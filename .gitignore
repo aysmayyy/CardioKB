@@ -205,3 +205,46 @@ cython_debug/
 marimo/_static/
 marimo/_lsp/
 __marimo__/
+
+# ==========================================
+# CardioKB specific ignores
+# ==========================================
+
+# Data files (don't commit large datasets)
+data/raw/*
+data/processed/*
+!data/raw/.gitkeep
+!data/processed/.gitkeep
+
+# Neo4j database files
+neo4j/
+*.neo4j
+
+# Model weights and outputs
+models/weights/*
+models/trained/*
+*.pkl
+*.h5
+*.pt
+*.pth
+*.onnx
+
+# Jupyter notebook checkpoints
+.ipynb_checkpoints/
+*.ipynb_checkpoints
+
+# API keys and secrets
+.env
+secrets.json
+config/credentials.json
+
+# Large files
+*.csv.gz
+*.tsv.gz
+*.json.gz
+*.db
+*.sqlite
+
+# OS files
+.DS_Store
+Thumbs.db
