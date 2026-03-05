@@ -120,7 +120,7 @@ ONTOLOGY_CONFIGS = {
             },
         },
         'merge': True,
-        'skip': False,
+        'skip': True,
     },
     f'aopdb.{AOPDB_PATHWAYS}': {
         'data_type': 'node',
@@ -137,7 +137,7 @@ ONTOLOGY_CONFIGS = {
             },
         },
         'merge': False,
-        'skip': False,
+        'skip': True,
     },
     f'aopdb.{AOPDB_GENE_PATHWAY_RELATIONSHIPS}': {
         'data_type': 'relationship',
@@ -154,7 +154,7 @@ ONTOLOGY_CONFIGS = {
             'object_match_property': 'pathwayName',
         },
         'merge': False,
-        'skip': False,
+        'skip': True,
     },
 
     # =========================================================================
@@ -174,7 +174,7 @@ ONTOLOGY_CONFIGS = {
             },
         },
         'merge': False,
-        'skip': False,
+        'skip': True,
     },
     f'disgenet.{DISGENET_DISEASE_MAPPINGS}': {
         'data_type': 'node',
@@ -195,7 +195,7 @@ ONTOLOGY_CONFIGS = {
             },
         },
         'merge': True,
-        'skip': False,
+        'skip': True,
     },
     f'disgenet.{DISGENET_GENE_DISEASE_ASSOCIATIONS}': {
         'data_type': 'relationship',
@@ -213,7 +213,7 @@ ONTOLOGY_CONFIGS = {
             'filter_value': 'disease',
         },
         'merge': False,
-        'skip': False,
+        'skip': True,
     },
 
     # =========================================================================
@@ -238,7 +238,7 @@ ONTOLOGY_CONFIGS = {
             },
         },
         'merge': True,
-        'skip': False,
+        'skip': True,
     },
 
     # =========================================================================
