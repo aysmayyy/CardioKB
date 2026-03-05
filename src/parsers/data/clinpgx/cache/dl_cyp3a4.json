@@ -1,0 +1,2335 @@
+{
+  "data": [
+    {
+      "objCls": "Label Annotation",
+      "id": "PA166105315",
+      "name": "Annotation of EMA Label for nelfinavir and CYP3A4",
+      "alternateDrugAvailable": false,
+      "cancerGenome": false,
+      "crossReferences": [],
+      "dosingInformation": false,
+      "history": [
+        {
+          "id": 1184512664,
+          "date": "2013-10-27T00:00:00-07:00",
+          "type": "Update",
+          "version": 0
+        },
+        {
+          "id": 1450933203,
+          "date": "2019-12-04T00:00:00-08:00",
+          "description": "Added source literature and edited summary to show that medication has been withdrawn from the EU.",
+          "type": "Update",
+          "version": 0
+        },
+        {
+          "id": 1452207483,
+          "date": "2023-08-15T12:46:18.360-07:00",
+          "description": "Unchecked informative as no longer meets criteria.",
+          "type": "Update",
+          "version": 0
+        }
+      ],
+      "indication": false,
+      "labelApplications": [],
+      "labelDocumentAvailable": true,
+      "literature": [
+        {
+          "id": 15103648,
+          "title": "Viracept | European Medicines Agency",
+          "_sameAs": "https://www.ema.europa.eu/en/medicines/human/EPAR/viracept",
+          "crossReferences": [
+            {
+              "id": 1450932879,
+              "resource": "URL",
+              "resourceId": "https://www.ema.europa.eu/en/medicines/human/EPAR/viracept",
+              "_url": "https://www.ema.europa.eu/en/medicines/human/EPAR/viracept"
+            }
+          ],
+          "objCls": "Literature",
+          "terms": [],
+          "type": "Drug Label"
+        }
+      ],
+      "otherPrescribingGuidance": false,
+      "pediatric": false,
+      "pgxRelated": true,
+      "prescribingGenes": [],
+      "relatedAlleles": [],
+      "relatedChemicals": [
+        {
+          "objCls": "Chemical",
+          "id": "PA450606",
+          "name": "nelfinavir",
+          "version": 8
+        }
+      ],
+      "relatedGenes": [
+        {
+          "objCls": "Gene",
+          "id": "PA130",
+          "symbol": "CYP3A4",
+          "name": "cytochrome P450 family 3 subfamily A member 4",
+          "version": 8039
+        }
+      ],
+      "source": "EMA",
+      "summaryMarkdown": {
+        "id": 1447981984,
+        "html": "<p><strong>Note: this medication has been withdrawn from use in the European Union</strong></p>\n<p>The EMA European Public Assessment Report (EPAR) for nelfinavir (Viracept) contains information regarding the metabolism of the drug by CYP3A4, CYP2C19 and CYP2D6, and that concomitant use of CYP3A4 substrates or inducers is contraindicated. No genetic information is included.</p>\n",
+        "version": 3
+      },
+      "terms": [],
+      "textMarkdown": {
+        "id": 1447981983,
+        "html": "<p>Excerpt from the nelfinavir (Viracept) EPAR:</p>\n<blockquote class=\"blockquote\">\n<p>Potent inducers of CYP3A4 (e.g., rifampicin, pehnobarbital and carbamazepine) may reduce nelfianvir plasma concentrations and their coadministration is contraindicated (see section 4.3). Caution should be used when co-administering other agents that induce CYP3A4.</p>\n</blockquote>\n<blockquote class=\"blockquote\">\n<p>Co-administration of nelfinavir with inhibitors of CYP2C19 (e.g., fluconazole, fluoxetine, paroxetine, lansoprazole, imipramine, amitriptyline and diazepam) may be expected to reduce the conversion of nelfinavir to its major active metabolite M8 (tert-butyl hydroxy nelfinavir) with a concomitant increase in plasma nelfinavir levels (see section 5.2). Limited clinical trial data from patients receiving one or more of these medicinal products with nelfinavir indicated that a clinically significant effect on safety and efficacy is not expected. However, such an effect cannot be ruled out.</p>\n</blockquote>\n<p>This information is highlighted in the following sections:</p>\n<p>Contraindications, interaction with other medicinal products and other forms of interaction, pharmacodynamic properties.</p>\n<p>For the complete drug label text with sections containing pharmacogenetic information highlighted, see the <a download=\"Viracept_EMA_EPAR_25July2013.pdf\" href=\"https://api.clinpgx.org/v1/download/file/attachment/Viracept_EMA_EPAR_25July2013.pdf\">nelfinavir (Viracept) EMA drug label</a>.</p>\n",
+        "version": 10
+      },
+      "version": 18
+    },
+    {
+      "objCls": "Label Annotation",
+      "id": "PA166123048",
+      "name": "Annotation of EMA Label for cabazitaxel and CYP3A4",
+      "alternateDrugAvailable": false,
+      "cancerGenome": false,
+      "crossReferences": [],
+      "dosingInformation": false,
+      "history": [
+        {
+          "id": 1184518968,
+          "date": "2014-08-21T00:00:00-07:00",
+          "type": "Create",
+          "version": 0
+        },
+        {
+          "id": 1450933190,
+          "date": "2019-12-04T13:16:57.623-08:00",
+          "description": "Added source literature",
+          "type": "Update",
+          "version": 0
+        },
+        {
+          "id": 1452206401,
+          "date": "2023-08-14T12:19:13.188-07:00",
+          "description": "Unchecked informative as no longer meets criteria.",
+          "type": "Update",
+          "version": 0
+        }
+      ],
+      "indication": false,
+      "labelApplications": [],
+      "labelDocumentAvailable": true,
+      "literature": [
+        {
+          "id": 15103634,
+          "title": "Jevtana | European Medicines Agency",
+          "_sameAs": "https://www.ema.europa.eu/en/medicines/human/EPAR/jevtana",
+          "crossReferences": [
+            {
+              "id": 1450932865,
+              "resource": "URL",
+              "resourceId": "https://www.ema.europa.eu/en/medicines/human/EPAR/jevtana",
+              "_url": "https://www.ema.europa.eu/en/medicines/human/EPAR/jevtana"
+            }
+          ],
+          "objCls": "Literature",
+          "terms": [],
+          "type": "Drug Label"
+        }
+      ],
+      "otherPrescribingGuidance": false,
+      "pediatric": false,
+      "pgxRelated": true,
+      "prescribingGenes": [],
+      "relatedAlleles": [],
+      "relatedChemicals": [
+        {
+          "objCls": "Chemical",
+          "id": "PA165958401",
+          "name": "cabazitaxel",
+          "version": 7
+        }
+      ],
+      "relatedGenes": [
+        {
+          "objCls": "Gene",
+          "id": "PA130",
+          "symbol": "CYP3A4",
+          "name": "cytochrome P450 family 3 subfamily A member 4",
+          "version": 8039
+        }
+      ],
+      "source": "EMA",
+      "summaryMarkdown": {
+        "id": 1447982143,
+        "html": "<p>The EMA European Public Assessment Report (EPAR) for cabazitaxel (Jevtana) does not contain pharmacogenetic information. It contains information regarding metabolism by CYP3A, and coadministration of strong CYP3A inhibitors or inducers should be avoided.</p>\n",
+        "version": 1
+      },
+      "terms": [],
+      "textMarkdown": {
+        "id": 1447982142,
+        "html": "<p>The EMA-approved drug cabazitaxel (Jevtana) is tagged with CYP3A4 in [Article:<a href=\"/pmid/24433361\">24433361</a>].</p>\n<p>Excerpt from the cabazitaxel (Jevtana) EPAR:</p>\n<blockquote class=\"blockquote\">\n<p>Concomitant medicinal products that are strong inducers or strong inhibitors of CYP3A should be avoided. However, if patients require co-administration of a strong CYP3A inhibitor, a 25% cabazitaxel dose reduction should be considered (see sections 4.4 and 4.5).</p>\n</blockquote>\n<p>For the complete drug label text with sections containing pharmacogenetic information highlighted, see the <a download=\"cabazitaxel_EMA_EPAR_Aug_6_2014_1.pdf\" href=\"https://api.clinpgx.org/v1/download/file/attachment/cabazitaxel_EMA_EPAR_Aug_6_2014_1.pdf\">cabazitaxel (Jevtana) EMA drug label</a>.</p>\n",
+        "version": 12
+      },
+      "version": 17
+    },
+    {
+      "objCls": "Label Annotation",
+      "id": "PA166123388",
+      "name": "Annotation of EMA Label for ruxolitinib and CYP3A4",
+      "alternateDrugAvailable": false,
+      "cancerGenome": false,
+      "crossReferences": [],
+      "dosingInformation": false,
+      "history": [
+        {
+          "id": 1184754032,
+          "date": "2014-09-12T00:00:00-07:00",
+          "type": "Create",
+          "version": 0
+        },
+        {
+          "id": 1450933210,
+          "date": "2019-12-04T13:26:45.033-08:00",
+          "description": "Added source literature",
+          "type": "Update",
+          "version": 0
+        },
+        {
+          "id": 1452215240,
+          "date": "2023-08-24T15:29:27.765-07:00",
+          "description": "removed informative PGx tag",
+          "type": "Update",
+          "version": 0
+        }
+      ],
+      "indication": false,
+      "labelApplications": [],
+      "labelDocumentAvailable": true,
+      "literature": [
+        {
+          "id": 15103654,
+          "title": "Jakavi | European Medicines Agency",
+          "_sameAs": "https://www.ema.europa.eu/en/medicines/human/EPAR/jakavi",
+          "crossReferences": [
+            {
+              "id": 1450932886,
+              "resource": "URL",
+              "resourceId": "https://www.ema.europa.eu/en/medicines/human/EPAR/jakavi",
+              "_url": "https://www.ema.europa.eu/en/medicines/human/EPAR/jakavi"
+            }
+          ],
+          "objCls": "Literature",
+          "terms": [],
+          "type": "Drug Label"
+        }
+      ],
+      "otherPrescribingGuidance": false,
+      "pediatric": false,
+      "pgxRelated": true,
+      "prescribingGenes": [],
+      "relatedAlleles": [],
+      "relatedChemicals": [
+        {
+          "objCls": "Chemical",
+          "id": "PA166123386",
+          "name": "ruxolitinib",
+          "version": 5
+        }
+      ],
+      "relatedGenes": [
+        {
+          "objCls": "Gene",
+          "id": "PA130",
+          "symbol": "CYP3A4",
+          "name": "cytochrome P450 family 3 subfamily A member 4",
+          "version": 8039
+        }
+      ],
+      "source": "EMA",
+      "summaryMarkdown": {
+        "id": 1447982177,
+        "html": "<p>The EMA European Public Assessment Report (EPAR) for ruxolitinib (Jakavi) does not contain pharmacogenetic information. It contains information regarding metabolism by CYP3A4 and CYP2C9, and suggests dosing adjustments and more frequent monitoring of hematology parameters if co-administered with strong CYP3A4 inhibitors or inducers, or dual inhibitors of CYP3A4 and CYP2C9.</p>\n",
+        "version": 2
+      },
+      "terms": [],
+      "textMarkdown": {
+        "id": 1447982176,
+        "html": "<p>The EMA-approved drug ruxolitinib (Jakavi) is tagged with CYP3A4 in [Article:<a href=\"/pmid/24433361\">24433361</a>].</p>\n<p>Excerpt from the ruxolitinib (Jakavi) EPAR:</p>\n<blockquote class=\"blockquote\">\n<p>When Jakavi is administered with strong CYP3A4 inhibitors or dual inhibitors of CYP2C9 and CYP3A4 enzymes (e.g. fluconazole) the unit dose of Jakavi should be reduced by approximately 50%, to be administered twice daily (see section 4.5).</p>\n<p>More frequent monitoring (e.g. twice a week) of haematology parameters and of clinical signs and symptoms of Jakavi-related adverse drug reactions is recommended while on strong CYP3A4 inhibitors or dual inhibitors of CYP2C9 and CYP3A4 enzymes.</p>\n</blockquote>\n<p>For the complete drug label text with sections containing pharmacogenetic information highlighted, see the <a download=\"ruxolitinib_EMA_EPAR_Aug_6_2014.pdf\" href=\"https://api.clinpgx.org/v1/download/file/attachment/ruxolitinib_EMA_EPAR_Aug_6_2014.pdf\">ruxolitinib (Jakavi) EMA drug label</a>.</p>\n",
+        "version": 11
+      },
+      "version": 15
+    },
+    {
+      "objCls": "Label Annotation",
+      "id": "PA166123410",
+      "name": "Annotation of EMA Label for ritonavir and CYP2D6, CYP3A4",
+      "alternateDrugAvailable": false,
+      "cancerGenome": false,
+      "crossReferences": [],
+      "dosingInformation": false,
+      "history": [
+        {
+          "id": 1184754377,
+          "date": "2014-09-15T00:00:00-07:00",
+          "type": "Create",
+          "version": 0
+        },
+        {
+          "id": 1450933208,
+          "date": "2019-12-04T13:26:13.576-08:00",
+          "description": "Added source literature",
+          "type": "Update",
+          "version": 0
+        },
+        {
+          "id": 1452213500,
+          "date": "2023-08-22T21:09:14.499-07:00",
+          "description": "removed informative PGx level as it doesn't fit new criteria",
+          "type": "Update",
+          "version": 0
+        }
+      ],
+      "indication": false,
+      "labelApplications": [],
+      "labelDocumentAvailable": true,
+      "literature": [
+        {
+          "id": 15103652,
+          "title": "Norvir | European Medicines Agency",
+          "_sameAs": "https://www.ema.europa.eu/en/medicines/human/EPAR/norvir",
+          "crossReferences": [
+            {
+              "id": 1450932884,
+              "resource": "URL",
+              "resourceId": "https://www.ema.europa.eu/en/medicines/human/EPAR/norvir",
+              "_url": "https://www.ema.europa.eu/en/medicines/human/EPAR/norvir"
+            }
+          ],
+          "objCls": "Literature",
+          "terms": [],
+          "type": "Drug Label"
+        }
+      ],
+      "otherPrescribingGuidance": false,
+      "pediatric": false,
+      "pgxRelated": true,
+      "prescribingGenes": [],
+      "relatedAlleles": [],
+      "relatedChemicals": [
+        {
+          "objCls": "Chemical",
+          "id": "PA451260",
+          "name": "ritonavir",
+          "version": 7
+        }
+      ],
+      "relatedGenes": [
+        {
+          "objCls": "Gene",
+          "id": "PA128",
+          "symbol": "CYP2D6",
+          "name": "cytochrome P450 family 2 subfamily D member 6",
+          "version": 7891
+        },
+        {
+          "objCls": "Gene",
+          "id": "PA130",
+          "symbol": "CYP3A4",
+          "name": "cytochrome P450 family 3 subfamily A member 4",
+          "version": 8039
+        }
+      ],
+      "source": "EMA",
+      "summaryMarkdown": {
+        "id": 1447982183,
+        "html": "<p>The EMA European Public Assessment Report (EPAR) for ritonavir (Norvir) does not contain pharmacogenetic information. It contains information regarding use of ritonavir as a pharmacokinetic enhancer for certain drugs to prolong their therapeutic effects. It is a potent inhibitor of CYP3A and CYP2D6-mediated biotransformation, and the EPAR provides a list of drugs contraindicated for concomitant use with ritonavir.</p>\n",
+        "version": 1
+      },
+      "terms": [],
+      "textMarkdown": {
+        "id": 1447982182,
+        "html": "<p>The EMA-approved drug ritonavir (Norvir) is tagged with CYP3A4 and CYP2D6 in [Article:<a href=\"/pmid/24433361\">24433361</a>].</p>\n<p>Excerpts from the ritonavir (Norvir) EPAR:</p>\n<blockquote class=\"blockquote\">\n<p><em>Ritonavir dosed as a pharmacokinetic enhancer</em></p>\n<p>Pharmacokinetic enhancement by ritonavir is based on ritonavir\u2019s activity as a potent inhibitor of CYP3A- mediated metabolism. The degree of enhancement is related to the metabolic pathway of the co-administered protease inhibitor and the impact of the co-administered protease inhibitor on the metabolism of ritonavir.</p>\n<p>Ritonavir has a high affinity for several cytochrome P450 (CYP) isoforms and may inhibit oxidation with the following ranked order: CYP3A4 &gt; CYP2D6. Co-administration of Norvir and medicinal products primarily metabolised by CYP3A may result in increased plasma concentrations of the other medicinal product, which could increase or prolong its therapeutic and adverse effects. For select medicinal products (e.g. alprazolam) the inhibitory effects of ritonavir on CYP3A4 may decrease over time.</p>\n</blockquote>\n<p>For the complete drug label text with sections containing pharmacogenetic information highlighted, see the <a download=\"ritonavir_EMA_EPAR_Aug_6_2014_1.pdf\" href=\"https://api.clinpgx.org/v1/download/file/attachment/ritonavir_EMA_EPAR_Aug_6_2014_1.pdf\">ritonavir EMA drug label</a>.</p>\n",
+        "version": 12
+      },
+      "version": 18
+    },
+    {
+      "objCls": "Label Annotation",
+      "id": "PA166123411",
+      "name": "Annotation of EMA Label for sirolimus and CYP3A4",
+      "alternateDrugAvailable": false,
+      "cancerGenome": false,
+      "crossReferences": [],
+      "dosingInformation": false,
+      "history": [
+        {
+          "id": 1184754382,
+          "date": "2014-09-15T00:00:00-07:00",
+          "type": "Create",
+          "version": 0
+        },
+        {
+          "id": 1450933212,
+          "date": "2019-12-04T13:27:54.056-08:00",
+          "description": "Added source literature",
+          "type": "Update",
+          "version": 0
+        },
+        {
+          "id": 1452215340,
+          "date": "2023-08-24T15:48:29.415-07:00",
+          "description": "remove informative PGx tag",
+          "type": "Update",
+          "version": 0
+        }
+      ],
+      "indication": false,
+      "labelApplications": [],
+      "labelDocumentAvailable": true,
+      "literature": [
+        {
+          "id": 15103656,
+          "title": "Rapamune | European Medicines Agency",
+          "_sameAs": "https://www.ema.europa.eu/en/medicines/human/EPAR/rapamune",
+          "crossReferences": [
+            {
+              "id": 1450932888,
+              "resource": "URL",
+              "resourceId": "https://www.ema.europa.eu/en/medicines/human/EPAR/rapamune",
+              "_url": "https://www.ema.europa.eu/en/medicines/human/EPAR/rapamune"
+            }
+          ],
+          "objCls": "Literature",
+          "terms": [],
+          "type": "Drug Label"
+        }
+      ],
+      "otherPrescribingGuidance": false,
+      "pediatric": false,
+      "pgxRelated": true,
+      "prescribingGenes": [],
+      "relatedAlleles": [],
+      "relatedChemicals": [
+        {
+          "objCls": "Chemical",
+          "id": "PA451365",
+          "name": "sirolimus",
+          "version": 17
+        }
+      ],
+      "relatedGenes": [
+        {
+          "objCls": "Gene",
+          "id": "PA130",
+          "symbol": "CYP3A4",
+          "name": "cytochrome P450 family 3 subfamily A member 4",
+          "version": 8039
+        }
+      ],
+      "source": "EMA",
+      "summaryMarkdown": {
+        "id": 1447981652,
+        "html": "<p>The EMA European Public Assessment Report (EPAR) for sirolimus (Rapamune) does not contain pharmacogenetic information. It contains information regarding metabolism by CYP3A4, and recommends therapeutic monitoring and dose adjustments when coadministrated with strong CYP3A inhibitors or inducers.</p>\n",
+        "version": 0
+      },
+      "terms": [],
+      "textMarkdown": {
+        "id": 1447981651,
+        "html": "<p>The EMA-approved drug sirolimus (Rapamune) is tagged with CYP3A4 in [Article:<a href=\"/pmid/24433361\">24433361</a>].</p>\n<p>For the complete drug label text with sections containing pharmacogenetic information highlighted, see the <a download=\"sirolimus_EMA_EPAR_Aug_6_2014.pdf\" href=\"https://api.clinpgx.org/v1/download/file/attachment/sirolimus_EMA_EPAR_Aug_6_2014.pdf\">sirolimus EMA drug label</a>.</p>\n",
+        "version": 8
+      },
+      "version": 17
+    },
+    {
+      "objCls": "Label Annotation",
+      "id": "PA166123412",
+      "name": "Annotation of EMA Label for sunitinib and CYP3A4",
+      "alternateDrugAvailable": false,
+      "cancerGenome": false,
+      "crossReferences": [],
+      "dosingInformation": false,
+      "history": [
+        {
+          "id": 1184754419,
+          "date": "2014-09-16T00:00:00-07:00",
+          "type": "Create",
+          "version": 0
+        },
+        {
+          "id": 1450933213,
+          "date": "2019-12-04T13:28:08.840-08:00",
+          "description": "Added source literature",
+          "type": "Update",
+          "version": 0
+        },
+        {
+          "id": 1452215343,
+          "date": "2023-08-24T15:57:59.370-07:00",
+          "description": "removed informative PGx tag",
+          "type": "Update",
+          "version": 0
+        }
+      ],
+      "indication": false,
+      "labelApplications": [],
+      "labelDocumentAvailable": true,
+      "literature": [
+        {
+          "id": 15103657,
+          "title": "Sutent | European Medicines Agency",
+          "_sameAs": "https://www.ema.europa.eu/en/medicines/human/EPAR/sutent",
+          "crossReferences": [
+            {
+              "id": 1450932889,
+              "resource": "URL",
+              "resourceId": "https://www.ema.europa.eu/en/medicines/human/EPAR/sutent",
+              "_url": "https://www.ema.europa.eu/en/medicines/human/EPAR/sutent"
+            }
+          ],
+          "objCls": "Literature",
+          "terms": [],
+          "type": "Drug Label"
+        }
+      ],
+      "otherPrescribingGuidance": false,
+      "pediatric": false,
+      "pgxRelated": true,
+      "prescribingGenes": [],
+      "relatedAlleles": [],
+      "relatedChemicals": [
+        {
+          "objCls": "Chemical",
+          "id": "PA162372840",
+          "name": "sunitinib",
+          "version": 11
+        }
+      ],
+      "relatedGenes": [
+        {
+          "objCls": "Gene",
+          "id": "PA130",
+          "symbol": "CYP3A4",
+          "name": "cytochrome P450 family 3 subfamily A member 4",
+          "version": 8039
+        }
+      ],
+      "source": "EMA",
+      "summaryMarkdown": {
+        "id": 1447981654,
+        "html": "<p>The EMA European Public Assessment Report (EPAR) for sunitinib (SUTENT) does not contain pharmacogenetic information. It contains information regarding metabolism by CYP3A4, and that potent CYP3A4 inhibitors or inducers should be avoided as they may affect sunitinib plasma levels.</p>\n",
+        "version": 0
+      },
+      "terms": [],
+      "textMarkdown": {
+        "id": 1447981653,
+        "html": "<p>The EMA-approved drug sunitinib is tagged with CYP3A4 in [Article:<a href=\"/pmid/24433361\">24433361</a>].</p>\n<p>For the complete drug label text with sections containing pharmacogenetic information highlighted, see the <a download=\"sunitinib_EMA_EPAR_Aug_6_2014_1.pdf\" href=\"https://api.clinpgx.org/v1/download/file/attachment/sunitinib_EMA_EPAR_Aug_6_2014_1.pdf\">sunitinib EMA drug label</a>.</p>\n",
+        "version": 10
+      },
+      "version": 17
+    },
+    {
+      "objCls": "Label Annotation",
+      "id": "PA166123413",
+      "name": "Annotation of EMA Label for zonisamide and CYP3A4",
+      "alternateDrugAvailable": false,
+      "cancerGenome": false,
+      "crossReferences": [],
+      "dosingInformation": false,
+      "history": [
+        {
+          "id": 1184754426,
+          "date": "2014-09-16T00:00:00-07:00",
+          "type": "Create",
+          "version": 0
+        },
+        {
+          "id": 1450933219,
+          "date": "2019-12-04T13:32:23.277-08:00",
+          "description": "Added source literature",
+          "type": "Update",
+          "version": 0
+        },
+        {
+          "id": 1452220504,
+          "date": "2023-08-29T13:01:23.157-07:00",
+          "description": "removed informative PGx tag",
+          "type": "Update",
+          "version": 0
+        }
+      ],
+      "indication": false,
+      "labelApplications": [],
+      "labelDocumentAvailable": true,
+      "literature": [
+        {
+          "id": 15103663,
+          "title": "Zonegran | European Medicines Agency",
+          "_sameAs": "https://www.ema.europa.eu/en/medicines/human/EPAR/zonegran",
+          "crossReferences": [
+            {
+              "id": 1450932895,
+              "resource": "URL",
+              "resourceId": "https://www.ema.europa.eu/en/medicines/human/EPAR/zonegran",
+              "_url": "https://www.ema.europa.eu/en/medicines/human/EPAR/zonegran"
+            }
+          ],
+          "objCls": "Literature",
+          "terms": [],
+          "type": "Drug Label"
+        }
+      ],
+      "otherPrescribingGuidance": false,
+      "pediatric": false,
+      "pgxRelated": true,
+      "prescribingGenes": [],
+      "relatedAlleles": [],
+      "relatedChemicals": [
+        {
+          "objCls": "Chemical",
+          "id": "PA451978",
+          "name": "zonisamide",
+          "version": 7
+        }
+      ],
+      "relatedGenes": [
+        {
+          "objCls": "Gene",
+          "id": "PA130",
+          "symbol": "CYP3A4",
+          "name": "cytochrome P450 family 3 subfamily A member 4",
+          "version": 8039
+        }
+      ],
+      "source": "EMA",
+      "summaryMarkdown": {
+        "id": 1447982215,
+        "html": "<p>The EMA European Public Assessment Report (EPAR) for zonisamide (Zonegran) does not contain pharmacogenetic information. It contains information regarding metabolism by CYP3A4, and recommends dose adjustments if CYP3A4 inducers are taken concomitantly.</p>\n",
+        "version": 1
+      },
+      "terms": [],
+      "textMarkdown": {
+        "id": 1447982214,
+        "html": "<p>The EMA-approved drug zonisamide is tagged with CYP3A4 in [Article:<a href=\"/pmid/24433361\">24433361</a>].</p>\n<p>For the complete drug label text with sections containing pharmacogenetic information highlighted, see the <a download=\"zonisamide_EMA_EPAR_Aug_6_2014_1.pdf\" href=\"https://api.clinpgx.org/v1/download/file/attachment/zonisamide_EMA_EPAR_Aug_6_2014_1.pdf\">zonisamide EMA drug label</a>.</p>\n",
+        "version": 10
+      },
+      "version": 18
+    },
+    {
+      "objCls": "Label Annotation",
+      "id": "PA166123414",
+      "name": "Annotation of EMA Label for dronedarone and CYP2D6, CYP3A4",
+      "alternateDrugAvailable": false,
+      "cancerGenome": false,
+      "crossReferences": [],
+      "dosingInformation": false,
+      "history": [
+        {
+          "id": 1184754428,
+          "date": "2014-09-16T00:00:00-07:00",
+          "type": "Create",
+          "version": 0
+        },
+        {
+          "id": 1450933194,
+          "date": "2019-12-04T13:18:31.879-08:00",
+          "description": "Added source literature",
+          "type": "Update",
+          "version": 0
+        },
+        {
+          "id": 1452206924,
+          "date": "2023-08-15T00:00:00-07:00",
+          "description": "Checked and this meets new criteria for Informative.",
+          "type": "Note",
+          "version": 0
+        },
+        {
+          "id": 1454194201,
+          "date": "2025-08-01T10:35:08.559-07:00",
+          "description": "updated label, changed PGx level to Informative",
+          "type": "Update",
+          "version": 0
+        }
+      ],
+      "indication": false,
+      "labelApplications": [],
+      "labelDocumentAvailable": true,
+      "literature": [
+        {
+          "id": 15103639,
+          "title": "Multaq | European Medicines Agency (EMA)",
+          "_sameAs": "https://www.ema.europa.eu/en/medicines/human/EPAR/multaq",
+          "crossReferences": [
+            {
+              "id": 1454194200,
+              "resource": "URL",
+              "resourceId": "https://www.ema.europa.eu/en/medicines/human/EPAR/multaq",
+              "_url": "https://www.ema.europa.eu/en/medicines/human/EPAR/multaq"
+            }
+          ],
+          "objCls": "Literature",
+          "terms": [],
+          "type": "Drug Label"
+        }
+      ],
+      "otherPrescribingGuidance": false,
+      "pediatric": false,
+      "pgxRelated": true,
+      "prescribingGenes": [],
+      "relatedAlleles": [],
+      "relatedChemicals": [
+        {
+          "objCls": "Chemical",
+          "id": "PA153619853",
+          "name": "dronedarone",
+          "version": 5
+        }
+      ],
+      "relatedGenes": [
+        {
+          "objCls": "Gene",
+          "id": "PA128",
+          "symbol": "CYP2D6",
+          "name": "cytochrome P450 family 2 subfamily D member 6",
+          "version": 7891
+        },
+        {
+          "objCls": "Gene",
+          "id": "PA130",
+          "symbol": "CYP3A4",
+          "name": "cytochrome P450 family 3 subfamily A member 4",
+          "version": 8039
+        }
+      ],
+      "source": "EMA",
+      "summaryMarkdown": {
+        "id": 1447982193,
+        "html": "<p>The EMA European Public Assessment Report (EPAR) for dronedarone (MULTAQ) states that it is a mild inhibitor of CYP2D6, and that the effect on metoprolol and propranol exposure is much below the difference seen between poor and extensive CYP2D6 metabolizers. It also contains information regarding metabolism of dronedarone by CYP3A4, and that concomitant drugs that are potent CYP3A4 inhibitors are contraindicated and potent CYP3A4 inducers are not recommended.</p>\n",
+        "version": 2
+      },
+      "terms": [],
+      "testing": {
+        "id": 1183672141,
+        "description": "The label mentions a gene or protein is involved in the metabolism or pharmacodynamics of the drug, but there is no information to suggest that variation in these genes/proteins leads to different response.",
+        "parents": [],
+        "resource": "Genetic Testing Level",
+        "synonyms": [],
+        "term": "Informative PGx",
+        "termId": "geneTestLevel:1183672141",
+        "valid": true,
+        "version": 2
+      },
+      "textMarkdown": {
+        "id": 1447982192,
+        "html": "<p>The EMA-approved drug dronedarone is tagged with CYP3A4 in [Article:<a href=\"/pmid/24433361\">24433361</a>].</p>\n<p>Excerpts from the dronedarone EPAR:</p>\n<blockquote class=\"blockquote\">\n<p>Dronedarone 800 mg daily increased metoprolol exposure by 1.6-fold and propranolol exposure by 1.3-fold (i.e. much below the 6-fold differences observed between poor and extensive CYP 2D6 metabolisers).</p>\n</blockquote>\n<blockquote class=\"blockquote\">\n<p>Dronedarone is extensively metabolised, mainly by CYP 3A4 (see section 4.5).</p>\n</blockquote>\n<blockquote class=\"blockquote\">\n<p>Dronedarone is a moderate inhibitor of CYP 3A4, a mild inhibitor of CYP 2D6 and a potent inhibitor of P-glycoproteins (P-gp).</p>\n</blockquote>\n<p>For the complete drug label text with sections containing pharmacogenetic information highlighted, see the <a download=\"Dronedarone_2025_08_01_EMA.pdf\" href=\"https://api.clinpgx.org/v1/download/file/attachment/Dronedarone_2025_08_01_EMA.pdf\">dronedarone EMA EPAR</a>.</p>\n",
+        "version": 13
+      },
+      "version": 19
+    },
+    {
+      "objCls": "Label Annotation",
+      "id": "PA166123416",
+      "name": "Annotation of EMA Label for ivabradine and CYP3A4",
+      "alternateDrugAvailable": false,
+      "cancerGenome": false,
+      "crossReferences": [],
+      "dosingInformation": false,
+      "history": [
+        {
+          "id": 1184754486,
+          "date": "2014-09-16T00:00:00-07:00",
+          "type": "Create",
+          "version": 0
+        },
+        {
+          "id": 1450933200,
+          "date": "2019-12-04T13:20:23.870-08:00",
+          "description": "Added source literature",
+          "type": "Update",
+          "version": 0
+        },
+        {
+          "id": 1452210080,
+          "date": "2023-08-18T14:36:59.245-07:00",
+          "description": "taking informative PGx tag off; no longer meets criteria",
+          "type": "Update",
+          "version": 0
+        }
+      ],
+      "indication": false,
+      "labelApplications": [],
+      "labelDocumentAvailable": true,
+      "literature": [
+        {
+          "id": 15103645,
+          "title": "Corlentor | European Medicines Agency",
+          "_sameAs": "https://www.ema.europa.eu/en/medicines/human/EPAR/corlentor",
+          "crossReferences": [
+            {
+              "id": 1450932876,
+              "resource": "URL",
+              "resourceId": "https://www.ema.europa.eu/en/medicines/human/EPAR/corlentor",
+              "_url": "https://www.ema.europa.eu/en/medicines/human/EPAR/corlentor"
+            }
+          ],
+          "objCls": "Literature",
+          "terms": [],
+          "type": "Drug Label"
+        }
+      ],
+      "otherPrescribingGuidance": false,
+      "pediatric": false,
+      "pgxRelated": true,
+      "prescribingGenes": [],
+      "relatedAlleles": [],
+      "relatedChemicals": [
+        {
+          "objCls": "Chemical",
+          "id": "PA166123415",
+          "name": "ivabradine",
+          "version": 5
+        }
+      ],
+      "relatedGenes": [
+        {
+          "objCls": "Gene",
+          "id": "PA130",
+          "symbol": "CYP3A4",
+          "name": "cytochrome P450 family 3 subfamily A member 4",
+          "version": 8039
+        }
+      ],
+      "source": "EMA",
+      "summaryMarkdown": {
+        "id": 1447981656,
+        "html": "<p>The EMA European Public Assessment Report (EPAR) for ivabradine (Corlentor) does not contain pharmacogenetic information. It contains information regarding metabolism of ivabradine by CYP3A4, and that concomitant use of potent CYP3A4 inhibitors is contraindicated.</p>\n",
+        "version": 1
+      },
+      "terms": [],
+      "textMarkdown": {
+        "id": 1447981655,
+        "html": "<p>The EMA-approved drug ivabradine is tagged with CYP3A4 in [Article:<a href=\"/pmid/24433361\">24433361</a>].</p>\n<p>For the complete drug label text with sections containing pharmacogenetic information highlighted, see the <a download=\"ivabradine_EMA_EPAR_Aug_6_2014_2.pdf\" href=\"https://api.clinpgx.org/v1/download/file/attachment/ivabradine_EMA_EPAR_Aug_6_2014_2.pdf\">ivabradine EMA drug label</a>.</p>\n",
+        "version": 10
+      },
+      "version": 17
+    },
+    {
+      "objCls": "Label Annotation",
+      "id": "PA166123417",
+      "name": "Annotation of EMA Label for telithromycin and CYP3A4",
+      "alternateDrugAvailable": false,
+      "cancerGenome": false,
+      "crossReferences": [],
+      "dosingInformation": false,
+      "history": [
+        {
+          "id": 1184754489,
+          "date": "2014-09-16T00:00:00-07:00",
+          "type": "Create",
+          "version": 0
+        },
+        {
+          "id": 1450933214,
+          "date": "2019-12-04T00:00:00-08:00",
+          "description": "Added source literature and edited summary to show that medication has been withdrawn from EU",
+          "type": "Update",
+          "version": 0
+        },
+        {
+          "id": 1452215420,
+          "date": "2023-08-24T16:02:13.007-07:00",
+          "description": "removed informative PGx tag",
+          "type": "Update",
+          "version": 0
+        },
+        {
+          "id": 1454290500,
+          "date": "2025-10-09T12:31:40.098-07:00",
+          "description": "\"On 7 June 2019, the European Commission withdrew the marketing authorisation for Ketek (telithromycin) in the European Union (EU).\"",
+          "type": "Update",
+          "version": 0
+        }
+      ],
+      "indication": false,
+      "labelApplications": [],
+      "labelDocumentAvailable": true,
+      "literature": [
+        {
+          "id": 15103658,
+          "title": "Ketek | European Medicines Agency",
+          "_sameAs": "https://www.ema.europa.eu/en/medicines/human/EPAR/ketek",
+          "crossReferences": [
+            {
+              "id": 1450932890,
+              "resource": "URL",
+              "resourceId": "https://www.ema.europa.eu/en/medicines/human/EPAR/ketek",
+              "_url": "https://www.ema.europa.eu/en/medicines/human/EPAR/ketek"
+            }
+          ],
+          "objCls": "Literature",
+          "terms": [],
+          "type": "Drug Label"
+        }
+      ],
+      "otherPrescribingGuidance": false,
+      "pediatric": false,
+      "pgxRelated": true,
+      "prescribingGenes": [],
+      "relatedAlleles": [],
+      "relatedChemicals": [
+        {
+          "objCls": "Chemical",
+          "id": "PA10202",
+          "name": "telithromycin",
+          "version": 7
+        }
+      ],
+      "relatedGenes": [
+        {
+          "objCls": "Gene",
+          "id": "PA130",
+          "symbol": "CYP3A4",
+          "name": "cytochrome P450 family 3 subfamily A member 4",
+          "version": 8039
+        }
+      ],
+      "retirementReason": {
+        "id": 1451259820,
+        "description": "The authoring agency has marked the label as withdrawn",
+        "parents": [],
+        "resource": "Retirement Reason",
+        "synonyms": [],
+        "term": "Withdrawal",
+        "termId": "retirement:1451259820",
+        "valid": true,
+        "version": 0
+      },
+      "source": "EMA",
+      "summaryMarkdown": {
+        "id": 1447982187,
+        "html": "<p><strong>Note: this medication has been withdrawn from use in the European Union.</strong></p>\n<p>The EMA European Public Assessment Report (EPAR) for telithromycin (Ketek) does not contain pharmacogenetic information. It contains information regarding metabolism by CYP3A4 and contains information regarding use of concomitant drugs that are CYP3A4 substrates, inhibitors or inducers.</p>\n",
+        "version": 2
+      },
+      "terms": [],
+      "textMarkdown": {
+        "id": 1447982186,
+        "html": "<p>The EMA-approved drug telithromycin is tagged with CYP3A4 in [Article:<a href=\"/pmid/24433361\">24433361</a>].</p>\n<p>For the complete drug label text with sections containing pharmacogenetic information highlighted, see the <a download=\"telithromycin_EMA_EPAR_Aug_6_2014_1.pdf\" href=\"https://api.clinpgx.org/v1/download/file/attachment/telithromycin_EMA_EPAR_Aug_6_2014_1.pdf\">telithromycin EMA drug label</a>.</p>\n",
+        "version": 10
+      },
+      "version": 18
+    },
+    {
+      "objCls": "Label Annotation",
+      "id": "PA166123418",
+      "name": "Annotation of EMA Label for posaconazole and CYP3A4",
+      "alternateDrugAvailable": false,
+      "cancerGenome": false,
+      "crossReferences": [],
+      "dosingInformation": false,
+      "history": [
+        {
+          "id": 1184754505,
+          "date": "2014-09-16T00:00:00-07:00",
+          "type": "Create",
+          "version": 0
+        },
+        {
+          "id": 1450933207,
+          "date": "2019-12-04T13:25:25.406-08:00",
+          "description": "Added source literature",
+          "type": "Update",
+          "version": 0
+        },
+        {
+          "id": 1452214560,
+          "date": "2023-08-23T16:45:04.168-07:00",
+          "description": "Unchecked informative as no longer meets criteria.",
+          "type": "Update",
+          "version": 0
+        }
+      ],
+      "indication": false,
+      "labelApplications": [],
+      "labelDocumentAvailable": true,
+      "literature": [
+        {
+          "id": 15103651,
+          "title": "Noxafil | European Medicines Agency",
+          "_sameAs": "https://www.ema.europa.eu/en/medicines/human/EPAR/noxafil",
+          "crossReferences": [
+            {
+              "id": 1450932883,
+              "resource": "URL",
+              "resourceId": "https://www.ema.europa.eu/en/medicines/human/EPAR/noxafil",
+              "_url": "https://www.ema.europa.eu/en/medicines/human/EPAR/noxafil"
+            }
+          ],
+          "objCls": "Literature",
+          "terms": [],
+          "type": "Drug Label"
+        }
+      ],
+      "otherPrescribingGuidance": false,
+      "pediatric": false,
+      "pgxRelated": true,
+      "prescribingGenes": [],
+      "relatedAlleles": [],
+      "relatedChemicals": [
+        {
+          "objCls": "Chemical",
+          "id": "PA151958574",
+          "name": "posaconazole",
+          "version": 9
+        }
+      ],
+      "relatedGenes": [
+        {
+          "objCls": "Gene",
+          "id": "PA130",
+          "symbol": "CYP3A4",
+          "name": "cytochrome P450 family 3 subfamily A member 4",
+          "version": 8039
+        }
+      ],
+      "source": "EMA",
+      "summaryMarkdown": {
+        "id": 1447982199,
+        "html": "<p>The EMA European Public Assessment Report (EPAR) for posaconazole (Noxafil) does not contain pharmacogenetic information. It contains information regarding metabolism drug-drug interactions with CYP3A4 substrates.</p>\n",
+        "version": 1
+      },
+      "terms": [],
+      "textMarkdown": {
+        "id": 1447982198,
+        "html": "<p>The EMA-approved drug posaconazole is tagged with CYP3A4 in [Article:<a href=\"/pmid/24433361\">24433361</a>].</p>\n<p>For the complete drug label text with sections containing pharmacogenetic information highlighted, see the <a download=\"posaconazole_EMA_EPAR_Aug_6_2014_1.pdf\" href=\"https://api.clinpgx.org/v1/download/file/attachment/posaconazole_EMA_EPAR_Aug_6_2014_1.pdf\">posaconazole EMA drug label</a>.</p>\n",
+        "version": 10
+      },
+      "version": 17
+    },
+    {
+      "objCls": "Label Annotation",
+      "id": "PA166123419",
+      "name": "Annotation of EMA Label for indinavir and CYP3A4",
+      "alternateDrugAvailable": false,
+      "cancerGenome": false,
+      "crossReferences": [],
+      "dosingInformation": false,
+      "history": [
+        {
+          "id": 1184754508,
+          "date": "2014-09-16T00:00:00-07:00",
+          "type": "Create",
+          "version": 0
+        },
+        {
+          "id": 1450933199,
+          "date": "2019-12-04T13:20:07.477-08:00",
+          "description": "Added source literature",
+          "type": "Update",
+          "version": 0
+        },
+        {
+          "id": 1452209900,
+          "date": "2023-08-18T10:51:31.634-07:00",
+          "description": "taking informative PGx tag off; no longer meets criteria",
+          "type": "Update",
+          "version": 0
+        }
+      ],
+      "indication": false,
+      "labelApplications": [],
+      "labelDocumentAvailable": true,
+      "literature": [
+        {
+          "id": 15103644,
+          "title": "Crixivan | European Medicines Agency",
+          "_sameAs": "https://www.ema.europa.eu/en/medicines/human/EPAR/crixivan",
+          "crossReferences": [
+            {
+              "id": 1450932875,
+              "resource": "URL",
+              "resourceId": "https://www.ema.europa.eu/en/medicines/human/EPAR/crixivan",
+              "_url": "https://www.ema.europa.eu/en/medicines/human/EPAR/crixivan"
+            }
+          ],
+          "objCls": "Literature",
+          "terms": [],
+          "type": "Drug Label"
+        }
+      ],
+      "otherPrescribingGuidance": false,
+      "pediatric": false,
+      "pgxRelated": true,
+      "prescribingGenes": [],
+      "relatedAlleles": [],
+      "relatedChemicals": [
+        {
+          "objCls": "Chemical",
+          "id": "PA449977",
+          "name": "indinavir",
+          "version": 7
+        }
+      ],
+      "relatedGenes": [
+        {
+          "objCls": "Gene",
+          "id": "PA130",
+          "symbol": "CYP3A4",
+          "name": "cytochrome P450 family 3 subfamily A member 4",
+          "version": 8039
+        }
+      ],
+      "source": "EMA",
+      "summaryMarkdown": {
+        "id": 1447982201,
+        "html": "<p>The EMA European Public Assessment Report (EPAR) for indinavir (Crixivan) does not contain pharmacogenetic information. It contains information regarding metabolism by CYP3A4 and contraindicates concomitant use of drugs that are CYP3A4 substrates.</p>\n",
+        "version": 1
+      },
+      "terms": [],
+      "textMarkdown": {
+        "id": 1447982200,
+        "html": "<p>The EMA-approved drug indinavir is tagged with CYP3A4 in [Article:<a href=\"/pmid/24433361\">24433361</a>].</p>\n<p>For the complete drug label text with sections containing pharmacogenetic information highlighted, see the <a download=\"indinavir_EMA_EPAR_Aug_6_2014_1.pdf\" href=\"https://api.clinpgx.org/v1/download/file/attachment/indinavir_EMA_EPAR_Aug_6_2014_1.pdf\">indinavir EMA drug label</a>.</p>\n",
+        "version": 10
+      },
+      "version": 17
+    },
+    {
+      "objCls": "Label Annotation",
+      "id": "PA166123420",
+      "name": "Annotation of EMA Label for fosamprenavir and CYP3A4",
+      "alternateDrugAvailable": false,
+      "cancerGenome": false,
+      "crossReferences": [],
+      "dosingInformation": false,
+      "history": [
+        {
+          "id": 1184754511,
+          "date": "2014-09-16T00:00:00-07:00",
+          "type": "Create",
+          "version": 0
+        },
+        {
+          "id": 1450933196,
+          "date": "2019-12-04T13:19:05.964-08:00",
+          "description": "Added source literature",
+          "type": "Update",
+          "version": 0
+        },
+        {
+          "id": 1452209380,
+          "date": "2023-08-17T16:57:03.201-07:00",
+          "description": "taking informative PGx tag off; no longer meets criteria",
+          "type": "Update",
+          "version": 0
+        }
+      ],
+      "indication": false,
+      "labelApplications": [],
+      "labelDocumentAvailable": true,
+      "literature": [
+        {
+          "id": 15103641,
+          "title": "Telzir | European Medicines Agency",
+          "_sameAs": "https://www.ema.europa.eu/en/medicines/human/EPAR/telzir",
+          "crossReferences": [
+            {
+              "id": 1450932872,
+              "resource": "URL",
+              "resourceId": "https://www.ema.europa.eu/en/medicines/human/EPAR/telzir",
+              "_url": "https://www.ema.europa.eu/en/medicines/human/EPAR/telzir"
+            }
+          ],
+          "objCls": "Literature",
+          "terms": [],
+          "type": "Drug Label"
+        }
+      ],
+      "otherPrescribingGuidance": false,
+      "pediatric": false,
+      "pgxRelated": true,
+      "prescribingGenes": [],
+      "relatedAlleles": [],
+      "relatedChemicals": [
+        {
+          "objCls": "Chemical",
+          "id": "PA10084",
+          "name": "fosamprenavir",
+          "version": 7
+        }
+      ],
+      "relatedGenes": [
+        {
+          "objCls": "Gene",
+          "id": "PA130",
+          "symbol": "CYP3A4",
+          "name": "cytochrome P450 family 3 subfamily A member 4",
+          "version": 8039
+        }
+      ],
+      "source": "EMA",
+      "summaryMarkdown": {
+        "id": 1447982189,
+        "html": "<p>The EMA European Public Assessment Report (EPAR) for fosamprenavir (Telzir) does not contain human pharmacogenetic information, but does contain pharmacogenetic information related to the genotype of the HIV virus. Concomitant use of drugs with a narrow therapeutic window that are substrates of CYP3A4 or CYP2D6 is contraindicated.</p>\n",
+        "version": 0
+      },
+      "terms": [],
+      "textMarkdown": {
+        "id": 1447982188,
+        "html": "<p>Fosamprenavir is rapidly hydrolysed to amprenavir, which is metabolized primarily by CYP3A4. The EMA-approved drug fosamprenavir is tagged with CYP3A4 in [Article:<a href=\"/pmid/24433361\">24433361</a>].</p>\n<p>For the complete drug label text with sections containing pharmacogenetic information highlighted, see the <a download=\"fosamprenavir_EMA_EPAR_Aug_6_2014_1.pdf\" href=\"https://api.clinpgx.org/v1/download/file/attachment/fosamprenavir_EMA_EPAR_Aug_6_2014_1.pdf\">fosamprenavir EMA drug label</a>.</p>\n",
+        "version": 10
+      },
+      "version": 18
+    },
+    {
+      "objCls": "Label Annotation",
+      "id": "PA166123423",
+      "name": "Annotation of EMA Label for tipranavir and CYP3A4",
+      "alternateDrugAvailable": false,
+      "cancerGenome": false,
+      "crossReferences": [],
+      "dosingInformation": false,
+      "history": [
+        {
+          "id": 1184754740,
+          "date": "2014-09-17T00:00:00-07:00",
+          "type": "Create",
+          "version": 0
+        },
+        {
+          "id": 1450933216,
+          "date": "2019-12-04T13:30:29.400-08:00",
+          "description": "Added source literature",
+          "type": "Update",
+          "version": 0
+        },
+        {
+          "id": 1452217622,
+          "date": "2023-08-27T22:40:44.821-07:00",
+          "description": "removed informative PGx tag",
+          "type": "Update",
+          "version": 0
+        }
+      ],
+      "indication": false,
+      "labelApplications": [],
+      "labelDocumentAvailable": true,
+      "literature": [
+        {
+          "id": 15103660,
+          "title": "Aptivus | European Medicines Agency",
+          "_sameAs": "https://www.ema.europa.eu/en/medicines/human/EPAR/aptivus",
+          "crossReferences": [
+            {
+              "id": 1450932892,
+              "resource": "URL",
+              "resourceId": "https://www.ema.europa.eu/en/medicines/human/EPAR/aptivus",
+              "_url": "https://www.ema.europa.eu/en/medicines/human/EPAR/aptivus"
+            }
+          ],
+          "objCls": "Literature",
+          "terms": [],
+          "type": "Drug Label"
+        }
+      ],
+      "otherPrescribingGuidance": false,
+      "pediatric": false,
+      "pgxRelated": true,
+      "prescribingGenes": [],
+      "relatedAlleles": [],
+      "relatedChemicals": [
+        {
+          "objCls": "Chemical",
+          "id": "PA163522473",
+          "name": "tipranavir",
+          "version": 8
+        }
+      ],
+      "relatedGenes": [
+        {
+          "objCls": "Gene",
+          "id": "PA130",
+          "symbol": "CYP3A4",
+          "name": "cytochrome P450 family 3 subfamily A member 4",
+          "version": 8039
+        }
+      ],
+      "source": "EMA",
+      "summaryMarkdown": {
+        "id": 1447982195,
+        "html": "<p>The EMA European Public Assessment Report (EPAR) for tipranavir (Aptivus) does not contain human pharmacogenetic information, but does contain pharmacogenetic information related to the genotype of the HIV virus. It contains information regarding metabolism of tipranavir by CYP3A4, and gives information regarding the coadministration of drugs that are CYP3A substrates, inhibitors or inducers.</p>\n",
+        "version": 0
+      },
+      "terms": [],
+      "textMarkdown": {
+        "id": 1447982194,
+        "html": "<p>The EMA-approved drug tipranavir (Aptivus) is tagged with CYP3A4 in [Article:<a href=\"/pmid/24433361\">24433361</a>].</p>\n<p>For the complete drug label text with sections containing pharmacogenetic information highlighted, see the <a download=\"tipranavir_EMA_EPAR_Aug_6_2014.pdf\" href=\"https://api.clinpgx.org/v1/download/file/attachment/tipranavir_EMA_EPAR_Aug_6_2014.pdf\">tipranavir EMA drug label</a>.</p>\n",
+        "version": 8
+      },
+      "version": 18
+    },
+    {
+      "objCls": "Label Annotation",
+      "id": "PA166123424",
+      "name": "Annotation of EMA Label for darunavir and CYP3A4",
+      "alternateDrugAvailable": false,
+      "cancerGenome": false,
+      "crossReferences": [],
+      "dosingInformation": false,
+      "history": [
+        {
+          "id": 1184754762,
+          "date": "2014-09-17T00:00:00-07:00",
+          "type": "Create",
+          "version": 0
+        },
+        {
+          "id": 1450933192,
+          "date": "2019-12-04T13:17:57.154-08:00",
+          "description": "Added source literature",
+          "type": "Update",
+          "version": 0
+        },
+        {
+          "id": 1452206880,
+          "date": "2023-08-15T07:06:00.679-07:00",
+          "description": "Unchecked informative as no longer meets criteria.",
+          "type": "Update",
+          "version": 0
+        }
+      ],
+      "indication": false,
+      "labelApplications": [],
+      "labelDocumentAvailable": true,
+      "literature": [
+        {
+          "id": 15103637,
+          "title": "Prezista | European Medicines Agency",
+          "_sameAs": "https://www.ema.europa.eu/en/medicines/human/EPAR/prezista",
+          "crossReferences": [
+            {
+              "id": 1450932868,
+              "resource": "URL",
+              "resourceId": "https://www.ema.europa.eu/en/medicines/human/EPAR/prezista",
+              "_url": "https://www.ema.europa.eu/en/medicines/human/EPAR/prezista"
+            }
+          ],
+          "objCls": "Literature",
+          "terms": [],
+          "type": "Drug Label"
+        }
+      ],
+      "otherPrescribingGuidance": false,
+      "pediatric": false,
+      "pgxRelated": true,
+      "prescribingGenes": [],
+      "relatedAlleles": [],
+      "relatedChemicals": [
+        {
+          "objCls": "Chemical",
+          "id": "PA163522472",
+          "name": "darunavir",
+          "version": 8
+        }
+      ],
+      "relatedGenes": [
+        {
+          "objCls": "Gene",
+          "id": "PA130",
+          "symbol": "CYP3A4",
+          "name": "cytochrome P450 family 3 subfamily A member 4",
+          "version": 8039
+        }
+      ],
+      "source": "EMA",
+      "summaryMarkdown": {
+        "id": 1447982209,
+        "html": "<p>The EMA European Public Assessment Report (EPAR) for darunavir (PREZISTA) does not contain human pharmacogenetic information, but does contain pharmacogenetic information related to the genotype of the HIV virus. It contains information regarding metabolism of darunavir by CYP3A and gives information regarding the coadministration of drugs that are CYP3A substrates, inhibitors or inducers.</p>\n",
+        "version": 2
+      },
+      "terms": [],
+      "textMarkdown": {
+        "id": 1447982208,
+        "html": "<p>The EMA-approved drug darunavir is tagged with CYP3A4 in [Article:<a href=\"/pmid/24433361\">24433361</a>].</p>\n<p>For the complete drug label text with sections containing pharmacogenetic information highlighted, see the <a download=\"darunavir_EMA_EPAR_Aug_6_2014.pdf\" href=\"https://api.clinpgx.org/v1/download/file/attachment/darunavir_EMA_EPAR_Aug_6_2014.pdf\">darunavir EMA drug label</a>.</p>\n",
+        "version": 8
+      },
+      "version": 15
+    },
+    {
+      "objCls": "Label Annotation",
+      "id": "PA166184388",
+      "name": "Annotation of Swissmedic Label for losartan and CYP2C9, CYP3A4",
+      "alternateDrugAvailable": false,
+      "cancerGenome": false,
+      "crossReferences": [],
+      "dosingInformation": false,
+      "history": [],
+      "indication": false,
+      "labelApplications": [],
+      "labelDocumentAvailable": true,
+      "literature": [
+        {
+          "id": 15103248,
+          "title": "Swissmedic label for losartan (Cosaar)",
+          "_sameAs": "https://amiko.oddb.org/de/fi?gtin=52904",
+          "crossReferences": [
+            {
+              "id": 1450815342,
+              "resource": "URL",
+              "resourceId": "https://amiko.oddb.org/de/fi?gtin=52904",
+              "_url": "https://amiko.oddb.org/de/fi?gtin=52904"
+            }
+          ],
+          "objCls": "Literature",
+          "terms": [],
+          "type": "Drug Label"
+        },
+        {
+          "id": 15103249,
+          "title": "Swissmedic label for losartan and diuretics (Cosaar Plus)",
+          "_sameAs": "https://amiko.oddb.org/de/fi?gtin=53629",
+          "crossReferences": [
+            {
+              "id": 1450815343,
+              "resource": "URL",
+              "resourceId": "https://amiko.oddb.org/de/fi?gtin=53629",
+              "_url": "https://amiko.oddb.org/de/fi?gtin=53629"
+            }
+          ],
+          "objCls": "Literature",
+          "terms": [],
+          "type": "Drug Label"
+        }
+      ],
+      "otherPrescribingGuidance": false,
+      "pediatric": false,
+      "pgxRelated": true,
+      "prescribingGenes": [],
+      "relatedAlleles": [],
+      "relatedChemicals": [
+        {
+          "objCls": "Chemical",
+          "id": "PA450268",
+          "name": "losartan",
+          "version": 21
+        }
+      ],
+      "relatedGenes": [
+        {
+          "objCls": "Gene",
+          "id": "PA126",
+          "symbol": "CYP2C9",
+          "name": "cytochrome P450 family 2 subfamily C member 9",
+          "version": 7877
+        },
+        {
+          "objCls": "Gene",
+          "id": "PA130",
+          "symbol": "CYP3A4",
+          "name": "cytochrome P450 family 3 subfamily A member 4",
+          "version": 8039
+        }
+      ],
+      "source": "Swissmedic",
+      "summaryMarkdown": {
+        "id": 1450815388,
+        "html": "<p>The Swiss drug label for losartan (Cosaar) gives information on CYP2C9 and CYP3A4 involvement in formation of active metabolites of losartan.</p>\n",
+        "version": 0
+      },
+      "terms": [],
+      "testing": {
+        "id": 1183672111,
+        "description": "The label does not discuss genetic or other testing for gene/protein/chromosomal variants, but does contain information about changes in efficacy, dosage or toxicity due to such variants. The label may mention contraindication of the drug in a particular subset of patients but does not require or recommend gene, protein or chromosomal testing.",
+        "parents": [],
+        "resource": "Genetic Testing Level",
+        "synonyms": [],
+        "term": "Actionable PGx",
+        "termId": "geneTestLevel:1183672111",
+        "valid": true,
+        "version": 2
+      },
+      "textMarkdown": {
+        "id": 1450815389,
+        "html": "<p><strong>Please note that the information contained within this drug label annotation is available through a collaboration with the <a rel=\"noopener noreferrer\" href=\"http://www.pharmacare.unibas.ch\" target=\"_blank\">Pharmaceutical Care Research Group (PCRG), Department of Pharmaceutical Sciences, University of Basel</a>, who provided a translation of the pharmacogenetic information contained in the Swiss drug labels. The original label in German can be accessed using the link under &quot;Source&quot; below.</strong></p>\n<p>Excerpt from the drug label for losartan (Cosaar):</p>\n<blockquote class=\"blockquote\">\n<p>Kinetics:\nApproximately 14% of a perorally administered dose of losartan is converted to an active metabolite. In vitro studies show that cytochrome P450 2C9 and 3A4 are involved in the conversion of losartan into its metabolites. In 1% of the patients a lower conversion was observed due to a genetically determined enzyme defect (less than 1% of the dose compared to 14% of the dose in normal patients). After oral administration of 14C-labelled losartan, the radioactivity circulating in plasma is mainly due to losartan and its active metabolites.</p>\n</blockquote>\n<p>For the complete drug label text with pharmacogenetic information highlighted, see the <a rel=\"noopener noreferrer\" href=\"https://amiko.oddb.org/de/fi?gtin=52904&amp;highlight=genetisch\" target=\"_blank\">losartan drug label</a> (in German).</p>\n",
+        "version": 2
+      },
+      "version": 1
+    },
+    {
+      "objCls": "Label Annotation",
+      "id": "PA166184404",
+      "name": "Annotation of Swissmedic Label for tamsulosin and CYP2D6, CYP3A4",
+      "alternateDrugAvailable": false,
+      "cancerGenome": false,
+      "crossReferences": [],
+      "dosingInformation": false,
+      "history": [],
+      "indication": false,
+      "labelApplications": [],
+      "labelDocumentAvailable": true,
+      "literature": [
+        {
+          "id": 15103102,
+          "title": "Swissmedic label for Tamsulosin und Dutasterid",
+          "_sameAs": "https://amiko.oddb.org/de/fi?gtin=60095",
+          "crossReferences": [
+            {
+              "id": 1450812063,
+              "resource": "URL",
+              "resourceId": "https://amiko.oddb.org/de/fi?gtin=60095",
+              "_url": "https://amiko.oddb.org/de/fi?gtin=60095"
+            }
+          ],
+          "objCls": "Literature",
+          "terms": [],
+          "type": "Drug Label"
+        },
+        {
+          "id": 15103101,
+          "title": "Swissmedic label for tamsulosin",
+          "_sameAs": "https://amiko.oddb.org/de/fi?gtin=57160",
+          "crossReferences": [
+            {
+              "id": 1450812062,
+              "resource": "URL",
+              "resourceId": "https://amiko.oddb.org/de/fi?gtin=57160",
+              "_url": "https://amiko.oddb.org/de/fi?gtin=57160"
+            }
+          ],
+          "objCls": "Literature",
+          "terms": [],
+          "type": "Drug Label"
+        }
+      ],
+      "otherPrescribingGuidance": false,
+      "pediatric": false,
+      "pgxRelated": true,
+      "prescribingGenes": [],
+      "relatedAlleles": [],
+      "relatedChemicals": [
+        {
+          "objCls": "Chemical",
+          "id": "PA451583",
+          "name": "tamsulosin",
+          "version": 10
+        }
+      ],
+      "relatedGenes": [
+        {
+          "objCls": "Gene",
+          "id": "PA128",
+          "symbol": "CYP2D6",
+          "name": "cytochrome P450 family 2 subfamily D member 6",
+          "version": 7891
+        },
+        {
+          "objCls": "Gene",
+          "id": "PA130",
+          "symbol": "CYP3A4",
+          "name": "cytochrome P450 family 3 subfamily A member 4",
+          "version": 8039
+        }
+      ],
+      "source": "Swissmedic",
+      "summaryMarkdown": {
+        "id": 1450815468,
+        "html": "<p>The Swiss drug label for tamsulosin (Pradif) and tamsulosin and dutasteride (Duodart) states that since CYP3A4 inhibitors can significantly influence exposure to tamsulosin in CYP2D6 poor metabolizers, all tamsulosin treated patients should avoid strong CYP3A4 inhibitors.</p>\n",
+        "version": 0
+      },
+      "terms": [],
+      "testing": {
+        "id": 1183672111,
+        "description": "The label does not discuss genetic or other testing for gene/protein/chromosomal variants, but does contain information about changes in efficacy, dosage or toxicity due to such variants. The label may mention contraindication of the drug in a particular subset of patients but does not require or recommend gene, protein or chromosomal testing.",
+        "parents": [],
+        "resource": "Genetic Testing Level",
+        "synonyms": [],
+        "term": "Actionable PGx",
+        "termId": "geneTestLevel:1183672111",
+        "valid": true,
+        "version": 2
+      },
+      "textMarkdown": {
+        "id": 1450815469,
+        "html": "<p><strong>Please note that the information contained within this drug label annotation is available through a collaboration with the <a rel=\"noopener noreferrer\" href=\"http://www.pharmacare.unibas.ch\" target=\"_blank\">Pharmaceutical Care Research Group (PCRG), Department of Pharmaceutical Sciences, University of Basel</a>, who provided a translation of the pharmacogenetic information contained in the Swiss drug labels. The original label in German can be accessed using the link under &quot;Source&quot; below.</strong></p>\n<p>Excerpt from the drug labels for tamsulosin (Pradif) and tamsulosin and dutasteride (Duodart):</p>\n<blockquote class=\"blockquote\">\n<p>Precautions:\nSimultaneous treatment with tamsulosin hydrochloride and CYP3A4 inhibitors may increase tamsulosin exposure (see &quot;Interactions&quot;). In particular, there is a risk of significantly increased tamsulosin exposure to CYP2D6 poor metabolizers treated simultaneously with strong CYP3A4 inhibitors. As the polymorphism for CYP2D6 is usually not known outside clinical studies, tamsulosin should not be used together with strong CYP3A4 inhibitors (e.g. itraconazole, voriconazole, clarithromycin, indinavir, nelfinavir, ritonavir, saquinavir).</p>\n</blockquote>\n<p>For the complete drug label text with pharmacogenetic information highlighted, see the <a rel=\"noopener noreferrer\" href=\"https://amiko.oddb.org/de/fi?gtin=57160&amp;highlight=metabolisern\" target=\"_blank\">tamsulosin drug label</a> (in German).</p>\n",
+        "version": 2
+      },
+      "version": 1
+    },
+    {
+      "objCls": "Label Annotation",
+      "id": "PA166184426",
+      "name": "Annotation of Swissmedic Label for tolterodine and CYP2D6, CYP3A4",
+      "alternateDrugAvailable": false,
+      "cancerGenome": false,
+      "crossReferences": [],
+      "dosingInformation": false,
+      "history": [],
+      "indication": false,
+      "labelApplications": [],
+      "labelDocumentAvailable": true,
+      "literature": [
+        {
+          "id": 15103107,
+          "title": "Swissmedic label for tolterodin",
+          "_sameAs": "https://amiko.oddb.org/de/fi?gtin=55581",
+          "crossReferences": [
+            {
+              "id": 1450812068,
+              "resource": "URL",
+              "resourceId": "https://amiko.oddb.org/de/fi?gtin=55581",
+              "_url": "https://amiko.oddb.org/de/fi?gtin=55581"
+            }
+          ],
+          "objCls": "Literature",
+          "terms": [],
+          "type": "Drug Label"
+        }
+      ],
+      "otherPrescribingGuidance": false,
+      "pediatric": false,
+      "pgxRelated": true,
+      "prescribingGenes": [],
+      "relatedAlleles": [],
+      "relatedChemicals": [
+        {
+          "objCls": "Chemical",
+          "id": "PA164746757",
+          "name": "tolterodine",
+          "version": 9
+        }
+      ],
+      "relatedGenes": [
+        {
+          "objCls": "Gene",
+          "id": "PA128",
+          "symbol": "CYP2D6",
+          "name": "cytochrome P450 family 2 subfamily D member 6",
+          "version": 7891
+        },
+        {
+          "objCls": "Gene",
+          "id": "PA130",
+          "symbol": "CYP3A4",
+          "name": "cytochrome P450 family 3 subfamily A member 4",
+          "version": 8039
+        }
+      ],
+      "source": "Swissmedic",
+      "summaryMarkdown": {
+        "id": 1450815571,
+        "html": "<p>The Swiss drug label for tolterodine (Detrusitol) gives information on pharmacokinetic changes in CYP2D6 poor metabolizers. This did not result in any changes in safety or tolerability alone but was notable in patients receiving CYP3A4 inhibitors.</p>\n",
+        "version": 0
+      },
+      "terms": [],
+      "testing": {
+        "id": 1183672111,
+        "description": "The label does not discuss genetic or other testing for gene/protein/chromosomal variants, but does contain information about changes in efficacy, dosage or toxicity due to such variants. The label may mention contraindication of the drug in a particular subset of patients but does not require or recommend gene, protein or chromosomal testing.",
+        "parents": [],
+        "resource": "Genetic Testing Level",
+        "synonyms": [],
+        "term": "Actionable PGx",
+        "termId": "geneTestLevel:1183672111",
+        "valid": true,
+        "version": 2
+      },
+      "textMarkdown": {
+        "id": 1450815572,
+        "html": "<p><strong>Please note that the information contained within this drug label annotation is available through a collaboration with the <a rel=\"noopener noreferrer\" href=\"http://www.pharmacare.unibas.ch\" target=\"_blank\">Pharmaceutical Care Research Group (PCRG), Department of Pharmaceutical Sciences, University of Basel</a>, who provided a translation of the pharmacogenetic information contained in the Swiss drug labels. The original label in German can be accessed using the link under &quot;Source&quot; below.</strong></p>\n<p>Excerpt from the drug label for tolterodine (Detrusitol):</p>\n<blockquote class=\"blockquote\">\n<p>Kinetics:\nTolterodine is metabolized mainly by the polymorphic enzyme CYP2D6 in about 90-95% of the Caucasian population, resulting in the formation of the pharmacologically active 5-hydroxymethyl metabolite (DD01). In poor metabolisers (those with a deficit of CYP2D6), tolterodine is dealkylated via the CYP3A isozymes to produce N-dealkylated tolterodine. This metabolite does not contribute to the clinical effect. The systemic clearance of tolterodine is approx. 30 l/h. The half-life for tolterodine and the 5-hydroxymethyl metabolite is approx. 6 hours. With poor metabolisers, the half-life of tolterodine is extended (11 hours) and clearance is reduced. In these patients, concentrations of tolterodine were found to increase about 7-fold, combined with undetectable concentrations of the 5-hydroxymethyl metabolite. This did not result in any differences with regard to safety and tolerability.</p>\n</blockquote>\n<blockquote class=\"blockquote\">\n<p>Simultaneous treatment with ketokonazole (200 mg/d), a potent CYP3A4 inhibitor, leads to an increase in AUC of tolterodine, especially when CYP2D6 activity is reduced. In a study of poor metabolizers for CYP2D6 (which account for approximately 5-10% of the Caucasian population), the AUC of tolterodine increased 2.2-fold. Patients receiving CYP3A4 inhibitors such as macrolide antibiotics (e.g. erythromycin and clarythromycin) or antimycotics (e.g. ketokonazole, itrakonazole and miconazole) at the same time should therefore not exceed 2 mg daily.</p>\n</blockquote>\n<p>For the complete drug label text with pharmacogenetic information highlighted, see the <a rel=\"noopener noreferrer\" href=\"https://amiko.oddb.org/de/fi?gtin=55581&amp;highlight=Metabolisierern\" target=\"_blank\">tolteridine drug label</a> (in German).</p>\n",
+        "version": 2
+      },
+      "version": 1
+    },
+    {
+      "objCls": "Label Annotation",
+      "id": "PA166184441",
+      "name": "Annotation of Swissmedic Label for dolutegravir and CYP3A4, CYP3A5, NR1I2, UGT1A1",
+      "alternateDrugAvailable": false,
+      "cancerGenome": false,
+      "crossReferences": [],
+      "dosingInformation": false,
+      "history": [
+        {
+          "id": 1452206923,
+          "date": "2023-08-15T00:00:00-07:00",
+          "description": "Checked and this meets new criteria for Informative.",
+          "type": "Note",
+          "version": 0
+        }
+      ],
+      "indication": false,
+      "labelApplications": [],
+      "labelDocumentAvailable": true,
+      "literature": [
+        {
+          "id": 15103262,
+          "title": "Swissmedic label for dolutegravir",
+          "_sameAs": "https://amiko.oddb.org/de/fi?gtin=66790",
+          "crossReferences": [
+            {
+              "id": 1450815645,
+              "resource": "URL",
+              "resourceId": "https://amiko.oddb.org/de/fi?gtin=66790",
+              "_url": "https://amiko.oddb.org/de/fi?gtin=66790"
+            }
+          ],
+          "objCls": "Literature",
+          "terms": [],
+          "type": "Drug Label"
+        },
+        {
+          "id": 15103263,
+          "title": "Swissmedic label for dolutegravir, abacavir und lamivudine (Triumeq)",
+          "_sameAs": "https://amiko.oddb.org/de/fi?gtin=63283",
+          "crossReferences": [
+            {
+              "id": 1450815647,
+              "resource": "URL",
+              "resourceId": "https://amiko.oddb.org/de/fi?gtin=63283",
+              "_url": "https://amiko.oddb.org/de/fi?gtin=63283"
+            }
+          ],
+          "objCls": "Literature",
+          "terms": [],
+          "type": "Drug Label"
+        }
+      ],
+      "otherPrescribingGuidance": false,
+      "pediatric": false,
+      "pgxRelated": true,
+      "prescribingGenes": [],
+      "relatedAlleles": [],
+      "relatedChemicals": [
+        {
+          "objCls": "Chemical",
+          "id": "PA166114961",
+          "name": "dolutegravir",
+          "version": 5
+        }
+      ],
+      "relatedGenes": [
+        {
+          "objCls": "Gene",
+          "id": "PA130",
+          "symbol": "CYP3A4",
+          "name": "cytochrome P450 family 3 subfamily A member 4",
+          "version": 8039
+        },
+        {
+          "objCls": "Gene",
+          "id": "PA131",
+          "symbol": "CYP3A5",
+          "name": "cytochrome P450 family 3 subfamily A member 5",
+          "version": 7962
+        },
+        {
+          "objCls": "Gene",
+          "id": "PA378",
+          "symbol": "NR1I2",
+          "name": "nuclear receptor subfamily 1 group I member 2",
+          "version": 7041
+        },
+        {
+          "objCls": "Gene",
+          "id": "PA420",
+          "symbol": "UGT1A1",
+          "name": "UDP glucuronosyltransferase 1 family, polypeptide A1",
+          "version": 6110
+        }
+      ],
+      "source": "Swissmedic",
+      "summaryMarkdown": {
+        "id": 1450815673,
+        "html": "<p>The Swiss drug label for dolutegravir (Julica) states that there is no evidence that gene variants of UGT1A1, CYP3A4, CYP3A5 and NR1I2 have clinically relevant effects.</p>\n",
+        "version": 0
+      },
+      "terms": [],
+      "testing": {
+        "id": 1183672141,
+        "description": "The label mentions a gene or protein is involved in the metabolism or pharmacodynamics of the drug, but there is no information to suggest that variation in these genes/proteins leads to different response.",
+        "parents": [],
+        "resource": "Genetic Testing Level",
+        "synonyms": [],
+        "term": "Informative PGx",
+        "termId": "geneTestLevel:1183672141",
+        "valid": true,
+        "version": 2
+      },
+      "textMarkdown": {
+        "id": 1450815674,
+        "html": "<p><strong>Please note that the information contained within this drug label annotation is available through a collaboration with the <a rel=\"noopener noreferrer\" href=\"http://www.pharmacare.unibas.ch\" target=\"_blank\">Pharmaceutical Care Research Group (PCRG), Department of Pharmaceutical Sciences, University of Basel</a>, who provided a translation of the pharmacogenetic information contained in the Swiss drug labels. The original label in German can be accessed using the link under &quot;Source&quot; below.</strong></p>\n<p>Excerpt from the drug label for dolutegravir (Julica):</p>\n<blockquote class=\"blockquote\">\n<p>Kinetics:\nThere is no evidence that frequently occurring polymorphisms of drug metabolizing enzymes have a clinically relevant effect on the pharmacokinetics of dolutegravir. In a meta-analysis of data from healthy subjects sampled for pharmacogenomic studies in clinical trials, individuals with UGT1A1 genotypes causing slow dolutegravir metabolism (n = 7) had 32% lower dolutegravir clearance and 46% higher AUC than individuals with genotypes associated with normal UGT1A1 mediated metabolism (n = 41). Polymorphisms of CYP3A4, CYP3A5 and NR1I2 were not associated with differences in the pharmacokinetics of dolutegravir.</p>\n</blockquote>\n<p>For the complete drug label text with pharmacogenetic information highlighted, see the <a rel=\"noopener noreferrer\" href=\"https://amiko.oddb.org/de/fi?gtin=66790&amp;highlight=Polymorphismen\" target=\"_blank\">dolutegravir drug label</a> (in German).</p>\n",
+        "version": 2
+      },
+      "version": 2
+    },
+    {
+      "objCls": "Label Annotation",
+      "id": "PA166234801",
+      "name": "Annotation of FDA Label for tacrolimus and CYP3A4, CYP3A5",
+      "alternateDrugAvailable": false,
+      "cancerGenome": false,
+      "crossReferences": [],
+      "dosingInformation": false,
+      "history": [
+        {
+          "id": 1452215360,
+          "date": "2023-08-24T00:00:00-07:00",
+          "description": "removed informative PGx tag. Drug-drug interaction information doesn't fit current PGx level criteria for \"informative PGx\", \"actionable PGx\", \"testing recommended\", and \"testing required\".",
+          "type": "Update",
+          "version": 1
+        },
+        {
+          "id": 1452570198,
+          "date": "2024-08-29T13:58:29.430-07:00",
+          "description": "Removed \"CYP3A\" as that is no longer recognized by the HGNC and NCBI; replaced with CYP3A4",
+          "type": "Update",
+          "version": 0
+        }
+      ],
+      "indication": false,
+      "labelApplications": [],
+      "labelDocumentAvailable": true,
+      "literature": [
+        {
+          "id": 15118382,
+          "title": "Drugs@FDA: Drug Product Prograf (Tacrolimus), NDA050708, Astellas Pharma US, Inc.",
+          "_sameAs": "https://www.accessdata.fda.gov/scripts/cder/daf/index.cfm?event=overview.process&varApplNo=050708",
+          "crossReferences": [
+            {
+              "id": 1451397160,
+              "resource": "FDA Application",
+              "resourceId": "NDA050708",
+              "_url": "https://www.accessdata.fda.gov/scripts/cder/daf/index.cfm?event=overview.process&varApplNo=050708"
+            }
+          ],
+          "objCls": "Literature",
+          "terms": [
+            {
+              "id": 1452267780,
+              "resource": "ClinPGx Tags",
+              "term": "Has PGx",
+              "termId": "pgkbTags:1452267780"
+            }
+          ],
+          "type": "Drug Label"
+        }
+      ],
+      "otherPrescribingGuidance": false,
+      "pediatric": false,
+      "pgxRelated": true,
+      "prescribingGenes": [],
+      "relatedAlleles": [],
+      "relatedChemicals": [
+        {
+          "objCls": "Chemical",
+          "id": "PA451578",
+          "name": "tacrolimus",
+          "version": 27
+        }
+      ],
+      "relatedGenes": [
+        {
+          "objCls": "Gene",
+          "id": "PA130",
+          "symbol": "CYP3A4",
+          "name": "cytochrome P450 family 3 subfamily A member 4",
+          "version": 8039
+        },
+        {
+          "objCls": "Gene",
+          "id": "PA131",
+          "symbol": "CYP3A5",
+          "name": "cytochrome P450 family 3 subfamily A member 5",
+          "version": 7962
+        }
+      ],
+      "source": "FDA",
+      "summaryMarkdown": {
+        "id": 1451397140,
+        "html": "<p>The FDA drug label for tacrolimus (PROGRAF) contains guidance on concomitant use with CYP3A inducers or inhibitors. The label states that tacrolimus blood concentrations are altered by CYP3A inhibitors and/or inducers, the risk of nephrotoxicity is increased with concomitant use of CYP3A inhibitors, and the risk of QT interval prolongation is increased by concomitant use of CYP3A4 substrates and/or inhibitors.</p>\n",
+        "version": 0
+      },
+      "terms": [],
+      "textMarkdown": {
+        "id": 1451397141,
+        "html": "<p>Excerpts from the tacrolimus drug label:</p>\n<blockquote class=\"blockquote\">\n<p>Tacrolimus is extensively metabolized by the mixed-function oxidase system, primarily the cytochrome P-450 system (CYP3A).</p>\n</blockquote>\n<blockquote class=\"blockquote\">\n<p>The risk for nephrotoxicity may increase when PROGRAF is concomitantly administered with CYP3A inhibitors (by increasing tacrolimus whole blood concentrations) or drugs associated with nephrotoxicity (e.g., aminoglycosides, ganciclovir, amphotericin B, cisplatin, nucleotide reverse transcriptase inhibitors, protease inhibitors)</p>\n</blockquote>\n<blockquote class=\"blockquote\">\n<p>When co-administering PROGRAF with strong CYP3A4 inhibitors (e.g., telaprevir, boceprevir, ritonavir, ketoconazole, itraconazole, voriconazole, clarithromycin) and strong inducers (e.g., rifampin, rifabutin), adjustments in the dosing regimen of PROGRAF and subsequent frequent monitoring of tacrolimus whole blood trough concentrations and tacrolimus-associated adverse reactions are recommended.</p>\n</blockquote>\n<blockquote class=\"blockquote\">\n<p>A rapid, sharp rise in tacrolimus levels has been reported after co-administration with a strong CYP3A4 inhibitor, clarithromycin, despite an initial reduction of tacrolimus dose. Early and frequent monitoring of tacrolimus whole blood trough levels is recommended.</p>\n</blockquote>\n<blockquote class=\"blockquote\">\n<p>When co-administering PROGRAF with other substrates and/or inhibitors of CYP3A4 that also have the potential to prolong the QT interval, a reduction in PROGRAF dose, frequent monitoring of tacrolimus whole blood concentrations, and monitoring for QT prolongation is recommended.</p>\n</blockquote>\n<p>For the complete drug label text with sections containing pharmacogenetic information highlighted, see the <a download=\"tacrolimus_prograf_02_11_21_FDA.pdf\" href=\"https://api.clinpgx.org/v1/download/file/attachment/tacrolimus_prograf_02_11_21_FDA.pdf\">tacrolimus drug label</a>.</p>\n",
+        "version": 1
+      },
+      "version": 7
+    },
+    {
+      "objCls": "Label Annotation",
+      "id": "PA166104808",
+      "name": "Annotation of FDA Label for nelfinavir and CYP2C19, CYP3A4, CYP3A5",
+      "alternateDrugAvailable": false,
+      "biomarkerStatus": "Formerly on FDA Biomarker List",
+      "cancerGenome": false,
+      "crossReferences": [],
+      "dosingInformation": false,
+      "history": [
+        {
+          "id": 1183681686,
+          "date": "2013-10-25T14:31:05.800-07:00",
+          "type": "Update",
+          "version": 0
+        },
+        {
+          "id": 1452207482,
+          "date": "2023-08-15T12:45:12.886-07:00",
+          "description": "Unchecked informative as no longer meets criteria.",
+          "type": "Update",
+          "version": 0
+        },
+        {
+          "id": 1452570201,
+          "date": "2024-08-29T13:59:45.832-07:00",
+          "description": "Removed \"CYP3A\" as that is no longer recognized by HGNC or NCBI; replaced with CYP3A4 and CYP3A5",
+          "type": "Update",
+          "version": 0
+        }
+      ],
+      "indication": false,
+      "labelApplications": [],
+      "labelDocumentAvailable": true,
+      "literature": [
+        {
+          "id": 15102012,
+          "title": "Drugs@FDA: Drug Product VIRACEPT (nelfinavir mesylate), NDA020779, H.J. Harkins Company, Inc.",
+          "_sameAs": "https://www.accessdata.fda.gov/scripts/cder/daf/index.cfm?event=overview.process&varApplNo=020779",
+          "crossReferences": [
+            {
+              "id": 1449763688,
+              "resource": "FDA Application",
+              "resourceId": "NDA020779",
+              "_url": "https://www.accessdata.fda.gov/scripts/cder/daf/index.cfm?event=overview.process&varApplNo=020779"
+            }
+          ],
+          "objCls": "Literature",
+          "terms": [
+            {
+              "id": 1452267780,
+              "resource": "ClinPGx Tags",
+              "term": "Has PGx",
+              "termId": "pgkbTags:1452267780"
+            }
+          ],
+          "type": "Drug Label"
+        }
+      ],
+      "otherPrescribingGuidance": false,
+      "pediatric": false,
+      "pgxRelated": true,
+      "prescribingGenes": [],
+      "relatedAlleles": [],
+      "relatedChemicals": [
+        {
+          "objCls": "Chemical",
+          "id": "PA450606",
+          "name": "nelfinavir",
+          "version": 8
+        }
+      ],
+      "relatedGenes": [
+        {
+          "objCls": "Gene",
+          "id": "PA124",
+          "symbol": "CYP2C19",
+          "name": "cytochrome P450 family 2 subfamily C member 19",
+          "version": 7210
+        },
+        {
+          "objCls": "Gene",
+          "id": "PA130",
+          "symbol": "CYP3A4",
+          "name": "cytochrome P450 family 3 subfamily A member 4",
+          "version": 8039
+        },
+        {
+          "objCls": "Gene",
+          "id": "PA131",
+          "symbol": "CYP3A5",
+          "name": "cytochrome P450 family 3 subfamily A member 5",
+          "version": 7962
+        }
+      ],
+      "source": "FDA",
+      "summaryMarkdown": {
+        "id": 1447981596,
+        "html": "<p>The FDA-approved drug label for nelfinavir (VIRACEPT) states that coadministration of nelfinavir and drugs that induce CYP3A or CYP2C19 may decrease nelfinavir plasma concentrations and reduce its therapeutic effect. Coadministration of nelfinavir and drugs that inhibit CYP3A or CYP2C19 may increase nelfinavir plasma concentrations.</p>\n",
+        "version": 1
+      },
+      "terms": [],
+      "textMarkdown": {
+        "id": 1447981595,
+        "html": "<p>Nelfinavir is a protease inhibitor which is used in combination with other medications to treat human immunodeficiency virus (HIV) infection by slowing the spread of the infection within the body. It is metabolized by cytochrome P-450 enzymes, mainly CYP3A and CYP2C19.</p>\n<p>Excerpts from the nelfinavir (VIRACEPT) drug label:</p>\n<blockquote class=\"blockquote\">\n<p>Nelfinavir is metabolized by CYP3A and CYP2C19. Coadministration of VIRACEPT and drugs that induce CYP3A or CYP2C19, such as rifampin, may decrease nelfinavir plasma concentrations and reduce its therapeutic effect. Coadministration of VIRACEPT and drugs that inhibit CYP3A or CYP2C19 may increase nelfinavir plasma concentrations.</p>\n</blockquote>\n<p>For the complete drug label text with sections containing pharmacogenetic information highlighted, see the <a download=\"Nelfinavir_12_07_2017_FDA.pdf\" href=\"https://api.clinpgx.org/v1/download/file/attachment/Nelfinavir_12_07_2017_FDA.pdf\">nelfinavir drug label</a>.</p>\n",
+        "version": 12
+      },
+      "version": 28
+    },
+    {
+      "objCls": "Label Annotation",
+      "id": "PA166355801",
+      "name": "Annotation of EMA Label for lonafarnib and CYP3A4",
+      "alternateDrugAvailable": false,
+      "cancerGenome": false,
+      "crossReferences": [],
+      "dosingInformation": true,
+      "history": [],
+      "indication": false,
+      "labelApplications": [],
+      "labelDocumentAvailable": true,
+      "literature": [
+        {
+          "id": 15151022,
+          "title": "Zokinvy | European Medicines Agency",
+          "_sameAs": "https://www.ema.europa.eu/en/medicines/human/EPAR/zokinvy",
+          "crossReferences": [
+            {
+              "id": 1452304982,
+              "resource": "URL",
+              "resourceId": "https://www.ema.europa.eu/en/medicines/human/EPAR/zokinvy",
+              "_url": "https://www.ema.europa.eu/en/medicines/human/EPAR/zokinvy"
+            }
+          ],
+          "objCls": "Literature",
+          "terms": [
+            {
+              "id": 1452267780,
+              "resource": "ClinPGx Tags",
+              "term": "Has PGx",
+              "termId": "pgkbTags:1452267780"
+            }
+          ],
+          "type": "Drug Label"
+        }
+      ],
+      "otherPrescribingGuidance": true,
+      "pediatric": true,
+      "pediatricMarkdown": {
+        "id": 1452644163,
+        "html": "<blockquote class=\"blockquote\">\n<p>Zokinvy is indicated for the treatment of patients 12 months of age and older with a genetically confirmed diagnosis of Hutchinson-Gilford progeria syndrome or a processing-deficient progeroid laminopathy associated with either a heterozygous <em>LMNA</em> mutation with progerin-like protein accumulation or a homozygous or compound heterozygous <em>ZMPSTE24</em> mutation.</p>\n</blockquote>\n",
+        "version": 0
+      },
+      "pgxRelated": true,
+      "prescribingGenes": [
+        {
+          "objCls": "Gene",
+          "id": "PA130",
+          "symbol": "CYP3A4",
+          "name": "cytochrome P450 family 3 subfamily A member 4",
+          "version": 8039
+        }
+      ],
+      "prescribingMarkdown": {
+        "id": 1452644162,
+        "html": "<blockquote class=\"blockquote\">\n<p>Subjects with a known dysfunctional polymorphism in CYP3A4 should start therapy at 50% of the indicated dose. QTc monitoring is necessary (see section 4.2 and 4.5).</p>\n</blockquote>\n",
+        "version": 0
+      },
+      "relatedAlleles": [],
+      "relatedChemicals": [
+        {
+          "objCls": "Chemical",
+          "id": "PA166129466",
+          "name": "lonafarnib",
+          "version": 4
+        }
+      ],
+      "relatedGenes": [
+        {
+          "objCls": "Gene",
+          "id": "PA130",
+          "symbol": "CYP3A4",
+          "name": "cytochrome P450 family 3 subfamily A member 4",
+          "version": 8039
+        }
+      ],
+      "source": "EMA",
+      "summaryMarkdown": {
+        "id": 1452644160,
+        "html": "<p>Lonafarnib is EMA-indicated for the treatment of patients with a genetically confirmed diagnosis of Hutchinson-Gilford progeria syndrome or a processing-deficient progeroid laminopathy. Patients with a known dysfunctional polymorphism in CYP3A4 should start therapy at 50% of the indicated dose. QTc monitoring is necessary.</p>\n",
+        "version": 0
+      },
+      "terms": [],
+      "testing": {
+        "id": 1183672111,
+        "description": "The label does not discuss genetic or other testing for gene/protein/chromosomal variants, but does contain information about changes in efficacy, dosage or toxicity due to such variants. The label may mention contraindication of the drug in a particular subset of patients but does not require or recommend gene, protein or chromosomal testing.",
+        "parents": [],
+        "resource": "Genetic Testing Level",
+        "synonyms": [],
+        "term": "Actionable PGx",
+        "termId": "geneTestLevel:1183672111",
+        "valid": true,
+        "version": 2
+      },
+      "textMarkdown": {
+        "id": 1452644161,
+        "html": "<p>Excerpts from the lonafarnib (Zokinvy) EPAR:</p>\n<blockquote class=\"blockquote\">\n<p><em>Dose adjustment for patients with known dysfunctional polymorphisms in CYP3A4</em>\nThe patient\u2019s daily dose of lonafarnib should be reduced by 50% and the reduced daily dose should be divided into two equal doses. Each dose should be rounded to the nearest 25 mg increment. The dosing regimen will be either 25 mg twice daily, 50 mg twice daily or 75 mg twice daily. Patients who have a reduced daily dose of 50 mg (25 mg twice daily) should mix the contents of a lonafarnib 50 mg capsule with 10 mL of orange juice to achieve the correct dose. Only half (5 mL) of the 10-mL mixture will be consumed (see section 6.6). QTc monitoring is recommended.</p>\n</blockquote>\n<blockquote class=\"blockquote\">\n<p>Subjects with a known dysfunctional polymorphism in CYP3A4 should start therapy at 50% of the indicated dose. QTc monitoring is necessary (see section 4.2 and 4.5).</p>\n</blockquote>\n<p>For the complete EPAR text with sections containing pharmacogenetic information highlighted, see the <a download=\"Lonafarnib_EMA_2023_10_11.pdf\" href=\"https://api.clinpgx.org/v1/download/file/attachment/Lonafarnib_EMA_2023_10_11.pdf\">lonafarnib EPAR PDF</a>.</p>\n",
+        "version": 1
+      },
+      "version": 0
+    },
+    {
+      "objCls": "Label Annotation",
+      "id": "PA166357701",
+      "name": "Annotation of HCSC Label for diazepam and CYP2C19, CYP3A4",
+      "alternateDrugAvailable": false,
+      "cancerGenome": false,
+      "crossReferences": [],
+      "dosingInformation": false,
+      "history": [],
+      "indication": false,
+      "labelApplications": [],
+      "labelDocumentAvailable": true,
+      "literature": [
+        {
+          "id": 15169282,
+          "title": "Drugs@HCSC: Drug Product DIASTAT (diazepam), Bausch Health, Canada Inc.",
+          "_sameAs": "https://health-products.canada.ca/dpd-bdpp/info?lang=eng&code=61553",
+          "crossReferences": [
+            {
+              "id": 1452690920,
+              "resource": "URL",
+              "resourceId": "https://health-products.canada.ca/dpd-bdpp/info?lang=eng&code=61553",
+              "_url": "https://health-products.canada.ca/dpd-bdpp/info?lang=eng&code=61553"
+            }
+          ],
+          "objCls": "Literature",
+          "terms": [
+            {
+              "id": 1452267780,
+              "resource": "ClinPGx Tags",
+              "term": "Has PGx",
+              "termId": "pgkbTags:1452267780"
+            }
+          ],
+          "type": "Drug Label"
+        },
+        {
+          "id": 15169283,
+          "title": "Drugs@HCSC: Drug Product VALIUM (diazepam), Searchlight Pharma Inc.",
+          "_sameAs": "https://health-products.canada.ca/dpd-bdpp/info?lang=eng&code=3178",
+          "crossReferences": [
+            {
+              "id": 1452690921,
+              "resource": "URL",
+              "resourceId": "https://health-products.canada.ca/dpd-bdpp/info?lang=eng&code=3178",
+              "_url": "https://health-products.canada.ca/dpd-bdpp/info?lang=eng&code=3178"
+            }
+          ],
+          "objCls": "Literature",
+          "terms": [
+            {
+              "id": 1452267780,
+              "resource": "ClinPGx Tags",
+              "term": "Has PGx",
+              "termId": "pgkbTags:1452267780"
+            }
+          ],
+          "type": "Drug Label"
+        }
+      ],
+      "otherPrescribingGuidance": false,
+      "pediatric": true,
+      "pediatricMarkdown": {
+        "id": 1452693502,
+        "html": "<p>Excerpt from the diazepam (DIASTAT) product monograph:</p>\n<blockquote class=\"blockquote\">\n<p>Clinical studies have not been conducted to establish the efficacy and safety of DIASTAT in children under 2 years of age. Prolonged CNS depression has been observed in neonates treated with diazepam, apparently due to an inability to biotransform diazepam into inactive metabolites. Therefore, Health Canada has not authorized an indication for pediatric use (&lt;2 years of age) (see 1.1 Pediatrics).</p>\n</blockquote>\n<p>Excerpt from the diazepam (VALIUM) product monograph:</p>\n<blockquote class=\"blockquote\">\n<p>VALIUM is contraindicated in children under 6 months (see CONTRAINDICATIONS and DOSAGE AND ADMINISTRATION, Children).</p>\n</blockquote>\n",
+        "version": 0
+      },
+      "pgxRelated": true,
+      "prescribingGenes": [],
+      "relatedAlleles": [],
+      "relatedChemicals": [
+        {
+          "objCls": "Chemical",
+          "id": "PA449283",
+          "name": "diazepam",
+          "version": 17
+        }
+      ],
+      "relatedGenes": [
+        {
+          "objCls": "Gene",
+          "id": "PA124",
+          "symbol": "CYP2C19",
+          "name": "cytochrome P450 family 2 subfamily C member 19",
+          "version": 7210
+        },
+        {
+          "objCls": "Gene",
+          "id": "PA130",
+          "symbol": "CYP3A4",
+          "name": "cytochrome P450 family 3 subfamily A member 4",
+          "version": 8039
+        }
+      ],
+      "source": "HCSC",
+      "summaryMarkdown": {
+        "id": 1452693500,
+        "html": "<p>The HCSC product monographs for diazepam (DIASTAT and VALIUM) note that the drug is metabolized by CYP2C19 and CYP3A4, and that inter-individual variation in clearance of the drug is likely attributable to genetic polymorphism of CYP2C19 and CYP3A4.</p>\n",
+        "version": 1
+      },
+      "terms": [],
+      "testing": {
+        "id": 1183672141,
+        "description": "The label mentions a gene or protein is involved in the metabolism or pharmacodynamics of the drug, but there is no information to suggest that variation in these genes/proteins leads to different response.",
+        "parents": [],
+        "resource": "Genetic Testing Level",
+        "synonyms": [],
+        "term": "Informative PGx",
+        "termId": "geneTestLevel:1183672141",
+        "valid": true,
+        "version": 2
+      },
+      "textMarkdown": {
+        "id": 1452693501,
+        "html": "<p>Excerpts from the diazepam (DIASTAT) product monograph:</p>\n<blockquote class=\"blockquote\">\n<p>DIASTAT (diazepam gel) is indicated for the management of selected, refractory, patients with epilepsy, on stable regimens of anti-epileptic drugs (AEDs), who require intermittent use of diazepam to control bouts of increased seizure activity.</p>\n</blockquote>\n<blockquote class=\"blockquote\">\n<p>The metabolism of diazepam is primarily hepatic and involves demethylation (involving primarily CYP2C19 and CYP3A4) and 3-hydroxylation (involving primarily CYP3A4), followed by glucuronidation. The marked inter-individual variability in the clearance of diazepam reported in the literature is probably attributable to variability of CYP2C19 (which is known to exhibit genetic polymorphism; about 3-5% of Caucasians have little or no activity and are \u201cpoor metabolizers\u201d) and CYP3A4.</p>\n</blockquote>\n<p>Excerpts from the diazepam (VALIUM) product monograph:</p>\n<blockquote class=\"blockquote\">\n<p>VALIUM (diazepam) is useful in the symptomatic management of mild to moderate degrees of anxiety in conditions dominated by tension, excitation, agitation, fear or aggressiveness, such as may occur in: psychoneurosis, anxiety reactions due to stress conditions and anxiety states with somatic expression.</p>\n</blockquote>\n<blockquote class=\"blockquote\">\n<p>Oxidation of diazepam is mediated by cytochrome P450 isozymes; formation of desmethyl-diazepam mainly by CYP2C19 and CYP3A and 3-hydroxy-diazepam (temazepam) and oxazepam by CYP3A. Because CYP2C19 is polymorphic, extensive metabolizers (EMs), and poor metabolizers (PMs) of diazepam can be distinguished. PMs of diazepam showed significantly lower clearance (12 vs 26 mL/min) and longer elimination half-life (88 vs 41 h) of diazepam than EMs after a single oral dose. Also, PMs had lower clearance, higher AUC and longer elimination half-life of desmethyl-diazepam.</p>\n</blockquote>\n<p>For the complete product monograph text with sections containing pharmacogenetic information highlighted, see the <a download=\"Diazepam_2024_11_05_HCSC.pdf\" href=\"https://api.clinpgx.org/v1/download/file/attachment/Diazepam_2024_11_05_HCSC.pdf\">diazepam gel product monograph</a> and the <a download=\"Diazepam_Valium_2024_11_05_HCSC.pdf\" href=\"https://api.clinpgx.org/v1/download/file/attachment/Diazepam_Valium_2024_11_05_HCSC.pdf\">diazepam (Valium) product monograph</a>.</p>\n",
+        "version": 1
+      },
+      "version": 1
+    },
+    {
+      "objCls": "Label Annotation",
+      "id": "PA166104784",
+      "name": "Annotation of FDA Label for diazepam and CYP2C19, CYP3A4",
+      "alternateDrugAvailable": false,
+      "biomarkerStatus": "On FDA Biomarker List",
+      "cancerGenome": false,
+      "crossReferences": [],
+      "dosingInformation": false,
+      "history": [
+        {
+          "id": 1183681227,
+          "date": "2013-10-25T10:57:41.398-07:00",
+          "type": "Update",
+          "version": 0
+        },
+        {
+          "id": 1452322940,
+          "date": "2023-12-11T00:00:00-08:00",
+          "description": "While there are newer labels available for both NDAs, the language around CYPs is the same.",
+          "type": "Note",
+          "version": 0
+        },
+        {
+          "id": 1452823461,
+          "date": "2025-01-23T00:00:00-08:00",
+          "description": "added Pediatric tag and info; CYP3A4",
+          "type": "Update",
+          "version": 0
+        }
+      ],
+      "indication": false,
+      "labelApplications": [],
+      "labelDocumentAvailable": true,
+      "literature": [
+        {
+          "id": 15101804,
+          "title": "Drugs@FDA: Drug Product Diazepam (diazepam), Bryant Ranch Prepack - NDA020648/SUPPL-14, 12/16/2016",
+          "_sameAs": "https://www.accessdata.fda.gov/scripts/cder/daf/index.cfm?event=overview.process&varApplNo=020648",
+          "crossReferences": [
+            {
+              "id": 1452823443,
+              "resource": "FDA Application",
+              "resourceId": "NDA020648/SUPPL-14",
+              "_url": "https://www.accessdata.fda.gov/scripts/cder/daf/index.cfm?event=overview.process&varApplNo=020648"
+            }
+          ],
+          "notes": "Diastat",
+          "objCls": "Literature",
+          "pubDate": "2016-12-16T00:00:00-08:00",
+          "terms": [
+            {
+              "id": 1452267780,
+              "resource": "ClinPGx Tags",
+              "term": "Has PGx",
+              "termId": "pgkbTags:1452267780"
+            }
+          ],
+          "type": "Drug Label"
+        },
+        {
+          "id": 15101846,
+          "title": "Drugs@FDA: Drug Product Valium (diazepam), NDA013263, Roche Laboratories Inc.",
+          "_sameAs": "https://www.accessdata.fda.gov/scripts/cder/daf/index.cfm?event=overview.process&varApplNo=013263",
+          "crossReferences": [
+            {
+              "id": 1449754285,
+              "resource": "FDA Application",
+              "resourceId": "NDA013263",
+              "_url": "https://www.accessdata.fda.gov/scripts/cder/daf/index.cfm?event=overview.process&varApplNo=013263"
+            }
+          ],
+          "notes": "Valium",
+          "objCls": "Literature",
+          "terms": [
+            {
+              "id": 1452267781,
+              "resource": "ClinPGx Tags",
+              "term": "Has No PGx",
+              "termId": "pgkbTags:1452267781"
+            }
+          ],
+          "type": "Drug Label"
+        }
+      ],
+      "otherPrescribingGuidance": false,
+      "pediatric": true,
+      "pediatricMarkdown": {
+        "id": 1452823460,
+        "html": "<p>Excerpt from the diazepam (Diastat) drug label:</p>\n<blockquote class=\"blockquote\">\n<p>The controlled trials demonstrating the effectiveness of Diazepam rectal gel included children two years of age and older. Clinical studies have not been conducted to establish the efficacy and safety of Diazepam rectal gel in children under two years of age.</p>\n</blockquote>\n",
+        "version": 0
+      },
+      "pgxRelated": true,
+      "prescribingGenes": [],
+      "relatedAlleles": [],
+      "relatedChemicals": [
+        {
+          "objCls": "Chemical",
+          "id": "PA449283",
+          "name": "diazepam",
+          "version": 17
+        }
+      ],
+      "relatedGenes": [
+        {
+          "objCls": "Gene",
+          "id": "PA124",
+          "symbol": "CYP2C19",
+          "name": "cytochrome P450 family 2 subfamily C member 19",
+          "version": 7210
+        },
+        {
+          "objCls": "Gene",
+          "id": "PA130",
+          "symbol": "CYP3A4",
+          "name": "cytochrome P450 family 3 subfamily A member 4",
+          "version": 8039
+        }
+      ],
+      "source": "FDA",
+      "summaryMarkdown": {
+        "id": 1450342995,
+        "html": "<p>The FDA-approved drug label for diazepam (Diastat) notes that the drug is metabolized by CYP2C19 and CYP3A4, and that inter-individual variation in clearance of the drug is likely attributable genetic polymorphism of CYP2C19 and CYP3A4.</p>\n",
+        "version": 0
+      },
+      "terms": [],
+      "testing": {
+        "id": 1183672141,
+        "description": "The label mentions a gene or protein is involved in the metabolism or pharmacodynamics of the drug, but there is no information to suggest that variation in these genes/proteins leads to different response.",
+        "parents": [],
+        "resource": "Genetic Testing Level",
+        "synonyms": [],
+        "term": "Informative PGx",
+        "termId": "geneTestLevel:1183672141",
+        "valid": true,
+        "version": 2
+      },
+      "textMarkdown": {
+        "id": 1450342996,
+        "html": "<p>Diazepam (Diastat) is drug intended for treatment of breakthrough seizures.</p>\n<p>Excerpt from the diazepam (Diastat) drug label:</p>\n<blockquote class=\"blockquote\">\n<p>The metabolism of diazepam...involves demethylation (involving primarily CYP2C19 and CYP3A4) and 3-hydroxylation (involving primarily CYP3A4), followed by glucuornidation. The marked inter-individual variability in the clearance of diazepam reported in the literature is probably attributable to variability of CYP2C19 (which is known to exhibit genetic polymorphism; about 3-5% of Caucasians have little or no activity and are &quot;poor metabolizers&quot;) and CYP3A4.</p>\n</blockquote>\n<p>For the complete drug label text with sections containing pharmacogenetic information highlighted, see the <a download=\"Diazepam_01_11_19_FDA.pdf\" href=\"https://api.clinpgx.org/v1/download/file/attachment/Diazepam_01_11_19_FDA.pdf\">diazepam drug label</a>.</p>\n<p><strong>Note: Diazepam (Valium) is indicated for the management of anxiety disorders, among other indications. The drug label for diazepam (Valium) notes that the drug is metabolized by CYP2C19 and CYP3A4, but does not comment on genetic variability affecting clearance.</strong></p>\n",
+        "version": 2
+      },
+      "version": 33
+    }
+  ],
+  "status": "success"
+}

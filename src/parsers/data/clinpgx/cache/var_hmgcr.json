@@ -1,0 +1,2059 @@
+{
+  "data": [
+    {
+      "objCls": "Variant",
+      "id": "PA166156815",
+      "symbol": "rs3761738",
+      "name": "rs3761738",
+      "altNames": {
+        "synonym": [
+          "NC_000005.10:g.75335314C>T",
+          "NC_000005.9:g.74631139C>T",
+          "NG_011449.1:g.3147C>T",
+          "NM_000859.2:c.-2010C>T",
+          "NM_001130996.1:c.-2010C>T",
+          "XM_005248492.1:c.-1267C>T",
+          "XM_011543357.1:c.-1267C>T",
+          "XM_011543359.1:c.-1267C>T",
+          "rs17238323",
+          "rs58875980"
+        ]
+      },
+      "changeClassification": "5' Flanking",
+      "crossReferences": [
+        {
+          "id": 1448068840,
+          "resource": "dbSNP",
+          "resourceId": "rs3761738",
+          "_url": "https://www.ncbi.nlm.nih.gov/snp/rs3761738",
+          "version": 0
+        },
+        {
+          "id": 1451189457,
+          "resource": "dbSNP",
+          "resourceId": "rs17238323",
+          "_url": "https://www.ncbi.nlm.nih.gov/snp/rs17238323",
+          "version": 1
+        },
+        {
+          "id": 1451189458,
+          "resource": "dbSNP",
+          "resourceId": "rs58875980",
+          "_url": "https://www.ncbi.nlm.nih.gov/snp/rs58875980",
+          "version": 1
+        }
+      ],
+      "history": [],
+      "lastUpdatedFromDbsnp": "2020-06-18T20:38:44.39766",
+      "locations": [
+        {
+          "id": 1449001278,
+          "altHgvs": {},
+          "assembly": "GRCh38",
+          "begin": 75335314,
+          "end": 75335314,
+          "intronicOffset": 0,
+          "referenceAllele": "C",
+          "referenceHgvs": "NC_000005.10:g.75335314=",
+          "sequence": {
+            "id": 1446906632,
+            "name": "[GRCh38]chr5",
+            "resource": "RefSeq DNA",
+            "resourceId": "NC_000005.10",
+            "_url": "https://www.ncbi.nlm.nih.gov/nuccore/NC_000005.10",
+            "version": 2
+          },
+          "source": "dbSnp",
+          "type": "genomic",
+          "variantAlleles": [
+            "T"
+          ],
+          "variantHgvs": [
+            "NC_000005.10:g.75335314C>T"
+          ],
+          "version": 1
+        },
+        {
+          "id": 1448068839,
+          "altHgvs": {},
+          "assembly": "GRCh37",
+          "begin": 74631139,
+          "end": 74631139,
+          "intronicOffset": 0,
+          "referenceAllele": "C",
+          "referenceHgvs": "NC_000005.9:g.74631139=",
+          "sequence": {
+            "id": 1447949555,
+            "name": "[GRCh37]chr5",
+            "resource": "RefSeq DNA",
+            "resourceId": "NC_000005.9",
+            "_url": "https://www.ncbi.nlm.nih.gov/nuccore/NC_000005.9",
+            "version": 2
+          },
+          "source": "dbSnp",
+          "type": "genomic",
+          "variantAlleles": [
+            "T"
+          ],
+          "variantHgvs": [
+            "NC_000005.9:g.74631139C>T"
+          ],
+          "version": 1
+        },
+        {
+          "id": 1451189456,
+          "altHgvs": {},
+          "begin": 3147,
+          "end": 3147,
+          "intronicOffset": 0,
+          "referenceAllele": "C",
+          "referenceHgvs": "NG_011449.1:g.3147=",
+          "sequence": {
+            "id": 1451166086,
+            "name": "NG_011449.1",
+            "resource": "RefSeq DNA",
+            "resourceId": "NG_011449.1",
+            "_url": "https://www.ncbi.nlm.nih.gov/nuccore/NG_011449.1",
+            "version": 0
+          },
+          "source": "dbSnp",
+          "type": "genomic",
+          "variantAlleles": [
+            "T"
+          ],
+          "variantHgvs": [
+            "NG_011449.1:g.3147C>T"
+          ],
+          "version": 0
+        }
+      ],
+      "obsolete": false,
+      "rare": false,
+      "raritySource": "gnomAD Genomes",
+      "relatedGenes": [
+        {
+          "objCls": "Gene",
+          "id": "PA189",
+          "symbol": "HMGCR",
+          "name": "3-hydroxy-3-methylglutaryl-CoA reductase",
+          "version": 58
+        }
+      ],
+      "terms": [],
+      "type": "SNP",
+      "version": 5
+    },
+    {
+      "objCls": "Variant",
+      "id": "PA166156816",
+      "symbol": "rs3761739",
+      "name": "rs3761739",
+      "altNames": {
+        "synonym": [
+          "NC_000005.10:g.75335676C>T",
+          "NC_000005.9:g.74631501C>T",
+          "NG_011449.1:g.3509C>T",
+          "NM_000859.2:c.-1648C>T",
+          "NM_001130996.1:c.-1648C>T",
+          "XM_005248492.1:c.-905C>T",
+          "XM_011543357.1:c.-905C>T",
+          "XM_011543359.1:c.-905C>T",
+          "rs17244701",
+          "rs56473844",
+          "rs59638059"
+        ]
+      },
+      "changeClassification": "5' Flanking",
+      "crossReferences": [
+        {
+          "id": 1448068857,
+          "resource": "dbSNP",
+          "resourceId": "rs3761739",
+          "_url": "https://www.ncbi.nlm.nih.gov/snp/rs3761739",
+          "version": 0
+        },
+        {
+          "id": 1451189462,
+          "resource": "dbSNP",
+          "resourceId": "rs17244701",
+          "_url": "https://www.ncbi.nlm.nih.gov/snp/rs17244701",
+          "version": 1
+        },
+        {
+          "id": 1451189463,
+          "resource": "dbSNP",
+          "resourceId": "rs56473844",
+          "_url": "https://www.ncbi.nlm.nih.gov/snp/rs56473844",
+          "version": 1
+        },
+        {
+          "id": 1451189464,
+          "resource": "dbSNP",
+          "resourceId": "rs59638059",
+          "_url": "https://www.ncbi.nlm.nih.gov/snp/rs59638059",
+          "version": 1
+        }
+      ],
+      "history": [],
+      "lastUpdatedFromDbsnp": "2020-06-18T20:38:47.439377",
+      "locations": [
+        {
+          "id": 1449001279,
+          "altHgvs": {},
+          "assembly": "GRCh38",
+          "begin": 75335676,
+          "end": 75335676,
+          "intronicOffset": 0,
+          "referenceAllele": "C",
+          "referenceHgvs": "NC_000005.10:g.75335676=",
+          "sequence": {
+            "id": 1446906632,
+            "name": "[GRCh38]chr5",
+            "resource": "RefSeq DNA",
+            "resourceId": "NC_000005.10",
+            "_url": "https://www.ncbi.nlm.nih.gov/nuccore/NC_000005.10",
+            "version": 2
+          },
+          "source": "dbSnp",
+          "type": "genomic",
+          "variantAlleles": [
+            "T"
+          ],
+          "variantHgvs": [
+            "NC_000005.10:g.75335676C>T"
+          ],
+          "version": 1
+        },
+        {
+          "id": 1448068856,
+          "altHgvs": {},
+          "assembly": "GRCh37",
+          "begin": 74631501,
+          "end": 74631501,
+          "intronicOffset": 0,
+          "referenceAllele": "C",
+          "referenceHgvs": "NC_000005.9:g.74631501=",
+          "sequence": {
+            "id": 1447949555,
+            "name": "[GRCh37]chr5",
+            "resource": "RefSeq DNA",
+            "resourceId": "NC_000005.9",
+            "_url": "https://www.ncbi.nlm.nih.gov/nuccore/NC_000005.9",
+            "version": 2
+          },
+          "source": "dbSnp",
+          "type": "genomic",
+          "variantAlleles": [
+            "T"
+          ],
+          "variantHgvs": [
+            "NC_000005.9:g.74631501C>T"
+          ],
+          "version": 1
+        },
+        {
+          "id": 1451189461,
+          "altHgvs": {},
+          "begin": 3509,
+          "end": 3509,
+          "intronicOffset": 0,
+          "referenceAllele": "C",
+          "referenceHgvs": "NG_011449.1:g.3509=",
+          "sequence": {
+            "id": 1451166086,
+            "name": "NG_011449.1",
+            "resource": "RefSeq DNA",
+            "resourceId": "NG_011449.1",
+            "_url": "https://www.ncbi.nlm.nih.gov/nuccore/NG_011449.1",
+            "version": 0
+          },
+          "source": "dbSnp",
+          "type": "genomic",
+          "variantAlleles": [
+            "T"
+          ],
+          "variantHgvs": [
+            "NG_011449.1:g.3509C>T"
+          ],
+          "version": 0
+        }
+      ],
+      "obsolete": false,
+      "rare": false,
+      "raritySource": "gnomAD Genomes",
+      "relatedGenes": [
+        {
+          "objCls": "Gene",
+          "id": "PA189",
+          "symbol": "HMGCR",
+          "name": "3-hydroxy-3-methylglutaryl-CoA reductase",
+          "version": 58
+        }
+      ],
+      "terms": [],
+      "type": "SNP",
+      "version": 5
+    },
+    {
+      "objCls": "Variant",
+      "id": "PA166156820",
+      "symbol": "rs3846662",
+      "name": "rs3846662",
+      "altNames": {
+        "synonym": [
+          "NC_000005.10:g.75355259A>G",
+          "NC_000005.9:g.74651084A>G",
+          "NG_011449.1:g.23092A>G",
+          "NM_000859.2:c.1722+45A>G",
+          "NM_001130996.1:c.1564-106A>G",
+          "XM_005248492.1:c.1782+45A>G",
+          "XM_011543357.1:c.1782+45A>G",
+          "XM_011543358.1:c.1722+45A>G",
+          "XM_011543359.1:c.1624-106A>G",
+          "rs17238505",
+          "rs17562582",
+          "rs386587624",
+          "rs56538861",
+          "rs59397732"
+        ]
+      },
+      "changeClassification": "Intronic",
+      "crossReferences": [
+        {
+          "id": 1448068921,
+          "resource": "dbSNP",
+          "resourceId": "rs3846662",
+          "_url": "https://www.ncbi.nlm.nih.gov/snp/rs3846662",
+          "version": 0
+        },
+        {
+          "id": 1451190410,
+          "resource": "dbSNP",
+          "resourceId": "rs17238505",
+          "_url": "https://www.ncbi.nlm.nih.gov/snp/rs17238505",
+          "version": 1
+        },
+        {
+          "id": 1451190411,
+          "resource": "dbSNP",
+          "resourceId": "rs17562582",
+          "_url": "https://www.ncbi.nlm.nih.gov/snp/rs17562582",
+          "version": 1
+        },
+        {
+          "id": 1451190414,
+          "resource": "dbSNP",
+          "resourceId": "rs386587624",
+          "_url": "https://www.ncbi.nlm.nih.gov/snp/rs386587624",
+          "version": 1
+        },
+        {
+          "id": 1451190412,
+          "resource": "dbSNP",
+          "resourceId": "rs56538861",
+          "_url": "https://www.ncbi.nlm.nih.gov/snp/rs56538861",
+          "version": 1
+        },
+        {
+          "id": 1451190413,
+          "resource": "dbSNP",
+          "resourceId": "rs59397732",
+          "_url": "https://www.ncbi.nlm.nih.gov/snp/rs59397732",
+          "version": 1
+        }
+      ],
+      "history": [],
+      "lastUpdatedFromDbsnp": "2020-06-18T20:48:07.34514",
+      "locations": [
+        {
+          "id": 1449001273,
+          "altHgvs": {},
+          "assembly": "GRCh38",
+          "begin": 75355259,
+          "end": 75355259,
+          "intronicOffset": 0,
+          "referenceAllele": "A",
+          "referenceHgvs": "NC_000005.10:g.75355259=",
+          "sequence": {
+            "id": 1446906632,
+            "name": "[GRCh38]chr5",
+            "resource": "RefSeq DNA",
+            "resourceId": "NC_000005.10",
+            "_url": "https://www.ncbi.nlm.nih.gov/nuccore/NC_000005.10",
+            "version": 2
+          },
+          "source": "dbSnp",
+          "type": "genomic",
+          "variantAlleles": [
+            "G",
+            "T"
+          ],
+          "variantHgvs": [
+            "NC_000005.10:g.75355259A>G",
+            "NC_000005.10:g.75355259A>T"
+          ],
+          "version": 1
+        },
+        {
+          "id": 1448068920,
+          "altHgvs": {},
+          "assembly": "GRCh37",
+          "begin": 74651084,
+          "end": 74651084,
+          "intronicOffset": 0,
+          "referenceAllele": "A",
+          "referenceHgvs": "NC_000005.9:g.74651084=",
+          "sequence": {
+            "id": 1447949555,
+            "name": "[GRCh37]chr5",
+            "resource": "RefSeq DNA",
+            "resourceId": "NC_000005.9",
+            "_url": "https://www.ncbi.nlm.nih.gov/nuccore/NC_000005.9",
+            "version": 2
+          },
+          "source": "dbSnp",
+          "type": "genomic",
+          "variantAlleles": [
+            "G",
+            "T"
+          ],
+          "variantHgvs": [
+            "NC_000005.9:g.74651084A>G",
+            "NC_000005.9:g.74651084A>T"
+          ],
+          "version": 1
+        },
+        {
+          "id": 1451190409,
+          "altHgvs": {},
+          "begin": 23092,
+          "end": 23092,
+          "intronicOffset": 0,
+          "referenceAllele": "A",
+          "referenceHgvs": "NG_011449.1:g.23092=",
+          "sequence": {
+            "id": 1451166086,
+            "name": "NG_011449.1",
+            "resource": "RefSeq DNA",
+            "resourceId": "NG_011449.1",
+            "_url": "https://www.ncbi.nlm.nih.gov/nuccore/NG_011449.1",
+            "version": 0
+          },
+          "source": "dbSnp",
+          "type": "genomic",
+          "variantAlleles": [
+            "G",
+            "T"
+          ],
+          "variantHgvs": [
+            "NG_011449.1:g.23092A>G",
+            "NG_011449.1:g.23092A>T"
+          ],
+          "version": 0
+        }
+      ],
+      "obsolete": false,
+      "rare": false,
+      "raritySource": "gnomAD Genomes",
+      "relatedGenes": [
+        {
+          "objCls": "Gene",
+          "id": "PA189",
+          "symbol": "HMGCR",
+          "name": "3-hydroxy-3-methylglutaryl-CoA reductase",
+          "version": 58
+        }
+      ],
+      "terms": [],
+      "type": "SNP",
+      "version": 5
+    },
+    {
+      "objCls": "Variant",
+      "id": "PA166156821",
+      "symbol": "rs3846663",
+      "name": "rs3846663",
+      "altNames": {
+        "synonym": [
+          "NC_000005.10:g.75359901C>T",
+          "NC_000005.9:g.74655726C>T",
+          "NG_011449.1:g.27734C>T",
+          "NM_000859.2:c.2458-84C>T",
+          "NM_001130996.1:c.2299-84C>T",
+          "XM_005248492.1:c.2518-84C>T",
+          "XM_011543357.1:c.2518-84C>T",
+          "XM_011543358.1:c.2458-84C>T",
+          "XM_011543359.1:c.2359-84C>T",
+          "rs17244911",
+          "rs17562610",
+          "rs386587625",
+          "rs56449980",
+          "rs57511624",
+          "rs58701067"
+        ]
+      },
+      "changeClassification": "Intronic",
+      "crossReferences": [
+        {
+          "id": 1448068942,
+          "resource": "dbSNP",
+          "resourceId": "rs3846663",
+          "_url": "https://www.ncbi.nlm.nih.gov/snp/rs3846663",
+          "version": 0
+        },
+        {
+          "id": 1451190418,
+          "resource": "dbSNP",
+          "resourceId": "rs17244911",
+          "_url": "https://www.ncbi.nlm.nih.gov/snp/rs17244911",
+          "version": 1
+        },
+        {
+          "id": 1451190419,
+          "resource": "dbSNP",
+          "resourceId": "rs17562610",
+          "_url": "https://www.ncbi.nlm.nih.gov/snp/rs17562610",
+          "version": 1
+        },
+        {
+          "id": 1451190423,
+          "resource": "dbSNP",
+          "resourceId": "rs386587625",
+          "_url": "https://www.ncbi.nlm.nih.gov/snp/rs386587625",
+          "version": 1
+        },
+        {
+          "id": 1451190420,
+          "resource": "dbSNP",
+          "resourceId": "rs56449980",
+          "_url": "https://www.ncbi.nlm.nih.gov/snp/rs56449980",
+          "version": 1
+        },
+        {
+          "id": 1451190421,
+          "resource": "dbSNP",
+          "resourceId": "rs57511624",
+          "_url": "https://www.ncbi.nlm.nih.gov/snp/rs57511624",
+          "version": 1
+        },
+        {
+          "id": 1451190422,
+          "resource": "dbSNP",
+          "resourceId": "rs58701067",
+          "_url": "https://www.ncbi.nlm.nih.gov/snp/rs58701067",
+          "version": 1
+        }
+      ],
+      "history": [],
+      "lastUpdatedFromDbsnp": "2020-06-18T20:48:10.83163",
+      "locations": [
+        {
+          "id": 1449001274,
+          "altHgvs": {},
+          "assembly": "GRCh38",
+          "begin": 75359901,
+          "end": 75359901,
+          "intronicOffset": 0,
+          "referenceAllele": "C",
+          "referenceHgvs": "NC_000005.10:g.75359901=",
+          "sequence": {
+            "id": 1446906632,
+            "name": "[GRCh38]chr5",
+            "resource": "RefSeq DNA",
+            "resourceId": "NC_000005.10",
+            "_url": "https://www.ncbi.nlm.nih.gov/nuccore/NC_000005.10",
+            "version": 2
+          },
+          "source": "dbSnp",
+          "type": "genomic",
+          "variantAlleles": [
+            "T"
+          ],
+          "variantHgvs": [
+            "NC_000005.10:g.75359901C>T"
+          ],
+          "version": 1
+        },
+        {
+          "id": 1448068941,
+          "altHgvs": {},
+          "assembly": "GRCh37",
+          "begin": 74655726,
+          "end": 74655726,
+          "intronicOffset": 0,
+          "referenceAllele": "C",
+          "referenceHgvs": "NC_000005.9:g.74655726=",
+          "sequence": {
+            "id": 1447949555,
+            "name": "[GRCh37]chr5",
+            "resource": "RefSeq DNA",
+            "resourceId": "NC_000005.9",
+            "_url": "https://www.ncbi.nlm.nih.gov/nuccore/NC_000005.9",
+            "version": 2
+          },
+          "source": "dbSnp",
+          "type": "genomic",
+          "variantAlleles": [
+            "T"
+          ],
+          "variantHgvs": [
+            "NC_000005.9:g.74655726C>T"
+          ],
+          "version": 1
+        },
+        {
+          "id": 1451190417,
+          "altHgvs": {},
+          "begin": 27734,
+          "end": 27734,
+          "intronicOffset": 0,
+          "referenceAllele": "C",
+          "referenceHgvs": "NG_011449.1:g.27734=",
+          "sequence": {
+            "id": 1451166086,
+            "name": "NG_011449.1",
+            "resource": "RefSeq DNA",
+            "resourceId": "NG_011449.1",
+            "_url": "https://www.ncbi.nlm.nih.gov/nuccore/NG_011449.1",
+            "version": 0
+          },
+          "source": "dbSnp",
+          "type": "genomic",
+          "variantAlleles": [
+            "T"
+          ],
+          "variantHgvs": [
+            "NG_011449.1:g.27734C>T"
+          ],
+          "version": 0
+        }
+      ],
+      "obsolete": false,
+      "rare": false,
+      "raritySource": "gnomAD Genomes",
+      "relatedGenes": [
+        {
+          "objCls": "Gene",
+          "id": "PA189",
+          "symbol": "HMGCR",
+          "name": "3-hydroxy-3-methylglutaryl-CoA reductase",
+          "version": 58
+        }
+      ],
+      "terms": [],
+      "type": "SNP",
+      "version": 5
+    },
+    {
+      "objCls": "Variant",
+      "id": "PA166156830",
+      "symbol": "rs4629571",
+      "name": "rs4629571",
+      "altNames": {
+        "synonym": [
+          "NC_000005.10:g.75362479A>G",
+          "NC_000005.9:g.74658304A>G",
+          "NG_011449.1:g.30312A>G",
+          "NM_000859.2:c.*2137A>G",
+          "NM_001130996.1:c.*2137A>G",
+          "XM_005248492.1:c.*2137A>G",
+          "XM_011543357.1:c.*2137A>G",
+          "XM_011543358.1:c.*2137A>G",
+          "XM_011543359.1:c.*2137A>G",
+          "rs17238561",
+          "rs61623943"
+        ]
+      },
+      "changeClassification": "3' Flanking",
+      "crossReferences": [
+        {
+          "id": 1448069064,
+          "resource": "dbSNP",
+          "resourceId": "rs4629571",
+          "_url": "https://www.ncbi.nlm.nih.gov/snp/rs4629571",
+          "version": 0
+        },
+        {
+          "id": 1451192121,
+          "resource": "dbSNP",
+          "resourceId": "rs17238561",
+          "_url": "https://www.ncbi.nlm.nih.gov/snp/rs17238561",
+          "version": 1
+        },
+        {
+          "id": 1451192122,
+          "resource": "dbSNP",
+          "resourceId": "rs61623943",
+          "_url": "https://www.ncbi.nlm.nih.gov/snp/rs61623943",
+          "version": 1
+        }
+      ],
+      "history": [],
+      "lastUpdatedFromDbsnp": "2020-06-18T21:05:58.055359",
+      "locations": [
+        {
+          "id": 1449001263,
+          "altHgvs": {},
+          "assembly": "GRCh38",
+          "begin": 75362479,
+          "end": 75362479,
+          "intronicOffset": 0,
+          "referenceAllele": "A",
+          "referenceHgvs": "NC_000005.10:g.75362479=",
+          "sequence": {
+            "id": 1446906632,
+            "name": "[GRCh38]chr5",
+            "resource": "RefSeq DNA",
+            "resourceId": "NC_000005.10",
+            "_url": "https://www.ncbi.nlm.nih.gov/nuccore/NC_000005.10",
+            "version": 2
+          },
+          "source": "dbSnp",
+          "type": "genomic",
+          "variantAlleles": [
+            "G",
+            "T"
+          ],
+          "variantHgvs": [
+            "NC_000005.10:g.75362479A>G",
+            "NC_000005.10:g.75362479A>T"
+          ],
+          "version": 1
+        },
+        {
+          "id": 1448069063,
+          "altHgvs": {},
+          "assembly": "GRCh37",
+          "begin": 74658304,
+          "end": 74658304,
+          "intronicOffset": 0,
+          "referenceAllele": "A",
+          "referenceHgvs": "NC_000005.9:g.74658304=",
+          "sequence": {
+            "id": 1447949555,
+            "name": "[GRCh37]chr5",
+            "resource": "RefSeq DNA",
+            "resourceId": "NC_000005.9",
+            "_url": "https://www.ncbi.nlm.nih.gov/nuccore/NC_000005.9",
+            "version": 2
+          },
+          "source": "dbSnp",
+          "type": "genomic",
+          "variantAlleles": [
+            "G",
+            "T"
+          ],
+          "variantHgvs": [
+            "NC_000005.9:g.74658304A>G",
+            "NC_000005.9:g.74658304A>T"
+          ],
+          "version": 1
+        },
+        {
+          "id": 1451192120,
+          "altHgvs": {},
+          "begin": 30312,
+          "end": 30312,
+          "intronicOffset": 0,
+          "referenceAllele": "A",
+          "referenceHgvs": "NG_011449.1:g.30312=",
+          "sequence": {
+            "id": 1451166086,
+            "name": "NG_011449.1",
+            "resource": "RefSeq DNA",
+            "resourceId": "NG_011449.1",
+            "_url": "https://www.ncbi.nlm.nih.gov/nuccore/NG_011449.1",
+            "version": 0
+          },
+          "source": "dbSnp",
+          "type": "genomic",
+          "variantAlleles": [
+            "G",
+            "T"
+          ],
+          "variantHgvs": [
+            "NG_011449.1:g.30312A>G",
+            "NG_011449.1:g.30312A>T"
+          ],
+          "version": 0
+        }
+      ],
+      "obsolete": false,
+      "rare": false,
+      "raritySource": "gnomAD Genomes",
+      "relatedGenes": [
+        {
+          "objCls": "Gene",
+          "id": "PA189",
+          "symbol": "HMGCR",
+          "name": "3-hydroxy-3-methylglutaryl-CoA reductase",
+          "version": 58
+        }
+      ],
+      "terms": [],
+      "type": "SNP",
+      "version": 5
+    },
+    {
+      "objCls": "Variant",
+      "id": "PA166156832",
+      "symbol": "rs4704209",
+      "name": "rs4704209",
+      "altNames": {
+        "synonym": [
+          "NC_000005.10:g.75338648A>G",
+          "NC_000005.9:g.74634473A>G",
+          "NG_011449.1:g.6481A>G",
+          "NM_000859.2:c.-24+1348A>G",
+          "NM_001130996.1:c.-24+1348A>G",
+          "XM_005248492.1:c.37+2031A>G",
+          "XM_011543357.1:c.37+2031A>G",
+          "XM_011543358.1:c.-24+345A>G",
+          "XM_011543359.1:c.37+2031A>G",
+          "rs17238365",
+          "rs57135466"
+        ]
+      },
+      "changeClassification": "Intronic",
+      "crossReferences": [
+        {
+          "id": 1448069093,
+          "resource": "dbSNP",
+          "resourceId": "rs4704209",
+          "_url": "https://www.ncbi.nlm.nih.gov/snp/rs4704209",
+          "version": 0
+        },
+        {
+          "id": 1451192525,
+          "resource": "dbSNP",
+          "resourceId": "rs17238365",
+          "_url": "https://www.ncbi.nlm.nih.gov/snp/rs17238365",
+          "version": 1
+        },
+        {
+          "id": 1451192526,
+          "resource": "dbSNP",
+          "resourceId": "rs57135466",
+          "_url": "https://www.ncbi.nlm.nih.gov/snp/rs57135466",
+          "version": 1
+        }
+      ],
+      "history": [],
+      "lastUpdatedFromDbsnp": "2020-06-18T21:09:50.887548",
+      "locations": [
+        {
+          "id": 1449001266,
+          "altHgvs": {},
+          "assembly": "GRCh38",
+          "begin": 75338648,
+          "end": 75338648,
+          "intronicOffset": 0,
+          "referenceAllele": "A",
+          "referenceHgvs": "NC_000005.10:g.75338648=",
+          "sequence": {
+            "id": 1446906632,
+            "name": "[GRCh38]chr5",
+            "resource": "RefSeq DNA",
+            "resourceId": "NC_000005.10",
+            "_url": "https://www.ncbi.nlm.nih.gov/nuccore/NC_000005.10",
+            "version": 2
+          },
+          "source": "dbSnp",
+          "type": "genomic",
+          "variantAlleles": [
+            "C",
+            "G"
+          ],
+          "variantHgvs": [
+            "NC_000005.10:g.75338648A>C",
+            "NC_000005.10:g.75338648A>G"
+          ],
+          "version": 1
+        },
+        {
+          "id": 1448069092,
+          "altHgvs": {},
+          "assembly": "GRCh37",
+          "begin": 74634473,
+          "end": 74634473,
+          "intronicOffset": 0,
+          "referenceAllele": "A",
+          "referenceHgvs": "NC_000005.9:g.74634473=",
+          "sequence": {
+            "id": 1447949555,
+            "name": "[GRCh37]chr5",
+            "resource": "RefSeq DNA",
+            "resourceId": "NC_000005.9",
+            "_url": "https://www.ncbi.nlm.nih.gov/nuccore/NC_000005.9",
+            "version": 2
+          },
+          "source": "dbSnp",
+          "type": "genomic",
+          "variantAlleles": [
+            "C",
+            "G"
+          ],
+          "variantHgvs": [
+            "NC_000005.9:g.74634473A>C",
+            "NC_000005.9:g.74634473A>G"
+          ],
+          "version": 1
+        },
+        {
+          "id": 1451192524,
+          "altHgvs": {},
+          "begin": 6481,
+          "end": 6481,
+          "intronicOffset": 0,
+          "referenceAllele": "A",
+          "referenceHgvs": "NG_011449.1:g.6481=",
+          "sequence": {
+            "id": 1451166086,
+            "name": "NG_011449.1",
+            "resource": "RefSeq DNA",
+            "resourceId": "NG_011449.1",
+            "_url": "https://www.ncbi.nlm.nih.gov/nuccore/NG_011449.1",
+            "version": 0
+          },
+          "source": "dbSnp",
+          "type": "genomic",
+          "variantAlleles": [
+            "C",
+            "G"
+          ],
+          "variantHgvs": [
+            "NG_011449.1:g.6481A>C",
+            "NG_011449.1:g.6481A>G"
+          ],
+          "version": 0
+        }
+      ],
+      "obsolete": false,
+      "rare": false,
+      "raritySource": "gnomAD Genomes",
+      "relatedGenes": [
+        {
+          "objCls": "Gene",
+          "id": "PA189",
+          "symbol": "HMGCR",
+          "name": "3-hydroxy-3-methylglutaryl-CoA reductase",
+          "version": 58
+        }
+      ],
+      "terms": [],
+      "type": "SNP",
+      "version": 5
+    },
+    {
+      "objCls": "Variant",
+      "id": "PA166156838",
+      "symbol": "rs6453131",
+      "name": "rs6453131",
+      "altNames": {
+        "synonym": [
+          "NC_000005.10:g.75348881T>G",
+          "NC_000005.9:g.74644706T>G",
+          "NG_011449.1:g.16714T>G",
+          "NM_000859.2:c.557-1161T>G",
+          "NM_001130996.1:c.557-1161T>G",
+          "XM_005248492.1:c.617-1161T>G",
+          "XM_011543357.1:c.617-1161T>G",
+          "XM_011543358.1:c.557-1161T>G",
+          "XM_011543359.1:c.617-1161T>G",
+          "rs17238470",
+          "rs59219458"
+        ]
+      },
+      "changeClassification": "Intronic",
+      "crossReferences": [
+        {
+          "id": 1448069161,
+          "resource": "dbSNP",
+          "resourceId": "rs6453131",
+          "_url": "https://www.ncbi.nlm.nih.gov/snp/rs6453131",
+          "version": 0
+        },
+        {
+          "id": 1451196231,
+          "resource": "dbSNP",
+          "resourceId": "rs17238470",
+          "_url": "https://www.ncbi.nlm.nih.gov/snp/rs17238470",
+          "version": 1
+        },
+        {
+          "id": 1451196232,
+          "resource": "dbSNP",
+          "resourceId": "rs59219458",
+          "_url": "https://www.ncbi.nlm.nih.gov/snp/rs59219458",
+          "version": 1
+        }
+      ],
+      "history": [],
+      "lastUpdatedFromDbsnp": "2020-06-18T21:52:07.745595",
+      "locations": [
+        {
+          "id": 1449001255,
+          "altHgvs": {},
+          "assembly": "GRCh38",
+          "begin": 75348881,
+          "end": 75348881,
+          "intronicOffset": 0,
+          "referenceAllele": "T",
+          "referenceHgvs": "NC_000005.10:g.75348881=",
+          "sequence": {
+            "id": 1446906632,
+            "name": "[GRCh38]chr5",
+            "resource": "RefSeq DNA",
+            "resourceId": "NC_000005.10",
+            "_url": "https://www.ncbi.nlm.nih.gov/nuccore/NC_000005.10",
+            "version": 2
+          },
+          "source": "dbSnp",
+          "type": "genomic",
+          "variantAlleles": [
+            "C",
+            "G"
+          ],
+          "variantHgvs": [
+            "NC_000005.10:g.75348881T>C",
+            "NC_000005.10:g.75348881T>G"
+          ],
+          "version": 1
+        },
+        {
+          "id": 1448069160,
+          "altHgvs": {},
+          "assembly": "GRCh37",
+          "begin": 74644706,
+          "end": 74644706,
+          "intronicOffset": 0,
+          "referenceAllele": "T",
+          "referenceHgvs": "NC_000005.9:g.74644706=",
+          "sequence": {
+            "id": 1447949555,
+            "name": "[GRCh37]chr5",
+            "resource": "RefSeq DNA",
+            "resourceId": "NC_000005.9",
+            "_url": "https://www.ncbi.nlm.nih.gov/nuccore/NC_000005.9",
+            "version": 2
+          },
+          "source": "dbSnp",
+          "type": "genomic",
+          "variantAlleles": [
+            "C",
+            "G"
+          ],
+          "variantHgvs": [
+            "NC_000005.9:g.74644706T>C",
+            "NC_000005.9:g.74644706T>G"
+          ],
+          "version": 1
+        },
+        {
+          "id": 1451196230,
+          "altHgvs": {},
+          "begin": 16714,
+          "end": 16714,
+          "intronicOffset": 0,
+          "referenceAllele": "T",
+          "referenceHgvs": "NG_011449.1:g.16714=",
+          "sequence": {
+            "id": 1451166086,
+            "name": "NG_011449.1",
+            "resource": "RefSeq DNA",
+            "resourceId": "NG_011449.1",
+            "_url": "https://www.ncbi.nlm.nih.gov/nuccore/NG_011449.1",
+            "version": 0
+          },
+          "source": "dbSnp",
+          "type": "genomic",
+          "variantAlleles": [
+            "C",
+            "G"
+          ],
+          "variantHgvs": [
+            "NG_011449.1:g.16714T>C",
+            "NG_011449.1:g.16714T>G"
+          ],
+          "version": 0
+        }
+      ],
+      "obsolete": false,
+      "rare": false,
+      "raritySource": "gnomAD Genomes",
+      "relatedGenes": [
+        {
+          "objCls": "Gene",
+          "id": "PA189",
+          "symbol": "HMGCR",
+          "name": "3-hydroxy-3-methylglutaryl-CoA reductase",
+          "version": 58
+        }
+      ],
+      "terms": [],
+      "type": "SNP",
+      "version": 5
+    },
+    {
+      "objCls": "Variant",
+      "id": "PA166156854",
+      "symbol": "rs10038095",
+      "name": "rs10038095",
+      "altNames": {
+        "synonym": [
+          "NC_000005.10:g.75341886A>T",
+          "NC_000005.9:g.74637711A>T",
+          "NG_011449.1:g.9719A>T",
+          "NM_000859.2:c.-23-697A>T",
+          "NM_001130996.1:c.-23-697A>T",
+          "XM_005248492.1:c.38-697A>T",
+          "XM_011543357.1:c.38-697A>T",
+          "XM_011543358.1:c.-23-697A>T",
+          "XM_011543359.1:c.38-697A>T",
+          "rs17238386",
+          "rs17648084",
+          "rs57479265"
+        ]
+      },
+      "changeClassification": "Intronic",
+      "crossReferences": [
+        {
+          "id": 1448069408,
+          "resource": "dbSNP",
+          "resourceId": "rs10038095",
+          "_url": "https://www.ncbi.nlm.nih.gov/snp/rs10038095",
+          "version": 0
+        },
+        {
+          "id": 1451166088,
+          "resource": "dbSNP",
+          "resourceId": "rs17238386",
+          "_url": "https://www.ncbi.nlm.nih.gov/snp/rs17238386",
+          "version": 1
+        },
+        {
+          "id": 1451166089,
+          "resource": "dbSNP",
+          "resourceId": "rs17648084",
+          "_url": "https://www.ncbi.nlm.nih.gov/snp/rs17648084",
+          "version": 1
+        },
+        {
+          "id": 1451166090,
+          "resource": "dbSNP",
+          "resourceId": "rs57479265",
+          "_url": "https://www.ncbi.nlm.nih.gov/snp/rs57479265",
+          "version": 1
+        }
+      ],
+      "history": [],
+      "lastUpdatedFromDbsnp": "2020-06-18T06:16:38.925415",
+      "locations": [
+        {
+          "id": 1449001228,
+          "altHgvs": {},
+          "assembly": "GRCh38",
+          "begin": 75341886,
+          "end": 75341886,
+          "intronicOffset": 0,
+          "referenceAllele": "A",
+          "referenceHgvs": "NC_000005.10:g.75341886=",
+          "sequence": {
+            "id": 1446906632,
+            "name": "[GRCh38]chr5",
+            "resource": "RefSeq DNA",
+            "resourceId": "NC_000005.10",
+            "_url": "https://www.ncbi.nlm.nih.gov/nuccore/NC_000005.10",
+            "version": 2
+          },
+          "source": "dbSnp",
+          "type": "genomic",
+          "variantAlleles": [
+            "C",
+            "G",
+            "T"
+          ],
+          "variantHgvs": [
+            "NC_000005.10:g.75341886A>C",
+            "NC_000005.10:g.75341886A>G",
+            "NC_000005.10:g.75341886A>T"
+          ],
+          "version": 1
+        },
+        {
+          "id": 1448069407,
+          "altHgvs": {},
+          "assembly": "GRCh37",
+          "begin": 74637711,
+          "end": 74637711,
+          "intronicOffset": 0,
+          "referenceAllele": "A",
+          "referenceHgvs": "NC_000005.9:g.74637711=",
+          "sequence": {
+            "id": 1447949555,
+            "name": "[GRCh37]chr5",
+            "resource": "RefSeq DNA",
+            "resourceId": "NC_000005.9",
+            "_url": "https://www.ncbi.nlm.nih.gov/nuccore/NC_000005.9",
+            "version": 2
+          },
+          "source": "dbSnp",
+          "type": "genomic",
+          "variantAlleles": [
+            "C",
+            "G",
+            "T"
+          ],
+          "variantHgvs": [
+            "NC_000005.9:g.74637711A>C",
+            "NC_000005.9:g.74637711A>G",
+            "NC_000005.9:g.74637711A>T"
+          ],
+          "version": 1
+        },
+        {
+          "id": 1451166087,
+          "altHgvs": {},
+          "begin": 9719,
+          "end": 9719,
+          "intronicOffset": 0,
+          "referenceAllele": "A",
+          "referenceHgvs": "NG_011449.1:g.9719=",
+          "sequence": {
+            "id": 1451166086,
+            "name": "NG_011449.1",
+            "resource": "RefSeq DNA",
+            "resourceId": "NG_011449.1",
+            "_url": "https://www.ncbi.nlm.nih.gov/nuccore/NG_011449.1",
+            "version": 0
+          },
+          "source": "dbSnp",
+          "type": "genomic",
+          "variantAlleles": [
+            "C",
+            "G",
+            "T"
+          ],
+          "variantHgvs": [
+            "NG_011449.1:g.9719A>C",
+            "NG_011449.1:g.9719A>G",
+            "NG_011449.1:g.9719A>T"
+          ],
+          "version": 0
+        }
+      ],
+      "obsolete": false,
+      "rare": false,
+      "raritySource": "gnomAD Genomes",
+      "relatedGenes": [
+        {
+          "objCls": "Gene",
+          "id": "PA189",
+          "symbol": "HMGCR",
+          "name": "3-hydroxy-3-methylglutaryl-CoA reductase",
+          "version": 58
+        }
+      ],
+      "terms": [],
+      "type": "SNP",
+      "version": 5
+    },
+    {
+      "objCls": "Variant",
+      "id": "PA166156878",
+      "symbol": "rs12654264",
+      "name": "rs12654264",
+      "altNames": {
+        "synonym": [
+          "NC_000005.10:g.75352778A>T",
+          "NC_000005.9:g.74648603A>T",
+          "NG_011449.1:g.20611A>T",
+          "NM_000859.2:c.1368+1176A>T",
+          "NM_001130996.1:c.1368+1176A>T",
+          "XM_005248492.1:c.1428+1176A>T",
+          "XM_011543357.1:c.1428+1176A>T",
+          "XM_011543358.1:c.1368+1176A>T",
+          "XM_011543359.1:c.1428+1176A>T",
+          "rs17562575",
+          "rs56464192",
+          "rs58426549"
+        ]
+      },
+      "changeClassification": "Intronic",
+      "clinicalSignificance": "other",
+      "crossReferences": [
+        {
+          "id": 1448069730,
+          "resource": "dbSNP",
+          "resourceId": "rs12654264",
+          "_url": "https://www.ncbi.nlm.nih.gov/snp/rs12654264",
+          "version": 0
+        },
+        {
+          "id": 1451172592,
+          "resource": "dbSNP",
+          "resourceId": "rs17562575",
+          "_url": "https://www.ncbi.nlm.nih.gov/snp/rs17562575",
+          "version": 1
+        },
+        {
+          "id": 1451172593,
+          "resource": "dbSNP",
+          "resourceId": "rs56464192",
+          "_url": "https://www.ncbi.nlm.nih.gov/snp/rs56464192",
+          "version": 1
+        },
+        {
+          "id": 1451172594,
+          "resource": "dbSNP",
+          "resourceId": "rs58426549",
+          "_url": "https://www.ncbi.nlm.nih.gov/snp/rs58426549",
+          "version": 1
+        }
+      ],
+      "history": [],
+      "lastUpdatedFromDbsnp": "2020-06-18T07:12:39.601182",
+      "locations": [
+        {
+          "id": 1451172589,
+          "altHgvs": {},
+          "assembly": "GRCh38",
+          "begin": 75352778,
+          "end": 75352778,
+          "intronicOffset": 0,
+          "referenceAllele": "A",
+          "referenceHgvs": "NC_000005.10:g.75352778=",
+          "sequence": {
+            "id": 1446906632,
+            "name": "[GRCh38]chr5",
+            "resource": "RefSeq DNA",
+            "resourceId": "NC_000005.10",
+            "_url": "https://www.ncbi.nlm.nih.gov/nuccore/NC_000005.10",
+            "version": 2
+          },
+          "source": "dbSnp",
+          "type": "genomic",
+          "variantAlleles": [
+            "T"
+          ],
+          "variantHgvs": [
+            "NC_000005.10:g.75352778A>T"
+          ],
+          "version": 0
+        },
+        {
+          "id": 1448069729,
+          "altHgvs": {},
+          "assembly": "GRCh37",
+          "begin": 74648603,
+          "end": 74648603,
+          "intronicOffset": 0,
+          "referenceAllele": "A",
+          "referenceHgvs": "NC_000005.9:g.74648603=",
+          "sequence": {
+            "id": 1447949555,
+            "name": "[GRCh37]chr5",
+            "resource": "RefSeq DNA",
+            "resourceId": "NC_000005.9",
+            "_url": "https://www.ncbi.nlm.nih.gov/nuccore/NC_000005.9",
+            "version": 2
+          },
+          "source": "dbSnp",
+          "type": "genomic",
+          "variantAlleles": [
+            "T"
+          ],
+          "variantHgvs": [
+            "NC_000005.9:g.74648603A>T"
+          ],
+          "version": 1
+        },
+        {
+          "id": 1451172591,
+          "altHgvs": {},
+          "begin": 20611,
+          "end": 20611,
+          "intronicOffset": 0,
+          "referenceAllele": "A",
+          "referenceHgvs": "NG_011449.1:g.20611=",
+          "sequence": {
+            "id": 1451166086,
+            "name": "NG_011449.1",
+            "resource": "RefSeq DNA",
+            "resourceId": "NG_011449.1",
+            "_url": "https://www.ncbi.nlm.nih.gov/nuccore/NG_011449.1",
+            "version": 0
+          },
+          "source": "dbSnp",
+          "type": "genomic",
+          "variantAlleles": [
+            "T"
+          ],
+          "variantHgvs": [
+            "NG_011449.1:g.20611A>T"
+          ],
+          "version": 0
+        }
+      ],
+      "obsolete": false,
+      "rare": false,
+      "raritySource": "gnomAD Genomes",
+      "relatedGenes": [
+        {
+          "objCls": "Gene",
+          "id": "PA189",
+          "symbol": "HMGCR",
+          "name": "3-hydroxy-3-methylglutaryl-CoA reductase",
+          "version": 58
+        }
+      ],
+      "terms": [],
+      "type": "SNP",
+      "version": 4
+    },
+    {
+      "objCls": "Variant",
+      "id": "PA166156884",
+      "symbol": "rs17238484",
+      "name": "rs17238484",
+      "altNames": {
+        "synonym": [
+          "NC_000005.10:g.75352671G>T",
+          "NC_000005.9:g.74648496G>T",
+          "NG_011449.1:g.20504G>T",
+          "NM_000859.2:c.1368+1069G>T",
+          "NM_001130996.1:c.1368+1069G>T",
+          "XM_005248492.1:c.1428+1069G>T",
+          "XM_011543357.1:c.1428+1069G>T",
+          "XM_011543358.1:c.1368+1069G>T",
+          "XM_011543359.1:c.1428+1069G>T",
+          "rs57354993"
+        ]
+      },
+      "changeClassification": "Intronic",
+      "crossReferences": [
+        {
+          "id": 1448069825,
+          "resource": "dbSNP",
+          "resourceId": "rs17238484",
+          "_url": "https://www.ncbi.nlm.nih.gov/snp/rs17238484",
+          "version": 0
+        },
+        {
+          "id": 1451176181,
+          "resource": "dbSNP",
+          "resourceId": "rs57354993",
+          "_url": "https://www.ncbi.nlm.nih.gov/snp/rs57354993",
+          "version": 1
+        }
+      ],
+      "history": [],
+      "lastUpdatedFromDbsnp": "2020-06-18T07:52:32.94642",
+      "locations": [
+        {
+          "id": 1449001193,
+          "altHgvs": {},
+          "assembly": "GRCh38",
+          "begin": 75352671,
+          "end": 75352671,
+          "intronicOffset": 0,
+          "referenceAllele": "G",
+          "referenceHgvs": "NC_000005.10:g.75352671=",
+          "sequence": {
+            "id": 1446906632,
+            "name": "[GRCh38]chr5",
+            "resource": "RefSeq DNA",
+            "resourceId": "NC_000005.10",
+            "_url": "https://www.ncbi.nlm.nih.gov/nuccore/NC_000005.10",
+            "version": 2
+          },
+          "source": "dbSnp",
+          "type": "genomic",
+          "variantAlleles": [
+            "T"
+          ],
+          "variantHgvs": [
+            "NC_000005.10:g.75352671G>T"
+          ],
+          "version": 1
+        },
+        {
+          "id": 1448069824,
+          "altHgvs": {},
+          "assembly": "GRCh37",
+          "begin": 74648496,
+          "end": 74648496,
+          "intronicOffset": 0,
+          "referenceAllele": "G",
+          "referenceHgvs": "NC_000005.9:g.74648496=",
+          "sequence": {
+            "id": 1447949555,
+            "name": "[GRCh37]chr5",
+            "resource": "RefSeq DNA",
+            "resourceId": "NC_000005.9",
+            "_url": "https://www.ncbi.nlm.nih.gov/nuccore/NC_000005.9",
+            "version": 2
+          },
+          "source": "dbSnp",
+          "type": "genomic",
+          "variantAlleles": [
+            "T"
+          ],
+          "variantHgvs": [
+            "NC_000005.9:g.74648496G>T"
+          ],
+          "version": 1
+        },
+        {
+          "id": 1451176180,
+          "altHgvs": {},
+          "begin": 20504,
+          "end": 20504,
+          "intronicOffset": 0,
+          "referenceAllele": "G",
+          "referenceHgvs": "NG_011449.1:g.20504=",
+          "sequence": {
+            "id": 1451166086,
+            "name": "NG_011449.1",
+            "resource": "RefSeq DNA",
+            "resourceId": "NG_011449.1",
+            "_url": "https://www.ncbi.nlm.nih.gov/nuccore/NG_011449.1",
+            "version": 0
+          },
+          "source": "dbSnp",
+          "type": "genomic",
+          "variantAlleles": [
+            "T"
+          ],
+          "variantHgvs": [
+            "NG_011449.1:g.20504G>T"
+          ],
+          "version": 0
+        }
+      ],
+      "obsolete": false,
+      "rare": false,
+      "raritySource": "gnomAD Genomes",
+      "relatedGenes": [
+        {
+          "objCls": "Gene",
+          "id": "PA189",
+          "symbol": "HMGCR",
+          "name": "3-hydroxy-3-methylglutaryl-CoA reductase",
+          "version": 58
+        }
+      ],
+      "terms": [],
+      "type": "SNP",
+      "version": 5
+    },
+    {
+      "objCls": "Variant",
+      "id": "PA166156885",
+      "symbol": "rs17238540",
+      "name": "rs17238540",
+      "altNames": {
+        "synonym": [
+          "NC_000005.10:g.75359673T>G",
+          "NC_000005.9:g.74655498T>G",
+          "NG_011449.1:g.27506T>G",
+          "NM_000859.2:c.2457+117T>G",
+          "NM_001130996.1:c.2298+117T>G",
+          "XM_005248492.1:c.2517+117T>G",
+          "XM_011543357.1:c.2517+117T>G",
+          "XM_011543358.1:c.2457+117T>G",
+          "XM_011543359.1:c.2358+117T>G",
+          "rs59500163"
+        ]
+      },
+      "changeClassification": "Intronic",
+      "crossReferences": [
+        {
+          "id": 1448069842,
+          "resource": "dbSNP",
+          "resourceId": "rs17238540",
+          "_url": "https://www.ncbi.nlm.nih.gov/snp/rs17238540",
+          "version": 0
+        },
+        {
+          "id": 1451176185,
+          "resource": "dbSNP",
+          "resourceId": "rs59500163",
+          "_url": "https://www.ncbi.nlm.nih.gov/snp/rs59500163",
+          "version": 1
+        }
+      ],
+      "history": [],
+      "lastUpdatedFromDbsnp": "2020-06-18T07:52:36.286489",
+      "locations": [
+        {
+          "id": 1449001196,
+          "altHgvs": {},
+          "assembly": "GRCh38",
+          "begin": 75359673,
+          "end": 75359673,
+          "intronicOffset": 0,
+          "referenceAllele": "T",
+          "referenceHgvs": "NC_000005.10:g.75359673=",
+          "sequence": {
+            "id": 1446906632,
+            "name": "[GRCh38]chr5",
+            "resource": "RefSeq DNA",
+            "resourceId": "NC_000005.10",
+            "_url": "https://www.ncbi.nlm.nih.gov/nuccore/NC_000005.10",
+            "version": 2
+          },
+          "source": "dbSnp",
+          "type": "genomic",
+          "variantAlleles": [
+            "G"
+          ],
+          "variantHgvs": [
+            "NC_000005.10:g.75359673T>G"
+          ],
+          "version": 1
+        },
+        {
+          "id": 1448069841,
+          "altHgvs": {},
+          "assembly": "GRCh37",
+          "begin": 74655498,
+          "end": 74655498,
+          "intronicOffset": 0,
+          "referenceAllele": "T",
+          "referenceHgvs": "NC_000005.9:g.74655498=",
+          "sequence": {
+            "id": 1447949555,
+            "name": "[GRCh37]chr5",
+            "resource": "RefSeq DNA",
+            "resourceId": "NC_000005.9",
+            "_url": "https://www.ncbi.nlm.nih.gov/nuccore/NC_000005.9",
+            "version": 2
+          },
+          "source": "dbSnp",
+          "type": "genomic",
+          "variantAlleles": [
+            "G"
+          ],
+          "variantHgvs": [
+            "NC_000005.9:g.74655498T>G"
+          ],
+          "version": 1
+        },
+        {
+          "id": 1451176184,
+          "altHgvs": {},
+          "begin": 27506,
+          "end": 27506,
+          "intronicOffset": 0,
+          "referenceAllele": "T",
+          "referenceHgvs": "NG_011449.1:g.27506=",
+          "sequence": {
+            "id": 1451166086,
+            "name": "NG_011449.1",
+            "resource": "RefSeq DNA",
+            "resourceId": "NG_011449.1",
+            "_url": "https://www.ncbi.nlm.nih.gov/nuccore/NG_011449.1",
+            "version": 0
+          },
+          "source": "dbSnp",
+          "type": "genomic",
+          "variantAlleles": [
+            "G"
+          ],
+          "variantHgvs": [
+            "NG_011449.1:g.27506T>G"
+          ],
+          "version": 0
+        }
+      ],
+      "obsolete": false,
+      "rare": false,
+      "raritySource": "gnomAD Genomes",
+      "relatedGenes": [
+        {
+          "objCls": "Gene",
+          "id": "PA189",
+          "symbol": "HMGCR",
+          "name": "3-hydroxy-3-methylglutaryl-CoA reductase",
+          "version": 58
+        }
+      ],
+      "terms": [],
+      "type": "SNP",
+      "version": 5
+    },
+    {
+      "objCls": "Variant",
+      "id": "PA166156886",
+      "symbol": "rs17244841",
+      "name": "rs17244841",
+      "altNames": {
+        "synonym": [
+          "NC_000005.10:g.75347030A>T",
+          "NC_000005.9:g.74642855A>T",
+          "NG_011449.1:g.14863A>T",
+          "NM_000859.2:c.451-174A>T",
+          "NM_001130996.1:c.451-174A>T",
+          "XM_005248492.1:c.511-174A>T",
+          "XM_011543357.1:c.511-174A>T",
+          "XM_011543358.1:c.451-174A>T",
+          "XM_011543359.1:c.511-174A>T",
+          "rs60168925"
+        ]
+      },
+      "changeClassification": "Intronic",
+      "clinicalSignificance": "drug-response",
+      "crossReferences": [
+        {
+          "id": 1448069859,
+          "resource": "dbSNP",
+          "resourceId": "rs17244841",
+          "_url": "https://www.ncbi.nlm.nih.gov/snp/rs17244841",
+          "version": 0
+        },
+        {
+          "id": 1451176198,
+          "resource": "dbSNP",
+          "resourceId": "rs60168925",
+          "_url": "https://www.ncbi.nlm.nih.gov/snp/rs60168925",
+          "version": 1
+        },
+        {
+          "id": 1448103620,
+          "name": "NM_000859.2(HMGCR):c.451-174A>T",
+          "resource": "ClinVar",
+          "resourceId": "225958",
+          "_url": "https://www.ncbi.nlm.nih.gov/clinvar/?term=225958",
+          "version": 0
+        }
+      ],
+      "history": [],
+      "lastUpdatedFromDbsnp": "2020-06-18T07:52:45.10192",
+      "locations": [
+        {
+          "id": 1449001198,
+          "altHgvs": {},
+          "assembly": "GRCh38",
+          "begin": 75347030,
+          "end": 75347030,
+          "intronicOffset": 0,
+          "referenceAllele": "A",
+          "referenceHgvs": "NC_000005.10:g.75347030=",
+          "sequence": {
+            "id": 1446906632,
+            "name": "[GRCh38]chr5",
+            "resource": "RefSeq DNA",
+            "resourceId": "NC_000005.10",
+            "_url": "https://www.ncbi.nlm.nih.gov/nuccore/NC_000005.10",
+            "version": 2
+          },
+          "source": "dbSnp",
+          "type": "genomic",
+          "variantAlleles": [
+            "T"
+          ],
+          "variantHgvs": [
+            "NC_000005.10:g.75347030A>T"
+          ],
+          "version": 1
+        },
+        {
+          "id": 1448069858,
+          "altHgvs": {},
+          "assembly": "GRCh37",
+          "begin": 74642855,
+          "end": 74642855,
+          "intronicOffset": 0,
+          "referenceAllele": "A",
+          "referenceHgvs": "NC_000005.9:g.74642855=",
+          "sequence": {
+            "id": 1447949555,
+            "name": "[GRCh37]chr5",
+            "resource": "RefSeq DNA",
+            "resourceId": "NC_000005.9",
+            "_url": "https://www.ncbi.nlm.nih.gov/nuccore/NC_000005.9",
+            "version": 2
+          },
+          "source": "dbSnp",
+          "type": "genomic",
+          "variantAlleles": [
+            "T"
+          ],
+          "variantHgvs": [
+            "NC_000005.9:g.74642855A>T"
+          ],
+          "version": 1
+        },
+        {
+          "id": 1451176197,
+          "altHgvs": {},
+          "begin": 14863,
+          "end": 14863,
+          "intronicOffset": 0,
+          "referenceAllele": "A",
+          "referenceHgvs": "NG_011449.1:g.14863=",
+          "sequence": {
+            "id": 1451166086,
+            "name": "NG_011449.1",
+            "resource": "RefSeq DNA",
+            "resourceId": "NG_011449.1",
+            "_url": "https://www.ncbi.nlm.nih.gov/nuccore/NG_011449.1",
+            "version": 0
+          },
+          "source": "dbSnp",
+          "type": "genomic",
+          "variantAlleles": [
+            "T"
+          ],
+          "variantHgvs": [
+            "NG_011449.1:g.14863A>T"
+          ],
+          "version": 0
+        }
+      ],
+      "obsolete": false,
+      "rare": false,
+      "raritySource": "gnomAD Genomes",
+      "relatedGenes": [
+        {
+          "objCls": "Gene",
+          "id": "PA189",
+          "symbol": "HMGCR",
+          "name": "3-hydroxy-3-methylglutaryl-CoA reductase",
+          "version": 58
+        }
+      ],
+      "terms": [],
+      "type": "SNP",
+      "version": 5
+    },
+    {
+      "objCls": "Variant",
+      "id": "PA166156889",
+      "symbol": "rs17671591",
+      "name": "rs17671591",
+      "altNames": {
+        "synonym": [
+          "NC_000005.10:g.75319196C>T",
+          "NC_000005.9:g.74615021C>T",
+          "rs57833312"
+        ]
+      },
+      "changeClassification": "Not Available",
+      "crossReferences": [
+        {
+          "id": 1448069895,
+          "resource": "dbSNP",
+          "resourceId": "rs17671591",
+          "_url": "https://www.ncbi.nlm.nih.gov/snp/rs17671591",
+          "version": 0
+        },
+        {
+          "id": 1451176519,
+          "resource": "dbSNP",
+          "resourceId": "rs57833312",
+          "_url": "https://www.ncbi.nlm.nih.gov/snp/rs57833312",
+          "version": 1
+        }
+      ],
+      "history": [],
+      "lastUpdatedFromDbsnp": "2020-06-18T07:56:29.210709",
+      "locations": [
+        {
+          "id": 1451176517,
+          "altHgvs": {},
+          "assembly": "GRCh38",
+          "begin": 75319196,
+          "end": 75319196,
+          "intronicOffset": 0,
+          "referenceAllele": "C",
+          "referenceHgvs": "NC_000005.10:g.75319196=",
+          "sequence": {
+            "id": 1446906632,
+            "name": "[GRCh38]chr5",
+            "resource": "RefSeq DNA",
+            "resourceId": "NC_000005.10",
+            "_url": "https://www.ncbi.nlm.nih.gov/nuccore/NC_000005.10",
+            "version": 2
+          },
+          "source": "dbSnp",
+          "type": "genomic",
+          "variantAlleles": [
+            "T"
+          ],
+          "variantHgvs": [
+            "NC_000005.10:g.75319196C>T"
+          ],
+          "version": 0
+        },
+        {
+          "id": 1448069894,
+          "altHgvs": {},
+          "assembly": "GRCh37",
+          "begin": 74615021,
+          "end": 74615021,
+          "intronicOffset": 0,
+          "referenceAllele": "C",
+          "referenceHgvs": "NC_000005.9:g.74615021=",
+          "sequence": {
+            "id": 1447949555,
+            "name": "[GRCh37]chr5",
+            "resource": "RefSeq DNA",
+            "resourceId": "NC_000005.9",
+            "_url": "https://www.ncbi.nlm.nih.gov/nuccore/NC_000005.9",
+            "version": 2
+          },
+          "source": "dbSnp",
+          "type": "genomic",
+          "variantAlleles": [
+            "T"
+          ],
+          "variantHgvs": [
+            "NC_000005.9:g.74615021C>T"
+          ],
+          "version": 1
+        }
+      ],
+      "obsolete": false,
+      "rare": false,
+      "raritySource": "gnomAD Genomes",
+      "relatedGenes": [
+        {
+          "objCls": "Gene",
+          "id": "PA189",
+          "symbol": "HMGCR",
+          "name": "3-hydroxy-3-methylglutaryl-CoA reductase",
+          "version": 58
+        }
+      ],
+      "terms": [],
+      "type": "SNP",
+      "version": 4
+    },
+    {
+      "objCls": "Variant",
+      "id": "PA166156862",
+      "symbol": "rs10474433",
+      "name": "rs10474433",
+      "altNames": {
+        "synonym": [
+          "NC_000005.10:g.75321018T>C",
+          "NC_000005.9:g.74616843T>C",
+          "rs17739061",
+          "rs52795663",
+          "rs59014840"
+        ]
+      },
+      "changeClassification": "Not Available",
+      "crossReferences": [
+        {
+          "id": 1448069514,
+          "resource": "dbSNP",
+          "resourceId": "rs10474433",
+          "_url": "https://www.ncbi.nlm.nih.gov/snp/rs10474433",
+          "version": 0
+        },
+        {
+          "id": 1451167091,
+          "resource": "dbSNP",
+          "resourceId": "rs17739061",
+          "_url": "https://www.ncbi.nlm.nih.gov/snp/rs17739061",
+          "version": 1
+        },
+        {
+          "id": 1451167092,
+          "resource": "dbSNP",
+          "resourceId": "rs52795663",
+          "_url": "https://www.ncbi.nlm.nih.gov/snp/rs52795663",
+          "version": 1
+        },
+        {
+          "id": 1451167093,
+          "resource": "dbSNP",
+          "resourceId": "rs59014840",
+          "_url": "https://www.ncbi.nlm.nih.gov/snp/rs59014840",
+          "version": 1
+        }
+      ],
+      "history": [],
+      "lastUpdatedFromDbsnp": "2020-06-18T06:24:03.207567",
+      "locations": [
+        {
+          "id": 1451167089,
+          "altHgvs": {},
+          "assembly": "GRCh38",
+          "begin": 75321018,
+          "end": 75321018,
+          "intronicOffset": 0,
+          "referenceAllele": "T",
+          "referenceHgvs": "NC_000005.10:g.75321018=",
+          "sequence": {
+            "id": 1446906632,
+            "name": "[GRCh38]chr5",
+            "resource": "RefSeq DNA",
+            "resourceId": "NC_000005.10",
+            "_url": "https://www.ncbi.nlm.nih.gov/nuccore/NC_000005.10",
+            "version": 2
+          },
+          "source": "dbSnp",
+          "type": "genomic",
+          "variantAlleles": [
+            "C",
+            "G"
+          ],
+          "variantHgvs": [
+            "NC_000005.10:g.75321018T>C",
+            "NC_000005.10:g.75321018T>G"
+          ],
+          "version": 0
+        },
+        {
+          "id": 1448069513,
+          "altHgvs": {},
+          "assembly": "GRCh37",
+          "begin": 74616843,
+          "end": 74616843,
+          "intronicOffset": 0,
+          "referenceAllele": "T",
+          "referenceHgvs": "NC_000005.9:g.74616843=",
+          "sequence": {
+            "id": 1447949555,
+            "name": "[GRCh37]chr5",
+            "resource": "RefSeq DNA",
+            "resourceId": "NC_000005.9",
+            "_url": "https://www.ncbi.nlm.nih.gov/nuccore/NC_000005.9",
+            "version": 2
+          },
+          "source": "dbSnp",
+          "type": "genomic",
+          "variantAlleles": [
+            "C",
+            "G"
+          ],
+          "variantHgvs": [
+            "NC_000005.9:g.74616843T>C",
+            "NC_000005.9:g.74616843T>G"
+          ],
+          "version": 1
+        }
+      ],
+      "obsolete": false,
+      "rare": false,
+      "raritySource": "gnomAD Genomes",
+      "relatedGenes": [
+        {
+          "objCls": "Gene",
+          "id": "PA189",
+          "symbol": "HMGCR",
+          "name": "3-hydroxy-3-methylglutaryl-CoA reductase",
+          "version": 58
+        }
+      ],
+      "terms": [],
+      "type": "SNP",
+      "version": 4
+    }
+  ],
+  "status": "success"
+}

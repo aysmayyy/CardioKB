@@ -1,0 +1,1706 @@
+{
+  "data": [
+    {
+      "objCls": "Label Annotation",
+      "id": "PA166105023",
+      "name": "Annotation of FDA Label for rosuvastatin and SLCO1B1",
+      "alternateDrugAvailable": false,
+      "biomarkerStatus": "On FDA Biomarker List",
+      "cancerGenome": false,
+      "crossReferences": [],
+      "dosingInformation": false,
+      "history": [
+        {
+          "id": 1183704715,
+          "date": "2014-01-14T00:00:00-08:00",
+          "type": "Create",
+          "version": 0
+        },
+        {
+          "id": 1448604638,
+          "date": "2017-03-15T14:13:04.365-07:00",
+          "description": "LDLR gene removed",
+          "type": "Update",
+          "version": 0
+        }
+      ],
+      "indication": false,
+      "labelApplications": [],
+      "labelDocumentAvailable": true,
+      "literature": [
+        {
+          "id": 15102023,
+          "title": "Drugs@FDA: Drug Product CRESTOR (Rosuvastatin calcium), NDA021366, Carilion Materials Management",
+          "_sameAs": "https://www.accessdata.fda.gov/scripts/cder/daf/index.cfm?event=overview.process&varApplNo=021366",
+          "crossReferences": [
+            {
+              "id": 1449776556,
+              "resource": "FDA Application",
+              "resourceId": "NDA021366",
+              "_url": "https://www.accessdata.fda.gov/scripts/cder/daf/index.cfm?event=overview.process&varApplNo=021366"
+            }
+          ],
+          "objCls": "Literature",
+          "terms": [
+            {
+              "id": 1452267780,
+              "resource": "ClinPGx Tags",
+              "term": "Has PGx",
+              "termId": "pgkbTags:1452267780"
+            }
+          ],
+          "type": "Drug Label"
+        }
+      ],
+      "otherPrescribingGuidance": false,
+      "pediatric": false,
+      "pgxRelated": true,
+      "prescribingGenes": [],
+      "relatedAlleles": [
+        {
+          "objCls": "Variant",
+          "id": "PA166154579",
+          "symbol": "rs4149056",
+          "name": "rs4149056",
+          "version": 6
+        }
+      ],
+      "relatedChemicals": [
+        {
+          "objCls": "Chemical",
+          "id": "PA134308647",
+          "name": "rosuvastatin",
+          "version": 23
+        }
+      ],
+      "relatedGenes": [
+        {
+          "objCls": "Gene",
+          "id": "PA134865839",
+          "symbol": "SLCO1B1",
+          "name": "solute carrier organic anion transporter family member 1B1",
+          "version": 49
+        }
+      ],
+      "source": "FDA",
+      "summaryMarkdown": {
+        "id": 1447981894,
+        "html": "<p>The FDA-approved drug label for rosuvastatin (CRESTOR) states that higher plasma concentrations of the drug have been seen in small groups of patients homozygous for the <em>SLCO1B1</em> rs4149056 variant.</p>\n",
+        "version": 1
+      },
+      "terms": [],
+      "testing": {
+        "id": 1183672141,
+        "description": "The label mentions a gene or protein is involved in the metabolism or pharmacodynamics of the drug, but there is no information to suggest that variation in these genes/proteins leads to different response.",
+        "parents": [],
+        "resource": "Genetic Testing Level",
+        "synonyms": [],
+        "term": "Informative PGx",
+        "termId": "geneTestLevel:1183672141",
+        "valid": true,
+        "version": 2
+      },
+      "textMarkdown": {
+        "id": 1447981893,
+        "html": "<p>Excerpts from the rosuvastatin (CRESTOR) drug label:</p>\n<blockquote class=\"blockquote\">\n<p>Pharmacogenomics...Higher plasma concentrations of rosuvastatin have been reported in very small groups of patients (n=3 to 5) who have two reduced function alleles of the gene that encodes OATP1B1 (SLCO1B1 521T &gt; C). The frequency of this genotype (i.e., SLCO1B1 521 C/C) is generally lower than 5% in most racial/ethnic groups. The impact of this polymorphism on efficacy and/or safety of rosuvastatin has not been clearly established.</p>\n</blockquote>\n<p>For the complete drug label text with sections containing pharmacogenetic information highlighted, see the <a download=\"Rosuvastatin_02_25_19_FDA.pdf\" href=\"https://api.clinpgx.org/v1/download/file/attachment/Rosuvastatin_02_25_19_FDA.pdf\">rosuvastatin drug label</a>.</p>\n",
+        "version": 13
+      },
+      "version": 31
+    },
+    {
+      "objCls": "Label Annotation",
+      "id": "PA166182762",
+      "name": "Annotation of FDA Label for elagolix and SLCO1B1",
+      "alternateDrugAvailable": false,
+      "biomarkerStatus": "On FDA Biomarker List",
+      "cancerGenome": false,
+      "crossReferences": [],
+      "dosingInformation": false,
+      "history": [
+        {
+          "id": 1452138901,
+          "date": "2023-06-23T09:54:16.510-07:00",
+          "description": "Fixed prescribing info box to show annotation on SLCO1B1",
+          "type": "Update",
+          "version": 0
+        },
+        {
+          "id": 1452211620,
+          "date": "2023-08-21T18:03:41.279-07:00",
+          "description": "Removed the Prescribing Information section since there is no suggested potential action to take based on SLCO1B1",
+          "type": "Update",
+          "version": 0
+        },
+        {
+          "id": 1452531820,
+          "date": "2024-07-19T09:27:14.220-07:00",
+          "description": "added newer label and updated the text",
+          "type": "Update",
+          "version": 0
+        }
+      ],
+      "indication": false,
+      "labelApplications": [],
+      "labelDocumentAvailable": true,
+      "literature": [
+        {
+          "id": 15160962,
+          "title": "Drugs@FDA: Drug Product Orilissa (Elagolix), AbbVie Inc. - NDA210450/SUPPL-9, 06/05/2023",
+          "_sameAs": "https://www.accessdata.fda.gov/scripts/cder/daf/index.cfm?event=overview.process&varApplNo=210450",
+          "crossReferences": [
+            {
+              "id": 1452531780,
+              "resource": "FDA Application",
+              "resourceId": "NDA210450/SUPPL-9",
+              "_url": "https://www.accessdata.fda.gov/scripts/cder/daf/index.cfm?event=overview.process&varApplNo=210450"
+            }
+          ],
+          "objCls": "Literature",
+          "pubDate": "2023-06-05T00:00:00-07:00",
+          "terms": [
+            {
+              "id": 1452267780,
+              "resource": "ClinPGx Tags",
+              "term": "Has PGx",
+              "termId": "pgkbTags:1452267780"
+            }
+          ],
+          "type": "Drug Label"
+        },
+        {
+          "id": 15102389,
+          "title": "Drugs@FDA: Drug Product Orilissa (Elagolix), NDA210450, AbbVie Inc.",
+          "_sameAs": "https://www.accessdata.fda.gov/scripts/cder/daf/index.cfm?event=overview.process&varApplNo=210450",
+          "crossReferences": [
+            {
+              "id": 1450401048,
+              "resource": "FDA Application",
+              "resourceId": "NDA210450",
+              "_url": "https://www.accessdata.fda.gov/scripts/cder/daf/index.cfm?event=overview.process&varApplNo=210450"
+            }
+          ],
+          "objCls": "Literature",
+          "terms": [
+            {
+              "id": 1452267780,
+              "resource": "ClinPGx Tags",
+              "term": "Has PGx",
+              "termId": "pgkbTags:1452267780"
+            }
+          ],
+          "type": "Drug Label"
+        }
+      ],
+      "otherPrescribingGuidance": false,
+      "pediatric": false,
+      "pgxRelated": true,
+      "prescribingGenes": [],
+      "relatedAlleles": [
+        {
+          "objCls": "Variant",
+          "id": "PA166154579",
+          "symbol": "rs4149056",
+          "name": "rs4149056",
+          "version": 6
+        }
+      ],
+      "relatedChemicals": [
+        {
+          "objCls": "Chemical",
+          "id": "PA166182348",
+          "name": "elagolix",
+          "version": 4
+        }
+      ],
+      "relatedGenes": [
+        {
+          "objCls": "Gene",
+          "id": "PA134865839",
+          "symbol": "SLCO1B1",
+          "name": "solute carrier organic anion transporter family member 1B1",
+          "version": 49
+        }
+      ],
+      "source": "FDA",
+      "summaryMarkdown": {
+        "id": 1450401046,
+        "html": "<p>The FDA-approved drug label for elagolix (ORILISSA) states that higher plasma concentrations of the drug have been observed in patients who have two reduced function alleles of the gene that encodes OATP 1B1 (SLCO1B1 521T&gt;C, rs4149056 variant).</p>\n",
+        "version": 1
+      },
+      "terms": [],
+      "testing": {
+        "id": 1183672141,
+        "description": "The label mentions a gene or protein is involved in the metabolism or pharmacodynamics of the drug, but there is no information to suggest that variation in these genes/proteins leads to different response.",
+        "parents": [],
+        "resource": "Genetic Testing Level",
+        "synonyms": [],
+        "term": "Informative PGx",
+        "termId": "geneTestLevel:1183672141",
+        "valid": true,
+        "version": 2
+      },
+      "textMarkdown": {
+        "id": 1450401047,
+        "html": "<p>Excerpt from the elagolix (ORILISSA) drug label:</p>\n<blockquote class=\"blockquote\">\n<p>Hepatic uptake of elagolix involves the OATP 1B1 transporter protein. Higher plasma concentrations of elagolix have been observed in patients who have two reduced function alleles of the gene that encodes OATP 1B1 (SLCO1B1 521T&gt;C) (these patients are likely to have reduced hepatic uptake of elagolix and thus, higher plasma elagolix concentrations). The frequency of this SLCO1B1 521 C/C genotype is generally less than 5% in most racial/ethnic groups. Subjects with this genotype are expected to have a 78% mean increase in elagolix concentrations compared to subjects with normal transporter function (i.e., SLCO1B1 521T/T genotype). Adverse effects of elagolix have not been fully evaluated in subjects who have two reduced function alleles of the gene that encodes OATP1B1 (SLCO1B1 521T&gt;C).</p>\n</blockquote>\n<p>For the complete drug label text with sections containing pharmacogenetic information highlighted, see the <a download=\"Elagolix_06_05_2023_FDA.pdf\" href=\"https://api.clinpgx.org/v1/download/file/attachment/Elagolix_06_05_2023_FDA.pdf\">elagolix drug label</a>.</p>\n",
+        "version": 2
+      },
+      "version": 13
+    },
+    {
+      "objCls": "Label Annotation",
+      "id": "PA166183786",
+      "name": "Annotation of Swissmedic Label for amlodipine / atorvastatin / perindopril arginine and G6PD, SLCO1B1",
+      "alternateDrugAvailable": false,
+      "cancerGenome": false,
+      "crossReferences": [],
+      "dosingInformation": false,
+      "history": [],
+      "indication": false,
+      "labelApplications": [],
+      "labelDocumentAvailable": true,
+      "literature": [
+        {
+          "id": 15103029,
+          "title": "Swissmedic label for Triveram",
+          "_sameAs": "https://amiko.oddb.org/de/fi?gtin=65514",
+          "crossReferences": [
+            {
+              "id": 1450811179,
+              "resource": "URL",
+              "resourceId": "https://amiko.oddb.org/de/fi?gtin=65514",
+              "_url": "https://amiko.oddb.org/de/fi?gtin=65514"
+            }
+          ],
+          "objCls": "Literature",
+          "terms": [],
+          "type": "Drug Label"
+        }
+      ],
+      "otherPrescribingGuidance": false,
+      "pediatric": false,
+      "pgxRelated": true,
+      "prescribingGenes": [],
+      "relatedAlleles": [
+        {
+          "objCls": "Variant",
+          "id": "PA166154579",
+          "symbol": "rs4149056",
+          "name": "rs4149056",
+          "version": 6
+        }
+      ],
+      "relatedChemicals": [
+        {
+          "objCls": "Chemical",
+          "id": "PA166183785",
+          "name": "amlodipine / atorvastatin / perindopril arginine",
+          "version": 4
+        }
+      ],
+      "relatedGenes": [
+        {
+          "objCls": "Gene",
+          "id": "PA28469",
+          "symbol": "G6PD",
+          "name": "glucose-6-phosphate dehydrogenase",
+          "version": 136
+        },
+        {
+          "objCls": "Gene",
+          "id": "PA134865839",
+          "symbol": "SLCO1B1",
+          "name": "solute carrier organic anion transporter family member 1B1",
+          "version": 49
+        }
+      ],
+      "source": "Swissmedic",
+      "summaryMarkdown": {
+        "id": 1450811172,
+        "html": "<p>The Swiss drug label for amlodipine, atorvastatin and perindopril arginine (Triveram) states that patients with G6PD deficiency may experience hemolytic anemia. Additionally, patients with the SLCO1B1 rs4149056 CC genotype may have higher atorvastatin exposure which may increase the risk of rhabdomyolysis.</p>\n",
+        "version": 0
+      },
+      "terms": [],
+      "testing": {
+        "id": 1183672111,
+        "description": "The label does not discuss genetic or other testing for gene/protein/chromosomal variants, but does contain information about changes in efficacy, dosage or toxicity due to such variants. The label may mention contraindication of the drug in a particular subset of patients but does not require or recommend gene, protein or chromosomal testing.",
+        "parents": [],
+        "resource": "Genetic Testing Level",
+        "synonyms": [],
+        "term": "Actionable PGx",
+        "termId": "geneTestLevel:1183672111",
+        "valid": true,
+        "version": 2
+      },
+      "textMarkdown": {
+        "id": 1450811173,
+        "html": "<p><strong>Please note that the information contained within this drug label annotation is available through a collaboration with the <a rel=\"noopener noreferrer\" href=\"http://www.pharmacare.unibas.ch\" target=\"_blank\">Pharmaceutical Care Research Group (PCRG), Department of Pharmaceutical Sciences, University of Basel</a>, who provided a translation of the pharmacogenetic information contained in the Swiss drug labels. The original label in German can be accessed using the link under &quot;Source&quot; below.</strong></p>\n<p>Excerpts from the drug label for amlodipine, atorvastatin and perindopril arginine (Triveram):</p>\n<blockquote class=\"blockquote\">\n<p>Undesirable effects...Hemolytic anemia in patients with congenital G-6PDH deficiency</p>\n</blockquote>\n<blockquote class=\"blockquote\">\n<p>SLCO1B1 polymorphism...The hepatic uptake of all HMG-CoA reductase inhibitors, including atorvastatin, requires the OATP1B1 transporter. Patients with SLCO1B1 polymorphism are at risk of increased exposure to atorvastatin, which may increase the risk of rhabdomyolysis (see &quot;Warnings and Precautions&quot;). The polymorphism in the OATC1B1 coding gene (SLCO1B1 c.521CC) causes 2.4 times higher atorvastatin exposure (AUC) than that in individuals without this genotype variant (c.521TT). A genetic disorder of hepatic uptake of atorvastatin is also possible in these patients. Possible effects on efficacy are not known.</p>\n</blockquote>\n<p>For the complete drug label text with G6PD information highlighted, see the following <a rel=\"noopener noreferrer\" href=\"https://amiko.oddb.org/de/fi?gtin=65514&amp;highlight=G-6PDH-Mangel\" target=\"_blank\">amlodipine, atorvastatin and perindopril arginine drug label</a>, and for SLCO1B1 information highlighted, see the following <a rel=\"noopener noreferrer\" href=\"https://amiko.oddb.org/de/fi?gtin=65514&amp;highlight=Polymorphismus\" target=\"_blank\">amlodipine, atorvastatin and perindopril arginine drug label</a> (both in German).</p>\n",
+        "version": 1
+      },
+      "version": 0
+    },
+    {
+      "objCls": "Label Annotation",
+      "id": "PA166184386",
+      "name": "Annotation of Swissmedic Label for letermovir and SLCO1B1, UGT1A1",
+      "alternateDrugAvailable": false,
+      "cancerGenome": false,
+      "crossReferences": [],
+      "dosingInformation": false,
+      "history": [],
+      "indication": false,
+      "labelApplications": [],
+      "labelDocumentAvailable": true,
+      "literature": [
+        {
+          "id": 15103247,
+          "title": "Swissmedic label for letermovir",
+          "_sameAs": "https://amiko.oddb.org/de/fi?gtin=66652",
+          "crossReferences": [
+            {
+              "id": 1450815337,
+              "resource": "URL",
+              "resourceId": "https://amiko.oddb.org/de/fi?gtin=66652",
+              "_url": "https://amiko.oddb.org/de/fi?gtin=66652"
+            }
+          ],
+          "objCls": "Literature",
+          "terms": [],
+          "type": "Drug Label"
+        }
+      ],
+      "otherPrescribingGuidance": false,
+      "pediatric": false,
+      "pgxRelated": true,
+      "prescribingGenes": [],
+      "relatedAlleles": [
+        {
+          "objCls": "Variant",
+          "id": "PA166154547",
+          "symbol": "rs2306283",
+          "name": "rs2306283",
+          "version": 5
+        },
+        {
+          "objCls": "Variant",
+          "id": "PA166155721",
+          "symbol": "rs4148323",
+          "name": "rs4148323",
+          "version": 6
+        },
+        {
+          "objCls": "Variant",
+          "id": "PA166154575",
+          "symbol": "rs4149032",
+          "name": "rs4149032",
+          "version": 4
+        },
+        {
+          "objCls": "Variant",
+          "id": "PA166154579",
+          "symbol": "rs4149056",
+          "name": "rs4149056",
+          "version": 6
+        },
+        {
+          "objCls": "Haplotype",
+          "id": "PA166115842",
+          "symbol": "UGT1A1*28",
+          "name": "*28",
+          "version": 16
+        }
+      ],
+      "relatedChemicals": [
+        {
+          "objCls": "Chemical",
+          "id": "PA166184379",
+          "name": "letermovir",
+          "version": 3
+        }
+      ],
+      "relatedGenes": [
+        {
+          "objCls": "Gene",
+          "id": "PA134865839",
+          "symbol": "SLCO1B1",
+          "name": "solute carrier organic anion transporter family member 1B1",
+          "version": 49
+        },
+        {
+          "objCls": "Gene",
+          "id": "PA420",
+          "symbol": "UGT1A1",
+          "name": "UDP glucuronosyltransferase 1 family, polypeptide A1",
+          "version": 6110
+        }
+      ],
+      "source": "Swissmedic",
+      "summaryMarkdown": {
+        "id": 1450815382,
+        "html": "<p>The Swiss drug label for letermovir (Prevymis) gives information about variants in UGT1A1 and SLCO1B1 that were tested for association with letermovir pharmacokinetics although no clinically relevant effects were observed.</p>\n",
+        "version": 0
+      },
+      "terms": [],
+      "testing": {
+        "id": 1183672141,
+        "description": "The label mentions a gene or protein is involved in the metabolism or pharmacodynamics of the drug, but there is no information to suggest that variation in these genes/proteins leads to different response.",
+        "parents": [],
+        "resource": "Genetic Testing Level",
+        "synonyms": [],
+        "term": "Informative PGx",
+        "termId": "geneTestLevel:1183672141",
+        "valid": true,
+        "version": 2
+      },
+      "textMarkdown": {
+        "id": 1450815383,
+        "html": "<p><strong>Please note that the information contained within this drug label annotation is available through a collaboration with the <a rel=\"noopener noreferrer\" href=\"http://www.pharmacare.unibas.ch\" target=\"_blank\">Pharmaceutical Care Research Group (PCRG), Department of Pharmaceutical Sciences, University of Basel</a>, who provided a translation of the pharmacogenetic information contained in the Swiss drug labels. The original label in German can be accessed using the link under &quot;Source&quot; below.</strong></p>\n<p>Excerpt from the drug label for letermovir (Prevymis):</p>\n<blockquote class=\"blockquote\">\n<p>Properties/Effects:\nPharmacogenomics:\nThe effect of genetic variants in the OATP1B1 gene SLCO1B1 (rs4149056, rs2306283, rs4149032) and UGT1A1 (rs4148323 and promoter TA repeat variants) on the pharmacokinetics of Letermovir was evaluated in 299 study participants. There were no clinically relevant effects of these variants on Letermovir exposure.</p>\n</blockquote>\n<p>For the complete drug label text with pharmacogenetic information highlighted, see the <a rel=\"noopener noreferrer\" href=\"https://amiko.oddb.org/de/fi?gtin=66652&amp;highlight=Pharmakogenomik\" target=\"_blank\">letermovir drug label</a> (in German).</p>\n",
+        "version": 2
+      },
+      "version": 1
+    },
+    {
+      "objCls": "Label Annotation",
+      "id": "PA166184393",
+      "name": "Annotation of Swissmedic Label for pitavastatin and SLCO1B1",
+      "alternateDrugAvailable": false,
+      "cancerGenome": false,
+      "crossReferences": [],
+      "dosingInformation": false,
+      "history": [],
+      "indication": false,
+      "labelApplications": [],
+      "labelDocumentAvailable": true,
+      "literature": [
+        {
+          "id": 15103076,
+          "title": "Swissmedic label for pitavastatin",
+          "_sameAs": "https://amiko.oddb.org/de/fi?gtin=62329",
+          "crossReferences": [
+            {
+              "id": 1450812037,
+              "resource": "URL",
+              "resourceId": "https://amiko.oddb.org/de/fi?gtin=62329",
+              "_url": "https://amiko.oddb.org/de/fi?gtin=62329"
+            }
+          ],
+          "objCls": "Literature",
+          "terms": [],
+          "type": "Drug Label"
+        }
+      ],
+      "otherPrescribingGuidance": false,
+      "pediatric": false,
+      "pgxRelated": true,
+      "prescribingGenes": [],
+      "relatedAlleles": [],
+      "relatedChemicals": [
+        {
+          "objCls": "Chemical",
+          "id": "PA142650384",
+          "name": "pitavastatin",
+          "version": 4
+        }
+      ],
+      "relatedGenes": [
+        {
+          "objCls": "Gene",
+          "id": "PA134865839",
+          "symbol": "SLCO1B1",
+          "name": "solute carrier organic anion transporter family member 1B1",
+          "version": 49
+        }
+      ],
+      "source": "Swissmedic",
+      "summaryMarkdown": {
+        "id": 1450815417,
+        "html": "<p>The Swiss drug label for pitavastatin (Livazo) states that genetic variation in SLCO1B1 gene may impact pitavastatin concentration.</p>\n",
+        "version": 0
+      },
+      "terms": [],
+      "testing": {
+        "id": 1183672111,
+        "description": "The label does not discuss genetic or other testing for gene/protein/chromosomal variants, but does contain information about changes in efficacy, dosage or toxicity due to such variants. The label may mention contraindication of the drug in a particular subset of patients but does not require or recommend gene, protein or chromosomal testing.",
+        "parents": [],
+        "resource": "Genetic Testing Level",
+        "synonyms": [],
+        "term": "Actionable PGx",
+        "termId": "geneTestLevel:1183672111",
+        "valid": true,
+        "version": 2
+      },
+      "textMarkdown": {
+        "id": 1450815418,
+        "html": "<p><strong>Please note that the information contained within this drug label annotation is available through a collaboration with the <a rel=\"noopener noreferrer\" href=\"http://www.pharmacare.unibas.ch\" target=\"_blank\">Pharmaceutical Care Research Group (PCRG), Department of Pharmaceutical Sciences, University of Basel</a>, who provided a translation of the pharmacogenetic information contained in the Swiss drug labels. The original label in German can be accessed using the link under &quot;Source&quot; below.</strong></p>\n<p>Excerpt from the pitavastatin (Livazo) label:</p>\n<blockquote class=\"blockquote\">\n<p>Pharmacokinetics:\nPitavastatin is actively transported by various hepatic transporters, including OATP1B1 and OATP1B3, into the hepatocytes (the site of action and metabolism). The AUC in plasma is variable with about factor 4 between the highest and the lowest value. Studies with SLCO1B1 (the gene coding for OATP1B1) suggest that a polymorphism of this gene contributes greatly to AUC variability. Pitavastatin is not a substrate of p-glycoprotein.</p>\n</blockquote>\n<p>For the complete drug label text with pharmacogenetic information highlighted, see the <a rel=\"noopener noreferrer\" href=\"https://amiko.oddb.org/de/fi?gtin=62329&amp;highlight=Polymorphismus\" target=\"_blank\">pitavastatin drug label</a> (in German);</p>\n",
+        "version": 2
+      },
+      "version": 1
+    },
+    {
+      "objCls": "Label Annotation",
+      "id": "PA166184427",
+      "name": "Annotation of Swissmedic Label for ezetimibe / rosuvastatin and ABCG2, SLCO1B1",
+      "alternateDrugAvailable": false,
+      "cancerGenome": false,
+      "crossReferences": [],
+      "dosingInformation": true,
+      "history": [
+        {
+          "id": 1452021846,
+          "date": "2023-02-28T13:10:35.592-08:00",
+          "description": "added prescribing genes",
+          "type": "Update",
+          "version": 0
+        },
+        {
+          "id": 1452555241,
+          "date": "2024-08-13T13:25:33.400-07:00",
+          "description": "added Dosing Info tag",
+          "type": "Update",
+          "version": 0
+        }
+      ],
+      "indication": false,
+      "labelApplications": [],
+      "labelDocumentAvailable": true,
+      "literature": [
+        {
+          "id": 15103088,
+          "title": "Swissmedic label for Rosuvastatin und Ezetimib",
+          "_sameAs": "https://amiko.oddb.org/de/fi?gtin=66835",
+          "crossReferences": [
+            {
+              "id": 1450812049,
+              "resource": "URL",
+              "resourceId": "https://amiko.oddb.org/de/fi?gtin=66835",
+              "_url": "https://amiko.oddb.org/de/fi?gtin=66835"
+            }
+          ],
+          "objCls": "Literature",
+          "terms": [],
+          "type": "Drug Label"
+        }
+      ],
+      "otherPrescribingGuidance": false,
+      "pediatric": false,
+      "pgxRelated": true,
+      "prescribingGenes": [
+        {
+          "objCls": "Gene",
+          "id": "PA390",
+          "symbol": "ABCG2",
+          "name": "ATP binding cassette subfamily G member 2 (JR blood group)",
+          "version": 3597
+        },
+        {
+          "objCls": "Gene",
+          "id": "PA134865839",
+          "symbol": "SLCO1B1",
+          "name": "solute carrier organic anion transporter family member 1B1",
+          "version": 49
+        }
+      ],
+      "prescribingMarkdown": {
+        "id": 1450815586,
+        "html": "<blockquote class=\"blockquote\">\n<p>Dosage: Specific types of genetic polymorphisms are known that may lead to an increase in rosuvastatin exposure (see &quot;Pharmacokinetics&quot;). In patients in whom such a polymorphism is known, a reduction in the dosage of ezetimib-rosuvastatin mepha is recommended.</p>\n</blockquote>\n",
+        "version": 1
+      },
+      "relatedAlleles": [
+        {
+          "objCls": "Variant",
+          "id": "PA166156544",
+          "symbol": "rs2231142",
+          "name": "rs2231142",
+          "version": 4
+        },
+        {
+          "objCls": "Variant",
+          "id": "PA166154579",
+          "symbol": "rs4149056",
+          "name": "rs4149056",
+          "version": 6
+        }
+      ],
+      "relatedChemicals": [
+        {
+          "objCls": "Chemical",
+          "id": "PA166184498",
+          "name": "ezetimibe / rosuvastatin",
+          "version": 4
+        }
+      ],
+      "relatedGenes": [
+        {
+          "objCls": "Gene",
+          "id": "PA390",
+          "symbol": "ABCG2",
+          "name": "ATP binding cassette subfamily G member 2 (JR blood group)",
+          "version": 3597
+        },
+        {
+          "objCls": "Gene",
+          "id": "PA134865839",
+          "symbol": "SLCO1B1",
+          "name": "solute carrier organic anion transporter family member 1B1",
+          "version": 49
+        }
+      ],
+      "source": "Swissmedic",
+      "summaryMarkdown": {
+        "id": 1450815584,
+        "html": "<p>The Swiss drug label for ezetimibe/rosuvastatin (Ezetimib-Rosuvastatin-Mepha Kapseln) states that genetic polymorphisms in SLCO1B1 and ABCG2  may lead to an increase in rosuvastatin exposure, a reduction in the dosage is recommended.</p>\n",
+        "version": 0
+      },
+      "terms": [],
+      "testing": {
+        "id": 1183672111,
+        "description": "The label does not discuss genetic or other testing for gene/protein/chromosomal variants, but does contain information about changes in efficacy, dosage or toxicity due to such variants. The label may mention contraindication of the drug in a particular subset of patients but does not require or recommend gene, protein or chromosomal testing.",
+        "parents": [],
+        "resource": "Genetic Testing Level",
+        "synonyms": [],
+        "term": "Actionable PGx",
+        "termId": "geneTestLevel:1183672111",
+        "valid": true,
+        "version": 2
+      },
+      "textMarkdown": {
+        "id": 1450815585,
+        "html": "<p><strong>Please note that the information contained within this drug label annotation is available through a collaboration with the <a rel=\"noopener noreferrer\" href=\"http://www.pharmacare.unibas.ch\" target=\"_blank\">Pharmaceutical Care Research Group (PCRG), Department of Pharmaceutical Sciences, University of Basel</a>, who provided a translation of the pharmacogenetic information contained in the Swiss drug labels. The original label in German can be accessed using the link under &quot;Source&quot; below.</strong></p>\n<p>Excerpts from the rosuvastatin (Ezetimib-Rosuvastatin-Mepha) label:</p>\n<blockquote class=\"blockquote\">\n<p>Dosage:\nGenetic polymorphisms: Specific types of genetic polymorphisms are known that may lead to an increase in rosuvastatin exposure (see &quot;Pharmacokinetics&quot;). In patients in whom such a polymorphism is known, a reduction in the dosage of ezetimib-rosuvastatin mepha is recommended.</p>\n</blockquote>\n<blockquote class=\"blockquote\">\n<p>Pharmacokinetics:\nGenetic polymorphisms: The availability of HMG-CoA reductase inhibitors such as rosuvastatin depends, among other things, on the transport proteins OATP1B1 and BCRP. Patients with different sequence variations of the SLCO1B1 gene (OATP1B1) and/or the ABCG2 gene (BCRP) are at risk of increased exposure to rosvastatin. The genotype variants SLCO1B1 c.521CC and ABCG2 c.421AA are associated with approximately 1.7-fold higher exposure to rosuvastatin (AUC) and 2.4-fold higher exposure, respectively, than the variants SLCO1B1 c.521TT and ABCG2 c.421CC.</p>\n</blockquote>\n<p>For the complete drug label text with pharmacogenetic information highlighted, see the <a rel=\"noopener noreferrer\" href=\"https://amiko.oddb.org/de/fi?gtin=66835&amp;highlight=Genetische\" target=\"_blank\">Ezetimib-Rosuvastatin-Mepha drug label</a> (in German).</p>\n",
+        "version": 2
+      },
+      "version": 3
+    },
+    {
+      "objCls": "Label Annotation",
+      "id": "PA166184429",
+      "name": "Annotation of Swissmedic Label for ezetimibe / simvastatin and SLCO1B1",
+      "alternateDrugAvailable": false,
+      "cancerGenome": false,
+      "crossReferences": [],
+      "dosingInformation": true,
+      "history": [
+        {
+          "id": 1452021847,
+          "date": "2023-02-28T13:10:57.662-08:00",
+          "description": "added prescribing genes",
+          "type": "Update",
+          "version": 0
+        }
+      ],
+      "indication": false,
+      "labelApplications": [],
+      "labelDocumentAvailable": true,
+      "literature": [
+        {
+          "id": 15103091,
+          "title": "Swissmedic label for Simvastatin und Ezetimib",
+          "_sameAs": "https://amiko.oddb.org/de/fi?gtin=56953",
+          "crossReferences": [
+            {
+              "id": 1450812052,
+              "resource": "URL",
+              "resourceId": "https://amiko.oddb.org/de/fi?gtin=56953",
+              "_url": "https://amiko.oddb.org/de/fi?gtin=56953"
+            }
+          ],
+          "objCls": "Literature",
+          "terms": [],
+          "type": "Drug Label"
+        }
+      ],
+      "otherPrescribingGuidance": false,
+      "pediatric": false,
+      "pgxRelated": true,
+      "prescribingGenes": [
+        {
+          "objCls": "Gene",
+          "id": "PA134865839",
+          "symbol": "SLCO1B1",
+          "name": "solute carrier organic anion transporter family member 1B1",
+          "version": 49
+        }
+      ],
+      "prescribingMarkdown": {
+        "id": 1450815596,
+        "html": "<blockquote class=\"blockquote\">\n<p>Where available, genotyping for the presence of the C allele should be considered as part of the benefit-risk assessment in individual patients before prescribing simvastatin 80 mg, and high doses should be avoided in identified carriers of the CC genotype. However, the absence of this gene in genotyping does not exclude the possibility of myopathy.</p>\n</blockquote>\n",
+        "version": 1
+      },
+      "relatedAlleles": [
+        {
+          "objCls": "Variant",
+          "id": "PA166154579",
+          "symbol": "rs4149056",
+          "name": "rs4149056",
+          "version": 6
+        }
+      ],
+      "relatedChemicals": [
+        {
+          "objCls": "Chemical",
+          "id": "PA166184495",
+          "name": "ezetimibe / simvastatin",
+          "version": 6
+        }
+      ],
+      "relatedGenes": [
+        {
+          "objCls": "Gene",
+          "id": "PA134865839",
+          "symbol": "SLCO1B1",
+          "name": "solute carrier organic anion transporter family member 1B1",
+          "version": 49
+        }
+      ],
+      "source": "Swissmedic",
+      "summaryMarkdown": {
+        "id": 1450815594,
+        "html": "<p>The Swiss drug label for ezetimibe/simvastatin (Inegy) states that patients with SLCO1B1 c.521T&gt;C polymorphism are at risk of increased exposure to simvastatin acid, which may lead to an increased risk of rhabdomyolysis.  &quot;Genotyping for the presence of the C allele should be considered as part of the benefit-risk assessment in individual patients before prescribing simvastatin 80 mg, and high doses should be avoided in identified carriers of the CC genotype.&quot;</p>\n",
+        "version": 0
+      },
+      "terms": [],
+      "testing": {
+        "id": 1183672077,
+        "description": "The label states or implies that some sort of gene, protein or chromosomal testing, including genetic testing, functional protein assays, cytogenetic studies, etc., is recommended before using this drug. This recommendation may only be for a particular subset of patients. PharmGKB considers labels that say testing \"should be considered\" to be recommending testing.",
+        "parents": [],
+        "resource": "Genetic Testing Level",
+        "synonyms": [],
+        "term": "Testing Recommended",
+        "termId": "geneTestLevel:1183672077",
+        "valid": true,
+        "version": 3
+      },
+      "textMarkdown": {
+        "id": 1450815595,
+        "html": "<p><strong>Please note that the information contained within this drug label annotation is available through a collaboration with the <a rel=\"noopener noreferrer\" href=\"http://www.pharmacare.unibas.ch\" target=\"_blank\">Pharmaceutical Care Research Group (PCRG), Department of Pharmaceutical Sciences, University of Basel</a>, who provided a translation of the pharmacogenetic information contained in the Swiss drug labels. The original label in German can be accessed using the link under &quot;Source&quot; below.</strong></p>\n<p>Excerpts from the simvastatin (Inegy) label:</p>\n<blockquote class=\"blockquote\">\n<p>Precautions:\nReduced function of transport proteins:\nThe decreased function of the hepatic OATP transport protein may increase the systemic exposure to simvastatin acid, as well as the risk for myopathy and rhabdomyolysis. Decreased function may result from inhibition by interacting drugs (e.g., ciclosporin) or may occur in patients carrying the SLCO1B1 c.521T&gt;C genotype.\nPatients carrying the allele c.521T&gt;C of the SLCO1B1 gene encoding a less active OATP1B1 protein have increased systemic exposure to simvastatin acid and increased risk of myopathy. The risk of myopathy caused by high-dose simvastatin (80 mg) is generally 1% without genetic testing. Based on the results of the SEARCH study, carriers of the homozygous C allele (also called CC) treated with 80 mg have a 15% risk of myopathy within one year, while carriers of the heterozygous C allele (CT) have a 1.5% risk. Patients with the most common genotype (TT) have a risk of 0.3% (see &quot;Pharmacokinetics&quot;). Where available, genotyping for the presence of the C allele should be considered as part of the benefit-risk assessment in individual patients before prescribing simvastatin 80 mg, and high doses should be avoided in identified carriers of the CC genotype. However, the absence of this gene in genotyping does not exclude the possibility of myopathy.</p>\n</blockquote>\n<blockquote class=\"blockquote\">\n<p>Pharmacokinetics:\nrace: ezetimibe\nThe meta-analysis of the pharmacokinetic studies showed no pharmacokinetic differences between blacks and Caucasians.</p>\n</blockquote>\n<blockquote class=\"blockquote\">\n<p>SLCO1B1 Polymorphism: simvastatin:\nCarriers of the c.521T&gt;C allele of the SLCO1B1 gene have a lower OATP1B1 activity. The average bioavailability (AUC) of the most important active metabolite, simvastatinic acid, is 120% for heterozygous carriers (CT) of the C allele and 221% for homozygous carriers (CC), relative to those of patients with the most common genotype (TT). The C allele has a frequency of 18% in the European population. Patients with SLCO1B1 polymorphism are at risk of increased exposure to simvastatin acid, which may lead to an increased risk of rhabdomyolysis (see &quot;Warnings and Precautions&quot;, Myopathy/Rhabdomyolysis).</p>\n</blockquote>\n<p>For the complete drug label text with pharmacogenetic information highlighted, see the <a rel=\"noopener noreferrer\" href=\"https://amiko.oddb.org/de/fi?gtin=49742&amp;highlight=Allel\" target=\"_blank\">zocor drug label</a> (in German); <a rel=\"noopener noreferrer\" href=\"https://amiko.oddb.org/de/fi?gtin=56953&amp;highlight=genotypischer\" target=\"_blank\">Inegy drug label</a> (in German)</p>\n",
+        "version": 2
+      },
+      "version": 2
+    },
+    {
+      "objCls": "Label Annotation",
+      "id": "PA166184430",
+      "name": "Annotation of Swissmedic Label for fenofibrate, simvastatin and SLCO1B1",
+      "alternateDrugAvailable": false,
+      "cancerGenome": false,
+      "crossReferences": [],
+      "dosingInformation": false,
+      "history": [],
+      "indication": false,
+      "labelApplications": [],
+      "labelDocumentAvailable": true,
+      "literature": [
+        {
+          "id": 15103092,
+          "title": "Swissmedic label for Simvastatin und Fenofibrat",
+          "_sameAs": "https://amiko.oddb.org/de/fi?gtin=65222",
+          "crossReferences": [
+            {
+              "id": 1450812053,
+              "resource": "URL",
+              "resourceId": "https://amiko.oddb.org/de/fi?gtin=65222",
+              "_url": "https://amiko.oddb.org/de/fi?gtin=65222"
+            }
+          ],
+          "objCls": "Literature",
+          "terms": [],
+          "type": "Drug Label"
+        }
+      ],
+      "otherPrescribingGuidance": false,
+      "pediatric": false,
+      "pgxRelated": true,
+      "prescribingGenes": [],
+      "relatedAlleles": [
+        {
+          "objCls": "Variant",
+          "id": "PA166154579",
+          "symbol": "rs4149056",
+          "name": "rs4149056",
+          "version": 6
+        }
+      ],
+      "relatedChemicals": [
+        {
+          "objCls": "Chemical",
+          "id": "PA449594",
+          "name": "fenofibrate",
+          "version": 7
+        },
+        {
+          "objCls": "Chemical",
+          "id": "PA451363",
+          "name": "simvastatin",
+          "version": 26
+        }
+      ],
+      "relatedGenes": [
+        {
+          "objCls": "Gene",
+          "id": "PA134865839",
+          "symbol": "SLCO1B1",
+          "name": "solute carrier organic anion transporter family member 1B1",
+          "version": 49
+        }
+      ],
+      "source": "Swissmedic",
+      "summaryMarkdown": {
+        "id": 1450815598,
+        "html": "<p>The Swiss drug label for Simvastatin and Fenofibrate (Cholib) states that the decreased function of hepatic OATP transport proteins may increase systemic simvastatin exposure and the risk for myopathy and rhabdomyolysis.</p>\n",
+        "version": 0
+      },
+      "terms": [],
+      "testing": {
+        "id": 1183672111,
+        "description": "The label does not discuss genetic or other testing for gene/protein/chromosomal variants, but does contain information about changes in efficacy, dosage or toxicity due to such variants. The label may mention contraindication of the drug in a particular subset of patients but does not require or recommend gene, protein or chromosomal testing.",
+        "parents": [],
+        "resource": "Genetic Testing Level",
+        "synonyms": [],
+        "term": "Actionable PGx",
+        "termId": "geneTestLevel:1183672111",
+        "valid": true,
+        "version": 2
+      },
+      "textMarkdown": {
+        "id": 1450815599,
+        "html": "<p><strong>Please note that the information contained within this drug label annotation is available through a collaboration with the <a rel=\"noopener noreferrer\" href=\"http://www.pharmacare.unibas.ch\" target=\"_blank\">Pharmaceutical Care Research Group (PCRG), Department of Pharmaceutical Sciences, University of Basel</a>, who provided a translation of the pharmacogenetic information contained in the Swiss drug labels. The original label in German can be accessed using the link under &quot;Source&quot; below.</strong></p>\n<p>Excerpts from the simavastatin and fenofibrate (Cholib) label:</p>\n<blockquote class=\"blockquote\">\n<p>Precautions:\nReduced transport protein function:\nThe decreased function of hepatic OATP transport proteins may increase systemic simvastatin exposure and the risk for myopathy and rhabdomyolysis. Decreased function may result from inhibition by interacting drugs (e.g., ciclosporin) or occur in patients carrying the SLCO1B1 c.521T&gt;C genotype.</p>\n</blockquote>\n<blockquote class=\"blockquote\">\n<p>In patients carrying the SLCO1B1 gene (c.521T&gt;C) coding for a less active OATP1B1 protein, systemic exposure to simvastatin and the risk of myopathy are increased. The risk of myopathy caused by high-dose simvastatin (80 mg) is generally 1% without genetic testing. Based on the results of the SEARCH study, carriers of the homozygous C allele (also called CC) treated with 80 mg have a 15% risk of myopathy within one year, while carriers of the heterozygous C allele (CT) have a 1.5% risk. The corresponding risk for patients with the most frequent genotype (TT) is 0.3% (see &quot;Pharmacokinetics&quot;).</p>\n</blockquote>\n<p>For the complete drug label text with pharmacogenetic information highlighted, see the <a rel=\"noopener noreferrer\" href=\"https://amiko.oddb.org/de/fi?gtin=65222&amp;highlight=SLCO1B1\" target=\"_blank\">Cholib drug label</a> (in German);</p>\n",
+        "version": 2
+      },
+      "version": 1
+    },
+    {
+      "objCls": "Label Annotation",
+      "id": "PA166184499",
+      "name": "Annotation of Swissmedic Label for rosuvastatin and ABCG2, SLCO1B1",
+      "alternateDrugAvailable": false,
+      "cancerGenome": false,
+      "crossReferences": [],
+      "dosingInformation": true,
+      "history": [
+        {
+          "id": 1452022040,
+          "date": "2023-02-28T14:36:35.748-08:00",
+          "description": "added prescribing genes",
+          "type": "Update",
+          "version": 0
+        },
+        {
+          "id": 1452555260,
+          "date": "2024-08-13T13:24:32.740-07:00",
+          "description": "added Dosing Info tag",
+          "type": "Update",
+          "version": 0
+        }
+      ],
+      "indication": false,
+      "labelApplications": [],
+      "labelDocumentAvailable": true,
+      "literature": [
+        {
+          "id": 15103087,
+          "title": "Swissmedic label for rosuvastatin",
+          "_sameAs": "https://amiko.oddb.org/de/fi?gtin=56139",
+          "crossReferences": [
+            {
+              "id": 1450812048,
+              "resource": "URL",
+              "resourceId": "https://amiko.oddb.org/de/fi?gtin=56139",
+              "_url": "https://amiko.oddb.org/de/fi?gtin=56139"
+            }
+          ],
+          "objCls": "Literature",
+          "terms": [],
+          "type": "Drug Label"
+        }
+      ],
+      "otherPrescribingGuidance": false,
+      "pediatric": false,
+      "pgxRelated": true,
+      "prescribingGenes": [
+        {
+          "objCls": "Gene",
+          "id": "PA390",
+          "symbol": "ABCG2",
+          "name": "ATP binding cassette subfamily G member 2 (JR blood group)",
+          "version": 3597
+        },
+        {
+          "objCls": "Gene",
+          "id": "PA134865839",
+          "symbol": "SLCO1B1",
+          "name": "solute carrier organic anion transporter family member 1B1",
+          "version": 49
+        }
+      ],
+      "prescribingMarkdown": {
+        "id": 1450820425,
+        "html": "<blockquote class=\"blockquote\">\n<p>Increased plasma levels of rosuvastatin have been observed in Asians (see &quot;Warnings and Precautions&quot; and &quot;Pharmacokinetics&quot;). The recommended starting dose for Asians is 5 mg and the dose of 40 mg is contraindicated.</p>\n</blockquote>\n<blockquote class=\"blockquote\">\n<p>Genetic polymorphisms\nSpecific types of genetic polymorphisms are known that may lead to an increase in rosuvastatin exposure (see &quot;Pharmacokinetics&quot;). In patients known to have such a polymorphism, a reduction in the dosage of Crestor is recommended.</p>\n</blockquote>\n<blockquote class=\"blockquote\">\n<p>Genetic polymorphisms\nSpecific types of genetic polymorphisms are known that may lead to an increase in rosuvastatin exposure (see &quot;Pharmacokinetics&quot;). In patients in whom such a polymorphism is known, a reduction in the dosage of ezetimib-rosuvastatin mepha is recommended.</p>\n</blockquote>\n",
+        "version": 1
+      },
+      "relatedAlleles": [
+        {
+          "objCls": "Variant",
+          "id": "PA166156544",
+          "symbol": "rs2231142",
+          "name": "rs2231142",
+          "version": 4
+        },
+        {
+          "objCls": "Variant",
+          "id": "PA166154579",
+          "symbol": "rs4149056",
+          "name": "rs4149056",
+          "version": 6
+        }
+      ],
+      "relatedChemicals": [
+        {
+          "objCls": "Chemical",
+          "id": "PA134308647",
+          "name": "rosuvastatin",
+          "version": 23
+        }
+      ],
+      "relatedGenes": [
+        {
+          "objCls": "Gene",
+          "id": "PA390",
+          "symbol": "ABCG2",
+          "name": "ATP binding cassette subfamily G member 2 (JR blood group)",
+          "version": 3597
+        },
+        {
+          "objCls": "Gene",
+          "id": "PA134865839",
+          "symbol": "SLCO1B1",
+          "name": "solute carrier organic anion transporter family member 1B1",
+          "version": 49
+        }
+      ],
+      "source": "Swissmedic",
+      "summaryMarkdown": {
+        "id": 1450820423,
+        "html": "<p>The Swiss drug label for rosuvastatin (Crestor) states that genetic polymorphisms in SLCO1B1 and ABCG2  may lead to an increase in rosuvastatin exposure, a reduction in the dosage is recommended.</p>\n",
+        "version": 0
+      },
+      "terms": [],
+      "testing": {
+        "id": 1183672111,
+        "description": "The label does not discuss genetic or other testing for gene/protein/chromosomal variants, but does contain information about changes in efficacy, dosage or toxicity due to such variants. The label may mention contraindication of the drug in a particular subset of patients but does not require or recommend gene, protein or chromosomal testing.",
+        "parents": [],
+        "resource": "Genetic Testing Level",
+        "synonyms": [],
+        "term": "Actionable PGx",
+        "termId": "geneTestLevel:1183672111",
+        "valid": true,
+        "version": 2
+      },
+      "textMarkdown": {
+        "id": 1450820424,
+        "html": "<p><strong>Please note that the information contained within this drug label annotation is available through a collaboration with the <a rel=\"noopener noreferrer\" href=\"http://www.pharmacare.unibas.ch\" target=\"_blank\">Pharmaceutical Care Research Group (PCRG), Department of Pharmaceutical Sciences, University of Basel</a>, who provided a translation of the pharmacogenetic information contained in the Swiss drug labels. The original label in German can be accessed using the link under &quot;Source&quot; below.</strong></p>\n<p>Excerpts from the rosuvastatin (Crestor) label:</p>\n<blockquote class=\"blockquote\">\n<p>Pharmacokinetics:\nethnicity: Pharmacokinetic studies conducted in Asia showed a 2-fold increase in mean AUC in Asians compared to Caucasians living in Asia or Europe. The involvement of environmental influences and genetic factors in these observed differences was not investigated. A pharmacokinetic analysis showed no clinically relevant differences between Caucasians, Hispanics and blacks or persons of Afro-Caribbean origin.</p>\n</blockquote>\n<blockquote class=\"blockquote\">\n<p>Genetic polymorphisms: The availability of HMG-CoA reductase inhibitors such as rosuvastatin depends, among other things, on the transport proteins OATP1B1 and BCRP. Patients with different sequence variations of the SLCO1B1 gene (OATP1B1) and/or the ABCG2 gene (BCRP) are at risk of increased exposure to rosvastatin. The genotype variants SLCO1B1 c.521CC and ABCG2 c.421AA are associated with approximately 1.7-fold higher exposure to rosuvastatin (AUC) and 2.4-fold higher exposure respectively than the variants SLCO1B1 c.521TT and ABCG2 c.421CC.</p>\n</blockquote>\n<blockquote class=\"blockquote\">\n<p>Dosage:\nrace: Increased plasma levels of rosuvastatin have been observed in Asians (see &quot;Warnings and Precautions&quot; and &quot;Pharmacokinetics&quot;). The recommended starting dose for Asians is 5 mg and the dose of 40 mg is contraindicated.</p>\n</blockquote>\n<blockquote class=\"blockquote\">\n<p>Genetic polymorphisms: Specific types of genetic polymorphisms are known that may lead to an increase in rosuvastatin exposure (see &quot;Pharmacokinetics&quot;). In patients known to have such a polymorphism, a reduction in the dosage of Crestor is recommended.</p>\n</blockquote>\n<p>For the complete drug label text with pharmacogenetic information highlighted, see the <a rel=\"noopener noreferrer\" href=\"https://amiko.oddb.org/de/fi?gtin=56139\" target=\"_blank\">Crestor drug label</a> (in German).</p>\n",
+        "version": 2
+      },
+      "version": 3
+    },
+    {
+      "objCls": "Label Annotation",
+      "id": "PA166184500",
+      "name": "Annotation of Swissmedic Label for simvastatin and SLCO1B1",
+      "alternateDrugAvailable": false,
+      "cancerGenome": false,
+      "crossReferences": [],
+      "dosingInformation": false,
+      "history": [
+        {
+          "id": 1452022043,
+          "date": "2023-02-28T14:36:57.168-08:00",
+          "description": "added prescribing genes",
+          "type": "Update",
+          "version": 0
+        }
+      ],
+      "indication": false,
+      "labelApplications": [],
+      "labelDocumentAvailable": true,
+      "literature": [
+        {
+          "id": 15103090,
+          "title": "Swissmedic label for simvastatin",
+          "_sameAs": "https://amiko.oddb.org/de/fi?gtin=49742",
+          "crossReferences": [
+            {
+              "id": 1450812051,
+              "resource": "URL",
+              "resourceId": "https://amiko.oddb.org/de/fi?gtin=49742",
+              "_url": "https://amiko.oddb.org/de/fi?gtin=49742"
+            }
+          ],
+          "objCls": "Literature",
+          "terms": [],
+          "type": "Drug Label"
+        }
+      ],
+      "otherPrescribingGuidance": false,
+      "pediatric": false,
+      "pgxRelated": true,
+      "prescribingGenes": [
+        {
+          "objCls": "Gene",
+          "id": "PA134865839",
+          "symbol": "SLCO1B1",
+          "name": "solute carrier organic anion transporter family member 1B1",
+          "version": 49
+        }
+      ],
+      "prescribingMarkdown": {
+        "id": 1450820429,
+        "html": "<blockquote class=\"blockquote\">\n<p>Where available, genotyping for the presence of the C allele should be considered as part of the benefit-risk assessment in individual patients before prescribing simvastatin 80 mg, and high doses should be avoided in identified carriers of the CC genotype. However, the absence of this gene in genotyping does not exclude the possibility of myopathy.</p>\n</blockquote>\n",
+        "version": 1
+      },
+      "relatedAlleles": [
+        {
+          "objCls": "Variant",
+          "id": "PA166154579",
+          "symbol": "rs4149056",
+          "name": "rs4149056",
+          "version": 6
+        }
+      ],
+      "relatedChemicals": [
+        {
+          "objCls": "Chemical",
+          "id": "PA451363",
+          "name": "simvastatin",
+          "version": 26
+        }
+      ],
+      "relatedGenes": [
+        {
+          "objCls": "Gene",
+          "id": "PA134865839",
+          "symbol": "SLCO1B1",
+          "name": "solute carrier organic anion transporter family member 1B1",
+          "version": 49
+        }
+      ],
+      "source": "Swissmedic",
+      "summaryMarkdown": {
+        "id": 1450820427,
+        "html": "<p>The Swiss drug label for simvastatin (Zocor\u00ae 20 mg/40 mg/80 mg) states that patients with SLCO1B1 c.521T&gt;C polymorphism are at risk of increased exposure to simvastatin acid, which may lead to an increased risk of rhabdomyolysis.  &quot;Genotyping for the presence of the C allele should be considered as part of the benefit-risk assessment in individual patients before prescribing simvastatin 80 mg, and high doses should be avoided in identified carriers of the CC genotype.&quot;</p>\n",
+        "version": 0
+      },
+      "terms": [],
+      "testing": {
+        "id": 1183672077,
+        "description": "The label states or implies that some sort of gene, protein or chromosomal testing, including genetic testing, functional protein assays, cytogenetic studies, etc., is recommended before using this drug. This recommendation may only be for a particular subset of patients. PharmGKB considers labels that say testing \"should be considered\" to be recommending testing.",
+        "parents": [],
+        "resource": "Genetic Testing Level",
+        "synonyms": [],
+        "term": "Testing Recommended",
+        "termId": "geneTestLevel:1183672077",
+        "valid": true,
+        "version": 3
+      },
+      "textMarkdown": {
+        "id": 1450820428,
+        "html": "<p><strong>Please note that the information contained within this drug label annotation is available through a collaboration with the <a rel=\"noopener noreferrer\" href=\"http://www.pharmacare.unibas.ch\" target=\"_blank\">Pharmaceutical Care Research Group (PCRG), Department of Pharmaceutical Sciences, University of Basel</a>, who provided a translation of the pharmacogenetic information contained in the Swiss drug labels. The original label in German can be accessed using the link under &quot;Source&quot; below.</strong></p>\n<p>Excerpts from the simvastatin (Zocor) label:</p>\n<blockquote class=\"blockquote\">\n<p>Pharmacokinetics:\nSLCO1B1 Polymorphism: Carriers of the c.521T&gt;C allele of the SLCO1B1 gene have a lower OATP1B1 activity. The average bioavailability (AUC) of the most important active metabolite, simvastatinic acid, is 120% for heterozygous carriers (CT) of the C allele and 221% for homozygous carriers (CC), relative to those of patients with the most common genotype (TT). The C allele has a frequency of 18% in the European population. Patients with SLCO1B1 polymorphism are at risk of increased exposure to simvastatin acid, which may lead to an increased risk of rhabdomyolysis (see &quot;Warnings and Precautions, Myopathy/Rhabdomyolysis&quot;).</p>\n</blockquote>\n<blockquote class=\"blockquote\">\n<p>Precautions:\nIn a clinical study in which patients at high risk of cardiovascular disease were treated with simvastatin 40 mg per day (mean follow-up 3.9 years), the incidence of myopathy was approximately 0.05% in non-Chinese patients (n=7367) compared to 0.24% in Chinese patients (n=5468). Since the Chinese were the only Asian population included in this clinical trial, simvastatin should be prescribed with caution in Asian patients and the lowest necessary dose should be used.\nReduced function of transport proteins:\nThe decreased function of the hepatic OATP transport protein may increase the systemic exposure to simvastatin acid, as well as the risk for myopathy and rhabdomyolysis. Decreased function may result from inhibition by interacting drugs (e.g., ciclosporin) or may occur in patients carrying the SLCO1B1 c.521T&gt;C genotype.\nPatients carrying the allele c.521T&gt;C of the SLCO1B1 gene encoding a less active OATP1B1 protein have increased systemic exposure to simvastatin acid and increased risk of myopathy. The risk of myopathy caused by high-dose simvastatin (80 mg) is generally 1% without genetic testing. Based on the results of the SEARCH study, carriers of the homozygous C allele (also called CC) treated with 80 mg have a 15% risk of myopathy within one year, while carriers of the heterozygous C allele (CT) have a 1.5% risk. Patients with the most common genotype (TT) have a risk of 0.3% (see &quot;Pharmacokinetics&quot;). Where available, genotyping for the presence of the C allele should be considered as part of the benefit-risk assessment in individual patients before prescribing simvastatin 80 mg, and high doses should be avoided in identified carriers of the CC genotype. However, the absence of this gene in genotyping does not exclude the possibility of myopathy.</p>\n</blockquote>\n<p>For the complete drug label text with pharmacogenetic information highlighted, see the <a rel=\"noopener noreferrer\" href=\"https://amiko.oddb.org/de/fi?gtin=49742&amp;highlight=Allel\" target=\"_blank\">zocor drug label</a> (in German).</p>\n",
+        "version": 2
+      },
+      "version": 2
+    },
+    {
+      "objCls": "Label Annotation",
+      "id": "PA166234723",
+      "name": "Annotation of FDA Label for atorvastatin and SLCO1B1",
+      "alternateDrugAvailable": false,
+      "cancerGenome": false,
+      "crossReferences": [],
+      "dosingInformation": false,
+      "history": [
+        {
+          "id": 1452206980,
+          "date": "2023-08-15T00:00:00-07:00",
+          "description": "Checked slightly newer label on FDA site (2022) to see if genotyping for SLCO1B1 was added and did not find any. Did not download and highlight newer label since still only has PK/DDI information.",
+          "type": "Note",
+          "version": 0
+        },
+        {
+          "id": 1452206960,
+          "date": "2023-08-15T07:29:00.561-07:00",
+          "description": "Unchecked informative as no longer meets criteria.",
+          "type": "Update",
+          "version": 0
+        },
+        {
+          "id": 1452315341,
+          "date": "2023-12-04T09:34:38.395-08:00",
+          "description": "Updated label and label source.",
+          "type": "Update",
+          "version": 0
+        }
+      ],
+      "indication": false,
+      "labelApplications": [],
+      "labelDocumentAvailable": true,
+      "literature": [
+        {
+          "id": 15101967,
+          "title": "Drugs@FDA: Drug Product ATORVASTATIN CALCIUM (ATORVASTATIN CALCIUM), NDA020702, Legacy Pharmaceutical Packaging, LLC",
+          "_sameAs": "https://www.accessdata.fda.gov/scripts/cder/daf/index.cfm?event=overview.process&varApplNo=020702",
+          "crossReferences": [
+            {
+              "id": 1452315342,
+              "resource": "FDA Application",
+              "resourceId": "NDA020702/SUPPL-79",
+              "_url": "https://www.accessdata.fda.gov/scripts/cder/daf/index.cfm?event=overview.process&varApplNo=020702"
+            }
+          ],
+          "objCls": "Literature",
+          "pubDate": "2022-12-07T00:00:00-08:00",
+          "terms": [
+            {
+              "id": 1452267780,
+              "resource": "ClinPGx Tags",
+              "term": "Has PGx",
+              "termId": "pgkbTags:1452267780"
+            }
+          ],
+          "type": "Drug Label"
+        }
+      ],
+      "otherPrescribingGuidance": false,
+      "pediatric": false,
+      "pgxRelated": true,
+      "prescribingGenes": [],
+      "relatedAlleles": [],
+      "relatedChemicals": [
+        {
+          "objCls": "Chemical",
+          "id": "PA448500",
+          "name": "atorvastatin",
+          "version": 24
+        }
+      ],
+      "relatedGenes": [
+        {
+          "objCls": "Gene",
+          "id": "PA134865839",
+          "symbol": "SLCO1B1",
+          "name": "solute carrier organic anion transporter family member 1B1",
+          "version": 49
+        }
+      ],
+      "source": "FDA",
+      "summaryMarkdown": {
+        "id": 1451391669,
+        "html": "<p>The FDA-approved label for atorvastatin (LIPITOR) states that atorvastatin exposure may be increased by drug interactions due to inhibition of CYP3A4 and/or transporters (e.g., breast cancer resistant protein (BCRP), organic anion-transporting polypeptide (OATP1B1 (SLCO1B1)/OATP1B3) and P-glycoprotein (P-gp (ABCB1))), resulting in an increased risk of myopathy and rhabdomyolysis.</p>\n",
+        "version": 0
+      },
+      "terms": [],
+      "textMarkdown": {
+        "id": 1451391670,
+        "html": "<p>Excerpts from the atorvastatin (LIPITOR) drug label:</p>\n<blockquote class=\"blockquote\">\n<p>Warnings and precautions:</p>\n</blockquote>\n<blockquote class=\"blockquote\">\n<p>LIPITOR exposure may be increased by drug interactions due to inhibition of cytochrome P450 enzyme 3A4 (CYP3A4) and/or transporters (e.g., breast cancer resistant protein (BCRP), organic anion-transporting polypeptide (OATP1B1/OATP1B3) and P-glycoprotein (P-gp)), resulting in an increased risk of myopathy and rhabdomyolysis.</p>\n</blockquote>\n<blockquote class=\"blockquote\">\n<p>DRUG INTERACTIONS:</p>\n</blockquote>\n<blockquote class=\"blockquote\">\n<p>Drug Interactions that may Increase the Risk of Myopathy and Rhabdomyolysis with LIPITOR: LIPITOR is a substrate of CYP3A4 and transporters (e.g., OATP1B1/1B3, P-gp, or BCRP). LIPITOR plasma levels can be significantly increased with concomitant administration of inhibitors of CYP3A4 and transporters.</p>\n</blockquote>\n<blockquote class=\"blockquote\">\n<p>Atorvastatin plasma levels were significantly increased with concomitant administration of LIPITOR and cyclosporine, an inhibitor of CYP3A4 and OATP1B1</p>\n</blockquote>\n<blockquote class=\"blockquote\">\n<p>Atorvastatin plasma levels were significantly increased with concomitant administration of LIPITOR with many anti-viral medications, which are inhibitors of CYP3A4 and/or transporters (e.g., BCRP, OATP1B1/1B3, P-gp, MRP2, and/or OAT2) . Cases of myopathy and rhabdomyolysis have been reported with concomitant use of ledipasvir plus sofosbuvir with LIPITOR.</p>\n</blockquote>\n<blockquote class=\"blockquote\">\n<p>Concomitant administration of LIPITOR with rifampin, an inducer of cytochrome P450 3A4 and inhibitor of OATP1B1, can lead to variable reductions in plasma concentrations of atorvastatin. Due to the dual interaction mechanism of rifampin, delayed administration of LIPITOR after administration of rifampin has been associated with a significant reduction in atorvastatin plasma concentrations.</p>\n</blockquote>\n<blockquote class=\"blockquote\">\n<p>Atorvastatin is a substrate of the hepatic transporters, OATP1B1 and OATP1B3 transporter. Metabolites of atorvastatin are substrates of OATP1B1. Atorvastatin is also identified as a substrate of the efflux transporter BCRP, which may limit the intestinal absorption and biliary clearance of atorvastatin.</p>\n</blockquote>\n<p>For the complete drug label text with sections containing pharmacogenetic information highlighted, see the <a download=\"Atorvastatin_FDA_2023_12_04.pdf\" href=\"https://api.clinpgx.org/v1/download/file/attachment/Atorvastatin_FDA_2023_12_04.pdf\">atorvastatin drug label</a>.</p>\n",
+        "version": 2
+      },
+      "version": 10
+    },
+    {
+      "objCls": "Label Annotation",
+      "id": "PA166234761",
+      "name": "Annotation of FDA Label for simvastatin and SLCO1B1",
+      "alternateDrugAvailable": false,
+      "cancerGenome": false,
+      "crossReferences": [],
+      "dosingInformation": false,
+      "history": [
+        {
+          "id": 1452215303,
+          "date": "2023-08-24T15:39:27.954-07:00",
+          "description": "removed informative PGx tag",
+          "type": "Update",
+          "version": 0
+        },
+        {
+          "id": 1454238103,
+          "date": "2025-08-29T13:08:15.904-07:00",
+          "description": "updated label, added Pediatric tag and info",
+          "type": "Update",
+          "version": 0
+        }
+      ],
+      "indication": false,
+      "labelApplications": [],
+      "labelDocumentAvailable": true,
+      "literature": [
+        {
+          "id": 15184062,
+          "title": "Drugs@FDA: Drug Product ZOCOR (SIMVASTATIN), Organon LLC - NDA019766/SUPPL-104, 08/09/2023",
+          "_sameAs": "https://www.accessdata.fda.gov/scripts/cder/daf/index.cfm?event=overview.process&varApplNo=019766",
+          "crossReferences": [
+            {
+              "id": 1454238101,
+              "resource": "FDA Application",
+              "resourceId": "NDA019766/SUPPL-104",
+              "_url": "https://www.accessdata.fda.gov/scripts/cder/daf/index.cfm?event=overview.process&varApplNo=019766"
+            }
+          ],
+          "objCls": "Literature",
+          "pubDate": "2023-08-09T00:00:00-07:00",
+          "terms": [
+            {
+              "id": 1452267781,
+              "resource": "ClinPGx Tags",
+              "term": "Has No PGx",
+              "termId": "pgkbTags:1452267781"
+            }
+          ],
+          "type": "Drug Label"
+        },
+        {
+          "id": 15101889,
+          "title": "Drugs@FDA: Drug Product ZOCOR (SIMVASTATIN), NDA019766, Merck Sharp & Dohme Corp.",
+          "_sameAs": "https://www.accessdata.fda.gov/scripts/cder/daf/index.cfm?event=overview.process&varApplNo=019766",
+          "crossReferences": [
+            {
+              "id": 1452245801,
+              "resource": "FDA Application",
+              "resourceId": "NDA019766",
+              "_url": "https://www.accessdata.fda.gov/scripts/cder/daf/index.cfm?event=overview.process&varApplNo=019766"
+            }
+          ],
+          "objCls": "Literature",
+          "terms": [
+            {
+              "id": 1452267780,
+              "resource": "ClinPGx Tags",
+              "term": "Has PGx",
+              "termId": "pgkbTags:1452267780"
+            }
+          ],
+          "type": "Drug Label"
+        }
+      ],
+      "otherPrescribingGuidance": false,
+      "pediatric": true,
+      "pediatricMarkdown": {
+        "id": 1454238102,
+        "html": "<blockquote class=\"blockquote\">\n<p>ZOCOR is an HMG-CoA reductase inhibitor indicated: [...]</p>\n<ul>\n<li>As an adjunct to diet to reduce low-density lipoprotein cholesterol (LDL-C):\n[...] In adults and pediatric patients aged 10 years and older with heterozygous familial hypercholesterolemia (HeFH).</li>\n</ul>\n</blockquote>\n",
+        "version": 0
+      },
+      "pgxRelated": true,
+      "prescribingGenes": [],
+      "relatedAlleles": [],
+      "relatedChemicals": [
+        {
+          "objCls": "Chemical",
+          "id": "PA451363",
+          "name": "simvastatin",
+          "version": 26
+        }
+      ],
+      "relatedGenes": [
+        {
+          "objCls": "Gene",
+          "id": "PA134865839",
+          "symbol": "SLCO1B1",
+          "name": "solute carrier organic anion transporter family member 1B1",
+          "version": 49
+        }
+      ],
+      "source": "FDA",
+      "summaryMarkdown": {
+        "id": 1451391700,
+        "html": "<p>The FDA-approved label for simvastatin (ZOCOR) states that simvastatin acid is a substrate of the transport protein OATP1B1 (SLCO1B1) and concomitant administration of medicinal products that are inhibitors of OATP1B1 and/or CYP3A4 may lead to increased plasma concentrations of simvastatin acid.</p>\n",
+        "version": 1
+      },
+      "terms": [],
+      "textMarkdown": {
+        "id": 1451391701,
+        "html": "<p>Excerpts from the simvastatin (ZOCOR) drug label:</p>\n<blockquote class=\"blockquote\">\n<p>Simvastatin is metabolized by CYP3A4. The major active metabolites of simvastatin present in human plasma are simvastatin acid and its 6\u2032-hydroxy, 6\u2032-hydroxymethyl, and 6\u2032-exomethylene derivatives.</p>\n</blockquote>\n<blockquote class=\"blockquote\">\n<p>Simvastatin acid is a substrate of the transport protein OATP1B1. Concomitant administration of inhibitors of the transport protein OATP1B1 and/or CYP3A4 may lead to increased exposure of simvastatin acid. Cyclosporine has been shown to increase the AUC of statins; although the mechanism is not fully understood, the increase in AUC for simvastatin acid is presumably due, in part, to inhibition of CYP3A4 and/or OATP1B1 [see Drug Interactions (7)].</p>\n</blockquote>\n<p>For the complete drug label text with sections containing pharmacogenetic information highlighted, see the <a download=\"Simvastatin_2025_08_29_FDA.pdf\" href=\"https://api.clinpgx.org/v1/download/file/attachment/Simvastatin_2025_08_29_FDA.pdf\">simvastatin drug label</a>.</p>\n",
+        "version": 2
+      },
+      "version": 5
+    },
+    {
+      "objCls": "Label Annotation",
+      "id": "PA166251621",
+      "name": "Annotation of FDA Label for viloxazine and SLCO1B1",
+      "alternateDrugAvailable": false,
+      "biomarkerStatus": "On FDA Biomarker List",
+      "cancerGenome": false,
+      "crossReferences": [],
+      "dosingInformation": false,
+      "history": [
+        {
+          "id": 1452220500,
+          "date": "2023-08-29T12:55:17.633-07:00",
+          "description": "removed informative PGx tag",
+          "type": "Update",
+          "version": 0
+        }
+      ],
+      "indication": false,
+      "labelApplications": [],
+      "labelDocumentAvailable": true,
+      "literature": [
+        {
+          "id": 15123802,
+          "title": "Drugs@FDA: Drug Product  QELBREE (VILOXAZINE HYDROCHLORIDE), NDA211964, SUPERNUS PHARMS",
+          "_sameAs": "https://www.accessdata.fda.gov/scripts/cder/daf/index.cfm?event=overview.process&varApplNo=211964",
+          "crossReferences": [
+            {
+              "id": 1452245662,
+              "resource": "FDA Application",
+              "resourceId": "NDA211964",
+              "_url": "https://www.accessdata.fda.gov/scripts/cder/daf/index.cfm?event=overview.process&varApplNo=211964"
+            }
+          ],
+          "objCls": "Literature",
+          "terms": [
+            {
+              "id": 1452267780,
+              "resource": "ClinPGx Tags",
+              "term": "Has PGx",
+              "termId": "pgkbTags:1452267780"
+            }
+          ],
+          "type": "Drug Label"
+        }
+      ],
+      "otherPrescribingGuidance": false,
+      "pediatric": false,
+      "pgxRelated": true,
+      "prescribingGenes": [],
+      "relatedAlleles": [],
+      "relatedChemicals": [
+        {
+          "objCls": "Chemical",
+          "id": "PA166251581",
+          "name": "viloxazine",
+          "version": 4
+        }
+      ],
+      "relatedGenes": [
+        {
+          "objCls": "Gene",
+          "id": "PA134865839",
+          "symbol": "SLCO1B1",
+          "name": "solute carrier organic anion transporter family member 1B1",
+          "version": 49
+        }
+      ],
+      "source": "FDA",
+      "summaryMarkdown": {
+        "id": 1451526170,
+        "html": "<p>The viloxazine FDA label mentions that it is not an inhibitor or a substrate of &quot;OATP1B1*1a&quot;. OATP1B1 is encoded by <a href=\"/gene/PA134865839\">SLCO1B1</a> and likely OATP1B1*1a refers to the protein formed by the reference sequence of SLCO1B1, however this is not explained in the label.</p>\n",
+        "version": 1
+      },
+      "terms": [],
+      "textMarkdown": {
+        "id": 1451526171,
+        "html": "<p>Excerpt from the FDA label:</p>\n<blockquote class=\"blockquote\">\n<p>Viloxazine is not a inhibitor of P-gp, BCRP, MATE2-K,OATP1B1*1a, and OATP1B3 transporters. Viloxazine appears to be a weak inhibitor of the MATE1. Viloxazine is not a substrate of either OATP1B1*1a or OATP1B3 transporters.</p>\n</blockquote>\n<p>Note that OATP1B1 is encoded by <a href=\"/gene/PA134865839\">SLCO1B1</a> and likely OATP1B1*1a refers to the protein formed by the reference sequence of SLCO1B1 (SLCO1B1), however this is not explained in the label.</p>\n<p>For the complete drug label text with sections containing pharmacogenetic information highlighted, see the <a download=\"viloxazine_10_12_2021_FDA.pdf\" href=\"https://api.clinpgx.org/v1/download/file/attachment/viloxazine_10_12_2021_FDA.pdf\">viloxazine (Qelbree) drug label.</a></p>\n",
+        "version": 2
+      },
+      "version": 6
+    },
+    {
+      "objCls": "Label Annotation",
+      "id": "PA166345301",
+      "name": "Annotation of HCSC Label for rosuvastatin and ABCG2, SLCO1B1",
+      "alternateDrugAvailable": false,
+      "cancerGenome": false,
+      "crossReferences": [],
+      "dosingInformation": true,
+      "history": [],
+      "indication": false,
+      "labelApplications": [],
+      "labelDocumentAvailable": true,
+      "literature": [
+        {
+          "id": 15161462,
+          "title": "Drugs@HCSC: Drug Product ACH-Rosuvastatin (rosuvastatin), Accord Healthcare Inc.",
+          "_sameAs": "https://health-products.canada.ca/dpd-bdpp/info?lang=eng&code=92329",
+          "crossReferences": [
+            {
+              "id": 1452534800,
+              "resource": "URL",
+              "resourceId": "https://health-products.canada.ca/dpd-bdpp/info?lang=eng&code=92329",
+              "_url": "https://health-products.canada.ca/dpd-bdpp/info?lang=eng&code=92329"
+            }
+          ],
+          "objCls": "Literature",
+          "terms": [
+            {
+              "id": 1452267780,
+              "resource": "ClinPGx Tags",
+              "term": "Has PGx",
+              "termId": "pgkbTags:1452267780"
+            }
+          ],
+          "type": "Drug Label"
+        }
+      ],
+      "otherPrescribingGuidance": false,
+      "pediatric": true,
+      "pediatricMarkdown": {
+        "id": 1452534804,
+        "html": "<blockquote class=\"blockquote\">\n<p>Pediatrics (10 to &lt;18 years): Based on the data submitted and reviewed by Health Canada, the safety and efficacy of rosuvastatin calcium in pediatric patients has been established. Therefore, Health Canada has authorized an indication for pediatric use as an adjunct to diet to reduce elevated total cholesterol (Total-C), LDL-C and ApoB in boys and girls who are at least one year post- menarche with heterozygous familial hypercholesterolemia (see 14 CLINICAL TRIALS), when response to diet alone has been inadequate.</p>\n</blockquote>\n<blockquote class=\"blockquote\">\n<p>Pediatrics (&lt;10 years of age): No data are available to Health Canada for pediatric patients under the age of 10; therefore, Health Canada has not authorized an indication for pediatric use in this age range.</p>\n</blockquote>\n",
+        "version": 0
+      },
+      "pgxRelated": true,
+      "prescribingGenes": [
+        {
+          "objCls": "Gene",
+          "id": "PA390",
+          "symbol": "ABCG2",
+          "name": "ATP binding cassette subfamily G member 2 (JR blood group)",
+          "version": 3597
+        },
+        {
+          "objCls": "Gene",
+          "id": "PA134865839",
+          "symbol": "SLCO1B1",
+          "name": "solute carrier organic anion transporter family member 1B1",
+          "version": 49
+        }
+      ],
+      "prescribingMarkdown": {
+        "id": 1452534803,
+        "html": "<p>Genetic Polymorphisms: Genotypes of SLCO1B1 (OATP1B1) c.521CC and ABCG2 (BCRP) c.421AA have been shown to be associated with an increase in rosuvastatin exposure (AUC) compared to SLCO1B1 c.521TT and ABCG2 c.421CC. For patients known to have the c.521CC or c.421AA genotype, a maximum once daily dose of 20 mg of ACH-Rosuvastatin is recommended.</p>\n",
+        "version": 0
+      },
+      "relatedAlleles": [
+        {
+          "objCls": "Variant",
+          "id": "PA166156544",
+          "symbol": "rs2231142",
+          "name": "rs2231142",
+          "version": 4
+        },
+        {
+          "objCls": "Variant",
+          "id": "PA166154579",
+          "symbol": "rs4149056",
+          "name": "rs4149056",
+          "version": 6
+        }
+      ],
+      "relatedChemicals": [
+        {
+          "objCls": "Chemical",
+          "id": "PA134308647",
+          "name": "rosuvastatin",
+          "version": 23
+        }
+      ],
+      "relatedGenes": [
+        {
+          "objCls": "Gene",
+          "id": "PA390",
+          "symbol": "ABCG2",
+          "name": "ATP binding cassette subfamily G member 2 (JR blood group)",
+          "version": 3597
+        },
+        {
+          "objCls": "Gene",
+          "id": "PA134865839",
+          "symbol": "SLCO1B1",
+          "name": "solute carrier organic anion transporter family member 1B1",
+          "version": 49
+        }
+      ],
+      "source": "HCSC",
+      "summaryMarkdown": {
+        "id": 1452534801,
+        "html": "<p>The product monograph for rosuvastatin states that genetic variants in SLCO1B1 (OATP1B1) and ABCG2 (BCRP) have been shown to be associated with an increase in rosuvastatin exposure. For patients known to have the SLCO1B1 c.521CC or ABCG2 c.421AA genotype, a maximum once daily dose of 20 mg of ACH-Rosuvastatin is recommended.</p>\n",
+        "version": 0
+      },
+      "terms": [],
+      "testing": {
+        "id": 1183672111,
+        "description": "The label does not discuss genetic or other testing for gene/protein/chromosomal variants, but does contain information about changes in efficacy, dosage or toxicity due to such variants. The label may mention contraindication of the drug in a particular subset of patients but does not require or recommend gene, protein or chromosomal testing.",
+        "parents": [],
+        "resource": "Genetic Testing Level",
+        "synonyms": [],
+        "term": "Actionable PGx",
+        "termId": "geneTestLevel:1183672111",
+        "valid": true,
+        "version": 2
+      },
+      "textMarkdown": {
+        "id": 1452534802,
+        "html": "<p>Excerpts from the <em><strong>rosuvastatin</strong></em> (<em><strong>ACH-ROSUVASTATIN</strong></em>) product monograph:</p>\n<blockquote class=\"blockquote\">\n<p><em><strong>Genetic Polymorphisms: Genotypes of SLCO1B1 (OATP1B1) c.521CC and ABCG2 (BCRP) c.421AA have been shown to be associated with an increase in rosuvastatin exposure (AUC) compared to SLCO1B1 c.521TT and ABCG2 c.421CC. For patients known to have the c.521CC or c.421AA genotype, a maximum once daily dose of 20 mg of ACH-Rosuvastatin is recommended.</strong></em></p>\n</blockquote>\n<blockquote class=\"blockquote\">\n<p><em><strong>Genetic Polymorphism: Disposition of HMG-CoA reductase inhibitors, including rosuvastatin, involves OATP1B1 and BCRP transporter proteins. In patients with SLCO1B1 (OATP1B1) and/or ABCG2 (BCRP) genetic polymorphisms there is a risk of increased rosuvastatin exposure. Individual polymorphisms of SLCO1B1 c.521CC and ABCG2 c.421AA are associated with an approximate 1.7- fold higher rosuvastatin exposure (AUC) or 2.4-fold higher exposure, respectively, compared to the SLCO1B1 c.521TT or ABCG2 c.421CC genotypes.</strong></em></p>\n</blockquote>\n<p>For the complete product monograph text with sections containing pharmacogenetic information highlighted, see the <a download=\"rosuvastatin_20240721_HCSC.pdf\" href=\"https://api.clinpgx.org/v1/download/file/attachment/rosuvastatin_20240721_HCSC.pdf\">rosuvastatin product monograph</a>.</p>\n",
+        "version": 2
+      },
+      "version": 1
+    },
+    {
+      "objCls": "Label Annotation",
+      "id": "PA166357723",
+      "name": "Annotation of HCSC Label for elagolix and SLCO1B1",
+      "alternateDrugAvailable": false,
+      "cancerGenome": false,
+      "crossReferences": [],
+      "dosingInformation": false,
+      "history": [],
+      "indication": false,
+      "labelApplications": [],
+      "labelDocumentAvailable": true,
+      "literature": [
+        {
+          "id": 15169342,
+          "title": "Drugs@HCSC: Drug Product ORILISSA (elagolix), AbbVie Corporation",
+          "_sameAs": "https://health-products.canada.ca/dpd-bdpp/info?lang=eng&code=97182",
+          "crossReferences": [
+            {
+              "id": 1452691000,
+              "resource": "URL",
+              "resourceId": "https://health-products.canada.ca/dpd-bdpp/info?lang=eng&code=97182",
+              "_url": "https://health-products.canada.ca/dpd-bdpp/info?lang=eng&code=97182"
+            }
+          ],
+          "objCls": "Literature",
+          "terms": [
+            {
+              "id": 1452267780,
+              "resource": "ClinPGx Tags",
+              "term": "Has PGx",
+              "termId": "pgkbTags:1452267780"
+            }
+          ],
+          "type": "Drug Label"
+        }
+      ],
+      "otherPrescribingGuidance": false,
+      "pediatric": false,
+      "pgxRelated": true,
+      "prescribingGenes": [],
+      "relatedAlleles": [
+        {
+          "objCls": "Variant",
+          "id": "PA166154579",
+          "symbol": "rs4149056",
+          "name": "rs4149056",
+          "version": 6
+        }
+      ],
+      "relatedChemicals": [
+        {
+          "objCls": "Chemical",
+          "id": "PA166182348",
+          "name": "elagolix",
+          "version": 4
+        }
+      ],
+      "relatedGenes": [
+        {
+          "objCls": "Gene",
+          "id": "PA134865839",
+          "symbol": "SLCO1B1",
+          "name": "solute carrier organic anion transporter family member 1B1",
+          "version": 49
+        }
+      ],
+      "source": "HCSC",
+      "summaryMarkdown": {
+        "id": 1452693530,
+        "html": "<p>The HCSC-approved product monograph for elagolix (ORILISSA) states that higher plasma concentrations of the drug can be expected in patients who have two reduced function alleles of the gene that encodes the OATP1B1 transporter (SLCO1B1 521T&gt;C, rs4149056 variant), but no dose adjustment is necessary.</p>\n",
+        "version": 0
+      },
+      "terms": [],
+      "testing": {
+        "id": 1452529540,
+        "parents": [],
+        "resource": "Genetic Testing Level",
+        "synonyms": [],
+        "term": "No Clinical PGx",
+        "termId": "geneTestLevel:1452529540",
+        "valid": true,
+        "version": 0
+      },
+      "textMarkdown": {
+        "id": 1452693531,
+        "html": "<p>Excerpt from the elagolix (ORILISSA) product monograph:</p>\n<blockquote class=\"blockquote\">\n<p>Disposition of elagolix involves the OATP1B1 transporter protein. Plasma concentrations of elagolix in patients who have 2 reduced function alleles of the gene that encodes OATP1B1 (SLCO1B1 521T&gt;C) are expected to be 78% higher than in patients without this genotype. The frequency of this SLCO1B1 521 C/C genotype is generally less than 5% in most racial/ethnic groups. No dose adjustment of ORILISSA is required based on OATP1B1 genotype status.</p>\n</blockquote>\n<p>For the complete product monograph text with sections containing pharmacogenetic information highlighted, see the <a download=\"Elagolix_2024_11_05_HCSC.pdf\" href=\"https://api.clinpgx.org/v1/download/file/attachment/Elagolix_2024_11_05_HCSC.pdf\">elagolix product monograph</a>.</p>\n",
+        "version": 1
+      },
+      "version": 0
+    },
+    {
+      "objCls": "Label Annotation",
+      "id": "PA166416941",
+      "name": "Annotation of HCSC Label for simvastatin and SLCO1B1",
+      "alternateDrugAvailable": false,
+      "cancerGenome": false,
+      "crossReferences": [],
+      "dosingInformation": false,
+      "history": [],
+      "indication": false,
+      "labelApplications": [],
+      "labelDocumentAvailable": true,
+      "literature": [
+        {
+          "id": 15184042,
+          "title": "Drugs@HCSC: Drug Product ZOCOR (simvastatin), Organon Canada Inc.",
+          "_sameAs": "https://health-products.canada.ca/dpd-bdpp/info?lang=eng&code=10947",
+          "crossReferences": [
+            {
+              "id": 1454238040,
+              "resource": "URL",
+              "resourceId": "https://health-products.canada.ca/dpd-bdpp/info?lang=eng&code=10947",
+              "_url": "https://health-products.canada.ca/dpd-bdpp/info?lang=eng&code=10947"
+            }
+          ],
+          "objCls": "Literature",
+          "terms": [
+            {
+              "id": 1452267781,
+              "resource": "ClinPGx Tags",
+              "term": "Has No PGx",
+              "termId": "pgkbTags:1452267781"
+            }
+          ],
+          "type": "Drug Label"
+        }
+      ],
+      "otherPrescribingGuidance": false,
+      "pediatric": true,
+      "pediatricMarkdown": {
+        "id": 1454238043,
+        "html": "<blockquote class=\"blockquote\">\n<p>ZOCOR\u00ae is indicated as an adjunct to diet in adolescent boys and girls who are at least one year post-menarche aged 10 to &lt;18 years to reduce total-C, LDL-C, TG, and Apo B levels with heterozygous familial hypercholesterolemia (HeFH).</p>\n</blockquote>\n",
+        "version": 0
+      },
+      "pgxRelated": true,
+      "prescribingGenes": [],
+      "relatedAlleles": [],
+      "relatedChemicals": [
+        {
+          "objCls": "Chemical",
+          "id": "PA451363",
+          "name": "simvastatin",
+          "version": 26
+        }
+      ],
+      "relatedGenes": [
+        {
+          "objCls": "Gene",
+          "id": "PA134865839",
+          "symbol": "SLCO1B1",
+          "name": "solute carrier organic anion transporter family member 1B1",
+          "version": 49
+        }
+      ],
+      "source": "HCSC",
+      "summaryMarkdown": {
+        "id": 1454238041,
+        "html": "<p>The product monograph for simvastatin (ZOCOR) states that simvastatin acid is a substrate of the transport protein OATP1B1 (SLCO1B1) and concomitant administration of medicinal products that are inhibitors of OATP1B1 may lead to increased plasma concentrations of simvastatin and an increased risk of myopathy.</p>\n",
+        "version": 0
+      },
+      "terms": [],
+      "textMarkdown": {
+        "id": 1454238042,
+        "html": "<p>Excerpts from the simvastatin (ZOCOR) product monograph:</p>\n<blockquote class=\"blockquote\">\n<p>Simvastatin acid is a substrate of OATP1B1 (organic anion-transporting polypeptide1B1) and, therefore, concomitant administration of medicinal products that are inhibitors of OATP1B1 may lead to an increase in plasma concentration of simvastatin and increase the risk of myopathy.</p>\n</blockquote>\n<p>For the complete product monograph text with sections containing pharmacogenetic information highlighted, see the <a download=\"Simvastatin_2025_08_29_HCSC.pdf\" href=\"https://api.clinpgx.org/v1/download/file/attachment/Simvastatin_2025_08_29_HCSC.pdf\">simvastatin product monograph</a>.</p>\n",
+        "version": 0
+      },
+      "version": 0
+    }
+  ],
+  "status": "success"
+}

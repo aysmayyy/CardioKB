@@ -1,0 +1,3825 @@
+{
+  "data": [
+    {
+      "objCls": "Variant",
+      "id": "PA166154977",
+      "symbol": "rs7294",
+      "name": "rs7294",
+      "altNames": {
+        "synonym": [
+          "9041 G>A on AY587020",
+          "NC_000016.10:g.31091000C>T",
+          "NC_000016.9:g.31102321C>T",
+          "NG_011564.1:g.8956G>A",
+          "NM_001311311.1:c.*134G>A",
+          "NM_024006.5:c.*134G>A",
+          "NM_206824.2:c.*237G>A",
+          "XM_005255568.1:c.*134G>A",
+          "XM_011545816.1:c.-2191G>A",
+          "XM_011545817.1:c.-2191G>A",
+          "XM_011545818.1:c.-2191G>A",
+          "XM_011545819.1:c.-2191G>A",
+          "XM_011545820.1:c.-2191G>A",
+          "XM_011545943.1:c.*134G>A",
+          "XM_011545944.1:c.*134G>A",
+          "XM_011545945.1:c.*237G>A",
+          "XR_243303.1:n.1175G>A",
+          "XR_950848.1:n.1414G>A",
+          "rs17880624",
+          "rs59098562"
+        ]
+      },
+      "changeClassification": "3' UTR",
+      "clinicalSignificance": "drug-response",
+      "crossReferences": [
+        {
+          "id": 1448023140,
+          "resource": "dbSNP",
+          "resourceId": "rs7294",
+          "_url": "https://www.ncbi.nlm.nih.gov/snp/rs7294",
+          "version": 0
+        },
+        {
+          "id": 1451199351,
+          "resource": "dbSNP",
+          "resourceId": "rs17880624",
+          "_url": "https://www.ncbi.nlm.nih.gov/snp/rs17880624",
+          "version": 1
+        },
+        {
+          "id": 1451199352,
+          "resource": "dbSNP",
+          "resourceId": "rs59098562",
+          "_url": "https://www.ncbi.nlm.nih.gov/snp/rs59098562",
+          "version": 1
+        },
+        {
+          "id": 1448103545,
+          "name": "NM_024006.5(VKORC1):c.*134G>A",
+          "resource": "ClinVar",
+          "resourceId": "226016",
+          "_url": "https://www.ncbi.nlm.nih.gov/clinvar/?term=226016",
+          "version": 0
+        }
+      ],
+      "history": [],
+      "lastUpdatedFromDbsnp": "2020-06-19T23:03:25.220705",
+      "locations": [
+        {
+          "id": 1449000764,
+          "altHgvs": {},
+          "assembly": "GRCh38",
+          "begin": 31091000,
+          "end": 31091000,
+          "intronicOffset": 0,
+          "referenceAllele": "C",
+          "referenceHgvs": "NC_000016.10:g.31091000=",
+          "sequence": {
+            "id": 1446906623,
+            "name": "[GRCh38]chr16",
+            "resource": "RefSeq DNA",
+            "resourceId": "NC_000016.10",
+            "_url": "https://www.ncbi.nlm.nih.gov/nuccore/NC_000016.10",
+            "version": 2
+          },
+          "source": "dbSnp",
+          "type": "genomic",
+          "variantAlleles": [
+            "T"
+          ],
+          "variantHgvs": [
+            "NC_000016.10:g.31091000C>T"
+          ],
+          "version": 1
+        },
+        {
+          "id": 1451199349,
+          "altHgvs": {},
+          "assembly": "GRCh37",
+          "begin": 31102321,
+          "end": 31102321,
+          "intronicOffset": 0,
+          "referenceAllele": "C",
+          "referenceHgvs": "NC_000016.9:g.31102321=",
+          "sequence": {
+            "id": 1447949566,
+            "name": "[GRCh37]chr16",
+            "resource": "RefSeq DNA",
+            "resourceId": "NC_000016.9",
+            "_url": "https://www.ncbi.nlm.nih.gov/nuccore/NC_000016.9",
+            "version": 2
+          },
+          "source": "dbSnp",
+          "type": "genomic",
+          "variantAlleles": [
+            "T"
+          ],
+          "variantHgvs": [
+            "NC_000016.9:g.31102321C>T"
+          ],
+          "version": 0
+        },
+        {
+          "id": 1451199350,
+          "altHgvs": {},
+          "begin": 8956,
+          "end": 8956,
+          "intronicOffset": 0,
+          "referenceAllele": "G",
+          "referenceHgvs": "NG_011564.1:g.8956=",
+          "sequence": {
+            "id": 1451167234,
+            "name": "NG_011564.1",
+            "resource": "RefSeq DNA",
+            "resourceId": "NG_011564.1",
+            "_url": "https://www.ncbi.nlm.nih.gov/nuccore/NG_011564.1",
+            "version": 0
+          },
+          "source": "dbSnp",
+          "type": "genomic",
+          "variantAlleles": [
+            "A"
+          ],
+          "variantHgvs": [
+            "NG_011564.1:g.8956G>A"
+          ],
+          "version": 0
+        }
+      ],
+      "obsolete": false,
+      "rare": false,
+      "raritySource": "gnomAD Genomes",
+      "relatedGenes": [
+        {
+          "objCls": "Gene",
+          "id": "PA165450635",
+          "symbol": "PRSS53",
+          "name": "serine protease 53",
+          "version": 7
+        },
+        {
+          "objCls": "Gene",
+          "id": "PA133787052",
+          "symbol": "VKORC1",
+          "name": "vitamin K epoxide reductase complex subunit 1",
+          "version": 16
+        }
+      ],
+      "terms": [],
+      "type": "SNP",
+      "version": 5
+    },
+    {
+      "objCls": "Variant",
+      "id": "PA166155040",
+      "symbol": "rs2359612",
+      "name": "rs2359612",
+      "altNames": {
+        "synonym": [
+          "NC_000016.10:g.31092475A>G",
+          "NC_000016.9:g.31103796A>G",
+          "NG_011564.1:g.7481T>C",
+          "NM_001311311.1:c.367+308T>C",
+          "NM_024006.5:c.283+837T>C",
+          "NM_206824.2:c.174-1133T>C",
+          "XM_005255568.1:c.367+308T>C",
+          "XM_011545943.1:c.367+308T>C",
+          "XM_011545944.1:c.283+837T>C",
+          "XM_011545945.1:c.174-1133T>C",
+          "XR_243303.1:n.832+837T>C",
+          "XR_950848.1:n.1071+837T>C",
+          "rs17884333"
+        ]
+      },
+      "changeClassification": "Intronic",
+      "clinicalSignificance": "drug-response",
+      "crossReferences": [
+        {
+          "id": 1448024685,
+          "resource": "dbSNP",
+          "resourceId": "rs2359612",
+          "_url": "https://www.ncbi.nlm.nih.gov/snp/rs2359612",
+          "version": 0
+        },
+        {
+          "id": 1451183443,
+          "resource": "dbSNP",
+          "resourceId": "rs17884333",
+          "_url": "https://www.ncbi.nlm.nih.gov/snp/rs17884333",
+          "version": 1
+        },
+        {
+          "id": 1448103667,
+          "name": "NM_024006.5(VKORC1):c.283+837T>C",
+          "resource": "ClinVar",
+          "resourceId": "225975",
+          "_url": "https://www.ncbi.nlm.nih.gov/clinvar/?term=225975",
+          "version": 0
+        }
+      ],
+      "history": [],
+      "lastUpdatedFromDbsnp": "2020-06-18T14:03:27.179655",
+      "locations": [
+        {
+          "id": 1449000762,
+          "altHgvs": {},
+          "assembly": "GRCh38",
+          "begin": 31092475,
+          "end": 31092475,
+          "intronicOffset": 0,
+          "referenceAllele": "A",
+          "referenceHgvs": "NC_000016.10:g.31092475=",
+          "sequence": {
+            "id": 1446906623,
+            "name": "[GRCh38]chr16",
+            "resource": "RefSeq DNA",
+            "resourceId": "NC_000016.10",
+            "_url": "https://www.ncbi.nlm.nih.gov/nuccore/NC_000016.10",
+            "version": 2
+          },
+          "source": "dbSnp",
+          "type": "genomic",
+          "variantAlleles": [
+            "G"
+          ],
+          "variantHgvs": [
+            "NC_000016.10:g.31092475A>G"
+          ],
+          "version": 1
+        },
+        {
+          "id": 1451183441,
+          "altHgvs": {},
+          "assembly": "GRCh37",
+          "begin": 31103796,
+          "end": 31103796,
+          "intronicOffset": 0,
+          "referenceAllele": "A",
+          "referenceHgvs": "NC_000016.9:g.31103796=",
+          "sequence": {
+            "id": 1447949566,
+            "name": "[GRCh37]chr16",
+            "resource": "RefSeq DNA",
+            "resourceId": "NC_000016.9",
+            "_url": "https://www.ncbi.nlm.nih.gov/nuccore/NC_000016.9",
+            "version": 2
+          },
+          "source": "dbSnp",
+          "type": "genomic",
+          "variantAlleles": [
+            "G"
+          ],
+          "variantHgvs": [
+            "NC_000016.9:g.31103796A>G"
+          ],
+          "version": 0
+        },
+        {
+          "id": 1451183442,
+          "altHgvs": {},
+          "begin": 7481,
+          "end": 7481,
+          "intronicOffset": 0,
+          "referenceAllele": "T",
+          "referenceHgvs": "NG_011564.1:g.7481=",
+          "sequence": {
+            "id": 1451167234,
+            "name": "NG_011564.1",
+            "resource": "RefSeq DNA",
+            "resourceId": "NG_011564.1",
+            "_url": "https://www.ncbi.nlm.nih.gov/nuccore/NG_011564.1",
+            "version": 0
+          },
+          "source": "dbSnp",
+          "type": "genomic",
+          "variantAlleles": [
+            "C"
+          ],
+          "variantHgvs": [
+            "NG_011564.1:g.7481T>C"
+          ],
+          "version": 0
+        }
+      ],
+      "obsolete": false,
+      "rare": false,
+      "raritySource": "gnomAD Genomes",
+      "relatedGenes": [
+        {
+          "objCls": "Gene",
+          "id": "PA165450635",
+          "symbol": "PRSS53",
+          "name": "serine protease 53",
+          "version": 7
+        },
+        {
+          "objCls": "Gene",
+          "id": "PA133787052",
+          "symbol": "VKORC1",
+          "name": "vitamin K epoxide reductase complex subunit 1",
+          "version": 16
+        }
+      ],
+      "terms": [],
+      "type": "SNP",
+      "version": 5
+    },
+    {
+      "objCls": "Variant",
+      "id": "PA166155042",
+      "symbol": "rs2884737",
+      "name": "rs2884737",
+      "altNames": {
+        "synonym": [
+          "NC_000016.10:g.31094233A>C",
+          "NC_000016.9:g.31105554A>C",
+          "NG_011564.1:g.5723T>G",
+          "NM_001311311.1:c.173+324T>G",
+          "NM_024006.5:c.173+324T>G",
+          "NM_206824.2:c.173+324T>G",
+          "XM_005255568.1:c.173+324T>G",
+          "XM_011545943.1:c.173+324T>G",
+          "XM_011545944.1:c.173+324T>G",
+          "XM_011545945.1:c.173+324T>G",
+          "XR_243303.1:n.822+324T>G",
+          "XR_950848.1:n.961+324T>G",
+          "rs17882154",
+          "tag for VKORC1*2B"
+        ]
+      },
+      "changeClassification": "Intronic",
+      "clinicalSignificance": "drug-response",
+      "crossReferences": [
+        {
+          "id": 1448024726,
+          "resource": "dbSNP",
+          "resourceId": "rs2884737",
+          "_url": "https://www.ncbi.nlm.nih.gov/snp/rs2884737",
+          "version": 0
+        },
+        {
+          "id": 1451186190,
+          "resource": "dbSNP",
+          "resourceId": "rs17882154",
+          "_url": "https://www.ncbi.nlm.nih.gov/snp/rs17882154",
+          "version": 1
+        },
+        {
+          "id": 1448103681,
+          "name": "NM_024006.5(VKORC1):c.173+324T>G",
+          "resource": "ClinVar",
+          "resourceId": "225983",
+          "_url": "https://www.ncbi.nlm.nih.gov/clinvar/?term=225983",
+          "version": 0
+        }
+      ],
+      "history": [],
+      "lastUpdatedFromDbsnp": "2020-06-18T18:45:33.293561",
+      "locations": [
+        {
+          "id": 1449001458,
+          "altHgvs": {},
+          "assembly": "GRCh38",
+          "begin": 31094233,
+          "end": 31094233,
+          "intronicOffset": 0,
+          "referenceAllele": "A",
+          "referenceHgvs": "NC_000016.10:g.31094233=",
+          "sequence": {
+            "id": 1446906623,
+            "name": "[GRCh38]chr16",
+            "resource": "RefSeq DNA",
+            "resourceId": "NC_000016.10",
+            "_url": "https://www.ncbi.nlm.nih.gov/nuccore/NC_000016.10",
+            "version": 2
+          },
+          "source": "dbSnp",
+          "type": "genomic",
+          "variantAlleles": [
+            "C"
+          ],
+          "variantHgvs": [
+            "NC_000016.10:g.31094233A>C"
+          ],
+          "version": 1
+        },
+        {
+          "id": 1448024725,
+          "altHgvs": {},
+          "assembly": "GRCh37",
+          "begin": 31105554,
+          "end": 31105554,
+          "intronicOffset": 0,
+          "referenceAllele": "A",
+          "referenceHgvs": "NC_000016.9:g.31105554=",
+          "sequence": {
+            "id": 1447949566,
+            "name": "[GRCh37]chr16",
+            "resource": "RefSeq DNA",
+            "resourceId": "NC_000016.9",
+            "_url": "https://www.ncbi.nlm.nih.gov/nuccore/NC_000016.9",
+            "version": 2
+          },
+          "source": "dbSnp",
+          "type": "genomic",
+          "variantAlleles": [
+            "C"
+          ],
+          "variantHgvs": [
+            "NC_000016.9:g.31105554A>C"
+          ],
+          "version": 1
+        },
+        {
+          "id": 1451186189,
+          "altHgvs": {},
+          "begin": 5723,
+          "end": 5723,
+          "intronicOffset": 0,
+          "referenceAllele": "T",
+          "referenceHgvs": "NG_011564.1:g.5723=",
+          "sequence": {
+            "id": 1451167234,
+            "name": "NG_011564.1",
+            "resource": "RefSeq DNA",
+            "resourceId": "NG_011564.1",
+            "_url": "https://www.ncbi.nlm.nih.gov/nuccore/NG_011564.1",
+            "version": 0
+          },
+          "source": "dbSnp",
+          "type": "genomic",
+          "variantAlleles": [
+            "G"
+          ],
+          "variantHgvs": [
+            "NG_011564.1:g.5723T>G"
+          ],
+          "version": 0
+        }
+      ],
+      "obsolete": false,
+      "rare": false,
+      "raritySource": "gnomAD Genomes",
+      "relatedGenes": [
+        {
+          "objCls": "Gene",
+          "id": "PA133787052",
+          "symbol": "VKORC1",
+          "name": "vitamin K epoxide reductase complex subunit 1",
+          "version": 16
+        }
+      ],
+      "terms": [],
+      "type": "SNP",
+      "version": 5
+    },
+    {
+      "objCls": "Variant",
+      "id": "PA166155080",
+      "symbol": "rs7200749",
+      "name": "rs7200749",
+      "altNames": {
+        "synonym": [
+          "NC_000016.10:g.31091268G>A",
+          "NC_000016.9:g.31102589G>A",
+          "NG_011564.1:g.8688C>T",
+          "NM_001311311.1:c.442C>T",
+          "NM_024006.5:c.358C>T",
+          "NM_206824.2:c.248C>T",
+          "NP_001298240.1:p.Leu148=",
+          "NP_076869.1:p.Leu120=",
+          "NP_996560.1:p.Pro83Leu",
+          "XM_005255568.1:c.442C>T",
+          "XM_011545816.1:c.-2459C>T",
+          "XM_011545817.1:c.-2459C>T",
+          "XM_011545818.1:c.-2459C>T",
+          "XM_011545819.1:c.-2459C>T",
+          "XM_011545820.1:c.-2459C>T",
+          "XM_011545943.1:c.442C>T",
+          "XM_011545944.1:c.358C>T",
+          "XM_011545945.1:c.248C>T",
+          "XP_005255625.1:p.Leu148=",
+          "XP_011544245.1:p.Leu148=",
+          "XP_011544246.1:p.Leu120=",
+          "XP_011544247.1:p.Pro83Leu",
+          "XR_243303.1:n.907C>T",
+          "XR_950848.1:n.1146C>T",
+          "rs17881770",
+          "rs59562965"
+        ]
+      },
+      "changeClassification": "Missense",
+      "crossReferences": [
+        {
+          "id": 1448025539,
+          "resource": "dbSNP",
+          "resourceId": "rs7200749",
+          "_url": "https://www.ncbi.nlm.nih.gov/snp/rs7200749",
+          "version": 0
+        },
+        {
+          "id": 1451198031,
+          "resource": "dbSNP",
+          "resourceId": "rs17881770",
+          "_url": "https://www.ncbi.nlm.nih.gov/snp/rs17881770",
+          "version": 1
+        },
+        {
+          "id": 1451198032,
+          "resource": "dbSNP",
+          "resourceId": "rs59562965",
+          "_url": "https://www.ncbi.nlm.nih.gov/snp/rs59562965",
+          "version": 1
+        }
+      ],
+      "history": [],
+      "lastUpdatedFromDbsnp": "2020-06-18T22:13:48.811026",
+      "locations": [
+        {
+          "id": 1451198027,
+          "altHgvs": {},
+          "assembly": "GRCh38",
+          "begin": 31091268,
+          "end": 31091268,
+          "intronicOffset": 0,
+          "referenceAllele": "G",
+          "referenceHgvs": "NC_000016.10:g.31091268=",
+          "sequence": {
+            "id": 1446906623,
+            "name": "[GRCh38]chr16",
+            "resource": "RefSeq DNA",
+            "resourceId": "NC_000016.10",
+            "_url": "https://www.ncbi.nlm.nih.gov/nuccore/NC_000016.10",
+            "version": 2
+          },
+          "source": "dbSnp",
+          "type": "genomic",
+          "variantAlleles": [
+            "A"
+          ],
+          "variantHgvs": [
+            "NC_000016.10:g.31091268G>A"
+          ],
+          "version": 0
+        },
+        {
+          "id": 1448025536,
+          "altHgvs": {},
+          "assembly": "GRCh37",
+          "begin": 31102589,
+          "end": 31102589,
+          "intronicOffset": 0,
+          "referenceAllele": "G",
+          "referenceHgvs": "NC_000016.9:g.31102589=",
+          "sequence": {
+            "id": 1447949566,
+            "name": "[GRCh37]chr16",
+            "resource": "RefSeq DNA",
+            "resourceId": "NC_000016.9",
+            "_url": "https://www.ncbi.nlm.nih.gov/nuccore/NC_000016.9",
+            "version": 2
+          },
+          "source": "dbSnp",
+          "type": "genomic",
+          "variantAlleles": [
+            "A"
+          ],
+          "variantHgvs": [
+            "NC_000016.9:g.31102589G>A"
+          ],
+          "version": 1
+        },
+        {
+          "id": 1451198029,
+          "altHgvs": {},
+          "begin": 8688,
+          "end": 8688,
+          "intronicOffset": 0,
+          "referenceAllele": "C",
+          "referenceHgvs": "NG_011564.1:g.8688=",
+          "sequence": {
+            "id": 1451167234,
+            "name": "NG_011564.1",
+            "resource": "RefSeq DNA",
+            "resourceId": "NG_011564.1",
+            "_url": "https://www.ncbi.nlm.nih.gov/nuccore/NG_011564.1",
+            "version": 0
+          },
+          "source": "dbSnp",
+          "type": "genomic",
+          "variantAlleles": [
+            "T"
+          ],
+          "variantHgvs": [
+            "NG_011564.1:g.8688C>T"
+          ],
+          "version": 0
+        },
+        {
+          "id": 1451198030,
+          "altHgvs": {},
+          "begin": 120,
+          "end": 120,
+          "intronicOffset": 0,
+          "referenceAllele": "L",
+          "referenceHgvs": "NP_076869.1:p.Leu120=",
+          "sequence": {
+            "id": 1451167236,
+            "name": "NP_076869.1",
+            "resource": "RefSeq Protein",
+            "resourceId": "NP_076869.1",
+            "_url": "https://www.ncbi.nlm.nih.gov/nuccore/NP_076869.1",
+            "version": 0
+          },
+          "source": "dbSnp",
+          "type": "protein",
+          "variantAlleles": [],
+          "variantHgvs": [],
+          "version": 0
+        }
+      ],
+      "obsolete": false,
+      "rare": false,
+      "raritySource": "gnomAD Genomes",
+      "relatedGenes": [
+        {
+          "objCls": "Gene",
+          "id": "PA165450635",
+          "symbol": "PRSS53",
+          "name": "serine protease 53",
+          "version": 7
+        },
+        {
+          "objCls": "Gene",
+          "id": "PA133787052",
+          "symbol": "VKORC1",
+          "name": "vitamin K epoxide reductase complex subunit 1",
+          "version": 16
+        }
+      ],
+      "terms": [],
+      "type": "SNP",
+      "version": 4
+    },
+    {
+      "objCls": "Variant",
+      "id": "PA166155084",
+      "symbol": "rs8050894",
+      "name": "rs8050894",
+      "altNames": {
+        "synonym": [
+          "NC_000016.10:g.31093188C>G",
+          "NC_000016.9:g.31104509C>G",
+          "NG_011564.1:g.6768G>C",
+          "NM_001311311.1:c.283+124G>C",
+          "NM_024006.5:c.283+124G>C",
+          "NM_206824.2:c.173+1369G>C",
+          "XM_005255568.1:c.283+124G>C",
+          "XM_011545943.1:c.283+124G>C",
+          "XM_011545944.1:c.283+124G>C",
+          "XM_011545945.1:c.173+1369G>C",
+          "XR_243303.1:n.832+124G>C",
+          "XR_950848.1:n.1071+124G>C",
+          "rs17886369"
+        ]
+      },
+      "changeClassification": "Intronic",
+      "clinicalSignificance": "drug-response",
+      "crossReferences": [
+        {
+          "id": 1448025654,
+          "resource": "dbSNP",
+          "resourceId": "rs8050894",
+          "_url": "https://www.ncbi.nlm.nih.gov/snp/rs8050894",
+          "version": 0
+        },
+        {
+          "id": 1451201669,
+          "resource": "dbSNP",
+          "resourceId": "rs17886369",
+          "_url": "https://www.ncbi.nlm.nih.gov/snp/rs17886369",
+          "version": 1
+        },
+        {
+          "id": 1448103574,
+          "name": "NM_024006.5(VKORC1):c.283+124G>C",
+          "resource": "ClinVar",
+          "resourceId": "226026",
+          "_url": "https://www.ncbi.nlm.nih.gov/clinvar/?term=226026",
+          "version": 0
+        }
+      ],
+      "history": [],
+      "lastUpdatedFromDbsnp": "2020-06-19T23:31:59.674521",
+      "locations": [
+        {
+          "id": 1449001387,
+          "altHgvs": {},
+          "assembly": "GRCh38",
+          "begin": 31093188,
+          "end": 31093188,
+          "intronicOffset": 0,
+          "referenceAllele": "C",
+          "referenceHgvs": "NC_000016.10:g.31093188=",
+          "sequence": {
+            "id": 1446906623,
+            "name": "[GRCh38]chr16",
+            "resource": "RefSeq DNA",
+            "resourceId": "NC_000016.10",
+            "_url": "https://www.ncbi.nlm.nih.gov/nuccore/NC_000016.10",
+            "version": 2
+          },
+          "source": "dbSnp",
+          "type": "genomic",
+          "variantAlleles": [
+            "A",
+            "G",
+            "T"
+          ],
+          "variantHgvs": [
+            "NC_000016.10:g.31093188C>A",
+            "NC_000016.10:g.31093188C>G",
+            "NC_000016.10:g.31093188C>T"
+          ],
+          "version": 1
+        },
+        {
+          "id": 1448025653,
+          "altHgvs": {},
+          "assembly": "GRCh37",
+          "begin": 31104509,
+          "end": 31104509,
+          "intronicOffset": 0,
+          "referenceAllele": "C",
+          "referenceHgvs": "NC_000016.9:g.31104509=",
+          "sequence": {
+            "id": 1447949566,
+            "name": "[GRCh37]chr16",
+            "resource": "RefSeq DNA",
+            "resourceId": "NC_000016.9",
+            "_url": "https://www.ncbi.nlm.nih.gov/nuccore/NC_000016.9",
+            "version": 2
+          },
+          "source": "dbSnp",
+          "type": "genomic",
+          "variantAlleles": [
+            "A",
+            "G",
+            "T"
+          ],
+          "variantHgvs": [
+            "NC_000016.9:g.31104509C>A",
+            "NC_000016.9:g.31104509C>G",
+            "NC_000016.9:g.31104509C>T"
+          ],
+          "version": 1
+        },
+        {
+          "id": 1451201668,
+          "altHgvs": {},
+          "begin": 6768,
+          "end": 6768,
+          "intronicOffset": 0,
+          "referenceAllele": "G",
+          "referenceHgvs": "NG_011564.1:g.6768=",
+          "sequence": {
+            "id": 1451167234,
+            "name": "NG_011564.1",
+            "resource": "RefSeq DNA",
+            "resourceId": "NG_011564.1",
+            "_url": "https://www.ncbi.nlm.nih.gov/nuccore/NG_011564.1",
+            "version": 0
+          },
+          "source": "dbSnp",
+          "type": "genomic",
+          "variantAlleles": [
+            "A",
+            "C",
+            "T"
+          ],
+          "variantHgvs": [
+            "NG_011564.1:g.6768G>A",
+            "NG_011564.1:g.6768G>C",
+            "NG_011564.1:g.6768G>T"
+          ],
+          "version": 0
+        }
+      ],
+      "obsolete": false,
+      "rare": false,
+      "raritySource": "gnomAD Genomes",
+      "relatedGenes": [
+        {
+          "objCls": "Gene",
+          "id": "PA133787052",
+          "symbol": "VKORC1",
+          "name": "vitamin K epoxide reductase complex subunit 1",
+          "version": 16
+        }
+      ],
+      "terms": [],
+      "type": "SNP",
+      "version": 5
+    },
+    {
+      "objCls": "Variant",
+      "id": "PA166155091",
+      "symbol": "rs9923231",
+      "name": "rs9923231",
+      "altNames": {
+        "synonym": [
+          "3673A/G on AY587020",
+          "NC_000016.10:g.31096368C=",
+          "NC_000016.10:g.31096368C>T",
+          "NC_000016.9:g.31107689C=",
+          "NC_000016.9:g.31107689C>T",
+          "NG_011564.1:g.3588G=",
+          "NG_011564.1:g.3588G>A",
+          "NM_001311311.1:c.-1639G=",
+          "NM_001311311.1:c.-1639G>A",
+          "NM_024006.5:c.-1639G=",
+          "NM_024006.5:c.-1639G>A",
+          "NM_206824.2:c.-1639G=",
+          "NM_206824.2:c.-1639G>A",
+          "XM_005255568.1:c.-1639G=",
+          "XM_005255568.1:c.-1639G>A",
+          "XM_011545943.1:c.-1639G=",
+          "XM_011545943.1:c.-1639G>A",
+          "XM_011545944.1:c.-1252G=",
+          "XM_011545944.1:c.-1252G>A",
+          "XM_011545945.1:c.-1252G=",
+          "XM_011545945.1:c.-1252G>A",
+          "XR_243303.1:n.-990G=",
+          "XR_243303.1:n.-990G>A",
+          "XR_950848.1:n.-31G=",
+          "XR_950848.1:n.-31G>A",
+          "rs117572127",
+          "rs17878363",
+          "rs60511154"
+        ]
+      },
+      "ampTier": "Tier 1",
+      "changeClassification": "5' Flanking",
+      "clinicalSignificance": "drug-response",
+      "crossReferences": [
+        {
+          "id": 1448025799,
+          "resource": "dbSNP",
+          "resourceId": "rs9923231",
+          "_url": "https://www.ncbi.nlm.nih.gov/snp/rs9923231",
+          "version": 0
+        },
+        {
+          "id": 1451203795,
+          "resource": "dbSNP",
+          "resourceId": "rs117572127",
+          "_url": "https://www.ncbi.nlm.nih.gov/snp/rs117572127",
+          "version": 1
+        },
+        {
+          "id": 1451203793,
+          "resource": "dbSNP",
+          "resourceId": "rs17878363",
+          "_url": "https://www.ncbi.nlm.nih.gov/snp/rs17878363",
+          "version": 1
+        },
+        {
+          "id": 1451203794,
+          "resource": "dbSNP",
+          "resourceId": "rs60511154",
+          "_url": "https://www.ncbi.nlm.nih.gov/snp/rs60511154",
+          "version": 1
+        },
+        {
+          "id": 1448103585,
+          "name": "NM_024006.5(VKORC1):c.-1639G>T",
+          "resource": "ClinVar",
+          "resourceId": "226030",
+          "_url": "https://www.ncbi.nlm.nih.gov/clinvar/?term=226030",
+          "version": 0
+        }
+      ],
+      "history": [],
+      "lastUpdatedFromDbsnp": "2020-06-20T00:00:56.71824",
+      "locations": [
+        {
+          "id": 1449000756,
+          "altHgvs": {},
+          "assembly": "GRCh38",
+          "begin": 31096368,
+          "end": 31096368,
+          "intronicOffset": 0,
+          "referenceAllele": "C",
+          "referenceHgvs": "NC_000016.10:g.31096368=",
+          "sequence": {
+            "id": 1446906623,
+            "name": "[GRCh38]chr16",
+            "resource": "RefSeq DNA",
+            "resourceId": "NC_000016.10",
+            "_url": "https://www.ncbi.nlm.nih.gov/nuccore/NC_000016.10",
+            "version": 2
+          },
+          "source": "dbSnp",
+          "type": "genomic",
+          "variantAlleles": [
+            "A",
+            "G",
+            "T"
+          ],
+          "variantHgvs": [
+            "NC_000016.10:g.31096368C>A",
+            "NC_000016.10:g.31096368C>G",
+            "NC_000016.10:g.31096368C>T"
+          ],
+          "version": 1
+        },
+        {
+          "id": 1451203791,
+          "altHgvs": {},
+          "assembly": "GRCh37",
+          "begin": 31107689,
+          "end": 31107689,
+          "intronicOffset": 0,
+          "referenceAllele": "C",
+          "referenceHgvs": "NC_000016.9:g.31107689=",
+          "sequence": {
+            "id": 1447949566,
+            "name": "[GRCh37]chr16",
+            "resource": "RefSeq DNA",
+            "resourceId": "NC_000016.9",
+            "_url": "https://www.ncbi.nlm.nih.gov/nuccore/NC_000016.9",
+            "version": 2
+          },
+          "source": "dbSnp",
+          "type": "genomic",
+          "variantAlleles": [
+            "A",
+            "G",
+            "T"
+          ],
+          "variantHgvs": [
+            "NC_000016.9:g.31107689C>A",
+            "NC_000016.9:g.31107689C>G",
+            "NC_000016.9:g.31107689C>T"
+          ],
+          "version": 0
+        },
+        {
+          "id": 1451203792,
+          "altHgvs": {},
+          "begin": 3588,
+          "end": 3588,
+          "intronicOffset": 0,
+          "referenceAllele": "G",
+          "referenceHgvs": "NG_011564.1:g.3588=",
+          "sequence": {
+            "id": 1451167234,
+            "name": "NG_011564.1",
+            "resource": "RefSeq DNA",
+            "resourceId": "NG_011564.1",
+            "_url": "https://www.ncbi.nlm.nih.gov/nuccore/NG_011564.1",
+            "version": 0
+          },
+          "source": "dbSnp",
+          "type": "genomic",
+          "variantAlleles": [
+            "A",
+            "C",
+            "T"
+          ],
+          "variantHgvs": [
+            "NG_011564.1:g.3588G>A",
+            "NG_011564.1:g.3588G>C",
+            "NG_011564.1:g.3588G>T"
+          ],
+          "version": 0
+        },
+        {
+          "id": 1451271401,
+          "altHgvs": {
+            "c": [
+              "NC_000016.10:g.31096368C>T"
+            ],
+            "g": [
+              "NG_011564.1:g.3588G>A"
+            ],
+            "name": "-1639G>A",
+            "p.desc": "5' region"
+          },
+          "assembly": "GRCh38",
+          "begin": 31096368,
+          "end": 31096368,
+          "intronicOffset": 0,
+          "referenceAllele": "C",
+          "sequence": {
+            "id": 1446906623,
+            "name": "[GRCh38]chr16",
+            "resource": "RefSeq DNA",
+            "resourceId": "NC_000016.10",
+            "_url": "https://www.ncbi.nlm.nih.gov/nuccore/NC_000016.10",
+            "version": 2
+          },
+          "source": "ClinPGx Haplotype",
+          "type": "genomic",
+          "variantAlleles": [
+            "T"
+          ],
+          "variantHgvs": [
+            "NC_000016.10:g.31096368C>T"
+          ],
+          "version": 3
+        }
+      ],
+      "obsolete": false,
+      "rare": false,
+      "raritySource": "gnomAD Genomes",
+      "relatedGenes": [
+        {
+          "objCls": "Gene",
+          "id": "PA134899581",
+          "symbol": "BCKDK",
+          "name": "branched chain keto acid dehydrogenase kinase",
+          "version": 10
+        },
+        {
+          "objCls": "Gene",
+          "id": "PA165450635",
+          "symbol": "PRSS53",
+          "name": "serine protease 53",
+          "version": 7
+        },
+        {
+          "objCls": "Gene",
+          "id": "PA133787052",
+          "symbol": "VKORC1",
+          "name": "vitamin K epoxide reductase complex subunit 1",
+          "version": 16
+        }
+      ],
+      "terms": [],
+      "type": "SNP",
+      "version": 5
+    },
+    {
+      "objCls": "Variant",
+      "id": "PA166155096",
+      "symbol": "rs9934438",
+      "name": "rs9934438",
+      "altNames": {
+        "synonym": [
+          "NC_000016.10:g.31093557G>A",
+          "NC_000016.9:g.31104878G>A",
+          "NG_011564.1:g.6399C>T",
+          "NM_001311311.1:c.174-136C>T",
+          "NM_024006.5:c.174-136C>T",
+          "NM_206824.2:c.173+1000C>T",
+          "XM_005255568.1:c.174-136C>T",
+          "XM_011545943.1:c.174-136C>T",
+          "XM_011545944.1:c.174-136C>T",
+          "XM_011545945.1:c.173+1000C>T",
+          "XR_243303.1:n.823-236C>T",
+          "XR_950848.1:n.962-136C>T",
+          "rs17641219"
+        ]
+      },
+      "changeClassification": "Intronic",
+      "clinicalSignificance": "drug-response",
+      "crossReferences": [
+        {
+          "id": 1448025891,
+          "resource": "dbSNP",
+          "resourceId": "rs9934438",
+          "_url": "https://www.ncbi.nlm.nih.gov/snp/rs9934438",
+          "version": 0
+        },
+        {
+          "id": 1451203820,
+          "resource": "dbSNP",
+          "resourceId": "rs17641219",
+          "_url": "https://www.ncbi.nlm.nih.gov/snp/rs17641219",
+          "version": 1
+        },
+        {
+          "id": 1448103729,
+          "name": "NM_024006.5(VKORC1):c.174-136C>T",
+          "resource": "ClinVar",
+          "resourceId": "37344",
+          "_url": "https://www.ncbi.nlm.nih.gov/clinvar/?term=37344",
+          "version": 0
+        }
+      ],
+      "history": [],
+      "lastUpdatedFromDbsnp": "2020-06-20T00:01:21.935565",
+      "locations": [
+        {
+          "id": 1449000760,
+          "altHgvs": {},
+          "assembly": "GRCh38",
+          "begin": 31093557,
+          "end": 31093557,
+          "intronicOffset": 0,
+          "referenceAllele": "G",
+          "referenceHgvs": "NC_000016.10:g.31093557=",
+          "sequence": {
+            "id": 1446906623,
+            "name": "[GRCh38]chr16",
+            "resource": "RefSeq DNA",
+            "resourceId": "NC_000016.10",
+            "_url": "https://www.ncbi.nlm.nih.gov/nuccore/NC_000016.10",
+            "version": 2
+          },
+          "source": "dbSnp",
+          "type": "genomic",
+          "variantAlleles": [
+            "A",
+            "C"
+          ],
+          "variantHgvs": [
+            "NC_000016.10:g.31093557G>A",
+            "NC_000016.10:g.31093557G>C"
+          ],
+          "version": 1
+        },
+        {
+          "id": 1451203818,
+          "altHgvs": {},
+          "assembly": "GRCh37",
+          "begin": 31104878,
+          "end": 31104878,
+          "intronicOffset": 0,
+          "referenceAllele": "G",
+          "referenceHgvs": "NC_000016.9:g.31104878=",
+          "sequence": {
+            "id": 1447949566,
+            "name": "[GRCh37]chr16",
+            "resource": "RefSeq DNA",
+            "resourceId": "NC_000016.9",
+            "_url": "https://www.ncbi.nlm.nih.gov/nuccore/NC_000016.9",
+            "version": 2
+          },
+          "source": "dbSnp",
+          "type": "genomic",
+          "variantAlleles": [
+            "A",
+            "C"
+          ],
+          "variantHgvs": [
+            "NC_000016.9:g.31104878G>A",
+            "NC_000016.9:g.31104878G>C"
+          ],
+          "version": 0
+        },
+        {
+          "id": 1451203819,
+          "altHgvs": {},
+          "begin": 6399,
+          "end": 6399,
+          "intronicOffset": 0,
+          "referenceAllele": "C",
+          "referenceHgvs": "NG_011564.1:g.6399=",
+          "sequence": {
+            "id": 1451167234,
+            "name": "NG_011564.1",
+            "resource": "RefSeq DNA",
+            "resourceId": "NG_011564.1",
+            "_url": "https://www.ncbi.nlm.nih.gov/nuccore/NG_011564.1",
+            "version": 0
+          },
+          "source": "dbSnp",
+          "type": "genomic",
+          "variantAlleles": [
+            "G",
+            "T"
+          ],
+          "variantHgvs": [
+            "NG_011564.1:g.6399C>G",
+            "NG_011564.1:g.6399C>T"
+          ],
+          "version": 0
+        }
+      ],
+      "obsolete": false,
+      "rare": false,
+      "raritySource": "gnomAD Genomes",
+      "relatedGenes": [
+        {
+          "objCls": "Gene",
+          "id": "PA165450635",
+          "symbol": "PRSS53",
+          "name": "serine protease 53",
+          "version": 7
+        },
+        {
+          "objCls": "Gene",
+          "id": "PA133787052",
+          "symbol": "VKORC1",
+          "name": "vitamin K epoxide reductase complex subunit 1",
+          "version": 16
+        }
+      ],
+      "terms": [],
+      "type": "SNP",
+      "version": 5
+    },
+    {
+      "objCls": "Variant",
+      "id": "PA166155119",
+      "symbol": "rs17708472",
+      "name": "rs17708472",
+      "altNames": {
+        "synonym": [
+          "6009 C>T on AY587020",
+          "NC_000016.10:g.31094032G>A",
+          "NC_000016.9:g.31105353G>A",
+          "NG_011564.1:g.5924C>T",
+          "NM_001311311.1:c.173+525C>T",
+          "NM_024006.5:c.173+525C>T",
+          "NM_206824.2:c.173+525C>T",
+          "XM_005255568.1:c.173+525C>T",
+          "XM_011545943.1:c.173+525C>T",
+          "XM_011545944.1:c.173+525C>T",
+          "XM_011545945.1:c.173+525C>T",
+          "XR_243303.1:n.822+525C>T",
+          "XR_950848.1:n.961+525C>T",
+          "rs386544324"
+        ]
+      },
+      "changeClassification": "Intronic",
+      "clinicalSignificance": "drug-response",
+      "crossReferences": [
+        {
+          "id": 1448026381,
+          "resource": "dbSNP",
+          "resourceId": "rs17708472",
+          "_url": "https://www.ncbi.nlm.nih.gov/snp/rs17708472",
+          "version": 0
+        },
+        {
+          "id": 1451176535,
+          "resource": "dbSNP",
+          "resourceId": "rs386544324",
+          "_url": "https://www.ncbi.nlm.nih.gov/snp/rs386544324",
+          "version": 1
+        },
+        {
+          "id": 1448103626,
+          "name": "NM_024006.5(VKORC1):c.173+525C>T",
+          "resource": "ClinVar",
+          "resourceId": "225960",
+          "_url": "https://www.ncbi.nlm.nih.gov/clinvar/?term=225960",
+          "version": 0
+        }
+      ],
+      "history": [],
+      "lastUpdatedFromDbsnp": "2020-06-18T07:56:41.887859",
+      "locations": [
+        {
+          "id": 1449000758,
+          "altHgvs": {},
+          "assembly": "GRCh38",
+          "begin": 31094032,
+          "end": 31094032,
+          "intronicOffset": 0,
+          "referenceAllele": "G",
+          "referenceHgvs": "NC_000016.10:g.31094032=",
+          "sequence": {
+            "id": 1446906623,
+            "name": "[GRCh38]chr16",
+            "resource": "RefSeq DNA",
+            "resourceId": "NC_000016.10",
+            "_url": "https://www.ncbi.nlm.nih.gov/nuccore/NC_000016.10",
+            "version": 2
+          },
+          "source": "dbSnp",
+          "type": "genomic",
+          "variantAlleles": [
+            "A"
+          ],
+          "variantHgvs": [
+            "NC_000016.10:g.31094032G>A"
+          ],
+          "version": 1
+        },
+        {
+          "id": 1451176533,
+          "altHgvs": {},
+          "assembly": "GRCh37",
+          "begin": 31105353,
+          "end": 31105353,
+          "intronicOffset": 0,
+          "referenceAllele": "G",
+          "referenceHgvs": "NC_000016.9:g.31105353=",
+          "sequence": {
+            "id": 1447949566,
+            "name": "[GRCh37]chr16",
+            "resource": "RefSeq DNA",
+            "resourceId": "NC_000016.9",
+            "_url": "https://www.ncbi.nlm.nih.gov/nuccore/NC_000016.9",
+            "version": 2
+          },
+          "source": "dbSnp",
+          "type": "genomic",
+          "variantAlleles": [
+            "A"
+          ],
+          "variantHgvs": [
+            "NC_000016.9:g.31105353G>A"
+          ],
+          "version": 0
+        },
+        {
+          "id": 1451176534,
+          "altHgvs": {},
+          "begin": 5924,
+          "end": 5924,
+          "intronicOffset": 0,
+          "referenceAllele": "C",
+          "referenceHgvs": "NG_011564.1:g.5924=",
+          "sequence": {
+            "id": 1451167234,
+            "name": "NG_011564.1",
+            "resource": "RefSeq DNA",
+            "resourceId": "NG_011564.1",
+            "_url": "https://www.ncbi.nlm.nih.gov/nuccore/NG_011564.1",
+            "version": 0
+          },
+          "source": "dbSnp",
+          "type": "genomic",
+          "variantAlleles": [
+            "T"
+          ],
+          "variantHgvs": [
+            "NG_011564.1:g.5924C>T"
+          ],
+          "version": 0
+        }
+      ],
+      "obsolete": false,
+      "rare": false,
+      "raritySource": "gnomAD Genomes",
+      "relatedGenes": [
+        {
+          "objCls": "Gene",
+          "id": "PA133787052",
+          "symbol": "VKORC1",
+          "name": "vitamin K epoxide reductase complex subunit 1",
+          "version": 16
+        }
+      ],
+      "terms": [],
+      "type": "SNP",
+      "version": 5
+    },
+    {
+      "objCls": "Variant",
+      "id": "PA166155122",
+      "symbol": "rs17878544",
+      "name": "rs17878544",
+      "altNames": {
+        "synonym": [
+          "NC_000016.10:g.31096606T>C",
+          "NC_000016.9:g.31107927T>C",
+          "NG_011564.1:g.3350A>G",
+          "NM_001311311.1:c.-1877A>G",
+          "NM_024006.5:c.-1877A>G",
+          "NM_206824.2:c.-1877A>G",
+          "XM_005255568.1:c.-1877A>G",
+          "XM_011545943.1:c.-1877A>G",
+          "XM_011545944.1:c.-1490A>G",
+          "XM_011545945.1:c.-1490A>G",
+          "XR_243303.1:n.-1228A>G",
+          "XR_950848.1:n.-269A>G"
+        ]
+      },
+      "changeClassification": "5' Flanking",
+      "crossReferences": [
+        {
+          "id": 1448026469,
+          "resource": "dbSNP",
+          "resourceId": "rs17878544",
+          "_url": "https://www.ncbi.nlm.nih.gov/snp/rs17878544",
+          "version": 0
+        }
+      ],
+      "history": [],
+      "lastUpdatedFromDbsnp": "2020-06-18T07:59:22.705823",
+      "locations": [
+        {
+          "id": 1451176732,
+          "altHgvs": {},
+          "assembly": "GRCh38",
+          "begin": 31096606,
+          "end": 31096606,
+          "intronicOffset": 0,
+          "referenceAllele": "T",
+          "referenceHgvs": "NC_000016.10:g.31096606=",
+          "sequence": {
+            "id": 1446906623,
+            "name": "[GRCh38]chr16",
+            "resource": "RefSeq DNA",
+            "resourceId": "NC_000016.10",
+            "_url": "https://www.ncbi.nlm.nih.gov/nuccore/NC_000016.10",
+            "version": 2
+          },
+          "source": "dbSnp",
+          "type": "genomic",
+          "variantAlleles": [
+            "C"
+          ],
+          "variantHgvs": [
+            "NC_000016.10:g.31096606T>C"
+          ],
+          "version": 0
+        },
+        {
+          "id": 1448026468,
+          "altHgvs": {},
+          "assembly": "GRCh37",
+          "begin": 31107927,
+          "end": 31107927,
+          "intronicOffset": 0,
+          "referenceAllele": "T",
+          "referenceHgvs": "NC_000016.9:g.31107927=",
+          "sequence": {
+            "id": 1447949566,
+            "name": "[GRCh37]chr16",
+            "resource": "RefSeq DNA",
+            "resourceId": "NC_000016.9",
+            "_url": "https://www.ncbi.nlm.nih.gov/nuccore/NC_000016.9",
+            "version": 2
+          },
+          "source": "dbSnp",
+          "type": "genomic",
+          "variantAlleles": [
+            "C"
+          ],
+          "variantHgvs": [
+            "NC_000016.9:g.31107927T>C"
+          ],
+          "version": 1
+        },
+        {
+          "id": 1451176734,
+          "altHgvs": {},
+          "begin": 3350,
+          "end": 3350,
+          "intronicOffset": 0,
+          "referenceAllele": "A",
+          "referenceHgvs": "NG_011564.1:g.3350=",
+          "sequence": {
+            "id": 1451167234,
+            "name": "NG_011564.1",
+            "resource": "RefSeq DNA",
+            "resourceId": "NG_011564.1",
+            "_url": "https://www.ncbi.nlm.nih.gov/nuccore/NG_011564.1",
+            "version": 0
+          },
+          "source": "dbSnp",
+          "type": "genomic",
+          "variantAlleles": [
+            "G"
+          ],
+          "variantHgvs": [
+            "NG_011564.1:g.3350A>G"
+          ],
+          "version": 0
+        }
+      ],
+      "obsolete": false,
+      "rare": false,
+      "raritySource": "gnomAD Genomes",
+      "relatedGenes": [
+        {
+          "objCls": "Gene",
+          "id": "PA133787052",
+          "symbol": "VKORC1",
+          "name": "vitamin K epoxide reductase complex subunit 1",
+          "version": 16
+        }
+      ],
+      "terms": [],
+      "type": "SNP",
+      "version": 4
+    },
+    {
+      "objCls": "Variant",
+      "id": "PA166155125",
+      "symbol": "rs17886199",
+      "name": "rs17886199",
+      "altNames": {
+        "synonym": [
+          "NC_000016.10:g.31093126A>G",
+          "NC_000016.9:g.31104447A>G",
+          "NG_011564.1:g.6830T>C",
+          "NM_001311311.1:c.283+186T>C",
+          "NM_024006.5:c.283+186T>C",
+          "NM_206824.2:c.173+1431T>C",
+          "XM_005255568.1:c.283+186T>C",
+          "XM_011545943.1:c.283+186T>C",
+          "XM_011545944.1:c.283+186T>C",
+          "XM_011545945.1:c.173+1431T>C",
+          "XR_243303.1:n.832+186T>C",
+          "XR_950848.1:n.1071+186T>C"
+        ]
+      },
+      "changeClassification": "Intronic",
+      "crossReferences": [
+        {
+          "id": 1448026508,
+          "resource": "dbSNP",
+          "resourceId": "rs17886199",
+          "_url": "https://www.ncbi.nlm.nih.gov/snp/rs17886199",
+          "version": 0
+        }
+      ],
+      "history": [],
+      "lastUpdatedFromDbsnp": "2020-06-18T08:00:03.97448",
+      "locations": [
+        {
+          "id": 1451176791,
+          "altHgvs": {},
+          "assembly": "GRCh38",
+          "begin": 31093126,
+          "end": 31093126,
+          "intronicOffset": 0,
+          "referenceAllele": "A",
+          "referenceHgvs": "NC_000016.10:g.31093126=",
+          "sequence": {
+            "id": 1446906623,
+            "name": "[GRCh38]chr16",
+            "resource": "RefSeq DNA",
+            "resourceId": "NC_000016.10",
+            "_url": "https://www.ncbi.nlm.nih.gov/nuccore/NC_000016.10",
+            "version": 2
+          },
+          "source": "dbSnp",
+          "type": "genomic",
+          "variantAlleles": [
+            "G"
+          ],
+          "variantHgvs": [
+            "NC_000016.10:g.31093126A>G"
+          ],
+          "version": 0
+        },
+        {
+          "id": 1448026507,
+          "altHgvs": {},
+          "assembly": "GRCh37",
+          "begin": 31104447,
+          "end": 31104447,
+          "intronicOffset": 0,
+          "referenceAllele": "A",
+          "referenceHgvs": "NC_000016.9:g.31104447=",
+          "sequence": {
+            "id": 1447949566,
+            "name": "[GRCh37]chr16",
+            "resource": "RefSeq DNA",
+            "resourceId": "NC_000016.9",
+            "_url": "https://www.ncbi.nlm.nih.gov/nuccore/NC_000016.9",
+            "version": 2
+          },
+          "source": "dbSnp",
+          "type": "genomic",
+          "variantAlleles": [
+            "G"
+          ],
+          "variantHgvs": [
+            "NC_000016.9:g.31104447A>G"
+          ],
+          "version": 1
+        },
+        {
+          "id": 1451176793,
+          "altHgvs": {},
+          "begin": 6830,
+          "end": 6830,
+          "intronicOffset": 0,
+          "referenceAllele": "T",
+          "referenceHgvs": "NG_011564.1:g.6830=",
+          "sequence": {
+            "id": 1451167234,
+            "name": "NG_011564.1",
+            "resource": "RefSeq DNA",
+            "resourceId": "NG_011564.1",
+            "_url": "https://www.ncbi.nlm.nih.gov/nuccore/NG_011564.1",
+            "version": 0
+          },
+          "source": "dbSnp",
+          "type": "genomic",
+          "variantAlleles": [
+            "C"
+          ],
+          "variantHgvs": [
+            "NG_011564.1:g.6830T>C"
+          ],
+          "version": 0
+        }
+      ],
+      "obsolete": false,
+      "rare": false,
+      "raritySource": "gnomAD Genomes",
+      "relatedGenes": [
+        {
+          "objCls": "Gene",
+          "id": "PA165450635",
+          "symbol": "PRSS53",
+          "name": "serine protease 53",
+          "version": 7
+        },
+        {
+          "objCls": "Gene",
+          "id": "PA133787052",
+          "symbol": "VKORC1",
+          "name": "vitamin K epoxide reductase complex subunit 1",
+          "version": 16
+        }
+      ],
+      "terms": [],
+      "type": "SNP",
+      "version": 4
+    },
+    {
+      "objCls": "Variant",
+      "id": "PA166155131",
+      "symbol": "rs55894764",
+      "name": "rs55894764",
+      "altNames": {
+        "synonym": [
+          "NC_000016.10:g.31094694C>T",
+          "NC_000016.9:g.31106015C>T",
+          "NG_011564.1:g.5262G>A",
+          "NM_001311311.1:c.36G>A",
+          "NM_024006.5:c.36G>A",
+          "NM_206824.2:c.36G>A",
+          "NP_001298240.1:p.Arg12=",
+          "NP_076869.1:p.Arg12=",
+          "NP_996560.1:p.Arg12=",
+          "XM_005255568.1:c.36G>A",
+          "XM_011545943.1:c.36G>A",
+          "XM_011545944.1:c.36G>A",
+          "XM_011545945.1:c.36G>A",
+          "XP_005255625.1:p.Arg12=",
+          "XP_011544245.1:p.Arg12=",
+          "XP_011544246.1:p.Arg12=",
+          "XP_011544247.1:p.Arg12=",
+          "XR_243303.1:n.685G>A",
+          "XR_950848.1:n.824G>A"
+        ]
+      },
+      "changeClassification": "Synonymous",
+      "crossReferences": [
+        {
+          "id": 1448026657,
+          "resource": "dbSNP",
+          "resourceId": "rs55894764",
+          "_url": "https://www.ncbi.nlm.nih.gov/snp/rs55894764",
+          "version": 0
+        }
+      ],
+      "history": [],
+      "lastUpdatedFromDbsnp": "2020-06-18T21:29:35.318407",
+      "locations": [
+        {
+          "id": 1451194365,
+          "altHgvs": {},
+          "assembly": "GRCh38",
+          "begin": 31094694,
+          "end": 31094694,
+          "intronicOffset": 0,
+          "referenceAllele": "C",
+          "referenceHgvs": "NC_000016.10:g.31094694=",
+          "sequence": {
+            "id": 1446906623,
+            "name": "[GRCh38]chr16",
+            "resource": "RefSeq DNA",
+            "resourceId": "NC_000016.10",
+            "_url": "https://www.ncbi.nlm.nih.gov/nuccore/NC_000016.10",
+            "version": 2
+          },
+          "source": "dbSnp",
+          "type": "genomic",
+          "variantAlleles": [
+            "A",
+            "T"
+          ],
+          "variantHgvs": [
+            "NC_000016.10:g.31094694C>A",
+            "NC_000016.10:g.31094694C>T"
+          ],
+          "version": 0
+        },
+        {
+          "id": 1448026655,
+          "altHgvs": {},
+          "assembly": "GRCh37",
+          "begin": 31106015,
+          "end": 31106015,
+          "intronicOffset": 0,
+          "referenceAllele": "C",
+          "referenceHgvs": "NC_000016.9:g.31106015=",
+          "sequence": {
+            "id": 1447949566,
+            "name": "[GRCh37]chr16",
+            "resource": "RefSeq DNA",
+            "resourceId": "NC_000016.9",
+            "_url": "https://www.ncbi.nlm.nih.gov/nuccore/NC_000016.9",
+            "version": 2
+          },
+          "source": "dbSnp",
+          "type": "genomic",
+          "variantAlleles": [
+            "A",
+            "T"
+          ],
+          "variantHgvs": [
+            "NC_000016.9:g.31106015C>A",
+            "NC_000016.9:g.31106015C>T"
+          ],
+          "version": 1
+        },
+        {
+          "id": 1451194367,
+          "altHgvs": {},
+          "begin": 5262,
+          "end": 5262,
+          "intronicOffset": 0,
+          "referenceAllele": "G",
+          "referenceHgvs": "NG_011564.1:g.5262=",
+          "sequence": {
+            "id": 1451167234,
+            "name": "NG_011564.1",
+            "resource": "RefSeq DNA",
+            "resourceId": "NG_011564.1",
+            "_url": "https://www.ncbi.nlm.nih.gov/nuccore/NG_011564.1",
+            "version": 0
+          },
+          "source": "dbSnp",
+          "type": "genomic",
+          "variantAlleles": [
+            "A",
+            "T"
+          ],
+          "variantHgvs": [
+            "NG_011564.1:g.5262G>A",
+            "NG_011564.1:g.5262G>T"
+          ],
+          "version": 0
+        },
+        {
+          "id": 1451194368,
+          "altHgvs": {},
+          "begin": 12,
+          "end": 12,
+          "intronicOffset": 0,
+          "referenceAllele": "R",
+          "referenceHgvs": "NP_076869.1:p.Arg12=",
+          "sequence": {
+            "id": 1451167236,
+            "name": "NP_076869.1",
+            "resource": "RefSeq Protein",
+            "resourceId": "NP_076869.1",
+            "_url": "https://www.ncbi.nlm.nih.gov/nuccore/NP_076869.1",
+            "version": 0
+          },
+          "source": "dbSnp",
+          "type": "protein",
+          "variantAlleles": [],
+          "variantHgvs": [],
+          "version": 0
+        }
+      ],
+      "obsolete": false,
+      "rare": false,
+      "raritySource": "gnomAD Genomes",
+      "relatedGenes": [
+        {
+          "objCls": "Gene",
+          "id": "PA133787052",
+          "symbol": "VKORC1",
+          "name": "vitamin K epoxide reductase complex subunit 1",
+          "version": 16
+        }
+      ],
+      "terms": [],
+      "type": "SNP",
+      "version": 4
+    },
+    {
+      "objCls": "Variant",
+      "id": "PA166155134",
+      "symbol": "rs61742245",
+      "name": "rs61742245",
+      "altNames": {
+        "synonym": [
+          "NC_000016.10:g.31094624C>A",
+          "NC_000016.9:g.31105945C>A",
+          "NG_011564.1:g.5332G>T",
+          "NM_001311311.1:c.106G>T",
+          "NM_024006.4:c.106G>T",
+          "NM_024006.5:c.106G>T",
+          "NM_206824.2:c.106G>T",
+          "NP_001298240.1:p.Asp36Tyr",
+          "NP_076869.1:p.Asp36Tyr",
+          "NP_996560.1:p.Asp36Tyr",
+          "XM_005255568.1:c.106G>T",
+          "XM_011545943.1:c.106G>T",
+          "XM_011545944.1:c.106G>T",
+          "XM_011545945.1:c.106G>T",
+          "XP_005255625.1:p.Asp36Tyr",
+          "XP_011544245.1:p.Asp36Tyr",
+          "XP_011544246.1:p.Asp36Tyr",
+          "XP_011544247.1:p.Asp36Tyr",
+          "XR_243303.1:n.755G>T",
+          "XR_950848.1:n.894G>T",
+          "rs104894543"
+        ]
+      },
+      "ampTier": "Tier 2",
+      "changeClassification": "Missense",
+      "clinicalSignificance": "Pathogenic",
+      "crossReferences": [
+        {
+          "id": 1448026703,
+          "resource": "dbSNP",
+          "resourceId": "rs61742245",
+          "_url": "https://www.ncbi.nlm.nih.gov/snp/rs61742245",
+          "version": 0
+        },
+        {
+          "id": 1451195730,
+          "resource": "dbSNP",
+          "resourceId": "rs104894543",
+          "_url": "https://www.ncbi.nlm.nih.gov/snp/rs104894543",
+          "version": 1
+        },
+        {
+          "id": 1448103347,
+          "name": "NM_024006.5(VKORC1):c.106G>T (p.Asp36Tyr)",
+          "resource": "ClinVar",
+          "resourceId": "2212",
+          "_url": "https://www.ncbi.nlm.nih.gov/clinvar/?term=2212",
+          "version": 0
+        }
+      ],
+      "history": [],
+      "lastUpdatedFromDbsnp": "2020-06-18T21:45:48.593033",
+      "locations": [
+        {
+          "id": 1451195726,
+          "altHgvs": {},
+          "assembly": "GRCh38",
+          "begin": 31094624,
+          "end": 31094624,
+          "intronicOffset": 0,
+          "referenceAllele": "C",
+          "referenceHgvs": "NC_000016.10:g.31094624=",
+          "sequence": {
+            "id": 1446906623,
+            "name": "[GRCh38]chr16",
+            "resource": "RefSeq DNA",
+            "resourceId": "NC_000016.10",
+            "_url": "https://www.ncbi.nlm.nih.gov/nuccore/NC_000016.10",
+            "version": 2
+          },
+          "source": "dbSnp",
+          "type": "genomic",
+          "variantAlleles": [
+            "A",
+            "T"
+          ],
+          "variantHgvs": [
+            "NC_000016.10:g.31094624C>A",
+            "NC_000016.10:g.31094624C>T"
+          ],
+          "version": 0
+        },
+        {
+          "id": 1448026701,
+          "altHgvs": {},
+          "assembly": "GRCh37",
+          "begin": 31105945,
+          "end": 31105945,
+          "intronicOffset": 0,
+          "referenceAllele": "C",
+          "referenceHgvs": "NC_000016.9:g.31105945=",
+          "sequence": {
+            "id": 1447949566,
+            "name": "[GRCh37]chr16",
+            "resource": "RefSeq DNA",
+            "resourceId": "NC_000016.9",
+            "_url": "https://www.ncbi.nlm.nih.gov/nuccore/NC_000016.9",
+            "version": 2
+          },
+          "source": "dbSnp",
+          "type": "genomic",
+          "variantAlleles": [
+            "A",
+            "T"
+          ],
+          "variantHgvs": [
+            "NC_000016.9:g.31105945C>A",
+            "NC_000016.9:g.31105945C>T"
+          ],
+          "version": 1
+        },
+        {
+          "id": 1451195728,
+          "altHgvs": {},
+          "begin": 5332,
+          "end": 5332,
+          "intronicOffset": 0,
+          "referenceAllele": "G",
+          "referenceHgvs": "NG_011564.1:g.5332=",
+          "sequence": {
+            "id": 1451167234,
+            "name": "NG_011564.1",
+            "resource": "RefSeq DNA",
+            "resourceId": "NG_011564.1",
+            "_url": "https://www.ncbi.nlm.nih.gov/nuccore/NG_011564.1",
+            "version": 0
+          },
+          "source": "dbSnp",
+          "type": "genomic",
+          "variantAlleles": [
+            "A",
+            "T"
+          ],
+          "variantHgvs": [
+            "NG_011564.1:g.5332G>A",
+            "NG_011564.1:g.5332G>T"
+          ],
+          "version": 0
+        },
+        {
+          "id": 1451195729,
+          "altHgvs": {},
+          "begin": 36,
+          "end": 36,
+          "intronicOffset": 0,
+          "referenceAllele": "D",
+          "referenceHgvs": "NP_076869.1:p.Asp36=",
+          "sequence": {
+            "id": 1451167236,
+            "name": "NP_076869.1",
+            "resource": "RefSeq Protein",
+            "resourceId": "NP_076869.1",
+            "_url": "https://www.ncbi.nlm.nih.gov/nuccore/NP_076869.1",
+            "version": 0
+          },
+          "source": "dbSnp",
+          "type": "protein",
+          "variantAlleles": [
+            "N",
+            "Y"
+          ],
+          "variantHgvs": [
+            "NP_076869.1:p.Asp36Asn",
+            "NP_076869.1:p.Asp36Tyr"
+          ],
+          "version": 0
+        }
+      ],
+      "obsolete": false,
+      "rare": true,
+      "raritySource": "gnomAD Genomes",
+      "relatedGenes": [
+        {
+          "objCls": "Gene",
+          "id": "PA165450635",
+          "symbol": "PRSS53",
+          "name": "serine protease 53",
+          "version": 7
+        },
+        {
+          "objCls": "Gene",
+          "id": "PA133787052",
+          "symbol": "VKORC1",
+          "name": "vitamin K epoxide reductase complex subunit 1",
+          "version": 16
+        }
+      ],
+      "terms": [],
+      "type": "SNP",
+      "version": 4
+    },
+    {
+      "objCls": "Variant",
+      "id": "PA166155136",
+      "symbol": "rs72547529",
+      "name": "rs72547529",
+      "altNames": {
+        "synonym": [
+          "NC_000016.10:g.31093399C>T",
+          "NC_000016.9:g.31104720C>T",
+          "NG_011564.1:g.6557G>A",
+          "NM_001311311.1:c.196G>A",
+          "NM_024006.5:c.196G>A",
+          "NM_206824.2:c.173+1158G>A",
+          "NP_001298240.1:p.Val66Met",
+          "NP_076869.1:p.Val66Met",
+          "XM_005255568.1:c.196G>A",
+          "XM_011545943.1:c.196G>A",
+          "XM_011545944.1:c.196G>A",
+          "XM_011545945.1:c.173+1158G>A",
+          "XP_005255625.1:p.Val66Met",
+          "XP_011544245.1:p.Val66Met",
+          "XP_011544246.1:p.Val66Met",
+          "XR_243303.1:n.823-78G>A",
+          "XR_950848.1:n.984G>A"
+        ]
+      },
+      "ampTier": "Tier 2",
+      "changeClassification": "Intronic",
+      "crossReferences": [
+        {
+          "id": 1448026768,
+          "resource": "dbSNP",
+          "resourceId": "rs72547529",
+          "_url": "https://www.ncbi.nlm.nih.gov/snp/rs72547529",
+          "version": 0
+        }
+      ],
+      "history": [
+        {
+          "id": 1451353124,
+          "date": "2021-03-14T12:58:37.517-07:00",
+          "description": "Updated location data from dbSNP",
+          "type": "Update",
+          "version": 0
+        }
+      ],
+      "lastUpdatedFromDbsnp": "2021-03-14T12:58:37.515",
+      "locations": [
+        {
+          "id": 1451198230,
+          "altHgvs": {},
+          "assembly": "GRCh38",
+          "begin": 31093399,
+          "end": 31093399,
+          "intronicOffset": 0,
+          "referenceAllele": "C",
+          "referenceHgvs": "NC_000016.10:g.31093399=",
+          "sequence": {
+            "id": 1446906623,
+            "name": "[GRCh38]chr16",
+            "resource": "RefSeq DNA",
+            "resourceId": "NC_000016.10",
+            "_url": "https://www.ncbi.nlm.nih.gov/nuccore/NC_000016.10",
+            "version": 2
+          },
+          "source": "dbSnp",
+          "type": "genomic",
+          "variantAlleles": [
+            "T"
+          ],
+          "variantHgvs": [
+            "NC_000016.10:g.31093399C>T"
+          ],
+          "version": 3
+        },
+        {
+          "id": 1448026766,
+          "altHgvs": {},
+          "assembly": "GRCh37",
+          "begin": 31104720,
+          "end": 31104720,
+          "intronicOffset": 0,
+          "referenceAllele": "C",
+          "referenceHgvs": "NC_000016.9:g.31104720=",
+          "sequence": {
+            "id": 1447949566,
+            "name": "[GRCh37]chr16",
+            "resource": "RefSeq DNA",
+            "resourceId": "NC_000016.9",
+            "_url": "https://www.ncbi.nlm.nih.gov/nuccore/NC_000016.9",
+            "version": 2
+          },
+          "source": "dbSnp",
+          "type": "genomic",
+          "variantAlleles": [
+            "T"
+          ],
+          "variantHgvs": [
+            "NC_000016.9:g.31104720C>T"
+          ],
+          "version": 4
+        },
+        {
+          "id": 1451198232,
+          "altHgvs": {},
+          "begin": 6557,
+          "end": 6557,
+          "intronicOffset": 0,
+          "referenceAllele": "G",
+          "referenceHgvs": "NG_011564.1:g.6557=",
+          "sequence": {
+            "id": 1451167234,
+            "name": "NG_011564.1",
+            "resource": "RefSeq DNA",
+            "resourceId": "NG_011564.1",
+            "_url": "https://www.ncbi.nlm.nih.gov/nuccore/NG_011564.1",
+            "version": 0
+          },
+          "source": "dbSnp",
+          "type": "genomic",
+          "variantAlleles": [
+            "A"
+          ],
+          "variantHgvs": [
+            "NG_011564.1:g.6557G>A"
+          ],
+          "version": 3
+        },
+        {
+          "id": 1451198233,
+          "altHgvs": {},
+          "begin": 66,
+          "end": 66,
+          "intronicOffset": 0,
+          "referenceAllele": "V",
+          "referenceHgvs": "NP_076869.1:p.Val66=",
+          "sequence": {
+            "id": 1451167236,
+            "name": "NP_076869.1",
+            "resource": "RefSeq Protein",
+            "resourceId": "NP_076869.1",
+            "_url": "https://www.ncbi.nlm.nih.gov/nuccore/NP_076869.1",
+            "version": 0
+          },
+          "source": "dbSnp",
+          "type": "protein",
+          "variantAlleles": [
+            "M"
+          ],
+          "variantHgvs": [
+            "NP_076869.1:p.Val66Met"
+          ],
+          "version": 3
+        }
+      ],
+      "obsolete": false,
+      "rare": true,
+      "raritySource": "gnomAD Genomes",
+      "relatedGenes": [
+        {
+          "objCls": "Gene",
+          "id": "PA133787052",
+          "symbol": "VKORC1",
+          "name": "vitamin K epoxide reductase complex subunit 1",
+          "version": 16
+        }
+      ],
+      "terms": [],
+      "type": "SNP",
+      "version": 7
+    },
+    {
+      "objCls": "Variant",
+      "id": "PA166155137",
+      "symbol": "rs104894539",
+      "name": "rs104894539",
+      "altNames": {
+        "synonym": [
+          "NC_000016.10:g.31094645C>A",
+          "NC_000016.9:g.31105966C>A",
+          "NG_011564.1:g.5311G>T",
+          "NM_001311311.1:c.85G>T",
+          "NM_024006.4:c.85G>T",
+          "NM_024006.5:c.85G>T",
+          "NM_206824.2:c.85G>T",
+          "NP_001298240.1:p.Val29Leu",
+          "NP_076869.1:p.Val29Leu",
+          "NP_996560.1:p.Val29Leu",
+          "XM_005255568.1:c.85G>T",
+          "XM_011545943.1:c.85G>T",
+          "XM_011545944.1:c.85G>T",
+          "XM_011545945.1:c.85G>T",
+          "XP_005255625.1:p.Val29Leu",
+          "XP_011544245.1:p.Val29Leu",
+          "XP_011544246.1:p.Val29Leu",
+          "XP_011544247.1:p.Val29Leu",
+          "XR_243303.1:n.734G>T",
+          "XR_950848.1:n.873G>T"
+        ]
+      },
+      "changeClassification": "Missense",
+      "clinicalSignificance": "Pathogenic",
+      "crossReferences": [
+        {
+          "id": 1448026796,
+          "resource": "dbSNP",
+          "resourceId": "rs104894539",
+          "_url": "https://www.ncbi.nlm.nih.gov/snp/rs104894539",
+          "version": 0
+        }
+      ],
+      "history": [],
+      "lastUpdatedFromDbsnp": "2020-06-18T06:25:00.061613",
+      "locations": [
+        {
+          "id": 1451167232,
+          "altHgvs": {},
+          "assembly": "GRCh38",
+          "begin": 31094645,
+          "end": 31094645,
+          "intronicOffset": 0,
+          "referenceAllele": "C",
+          "referenceHgvs": "NC_000016.10:g.31094645=",
+          "sequence": {
+            "id": 1446906623,
+            "name": "[GRCh38]chr16",
+            "resource": "RefSeq DNA",
+            "resourceId": "NC_000016.10",
+            "_url": "https://www.ncbi.nlm.nih.gov/nuccore/NC_000016.10",
+            "version": 2
+          },
+          "source": "dbSnp",
+          "type": "genomic",
+          "variantAlleles": [
+            "A"
+          ],
+          "variantHgvs": [
+            "NC_000016.10:g.31094645C>A"
+          ],
+          "version": 0
+        },
+        {
+          "id": 1448026794,
+          "altHgvs": {},
+          "assembly": "GRCh37",
+          "begin": 31105966,
+          "end": 31105966,
+          "intronicOffset": 0,
+          "referenceAllele": "C",
+          "referenceHgvs": "NC_000016.9:g.31105966=",
+          "sequence": {
+            "id": 1447949566,
+            "name": "[GRCh37]chr16",
+            "resource": "RefSeq DNA",
+            "resourceId": "NC_000016.9",
+            "_url": "https://www.ncbi.nlm.nih.gov/nuccore/NC_000016.9",
+            "version": 2
+          },
+          "source": "dbSnp",
+          "type": "genomic",
+          "variantAlleles": [
+            "A"
+          ],
+          "variantHgvs": [
+            "NC_000016.9:g.31105966C>A"
+          ],
+          "version": 1
+        },
+        {
+          "id": 1451167235,
+          "altHgvs": {},
+          "begin": 5311,
+          "end": 5311,
+          "intronicOffset": 0,
+          "referenceAllele": "G",
+          "referenceHgvs": "NG_011564.1:g.5311=",
+          "sequence": {
+            "id": 1451167234,
+            "name": "NG_011564.1",
+            "resource": "RefSeq DNA",
+            "resourceId": "NG_011564.1",
+            "_url": "https://www.ncbi.nlm.nih.gov/nuccore/NG_011564.1",
+            "version": 0
+          },
+          "source": "dbSnp",
+          "type": "genomic",
+          "variantAlleles": [
+            "T"
+          ],
+          "variantHgvs": [
+            "NG_011564.1:g.5311G>T"
+          ],
+          "version": 0
+        },
+        {
+          "id": 1451167237,
+          "altHgvs": {},
+          "begin": 29,
+          "end": 29,
+          "intronicOffset": 0,
+          "referenceAllele": "V",
+          "referenceHgvs": "NP_076869.1:p.Val29=",
+          "sequence": {
+            "id": 1451167236,
+            "name": "NP_076869.1",
+            "resource": "RefSeq Protein",
+            "resourceId": "NP_076869.1",
+            "_url": "https://www.ncbi.nlm.nih.gov/nuccore/NP_076869.1",
+            "version": 0
+          },
+          "source": "dbSnp",
+          "type": "protein",
+          "variantAlleles": [
+            "L"
+          ],
+          "variantHgvs": [
+            "NP_076869.1:p.Val29Leu"
+          ],
+          "version": 0
+        }
+      ],
+      "obsolete": false,
+      "rare": true,
+      "raritySource": "gnomAD Genomes",
+      "relatedGenes": [
+        {
+          "objCls": "Gene",
+          "id": "PA133787052",
+          "symbol": "VKORC1",
+          "name": "vitamin K epoxide reductase complex subunit 1",
+          "version": 16
+        }
+      ],
+      "terms": [],
+      "type": "SNP",
+      "version": 4
+    },
+    {
+      "objCls": "Variant",
+      "id": "PA166155138",
+      "symbol": "rs104894540",
+      "name": "rs104894540",
+      "altNames": {
+        "synonym": [
+          "NC_000016.10:g.31094596A>G",
+          "NC_000016.9:g.31105917A>G",
+          "NG_011564.1:g.5360T>C",
+          "NM_001311311.1:c.134T>C",
+          "NM_024006.4:c.134T>C",
+          "NM_024006.5:c.134T>C",
+          "NM_206824.2:c.134T>C",
+          "NP_001298240.1:p.Val45Ala",
+          "NP_076869.1:p.Val45Ala",
+          "NP_996560.1:p.Val45Ala",
+          "XM_005255568.1:c.134T>C",
+          "XM_011545943.1:c.134T>C",
+          "XM_011545944.1:c.134T>C",
+          "XM_011545945.1:c.134T>C",
+          "XP_005255625.1:p.Val45Ala",
+          "XP_011544245.1:p.Val45Ala",
+          "XP_011544246.1:p.Val45Ala",
+          "XP_011544247.1:p.Val45Ala",
+          "XR_243303.1:n.783T>C",
+          "XR_950848.1:n.922T>C",
+          "rs28940303"
+        ]
+      },
+      "changeClassification": "Missense",
+      "clinicalSignificance": "Pathogenic",
+      "crossReferences": [
+        {
+          "id": 1448026829,
+          "resource": "dbSNP",
+          "resourceId": "rs104894540",
+          "_url": "https://www.ncbi.nlm.nih.gov/snp/rs104894540",
+          "version": 0
+        },
+        {
+          "id": 1451167242,
+          "resource": "dbSNP",
+          "resourceId": "rs28940303",
+          "_url": "https://www.ncbi.nlm.nih.gov/snp/rs28940303",
+          "version": 1
+        }
+      ],
+      "history": [],
+      "lastUpdatedFromDbsnp": "2020-06-18T06:25:02.767523",
+      "locations": [
+        {
+          "id": 1451167238,
+          "altHgvs": {},
+          "assembly": "GRCh38",
+          "begin": 31094596,
+          "end": 31094596,
+          "intronicOffset": 0,
+          "referenceAllele": "A",
+          "referenceHgvs": "NC_000016.10:g.31094596=",
+          "sequence": {
+            "id": 1446906623,
+            "name": "[GRCh38]chr16",
+            "resource": "RefSeq DNA",
+            "resourceId": "NC_000016.10",
+            "_url": "https://www.ncbi.nlm.nih.gov/nuccore/NC_000016.10",
+            "version": 2
+          },
+          "source": "dbSnp",
+          "type": "genomic",
+          "variantAlleles": [
+            "G"
+          ],
+          "variantHgvs": [
+            "NC_000016.10:g.31094596A>G"
+          ],
+          "version": 0
+        },
+        {
+          "id": 1448026827,
+          "altHgvs": {},
+          "assembly": "GRCh37",
+          "begin": 31105917,
+          "end": 31105917,
+          "intronicOffset": 0,
+          "referenceAllele": "A",
+          "referenceHgvs": "NC_000016.9:g.31105917=",
+          "sequence": {
+            "id": 1447949566,
+            "name": "[GRCh37]chr16",
+            "resource": "RefSeq DNA",
+            "resourceId": "NC_000016.9",
+            "_url": "https://www.ncbi.nlm.nih.gov/nuccore/NC_000016.9",
+            "version": 2
+          },
+          "source": "dbSnp",
+          "type": "genomic",
+          "variantAlleles": [
+            "G"
+          ],
+          "variantHgvs": [
+            "NC_000016.9:g.31105917A>G"
+          ],
+          "version": 1
+        },
+        {
+          "id": 1451167240,
+          "altHgvs": {},
+          "begin": 5360,
+          "end": 5360,
+          "intronicOffset": 0,
+          "referenceAllele": "T",
+          "referenceHgvs": "NG_011564.1:g.5360=",
+          "sequence": {
+            "id": 1451167234,
+            "name": "NG_011564.1",
+            "resource": "RefSeq DNA",
+            "resourceId": "NG_011564.1",
+            "_url": "https://www.ncbi.nlm.nih.gov/nuccore/NG_011564.1",
+            "version": 0
+          },
+          "source": "dbSnp",
+          "type": "genomic",
+          "variantAlleles": [
+            "C"
+          ],
+          "variantHgvs": [
+            "NG_011564.1:g.5360T>C"
+          ],
+          "version": 0
+        },
+        {
+          "id": 1451167241,
+          "altHgvs": {},
+          "begin": 45,
+          "end": 45,
+          "intronicOffset": 0,
+          "referenceAllele": "V",
+          "referenceHgvs": "NP_076869.1:p.Val45=",
+          "sequence": {
+            "id": 1451167236,
+            "name": "NP_076869.1",
+            "resource": "RefSeq Protein",
+            "resourceId": "NP_076869.1",
+            "_url": "https://www.ncbi.nlm.nih.gov/nuccore/NP_076869.1",
+            "version": 0
+          },
+          "source": "dbSnp",
+          "type": "protein",
+          "variantAlleles": [
+            "A"
+          ],
+          "variantHgvs": [
+            "NP_076869.1:p.Val45Ala"
+          ],
+          "version": 0
+        }
+      ],
+      "obsolete": false,
+      "rare": false,
+      "raritySource": "Unknown",
+      "relatedGenes": [
+        {
+          "objCls": "Gene",
+          "id": "PA133787052",
+          "symbol": "VKORC1",
+          "name": "vitamin K epoxide reductase complex subunit 1",
+          "version": 16
+        }
+      ],
+      "terms": [],
+      "type": "SNP",
+      "version": 3
+    },
+    {
+      "objCls": "Variant",
+      "id": "PA166155139",
+      "symbol": "rs104894541",
+      "name": "rs104894541",
+      "altNames": {
+        "synonym": [
+          "NC_000016.10:g.31094558T>C",
+          "NC_000016.9:g.31105879T>C",
+          "NG_011564.1:g.5398A>G",
+          "NM_001311311.1:c.172A>G",
+          "NM_024006.4:c.172A>G",
+          "NM_024006.5:c.172A>G",
+          "NM_206824.2:c.172A>G",
+          "NP_001298240.1:p.Arg58Gly",
+          "NP_076869.1:p.Arg58Gly",
+          "NP_996560.1:p.Arg58Gly",
+          "XM_005255568.1:c.172A>G",
+          "XM_011545943.1:c.172A>G",
+          "XM_011545944.1:c.172A>G",
+          "XM_011545945.1:c.172A>G",
+          "XP_005255625.1:p.Arg58Gly",
+          "XP_011544245.1:p.Arg58Gly",
+          "XP_011544246.1:p.Arg58Gly",
+          "XP_011544247.1:p.Arg58Gly",
+          "XR_243303.1:n.821A>G",
+          "XR_950848.1:n.960A>G",
+          "rs28940304"
+        ]
+      },
+      "changeClassification": "Missense",
+      "clinicalSignificance": "Pathogenic",
+      "crossReferences": [
+        {
+          "id": 1448026863,
+          "resource": "dbSNP",
+          "resourceId": "rs104894541",
+          "_url": "https://www.ncbi.nlm.nih.gov/snp/rs104894541",
+          "version": 0
+        },
+        {
+          "id": 1451167247,
+          "resource": "dbSNP",
+          "resourceId": "rs28940304",
+          "_url": "https://www.ncbi.nlm.nih.gov/snp/rs28940304",
+          "version": 1
+        }
+      ],
+      "history": [],
+      "lastUpdatedFromDbsnp": "2020-06-18T06:25:05.347745",
+      "locations": [
+        {
+          "id": 1451167243,
+          "altHgvs": {},
+          "assembly": "GRCh38",
+          "begin": 31094558,
+          "end": 31094558,
+          "intronicOffset": 0,
+          "referenceAllele": "T",
+          "referenceHgvs": "NC_000016.10:g.31094558=",
+          "sequence": {
+            "id": 1446906623,
+            "name": "[GRCh38]chr16",
+            "resource": "RefSeq DNA",
+            "resourceId": "NC_000016.10",
+            "_url": "https://www.ncbi.nlm.nih.gov/nuccore/NC_000016.10",
+            "version": 2
+          },
+          "source": "dbSnp",
+          "type": "genomic",
+          "variantAlleles": [
+            "C"
+          ],
+          "variantHgvs": [
+            "NC_000016.10:g.31094558T>C"
+          ],
+          "version": 0
+        },
+        {
+          "id": 1448026861,
+          "altHgvs": {},
+          "assembly": "GRCh37",
+          "begin": 31105879,
+          "end": 31105879,
+          "intronicOffset": 0,
+          "referenceAllele": "T",
+          "referenceHgvs": "NC_000016.9:g.31105879=",
+          "sequence": {
+            "id": 1447949566,
+            "name": "[GRCh37]chr16",
+            "resource": "RefSeq DNA",
+            "resourceId": "NC_000016.9",
+            "_url": "https://www.ncbi.nlm.nih.gov/nuccore/NC_000016.9",
+            "version": 2
+          },
+          "source": "dbSnp",
+          "type": "genomic",
+          "variantAlleles": [
+            "C"
+          ],
+          "variantHgvs": [
+            "NC_000016.9:g.31105879T>C"
+          ],
+          "version": 1
+        },
+        {
+          "id": 1451167245,
+          "altHgvs": {},
+          "begin": 5398,
+          "end": 5398,
+          "intronicOffset": 0,
+          "referenceAllele": "A",
+          "referenceHgvs": "NG_011564.1:g.5398=",
+          "sequence": {
+            "id": 1451167234,
+            "name": "NG_011564.1",
+            "resource": "RefSeq DNA",
+            "resourceId": "NG_011564.1",
+            "_url": "https://www.ncbi.nlm.nih.gov/nuccore/NG_011564.1",
+            "version": 0
+          },
+          "source": "dbSnp",
+          "type": "genomic",
+          "variantAlleles": [
+            "G"
+          ],
+          "variantHgvs": [
+            "NG_011564.1:g.5398A>G"
+          ],
+          "version": 0
+        },
+        {
+          "id": 1451167246,
+          "altHgvs": {},
+          "begin": 58,
+          "end": 58,
+          "intronicOffset": 0,
+          "referenceAllele": "R",
+          "referenceHgvs": "NP_076869.1:p.Arg58=",
+          "sequence": {
+            "id": 1451167236,
+            "name": "NP_076869.1",
+            "resource": "RefSeq Protein",
+            "resourceId": "NP_076869.1",
+            "_url": "https://www.ncbi.nlm.nih.gov/nuccore/NP_076869.1",
+            "version": 0
+          },
+          "source": "dbSnp",
+          "type": "protein",
+          "variantAlleles": [
+            "G"
+          ],
+          "variantHgvs": [
+            "NP_076869.1:p.Arg58Gly"
+          ],
+          "version": 0
+        }
+      ],
+      "obsolete": false,
+      "rare": false,
+      "raritySource": "Unknown",
+      "relatedGenes": [
+        {
+          "objCls": "Gene",
+          "id": "PA133787052",
+          "symbol": "VKORC1",
+          "name": "vitamin K epoxide reductase complex subunit 1",
+          "version": 16
+        }
+      ],
+      "terms": [],
+      "type": "SNP",
+      "version": 3
+    },
+    {
+      "objCls": "Variant",
+      "id": "PA166155140",
+      "symbol": "rs104894542",
+      "name": "rs104894542",
+      "altNames": {
+        "synonym": [
+          "NC_000016.10:g.31091243A>C",
+          "NC_000016.9:g.31102564A>C",
+          "NG_011564.1:g.8713T>G",
+          "NM_001311311.1:c.467T>G",
+          "NM_024006.4:c.383T>G",
+          "NM_024006.5:c.383T>G",
+          "NM_206824.2:c.273T>G",
+          "NP_001298240.1:p.Leu156Arg",
+          "NP_076869.1:p.Leu128Arg",
+          "NP_996560.1:p.Ala91=",
+          "XM_005255568.1:c.467T>G",
+          "XM_011545816.1:c.-2434T>G",
+          "XM_011545817.1:c.-2434T>G",
+          "XM_011545818.1:c.-2434T>G",
+          "XM_011545819.1:c.-2434T>G",
+          "XM_011545820.1:c.-2434T>G",
+          "XM_011545943.1:c.467T>G",
+          "XM_011545944.1:c.383T>G",
+          "XM_011545945.1:c.273T>G",
+          "XP_005255625.1:p.Leu156Arg",
+          "XP_011544245.1:p.Leu156Arg",
+          "XP_011544246.1:p.Leu128Arg",
+          "XP_011544247.1:p.Ala91=",
+          "XR_243303.1:n.932T>G",
+          "XR_950848.1:n.1171T>G",
+          "rs28940305"
+        ]
+      },
+      "changeClassification": "Missense",
+      "clinicalSignificance": "Pathogenic",
+      "crossReferences": [
+        {
+          "id": 1448026897,
+          "resource": "dbSNP",
+          "resourceId": "rs104894542",
+          "_url": "https://www.ncbi.nlm.nih.gov/snp/rs104894542",
+          "version": 0
+        },
+        {
+          "id": 1451167252,
+          "resource": "dbSNP",
+          "resourceId": "rs28940305",
+          "_url": "https://www.ncbi.nlm.nih.gov/snp/rs28940305",
+          "version": 1
+        }
+      ],
+      "history": [],
+      "lastUpdatedFromDbsnp": "2020-06-18T06:25:08.173362",
+      "locations": [
+        {
+          "id": 1451167248,
+          "altHgvs": {},
+          "assembly": "GRCh38",
+          "begin": 31091243,
+          "end": 31091243,
+          "intronicOffset": 0,
+          "referenceAllele": "A",
+          "referenceHgvs": "NC_000016.10:g.31091243=",
+          "sequence": {
+            "id": 1446906623,
+            "name": "[GRCh38]chr16",
+            "resource": "RefSeq DNA",
+            "resourceId": "NC_000016.10",
+            "_url": "https://www.ncbi.nlm.nih.gov/nuccore/NC_000016.10",
+            "version": 2
+          },
+          "source": "dbSnp",
+          "type": "genomic",
+          "variantAlleles": [
+            "C"
+          ],
+          "variantHgvs": [
+            "NC_000016.10:g.31091243A>C"
+          ],
+          "version": 0
+        },
+        {
+          "id": 1448026895,
+          "altHgvs": {},
+          "assembly": "GRCh37",
+          "begin": 31102564,
+          "end": 31102564,
+          "intronicOffset": 0,
+          "referenceAllele": "A",
+          "referenceHgvs": "NC_000016.9:g.31102564=",
+          "sequence": {
+            "id": 1447949566,
+            "name": "[GRCh37]chr16",
+            "resource": "RefSeq DNA",
+            "resourceId": "NC_000016.9",
+            "_url": "https://www.ncbi.nlm.nih.gov/nuccore/NC_000016.9",
+            "version": 2
+          },
+          "source": "dbSnp",
+          "type": "genomic",
+          "variantAlleles": [
+            "C"
+          ],
+          "variantHgvs": [
+            "NC_000016.9:g.31102564A>C"
+          ],
+          "version": 1
+        },
+        {
+          "id": 1451167250,
+          "altHgvs": {},
+          "begin": 8713,
+          "end": 8713,
+          "intronicOffset": 0,
+          "referenceAllele": "T",
+          "referenceHgvs": "NG_011564.1:g.8713=",
+          "sequence": {
+            "id": 1451167234,
+            "name": "NG_011564.1",
+            "resource": "RefSeq DNA",
+            "resourceId": "NG_011564.1",
+            "_url": "https://www.ncbi.nlm.nih.gov/nuccore/NG_011564.1",
+            "version": 0
+          },
+          "source": "dbSnp",
+          "type": "genomic",
+          "variantAlleles": [
+            "G"
+          ],
+          "variantHgvs": [
+            "NG_011564.1:g.8713T>G"
+          ],
+          "version": 0
+        },
+        {
+          "id": 1451167251,
+          "altHgvs": {},
+          "begin": 128,
+          "end": 128,
+          "intronicOffset": 0,
+          "referenceAllele": "L",
+          "referenceHgvs": "NP_076869.1:p.Leu128=",
+          "sequence": {
+            "id": 1451167236,
+            "name": "NP_076869.1",
+            "resource": "RefSeq Protein",
+            "resourceId": "NP_076869.1",
+            "_url": "https://www.ncbi.nlm.nih.gov/nuccore/NP_076869.1",
+            "version": 0
+          },
+          "source": "dbSnp",
+          "type": "protein",
+          "variantAlleles": [
+            "R"
+          ],
+          "variantHgvs": [
+            "NP_076869.1:p.Leu128Arg"
+          ],
+          "version": 0
+        }
+      ],
+      "obsolete": false,
+      "rare": true,
+      "raritySource": "gnomAD Genomes",
+      "relatedGenes": [
+        {
+          "objCls": "Gene",
+          "id": "PA165450635",
+          "symbol": "PRSS53",
+          "name": "serine protease 53",
+          "version": 7
+        },
+        {
+          "objCls": "Gene",
+          "id": "PA133787052",
+          "symbol": "VKORC1",
+          "name": "vitamin K epoxide reductase complex subunit 1",
+          "version": 16
+        }
+      ],
+      "terms": [],
+      "type": "SNP",
+      "version": 4
+    },
+    {
+      "objCls": "Variant",
+      "id": "PA166155133",
+      "symbol": "rs61162043",
+      "name": "rs61162043",
+      "altNames": {
+        "synonym": [
+          "NC_000016.10:g.31102913A>G",
+          "NC_000016.9:g.31114234A>G"
+        ]
+      },
+      "changeClassification": "Not Available",
+      "crossReferences": [
+        {
+          "id": 1448026696,
+          "resource": "dbSNP",
+          "resourceId": "rs61162043",
+          "_url": "https://www.ncbi.nlm.nih.gov/snp/rs61162043",
+          "version": 0
+        }
+      ],
+      "history": [],
+      "lastUpdatedFromDbsnp": "2020-06-18T21:43:57.234922",
+      "locations": [
+        {
+          "id": 1451195563,
+          "altHgvs": {},
+          "assembly": "GRCh38",
+          "begin": 31102913,
+          "end": 31102913,
+          "intronicOffset": 0,
+          "referenceAllele": "A",
+          "referenceHgvs": "NC_000016.10:g.31102913=",
+          "sequence": {
+            "id": 1446906623,
+            "name": "[GRCh38]chr16",
+            "resource": "RefSeq DNA",
+            "resourceId": "NC_000016.10",
+            "_url": "https://www.ncbi.nlm.nih.gov/nuccore/NC_000016.10",
+            "version": 2
+          },
+          "source": "dbSnp",
+          "type": "genomic",
+          "variantAlleles": [
+            "G"
+          ],
+          "variantHgvs": [
+            "NC_000016.10:g.31102913A>G"
+          ],
+          "version": 0
+        },
+        {
+          "id": 1448026695,
+          "altHgvs": {},
+          "assembly": "GRCh37",
+          "begin": 31114234,
+          "end": 31114234,
+          "intronicOffset": 0,
+          "referenceAllele": "A",
+          "referenceHgvs": "NC_000016.9:g.31114234=",
+          "sequence": {
+            "id": 1447949566,
+            "name": "[GRCh37]chr16",
+            "resource": "RefSeq DNA",
+            "resourceId": "NC_000016.9",
+            "_url": "https://www.ncbi.nlm.nih.gov/nuccore/NC_000016.9",
+            "version": 2
+          },
+          "source": "dbSnp",
+          "type": "genomic",
+          "variantAlleles": [
+            "G"
+          ],
+          "variantHgvs": [
+            "NC_000016.9:g.31114234A>G"
+          ],
+          "version": 1
+        }
+      ],
+      "obsolete": false,
+      "rare": false,
+      "raritySource": "gnomAD Genomes",
+      "relatedGenes": [
+        {
+          "objCls": "Gene",
+          "id": "PA134899581",
+          "symbol": "BCKDK",
+          "name": "branched chain keto acid dehydrogenase kinase",
+          "version": 10
+        },
+        {
+          "objCls": "Gene",
+          "id": "PA133787052",
+          "symbol": "VKORC1",
+          "name": "vitamin K epoxide reductase complex subunit 1",
+          "version": 16
+        }
+      ],
+      "terms": [],
+      "type": "SNP",
+      "version": 4
+    },
+    {
+      "objCls": "Variant",
+      "id": "PA166155079",
+      "symbol": "rs7196161",
+      "name": "rs7196161",
+      "altNames": {
+        "synonym": [
+          "NC_000016.10:g.31099660G>A",
+          "NC_000016.9:g.31110981G>A",
+          "NG_011564.1:g.296C>T",
+          "VKORC1 381T>C on AY587020",
+          "rs17882285"
+        ]
+      },
+      "changeClassification": "Not Available",
+      "clinicalSignificance": "drug-response",
+      "crossReferences": [
+        {
+          "id": 1448025528,
+          "resource": "dbSNP",
+          "resourceId": "rs7196161",
+          "_url": "https://www.ncbi.nlm.nih.gov/snp/rs7196161",
+          "version": 0
+        },
+        {
+          "id": 1451198026,
+          "resource": "dbSNP",
+          "resourceId": "rs17882285",
+          "_url": "https://www.ncbi.nlm.nih.gov/snp/rs17882285",
+          "version": 1
+        },
+        {
+          "id": 1448103543,
+          "name": "NG_011564.1:g.296C>T",
+          "resource": "ClinVar",
+          "resourceId": "226015",
+          "_url": "https://www.ncbi.nlm.nih.gov/clinvar/?term=226015",
+          "version": 1
+        }
+      ],
+      "history": [],
+      "lastUpdatedFromDbsnp": "2020-06-18T22:13:44.926811",
+      "locations": [
+        {
+          "id": 1449001373,
+          "altHgvs": {},
+          "assembly": "GRCh38",
+          "begin": 31099660,
+          "end": 31099660,
+          "intronicOffset": 0,
+          "referenceAllele": "G",
+          "referenceHgvs": "NC_000016.10:g.31099660=",
+          "sequence": {
+            "id": 1446906623,
+            "name": "[GRCh38]chr16",
+            "resource": "RefSeq DNA",
+            "resourceId": "NC_000016.10",
+            "_url": "https://www.ncbi.nlm.nih.gov/nuccore/NC_000016.10",
+            "version": 2
+          },
+          "source": "dbSnp",
+          "type": "genomic",
+          "variantAlleles": [
+            "A",
+            "C"
+          ],
+          "variantHgvs": [
+            "NC_000016.10:g.31099660G>A",
+            "NC_000016.10:g.31099660G>C"
+          ],
+          "version": 2
+        },
+        {
+          "id": 1451198024,
+          "altHgvs": {},
+          "assembly": "GRCh37",
+          "begin": 31110981,
+          "end": 31110981,
+          "intronicOffset": 0,
+          "referenceAllele": "G",
+          "referenceHgvs": "NC_000016.9:g.31110981=",
+          "sequence": {
+            "id": 1447949566,
+            "name": "[GRCh37]chr16",
+            "resource": "RefSeq DNA",
+            "resourceId": "NC_000016.9",
+            "_url": "https://www.ncbi.nlm.nih.gov/nuccore/NC_000016.9",
+            "version": 2
+          },
+          "source": "dbSnp",
+          "type": "genomic",
+          "variantAlleles": [
+            "A",
+            "C"
+          ],
+          "variantHgvs": [
+            "NC_000016.9:g.31110981G>A",
+            "NC_000016.9:g.31110981G>C"
+          ],
+          "version": 0
+        },
+        {
+          "id": 1451198025,
+          "altHgvs": {},
+          "begin": 296,
+          "end": 296,
+          "intronicOffset": 0,
+          "referenceAllele": "C",
+          "referenceHgvs": "NG_011564.1:g.296=",
+          "sequence": {
+            "id": 1451167234,
+            "name": "NG_011564.1",
+            "resource": "RefSeq DNA",
+            "resourceId": "NG_011564.1",
+            "_url": "https://www.ncbi.nlm.nih.gov/nuccore/NG_011564.1",
+            "version": 0
+          },
+          "source": "dbSnp",
+          "type": "genomic",
+          "variantAlleles": [
+            "G",
+            "T"
+          ],
+          "variantHgvs": [
+            "NG_011564.1:g.296C>G",
+            "NG_011564.1:g.296C>T"
+          ],
+          "version": 0
+        }
+      ],
+      "obsolete": false,
+      "rare": false,
+      "raritySource": "gnomAD Genomes",
+      "relatedGenes": [
+        {
+          "objCls": "Gene",
+          "id": "PA133787052",
+          "symbol": "VKORC1",
+          "name": "vitamin K epoxide reductase complex subunit 1",
+          "version": 16
+        }
+      ],
+      "terms": [],
+      "type": "SNP",
+      "version": 6
+    },
+    {
+      "objCls": "Variant",
+      "id": "PA166155104",
+      "symbol": "rs11150606",
+      "name": "rs11150606",
+      "altNames": {
+        "synonym": [
+          "NC_000016.10:g.31087690T>C",
+          "NC_000016.9:g.31099011T>C",
+          "NM_001039503.2:c.89A>G",
+          "NP_001034592.1:p.Gln30Arg",
+          "XM_005255293.1:c.89A>G",
+          "XM_005255294.1:c.-530A>G",
+          "XM_011545816.1:c.89A>G",
+          "XM_011545817.1:c.89A>G",
+          "XM_011545818.1:c.89A>G",
+          "XM_011545819.1:c.89A>G",
+          "XM_011545820.1:c.89A>G",
+          "XP_005255350.1:p.Gln30Arg",
+          "XP_011544118.1:p.Gln30Arg",
+          "XP_011544119.1:p.Gln30Arg",
+          "XP_011544120.1:p.Gln30Arg",
+          "XP_011544121.1:p.Gln30Arg",
+          "XP_011544122.1:p.Gln30Arg"
+        ]
+      },
+      "changeClassification": "Missense",
+      "crossReferences": [
+        {
+          "id": 1448026033,
+          "resource": "dbSNP",
+          "resourceId": "rs11150606",
+          "_url": "https://www.ncbi.nlm.nih.gov/snp/rs11150606",
+          "version": 0
+        }
+      ],
+      "history": [],
+      "lastUpdatedFromDbsnp": "2020-06-18T06:41:34.073938",
+      "locations": [
+        {
+          "id": 1451169232,
+          "altHgvs": {},
+          "assembly": "GRCh38",
+          "begin": 31087690,
+          "end": 31087690,
+          "intronicOffset": 0,
+          "referenceAllele": "T",
+          "referenceHgvs": "NC_000016.10:g.31087690=",
+          "sequence": {
+            "id": 1446906623,
+            "name": "[GRCh38]chr16",
+            "resource": "RefSeq DNA",
+            "resourceId": "NC_000016.10",
+            "_url": "https://www.ncbi.nlm.nih.gov/nuccore/NC_000016.10",
+            "version": 2
+          },
+          "source": "dbSnp",
+          "type": "genomic",
+          "variantAlleles": [
+            "A",
+            "C"
+          ],
+          "variantHgvs": [
+            "NC_000016.10:g.31087690T>A",
+            "NC_000016.10:g.31087690T>C"
+          ],
+          "version": 0
+        },
+        {
+          "id": 1448026030,
+          "altHgvs": {},
+          "assembly": "GRCh37",
+          "begin": 31099011,
+          "end": 31099011,
+          "intronicOffset": 0,
+          "referenceAllele": "T",
+          "referenceHgvs": "NC_000016.9:g.31099011=",
+          "sequence": {
+            "id": 1447949566,
+            "name": "[GRCh37]chr16",
+            "resource": "RefSeq DNA",
+            "resourceId": "NC_000016.9",
+            "_url": "https://www.ncbi.nlm.nih.gov/nuccore/NC_000016.9",
+            "version": 2
+          },
+          "source": "dbSnp",
+          "type": "genomic",
+          "variantAlleles": [
+            "A",
+            "C"
+          ],
+          "variantHgvs": [
+            "NC_000016.9:g.31099011T>A",
+            "NC_000016.9:g.31099011T>C"
+          ],
+          "version": 1
+        },
+        {
+          "id": 1448026031,
+          "altHgvs": {},
+          "begin": 30,
+          "end": 30,
+          "intronicOffset": 0,
+          "referenceAllele": "Q",
+          "referenceHgvs": "NP_001034592.1:p.Gln30=",
+          "sequence": {
+            "id": 1448026032,
+            "name": "NP_001034592.1",
+            "resource": "RefSeq Protein",
+            "resourceId": "NP_001034592.1",
+            "_url": "https://www.ncbi.nlm.nih.gov/nuccore/NP_001034592.1",
+            "version": 0
+          },
+          "source": "dbSnp",
+          "type": "protein",
+          "variantAlleles": [
+            "L",
+            "R"
+          ],
+          "variantHgvs": [
+            "NP_001034592.1:p.Gln30Arg",
+            "NP_001034592.1:p.Gln30Leu"
+          ],
+          "version": 1
+        }
+      ],
+      "obsolete": false,
+      "rare": false,
+      "raritySource": "gnomAD Genomes",
+      "relatedGenes": [
+        {
+          "objCls": "Gene",
+          "id": "PA165450635",
+          "symbol": "PRSS53",
+          "name": "serine protease 53",
+          "version": 7
+        },
+        {
+          "objCls": "Gene",
+          "id": "PA133787052",
+          "symbol": "VKORC1",
+          "name": "vitamin K epoxide reductase complex subunit 1",
+          "version": 16
+        }
+      ],
+      "terms": [],
+      "type": "SNP",
+      "version": 4
+    },
+    {
+      "objCls": "Variant",
+      "id": "PA166155123",
+      "symbol": "rs17880887",
+      "name": "rs17880887",
+      "altNames": {
+        "synonym": [
+          "NC_000016.10:g.31099180G>T",
+          "NC_000016.9:g.31110501G>T",
+          "NG_011564.1:g.776C>A"
+        ]
+      },
+      "changeClassification": "Not Available",
+      "crossReferences": [
+        {
+          "id": 1448026489,
+          "resource": "dbSNP",
+          "resourceId": "rs17880887",
+          "_url": "https://www.ncbi.nlm.nih.gov/snp/rs17880887",
+          "version": 0
+        }
+      ],
+      "history": [],
+      "lastUpdatedFromDbsnp": "2020-06-18T07:59:36.511908",
+      "locations": [
+        {
+          "id": 1449001088,
+          "altHgvs": {},
+          "assembly": "GRCh38",
+          "begin": 31099180,
+          "end": 31099180,
+          "intronicOffset": 0,
+          "referenceAllele": "G",
+          "referenceHgvs": "NC_000016.10:g.31099180=",
+          "sequence": {
+            "id": 1446906623,
+            "name": "[GRCh38]chr16",
+            "resource": "RefSeq DNA",
+            "resourceId": "NC_000016.10",
+            "_url": "https://www.ncbi.nlm.nih.gov/nuccore/NC_000016.10",
+            "version": 2
+          },
+          "source": "dbSnp",
+          "type": "genomic",
+          "variantAlleles": [
+            "T"
+          ],
+          "variantHgvs": [
+            "NC_000016.10:g.31099180G>T"
+          ],
+          "version": 1
+        },
+        {
+          "id": 1448026488,
+          "altHgvs": {},
+          "assembly": "GRCh37",
+          "begin": 31110501,
+          "end": 31110501,
+          "intronicOffset": 0,
+          "referenceAllele": "G",
+          "referenceHgvs": "NC_000016.9:g.31110501=",
+          "sequence": {
+            "id": 1447949566,
+            "name": "[GRCh37]chr16",
+            "resource": "RefSeq DNA",
+            "resourceId": "NC_000016.9",
+            "_url": "https://www.ncbi.nlm.nih.gov/nuccore/NC_000016.9",
+            "version": 2
+          },
+          "source": "dbSnp",
+          "type": "genomic",
+          "variantAlleles": [
+            "T"
+          ],
+          "variantHgvs": [
+            "NC_000016.9:g.31110501G>T"
+          ],
+          "version": 1
+        },
+        {
+          "id": 1451176752,
+          "altHgvs": {},
+          "begin": 776,
+          "end": 776,
+          "intronicOffset": 0,
+          "referenceAllele": "C",
+          "referenceHgvs": "NG_011564.1:g.776=",
+          "sequence": {
+            "id": 1451167234,
+            "name": "NG_011564.1",
+            "resource": "RefSeq DNA",
+            "resourceId": "NG_011564.1",
+            "_url": "https://www.ncbi.nlm.nih.gov/nuccore/NG_011564.1",
+            "version": 0
+          },
+          "source": "dbSnp",
+          "type": "genomic",
+          "variantAlleles": [
+            "A"
+          ],
+          "variantHgvs": [
+            "NG_011564.1:g.776C>A"
+          ],
+          "version": 0
+        }
+      ],
+      "obsolete": false,
+      "rare": false,
+      "raritySource": "gnomAD Genomes",
+      "relatedGenes": [
+        {
+          "objCls": "Gene",
+          "id": "PA133787052",
+          "symbol": "VKORC1",
+          "name": "vitamin K epoxide reductase complex subunit 1",
+          "version": 16
+        }
+      ],
+      "terms": [],
+      "type": "SNP",
+      "version": 5
+    },
+    {
+      "objCls": "Variant",
+      "id": "PA166155132",
+      "symbol": "rs56314408",
+      "name": "rs56314408",
+      "altNames": {
+        "synonym": [
+          "NC_000016.10:g.31106068T>C",
+          "NC_000016.9:g.31117389T>C",
+          "NG_033011.1:g.2775T>C",
+          "rs61640251"
+        ]
+      },
+      "changeClassification": "Not Available",
+      "crossReferences": [
+        {
+          "id": 1448026687,
+          "resource": "dbSNP",
+          "resourceId": "rs56314408",
+          "_url": "https://www.ncbi.nlm.nih.gov/snp/rs56314408",
+          "version": 0
+        },
+        {
+          "id": 1451194593,
+          "resource": "dbSNP",
+          "resourceId": "rs61640251",
+          "_url": "https://www.ncbi.nlm.nih.gov/snp/rs61640251",
+          "version": 1
+        }
+      ],
+      "history": [],
+      "lastUpdatedFromDbsnp": "2020-06-18T21:32:46.53948",
+      "locations": [
+        {
+          "id": 1451194589,
+          "altHgvs": {},
+          "assembly": "GRCh38",
+          "begin": 31106068,
+          "end": 31106068,
+          "intronicOffset": 0,
+          "referenceAllele": "T",
+          "referenceHgvs": "NC_000016.10:g.31106068=",
+          "sequence": {
+            "id": 1446906623,
+            "name": "[GRCh38]chr16",
+            "resource": "RefSeq DNA",
+            "resourceId": "NC_000016.10",
+            "_url": "https://www.ncbi.nlm.nih.gov/nuccore/NC_000016.10",
+            "version": 2
+          },
+          "source": "dbSnp",
+          "type": "genomic",
+          "variantAlleles": [
+            "C"
+          ],
+          "variantHgvs": [
+            "NC_000016.10:g.31106068T>C"
+          ],
+          "version": 0
+        },
+        {
+          "id": 1448026686,
+          "altHgvs": {},
+          "assembly": "GRCh37",
+          "begin": 31117389,
+          "end": 31117389,
+          "intronicOffset": 0,
+          "referenceAllele": "T",
+          "referenceHgvs": "NC_000016.9:g.31117389=",
+          "sequence": {
+            "id": 1447949566,
+            "name": "[GRCh37]chr16",
+            "resource": "RefSeq DNA",
+            "resourceId": "NC_000016.9",
+            "_url": "https://www.ncbi.nlm.nih.gov/nuccore/NC_000016.9",
+            "version": 2
+          },
+          "source": "dbSnp",
+          "type": "genomic",
+          "variantAlleles": [
+            "C"
+          ],
+          "variantHgvs": [
+            "NC_000016.9:g.31117389T>C"
+          ],
+          "version": 1
+        },
+        {
+          "id": 1451194592,
+          "altHgvs": {},
+          "begin": 2775,
+          "end": 2775,
+          "intronicOffset": 0,
+          "referenceAllele": "T",
+          "referenceHgvs": "NG_033011.1:g.2775=",
+          "sequence": {
+            "id": 1451194591,
+            "name": "NG_033011.1",
+            "resource": "RefSeq DNA",
+            "resourceId": "NG_033011.1",
+            "_url": "https://www.ncbi.nlm.nih.gov/nuccore/NG_033011.1",
+            "version": 0
+          },
+          "source": "dbSnp",
+          "type": "genomic",
+          "variantAlleles": [
+            "C"
+          ],
+          "variantHgvs": [
+            "NG_033011.1:g.2775T>C"
+          ],
+          "version": 0
+        }
+      ],
+      "obsolete": false,
+      "rare": false,
+      "raritySource": "gnomAD Genomes",
+      "relatedGenes": [
+        {
+          "objCls": "Gene",
+          "id": "PA133787052",
+          "symbol": "VKORC1",
+          "name": "vitamin K epoxide reductase complex subunit 1",
+          "version": 16
+        }
+      ],
+      "terms": [],
+      "type": "SNP",
+      "version": 4
+    },
+    {
+      "objCls": "Variant",
+      "id": "PA166154994",
+      "symbol": "rs749671",
+      "name": "rs749671",
+      "altNames": {
+        "synonym": [
+          "NC_000016.10:g.31077026G>A",
+          "NC_000016.9:g.31088347G>A",
+          "NM_014699.3:c.702G>A",
+          "NP_055514.3:p.Glu234=",
+          "XM_005255710.1:c.702G>A",
+          "XM_005255710.2:c.702G>A",
+          "XM_005255711.1:c.702G>A",
+          "XM_005255711.2:c.702G>A",
+          "XM_005255712.1:c.702G>A",
+          "XM_005255712.2:c.702G>A",
+          "XM_011545990.1:c.702G>A",
+          "XP_005255767.1:p.Glu234=",
+          "XP_005255768.1:p.Glu234=",
+          "XP_005255769.1:p.Glu234=",
+          "XP_011544292.1:p.Glu234=",
+          "rs17846139",
+          "rs17859147",
+          "rs386610694"
+        ]
+      },
+      "changeClassification": "Missense",
+      "crossReferences": [
+        {
+          "id": 1448023499,
+          "resource": "dbSNP",
+          "resourceId": "rs749671",
+          "_url": "https://www.ncbi.nlm.nih.gov/snp/rs749671",
+          "version": 0
+        },
+        {
+          "id": 1451199837,
+          "resource": "dbSNP",
+          "resourceId": "rs17846139",
+          "_url": "https://www.ncbi.nlm.nih.gov/snp/rs17846139",
+          "version": 1
+        },
+        {
+          "id": 1451199838,
+          "resource": "dbSNP",
+          "resourceId": "rs17859147",
+          "_url": "https://www.ncbi.nlm.nih.gov/snp/rs17859147",
+          "version": 1
+        },
+        {
+          "id": 1451199839,
+          "resource": "dbSNP",
+          "resourceId": "rs386610694",
+          "_url": "https://www.ncbi.nlm.nih.gov/snp/rs386610694",
+          "version": 1
+        }
+      ],
+      "history": [],
+      "lastUpdatedFromDbsnp": "2020-06-19T23:08:37.350195",
+      "locations": [
+        {
+          "id": 1451199834,
+          "altHgvs": {},
+          "assembly": "GRCh38",
+          "begin": 31077026,
+          "end": 31077026,
+          "intronicOffset": 0,
+          "referenceAllele": "G",
+          "referenceHgvs": "NC_000016.10:g.31077026=",
+          "sequence": {
+            "id": 1446906623,
+            "name": "[GRCh38]chr16",
+            "resource": "RefSeq DNA",
+            "resourceId": "NC_000016.10",
+            "_url": "https://www.ncbi.nlm.nih.gov/nuccore/NC_000016.10",
+            "version": 2
+          },
+          "source": "dbSnp",
+          "type": "genomic",
+          "variantAlleles": [
+            "A",
+            "C",
+            "T"
+          ],
+          "variantHgvs": [
+            "NC_000016.10:g.31077026G>A",
+            "NC_000016.10:g.31077026G>C",
+            "NC_000016.10:g.31077026G>T"
+          ],
+          "version": 0
+        },
+        {
+          "id": 1448023496,
+          "altHgvs": {},
+          "assembly": "GRCh37",
+          "begin": 31088347,
+          "end": 31088347,
+          "intronicOffset": 0,
+          "referenceAllele": "G",
+          "referenceHgvs": "NC_000016.9:g.31088347=",
+          "sequence": {
+            "id": 1447949566,
+            "name": "[GRCh37]chr16",
+            "resource": "RefSeq DNA",
+            "resourceId": "NC_000016.9",
+            "_url": "https://www.ncbi.nlm.nih.gov/nuccore/NC_000016.9",
+            "version": 2
+          },
+          "source": "dbSnp",
+          "type": "genomic",
+          "variantAlleles": [
+            "A",
+            "C",
+            "T"
+          ],
+          "variantHgvs": [
+            "NC_000016.9:g.31088347G>A",
+            "NC_000016.9:g.31088347G>C",
+            "NC_000016.9:g.31088347G>T"
+          ],
+          "version": 1
+        },
+        {
+          "id": 1448023497,
+          "altHgvs": {},
+          "begin": 234,
+          "end": 234,
+          "intronicOffset": 0,
+          "referenceAllele": "E",
+          "referenceHgvs": "NP_055514.3:p.Glu234=",
+          "sequence": {
+            "id": 1448023498,
+            "name": "NP_055514.3",
+            "resource": "RefSeq Protein",
+            "resourceId": "NP_055514.3",
+            "_url": "https://www.ncbi.nlm.nih.gov/nuccore/NP_055514.3",
+            "version": 0
+          },
+          "source": "dbSnp",
+          "type": "protein",
+          "variantAlleles": [
+            "D"
+          ],
+          "variantHgvs": [
+            "NP_055514.3:p.Glu234Asp"
+          ],
+          "version": 1
+        }
+      ],
+      "obsolete": false,
+      "rare": false,
+      "raritySource": "gnomAD Genomes",
+      "relatedGenes": [
+        {
+          "objCls": "Gene",
+          "id": "PA133787052",
+          "symbol": "VKORC1",
+          "name": "vitamin K epoxide reductase complex subunit 1",
+          "version": 16
+        },
+        {
+          "objCls": "Gene",
+          "id": "PA134955953",
+          "symbol": "ZNF646",
+          "name": "zinc finger protein 646",
+          "version": 8
+        }
+      ],
+      "terms": [],
+      "type": "SNP",
+      "version": 4
+    },
+    {
+      "objCls": "Variant",
+      "id": "PA166254923",
+      "symbol": "rs188009042",
+      "name": "rs188009042",
+      "altNames": {},
+      "changeClassification": "Intronic",
+      "crossReferences": [
+        {
+          "id": 1451589752,
+          "resource": "dbSNP",
+          "resourceId": "rs188009042",
+          "_url": "https://www.ncbi.nlm.nih.gov/snp/rs188009042",
+          "version": 0
+        }
+      ],
+      "history": [
+        {
+          "id": 1451589753,
+          "date": "2021-11-19T09:53:08.067-08:00",
+          "description": "Imported from dbSNP",
+          "type": "Create",
+          "version": 0
+        }
+      ],
+      "lastUpdatedFromDbsnp": "2021-11-19T09:53:08.064499",
+      "locations": [
+        {
+          "id": 1451589749,
+          "altHgvs": {},
+          "assembly": "GRCh38",
+          "begin": 31093563,
+          "end": 31093563,
+          "intronicOffset": 0,
+          "referenceAllele": "T",
+          "referenceHgvs": "NC_000016.10:g.31093563=",
+          "sequence": {
+            "id": 1446906623,
+            "name": "[GRCh38]chr16",
+            "resource": "RefSeq DNA",
+            "resourceId": "NC_000016.10",
+            "_url": "https://www.ncbi.nlm.nih.gov/nuccore/NC_000016.10",
+            "version": 2
+          },
+          "source": "dbSnp",
+          "type": "genomic",
+          "variantAlleles": [
+            "C"
+          ],
+          "variantHgvs": [
+            "NC_000016.10:g.31093563T>C"
+          ],
+          "version": 0
+        },
+        {
+          "id": 1451589750,
+          "altHgvs": {},
+          "assembly": "GRCh37",
+          "begin": 31104884,
+          "end": 31104884,
+          "intronicOffset": 0,
+          "referenceAllele": "T",
+          "referenceHgvs": "NC_000016.9:g.31104884=",
+          "sequence": {
+            "id": 1447949566,
+            "name": "[GRCh37]chr16",
+            "resource": "RefSeq DNA",
+            "resourceId": "NC_000016.9",
+            "_url": "https://www.ncbi.nlm.nih.gov/nuccore/NC_000016.9",
+            "version": 2
+          },
+          "source": "dbSnp",
+          "type": "genomic",
+          "variantAlleles": [
+            "C"
+          ],
+          "variantHgvs": [
+            "NC_000016.9:g.31104884T>C"
+          ],
+          "version": 0
+        },
+        {
+          "id": 1451589751,
+          "altHgvs": {},
+          "begin": 6393,
+          "end": 6393,
+          "intronicOffset": 0,
+          "referenceAllele": "A",
+          "referenceHgvs": "NG_011564.1:g.6393=",
+          "sequence": {
+            "id": 1451167234,
+            "name": "NG_011564.1",
+            "resource": "RefSeq DNA",
+            "resourceId": "NG_011564.1",
+            "_url": "https://www.ncbi.nlm.nih.gov/nuccore/NG_011564.1",
+            "version": 0
+          },
+          "source": "dbSnp",
+          "type": "genomic",
+          "variantAlleles": [
+            "G"
+          ],
+          "variantHgvs": [
+            "NG_011564.1:g.6393A>G"
+          ],
+          "version": 0
+        }
+      ],
+      "obsolete": false,
+      "rare": true,
+      "raritySource": "gnomAD Genomes",
+      "relatedGenes": [
+        {
+          "objCls": "Gene",
+          "id": "PA133787052",
+          "symbol": "VKORC1",
+          "name": "vitamin K epoxide reductase complex subunit 1",
+          "version": 16
+        }
+      ],
+      "terms": [],
+      "type": "SNP",
+      "version": 3
+    }
+  ],
+  "status": "success"
+}

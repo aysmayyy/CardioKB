@@ -1,0 +1,2432 @@
+{
+  "data": [
+    {
+      "objCls": "Label Annotation",
+      "id": "PA166120287",
+      "name": "Annotation of EMA Label for ethinyl estradiol / norelgestromin and F5, PROC, PROS1, SERPINC1",
+      "alternateDrugAvailable": true,
+      "cancerGenome": false,
+      "crossReferences": [],
+      "dosingInformation": false,
+      "history": [
+        {
+          "id": 1184233796,
+          "date": "2014-05-08T00:00:00-07:00",
+          "type": "Create",
+          "version": 0
+        },
+        {
+          "id": 1452011201,
+          "date": "2023-02-16T20:39:08.295-08:00",
+          "description": "added prescribing genes",
+          "type": "Update",
+          "version": 0
+        }
+      ],
+      "indication": false,
+      "labelApplications": [],
+      "labelDocumentAvailable": true,
+      "literature": [
+        {
+          "id": 15102941,
+          "title": "Evra | European Medicines Agency",
+          "_sameAs": "https://www.ema.europa.eu/en/medicines/human/EPAR/evra",
+          "crossReferences": [
+            {
+              "id": 1450417091,
+              "resource": "URL",
+              "resourceId": "https://www.ema.europa.eu/en/medicines/human/EPAR/evra",
+              "_url": "https://www.ema.europa.eu/en/medicines/human/EPAR/evra"
+            }
+          ],
+          "objCls": "Literature",
+          "terms": [],
+          "type": "Drug Label"
+        }
+      ],
+      "otherPrescribingGuidance": false,
+      "pediatric": false,
+      "pgxRelated": true,
+      "prescribingGenes": [
+        {
+          "objCls": "Gene",
+          "id": "PA159",
+          "symbol": "F5",
+          "name": "coagulation factor V",
+          "version": 141
+        },
+        {
+          "objCls": "Gene",
+          "id": "PA33799",
+          "symbol": "PROC",
+          "name": "protein C, inactivator of coagulation factors Va and VIIIa",
+          "version": 34
+        },
+        {
+          "objCls": "Gene",
+          "id": "PA33809",
+          "symbol": "PROS1",
+          "name": "protein S",
+          "version": 28
+        },
+        {
+          "objCls": "Gene",
+          "id": "PA35026",
+          "symbol": "SERPINC1",
+          "name": "serpin family C member 1",
+          "version": 20
+        }
+      ],
+      "prescribingMarkdown": {
+        "id": 1450417090,
+        "html": "<p>&quot;Contraindications...Known hereditary or acquired predisposition for venous thromboembolism, such as APC-resistance, (including Factor V Leiden), antithrombin-III-deficiency, protein C deficiency, protein S deficiency...&quot;</p>\n",
+        "version": 0
+      },
+      "relatedAlleles": [],
+      "relatedChemicals": [
+        {
+          "objCls": "Chemical",
+          "id": "PA165290929",
+          "name": "ethinyl estradiol / norelgestromin",
+          "version": 5
+        }
+      ],
+      "relatedGenes": [
+        {
+          "objCls": "Gene",
+          "id": "PA159",
+          "symbol": "F5",
+          "name": "coagulation factor V",
+          "version": 141
+        },
+        {
+          "objCls": "Gene",
+          "id": "PA33799",
+          "symbol": "PROC",
+          "name": "protein C, inactivator of coagulation factors Va and VIIIa",
+          "version": 34
+        },
+        {
+          "objCls": "Gene",
+          "id": "PA33809",
+          "symbol": "PROS1",
+          "name": "protein S",
+          "version": 28
+        },
+        {
+          "objCls": "Gene",
+          "id": "PA35026",
+          "symbol": "SERPINC1",
+          "name": "serpin family C member 1",
+          "version": 20
+        }
+      ],
+      "source": "EMA",
+      "summaryMarkdown": {
+        "id": 1447982083,
+        "html": "<p>The EMA European Public Assessment Report (EPAR) for norelgestromin and ethinyl estradiol (EVRA) states that it is contraindicated in patients with known hereditary or acquired predisposition for venous thromboembolism, including Factor 5 Leiden (<em>F5</em>), antithrombin III deficiency (<em>SERPINC1</em>), protein C deficiency (<em>PROC</em>) and protein S deficiency (<em>PROS</em>).</p>\n",
+        "version": 11
+      },
+      "terms": [],
+      "testing": {
+        "id": 1183672111,
+        "description": "The label does not discuss genetic or other testing for gene/protein/chromosomal variants, but does contain information about changes in efficacy, dosage or toxicity due to such variants. The label may mention contraindication of the drug in a particular subset of patients but does not require or recommend gene, protein or chromosomal testing.",
+        "parents": [],
+        "resource": "Genetic Testing Level",
+        "synonyms": [],
+        "term": "Actionable PGx",
+        "termId": "geneTestLevel:1183672111",
+        "valid": true,
+        "version": 2
+      },
+      "textMarkdown": {
+        "id": 1447982082,
+        "html": "<p>Excerpt from the norelgestromin and ethinyl estradiol (EVRA) EPAR:</p>\n<blockquote class=\"blockquote\">\n<p>Contraindications...Known hereditary or acquired predisposition for venous thromboembolism, such as APC-resistance, (including Factor V Leiden), antithrombin-III-deficiency, protein C deficiency, protein S deficiency...</p>\n</blockquote>\n<p>For the complete drug label text with sections containing pharmacogenetic information highlighted, see the <a download=\"Ethinyl_Estradiol_Norelgestrom_06_21_19_EMA.pdf\" href=\"https://api.clinpgx.org/v1/download/file/attachment/Ethinyl_Estradiol_Norelgestrom_06_21_19_EMA.pdf\">norelgestromin and ethinyl estradiol EPAR PDF</a>.</p>\n",
+        "version": 12
+      },
+      "version": 24
+    },
+    {
+      "objCls": "Label Annotation",
+      "id": "PA166127666",
+      "name": "Annotation of HCSC Label for drospirenone / ethinyl estradiol and F5, PROC, PROS1, SERPINC1",
+      "alternateDrugAvailable": true,
+      "cancerGenome": false,
+      "crossReferences": [],
+      "dosingInformation": false,
+      "history": [
+        {
+          "id": 1452530681,
+          "date": "2024-07-18T00:00:00-07:00",
+          "description": "added text in prescribing field, added alternate drug tag, added label document, attached label from 2017",
+          "type": "Update",
+          "version": 0
+        }
+      ],
+      "indication": false,
+      "labelApplications": [],
+      "labelDocumentAvailable": true,
+      "literature": [
+        {
+          "id": 15160842,
+          "title": "Drugs@HCSC: Drug Product YAZ (drospirenone/ethinyl estradiol), \u200bBayer Inc.",
+          "_sameAs": "https://health-products.canada.ca/dpd-bdpp/info?lang=eng&code=80656",
+          "crossReferences": [
+            {
+              "id": 1452530660,
+              "resource": "URL",
+              "resourceId": "https://health-products.canada.ca/dpd-bdpp/info?lang=eng&code=80656",
+              "_url": "https://health-products.canada.ca/dpd-bdpp/info?lang=eng&code=80656"
+            }
+          ],
+          "objCls": "Literature",
+          "terms": [
+            {
+              "id": 1452267780,
+              "resource": "ClinPGx Tags",
+              "term": "Has PGx",
+              "termId": "pgkbTags:1452267780"
+            }
+          ],
+          "type": "Drug Label"
+        }
+      ],
+      "otherPrescribingGuidance": false,
+      "pediatric": false,
+      "pgxRelated": true,
+      "prescribingGenes": [
+        {
+          "objCls": "Gene",
+          "id": "PA159",
+          "symbol": "F5",
+          "name": "coagulation factor V",
+          "version": 141
+        }
+      ],
+      "prescribingMarkdown": {
+        "id": 1452530680,
+        "html": "<p>The product monograph for drospirenone and ethinyl estradiol (YAZ) states:</p>\n<blockquote class=\"blockquote\">\n<p>YAZ should not be used in women with: presence of severe or multiple risk factor(s) for arterial or venous thrombosis: hereditary or acquired predisposition for venous or arterial thrombosis, such as Factor V Leiden mutation and activated protein C (APC-) resistance, antithrombin-III-deficiency, protein C deficiency, protein S deficiency, hyperhomocysteinemia and antiphospholipid-antibodies (anticardiolipin antibodies, lupus anticoagulant).</p>\n</blockquote>\n",
+        "version": 0
+      },
+      "relatedAlleles": [
+        {
+          "objCls": "Variant",
+          "id": "PA166153554",
+          "symbol": "rs6025",
+          "name": "rs6025",
+          "version": 5
+        }
+      ],
+      "relatedChemicals": [
+        {
+          "objCls": "Chemical",
+          "id": "PA165290928",
+          "name": "drospirenone / ethinyl estradiol",
+          "version": 6
+        }
+      ],
+      "relatedGenes": [
+        {
+          "objCls": "Gene",
+          "id": "PA159",
+          "symbol": "F5",
+          "name": "coagulation factor V",
+          "version": 141
+        },
+        {
+          "objCls": "Gene",
+          "id": "PA33799",
+          "symbol": "PROC",
+          "name": "protein C, inactivator of coagulation factors Va and VIIIa",
+          "version": 34
+        },
+        {
+          "objCls": "Gene",
+          "id": "PA33809",
+          "symbol": "PROS1",
+          "name": "protein S",
+          "version": 28
+        },
+        {
+          "objCls": "Gene",
+          "id": "PA35026",
+          "symbol": "SERPINC1",
+          "name": "serpin family C member 1",
+          "version": 20
+        }
+      ],
+      "source": "HCSC",
+      "summaryMarkdown": {
+        "id": 1447982373,
+        "html": "<p>The product monograph for drospirenone and ethinyl estradiol (YAZ) states that the drug is contraindicated in women with Factor V Leiden mutation, antithrombin III deficiency, protein C deficiency and protein S deficiency (among other contraindications), due to the risk for arterial or venous thrombosis.</p>\n",
+        "version": 1
+      },
+      "terms": [],
+      "testing": {
+        "id": 1183672111,
+        "description": "The label does not discuss genetic or other testing for gene/protein/chromosomal variants, but does contain information about changes in efficacy, dosage or toxicity due to such variants. The label may mention contraindication of the drug in a particular subset of patients but does not require or recommend gene, protein or chromosomal testing.",
+        "parents": [],
+        "resource": "Genetic Testing Level",
+        "synonyms": [],
+        "term": "Actionable PGx",
+        "termId": "geneTestLevel:1183672111",
+        "valid": true,
+        "version": 2
+      },
+      "textMarkdown": {
+        "id": 1447982372,
+        "html": "<p>YAZ is indicated for conception control and treatment of moderate acne vulgaris. It is contraindicated in women who have a hereditary or acquired predisposition for venous or arterial thrombosis. One such predisposition is Factor V Leiden mutation - <a href=\"/variant/PA166153554\">rs6025</a> within the <em>F5</em> gene. Others are antithrombin III, protein C or protein S deficiency. These three proteins are encoded by the <em>SERPINC1</em>, <em>PROC</em> and <em>PROS1</em> genes, respectively. Each of these predispositions and oral contraceptives themselves are known to independently increase the risk for thrombosis; together they may have a cumulative effect on thrombosis risk.</p>\n<blockquote class=\"blockquote\">\n<p>YAZ should not be used in women with: presence of severe or multiple risk factor(s) for arterial or venous thrombosis: hereditary or acquired predisposition for venous or arterial thrombosis, such as Factor V Leiden mutation and activated protein C (APC-) resistance, antithrombin-III-deficiency, protein C deficiency, protein S deficiency, hyperhomocysteinemia and antiphospholipid-antibodies (anticardiolipin antibodies, lupus anticoagulant).</p>\n</blockquote>\n<p>For the complete product monograph text with sections containing pharmacogenetic information highlighted, see the <a download=\"Drospirenone_and_ethinyl_estradiol_HCSC_03_02_2017.PDF\" href=\"https://api.clinpgx.org/v1/download/file/attachment/Drospirenone_and_ethinyl_estradiol_HCSC_03_02_2017.PDF\">drospirenone and ethinyl estradiol product monograph</a>.</p>\n",
+        "version": 12
+      },
+      "version": 19
+    },
+    {
+      "objCls": "Label Annotation",
+      "id": "PA166127668",
+      "name": "Annotation of HCSC Label for eltrombopag and F5, SERPINC1",
+      "alternateDrugAvailable": false,
+      "cancerGenome": false,
+      "crossReferences": [],
+      "dosingInformation": false,
+      "history": [
+        {
+          "id": 1452532001,
+          "date": "2024-07-19T10:08:36.799-07:00",
+          "description": "added newer label and prescribing info, updated text",
+          "type": "Update",
+          "version": 0
+        }
+      ],
+      "indication": false,
+      "labelApplications": [],
+      "labelDocumentAvailable": true,
+      "literature": [
+        {
+          "id": 15160982,
+          "title": "Drugs@HCSC: Drug Product REVOLADE (Eltrombopag), Novartis Pharmaceuticals Canada Inc.",
+          "_sameAs": "https://health-products.canada.ca/dpd-bdpp/info?lang=eng&code=84687",
+          "crossReferences": [
+            {
+              "id": 1452531920,
+              "resource": "URL",
+              "resourceId": "https://health-products.canada.ca/dpd-bdpp/info?lang=eng&code=84687",
+              "_url": "https://health-products.canada.ca/dpd-bdpp/info?lang=eng&code=84687"
+            }
+          ],
+          "objCls": "Literature",
+          "terms": [
+            {
+              "id": 1452267780,
+              "resource": "ClinPGx Tags",
+              "term": "Has PGx",
+              "termId": "pgkbTags:1452267780"
+            }
+          ],
+          "type": "Drug Label"
+        }
+      ],
+      "otherPrescribingGuidance": true,
+      "pediatric": false,
+      "pgxRelated": true,
+      "prescribingGenes": [
+        {
+          "objCls": "Gene",
+          "id": "PA159",
+          "symbol": "F5",
+          "name": "coagulation factor V",
+          "version": 141
+        }
+      ],
+      "prescribingMarkdown": {
+        "id": 1452532000,
+        "html": "<p>Excerpt from the eltrombopag product monograph:</p>\n<blockquote class=\"blockquote\">\n<p>Caution should be used when administering REVOLADE to patients with known risk factors for thromboembolism including but not limited to inherited (e.g. Factor V Leiden) or acquired risk factors (e.g. ATIII deficiency, antiphospholipid syndrome and systemic lupus erythematosus), advanced age, patients with prolonged periods of immobilisation, malignancies, contraceptives and hormone replacement therapy, surgery/trauma, obesity and smoking. Platelet counts should be closely monitored and consideration given to reducing the dose or discontinuing REVOLADE if the platelet count exceeds the target levels. The risk-benefit balance should be considered in patients at risk of TEEs of any aetiology.</p>\n</blockquote>\n",
+        "version": 0
+      },
+      "relatedAlleles": [
+        {
+          "objCls": "Variant",
+          "id": "PA166153554",
+          "symbol": "rs6025",
+          "name": "rs6025",
+          "version": 5
+        }
+      ],
+      "relatedChemicals": [
+        {
+          "objCls": "Chemical",
+          "id": "PA165981594",
+          "name": "eltrombopag",
+          "version": 8
+        }
+      ],
+      "relatedGenes": [
+        {
+          "objCls": "Gene",
+          "id": "PA159",
+          "symbol": "F5",
+          "name": "coagulation factor V",
+          "version": 141
+        },
+        {
+          "objCls": "Gene",
+          "id": "PA35026",
+          "symbol": "SERPINC1",
+          "name": "serpin family C member 1",
+          "version": 20
+        }
+      ],
+      "source": "HCSC",
+      "summaryMarkdown": {
+        "id": 1447982377,
+        "html": "<p>The product monograph for eltrombopag (REVOLADE) states caution should be used in patients with known risk factors for thromboembolism including but not limited to inherited (e.g. Factor V Leiden) or acquired risk factors (e.g. ATIII deficiency, antiphospholipid syndrome and systemic lupus erythematosus).</p>\n",
+        "version": 9
+      },
+      "terms": [],
+      "testing": {
+        "id": 1183672111,
+        "description": "The label does not discuss genetic or other testing for gene/protein/chromosomal variants, but does contain information about changes in efficacy, dosage or toxicity due to such variants. The label may mention contraindication of the drug in a particular subset of patients but does not require or recommend gene, protein or chromosomal testing.",
+        "parents": [],
+        "resource": "Genetic Testing Level",
+        "synonyms": [],
+        "term": "Actionable PGx",
+        "termId": "geneTestLevel:1183672111",
+        "valid": true,
+        "version": 2
+      },
+      "textMarkdown": {
+        "id": 1447982376,
+        "html": "<p>The product monograph notes that caution should be used in patients with known risk factors for thromboembolism including but not limited to inherited (e.g. Factor V Leiden) or acquired risk factors (e.g. ATIII deficiency, antiphospholipid syndrome and systemic lupus erythematosus).</p>\n<p>Excerpt from the eltrombopag product monograph:</p>\n<blockquote class=\"blockquote\">\n<p>Caution should be used when administering REVOLADE to patients with known risk factors for thromboembolism including but not limited to inherited (e.g. Factor V Leiden) or acquired risk factors (e.g. ATIII deficiency, antiphospholipid syndrome and systemic lupus erythematosus), advanced age, patients with prolonged periods of immobilisation, malignancies, contraceptives and hormone replacement therapy, surgery/trauma, obesity and smoking. Platelet counts should be closely monitored and consideration given to reducing the dose or discontinuing REVOLADE if the platelet count exceeds the target levels. The risk-benefit balance should be considered in patients at risk of TEEs of any aetiology.</p>\n</blockquote>\n<p>For the complete product monograph text with sections containing pharmacogenetic information highlighted, see the <a download=\"Eltrombopag_HCSC_11_03_21.pdf\" href=\"https://api.clinpgx.org/v1/download/file/attachment/Eltrombopag_HCSC_11_03_21.pdf\">eltrombopag product monograph</a>.</p>\n",
+        "version": 11
+      },
+      "version": 14
+    },
+    {
+      "objCls": "Label Annotation",
+      "id": "PA166127695",
+      "name": "Annotation of HCSC Label for ethinyl estradiol / norelgestromin and F2, F5, MTHFR, PROC, PROS1, SERPINC1",
+      "alternateDrugAvailable": true,
+      "cancerGenome": false,
+      "crossReferences": [],
+      "dosingInformation": false,
+      "history": [
+        {
+          "id": 1452538341,
+          "date": "2024-07-25T00:00:00-07:00",
+          "description": "Added variants, Prescribing section, tags and label document. Updated label PDF as previous one was discontinued.",
+          "type": "Update",
+          "version": 0
+        }
+      ],
+      "indication": false,
+      "labelApplications": [],
+      "labelDocumentAvailable": true,
+      "literature": [
+        {
+          "id": 15161922,
+          "title": "Drugs@HCSC: Drug Product Evra (ethinyl estradiol / norelgestromin), Searchlight Pharma Inc",
+          "_sameAs": "https://health-products.canada.ca/dpd-bdpp/info?lang=eng&code=72637",
+          "crossReferences": [
+            {
+              "id": 1452538320,
+              "resource": "URL",
+              "resourceId": "https://health-products.canada.ca/dpd-bdpp/info?lang=eng&code=72637",
+              "_url": "https://health-products.canada.ca/dpd-bdpp/info?lang=eng&code=72637"
+            }
+          ],
+          "objCls": "Literature",
+          "terms": [
+            {
+              "id": 1452267780,
+              "resource": "ClinPGx Tags",
+              "term": "Has PGx",
+              "termId": "pgkbTags:1452267780"
+            }
+          ],
+          "type": "Drug Label"
+        }
+      ],
+      "otherPrescribingGuidance": false,
+      "pediatric": false,
+      "pgxRelated": true,
+      "prescribingGenes": [
+        {
+          "objCls": "Gene",
+          "id": "PA157",
+          "symbol": "F2",
+          "name": "coagulation factor II, thrombin",
+          "version": 166
+        },
+        {
+          "objCls": "Gene",
+          "id": "PA159",
+          "symbol": "F5",
+          "name": "coagulation factor V",
+          "version": 141
+        },
+        {
+          "objCls": "Gene",
+          "id": "PA245",
+          "symbol": "MTHFR",
+          "name": "methylenetetrahydrofolate reductase",
+          "version": 3429
+        },
+        {
+          "objCls": "Gene",
+          "id": "PA33799",
+          "symbol": "PROC",
+          "name": "protein C, inactivator of coagulation factors Va and VIIIa",
+          "version": 34
+        },
+        {
+          "objCls": "Gene",
+          "id": "PA33809",
+          "symbol": "PROS1",
+          "name": "protein S",
+          "version": 28
+        },
+        {
+          "objCls": "Gene",
+          "id": "PA35026",
+          "symbol": "SERPINC1",
+          "name": "serpin family C member 1",
+          "version": 20
+        }
+      ],
+      "prescribingMarkdown": {
+        "id": 1452538340,
+        "html": "<p>Excerpt from the product monograph:</p>\n<blockquote class=\"blockquote\">\n<p>Contraindications. The EVRA(R) (norelgestromin and ethinyl estradiol) transdermal system should not be used in women with: presence of severe or multiple risk factor(s) for arterial or venous thrombosis such as:</p>\n<ul>\n<li>hereditary or acquired predisposition for venous or arterial thrombosis, such as Factor V Leiden mutation and activated protein C (APC-) resistance, antithrombin-III-deficiency, protein C deficiency, protein S deficiency, hyperhomocysteinemia (e.g., due to MTHFR C677T, A1298 mutations), prothrombin mutation G20210A, and antiphospholipid antibodies (anticardiolipin antibodies, lupus anticoagulant)</li>\n</ul>\n</blockquote>\n",
+        "version": 0
+      },
+      "relatedAlleles": [
+        {
+          "objCls": "Variant",
+          "id": "PA166154336",
+          "symbol": "rs1799963",
+          "name": "rs1799963",
+          "version": 4
+        },
+        {
+          "objCls": "Variant",
+          "id": "PA166153643",
+          "symbol": "rs1801131",
+          "name": "rs1801131",
+          "version": 5
+        },
+        {
+          "objCls": "Variant",
+          "id": "PA166153644",
+          "symbol": "rs1801133",
+          "name": "rs1801133",
+          "version": 5
+        }
+      ],
+      "relatedChemicals": [
+        {
+          "objCls": "Chemical",
+          "id": "PA165290929",
+          "name": "ethinyl estradiol / norelgestromin",
+          "version": 5
+        }
+      ],
+      "relatedGenes": [
+        {
+          "objCls": "Gene",
+          "id": "PA157",
+          "symbol": "F2",
+          "name": "coagulation factor II, thrombin",
+          "version": 166
+        },
+        {
+          "objCls": "Gene",
+          "id": "PA159",
+          "symbol": "F5",
+          "name": "coagulation factor V",
+          "version": 141
+        },
+        {
+          "objCls": "Gene",
+          "id": "PA245",
+          "symbol": "MTHFR",
+          "name": "methylenetetrahydrofolate reductase",
+          "version": 3429
+        },
+        {
+          "objCls": "Gene",
+          "id": "PA33799",
+          "symbol": "PROC",
+          "name": "protein C, inactivator of coagulation factors Va and VIIIa",
+          "version": 34
+        },
+        {
+          "objCls": "Gene",
+          "id": "PA33809",
+          "symbol": "PROS1",
+          "name": "protein S",
+          "version": 28
+        },
+        {
+          "objCls": "Gene",
+          "id": "PA35026",
+          "symbol": "SERPINC1",
+          "name": "serpin family C member 1",
+          "version": 20
+        }
+      ],
+      "source": "HCSC",
+      "summaryMarkdown": {
+        "id": 1447982451,
+        "html": "<p>The product monograph for norelgestromin and ethinyl estradiol (EVRA) states that the drug is contraindicated in women with Factor V Leiden mutation, antithrombin III deficiency, protein C deficiency, protein S deficiency, hyperhomocysteinemia due to mutations in the <em>MTHFR</em> gene and prothrombin mutation G20210A (among other contraindications), due to the risk for arterial or venous thrombosis.</p>\n",
+        "version": 1
+      },
+      "terms": [],
+      "testing": {
+        "id": 1183672111,
+        "description": "The label does not discuss genetic or other testing for gene/protein/chromosomal variants, but does contain information about changes in efficacy, dosage or toxicity due to such variants. The label may mention contraindication of the drug in a particular subset of patients but does not require or recommend gene, protein or chromosomal testing.",
+        "parents": [],
+        "resource": "Genetic Testing Level",
+        "synonyms": [],
+        "term": "Actionable PGx",
+        "termId": "geneTestLevel:1183672111",
+        "valid": true,
+        "version": 2
+      },
+      "textMarkdown": {
+        "id": 1447982450,
+        "html": "<p>EVRA(R) is a hormonal contraceptive. It is contraindicated in women who have a hereditary or acquired predisposition for venous or arterial thrombosis. One such predisposition is Factor V Leiden mutation - <a href=\"/variant/PA166153554\">rs6025</a> within the F5 gene. Others are antithrombin III (<em>SERPINC1</em>), protein C (<em>PROC</em>) or protein S (<em>PROS</em>) deficiency, as well as hyperhomocysteinaemia due to the mutations C677T (<a href=\"/variant/PA166153644\">rs1801133</a>) and A1298C (<a href=\"/variant/PA166153643\">rs1801131</a>) in the <em>MTHFR</em> gene, and the G20210A mutation in the prothrombin gene (<em>F2</em>) (<a href=\"/variant/PA166154336\">rs1799963</a>). Each of these predispositions and oral contraceptives themselves are known to independently increase the risk for thrombosis; together they may have a cumulative effect on thrombosis risk.</p>\n<p>Excerpt from the product monograph:</p>\n<blockquote class=\"blockquote\">\n<p>Contraindications. The EVRA(R) (norelgestromin and ethinyl estradiol) transdermal system should not be used in women with: presence of severe or multiple risk factor(s) for arterial or venous thrombosis such as:</p>\n<ul>\n<li>hereditary or acquired predisposition for venous or arterial thrombosis, such as Factor V Leiden mutation and activated protein C (APC-) resistance, antithrombin-III-deficiency, protein C deficiency, protein S deficiency, hyperhomocysteinemia (e.g., due to MTHFR C677T, A1298 mutations), prothrombin mutation G20210A, and antiphospholipid antibodies (anticardiolipin antibodies, lupus anticoagulant)</li>\n</ul>\n</blockquote>\n<p>For the complete product monograph text with sections containing pharmacogenetic information highlighted, see the <a download=\"ethinyl_estradiol_norelgestromin_2024_07_25_HCSC.pdf\" href=\"https://api.clinpgx.org/v1/download/file/attachment/ethinyl_estradiol_norelgestromin_2024_07_25_HCSC.pdf\">norelgestromin and ethinyl estradiol product monograph</a>.</p>\n",
+        "version": 12
+      },
+      "version": 18
+    },
+    {
+      "objCls": "Label Annotation",
+      "id": "PA166104907",
+      "name": "Annotation of EMA Label for eltrombopag and F5, SERPINC1",
+      "alternateDrugAvailable": false,
+      "cancerGenome": false,
+      "crossReferences": [],
+      "dosingInformation": false,
+      "history": [
+        {
+          "id": 1184512645,
+          "date": "2013-01-02T00:00:00-08:00",
+          "type": "Create",
+          "version": 0
+        },
+        {
+          "id": 1184466997,
+          "date": "2013-10-25T00:00:00-07:00",
+          "type": "Update",
+          "version": 0
+        },
+        {
+          "id": 1452011188,
+          "date": "2023-02-16T20:38:05.075-08:00",
+          "description": "added prescribing genes",
+          "type": "Update",
+          "version": 0
+        },
+        {
+          "id": 1452556320,
+          "date": "2024-08-14T13:30:36.993-07:00",
+          "description": "added Other Guidance tag",
+          "type": "Update",
+          "version": 0
+        }
+      ],
+      "indication": false,
+      "labelApplications": [],
+      "labelDocumentAvailable": true,
+      "literature": [
+        {
+          "id": 15102974,
+          "title": "Revolade | European Medicines Agency",
+          "_sameAs": "https://www.ema.europa.eu/en/medicines/human/EPAR/revolade",
+          "crossReferences": [
+            {
+              "id": 1450417072,
+              "resource": "URL",
+              "resourceId": "https://www.ema.europa.eu/en/medicines/human/EPAR/revolade",
+              "_url": "https://www.ema.europa.eu/en/medicines/human/EPAR/revolade"
+            }
+          ],
+          "objCls": "Literature",
+          "terms": [],
+          "type": "Drug Label"
+        }
+      ],
+      "otherPrescribingGuidance": true,
+      "pediatric": false,
+      "pgxRelated": true,
+      "prescribingGenes": [
+        {
+          "objCls": "Gene",
+          "id": "PA159",
+          "symbol": "F5",
+          "name": "coagulation factor V",
+          "version": 141
+        },
+        {
+          "objCls": "Gene",
+          "id": "PA35026",
+          "symbol": "SERPINC1",
+          "name": "serpin family C member 1",
+          "version": 20
+        }
+      ],
+      "prescribingMarkdown": {
+        "id": 1450417071,
+        "html": "<p>&quot;Caution should be used when administering eltrombopag to patients with known risk factors for thromboembolism including but not limited to inherited (e.g. Factor V Leiden) or acquired risk factors (e.g. ATIII deficiency, antiphospholipid syndrome)...&quot;</p>\n",
+        "version": 0
+      },
+      "relatedAlleles": [],
+      "relatedChemicals": [
+        {
+          "objCls": "Chemical",
+          "id": "PA165981594",
+          "name": "eltrombopag",
+          "version": 8
+        }
+      ],
+      "relatedGenes": [
+        {
+          "objCls": "Gene",
+          "id": "PA159",
+          "symbol": "F5",
+          "name": "coagulation factor V",
+          "version": 141
+        },
+        {
+          "objCls": "Gene",
+          "id": "PA35026",
+          "symbol": "SERPINC1",
+          "name": "serpin family C member 1",
+          "version": 20
+        }
+      ],
+      "source": "EMA",
+      "summaryMarkdown": {
+        "id": 1447981791,
+        "html": "<p>The EMA European Public Assessment Report (EPAR) states that caution should be taken when administering eltrombopag in patients with known risk factors for thromboembolism, including Factor V Leiden (F5 gene) and ATIII deficiency (SERPINC1 gene).</p>\n",
+        "version": 1
+      },
+      "terms": [],
+      "testing": {
+        "id": 1183672111,
+        "description": "The label does not discuss genetic or other testing for gene/protein/chromosomal variants, but does contain information about changes in efficacy, dosage or toxicity due to such variants. The label may mention contraindication of the drug in a particular subset of patients but does not require or recommend gene, protein or chromosomal testing.",
+        "parents": [],
+        "resource": "Genetic Testing Level",
+        "synonyms": [],
+        "term": "Actionable PGx",
+        "termId": "geneTestLevel:1183672111",
+        "valid": true,
+        "version": 2
+      },
+      "textMarkdown": {
+        "id": 1447981790,
+        "html": "<p>Excerpt from the eltrombopag (Revolade) EPAR:</p>\n<blockquote class=\"blockquote\">\n<p>Thrombotic/Thromboembolic complications may occur in patients with ITP. Platelet counts above the normal range present a theoretical risk of thrombotic/thromboembolic complications. In eltrombopag clinical trials in ITP thromboembolic events were observed at low and normal platelet counts. Caution should be used when administering eltrombopag to patients with known risk factors for thromboembolism including but not limited to inherited (e.g. Factor V Leiden) or acquired risk factors (e.g. ATIII deficiency, antiphospholipid syndrome), advanced age, patients with prolonged periods of immobilisation, malignancies, contraceptives and hormone replacement therapy, surgery/trauma, obesity and smoking. Platelet counts should be closely monitored and consideration given to reducing the dose or discontinuing eltrombopag treatment if the platelet count exceeds the target levels...The risk-benefit balance should be considered in patients at risk of thromboembolic events (TEEs) of any aetiology.</p>\n</blockquote>\n<p>For the complete drug label text with sections containing pharmacogenetic information highlighted, see the <a download=\"Eltrombopag_06_21_19_EMA.pdf\" href=\"https://api.clinpgx.org/v1/download/file/attachment/Eltrombopag_06_21_19_EMA.pdf\">eltrombopag EPAR PFF</a>.</p>\n",
+        "version": 11
+      },
+      "version": 20
+    },
+    {
+      "objCls": "Label Annotation",
+      "id": "PA166104912",
+      "name": "Annotation of FDA Label for eltrombopag and F5, SERPINC1",
+      "alternateDrugAvailable": false,
+      "biomarkerStatus": "On FDA Biomarker List",
+      "cancerGenome": false,
+      "crossReferences": [],
+      "dosingInformation": false,
+      "history": [
+        {
+          "id": 1183681231,
+          "date": "2013-10-25T10:58:15.902-07:00",
+          "type": "Update",
+          "version": 0
+        },
+        {
+          "id": 1451277940,
+          "date": "2020-10-13T16:25:06.093-07:00",
+          "description": "added text for chromosome 7, 13 based on update from biomarker table, updated label",
+          "type": "Update",
+          "version": 0
+        },
+        {
+          "id": 1452532141,
+          "date": "2024-07-19T11:23:48.370-07:00",
+          "description": "added prescribing info and tag",
+          "type": "Update",
+          "version": 0
+        }
+      ],
+      "indication": false,
+      "labelApplications": [],
+      "labelDocumentAvailable": true,
+      "literature": [
+        {
+          "id": 15101864,
+          "title": "Drugs@FDA: Drug Product PROMACTA (eltrombopag olamine), NDA022291, Novartis Pharmaceuticals Corporation",
+          "_sameAs": "https://www.accessdata.fda.gov/scripts/cder/daf/index.cfm?event=overview.process&varApplNo=022291",
+          "crossReferences": [
+            {
+              "id": 1449754563,
+              "resource": "FDA Application",
+              "resourceId": "NDA022291",
+              "_url": "https://www.accessdata.fda.gov/scripts/cder/daf/index.cfm?event=overview.process&varApplNo=022291"
+            }
+          ],
+          "objCls": "Literature",
+          "terms": [
+            {
+              "id": 1452267780,
+              "resource": "ClinPGx Tags",
+              "term": "Has PGx",
+              "termId": "pgkbTags:1452267780"
+            }
+          ],
+          "type": "Drug Label"
+        }
+      ],
+      "otherPrescribingGuidance": true,
+      "pediatric": false,
+      "pgxRelated": true,
+      "prescribingGenes": [
+        {
+          "objCls": "Gene",
+          "id": "PA159",
+          "symbol": "F5",
+          "name": "coagulation factor V",
+          "version": 141
+        }
+      ],
+      "prescribingMarkdown": {
+        "id": 1452532140,
+        "html": "<p>Excerpt from the eltrombopag (PROMACTA) drug label:</p>\n<blockquote class=\"blockquote\">\n<p>Consider the potential for an increased risk of thromboembolism when administering PROMACTA to patients with known risk factors for thromboembolism (e.g., Factor V Leiden, ATIII deficiency, antiphospholipid syndrome, chronic liver disease). To minimize the risk for thrombotic/thromboembolic complications, do not use PROMACTA in an attempt to normalize platelet counts. Follow the dose adjustment guidelines to achieve and maintain target platelet counts.</p>\n</blockquote>\n",
+        "version": 0
+      },
+      "relatedAlleles": [],
+      "relatedChemicals": [
+        {
+          "objCls": "Chemical",
+          "id": "PA165981594",
+          "name": "eltrombopag",
+          "version": 8
+        }
+      ],
+      "relatedGenes": [
+        {
+          "objCls": "Gene",
+          "id": "PA159",
+          "symbol": "F5",
+          "name": "coagulation factor V",
+          "version": 141
+        },
+        {
+          "objCls": "Gene",
+          "id": "PA35026",
+          "symbol": "SERPINC1",
+          "name": "serpin family C member 1",
+          "version": 20
+        }
+      ],
+      "source": "FDA",
+      "summaryMarkdown": {
+        "id": 1450361358,
+        "html": "<p>The FDA-approved drug label for eltrombopag (PROMACTA) notes that patients taking the drug have an increased risk of thromboembolism if they have antithrombin III deficiency (SERPINC1) or Factor V Leiden (F5). The label also mentions that when patients were evaluated for cytogenetic abnormalities in PROMACTA D1-M6 cohort, some patients had loss of chromosome 7 or deletion of chromosome 13.</p>\n",
+        "version": 1
+      },
+      "terms": [],
+      "testing": {
+        "id": 1183672111,
+        "description": "The label does not discuss genetic or other testing for gene/protein/chromosomal variants, but does contain information about changes in efficacy, dosage or toxicity due to such variants. The label may mention contraindication of the drug in a particular subset of patients but does not require or recommend gene, protein or chromosomal testing.",
+        "parents": [],
+        "resource": "Genetic Testing Level",
+        "synonyms": [],
+        "term": "Actionable PGx",
+        "termId": "geneTestLevel:1183672111",
+        "valid": true,
+        "version": 2
+      },
+      "textMarkdown": {
+        "id": 1447981792,
+        "html": "<p>Eltrombopag olamine (PROMACTA) is a thrombopoietin receptor agonist.</p>\n<p>Excerpt from the eltrombopag (PROMACTA) drug label:</p>\n<blockquote class=\"blockquote\">\n<p>Consider the potential for an increased risk of thromboembolism when administering PROMACTA to patients with known risk factors for thromboembolism (e.g., Factor V Leiden, ATIII deficiency, antiphospholipid syndrome, chronic liver disease)</p>\n</blockquote>\n<p>Note that Factor V Leiden is a polymorphism resulting in an Arg to Gln substitution at position 506 in the Factor V heavy chain (<a href=\"/variant/PA166153554\">rs6025</a>)</p>\n<blockquote class=\"blockquote\">\n<p>Cytogenetic Abnormalities:</p>\n</blockquote>\n<blockquote class=\"blockquote\">\n<p>In this trial, patients had bone marrow aspirates evaluated for cytogenetic abnormalities. Seven patients in the PROMACTA D1-M6 cohort had a new cytogenetic abnormality reported of which 4 had the loss of chromosome 7; these 4 occurred within 6.1 months. Across all cohorts, clonal cytogenetic evolution occurred in 15 out of 153 (10%) patients. Of the 15 patients who experienced a cytogenetic abnormality: 7 patients had the loss of chromosome 7, 6 of which occurred within 6.1 months; 4 patients had chromosomal aberrations which were of unclear significance; 3 patients had a deletion of chromosome 13; and 1 patient had a follow-up bone marrow assessment at 5 years with features of dysplasia with hypercellularity concerning for potential development of MDS. It is unclear whether these findings occurred due to the underlying disease, the immunosuppressive therapy, and/or treatment with PROMACTA.</p>\n</blockquote>\n<p>For the complete drug label text with sections containing pharmacogenetic information highlighted, see the <a download=\"eltrombopag_FDA_10132020.pdf\" href=\"https://api.clinpgx.org/v1/download/file/attachment/eltrombopag_FDA_10132020.pdf\">eltrombopag drug label</a>.</p>\n",
+        "version": 13
+      },
+      "version": 29
+    },
+    {
+      "objCls": "Label Annotation",
+      "id": "PA166170936",
+      "name": "Annotation of FDA Label for tamoxifen and F2, F5",
+      "alternateDrugAvailable": false,
+      "biomarkerStatus": "On FDA Biomarker List",
+      "cancerGenome": false,
+      "crossReferences": [],
+      "dosingInformation": false,
+      "history": [],
+      "indication": false,
+      "labelApplications": [],
+      "labelDocumentAvailable": true,
+      "literature": [
+        {
+          "id": 15101886,
+          "title": "Drugs@FDA: Drug Product Soltamox (TAMOXIFEN CITRATE), NDA021807, Midatech Pharma US Inc.",
+          "_sameAs": "https://www.accessdata.fda.gov/scripts/cder/daf/index.cfm?event=overview.process&varApplNo=021807",
+          "crossReferences": [
+            {
+              "id": 1449814157,
+              "resource": "FDA Application",
+              "resourceId": "NDA021807",
+              "_url": "https://www.accessdata.fda.gov/scripts/cder/daf/index.cfm?event=overview.process&varApplNo=021807"
+            }
+          ],
+          "objCls": "Literature",
+          "terms": [
+            {
+              "id": 1452267780,
+              "resource": "ClinPGx Tags",
+              "term": "Has PGx",
+              "termId": "pgkbTags:1452267780"
+            }
+          ],
+          "type": "Drug Label"
+        }
+      ],
+      "otherPrescribingGuidance": false,
+      "pediatric": false,
+      "pgxRelated": true,
+      "prescribingGenes": [],
+      "relatedAlleles": [],
+      "relatedChemicals": [
+        {
+          "objCls": "Chemical",
+          "id": "PA451581",
+          "name": "tamoxifen",
+          "version": 25
+        }
+      ],
+      "relatedGenes": [
+        {
+          "objCls": "Gene",
+          "id": "PA157",
+          "symbol": "F2",
+          "name": "coagulation factor II, thrombin",
+          "version": 166
+        },
+        {
+          "objCls": "Gene",
+          "id": "PA159",
+          "symbol": "F5",
+          "name": "coagulation factor V",
+          "version": 141
+        }
+      ],
+      "source": "FDA",
+      "summaryMarkdown": {
+        "id": 1449052557,
+        "html": "<p>Tamoxifen (SOLTAMOX) is indicated for the treatment of breast cancer. A clinical trial showed no benefit of screening for Factor V Leiden (F5) or Prothrombin (F2) mutations when treating with tamoxifen.</p>\n",
+        "version": 1
+      },
+      "terms": [],
+      "testing": {
+        "id": 1452529540,
+        "parents": [],
+        "resource": "Genetic Testing Level",
+        "synonyms": [],
+        "term": "No Clinical PGx",
+        "termId": "geneTestLevel:1452529540",
+        "valid": true,
+        "version": 0
+      },
+      "textMarkdown": {
+        "id": 1449052556,
+        "html": "<p>Excerpt from the tamoxifen (SOLTAMOX) drug label:</p>\n<blockquote class=\"blockquote\">\n<p>In a small substudy (N = 81) of the NSABP-1 trial, there appeared to be no benefit to screening women for Factor V Leiden and Prothrombin mutations G20210A as a means to identify those who may not be appropriate candidates for tamoxifen therapy.</p>\n</blockquote>\n<p>For the complete drug label text with sections containing pharmacogenetic information highlighted, see the <a download=\"Tamoxifen_02_28_19_FDA.pdf\" href=\"https://api.clinpgx.org/v1/download/file/attachment/Tamoxifen_02_28_19_FDA.pdf\">tamoxifen drug label</a>.</p>\n",
+        "version": 4
+      },
+      "version": 13
+    },
+    {
+      "objCls": "Label Annotation",
+      "id": "PA166179855",
+      "name": "Annotation of FDA Label for avatrombopag and F2, F5, PROC, PROS1, SERPINC1",
+      "alternateDrugAvailable": false,
+      "biomarkerStatus": "On FDA Biomarker List",
+      "cancerGenome": false,
+      "crossReferences": [],
+      "dosingInformation": false,
+      "history": [
+        {
+          "id": 1450820822,
+          "date": "2019-10-07T10:26:04.464-07:00",
+          "description": "Added CYP2C9 and excerpt as per FDA table.",
+          "type": "Update",
+          "version": 0
+        },
+        {
+          "id": 1450824504,
+          "date": "2019-10-24T06:33:26.205-07:00",
+          "description": "Moved CYP2C9 annotation to separate annotation as is Informational rather than Actionable.",
+          "type": "Update",
+          "version": 0
+        },
+        {
+          "id": 1452525701,
+          "date": "2024-07-11T17:52:11.962-07:00",
+          "description": "updated drug label version, added Other Guidance tag, prescribing info and genes",
+          "type": "Update",
+          "version": 0
+        },
+        {
+          "id": 1452529720,
+          "date": "2024-07-17T15:07:36.665-07:00",
+          "description": "added F2, F5 variants",
+          "type": "Update",
+          "version": 0
+        }
+      ],
+      "indication": false,
+      "labelApplications": [],
+      "labelDocumentAvailable": true,
+      "literature": [
+        {
+          "id": 15160442,
+          "title": "Drugs@FDA: Drug Product DOPTELET (avatrombopag maleate), AkaRx, Inc. - NDA210238/SUPPL-6, 10/14/2021",
+          "_sameAs": "https://www.accessdata.fda.gov/scripts/cder/daf/index.cfm?event=overview.process&varApplNo=210238",
+          "crossReferences": [
+            {
+              "id": 1452525641,
+              "resource": "FDA Application",
+              "resourceId": "NDA210238/SUPPL-6",
+              "_url": "https://www.accessdata.fda.gov/scripts/cder/daf/index.cfm?event=overview.process&varApplNo=210238"
+            }
+          ],
+          "objCls": "Literature",
+          "pubDate": "2021-10-14T00:00:00-07:00",
+          "terms": [
+            {
+              "id": 1452267780,
+              "resource": "ClinPGx Tags",
+              "term": "Has PGx",
+              "termId": "pgkbTags:1452267780"
+            }
+          ],
+          "type": "Drug Label"
+        }
+      ],
+      "otherPrescribingGuidance": true,
+      "pediatric": false,
+      "pgxRelated": true,
+      "prescribingGenes": [
+        {
+          "objCls": "Gene",
+          "id": "PA157",
+          "symbol": "F2",
+          "name": "coagulation factor II, thrombin",
+          "version": 166
+        },
+        {
+          "objCls": "Gene",
+          "id": "PA159",
+          "symbol": "F5",
+          "name": "coagulation factor V",
+          "version": 141
+        },
+        {
+          "objCls": "Gene",
+          "id": "PA33799",
+          "symbol": "PROC",
+          "name": "protein C, inactivator of coagulation factors Va and VIIIa",
+          "version": 34
+        },
+        {
+          "objCls": "Gene",
+          "id": "PA33809",
+          "symbol": "PROS1",
+          "name": "protein S",
+          "version": 28
+        },
+        {
+          "objCls": "Gene",
+          "id": "PA35026",
+          "symbol": "SERPINC1",
+          "name": "serpin family C member 1",
+          "version": 20
+        }
+      ],
+      "prescribingMarkdown": {
+        "id": 1452525700,
+        "html": "<blockquote class=\"blockquote\">\n<p>Consider the potential increased thrombotic risk when administering DOPTELET to patients with known risk factors for thromboembolism, including genetic prothrombotic conditions (e.g., Factor V Leiden, Prothrombin 20210A, Antithrombin deficiency or Protein C or S deficiency).</p>\n</blockquote>\n",
+        "version": 0
+      },
+      "relatedAlleles": [
+        {
+          "objCls": "Variant",
+          "id": "PA166154336",
+          "symbol": "rs1799963",
+          "name": "rs1799963",
+          "version": 4
+        },
+        {
+          "objCls": "Variant",
+          "id": "PA166153554",
+          "symbol": "rs6025",
+          "name": "rs6025",
+          "version": 5
+        }
+      ],
+      "relatedChemicals": [
+        {
+          "objCls": "Chemical",
+          "id": "PA166179849",
+          "name": "avatrombopag",
+          "version": 5
+        }
+      ],
+      "relatedGenes": [
+        {
+          "objCls": "Gene",
+          "id": "PA157",
+          "symbol": "F2",
+          "name": "coagulation factor II, thrombin",
+          "version": 166
+        },
+        {
+          "objCls": "Gene",
+          "id": "PA159",
+          "symbol": "F5",
+          "name": "coagulation factor V",
+          "version": 141
+        },
+        {
+          "objCls": "Gene",
+          "id": "PA33799",
+          "symbol": "PROC",
+          "name": "protein C, inactivator of coagulation factors Va and VIIIa",
+          "version": 34
+        },
+        {
+          "objCls": "Gene",
+          "id": "PA33809",
+          "symbol": "PROS1",
+          "name": "protein S",
+          "version": 28
+        },
+        {
+          "objCls": "Gene",
+          "id": "PA35026",
+          "symbol": "SERPINC1",
+          "name": "serpin family C member 1",
+          "version": 20
+        }
+      ],
+      "source": "FDA",
+      "summaryMarkdown": {
+        "id": 1449713953,
+        "html": "<p>The FDA-approved drug label for avatrombopag (DOPTELET) states that the risk for thrombosis should be considered in patients with risk factors for thromboembolism, including genetic prothrombotic conditions such as Factor V Leiden (F5), Prothrombin 20210A (F2), Antithrombin deficiency (SERPINC1) or Protein C (PROC) or S (PROS1) deficiency.</p>\n",
+        "version": 1
+      },
+      "terms": [],
+      "testing": {
+        "id": 1183672111,
+        "description": "The label does not discuss genetic or other testing for gene/protein/chromosomal variants, but does contain information about changes in efficacy, dosage or toxicity due to such variants. The label may mention contraindication of the drug in a particular subset of patients but does not require or recommend gene, protein or chromosomal testing.",
+        "parents": [],
+        "resource": "Genetic Testing Level",
+        "synonyms": [],
+        "term": "Actionable PGx",
+        "termId": "geneTestLevel:1183672111",
+        "valid": true,
+        "version": 2
+      },
+      "textMarkdown": {
+        "id": 1449713952,
+        "html": "<p>Excerpt from the avatrombopag (DOPTELET) drug label:</p>\n<blockquote class=\"blockquote\">\n<p>Consider the potential increased thrombotic risk when administering DOPTELET to patients with known risk factors for thromboembolism, including genetic prothrombotic conditions (e.g., Factor V Leiden, Prothrombin 20210A, Antithrombin deficiency or Protein C or S deficiency).</p>\n</blockquote>\n<p>For the complete drug label text with sections containing pharmacogenetic information highlighted, see the <a download=\"Avatrombopag_2024_07_11_FDA.pdf\" href=\"https://api.clinpgx.org/v1/download/file/attachment/Avatrombopag_2024_07_11_FDA.pdf\">avatrombopag drug label</a>.</p>\n",
+        "version": 4
+      },
+      "version": 13
+    },
+    {
+      "objCls": "Label Annotation",
+      "id": "PA166182726",
+      "name": "Annotation of FDA Label for rivaroxaban and F5",
+      "alternateDrugAvailable": false,
+      "biomarkerStatus": "On FDA Biomarker List",
+      "cancerGenome": false,
+      "crossReferences": [],
+      "dosingInformation": false,
+      "history": [
+        {
+          "id": 1452215220,
+          "date": "2023-08-24T15:04:47.097-07:00",
+          "description": "remove informative PGx tag",
+          "type": "Update",
+          "version": 0
+        }
+      ],
+      "indication": false,
+      "labelApplications": [],
+      "labelDocumentAvailable": true,
+      "literature": [
+        {
+          "id": 15102367,
+          "title": "Drugs@FDA: Drug Product Xarelto (rivaroxaban), NDA022406, Janssen Pharmaceuticals, Inc.",
+          "_sameAs": "https://www.accessdata.fda.gov/scripts/cder/daf/index.cfm?event=overview.process&varApplNo=022406",
+          "crossReferences": [
+            {
+              "id": 1450399996,
+              "resource": "FDA Application",
+              "resourceId": "NDA022406",
+              "_url": "https://www.accessdata.fda.gov/scripts/cder/daf/index.cfm?event=overview.process&varApplNo=022406"
+            }
+          ],
+          "objCls": "Literature",
+          "terms": [
+            {
+              "id": 1452267780,
+              "resource": "ClinPGx Tags",
+              "term": "Has PGx",
+              "termId": "pgkbTags:1452267780"
+            }
+          ],
+          "type": "Drug Label"
+        }
+      ],
+      "otherPrescribingGuidance": false,
+      "pediatric": false,
+      "pgxRelated": true,
+      "prescribingGenes": [],
+      "relatedAlleles": [],
+      "relatedChemicals": [
+        {
+          "objCls": "Chemical",
+          "id": "PA165958360",
+          "name": "rivaroxaban",
+          "version": 7
+        }
+      ],
+      "relatedGenes": [
+        {
+          "objCls": "Gene",
+          "id": "PA159",
+          "symbol": "F5",
+          "name": "coagulation factor V",
+          "version": 141
+        }
+      ],
+      "source": "FDA",
+      "summaryMarkdown": {
+        "id": 1450399993,
+        "html": "<p>Rivaroxaban (XARELTO) is an anticoagulant with several indications, including for the reduction of risk of recurrence of deep vein thrombosis (DVT) or pulmonary embolism (PE). In a study of the efficacy of rivaroxaban in reducing the risk of recurrence of DVT or PE, mutations in F5 are mentioned as a risk factor for recurrence of DVT or PE.</p>\n",
+        "version": 0
+      },
+      "terms": [],
+      "textMarkdown": {
+        "id": 1450399994,
+        "html": "<p>Excerpt from the rivaroxaban (XARELTO) drug label:</p>\n<blockquote class=\"blockquote\">\n<p>A total of 2275 patients were randomized and followed on study treatment for a mean of 290 days for the XARELTO and aspirin treatment groups. The mean age was approximately 59 years. The population was 56% male, 70% Caucasian, 14% Asian and 3% Black. In the EINSTEIN CHOICE study, 51% of patients had DVT only, 33% had PE only, and 16% had PE and DVT combined. Other risk factors included idiopathic VTE (43%), previous episode of DVT/PE (17%), recent surgery or trauma (12%), prolonged immobilization (10%), use of estrogen containing drugs (5%), known thrombophilic conditions (6%), Factor V Leiden gene mutation (4%), or active cancer (3%).</p>\n</blockquote>\n<p>For the complete drug label text with sections containing pharmacogenetic information highlighted, see the <a download=\"Rivaroxaban_05_13_19_FDA.pdf\" href=\"https://api.clinpgx.org/v1/download/file/attachment/Rivaroxaban_05_13_19_FDA.pdf\">rivaroxaban drug label</a>.</p>\n",
+        "version": 1
+      },
+      "version": 6
+    },
+    {
+      "objCls": "Label Annotation",
+      "id": "PA166182749",
+      "name": "Annotation of FDA Label for lusutrombopag and F2, F5, PROC, PROS1, SERPINC1",
+      "alternateDrugAvailable": false,
+      "biomarkerStatus": "On FDA Biomarker List",
+      "cancerGenome": false,
+      "crossReferences": [],
+      "dosingInformation": false,
+      "history": [
+        {
+          "id": 1452537292,
+          "date": "2024-07-24T10:05:16.468-07:00",
+          "description": "added Other Guidance tag, prescribing info",
+          "type": "Update",
+          "version": 0
+        }
+      ],
+      "indication": false,
+      "labelApplications": [],
+      "labelDocumentAvailable": true,
+      "literature": [
+        {
+          "id": 15102383,
+          "title": "Drugs@FDA: Drug Product Mulpleta (Lusutrombopag), SHIONOGI INC. - NDA210923/ORIG-1, 07/31/2018",
+          "_sameAs": "https://www.accessdata.fda.gov/scripts/cder/daf/index.cfm?event=overview.process&varApplNo=210923",
+          "crossReferences": [
+            {
+              "id": 1452536640,
+              "resource": "FDA Application",
+              "resourceId": "NDA210923/ORIG-1",
+              "_url": "https://www.accessdata.fda.gov/scripts/cder/daf/index.cfm?event=overview.process&varApplNo=210923"
+            }
+          ],
+          "objCls": "Literature",
+          "pubDate": "2018-07-31T00:00:00-07:00",
+          "terms": [
+            {
+              "id": 1452267780,
+              "resource": "ClinPGx Tags",
+              "term": "Has PGx",
+              "termId": "pgkbTags:1452267780"
+            }
+          ],
+          "type": "Drug Label"
+        }
+      ],
+      "otherPrescribingGuidance": true,
+      "pediatric": false,
+      "pgxRelated": true,
+      "prescribingGenes": [
+        {
+          "objCls": "Gene",
+          "id": "PA157",
+          "symbol": "F2",
+          "name": "coagulation factor II, thrombin",
+          "version": 166
+        },
+        {
+          "objCls": "Gene",
+          "id": "PA159",
+          "symbol": "F5",
+          "name": "coagulation factor V",
+          "version": 141
+        },
+        {
+          "objCls": "Gene",
+          "id": "PA33799",
+          "symbol": "PROC",
+          "name": "protein C, inactivator of coagulation factors Va and VIIIa",
+          "version": 34
+        },
+        {
+          "objCls": "Gene",
+          "id": "PA33809",
+          "symbol": "PROS1",
+          "name": "protein S",
+          "version": 28
+        },
+        {
+          "objCls": "Gene",
+          "id": "PA35026",
+          "symbol": "SERPINC1",
+          "name": "serpin family C member 1",
+          "version": 20
+        }
+      ],
+      "prescribingMarkdown": {
+        "id": 1452537291,
+        "html": "<blockquote class=\"blockquote\">\n<p>Consider the potential increased thrombotic risk when administering MULPLETA to patients with known risk factors for thromboembolism, including genetic pro-thrombotic conditions (Factor V Leiden, Prothrombin 20210A, Antithrombin deficiency, or Protein C or S deficiency).</p>\n</blockquote>\n",
+        "version": 0
+      },
+      "relatedAlleles": [
+        {
+          "objCls": "Variant",
+          "id": "PA166154336",
+          "symbol": "rs1799963",
+          "name": "rs1799963",
+          "version": 4
+        },
+        {
+          "objCls": "Variant",
+          "id": "PA166153554",
+          "symbol": "rs6025",
+          "name": "rs6025",
+          "version": 5
+        }
+      ],
+      "relatedChemicals": [
+        {
+          "objCls": "Chemical",
+          "id": "PA166182748",
+          "name": "lusutrombopag",
+          "version": 3
+        }
+      ],
+      "relatedGenes": [
+        {
+          "objCls": "Gene",
+          "id": "PA157",
+          "symbol": "F2",
+          "name": "coagulation factor II, thrombin",
+          "version": 166
+        },
+        {
+          "objCls": "Gene",
+          "id": "PA159",
+          "symbol": "F5",
+          "name": "coagulation factor V",
+          "version": 141
+        },
+        {
+          "objCls": "Gene",
+          "id": "PA33799",
+          "symbol": "PROC",
+          "name": "protein C, inactivator of coagulation factors Va and VIIIa",
+          "version": 34
+        },
+        {
+          "objCls": "Gene",
+          "id": "PA33809",
+          "symbol": "PROS1",
+          "name": "protein S",
+          "version": 28
+        },
+        {
+          "objCls": "Gene",
+          "id": "PA35026",
+          "symbol": "SERPINC1",
+          "name": "serpin family C member 1",
+          "version": 20
+        }
+      ],
+      "source": "FDA",
+      "summaryMarkdown": {
+        "id": 1450400565,
+        "html": "<p>The FDA-approved drug label for lusutrombopag (MULPLETA) states that the potential increased risk for thrombosis should be considered in patients with risk factors for thromboembolism, including genetic prothrombotic conditions such as Factor V Leiden (F5), Prothrombin 20210A (F2), Antithrombin deficiency (SERPINC1) or Protein C (PROC) or S (PROS1) deficiency.</p>\n",
+        "version": 0
+      },
+      "terms": [],
+      "testing": {
+        "id": 1183672111,
+        "description": "The label does not discuss genetic or other testing for gene/protein/chromosomal variants, but does contain information about changes in efficacy, dosage or toxicity due to such variants. The label may mention contraindication of the drug in a particular subset of patients but does not require or recommend gene, protein or chromosomal testing.",
+        "parents": [],
+        "resource": "Genetic Testing Level",
+        "synonyms": [],
+        "term": "Actionable PGx",
+        "termId": "geneTestLevel:1183672111",
+        "valid": true,
+        "version": 2
+      },
+      "textMarkdown": {
+        "id": 1450400566,
+        "html": "<p>Excerpts from the lusutrombopag (MULPLETA) FDA drug label:</p>\n<blockquote class=\"blockquote\">\n<p>MULPLETA is a thrombopoietin receptor agonist indicated for the treatment of thrombocytopenia in adult patients with chronic liver disease who are scheduled to undergo a procedure.</p>\n</blockquote>\n<blockquote class=\"blockquote\">\n<p>MULPLETA is a thrombopoietin (TPO) receptor agonist, and TPO receptor agonists have been associated with thrombotic and thromboembolic complications in patients with chronic liver disease. Portal vein thrombosis has been reported in patients with chronic liver disease treated with TPO receptor agonists. Portal vein thrombosis was reported in 1% (2 of 171) of MULPLETA-treated patients and 1% (2 of 170) of placebo-treated patients in 3 randomized, double-blind trials and was identified post-procedure in protocol-specified imaging. The thromboses were not associated with a marked increase in platelet count.</p>\n</blockquote>\n<blockquote class=\"blockquote\">\n<p>Consider the potential increased thrombotic risk when administering MULPLETA to patients with known risk factors for thromboembolism, including genetic pro-thrombotic conditions (Factor V Leiden, Prothrombin 20210A, Antithrombin deficiency, or Protein C or S deficiency). In patients with ongoing or prior thrombosis or absence of hepatopetal blood flow, MULPLETA should only be used if the potential benefit to the patient justifies the potential risk.</p>\n</blockquote>\n<p>For the complete drug label text with sections containing pharmacogenetic information highlighted, see the <a download=\"lusutrombopag_05_14_2019_FDA.pdf\" href=\"https://api.clinpgx.org/v1/download/file/attachment/lusutrombopag_05_14_2019_FDA.pdf\">lusutrombopag drug label</a>.</p>\n",
+        "version": 3
+      },
+      "version": 10
+    },
+    {
+      "objCls": "Label Annotation",
+      "id": "PA166240301",
+      "name": "Annotation of EMA Label for avatrombopag and CYP2C9, F2, F5, PROC, PROS1, SERPINC1",
+      "alternateDrugAvailable": false,
+      "cancerGenome": false,
+      "crossReferences": [],
+      "dosingInformation": false,
+      "history": [
+        {
+          "id": 1452526261,
+          "date": "2024-07-12T15:43:00.054-07:00",
+          "description": "updated label, added Other Guidance annotation",
+          "type": "Update",
+          "version": 0
+        },
+        {
+          "id": 1452529721,
+          "date": "2024-07-17T15:10:11.818-07:00",
+          "description": "added F2, F5 variants",
+          "type": "Update",
+          "version": 0
+        }
+      ],
+      "indication": false,
+      "labelApplications": [],
+      "labelDocumentAvailable": true,
+      "literature": [
+        {
+          "id": 15119602,
+          "title": "Doptelet | European Medicines Agency",
+          "_sameAs": "https://www.ema.europa.eu/en/medicines/human/EPAR/doptelet",
+          "crossReferences": [
+            {
+              "id": 1451417131,
+              "resource": "URL",
+              "resourceId": "https://www.ema.europa.eu/en/medicines/human/EPAR/doptelet",
+              "_url": "https://www.ema.europa.eu/en/medicines/human/EPAR/doptelet"
+            }
+          ],
+          "objCls": "Literature",
+          "terms": [],
+          "type": "Drug Label"
+        }
+      ],
+      "otherPrescribingGuidance": true,
+      "pediatric": false,
+      "pgxRelated": true,
+      "prescribingGenes": [
+        {
+          "objCls": "Gene",
+          "id": "PA126",
+          "symbol": "CYP2C9",
+          "name": "cytochrome P450 family 2 subfamily C member 9",
+          "version": 7877
+        },
+        {
+          "objCls": "Gene",
+          "id": "PA157",
+          "symbol": "F2",
+          "name": "coagulation factor II, thrombin",
+          "version": 166
+        },
+        {
+          "objCls": "Gene",
+          "id": "PA159",
+          "symbol": "F5",
+          "name": "coagulation factor V",
+          "version": 141
+        },
+        {
+          "objCls": "Gene",
+          "id": "PA33799",
+          "symbol": "PROC",
+          "name": "protein C, inactivator of coagulation factors Va and VIIIa",
+          "version": 34
+        },
+        {
+          "objCls": "Gene",
+          "id": "PA33809",
+          "symbol": "PROS1",
+          "name": "protein S",
+          "version": 28
+        },
+        {
+          "objCls": "Gene",
+          "id": "PA35026",
+          "symbol": "SERPINC1",
+          "name": "serpin family C member 1",
+          "version": 20
+        }
+      ],
+      "prescribingMarkdown": {
+        "id": 1452526260,
+        "html": "<blockquote class=\"blockquote\">\n<p>Caution must also be exercised in patients with loss-of-function polymorphisms of CYP2C9, as these can increase avatrombopag exposure.</p>\n</blockquote>\n<blockquote class=\"blockquote\">\n<p>Consider the potential increased thrombotic risk when administering Doptelet to patients with known risk factors for thromboembolism, including but not limited to genetic prothrombotic conditions (e.g. Factor V Leiden, Prothrombin 20210A, Antithrombin deficiency or Protein C or S deficiency), [...]</p>\n</blockquote>\n",
+        "version": 0
+      },
+      "relatedAlleles": [
+        {
+          "objCls": "Haplotype",
+          "id": "PA165816543",
+          "symbol": "CYP2C9*2",
+          "name": "*2",
+          "version": 25
+        },
+        {
+          "objCls": "Haplotype",
+          "id": "PA165816544",
+          "symbol": "CYP2C9*3",
+          "name": "*3",
+          "version": 28
+        },
+        {
+          "objCls": "Variant",
+          "id": "PA166154336",
+          "symbol": "rs1799963",
+          "name": "rs1799963",
+          "version": 4
+        },
+        {
+          "objCls": "Variant",
+          "id": "PA166153554",
+          "symbol": "rs6025",
+          "name": "rs6025",
+          "version": 5
+        }
+      ],
+      "relatedChemicals": [
+        {
+          "objCls": "Chemical",
+          "id": "PA166179849",
+          "name": "avatrombopag",
+          "version": 5
+        }
+      ],
+      "relatedGenes": [
+        {
+          "objCls": "Gene",
+          "id": "PA126",
+          "symbol": "CYP2C9",
+          "name": "cytochrome P450 family 2 subfamily C member 9",
+          "version": 7877
+        },
+        {
+          "objCls": "Gene",
+          "id": "PA157",
+          "symbol": "F2",
+          "name": "coagulation factor II, thrombin",
+          "version": 166
+        },
+        {
+          "objCls": "Gene",
+          "id": "PA159",
+          "symbol": "F5",
+          "name": "coagulation factor V",
+          "version": 141
+        },
+        {
+          "objCls": "Gene",
+          "id": "PA33799",
+          "symbol": "PROC",
+          "name": "protein C, inactivator of coagulation factors Va and VIIIa",
+          "version": 34
+        },
+        {
+          "objCls": "Gene",
+          "id": "PA33809",
+          "symbol": "PROS1",
+          "name": "protein S",
+          "version": 28
+        },
+        {
+          "objCls": "Gene",
+          "id": "PA35026",
+          "symbol": "SERPINC1",
+          "name": "serpin family C member 1",
+          "version": 20
+        }
+      ],
+      "source": "EMA",
+      "summaryMarkdown": {
+        "id": 1451417160,
+        "html": "<p>The EMA European Public Assessment Report (EPAR) for avatrombopag (Doptelet) states that avatrombopag exposure may increase in patients with <em>CYP2C9*2</em> and/or <em>CYP2C9*3</em> alleles, and that increased exposure may increase the risk of clinically-relevant QTc prolongation. The label also states that potential increased thrombotic risk should be considered in patients with deficiency in Factor V Leiden (<em>F5</em>), prothrombin 20210A (<em>F2</em>), antithrombin (<em>SERPINC1</em>), protein C (<em>PROC</em>), or protein S (<em>PROS1</em>).</p>\n",
+        "version": 1
+      },
+      "terms": [],
+      "testing": {
+        "id": 1183672111,
+        "description": "The label does not discuss genetic or other testing for gene/protein/chromosomal variants, but does contain information about changes in efficacy, dosage or toxicity due to such variants. The label may mention contraindication of the drug in a particular subset of patients but does not require or recommend gene, protein or chromosomal testing.",
+        "parents": [],
+        "resource": "Genetic Testing Level",
+        "synonyms": [],
+        "term": "Actionable PGx",
+        "termId": "geneTestLevel:1183672111",
+        "valid": true,
+        "version": 2
+      },
+      "textMarkdown": {
+        "id": 1451417161,
+        "html": "<p>Excerpts from the avatrombopag EPAR:</p>\n<blockquote class=\"blockquote\">\n<p>CYP2C9 loss-of-function polymorphisms: Avatrombopag exposure may increase in patients with CYP2C9*2 and CYP2C9*3 loss-of-function polymorphisms. Healthy subjects (n=2) who were homozygous for these mutations (poor metabolizers) had approximately 2-fold higher exposure compared to subjects with wild-type CYP2C9.</p>\n</blockquote>\n<blockquote class=\"blockquote\">\n<p>At exposures similar to that achieved at the 40 mg and 60 mg dose, Doptelet did not prolong the QT interval to any clinically relevant extent. Mean QTc prolongation effects &gt; 20 ms are not anticipated with the highest recommended therapeutic dosing regimen based on analysis of data from the pooled clinical trials in patients with chronic liver disease. [...] Caution must also be exercised in patients with loss-of-function polymorphisms of CYP2C9, as these can increase avatrombopag exposure.</p>\n</blockquote>\n<blockquote class=\"blockquote\">\n<p>Doptelet was not studied in patients with prior thromboembolic events. Consider the potential increased thrombotic risk when administering Doptelet to patients with known risk factors for thromboembolism, including but not limited to genetic prothrombotic conditions (e.g. Factor V Leiden, Prothrombin 20210A, Antithrombin deficiency or Protein C or S deficiency), acquired risk factors (e.g. antiphospholipid syndrome), advanced age, patients with prolonged periods of immobilisation, malignancies, contraceptives and hormone replacement therapy, surgery/trauma, obesity and smoking.</p>\n</blockquote>\n<p>For the complete drug label text with sections containing pharmacogenetic information highlighted, see the <a download=\"Avatrombopag_2024_07_11_EMA.pdf\" href=\"https://api.clinpgx.org/v1/download/file/attachment/Avatrombopag_2024_07_11_EMA.pdf\">avatrombopag EPAR</a>.</p>\n",
+        "version": 2
+      },
+      "version": 2
+    },
+    {
+      "objCls": "Label Annotation",
+      "id": "PA166343901",
+      "name": "Annotation of HCSC Label for avatrombopag and CYP2C9, F2, F5, PROC, PROS1, SERPINC1",
+      "alternateDrugAvailable": false,
+      "cancerGenome": false,
+      "crossReferences": [],
+      "dosingInformation": false,
+      "history": [
+        {
+          "id": 1452529761,
+          "date": "2024-07-17T15:11:26.066-07:00",
+          "description": "added F2, F5 variants",
+          "type": "Update",
+          "version": 0
+        }
+      ],
+      "indication": false,
+      "labelApplications": [],
+      "labelDocumentAvailable": true,
+      "literature": [
+        {
+          "id": 15160462,
+          "title": "Drugs@HCSC: Drug Product DOPTELET (avatrombopag), Swedish Orphan Biovitrum AB (publ)",
+          "_sameAs": "https://pdf.hres.ca/dpd_pm/00073257.PDF",
+          "crossReferences": [
+            {
+              "id": 1452526280,
+              "resource": "URL",
+              "resourceId": "https://pdf.hres.ca/dpd_pm/00073257.PDF",
+              "_url": "https://pdf.hres.ca/dpd_pm/00073257.PDF"
+            }
+          ],
+          "objCls": "Literature",
+          "terms": [
+            {
+              "id": 1452267780,
+              "resource": "ClinPGx Tags",
+              "term": "Has PGx",
+              "termId": "pgkbTags:1452267780"
+            }
+          ],
+          "type": "Drug Label"
+        }
+      ],
+      "otherPrescribingGuidance": true,
+      "pediatric": false,
+      "pgxRelated": true,
+      "prescribingGenes": [
+        {
+          "objCls": "Gene",
+          "id": "PA126",
+          "symbol": "CYP2C9",
+          "name": "cytochrome P450 family 2 subfamily C member 9",
+          "version": 7877
+        },
+        {
+          "objCls": "Gene",
+          "id": "PA157",
+          "symbol": "F2",
+          "name": "coagulation factor II, thrombin",
+          "version": 166
+        },
+        {
+          "objCls": "Gene",
+          "id": "PA159",
+          "symbol": "F5",
+          "name": "coagulation factor V",
+          "version": 141
+        },
+        {
+          "objCls": "Gene",
+          "id": "PA33799",
+          "symbol": "PROC",
+          "name": "protein C, inactivator of coagulation factors Va and VIIIa",
+          "version": 34
+        },
+        {
+          "objCls": "Gene",
+          "id": "PA33809",
+          "symbol": "PROS1",
+          "name": "protein S",
+          "version": 28
+        },
+        {
+          "objCls": "Gene",
+          "id": "PA35026",
+          "symbol": "SERPINC1",
+          "name": "serpin family C member 1",
+          "version": 20
+        }
+      ],
+      "prescribingMarkdown": {
+        "id": 1452526302,
+        "html": "<blockquote class=\"blockquote\">\n<p>Caution must also be exercised in patients with loss-of-function polymorphisms of CYP2C9, as these can increase avatrombopag exposure.</p>\n</blockquote>\n<blockquote class=\"blockquote\">\n<p>Consider the potential increased thrombotic risk when administering DOPTELET to patients with known risk factors for thromboembolism, including but not limited to [...] genetic prothrombotic conditions (e.g., Factor V Leiden, Prothrombin 20210A, Antithrombin deficiency or Protein C or S deficiency).</p>\n</blockquote>\n",
+        "version": 0
+      },
+      "relatedAlleles": [
+        {
+          "objCls": "Haplotype",
+          "id": "PA165816543",
+          "symbol": "CYP2C9*2",
+          "name": "*2",
+          "version": 25
+        },
+        {
+          "objCls": "Haplotype",
+          "id": "PA165816544",
+          "symbol": "CYP2C9*3",
+          "name": "*3",
+          "version": 28
+        },
+        {
+          "objCls": "Variant",
+          "id": "PA166154336",
+          "symbol": "rs1799963",
+          "name": "rs1799963",
+          "version": 4
+        },
+        {
+          "objCls": "Variant",
+          "id": "PA166153554",
+          "symbol": "rs6025",
+          "name": "rs6025",
+          "version": 5
+        }
+      ],
+      "relatedChemicals": [
+        {
+          "objCls": "Chemical",
+          "id": "PA166179849",
+          "name": "avatrombopag",
+          "version": 5
+        }
+      ],
+      "relatedGenes": [
+        {
+          "objCls": "Gene",
+          "id": "PA126",
+          "symbol": "CYP2C9",
+          "name": "cytochrome P450 family 2 subfamily C member 9",
+          "version": 7877
+        },
+        {
+          "objCls": "Gene",
+          "id": "PA157",
+          "symbol": "F2",
+          "name": "coagulation factor II, thrombin",
+          "version": 166
+        },
+        {
+          "objCls": "Gene",
+          "id": "PA159",
+          "symbol": "F5",
+          "name": "coagulation factor V",
+          "version": 141
+        },
+        {
+          "objCls": "Gene",
+          "id": "PA33799",
+          "symbol": "PROC",
+          "name": "protein C, inactivator of coagulation factors Va and VIIIa",
+          "version": 34
+        },
+        {
+          "objCls": "Gene",
+          "id": "PA33809",
+          "symbol": "PROS1",
+          "name": "protein S",
+          "version": 28
+        },
+        {
+          "objCls": "Gene",
+          "id": "PA35026",
+          "symbol": "SERPINC1",
+          "name": "serpin family C member 1",
+          "version": 20
+        }
+      ],
+      "source": "HCSC",
+      "summaryMarkdown": {
+        "id": 1452526300,
+        "html": "<p>The HCSC-approved product monograph for avatrombopag (DOPTELET) states that avatrombopag exposure may increase in patients with CYP2C9*2 and/or CYP2C9*3 alleles, and that increased exposure may increase the risk of clinically-relevant QTc prolongation. The label also states that potential increased thrombotic risk should be considered in patients with deficiency in Factor V Leiden (F5), prothrombin 20210A (F2), antithrombin (SERPINC1), protein C (PROC), or protein S (PROS1).</p>\n",
+        "version": 0
+      },
+      "terms": [],
+      "testing": {
+        "id": 1183672111,
+        "description": "The label does not discuss genetic or other testing for gene/protein/chromosomal variants, but does contain information about changes in efficacy, dosage or toxicity due to such variants. The label may mention contraindication of the drug in a particular subset of patients but does not require or recommend gene, protein or chromosomal testing.",
+        "parents": [],
+        "resource": "Genetic Testing Level",
+        "synonyms": [],
+        "term": "Actionable PGx",
+        "termId": "geneTestLevel:1183672111",
+        "valid": true,
+        "version": 2
+      },
+      "textMarkdown": {
+        "id": 1452526301,
+        "html": "<p>Excerpts from the avatrombopag (DOPTELET) product monograph:</p>\n<blockquote class=\"blockquote\">\n<p>Avatrombopag is primarily metabolized by CYP2C9 and CYP3A4 enzymes.</p>\n</blockquote>\n<blockquote class=\"blockquote\">\n<p>The CYP2C9*2 and CYP2C9*3 loss-of-function polymorphisms result in reduced CYP2C9 enzymatic activity. In a pooled pharmacogenomic analysis of avatrombopag studies, subjects heterozygous for CYP2C9 loss-of-function polymorphisms (intermediate metabolizers [n=24]) had approximately 1.4-fold higher exposure and subjects homozygous for CYP2C9 loss-of-function polymorphisms (poor metabolizers [n=2]) had approximately 2-fold higher exposure compared to subjects wild-type for CYP2C9 (normal metabolizers [n=94]).</p>\n</blockquote>\n<blockquote class=\"blockquote\">\n<p>QTc prolongation: At mean Cmax exposures similar to that achieved at the 40 mg dose, avatrombopag did not prolong the QT interval to any clinically relevant extent. Mean QTc prolongation effects &gt; 20 ms are not anticipated with the highest recommended therapeutic dosing regimen based on analysis of data from the pooled clinical trials in patients with chronic liver disease. [...] Caution must also be exercised in patients with loss-of-function polymorphisms of CYP2C9, as these can increase avatrombopag exposure.</p>\n</blockquote>\n<blockquote class=\"blockquote\">\n<p>Consider the potential increased thrombotic risk when administering DOPTELET to patients with known risk factors for thromboembolism, including but not limited to advanced age, patients with prolonged periods of immobilization, malignancies, use of contraceptives or hormone replacement therapy, surgery/trauma, obesity, smoking, and genetic prothrombotic conditions (e.g., Factor V Leiden, Prothrombin 20210A, Antithrombin deficiency or Protein C or S deficiency).</p>\n</blockquote>\n<p>For the complete product monograph text with sections containing pharmacogenetic information highlighted, see the <a download=\"Avatrombopag_2024_07_11_HCSC.pdf\" href=\"https://api.clinpgx.org/v1/download/file/attachment/Avatrombopag_2024_07_11_HCSC.pdf\">avatrombopag product monograph</a>.</p>\n",
+        "version": 1
+      },
+      "version": 1
+    },
+    {
+      "objCls": "Label Annotation",
+      "id": "PA166357881",
+      "name": "Annotation of EMA Label for lusutrombopag and F2, F5, PROC, PROS1, SERPINC1",
+      "alternateDrugAvailable": false,
+      "cancerGenome": false,
+      "crossReferences": [],
+      "dosingInformation": false,
+      "history": [],
+      "indication": false,
+      "labelApplications": [],
+      "labelDocumentAvailable": true,
+      "literature": [
+        {
+          "id": 15169642,
+          "title": "Mulpleo (previously Lusutrombopag Shionogi) | European Medicines Agency (EMA)",
+          "_sameAs": "https://www.ema.europa.eu/en/medicines/human/EPAR/mulpleo",
+          "crossReferences": [
+            {
+              "id": 1452694480,
+              "resource": "URL",
+              "resourceId": "https://www.ema.europa.eu/en/medicines/human/EPAR/mulpleo",
+              "_url": "https://www.ema.europa.eu/en/medicines/human/EPAR/mulpleo"
+            }
+          ],
+          "objCls": "Literature",
+          "terms": [
+            {
+              "id": 1452267780,
+              "resource": "ClinPGx Tags",
+              "term": "Has PGx",
+              "termId": "pgkbTags:1452267780"
+            }
+          ],
+          "type": "Drug Label"
+        }
+      ],
+      "otherPrescribingGuidance": true,
+      "pediatric": false,
+      "pgxRelated": true,
+      "prescribingGenes": [
+        {
+          "objCls": "Gene",
+          "id": "PA157",
+          "symbol": "F2",
+          "name": "coagulation factor II, thrombin",
+          "version": 166
+        },
+        {
+          "objCls": "Gene",
+          "id": "PA159",
+          "symbol": "F5",
+          "name": "coagulation factor V",
+          "version": 141
+        },
+        {
+          "objCls": "Gene",
+          "id": "PA33799",
+          "symbol": "PROC",
+          "name": "protein C, inactivator of coagulation factors Va and VIIIa",
+          "version": 34
+        },
+        {
+          "objCls": "Gene",
+          "id": "PA33809",
+          "symbol": "PROS1",
+          "name": "protein S",
+          "version": 28
+        },
+        {
+          "objCls": "Gene",
+          "id": "PA35026",
+          "symbol": "SERPINC1",
+          "name": "serpin family C member 1",
+          "version": 20
+        }
+      ],
+      "prescribingMarkdown": {
+        "id": 1452694502,
+        "html": "<blockquote class=\"blockquote\">\n<p>In patients with thrombosis or thromboembolism, with a history of thrombosis or thromboembolism, with absence of hepatopetal blood flow in the main trunk of the portal vein, or patients with congenital coagulopathy the risk for thrombosis or thromboembolism may increase. These patients should be clinically monitored when treated with lusutrombopag.</p>\n</blockquote>\n",
+        "version": 0
+      },
+      "relatedAlleles": [
+        {
+          "objCls": "Variant",
+          "id": "PA166154336",
+          "symbol": "rs1799963",
+          "name": "rs1799963",
+          "version": 4
+        },
+        {
+          "objCls": "Variant",
+          "id": "PA166153554",
+          "symbol": "rs6025",
+          "name": "rs6025",
+          "version": 5
+        }
+      ],
+      "relatedChemicals": [
+        {
+          "objCls": "Chemical",
+          "id": "PA166182748",
+          "name": "lusutrombopag",
+          "version": 3
+        }
+      ],
+      "relatedGenes": [
+        {
+          "objCls": "Gene",
+          "id": "PA157",
+          "symbol": "F2",
+          "name": "coagulation factor II, thrombin",
+          "version": 166
+        },
+        {
+          "objCls": "Gene",
+          "id": "PA159",
+          "symbol": "F5",
+          "name": "coagulation factor V",
+          "version": 141
+        },
+        {
+          "objCls": "Gene",
+          "id": "PA33799",
+          "symbol": "PROC",
+          "name": "protein C, inactivator of coagulation factors Va and VIIIa",
+          "version": 34
+        },
+        {
+          "objCls": "Gene",
+          "id": "PA33809",
+          "symbol": "PROS1",
+          "name": "protein S",
+          "version": 28
+        },
+        {
+          "objCls": "Gene",
+          "id": "PA35026",
+          "symbol": "SERPINC1",
+          "name": "serpin family C member 1",
+          "version": 20
+        }
+      ],
+      "source": "EMA",
+      "summaryMarkdown": {
+        "id": 1452694500,
+        "html": "<p>The EMA-approved EPAR for lusutrombopag (Mulpleo) states that patients with congenital coagulopathy the risk for thrombosis or thromboembolism may increase. These patients should be clinically monitored when treated with lusutrombopag.</p>\n<p>Although the EPAR does not mention specific genes, genetic prothrombotic conditions include Factor V Leiden (F5), Prothrombin 20210A (F2), Antithrombin deficiency (SERPINC1) or Protein C (PROC) or S (PROS1) deficiency.</p>\n",
+        "version": 0
+      },
+      "terms": [],
+      "testing": {
+        "id": 1183672111,
+        "description": "The label does not discuss genetic or other testing for gene/protein/chromosomal variants, but does contain information about changes in efficacy, dosage or toxicity due to such variants. The label may mention contraindication of the drug in a particular subset of patients but does not require or recommend gene, protein or chromosomal testing.",
+        "parents": [],
+        "resource": "Genetic Testing Level",
+        "synonyms": [],
+        "term": "Actionable PGx",
+        "termId": "geneTestLevel:1183672111",
+        "valid": true,
+        "version": 2
+      },
+      "textMarkdown": {
+        "id": 1452694501,
+        "html": "<p>Excerpt from the lusutrombopag (Mulpleo) EPAR:</p>\n<blockquote class=\"blockquote\">\n<p>In patients with thrombosis or thromboembolism, with a history of thrombosis or thromboembolism, with absence of hepatopetal blood flow in the main trunk of the portal vein, or patients with congenital coagulopathy the risk for thrombosis or thromboembolism may increase. These patients should be clinically monitored when treated with lusutrombopag.</p>\n</blockquote>\n<p>For the complete EPAR text with sections containing pharmacogenetic information highlighted, see the <a download=\"Lusutrombopag_2024_11_08_EMA.pdf\" href=\"https://api.clinpgx.org/v1/download/file/attachment/Lusutrombopag_2024_11_08_EMA.pdf\">lusutrombopag EPAR PDF</a>.</p>\n",
+        "version": 1
+      },
+      "version": 0
+    },
+    {
+      "objCls": "Label Annotation",
+      "id": "PA166397701",
+      "name": "Annotation of HCSC Label for relugolix / estradiol / norethindrone acetate and F5, PROC, PROS1, SERPINC1",
+      "alternateDrugAvailable": true,
+      "cancerGenome": false,
+      "crossReferences": [],
+      "dosingInformation": false,
+      "history": [],
+      "indication": false,
+      "labelApplications": [],
+      "labelDocumentAvailable": true,
+      "literature": [
+        {
+          "id": 15177742,
+          "title": "Drugs@HCSC: Drug Product MYFEMBREE (relugolix, estradiol, norethindrone acetate), Sumitomo Pharma Switzerland GmbH",
+          "_sameAs": "https://pdf.hres.ca/dpd_pm/00072888.PDF",
+          "crossReferences": [
+            {
+              "id": 1453099520,
+              "resource": "URL",
+              "resourceId": "https://pdf.hres.ca/dpd_pm/00072888.PDF",
+              "_url": "https://pdf.hres.ca/dpd_pm/00072888.PDF"
+            }
+          ],
+          "objCls": "Literature",
+          "terms": [
+            {
+              "id": 1452267780,
+              "resource": "ClinPGx Tags",
+              "term": "Has PGx",
+              "termId": "pgkbTags:1452267780"
+            }
+          ],
+          "type": "Drug Label"
+        }
+      ],
+      "otherPrescribingGuidance": false,
+      "pediatric": false,
+      "pgxRelated": true,
+      "prescribingGenes": [
+        {
+          "objCls": "Gene",
+          "id": "PA159",
+          "symbol": "F5",
+          "name": "coagulation factor V",
+          "version": 141
+        },
+        {
+          "objCls": "Gene",
+          "id": "PA33799",
+          "symbol": "PROC",
+          "name": "protein C, inactivator of coagulation factors Va and VIIIa",
+          "version": 34
+        },
+        {
+          "objCls": "Gene",
+          "id": "PA33809",
+          "symbol": "PROS1",
+          "name": "protein S",
+          "version": 28
+        },
+        {
+          "objCls": "Gene",
+          "id": "PA35026",
+          "symbol": "SERPINC1",
+          "name": "serpin family C member 1",
+          "version": 20
+        }
+      ],
+      "prescribingMarkdown": {
+        "id": 1453099523,
+        "html": "<blockquote class=\"blockquote\">\n<p>MYFEMBREE is contraindicated in patients who [...] have inherited or acquired hypercoagulopathies.</p>\n</blockquote>\n<blockquote class=\"blockquote\">\n<p>Do not use MYFEMBREE if [...] you have a blood clotting disorder. Examples such as protein C deficiency, protein S deficiency, antithrombin-III deficiency, or Factor V Leiden.</p>\n</blockquote>\n",
+        "version": 0
+      },
+      "relatedAlleles": [
+        {
+          "objCls": "Variant",
+          "id": "PA166153554",
+          "symbol": "rs6025",
+          "name": "rs6025",
+          "version": 5
+        }
+      ],
+      "relatedChemicals": [
+        {
+          "objCls": "Chemical",
+          "id": "PA166397682",
+          "name": "relugolix / estradiol / norethindrone acetate",
+          "version": 5
+        }
+      ],
+      "relatedGenes": [
+        {
+          "objCls": "Gene",
+          "id": "PA159",
+          "symbol": "F5",
+          "name": "coagulation factor V",
+          "version": 141
+        },
+        {
+          "objCls": "Gene",
+          "id": "PA33799",
+          "symbol": "PROC",
+          "name": "protein C, inactivator of coagulation factors Va and VIIIa",
+          "version": 34
+        },
+        {
+          "objCls": "Gene",
+          "id": "PA33809",
+          "symbol": "PROS1",
+          "name": "protein S",
+          "version": 28
+        },
+        {
+          "objCls": "Gene",
+          "id": "PA35026",
+          "symbol": "SERPINC1",
+          "name": "serpin family C member 1",
+          "version": 20
+        }
+      ],
+      "source": "HCSC",
+      "summaryMarkdown": {
+        "id": 1453099521,
+        "html": "<p>The product monograph for relugolix/estradiol/norethindrone acetate (MYFEMBREE) states that patients with a blood clotting disorder such as protein C (PROC) deficiency, protein S (PROS1) deficiency, antithrombin-III (SERPINC1) deficiency, or Factor V Leiden (F5) should not use the drug.</p>\n",
+        "version": 0
+      },
+      "terms": [],
+      "testing": {
+        "id": 1183672111,
+        "description": "The label does not discuss genetic or other testing for gene/protein/chromosomal variants, but does contain information about changes in efficacy, dosage or toxicity due to such variants. The label may mention contraindication of the drug in a particular subset of patients but does not require or recommend gene, protein or chromosomal testing.",
+        "parents": [],
+        "resource": "Genetic Testing Level",
+        "synonyms": [],
+        "term": "Actionable PGx",
+        "termId": "geneTestLevel:1183672111",
+        "valid": true,
+        "version": 2
+      },
+      "textMarkdown": {
+        "id": 1453099522,
+        "html": "<p>Excerpts from the relugolix/estradiol/norethindrone acetate (MYFEMBREE) product monograph:</p>\n<blockquote class=\"blockquote\">\n<p>MYFEMBREE is contraindicated in patients who [...] have inherited or acquired hypercoagulopathies.</p>\n</blockquote>\n<blockquote class=\"blockquote\">\n<p>Do not use MYFEMBREE if [...] you have a blood clotting disorder. Examples such as protein C deficiency, protein S deficiency, antithrombin-III deficiency, or Factor V Leiden.</p>\n</blockquote>\n<p>For the complete product monograph text with sections containing pharmacogenetic information highlighted, see the <a download=\"Relugolix_estradiol_norethindroneacetate_2025_04_11_HCSC.pdf\" href=\"https://api.clinpgx.org/v1/download/file/attachment/Relugolix_estradiol_norethindroneacetate_2025_04_11_HCSC.pdf\">relugolix/estradiol/norethindrone acetate product monograph</a>.</p>\n",
+        "version": 1
+      },
+      "version": 1
+    },
+    {
+      "objCls": "Label Annotation",
+      "id": "PA166397721",
+      "name": "Annotation of FDA Label for relugolix / estradiol / norethindrone acetate and F5, PROC, PROS1, SERPINC1",
+      "alternateDrugAvailable": true,
+      "cancerGenome": false,
+      "crossReferences": [],
+      "dosingInformation": false,
+      "history": [],
+      "indication": false,
+      "labelApplications": [],
+      "labelDocumentAvailable": true,
+      "literature": [
+        {
+          "id": 15177762,
+          "title": "Drugs@FDA: Drug Product Myfembree (relugolix, estradiol hemihydrate, and norethindrone acetate), Sumitomo Pharma America, Inc - NDA214846/SUPPL-8, 07/17/2024",
+          "_sameAs": "https://www.accessdata.fda.gov/scripts/cder/daf/index.cfm?event=overview.process&varApplNo=214846",
+          "crossReferences": [
+            {
+              "id": 1453099561,
+              "resource": "FDA Application",
+              "resourceId": "NDA214846/SUPPL-8",
+              "_url": "https://www.accessdata.fda.gov/scripts/cder/daf/index.cfm?event=overview.process&varApplNo=214846"
+            }
+          ],
+          "objCls": "Literature",
+          "pubDate": "2024-07-17T00:00:00-07:00",
+          "terms": [
+            {
+              "id": 1452267780,
+              "resource": "ClinPGx Tags",
+              "term": "Has PGx",
+              "termId": "pgkbTags:1452267780"
+            }
+          ],
+          "type": "Drug Label"
+        }
+      ],
+      "otherPrescribingGuidance": false,
+      "pediatric": false,
+      "pgxRelated": true,
+      "prescribingGenes": [
+        {
+          "objCls": "Gene",
+          "id": "PA159",
+          "symbol": "F5",
+          "name": "coagulation factor V",
+          "version": 141
+        },
+        {
+          "objCls": "Gene",
+          "id": "PA33799",
+          "symbol": "PROC",
+          "name": "protein C, inactivator of coagulation factors Va and VIIIa",
+          "version": 34
+        },
+        {
+          "objCls": "Gene",
+          "id": "PA33809",
+          "symbol": "PROS1",
+          "name": "protein S",
+          "version": 28
+        },
+        {
+          "objCls": "Gene",
+          "id": "PA35026",
+          "symbol": "SERPINC1",
+          "name": "serpin family C member 1",
+          "version": 20
+        }
+      ],
+      "prescribingMarkdown": {
+        "id": 1453099582,
+        "html": "<blockquote class=\"blockquote\">\n<p>MYFEMBREE is contraindicated in women:</p>\n<ul>\n<li>With a high risk of arterial, venous thrombotic, or thromboembolic disorders [...]. Examples include [...] women who are known to have [...] inherited or acquired hypercoagulopathies</li>\n</ul>\n</blockquote>\n",
+        "version": 0
+      },
+      "relatedAlleles": [
+        {
+          "objCls": "Variant",
+          "id": "PA166153554",
+          "symbol": "rs6025",
+          "name": "rs6025",
+          "version": 5
+        }
+      ],
+      "relatedChemicals": [
+        {
+          "objCls": "Chemical",
+          "id": "PA166397682",
+          "name": "relugolix / estradiol / norethindrone acetate",
+          "version": 5
+        }
+      ],
+      "relatedGenes": [
+        {
+          "objCls": "Gene",
+          "id": "PA159",
+          "symbol": "F5",
+          "name": "coagulation factor V",
+          "version": 141
+        },
+        {
+          "objCls": "Gene",
+          "id": "PA33799",
+          "symbol": "PROC",
+          "name": "protein C, inactivator of coagulation factors Va and VIIIa",
+          "version": 34
+        },
+        {
+          "objCls": "Gene",
+          "id": "PA33809",
+          "symbol": "PROS1",
+          "name": "protein S",
+          "version": 28
+        },
+        {
+          "objCls": "Gene",
+          "id": "PA35026",
+          "symbol": "SERPINC1",
+          "name": "serpin family C member 1",
+          "version": 20
+        }
+      ],
+      "source": "FDA",
+      "summaryMarkdown": {
+        "id": 1453099580,
+        "html": "<p>The FDA-approved drug label for relugolix/estradiol/norethindrone acetate (MYFEMBREE) states that women who are known to have inherited or acquired hypercoagulopathies should not use the drug. Specific inherited hypercoagulophathies were not mentioned on the label, but include protein C (PROC) deficiency, protein S (PROS1) deficiency, antithrombin-III (SERPINC1) deficiency, or Factor V Leiden (F5).</p>\n",
+        "version": 0
+      },
+      "terms": [],
+      "testing": {
+        "id": 1183672111,
+        "description": "The label does not discuss genetic or other testing for gene/protein/chromosomal variants, but does contain information about changes in efficacy, dosage or toxicity due to such variants. The label may mention contraindication of the drug in a particular subset of patients but does not require or recommend gene, protein or chromosomal testing.",
+        "parents": [],
+        "resource": "Genetic Testing Level",
+        "synonyms": [],
+        "term": "Actionable PGx",
+        "termId": "geneTestLevel:1183672111",
+        "valid": true,
+        "version": 2
+      },
+      "textMarkdown": {
+        "id": 1453099581,
+        "html": "<p>Excerpt from the relugolix/estradiol/norethindrone acetate (MYFEMBREE) label:</p>\n<blockquote class=\"blockquote\">\n<p>MYFEMBREE is contraindicated in women:</p>\n<ul>\n<li>With a high risk of arterial, venous thrombotic, or thromboembolic disorders [see Boxed Warning and Warnings and Precautions (5.1)]. Examples include women over 35 years of age who smoke and women who are known to have [...] inherited or acquired hypercoagulopathies</li>\n</ul>\n</blockquote>\n<p>Specific inherited hypercoagulophathies were not mentioned on the label, but include protein C (PROC) deficiency, protein S (PROS1) deficiency, antithrombin-III (SERPINC1) deficiency, or Factor V Leiden (F5).</p>\n<p>For the complete drug label text with sections containing pharmacogenetic information highlighted, see the <a download=\"Relugolix_estradiol_norethindroneacetate_2025_04_11_FDA.pdf\" href=\"https://api.clinpgx.org/v1/download/file/attachment/Relugolix_estradiol_norethindroneacetate_2025_04_11_FDA.pdf\">relugolix/estradiol/norethindrone acetate drug label</a>.</p>\n",
+        "version": 1
+      },
+      "version": 2
+    },
+    {
+      "objCls": "Label Annotation",
+      "id": "PA166414701",
+      "name": "Annotation of FDA Label for ethinyl estradiol / norelgestromin and F5, PROC, PROS1, SERPINC1",
+      "alternateDrugAvailable": true,
+      "cancerGenome": false,
+      "crossReferences": [],
+      "dosingInformation": false,
+      "history": [],
+      "indication": false,
+      "labelApplications": [],
+      "labelDocumentAvailable": true,
+      "literature": [
+        {
+          "id": 15182962,
+          "title": "DailyMed - NORELGESTROMIN AND ETHINYL ESTRADIOL patch",
+          "_sameAs": "https://dailymed.nlm.nih.gov/dailymed/lookup.cfm?setid=10fa1458-c8ed-4197-922a-1ba7271d2b02",
+          "crossReferences": [
+            {
+              "id": 1454200560,
+              "resource": "FDA Drug Label at DailyMed",
+              "resourceId": "10fa1458-c8ed-4197-922a-1ba7271d2b02",
+              "_url": "https://dailymed.nlm.nih.gov/dailymed/lookup.cfm?setid=10fa1458-c8ed-4197-922a-1ba7271d2b02"
+            }
+          ],
+          "objCls": "Literature",
+          "terms": [
+            {
+              "id": 1452267780,
+              "resource": "ClinPGx Tags",
+              "term": "Has PGx",
+              "termId": "pgkbTags:1452267780"
+            }
+          ],
+          "type": "Drug Label"
+        }
+      ],
+      "otherPrescribingGuidance": false,
+      "pediatric": true,
+      "pediatricMarkdown": {
+        "id": 1454200564,
+        "html": "<blockquote class=\"blockquote\">\n<p>Safety and efficacy of norelgestromin and ethinyl estradiol transdermal system have been established in women of reproductive age. Efficacy is expected to be the same for post-pubertal adolescents under the age of 18 and for users 18 years and older. Use of this product before menarche is not indicated.</p>\n</blockquote>\n",
+        "version": 0
+      },
+      "pgxRelated": true,
+      "prescribingGenes": [
+        {
+          "objCls": "Gene",
+          "id": "PA159",
+          "symbol": "F5",
+          "name": "coagulation factor V",
+          "version": 141
+        },
+        {
+          "objCls": "Gene",
+          "id": "PA33799",
+          "symbol": "PROC",
+          "name": "protein C, inactivator of coagulation factors Va and VIIIa",
+          "version": 34
+        },
+        {
+          "objCls": "Gene",
+          "id": "PA33809",
+          "symbol": "PROS1",
+          "name": "protein S",
+          "version": 28
+        },
+        {
+          "objCls": "Gene",
+          "id": "PA35026",
+          "symbol": "SERPINC1",
+          "name": "serpin family C member 1",
+          "version": 20
+        }
+      ],
+      "prescribingMarkdown": {
+        "id": 1454200563,
+        "html": "<blockquote class=\"blockquote\">\n<p>Norelgestromin and ethinyl estradiol transdermal system is contraindicated in females who [...] have inherited or acquired hypercoagulopathies</p>\n</blockquote>\n",
+        "version": 0
+      },
+      "relatedAlleles": [
+        {
+          "objCls": "Variant",
+          "id": "PA166153554",
+          "symbol": "rs6025",
+          "name": "rs6025",
+          "version": 5
+        }
+      ],
+      "relatedChemicals": [
+        {
+          "objCls": "Chemical",
+          "id": "PA165290929",
+          "name": "ethinyl estradiol / norelgestromin",
+          "version": 5
+        }
+      ],
+      "relatedGenes": [
+        {
+          "objCls": "Gene",
+          "id": "PA159",
+          "symbol": "F5",
+          "name": "coagulation factor V",
+          "version": 141
+        },
+        {
+          "objCls": "Gene",
+          "id": "PA33799",
+          "symbol": "PROC",
+          "name": "protein C, inactivator of coagulation factors Va and VIIIa",
+          "version": 34
+        },
+        {
+          "objCls": "Gene",
+          "id": "PA33809",
+          "symbol": "PROS1",
+          "name": "protein S",
+          "version": 28
+        },
+        {
+          "objCls": "Gene",
+          "id": "PA35026",
+          "symbol": "SERPINC1",
+          "name": "serpin family C member 1",
+          "version": 20
+        }
+      ],
+      "source": "FDA",
+      "summaryMarkdown": {
+        "id": 1454200561,
+        "html": "<p>Norelgestromin and ethinyl estradiol transdermal system is contraindicated in patients who have inherited hypercoagulopathies, among other contraindications. Although not mentioned on the drug label, known inherited hypercoagulopathies include deficiencies of antithrombin (SERPINC1), protein C (PROC) and protein S (PROS1), and the resistance to APC (factor V Leiden).</p>\n",
+        "version": 0
+      },
+      "terms": [],
+      "testing": {
+        "id": 1183672111,
+        "description": "The label does not discuss genetic or other testing for gene/protein/chromosomal variants, but does contain information about changes in efficacy, dosage or toxicity due to such variants. The label may mention contraindication of the drug in a particular subset of patients but does not require or recommend gene, protein or chromosomal testing.",
+        "parents": [],
+        "resource": "Genetic Testing Level",
+        "synonyms": [],
+        "term": "Actionable PGx",
+        "termId": "geneTestLevel:1183672111",
+        "valid": true,
+        "version": 2
+      },
+      "textMarkdown": {
+        "id": 1454200562,
+        "html": "<p>Excerpts from the norelgestromin and ethinyl estradiol transdermal system label:</p>\n<blockquote class=\"blockquote\">\n<p>Norelgestromin and ethinyl estradiol transdermal system is contraindicated in females who are known to have or develop the following conditions:\n\u25cf At high risk of arterial or venous thromboembolic events. Examples include women who: [...]</p>\n<ul>\n<li>Have inherited or acquired hypercoagulopathies [see Warnings and Precautions (5.1)]</li>\n</ul>\n</blockquote>\n<blockquote class=\"blockquote\">\n<p>Before starting norelgestromin and ethinyl estradiol transdermal system, evaluate any past medical history or family history of thrombotic or thromboembolic disorders and consider whether the history suggests an inherited or acquired hypercoagulopathy [see Contraindications (4)].</p>\n</blockquote>\n<p>For the complete drug label text with sections containing pharmacogenetic information highlighted, see the <a download=\"Norelgestromin_ethinyl_estradiol_2025_08_05_FDA.pdf\" href=\"https://api.clinpgx.org/v1/download/file/attachment/Norelgestromin_ethinyl_estradiol_2025_08_05_FDA.pdf\">norelgestromin and ethinyl estradiol drug label</a>.</p>\n",
+        "version": 0
+      },
+      "version": 0
+    }
+  ],
+  "status": "success"
+}

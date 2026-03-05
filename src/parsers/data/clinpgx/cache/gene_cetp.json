@@ -1,0 +1,383 @@
+{
+  "data": [
+    {
+      "objCls": "Gene",
+      "id": "PA108",
+      "symbol": "CETP",
+      "name": "cholesteryl ester transfer protein",
+      "alleleType": "None",
+      "altNames": {
+        "synonym": [
+          "BPI fold containing family F",
+          "cholesteryl ester transfer protein, plasma"
+        ],
+        "symbol": [
+          "BPIFF"
+        ]
+      },
+      "amp": false,
+      "buildVersion": "GRCh38.p7",
+      "cbStart": "q21",
+      "cbStop": "q13",
+      "chr": {
+        "objCls": "Chromosome",
+        "id": "PA515",
+        "name": "chr16",
+        "version": 3
+      },
+      "chrStartPosB37": 56995835,
+      "chrStartPosB38": 56961923,
+      "chrStopPosB37": 57017757,
+      "chrStopPosB38": 56983844,
+      "cpicGene": false,
+      "crossReferences": [
+        {
+          "id": 553244881,
+          "resource": "Comparative Toxicogenomics Database",
+          "resourceId": "1071",
+          "_url": "http://ctdbase.org/detail.go?type=gene&acc=1071",
+          "version": 0
+        },
+        {
+          "id": 132254872,
+          "resource": "Ensembl",
+          "resourceId": "ENSG00000087237",
+          "_url": "https://www.ensembl.org/Homo_sapiens/Gene/Summary?g=ENSG00000087237",
+          "version": 0
+        },
+        {
+          "id": 72620,
+          "resource": "GenAtlas",
+          "resourceId": "CETP",
+          "_url": "http://genatlas.medecine.univ-paris5.fr/fiche.php?symbol=CETP",
+          "version": 1
+        },
+        {
+          "id": 87548,
+          "resource": "GeneCard",
+          "resourceId": "CETP",
+          "_url": "https://www.genecards.org/cgi-bin/carddisp.pl?gene=CETP",
+          "version": 1
+        },
+        {
+          "id": 608051230,
+          "resource": "HGNC",
+          "resourceId": "HGNC:1869",
+          "_url": "https://www.genenames.org/data/gene-symbol-report/#!/hgnc_id/HGNC%3A1869",
+          "version": 1
+        },
+        {
+          "id": 608051236,
+          "resource": "HumanCyc Gene",
+          "resourceId": "HS01564",
+          "_url": "http://biocyc.org/HUMAN/NEW-IMAGE?object=HS01564",
+          "version": 0
+        },
+        {
+          "id": 560878453,
+          "resource": "ModBase",
+          "resourceId": "P11597",
+          "_url": "http://salilab.org/modbase/search?modelflag=longest&databaseID=P11597",
+          "version": 0
+        },
+        {
+          "id": 9352,
+          "resource": "NCBI Gene",
+          "resourceId": "1071",
+          "_url": "https://www.ncbi.nlm.nih.gov/gene/1071",
+          "version": 1
+        },
+        {
+          "id": 518,
+          "resource": "OMIM",
+          "resourceId": "118470",
+          "_url": "https://omim.org/entry/118470",
+          "version": 1
+        },
+        {
+          "id": 560556090,
+          "resource": "OMIM",
+          "resourceId": "143470",
+          "_url": "https://omim.org/entry/143470",
+          "version": 0
+        },
+        {
+          "id": 560545983,
+          "resource": "OMIM",
+          "resourceId": "152430",
+          "_url": "https://omim.org/entry/152430",
+          "version": 0
+        },
+        {
+          "id": 560556091,
+          "resource": "OMIM",
+          "resourceId": "607322",
+          "_url": "https://omim.org/entry/607322",
+          "version": 0
+        },
+        {
+          "id": 560556089,
+          "resource": "RefSeq DNA",
+          "resourceId": "NG_008952",
+          "_url": "https://www.ncbi.nlm.nih.gov/nuccore/NG_008952",
+          "version": 0
+        },
+        {
+          "id": 36801,
+          "resource": "RefSeq DNA",
+          "resourceId": "NT_010498",
+          "_url": "https://www.ncbi.nlm.nih.gov/nuccore/NT_010498",
+          "version": 1
+        },
+        {
+          "id": 37251,
+          "resource": "RefSeq Protein",
+          "resourceId": "NP_000069",
+          "_url": "https://www.ncbi.nlm.nih.gov/nuccore/NP_000069",
+          "version": 1
+        },
+        {
+          "id": 46326,
+          "resource": "RefSeq RNA",
+          "resourceId": "NM_000078",
+          "_url": "https://www.ncbi.nlm.nih.gov/nuccore/NM_000078",
+          "version": 1
+        },
+        {
+          "id": 121643,
+          "resource": "UCSC Genome Browser",
+          "resourceId": "NM_000078",
+          "_url": "https://genome.ucsc.edu/cgi-bin/hgTracks?Submit=Submit&position=NM_000078",
+          "version": 1
+        },
+        {
+          "id": 62331793,
+          "name": "CETP_HUMAN",
+          "resource": "UniProtKB",
+          "resourceId": "P11597",
+          "_url": "https://www.uniprot.org/uniprot/P11597",
+          "version": 1
+        }
+      ],
+      "hasNonStandardHaplotypes": false,
+      "hideHaplotypes": false,
+      "pharmVarGene": false,
+      "strand": "plus",
+      "terms": [
+        {
+          "id": 560499707,
+          "_url": "http://amigo.geneontology.org/amigo/term/GO:0005319",
+          "resource": "Gene Ontology",
+          "term": "lipid transporter activity",
+          "termId": "GO:0005319"
+        },
+        {
+          "id": 560499885,
+          "_url": "http://amigo.geneontology.org/amigo/term/GO:0005548",
+          "resource": "Gene Ontology",
+          "term": "phospholipid transporter activity",
+          "termId": "GO:0005548"
+        },
+        {
+          "id": 560499910,
+          "_url": "http://amigo.geneontology.org/amigo/term/GO:0005576",
+          "resource": "Gene Ontology",
+          "term": "extracellular region",
+          "termId": "GO:0005576"
+        },
+        {
+          "id": 560499957,
+          "_url": "http://amigo.geneontology.org/amigo/term/GO:0005615",
+          "resource": "Gene Ontology",
+          "term": "extracellular space",
+          "termId": "GO:0005615"
+        },
+        {
+          "id": 560501203,
+          "_url": "http://amigo.geneontology.org/amigo/term/GO:0006629",
+          "resource": "Gene Ontology",
+          "term": "lipid metabolic process",
+          "termId": "GO:0006629"
+        },
+        {
+          "id": 560501221,
+          "_url": "http://amigo.geneontology.org/amigo/term/GO:0006641",
+          "resource": "Gene Ontology",
+          "term": "triglyceride metabolic process",
+          "termId": "GO:0006641"
+        },
+        {
+          "id": 560497400,
+          "_url": "http://amigo.geneontology.org/amigo/term/GO:0006869",
+          "resource": "Gene Ontology",
+          "term": "lipid transport",
+          "termId": "GO:0006869"
+        },
+        {
+          "id": 560501294,
+          "_url": "http://amigo.geneontology.org/amigo/term/GO:0008202",
+          "resource": "Gene Ontology",
+          "term": "steroid metabolic process",
+          "termId": "GO:0008202"
+        },
+        {
+          "id": 560501296,
+          "_url": "http://amigo.geneontology.org/amigo/term/GO:0008203",
+          "resource": "Gene Ontology",
+          "term": "cholesterol metabolic process",
+          "termId": "GO:0008203"
+        },
+        {
+          "id": 560499829,
+          "_url": "http://amigo.geneontology.org/amigo/term/GO:0008289",
+          "resource": "Gene Ontology",
+          "term": "lipid binding",
+          "termId": "GO:0008289"
+        },
+        {
+          "id": 560505239,
+          "_url": "http://amigo.geneontology.org/amigo/term/GO:0010745",
+          "resource": "Gene Ontology",
+          "term": "negative regulation of foam cell differentiation",
+          "termId": "GO:0010745"
+        },
+        {
+          "id": 560505383,
+          "_url": "http://amigo.geneontology.org/amigo/term/GO:0010874",
+          "resource": "Gene Ontology",
+          "term": "regulation of cholesterol efflux",
+          "termId": "GO:0010874"
+        },
+        {
+          "id": 560506181,
+          "_url": "http://amigo.geneontology.org/amigo/term/GO:0015485",
+          "resource": "Gene Ontology",
+          "term": "cholesterol binding",
+          "termId": "GO:0015485"
+        },
+        {
+          "id": 560501233,
+          "_url": "http://amigo.geneontology.org/amigo/term/GO:0015914",
+          "resource": "Gene Ontology",
+          "term": "phospholipid transport",
+          "termId": "GO:0015914"
+        },
+        {
+          "id": 560507398,
+          "_url": "http://amigo.geneontology.org/amigo/term/GO:0017127",
+          "resource": "Gene Ontology",
+          "term": "cholesterol transporter activity",
+          "termId": "GO:0017127"
+        },
+        {
+          "id": 560507400,
+          "_url": "http://amigo.geneontology.org/amigo/term/GO:0017129",
+          "resource": "Gene Ontology",
+          "term": "triglyceride binding",
+          "termId": "GO:0017129"
+        },
+        {
+          "id": 560505392,
+          "_url": "http://amigo.geneontology.org/amigo/term/GO:0030301",
+          "resource": "Gene Ontology",
+          "term": "cholesterol transport",
+          "termId": "GO:0030301"
+        },
+        {
+          "id": 560511107,
+          "_url": "http://amigo.geneontology.org/amigo/term/GO:0031210",
+          "resource": "Gene Ontology",
+          "term": "phosphatidylcholine binding",
+          "termId": "GO:0031210"
+        },
+        {
+          "id": 560511273,
+          "_url": "http://amigo.geneontology.org/amigo/term/GO:0031982",
+          "resource": "Gene Ontology",
+          "term": "vesicle",
+          "termId": "GO:0031982"
+        },
+        {
+          "id": 560514226,
+          "_url": "http://amigo.geneontology.org/amigo/term/GO:0034364",
+          "resource": "Gene Ontology",
+          "term": "high-density lipoprotein particle",
+          "termId": "GO:0034364"
+        },
+        {
+          "id": 560514234,
+          "_url": "http://amigo.geneontology.org/amigo/term/GO:0034372",
+          "resource": "Gene Ontology",
+          "term": "very-low-density lipoprotein particle remodeling",
+          "termId": "GO:0034372"
+        },
+        {
+          "id": 560514236,
+          "_url": "http://amigo.geneontology.org/amigo/term/GO:0034374",
+          "resource": "Gene Ontology",
+          "term": "low-density lipoprotein particle remodeling",
+          "termId": "GO:0034374"
+        },
+        {
+          "id": 560514237,
+          "_url": "http://amigo.geneontology.org/amigo/term/GO:0034375",
+          "resource": "Gene Ontology",
+          "term": "high-density lipoprotein particle remodeling",
+          "termId": "GO:0034375"
+        },
+        {
+          "id": 560515600,
+          "_url": "http://amigo.geneontology.org/amigo/term/GO:0042632",
+          "resource": "Gene Ontology",
+          "term": "cholesterol homeostasis",
+          "termId": "GO:0042632"
+        },
+        {
+          "id": 560516418,
+          "_url": "http://amigo.geneontology.org/amigo/term/GO:0043691",
+          "resource": "Gene Ontology",
+          "term": "reverse cholesterol transport",
+          "termId": "GO:0043691"
+        },
+        {
+          "id": 560501239,
+          "_url": "http://amigo.geneontology.org/amigo/term/GO:0046470",
+          "resource": "Gene Ontology",
+          "term": "phosphatidylcholine metabolic process",
+          "termId": "GO:0046470"
+        },
+        {
+          "id": 560522166,
+          "_url": "http://amigo.geneontology.org/amigo/term/GO:0055088",
+          "resource": "Gene Ontology",
+          "term": "lipid homeostasis",
+          "termId": "GO:0055088"
+        },
+        {
+          "id": 560522168,
+          "_url": "http://amigo.geneontology.org/amigo/term/GO:0055090",
+          "resource": "Gene Ontology",
+          "term": "acylglycerol homeostasis",
+          "termId": "GO:0055090"
+        },
+        {
+          "id": 560522169,
+          "_url": "http://amigo.geneontology.org/amigo/term/GO:0055091",
+          "resource": "Gene Ontology",
+          "term": "phospholipid homeostasis",
+          "termId": "GO:0055091"
+        },
+        {
+          "id": 560523001,
+          "_url": "http://amigo.geneontology.org/amigo/term/GO:0070328",
+          "resource": "Gene Ontology",
+          "term": "triglyceride homeostasis",
+          "termId": "GO:0070328"
+        }
+      ],
+      "version": 49,
+      "vipTier": "Undefined"
+    }
+  ],
+  "status": "success"
+}

@@ -1,0 +1,295 @@
+{
+  "data": [
+    {
+      "objCls": "Gene",
+      "id": "PA159",
+      "symbol": "F5",
+      "name": "coagulation factor V",
+      "alleleFunctionSource": "CPIC",
+      "alleleType": "Named Variants",
+      "altNames": {
+        "synonym": [
+          "coagulation factor V (proaccelerin, labile factor)"
+        ]
+      },
+      "amp": false,
+      "buildVersion": "GRCh38.p7",
+      "cbStart": "q24.2",
+      "cbStop": "q24.2",
+      "chr": {
+        "objCls": "Chromosome",
+        "id": "PA503",
+        "name": "chr1",
+        "version": 3
+      },
+      "chrStartPosB37": 169481192,
+      "chrStartPosB38": 169511954,
+      "chrStopPosB37": 169555769,
+      "chrStopPosB38": 169586632,
+      "cpicGene": false,
+      "crossReferences": [
+        {
+          "id": 553237887,
+          "resource": "Comparative Toxicogenomics Database",
+          "resourceId": "2153",
+          "_url": "http://ctdbase.org/detail.go?type=gene&acc=2153",
+          "version": 0
+        },
+        {
+          "id": 132257556,
+          "resource": "Ensembl",
+          "resourceId": "ENSG00000198734",
+          "_url": "https://www.ensembl.org/Homo_sapiens/Gene/Summary?g=ENSG00000198734",
+          "version": 0
+        },
+        {
+          "id": 74333,
+          "resource": "GenAtlas",
+          "resourceId": "F5",
+          "_url": "http://genatlas.medecine.univ-paris5.fr/fiche.php?symbol=F5",
+          "version": 1
+        },
+        {
+          "id": 89261,
+          "resource": "GeneCard",
+          "resourceId": "F5",
+          "_url": "https://www.genecards.org/cgi-bin/carddisp.pl?gene=F5",
+          "version": 1
+        },
+        {
+          "id": 608155007,
+          "resource": "HGNC",
+          "resourceId": "HGNC:3542",
+          "_url": "https://www.genenames.org/data/gene-symbol-report/#!/hgnc_id/HGNC%3A3542",
+          "version": 1
+        },
+        {
+          "id": 560880888,
+          "resource": "ModBase",
+          "resourceId": "P12259",
+          "_url": "http://salilab.org/modbase/search?modelflag=longest&databaseID=P12259",
+          "version": 0
+        },
+        {
+          "id": 11540,
+          "resource": "NCBI Gene",
+          "resourceId": "2153",
+          "_url": "https://www.ncbi.nlm.nih.gov/gene/2153",
+          "version": 1
+        },
+        {
+          "id": 560544385,
+          "resource": "OMIM",
+          "resourceId": "188055",
+          "_url": "https://omim.org/entry/188055",
+          "version": 0
+        },
+        {
+          "id": 2724,
+          "resource": "OMIM",
+          "resourceId": "227400",
+          "_url": "https://omim.org/entry/227400",
+          "version": 1
+        },
+        {
+          "id": 560544386,
+          "resource": "OMIM",
+          "resourceId": "600880",
+          "_url": "https://omim.org/entry/600880",
+          "version": 0
+        },
+        {
+          "id": 560544305,
+          "resource": "OMIM",
+          "resourceId": "601367",
+          "_url": "https://omim.org/entry/601367",
+          "version": 0
+        },
+        {
+          "id": 560544384,
+          "resource": "OMIM",
+          "resourceId": "612309",
+          "_url": "https://omim.org/entry/612309",
+          "version": 0
+        },
+        {
+          "id": 560544383,
+          "resource": "RefSeq DNA",
+          "resourceId": "NG_011806",
+          "_url": "https://www.ncbi.nlm.nih.gov/nuccore/NG_011806",
+          "version": 0
+        },
+        {
+          "id": 36614,
+          "resource": "RefSeq DNA",
+          "resourceId": "NT_004487",
+          "_url": "https://www.ncbi.nlm.nih.gov/nuccore/NT_004487",
+          "version": 1
+        },
+        {
+          "id": 37301,
+          "resource": "RefSeq Protein",
+          "resourceId": "NP_000121",
+          "_url": "https://www.ncbi.nlm.nih.gov/nuccore/NP_000121",
+          "version": 1
+        },
+        {
+          "id": 46376,
+          "resource": "RefSeq RNA",
+          "resourceId": "NM_000130",
+          "_url": "https://www.ncbi.nlm.nih.gov/nuccore/NM_000130",
+          "version": 1
+        },
+        {
+          "id": 121693,
+          "resource": "UCSC Genome Browser",
+          "resourceId": "NM_000130",
+          "_url": "https://genome.ucsc.edu/cgi-bin/hgTracks?Submit=Submit&position=NM_000130",
+          "version": 1
+        },
+        {
+          "id": 123214779,
+          "name": "FA5_HUMAN",
+          "resource": "UniProtKB",
+          "resourceId": "P12259",
+          "_url": "https://www.uniprot.org/uniprot/P12259",
+          "version": 2
+        }
+      ],
+      "hasNonStandardHaplotypes": false,
+      "hideHaplotypes": true,
+      "pharmVarGene": false,
+      "strand": "minus",
+      "terms": [
+        {
+          "id": 560499843,
+          "_url": "http://amigo.geneontology.org/amigo/term/GO:0005507",
+          "resource": "Gene Ontology",
+          "term": "copper ion binding",
+          "termId": "GO:0005507"
+        },
+        {
+          "id": 560499845,
+          "_url": "http://amigo.geneontology.org/amigo/term/GO:0005509",
+          "resource": "Gene Ontology",
+          "term": "calcium ion binding",
+          "termId": "GO:0005509"
+        },
+        {
+          "id": 560499910,
+          "_url": "http://amigo.geneontology.org/amigo/term/GO:0005576",
+          "resource": "Gene Ontology",
+          "term": "extracellular region",
+          "termId": "GO:0005576"
+        },
+        {
+          "id": 560499957,
+          "_url": "http://amigo.geneontology.org/amigo/term/GO:0005615",
+          "resource": "Gene Ontology",
+          "term": "extracellular space",
+          "termId": "GO:0005615"
+        },
+        {
+          "id": 560500224,
+          "_url": "http://amigo.geneontology.org/amigo/term/GO:0005886",
+          "resource": "Gene Ontology",
+          "term": "plasma membrane",
+          "termId": "GO:0005886"
+        },
+        {
+          "id": 560501853,
+          "_url": "http://amigo.geneontology.org/amigo/term/GO:0007155",
+          "resource": "Gene Ontology",
+          "term": "cell adhesion",
+          "termId": "GO:0007155"
+        },
+        {
+          "id": 560502354,
+          "_url": "http://amigo.geneontology.org/amigo/term/GO:0007596",
+          "resource": "Gene Ontology",
+          "term": "blood coagulation",
+          "termId": "GO:0007596"
+        },
+        {
+          "id": 560502421,
+          "_url": "http://amigo.geneontology.org/amigo/term/GO:0008015",
+          "resource": "Gene Ontology",
+          "term": "blood circulation",
+          "termId": "GO:0008015"
+        },
+        {
+          "id": 560495264,
+          "_url": "http://amigo.geneontology.org/amigo/term/GO:0016491",
+          "resource": "Gene Ontology",
+          "term": "oxidoreductase activity",
+          "termId": "GO:0016491"
+        },
+        {
+          "id": 560511018,
+          "_url": "http://amigo.geneontology.org/amigo/term/GO:0031093",
+          "resource": "Gene Ontology",
+          "term": "platelet alpha granule lumen",
+          "termId": "GO:0031093"
+        },
+        {
+          "id": 560495445,
+          "_url": "http://amigo.geneontology.org/amigo/term/GO:0046872",
+          "resource": "Gene Ontology",
+          "term": "metal ion binding",
+          "termId": "GO:0046872"
+        },
+        {
+          "id": 560509993,
+          "_url": "http://amigo.geneontology.org/amigo/term/GO:0055114",
+          "resource": "Gene Ontology",
+          "term": "oxidation reduction",
+          "termId": "GO:0055114"
+        }
+      ],
+      "version": 141,
+      "vipCitation": {
+        "id": 15168382,
+        "title": "PharmGKB VIP Summary: F5",
+        "_sameAs": "https://api.pharmgkb.org/v1/download/file/attachment/F5_VIP_Summary.pdf",
+        "crossReferences": [
+          {
+            "id": 1452646260,
+            "resource": "URL",
+            "resourceId": "https://api.pharmgkb.org/v1/download/file/attachment/F5_VIP_Summary.pdf",
+            "_url": "https://api.pharmgkb.org/v1/download/file/attachment/F5_VIP_Summary.pdf",
+            "version": 0
+          }
+        ],
+        "day": -1,
+        "hasKeyword": false,
+        "meshTerms": [],
+        "month": -1,
+        "nonHuman": false,
+        "notes": "This document contains text that was found on the PharmGKB VIP page for F5 prior to Oct 2024.",
+        "objCls": "Literature",
+        "pediatric": false,
+        "pgkbPublication": false,
+        "pubmedMeshTerms": [],
+        "terms": [
+          {
+            "id": 1452267780,
+            "resource": "ClinPGx Tags",
+            "term": "Has PGx",
+            "termId": "pgkbTags:1452267780"
+          }
+        ],
+        "type": "Literature",
+        "version": 0,
+        "year": -1
+      },
+      "vipId": "PA166169437",
+      "vipSummary": {
+        "id": 1448638861,
+        "html": "<p>Factor V is an essential coagulation cofactor that enhances thrombin activation by factor Xa. Genetic variant of F5 (Factor V Leiden (FVL) polymorphism) has been associated with risk of venous thromboembolism (VTE).</p>\n",
+        "version": 0
+      },
+      "vipTier": "Tier 2"
+    }
+  ],
+  "status": "success"
+}

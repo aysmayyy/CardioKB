@@ -1,0 +1,295 @@
+{
+  "data": [
+    {
+      "objCls": "Gene",
+      "id": "PA245",
+      "symbol": "MTHFR",
+      "name": "methylenetetrahydrofolate reductase",
+      "alleleType": "None",
+      "altNames": {
+        "synonym": [
+          "methylenetetrahydrofolate reductase (NAD(P)H)"
+        ]
+      },
+      "amp": false,
+      "buildVersion": "GRCh38.p7",
+      "cbStart": "p36.22",
+      "cbStop": "p36.22",
+      "chr": {
+        "objCls": "Chromosome",
+        "id": "PA503",
+        "name": "chr1",
+        "version": 3
+      },
+      "chrStartPosB37": 11845787,
+      "chrStartPosB38": 11785730,
+      "chrStopPosB37": 11866160,
+      "chrStopPosB38": 11806103,
+      "cpicGene": false,
+      "crossReferences": [
+        {
+          "id": 553241780,
+          "resource": "Comparative Toxicogenomics Database",
+          "resourceId": "4524",
+          "_url": "http://ctdbase.org/detail.go?type=gene&acc=4524",
+          "version": 0
+        },
+        {
+          "id": 132263623,
+          "resource": "Ensembl",
+          "resourceId": "ENSG00000177000",
+          "_url": "https://www.ensembl.org/Homo_sapiens/Gene/Summary?g=ENSG00000177000",
+          "version": 0
+        },
+        {
+          "id": 78341,
+          "resource": "GenAtlas",
+          "resourceId": "MTHFR",
+          "_url": "http://genatlas.medecine.univ-paris5.fr/fiche.php?symbol=MTHFR",
+          "version": 1
+        },
+        {
+          "id": 93269,
+          "resource": "GeneCard",
+          "resourceId": "MTHFR",
+          "_url": "https://www.genecards.org/cgi-bin/carddisp.pl?gene=MTHFR",
+          "version": 1
+        },
+        {
+          "id": 608171588,
+          "resource": "HGNC",
+          "resourceId": "HGNC:7436",
+          "_url": "https://www.genenames.org/data/gene-symbol-report/#!/hgnc_id/HGNC%3A7436",
+          "version": 1
+        },
+        {
+          "id": 608171591,
+          "resource": "HumanCyc Gene",
+          "resourceId": "HS11117",
+          "_url": "http://biocyc.org/HUMAN/NEW-IMAGE?object=HS11117",
+          "version": 0
+        },
+        {
+          "id": 560882859,
+          "resource": "ModBase",
+          "resourceId": "P42898",
+          "_url": "http://salilab.org/modbase/search?modelflag=longest&databaseID=P42898",
+          "version": 0
+        },
+        {
+          "id": 16020,
+          "resource": "NCBI Gene",
+          "resourceId": "4524",
+          "_url": "https://www.ncbi.nlm.nih.gov/gene/4524",
+          "version": 1
+        },
+        {
+          "id": 562,
+          "resource": "OMIM",
+          "resourceId": "119530",
+          "_url": "https://omim.org/entry/119530",
+          "version": 1
+        },
+        {
+          "id": 560529099,
+          "resource": "OMIM",
+          "resourceId": "181500",
+          "_url": "https://omim.org/entry/181500",
+          "version": 0
+        },
+        {
+          "id": 560545784,
+          "resource": "OMIM",
+          "resourceId": "188050",
+          "_url": "https://omim.org/entry/188050",
+          "version": 0
+        },
+        {
+          "id": 2763,
+          "resource": "OMIM",
+          "resourceId": "236250",
+          "_url": "https://omim.org/entry/236250",
+          "version": 1
+        },
+        {
+          "id": 560548320,
+          "resource": "OMIM",
+          "resourceId": "601634",
+          "_url": "https://omim.org/entry/601634",
+          "version": 0
+        },
+        {
+          "id": 8681476,
+          "resource": "OMIM",
+          "resourceId": "607093",
+          "_url": "https://omim.org/entry/607093",
+          "version": 1
+        },
+        {
+          "id": 608171589,
+          "resource": "RefSeq DNA",
+          "resourceId": "NG_013351",
+          "_url": "https://www.ncbi.nlm.nih.gov/nuccore/NG_013351",
+          "version": 0
+        },
+        {
+          "id": 36915,
+          "resource": "RefSeq DNA",
+          "resourceId": "NT_021937",
+          "_url": "https://www.ncbi.nlm.nih.gov/nuccore/NT_021937",
+          "version": 1
+        },
+        {
+          "id": 42482,
+          "resource": "RefSeq Protein",
+          "resourceId": "NP_005948",
+          "_url": "https://www.ncbi.nlm.nih.gov/nuccore/NP_005948",
+          "version": 1
+        },
+        {
+          "id": 51581,
+          "resource": "RefSeq RNA",
+          "resourceId": "NM_005957",
+          "_url": "https://www.ncbi.nlm.nih.gov/nuccore/NM_005957",
+          "version": 1
+        },
+        {
+          "id": 120465,
+          "resource": "UCSC Genome Browser",
+          "resourceId": "NM_005957",
+          "_url": "https://genome.ucsc.edu/cgi-bin/hgTracks?Submit=Submit&position=NM_005957",
+          "version": 1
+        },
+        {
+          "id": 62331820,
+          "name": "MTHR_HUMAN",
+          "resource": "UniProtKB",
+          "resourceId": "P42898",
+          "_url": "https://www.uniprot.org/uniprot/P42898",
+          "version": 1
+        },
+        {
+          "id": 608171590,
+          "name": "Q8IU67_HUMAN",
+          "resource": "UniProtKB",
+          "resourceId": "Q8IU67",
+          "_url": "https://www.uniprot.org/uniprot/Q8IU67",
+          "version": 1
+        }
+      ],
+      "hasNonStandardHaplotypes": false,
+      "hideHaplotypes": false,
+      "pharmVarGene": false,
+      "strand": "minus",
+      "terms": [
+        {
+          "id": 560498869,
+          "_url": "http://amigo.geneontology.org/amigo/term/GO:0004489",
+          "resource": "Gene Ontology",
+          "term": "methylenetetrahydrofolate reductase (NADPH) activity",
+          "termId": "GO:0004489"
+        },
+        {
+          "id": 560495229,
+          "_url": "http://amigo.geneontology.org/amigo/term/GO:0005515",
+          "resource": "Gene Ontology",
+          "term": "protein binding",
+          "termId": "GO:0005515"
+        },
+        {
+          "id": 560500177,
+          "_url": "http://amigo.geneontology.org/amigo/term/GO:0005829",
+          "resource": "Gene Ontology",
+          "term": "cytosol",
+          "termId": "GO:0005829"
+        },
+        {
+          "id": 560495143,
+          "_url": "http://amigo.geneontology.org/amigo/term/GO:0006520",
+          "resource": "Gene Ontology",
+          "term": "amino acid metabolic process",
+          "termId": "GO:0006520"
+        },
+        {
+          "id": 560501099,
+          "_url": "http://amigo.geneontology.org/amigo/term/GO:0006555",
+          "resource": "Gene Ontology",
+          "term": "methionine metabolic process",
+          "termId": "GO:0006555"
+        },
+        {
+          "id": 560502421,
+          "_url": "http://amigo.geneontology.org/amigo/term/GO:0008015",
+          "resource": "Gene Ontology",
+          "term": "blood circulation",
+          "termId": "GO:0008015"
+        },
+        {
+          "id": 560503424,
+          "_url": "http://amigo.geneontology.org/amigo/term/GO:0009086",
+          "resource": "Gene Ontology",
+          "term": "methionine biosynthetic process",
+          "termId": "GO:0009086"
+        },
+        {
+          "id": 560495264,
+          "_url": "http://amigo.geneontology.org/amigo/term/GO:0016491",
+          "resource": "Gene Ontology",
+          "term": "oxidoreductase activity",
+          "termId": "GO:0016491"
+        },
+        {
+          "id": 560509993,
+          "_url": "http://amigo.geneontology.org/amigo/term/GO:0055114",
+          "resource": "Gene Ontology",
+          "term": "oxidation reduction",
+          "termId": "GO:0055114"
+        }
+      ],
+      "version": 3429,
+      "vipCitation": {
+        "id": 15168389,
+        "title": "PharmGKB VIP Summary: MTHFR",
+        "_sameAs": "https://api.pharmgkb.org/v1/download/file/attachment/MTHFR_VIP_Summary.pdf",
+        "crossReferences": [
+          {
+            "id": 1452646267,
+            "resource": "URL",
+            "resourceId": "https://api.pharmgkb.org/v1/download/file/attachment/MTHFR_VIP_Summary.pdf",
+            "_url": "https://api.pharmgkb.org/v1/download/file/attachment/MTHFR_VIP_Summary.pdf",
+            "version": 0
+          }
+        ],
+        "day": -1,
+        "hasKeyword": false,
+        "meshTerms": [],
+        "month": -1,
+        "nonHuman": false,
+        "notes": "This document contains text that was found on the PharmGKB VIP page for MTHFR prior to Oct 2024.",
+        "objCls": "Literature",
+        "pediatric": false,
+        "pgkbPublication": false,
+        "pubmedMeshTerms": [],
+        "terms": [
+          {
+            "id": 1452267780,
+            "resource": "ClinPGx Tags",
+            "term": "Has PGx",
+            "termId": "pgkbTags:1452267780"
+          }
+        ],
+        "type": "Literature",
+        "version": 0,
+        "year": -1
+      },
+      "vipId": "PA166169429",
+      "vipSummary": {
+        "id": 1448638362,
+        "html": "<p>Methylenetetrahydrofolate reductase (MTHFR) plays a key role in folate metabolism and is implicated in the pharmacodynamics of several drugs.</p>\n",
+        "version": 0
+      },
+      "vipTier": "Tier 1"
+    }
+  ],
+  "status": "success"
+}

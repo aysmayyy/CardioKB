@@ -1,0 +1,416 @@
+{
+  "data": [
+    {
+      "objCls": "Gene",
+      "id": "PA157",
+      "symbol": "F2",
+      "name": "coagulation factor II, thrombin",
+      "alleleFunctionSource": "ClinPGx",
+      "alleleType": "None",
+      "altNames": {
+        "synonym": [
+          "coagulation factor II (thrombin)",
+          "prepro-coagulation factor II"
+        ]
+      },
+      "amp": false,
+      "buildVersion": "GRCh38.p7",
+      "cbStart": "p11.2",
+      "cbStop": "p11.2",
+      "chr": {
+        "objCls": "Chromosome",
+        "id": "PA506",
+        "name": "chr11",
+        "version": 3
+      },
+      "chrStartPosB37": 46740743,
+      "chrStartPosB38": 46719166,
+      "chrStopPosB37": 46761056,
+      "chrStopPosB38": 46739508,
+      "cpicGene": false,
+      "crossReferences": [
+        {
+          "id": 553237866,
+          "resource": "Comparative Toxicogenomics Database",
+          "resourceId": "2147",
+          "_url": "http://ctdbase.org/detail.go?type=gene&acc=2147",
+          "version": 0
+        },
+        {
+          "id": 132257549,
+          "resource": "Ensembl",
+          "resourceId": "ENSG00000180210",
+          "_url": "https://www.ensembl.org/Homo_sapiens/Gene/Summary?g=ENSG00000180210",
+          "version": 0
+        },
+        {
+          "id": 74326,
+          "resource": "GenAtlas",
+          "resourceId": "F2",
+          "_url": "http://genatlas.medecine.univ-paris5.fr/fiche.php?symbol=F2",
+          "version": 1
+        },
+        {
+          "id": 89254,
+          "resource": "GeneCard",
+          "resourceId": "F2",
+          "_url": "https://www.genecards.org/cgi-bin/carddisp.pl?gene=F2",
+          "version": 1
+        },
+        {
+          "id": 608078743,
+          "resource": "HGNC",
+          "resourceId": "HGNC:3535",
+          "_url": "https://www.genenames.org/data/gene-symbol-report/#!/hgnc_id/HGNC%3A3535",
+          "version": 1
+        },
+        {
+          "id": 608078744,
+          "resource": "HumanCyc Gene",
+          "resourceId": "HS11470",
+          "_url": "http://biocyc.org/HUMAN/NEW-IMAGE?object=HS11470",
+          "version": 0
+        },
+        {
+          "id": 560884443,
+          "resource": "ModBase",
+          "resourceId": "P00734",
+          "_url": "http://salilab.org/modbase/search?modelflag=longest&databaseID=P00734",
+          "version": 0
+        },
+        {
+          "id": 11533,
+          "resource": "NCBI Gene",
+          "resourceId": "2147",
+          "_url": "https://www.ncbi.nlm.nih.gov/gene/2147",
+          "version": 1
+        },
+        {
+          "id": 2061,
+          "resource": "OMIM",
+          "resourceId": "176930",
+          "_url": "https://omim.org/entry/176930",
+          "version": 1
+        },
+        {
+          "id": 560544213,
+          "resource": "RefSeq DNA",
+          "resourceId": "NG_008953",
+          "_url": "https://www.ncbi.nlm.nih.gov/nuccore/NG_008953",
+          "version": 0
+        },
+        {
+          "id": 36754,
+          "resource": "RefSeq DNA",
+          "resourceId": "NT_009237",
+          "_url": "https://www.ncbi.nlm.nih.gov/nuccore/NT_009237",
+          "version": 1
+        },
+        {
+          "id": 37663,
+          "resource": "RefSeq Protein",
+          "resourceId": "NP_000497",
+          "_url": "https://www.ncbi.nlm.nih.gov/nuccore/NP_000497",
+          "version": 1
+        },
+        {
+          "id": 46738,
+          "resource": "RefSeq RNA",
+          "resourceId": "NM_000506",
+          "_url": "https://www.ncbi.nlm.nih.gov/nuccore/NM_000506",
+          "version": 1
+        },
+        {
+          "id": 122055,
+          "resource": "UCSC Genome Browser",
+          "resourceId": "NM_000506",
+          "_url": "https://genome.ucsc.edu/cgi-bin/hgTracks?Submit=Submit&position=NM_000506",
+          "version": 1
+        },
+        {
+          "id": 123214249,
+          "name": "THRB_HUMAN",
+          "resource": "UniProtKB",
+          "resourceId": "P00734",
+          "_url": "https://www.uniprot.org/uniprot/P00734",
+          "version": 2
+        }
+      ],
+      "hasNonStandardHaplotypes": false,
+      "hideHaplotypes": true,
+      "pharmVarGene": false,
+      "strand": "plus",
+      "terms": [
+        {
+          "id": 560496717,
+          "_url": "http://amigo.geneontology.org/amigo/term/GO:0001934",
+          "resource": "Gene Ontology",
+          "term": "positive regulation of protein amino acid phosphorylation",
+          "termId": "GO:0001934"
+        },
+        {
+          "id": 560498629,
+          "_url": "http://amigo.geneontology.org/amigo/term/GO:0004252",
+          "resource": "Gene Ontology",
+          "term": "serine-type endopeptidase activity",
+          "termId": "GO:0004252"
+        },
+        {
+          "id": 560496093,
+          "_url": "http://amigo.geneontology.org/amigo/term/GO:0005102",
+          "resource": "Gene Ontology",
+          "term": "receptor binding",
+          "termId": "GO:0005102"
+        },
+        {
+          "id": 560499845,
+          "_url": "http://amigo.geneontology.org/amigo/term/GO:0005509",
+          "resource": "Gene Ontology",
+          "term": "calcium ion binding",
+          "termId": "GO:0005509"
+        },
+        {
+          "id": 560495229,
+          "_url": "http://amigo.geneontology.org/amigo/term/GO:0005515",
+          "resource": "Gene Ontology",
+          "term": "protein binding",
+          "termId": "GO:0005515"
+        },
+        {
+          "id": 560499910,
+          "_url": "http://amigo.geneontology.org/amigo/term/GO:0005576",
+          "resource": "Gene Ontology",
+          "term": "extracellular region",
+          "termId": "GO:0005576"
+        },
+        {
+          "id": 560499957,
+          "_url": "http://amigo.geneontology.org/amigo/term/GO:0005615",
+          "resource": "Gene Ontology",
+          "term": "extracellular space",
+          "termId": "GO:0005615"
+        },
+        {
+          "id": 560499969,
+          "_url": "http://amigo.geneontology.org/amigo/term/GO:0005625",
+          "resource": "Gene Ontology",
+          "term": "soluble fraction",
+          "termId": "GO:0005625"
+        },
+        {
+          "id": 560500224,
+          "_url": "http://amigo.geneontology.org/amigo/term/GO:0005886",
+          "resource": "Gene Ontology",
+          "term": "plasma membrane",
+          "termId": "GO:0005886"
+        },
+        {
+          "id": 560496946,
+          "_url": "http://amigo.geneontology.org/amigo/term/GO:0006508",
+          "resource": "Gene Ontology",
+          "term": "proteolysis",
+          "termId": "GO:0006508"
+        },
+        {
+          "id": 560496149,
+          "_url": "http://amigo.geneontology.org/amigo/term/GO:0006915",
+          "resource": "Gene Ontology",
+          "term": "apoptosis",
+          "termId": "GO:0006915"
+        },
+        {
+          "id": 560501592,
+          "_url": "http://amigo.geneontology.org/amigo/term/GO:0006919",
+          "resource": "Gene Ontology",
+          "term": "activation of caspase activity",
+          "termId": "GO:0006919"
+        },
+        {
+          "id": 560496294,
+          "_url": "http://amigo.geneontology.org/amigo/term/GO:0006953",
+          "resource": "Gene Ontology",
+          "term": "acute-phase response",
+          "termId": "GO:0006953"
+        },
+        {
+          "id": 560497704,
+          "_url": "http://amigo.geneontology.org/amigo/term/GO:0007166",
+          "resource": "Gene Ontology",
+          "term": "cell surface receptor linked signal transduction",
+          "termId": "GO:0007166"
+        },
+        {
+          "id": 560501968,
+          "_url": "http://amigo.geneontology.org/amigo/term/GO:0007260",
+          "resource": "Gene Ontology",
+          "term": "tyrosine phosphorylation of STAT protein",
+          "termId": "GO:0007260"
+        },
+        {
+          "id": 560501971,
+          "_url": "http://amigo.geneontology.org/amigo/term/GO:0007262",
+          "resource": "Gene Ontology",
+          "term": "STAT protein nuclear translocation",
+          "termId": "GO:0007262"
+        },
+        {
+          "id": 560501983,
+          "_url": "http://amigo.geneontology.org/amigo/term/GO:0007275",
+          "resource": "Gene Ontology",
+          "term": "multicellular organismal development",
+          "termId": "GO:0007275"
+        },
+        {
+          "id": 560502354,
+          "_url": "http://amigo.geneontology.org/amigo/term/GO:0007596",
+          "resource": "Gene Ontology",
+          "term": "blood coagulation",
+          "termId": "GO:0007596"
+        },
+        {
+          "id": 560499520,
+          "_url": "http://amigo.geneontology.org/amigo/term/GO:0008083",
+          "resource": "Gene Ontology",
+          "term": "growth factor activity",
+          "termId": "GO:0008083"
+        },
+        {
+          "id": 560502611,
+          "_url": "http://amigo.geneontology.org/amigo/term/GO:0008233",
+          "resource": "Gene Ontology",
+          "term": "peptidase activity",
+          "termId": "GO:0008233"
+        },
+        {
+          "id": 560496726,
+          "_url": "http://amigo.geneontology.org/amigo/term/GO:0008284",
+          "resource": "Gene Ontology",
+          "term": "positive regulation of cell proliferation",
+          "termId": "GO:0008284"
+        },
+        {
+          "id": 560502715,
+          "_url": "http://amigo.geneontology.org/amigo/term/GO:0008360",
+          "resource": "Gene Ontology",
+          "term": "regulation of cell shape",
+          "termId": "GO:0008360"
+        },
+        {
+          "id": 560497049,
+          "_url": "http://amigo.geneontology.org/amigo/term/GO:0009611",
+          "resource": "Gene Ontology",
+          "term": "response to wounding",
+          "termId": "GO:0009611"
+        },
+        {
+          "id": 560504991,
+          "_url": "http://amigo.geneontology.org/amigo/term/GO:0010544",
+          "resource": "Gene Ontology",
+          "term": "negative regulation of platelet activation",
+          "termId": "GO:0010544"
+        },
+        {
+          "id": 560505587,
+          "_url": "http://amigo.geneontology.org/amigo/term/GO:0014068",
+          "resource": "Gene Ontology",
+          "term": "positive regulation of phosphoinositide 3-kinase cascade",
+          "termId": "GO:0014068"
+        },
+        {
+          "id": 560510142,
+          "_url": "http://amigo.geneontology.org/amigo/term/GO:0030168",
+          "resource": "Gene Ontology",
+          "term": "platelet activation",
+          "termId": "GO:0030168"
+        },
+        {
+          "id": 560504990,
+          "_url": "http://amigo.geneontology.org/amigo/term/GO:0030193",
+          "resource": "Gene Ontology",
+          "term": "regulation of blood coagulation",
+          "termId": "GO:0030193"
+        },
+        {
+          "id": 560497444,
+          "_url": "http://amigo.geneontology.org/amigo/term/GO:0030194",
+          "resource": "Gene Ontology",
+          "term": "positive regulation of blood coagulation",
+          "termId": "GO:0030194"
+        },
+        {
+          "id": 560510273,
+          "_url": "http://amigo.geneontology.org/amigo/term/GO:0030307",
+          "resource": "Gene Ontology",
+          "term": "positive regulation of cell growth",
+          "termId": "GO:0030307"
+        },
+        {
+          "id": 560512834,
+          "_url": "http://amigo.geneontology.org/amigo/term/GO:0032967",
+          "resource": "Gene Ontology",
+          "term": "positive regulation of collagen biosynthetic process",
+          "termId": "GO:0032967"
+        },
+        {
+          "id": 560515683,
+          "_url": "http://amigo.geneontology.org/amigo/term/GO:0042730",
+          "resource": "Gene Ontology",
+          "term": "fibrinolysis",
+          "termId": "GO:0042730"
+        },
+        {
+          "id": 560497541,
+          "_url": "http://amigo.geneontology.org/amigo/term/GO:0045861",
+          "resource": "Gene Ontology",
+          "term": "negative regulation of proteolysis",
+          "termId": "GO:0045861"
+        },
+        {
+          "id": 560519829,
+          "_url": "http://amigo.geneontology.org/amigo/term/GO:0048712",
+          "resource": "Gene Ontology",
+          "term": "negative regulation of astrocyte differentiation",
+          "termId": "GO:0048712"
+        },
+        {
+          "id": 560505663,
+          "_url": "http://amigo.geneontology.org/amigo/term/GO:0051209",
+          "resource": "Gene Ontology",
+          "term": "release of sequestered calcium ion into cytosol",
+          "termId": "GO:0051209"
+        },
+        {
+          "id": 560521056,
+          "_url": "http://amigo.geneontology.org/amigo/term/GO:0051281",
+          "resource": "Gene Ontology",
+          "term": "positive regulation of release of sequestered calcium ion into cytosol",
+          "termId": "GO:0051281"
+        },
+        {
+          "id": 560501915,
+          "_url": "http://amigo.geneontology.org/amigo/term/GO:0051480",
+          "resource": "Gene Ontology",
+          "term": "cytosolic calcium ion homeostasis",
+          "termId": "GO:0051480"
+        },
+        {
+          "id": 560521540,
+          "_url": "http://amigo.geneontology.org/amigo/term/GO:0051918",
+          "resource": "Gene Ontology",
+          "term": "negative regulation of fibrinolysis",
+          "termId": "GO:0051918"
+        },
+        {
+          "id": 560522759,
+          "_url": "http://amigo.geneontology.org/amigo/term/GO:0070053",
+          "resource": "Gene Ontology",
+          "term": "thrombospondin receptor activity",
+          "termId": "GO:0070053"
+        }
+      ],
+      "version": 166,
+      "vipTier": "Undefined"
+    }
+  ],
+  "status": "success"
+}

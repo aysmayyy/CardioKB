@@ -1,0 +1,4753 @@
+{
+  "data": [
+    {
+      "id": 1448531857,
+      "accessionId": "PA166162372",
+      "allelePhenotypes": [
+        {
+          "id": 1450963261,
+          "allele": "GT",
+          "limitedEvidence": false,
+          "phenotype": "Patients with the GT genotype may have higher maximal platelet aggregation as compared to patients with the TT genotype when taking ticagrelor. Other clinical and genetic factors may affect response to ticagrelor.",
+          "version": 0
+        },
+        {
+          "id": 1450963262,
+          "allele": "TT",
+          "limitedEvidence": false,
+          "phenotype": "Patients with the TT genotype may have lower maximal platelet aggregation as compared to patients with the GT genotype when taking ticagrelor. Other clinical and genetic factors may affect response to ticagrelor.",
+          "version": 0
+        }
+      ],
+      "conflictingVariantAnnotationIds": [],
+      "history": [
+        {
+          "id": 1448531858,
+          "date": "2017-01-17T14:44:30.558-08:00",
+          "type": "Create",
+          "version": 0
+        },
+        {
+          "id": 1449764264,
+          "date": "2018-11-05T14:23:51.727-08:00",
+          "description": "Updated OMB race to appropriate biogeographical group",
+          "type": "Update",
+          "version": 0
+        },
+        {
+          "id": 1450963263,
+          "date": "2020-02-10T17:18:01.346-08:00",
+          "description": "Reworded phenotype descriptions",
+          "type": "Update",
+          "version": 0
+        },
+        {
+          "id": 1451395019,
+          "date": "2021-03-24T20:27:45.145-07:00",
+          "description": "CA score added as part of scoring system release. LOE may have automatically changed based on new score but may be subject to further changes upon curator review.",
+          "type": "Update",
+          "version": 0
+        }
+      ],
+      "levelOfEvidence": {
+        "id": 827923056,
+        "description": "Level 3 clinical annotations describe variant-drug combinations with a low level of evidence supporting the association. This association may be based on a single study annotated in PharmGKB, or there may be several studies that failed to replicate the association. The annotation may also be based on preliminary evidence (e.g., a case report, non-significant study, or in vitro, molecular, or functional assay evidence), resulting in a lower calculated score.",
+        "parents": [],
+        "resource": "Level of Evidence",
+        "synonyms": [],
+        "term": "3",
+        "termId": "levelsOfEvidence:827923056",
+        "valid": true,
+        "version": 2
+      },
+      "location": {
+        "id": 1450963260,
+        "buildVersion": "GRCh37.p13",
+        "chromosomeId": "PA503",
+        "chromosomeName": "chr1",
+        "copyNumber": "1",
+        "diplotypes": [],
+        "displayName": "rs12566888",
+        "genes": [
+          {
+            "objCls": "Gene",
+            "id": "PA162399233",
+            "symbol": "PEAR1",
+            "name": "platelet endothelial aggregation receptor 1",
+            "version": 9
+          }
+        ],
+        "gpPosition": 156869047,
+        "haplotypes": [],
+        "linkedObjects": [
+          {
+            "objCls": "Variant",
+            "id": "PA166153859",
+            "symbol": "rs12566888",
+            "name": "rs12566888",
+            "version": 4
+          }
+        ],
+        "refSeqCrossReference": {
+          "id": 556603510,
+          "resource": "RefSeq RNA",
+          "resourceId": "NM_001080471.1",
+          "_url": "https://www.ncbi.nlm.nih.gov/nuccore/NM_001080471.1",
+          "version": 0
+        },
+        "refSeqPosition": -9,
+        "rsid": "rs12566888",
+        "tagGene": false,
+        "type": "SNP",
+        "variant": {
+          "objCls": "Variant",
+          "id": "PA166153859",
+          "symbol": "rs12566888",
+          "name": "rs12566888",
+          "version": 4
+        },
+        "version": 0
+      },
+      "name": "rs12566888 (PEAR1); ticagrelor (level 3 Efficacy)",
+      "objCls": "Clinical Annotation",
+      "overrideLevel": false,
+      "pediatric": false,
+      "relatedChemicals": [
+        {
+          "objCls": "Chemical",
+          "id": "PA165374673",
+          "name": "ticagrelor",
+          "version": 6
+        }
+      ],
+      "relatedChemicalsLogic": "Or",
+      "relatedDiseases": [],
+      "relatedGuidelines": [],
+      "relatedLabels": [],
+      "relatedVariations": [
+        {
+          "objCls": "Allele",
+          "id": "PA166371856",
+          "symbol": "CA10988922",
+          "name": "NM_001080471.3(PEAR1):c.-9-4663G>T",
+          "version": 1
+        },
+        {
+          "objCls": "Allele",
+          "id": "PA166371857",
+          "symbol": "CA1140405069",
+          "name": "NM_001080471.3(PEAR1):c.-9-4663G=",
+          "version": 1
+        }
+      ],
+      "score": 2.0,
+      "scoreDetails": "{\"vaScores\": [{\"step5A\": 1.0, \"step5B\": 1.0, \"chosenSpId\": 1448531844, \"step1Score\": 1.0, \"step2Score\": 1.0, \"step3Score\": 0.0, \"step4Score\": 0.0, \"totalScore\": 2.0, \"chosenSpIndex\": \"1 of 1\", \"generatedDate\": \"2021-03-21T05:03:26.740-07:00\", \"variantAnnotationId\": 1448531842}], \"totalScore\": 2.0, \"vaScoreTotal\": 2.0, \"generatedDate\": \"2021-03-21T05:03:26.740-07:00\", \"labelScoreTotal\": 0.0, \"guidelineScoreTotal\": 0.0}",
+      "types": [
+        "Efficacy"
+      ],
+      "variantAnnotations": [
+        {
+          "id": 1448531842,
+          "accessionId": "PA166174480",
+          "alleleGenotype": "TT",
+          "comparison": "GT",
+          "connWords1": {
+            "id": 769229670,
+            "parents": [],
+            "resource": "Drug Connecting words 1",
+            "synonyms": [],
+            "term": "response to",
+            "termId": "variantAnnotationDrugConnWords1:769229670",
+            "valid": true,
+            "version": 0
+          },
+          "description": "Healthy control plasma incubated with 15uM ticagrelor. Significant difference observed in maximal platelet aggregation at baseline and after ticagrelor treatment.",
+          "drugsConnWord": {
+            "id": 827698395,
+            "parents": [],
+            "resource": "Collection Operator - And/Or",
+            "synonyms": [],
+            "term": "and",
+            "termId": "drugsConnWord:827698395",
+            "valid": true,
+            "version": 0
+          },
+          "formatVersion": 1,
+          "history": [
+            {
+              "id": 1448531846,
+              "date": "2017-01-17T14:14:00.286-08:00",
+              "type": "Create",
+              "version": 0
+            },
+            {
+              "id": 1449755499,
+              "date": "2018-11-05T13:51:16.140-08:00",
+              "description": "Updated OMB race to appropriate biogeographical group",
+              "type": "Update",
+              "version": 0
+            }
+          ],
+          "isAssociated": true,
+          "isPlural": false,
+          "literature": {
+            "id": 15098208,
+            "title": "Association of PEAR1 rs12041331 polymorphism and pharmacodynamics of ticagrelor in healthy Chinese volunteers.",
+            "_sameAs": "https://www.ncbi.nlm.nih.gov/pubmed/27937053",
+            "authors": [
+              "Li Mupeng",
+              "Hu Yaodong",
+              "Wen Zhipeng",
+              "Li Huilan",
+              "Hu Xiaolei",
+              "Zhang Yanjiao",
+              "Zhang Zanling",
+              "Xiao Jian",
+              "Tang Jie",
+              "Chen Xiaoping"
+            ],
+            "crossReferences": [
+              {
+                "id": 1449293299,
+                "resource": "PubMed",
+                "resourceId": "27937053",
+                "_url": "https://www.ncbi.nlm.nih.gov/pubmed/27937053",
+                "version": 0
+              },
+              {
+                "id": 1449293300,
+                "resource": "DOI",
+                "resourceId": "10.1080/00498254.2016.1271962",
+                "_url": "http://dx.doi.org/10.1080%2F00498254.2016.1271962",
+                "version": 0
+              }
+            ],
+            "day": -1,
+            "hasKeyword": true,
+            "journal": "Xenobiotica; the fate of foreign compounds in biological systems",
+            "meshTerms": [
+              "Adenosine",
+              "Adult",
+              "China",
+              "Healthy Volunteers",
+              "Humans",
+              "Male",
+              "Middle Aged",
+              "Polymorphism, Genetic",
+              "Purinergic P2Y Receptor Antagonists",
+              "Receptors, Cell Surface",
+              "Ticagrelor"
+            ],
+            "month": 12,
+            "nonHuman": false,
+            "objCls": "Literature",
+            "page": "1130-1138",
+            "pediatric": false,
+            "pgkbPublication": false,
+            "pubDate": "2017-12-01T00:00:00-08:00",
+            "pubmedMeshTerms": [],
+            "summary": "1.\u2003Genetic polymorphisms in platelet endothelial aggregation receptor 1 (PEAR1) were associated with responsiveness to aspirin and P2Y12 receptor antagonists. This study aimed to investigate whether PEAR1 polymorphism is associated with ticagrelor pharmacodynamics in healthy Chinese subjects. 2.\u2003The in vitro inhibition of platelet aggregation (IPA) was evaluated before and after ticagrelor incubated with platelet-rich plasma from 196 healthy Chinese male subjects. Eight polymorphisms at PEAR1 locus were genotyped. Eighteen volunteers (six in each rs12041331 genotype group) were randomly selected. After a single oral 180\u2009mg dose of ticagrelor, plasma levels of ticagrelor and the active metabolite AR-C124910XX were measured and pharmacodynamics parameters including IPA and VASP-platelet reactivity index (PRI) were assessed. 3.\u2003No significant difference in ticagrelor pharmacokinetics among rs12041331 genotype was observed. As compared with rs12041331\u2009G allele carriers, AA homozygotes exhibited increased IPA after 15\u2009\u03bcM ticagrelor incubation (p\u2009&lt;\u20090.01), increased area under the time-effect curve of IPA and lower PRI at 2\u2009h after ticagrelor administration (p\u2009&lt;\u20090.05, respectively). Rs4661012 GG homozygotes showed increased IPA after 50\u2009\u03bcM ticagrelor incubation as compared to T allele carriers (p\u2009&lt;\u20090.01). 4.\u2003PEAR1 polymorphism may influence ticagrelor pharmacodynamics in healthy Chinese subjects.",
+            "terms": [],
+            "type": "Literature",
+            "version": 3,
+            "volume": "47",
+            "year": 2017
+          },
+          "location": {
+            "id": 1448531845,
+            "buildVersion": "GRCh37",
+            "chromosomeId": "PA503",
+            "chromosomeName": "chr1",
+            "copyNumber": "1",
+            "diplotypes": [],
+            "displayName": "rs12566888",
+            "genes": [
+              {
+                "objCls": "Gene",
+                "id": "PA162399233",
+                "symbol": "PEAR1",
+                "name": "platelet endothelial aggregation receptor 1",
+                "version": 9
+              }
+            ],
+            "gpPosition": 156869047,
+            "haplotypes": [],
+            "linkedObjects": [
+              {
+                "objCls": "Variant",
+                "id": "PA166153859",
+                "symbol": "rs12566888",
+                "name": "rs12566888",
+                "version": 4
+              }
+            ],
+            "refSeqCrossReference": {
+              "id": 556603510,
+              "resource": "RefSeq RNA",
+              "resourceId": "NM_001080471.1",
+              "_url": "https://www.ncbi.nlm.nih.gov/nuccore/NM_001080471.1",
+              "version": 0
+            },
+            "refSeqPosition": -9,
+            "rsid": "rs12566888",
+            "tagGene": false,
+            "type": "SNP",
+            "variant": {
+              "objCls": "Variant",
+              "id": "PA166153859",
+              "symbol": "rs12566888",
+              "name": "rs12566888",
+              "version": 4
+            },
+            "version": 0
+          },
+          "metabolizers1": [],
+          "metabolizers2": [],
+          "objCls": "Variant Drug Annotation",
+          "pediatric": false,
+          "phenotypeCategories": [
+            {
+              "id": 769229934,
+              "description": "[PD]",
+              "parents": [],
+              "resource": "Phenotype Categories",
+              "synonyms": [],
+              "term": "Efficacy",
+              "termId": "secondaryCat:769229934",
+              "valid": true,
+              "version": 2
+            }
+          ],
+          "polarity": {
+            "id": 769229639,
+            "parents": [],
+            "resource": "Polarity",
+            "synonyms": [],
+            "term": "increased",
+            "termId": "variantAnnotationPolarity:769229639",
+            "valid": true,
+            "version": 0
+          },
+          "populationPhenotypeLinksConnWord": {
+            "id": 827698395,
+            "parents": [],
+            "resource": "Collection Operator - And/Or",
+            "synonyms": [],
+            "term": "and",
+            "termId": "drugsConnWord:827698395",
+            "valid": true,
+            "version": 0
+          },
+          "populationPhenotypes": [],
+          "populationTerm": {
+            "id": 827566960,
+            "parents": [],
+            "resource": "Population",
+            "synonyms": [],
+            "term": "in healthy individuals",
+            "termId": "connWords3:827566960",
+            "valid": true,
+            "version": 0
+          },
+          "relatedChemicals": [
+            {
+              "objCls": "Chemical",
+              "id": "PA165374673",
+              "name": "ticagrelor",
+              "version": 6
+            }
+          ],
+          "relatedVariations": [
+            {
+              "objCls": "Allele",
+              "id": "PA166371856",
+              "symbol": "CA10988922",
+              "name": "NM_001080471.3(PEAR1):c.-9-4663G>T",
+              "version": 1
+            },
+            {
+              "objCls": "Allele",
+              "id": "PA166371857",
+              "symbol": "CA1140405069",
+              "name": "NM_001080471.3(PEAR1):c.-9-4663G=",
+              "version": 1
+            }
+          ],
+          "score": 2.0,
+          "scoreDetails": {
+            "step5A": 1.0,
+            "step5B": 1.0,
+            "chosenSpId": 1448531844,
+            "step1Score": 1.0,
+            "step2Score": 1.0,
+            "step3Score": 0.0,
+            "step4Score": 0.0,
+            "totalScore": 2.0,
+            "chosenSpIndex": "1 of 1",
+            "generatedDate": "2021-03-21T01:07:08.173-07:00",
+            "variantAnnotationId": 1448531842
+          },
+          "sentence": "Genotype TT is associated with increased response to ticagrelor in healthy individuals as compared to genotype GT.",
+          "sequenceLocation": {
+            "id": 1447999090,
+            "altHgvs": {},
+            "assembly": "GRCh37",
+            "begin": 156869047,
+            "end": 156869047,
+            "intronicOffset": 0,
+            "referenceAllele": "G",
+            "referenceHgvs": "NC_000001.10:g.156869047=",
+            "sequence": {
+              "id": 1447949551,
+              "name": "[GRCh37]chr1",
+              "resource": "RefSeq DNA",
+              "resourceId": "NC_000001.10",
+              "_url": "https://www.ncbi.nlm.nih.gov/nuccore/NC_000001.10",
+              "version": 2
+            },
+            "source": "dbSnp",
+            "type": "genomic",
+            "variantAlleles": [
+              "T"
+            ],
+            "variantHgvs": [
+              "NC_000001.10:g.156869047G>T"
+            ],
+            "version": 1
+          },
+          "significance": {
+            "id": 769229666,
+            "parents": [],
+            "resource": "Association Significance",
+            "synonyms": [],
+            "term": "yes",
+            "termId": "variantAnnotationSignificance:769229666",
+            "valid": true,
+            "version": 0
+          },
+          "studyParameters": [
+            {
+              "id": 1448531844,
+              "alleleOfFreqInCases": "G",
+              "characteristics": "ticagrelor ",
+              "characteristicsType": "Drug",
+              "confidenceIntervalStart": -1.0,
+              "confidenceIntervalStop": -1.0,
+              "description": "Comparison of platelet aggregation at baseline p = 0.008 and after ticagrelor treatment p = 0.005",
+              "frequencyInCases": 0.5,
+              "frequencyInControls": -1.0,
+              "pediatric": false,
+              "populationEthnicity": {
+                "custom": false,
+                "ethnicities": [
+                  "East Asian"
+                ],
+                "mixed": false,
+                "notes": "Chinese",
+                "unknown": false
+              },
+              "populationTypes": [
+                {
+                  "id": 1183702745,
+                  "parents": [],
+                  "resource": "Population Type",
+                  "synonyms": [],
+                  "term": "men",
+                  "termId": "populationType:1183702745",
+                  "valid": true,
+                  "version": 0
+                },
+                {
+                  "id": 1183702746,
+                  "parents": [],
+                  "resource": "Population Type",
+                  "synonyms": [],
+                  "term": "women",
+                  "termId": "populationType:1183702746",
+                  "valid": true,
+                  "version": 0
+                },
+                {
+                  "id": 1183702747,
+                  "parents": [],
+                  "resource": "Population Type",
+                  "synonyms": [],
+                  "term": "healthy individuals",
+                  "termId": "populationType:1183702747",
+                  "valid": true,
+                  "version": 0
+                }
+              ],
+              "pvalue": 0.005,
+              "pvalueOp": {
+                "id": 1183492001,
+                "parents": [],
+                "resource": "Equality Symbols",
+                "synonyms": [],
+                "term": "=",
+                "termId": "equality:1183492001",
+                "valid": true,
+                "version": 0
+              },
+              "pvalueString": "0.005",
+              "ratioStat": -1.0,
+              "ratioStatType": {
+                "id": 1183624559,
+                "parents": [],
+                "resource": "Statistic Analysis",
+                "synonyms": [],
+                "term": "OR",
+                "termId": "statAnalysis:1183624559",
+                "valid": true,
+                "version": 0
+              },
+              "statTests": [
+                {
+                  "id": 1183698597,
+                  "parents": [
+                    1183698596
+                  ],
+                  "resource": "Statistical Test Tags",
+                  "synonyms": [],
+                  "term": "one-way ANOVA",
+                  "termId": "statTest:1183698597",
+                  "valid": true,
+                  "version": 0
+                }
+              ],
+              "studyCases": 18,
+              "studyControls": -1,
+              "studyTypes": [
+                "clinical trial"
+              ],
+              "usedForScoring": true,
+              "version": 0
+            }
+          ],
+          "useForCaScoring": true,
+          "version": 10
+        }
+      ],
+      "version": 5
+    },
+    {
+      "id": 1448531862,
+      "accessionId": "PA166162373",
+      "allelePhenotypes": [
+        {
+          "id": 1448531864,
+          "allele": "AA",
+          "limitedEvidence": false,
+          "phenotype": "People with the AA genotype may have increased inhibition of platelet aggregation in response to ticagrelor compared to people with the AG and GG genotypes. Other clinical and genetic factors may affect response to ticagrelor.",
+          "version": 0
+        },
+        {
+          "id": 1448531865,
+          "allele": "AG",
+          "limitedEvidence": false,
+          "phenotype": "People with the AG genotype may have deceased inhibition of platelet aggregation in response to ticagrelor compared to people with the AA genotype. Other clinical and genetic factors may affect response to ticagrelor.",
+          "version": 0
+        },
+        {
+          "id": 1448531866,
+          "allele": "GG",
+          "limitedEvidence": false,
+          "phenotype": "People with the GG genotype may have deceased inhibition of platelet aggregation in response to ticagrelor compared to people with the AA genotype. Other clinical and genetic factors may affect response to ticagrelor.",
+          "version": 0
+        }
+      ],
+      "conflictingVariantAnnotationIds": [],
+      "history": [
+        {
+          "id": 1448531863,
+          "date": "2017-01-17T15:13:28.231-08:00",
+          "type": "Create",
+          "version": 0
+        },
+        {
+          "id": 1449764249,
+          "date": "2018-11-05T14:23:51.234-08:00",
+          "description": "Updated OMB race to appropriate biogeographical group",
+          "type": "Update",
+          "version": 0
+        },
+        {
+          "id": 1451395020,
+          "date": "2021-03-24T20:27:45.585-07:00",
+          "description": "CA score added as part of scoring system release. LOE may have automatically changed based on new score but may be subject to further changes upon curator review.",
+          "type": "Update",
+          "version": 0
+        }
+      ],
+      "levelOfEvidence": {
+        "id": 827923056,
+        "description": "Level 3 clinical annotations describe variant-drug combinations with a low level of evidence supporting the association. This association may be based on a single study annotated in PharmGKB, or there may be several studies that failed to replicate the association. The annotation may also be based on preliminary evidence (e.g., a case report, non-significant study, or in vitro, molecular, or functional assay evidence), resulting in a lower calculated score.",
+        "parents": [],
+        "resource": "Level of Evidence",
+        "synonyms": [],
+        "term": "3",
+        "termId": "levelsOfEvidence:827923056",
+        "valid": true,
+        "version": 2
+      },
+      "location": {
+        "id": 1448531867,
+        "buildVersion": "GRCh37",
+        "chromosomeId": "PA503",
+        "chromosomeName": "chr1",
+        "copyNumber": "1",
+        "diplotypes": [],
+        "displayName": "rs12041331",
+        "genes": [
+          {
+            "objCls": "Gene",
+            "id": "PA162399233",
+            "symbol": "PEAR1",
+            "name": "platelet endothelial aggregation receptor 1",
+            "version": 9
+          }
+        ],
+        "gpPosition": 156869714,
+        "haplotypes": [],
+        "linkedObjects": [
+          {
+            "objCls": "Variant",
+            "id": "PA166153839",
+            "symbol": "rs12041331",
+            "name": "rs12041331",
+            "version": 4
+          }
+        ],
+        "refSeqCrossReference": {
+          "id": 556603510,
+          "resource": "RefSeq RNA",
+          "resourceId": "NM_001080471.1",
+          "_url": "https://www.ncbi.nlm.nih.gov/nuccore/NM_001080471.1",
+          "version": 0
+        },
+        "refSeqPosition": -9,
+        "rsid": "rs12041331",
+        "tagGene": false,
+        "type": "SNP",
+        "variant": {
+          "objCls": "Variant",
+          "id": "PA166153839",
+          "symbol": "rs12041331",
+          "name": "rs12041331",
+          "version": 4
+        },
+        "version": 0
+      },
+      "name": "rs12041331 (PEAR1); ticagrelor (level 3 Efficacy)",
+      "objCls": "Clinical Annotation",
+      "overrideLevel": false,
+      "pediatric": false,
+      "relatedChemicals": [
+        {
+          "objCls": "Chemical",
+          "id": "PA165374673",
+          "name": "ticagrelor",
+          "version": 6
+        }
+      ],
+      "relatedChemicalsLogic": "Or",
+      "relatedDiseases": [],
+      "relatedGuidelines": [],
+      "relatedLabels": [],
+      "relatedVariations": [
+        {
+          "objCls": "Allele",
+          "id": "PA166389171",
+          "symbol": "CA1140312222",
+          "name": "NM_001080471.3(PEAR1):c.-9-3996G=",
+          "version": 1
+        },
+        {
+          "objCls": "Allele",
+          "id": "PA166389172",
+          "symbol": "CA16067254",
+          "name": "NM_001080471.3(PEAR1):c.-9-3996G>A",
+          "version": 1
+        }
+      ],
+      "score": 3.0,
+      "scoreDetails": "{\"vaScores\": [{\"step5A\": 1.0, \"step5B\": 1.0, \"chosenSpId\": 1448531835, \"step1Score\": 1.0, \"step2Score\": 0.5, \"step3Score\": 0.0, \"step4Score\": 0.0, \"totalScore\": 1.5, \"chosenSpIndex\": \"1 of 1\", \"generatedDate\": \"2021-03-21T05:03:18.566-07:00\", \"variantAnnotationId\": 1448531830}, {\"step5A\": 1.0, \"step5B\": 1.0, \"chosenSpId\": 1448531838, \"step1Score\": 1.0, \"step2Score\": 0.5, \"step3Score\": 0.0, \"step4Score\": 0.0, \"totalScore\": 1.5, \"chosenSpIndex\": \"1 of 1\", \"generatedDate\": \"2021-03-21T05:03:18.566-07:00\", \"variantAnnotationId\": 1448531836}], \"totalScore\": 3.0, \"vaScoreTotal\": 3.0, \"generatedDate\": \"2021-03-21T05:03:18.566-07:00\", \"labelScoreTotal\": 0.0, \"guidelineScoreTotal\": 0.0}",
+      "types": [
+        "Efficacy"
+      ],
+      "variantAnnotations": [
+        {
+          "id": 1448531830,
+          "accessionId": "PA166162367",
+          "alleleGenotype": "AA",
+          "comparison": "AG + GG",
+          "connWords1": {
+            "id": 769229670,
+            "parents": [],
+            "resource": "Drug Connecting words 1",
+            "synonyms": [],
+            "term": "response to",
+            "termId": "variantAnnotationDrugConnWords1:769229670",
+            "valid": true,
+            "version": 0
+          },
+          "description": "Healthy control plasma incubated with 15uM ticagrelor.",
+          "drugsConnWord": {
+            "id": 827698395,
+            "parents": [],
+            "resource": "Collection Operator - And/Or",
+            "synonyms": [],
+            "term": "and",
+            "termId": "drugsConnWord:827698395",
+            "valid": true,
+            "version": 0
+          },
+          "formatVersion": 1,
+          "history": [
+            {
+              "id": 1448531833,
+              "date": "2017-01-17T13:47:07.815-08:00",
+              "type": "Create",
+              "version": 0
+            },
+            {
+              "id": 1449755519,
+              "date": "2018-11-05T13:51:17.007-08:00",
+              "description": "Updated OMB race to appropriate biogeographical group",
+              "type": "Update",
+              "version": 0
+            }
+          ],
+          "isAssociated": true,
+          "isPlural": false,
+          "literature": {
+            "id": 15098208,
+            "title": "Association of PEAR1 rs12041331 polymorphism and pharmacodynamics of ticagrelor in healthy Chinese volunteers.",
+            "_sameAs": "https://www.ncbi.nlm.nih.gov/pubmed/27937053",
+            "authors": [
+              "Li Mupeng",
+              "Hu Yaodong",
+              "Wen Zhipeng",
+              "Li Huilan",
+              "Hu Xiaolei",
+              "Zhang Yanjiao",
+              "Zhang Zanling",
+              "Xiao Jian",
+              "Tang Jie",
+              "Chen Xiaoping"
+            ],
+            "crossReferences": [
+              {
+                "id": 1449293299,
+                "resource": "PubMed",
+                "resourceId": "27937053",
+                "_url": "https://www.ncbi.nlm.nih.gov/pubmed/27937053",
+                "version": 0
+              },
+              {
+                "id": 1449293300,
+                "resource": "DOI",
+                "resourceId": "10.1080/00498254.2016.1271962",
+                "_url": "http://dx.doi.org/10.1080%2F00498254.2016.1271962",
+                "version": 0
+              }
+            ],
+            "day": -1,
+            "hasKeyword": true,
+            "journal": "Xenobiotica; the fate of foreign compounds in biological systems",
+            "meshTerms": [
+              "Adenosine",
+              "Adult",
+              "China",
+              "Healthy Volunteers",
+              "Humans",
+              "Male",
+              "Middle Aged",
+              "Polymorphism, Genetic",
+              "Purinergic P2Y Receptor Antagonists",
+              "Receptors, Cell Surface",
+              "Ticagrelor"
+            ],
+            "month": 12,
+            "nonHuman": false,
+            "objCls": "Literature",
+            "page": "1130-1138",
+            "pediatric": false,
+            "pgkbPublication": false,
+            "pubDate": "2017-12-01T00:00:00-08:00",
+            "pubmedMeshTerms": [],
+            "summary": "1.\u2003Genetic polymorphisms in platelet endothelial aggregation receptor 1 (PEAR1) were associated with responsiveness to aspirin and P2Y12 receptor antagonists. This study aimed to investigate whether PEAR1 polymorphism is associated with ticagrelor pharmacodynamics in healthy Chinese subjects. 2.\u2003The in vitro inhibition of platelet aggregation (IPA) was evaluated before and after ticagrelor incubated with platelet-rich plasma from 196 healthy Chinese male subjects. Eight polymorphisms at PEAR1 locus were genotyped. Eighteen volunteers (six in each rs12041331 genotype group) were randomly selected. After a single oral 180\u2009mg dose of ticagrelor, plasma levels of ticagrelor and the active metabolite AR-C124910XX were measured and pharmacodynamics parameters including IPA and VASP-platelet reactivity index (PRI) were assessed. 3.\u2003No significant difference in ticagrelor pharmacokinetics among rs12041331 genotype was observed. As compared with rs12041331\u2009G allele carriers, AA homozygotes exhibited increased IPA after 15\u2009\u03bcM ticagrelor incubation (p\u2009&lt;\u20090.01), increased area under the time-effect curve of IPA and lower PRI at 2\u2009h after ticagrelor administration (p\u2009&lt;\u20090.05, respectively). Rs4661012 GG homozygotes showed increased IPA after 50\u2009\u03bcM ticagrelor incubation as compared to T allele carriers (p\u2009&lt;\u20090.01). 4.\u2003PEAR1 polymorphism may influence ticagrelor pharmacodynamics in healthy Chinese subjects.",
+            "terms": [],
+            "type": "Literature",
+            "version": 3,
+            "volume": "47",
+            "year": 2017
+          },
+          "location": {
+            "id": 1448531832,
+            "buildVersion": "GRCh37",
+            "chromosomeId": "PA503",
+            "chromosomeName": "chr1",
+            "copyNumber": "1",
+            "diplotypes": [],
+            "displayName": "rs12041331",
+            "genes": [
+              {
+                "objCls": "Gene",
+                "id": "PA162399233",
+                "symbol": "PEAR1",
+                "name": "platelet endothelial aggregation receptor 1",
+                "version": 9
+              }
+            ],
+            "gpPosition": 156869714,
+            "haplotypes": [],
+            "linkedObjects": [
+              {
+                "objCls": "Variant",
+                "id": "PA166153839",
+                "symbol": "rs12041331",
+                "name": "rs12041331",
+                "version": 4
+              }
+            ],
+            "refSeqCrossReference": {
+              "id": 556603510,
+              "resource": "RefSeq RNA",
+              "resourceId": "NM_001080471.1",
+              "_url": "https://www.ncbi.nlm.nih.gov/nuccore/NM_001080471.1",
+              "version": 0
+            },
+            "refSeqPosition": -9,
+            "rsid": "rs12041331",
+            "tagGene": false,
+            "type": "SNP",
+            "variant": {
+              "objCls": "Variant",
+              "id": "PA166153839",
+              "symbol": "rs12041331",
+              "name": "rs12041331",
+              "version": 4
+            },
+            "version": 0
+          },
+          "metabolizers1": [],
+          "metabolizers2": [],
+          "objCls": "Variant Drug Annotation",
+          "pediatric": false,
+          "phenotypeCategories": [
+            {
+              "id": 769229934,
+              "description": "[PD]",
+              "parents": [],
+              "resource": "Phenotype Categories",
+              "synonyms": [],
+              "term": "Efficacy",
+              "termId": "secondaryCat:769229934",
+              "valid": true,
+              "version": 2
+            }
+          ],
+          "polarity": {
+            "id": 769229639,
+            "parents": [],
+            "resource": "Polarity",
+            "synonyms": [],
+            "term": "increased",
+            "termId": "variantAnnotationPolarity:769229639",
+            "valid": true,
+            "version": 0
+          },
+          "populationPhenotypeLinksConnWord": {
+            "id": 827698395,
+            "parents": [],
+            "resource": "Collection Operator - And/Or",
+            "synonyms": [],
+            "term": "and",
+            "termId": "drugsConnWord:827698395",
+            "valid": true,
+            "version": 0
+          },
+          "populationPhenotypes": [],
+          "populationTerm": {
+            "id": 827566960,
+            "parents": [],
+            "resource": "Population",
+            "synonyms": [],
+            "term": "in healthy individuals",
+            "termId": "connWords3:827566960",
+            "valid": true,
+            "version": 0
+          },
+          "relatedChemicals": [
+            {
+              "objCls": "Chemical",
+              "id": "PA165374673",
+              "name": "ticagrelor",
+              "version": 6
+            }
+          ],
+          "relatedVariations": [
+            {
+              "objCls": "Allele",
+              "id": "PA166389171",
+              "symbol": "CA1140312222",
+              "name": "NM_001080471.3(PEAR1):c.-9-3996G=",
+              "version": 1
+            },
+            {
+              "objCls": "Allele",
+              "id": "PA166389172",
+              "symbol": "CA16067254",
+              "name": "NM_001080471.3(PEAR1):c.-9-3996G>A",
+              "version": 1
+            }
+          ],
+          "score": 1.5,
+          "scoreDetails": {
+            "step5A": 1.0,
+            "step5B": 1.0,
+            "chosenSpId": 1448531835,
+            "step1Score": 1.0,
+            "step2Score": 0.5,
+            "step3Score": 0.0,
+            "step4Score": 0.0,
+            "totalScore": 1.5,
+            "chosenSpIndex": "1 of 1",
+            "generatedDate": "2021-03-21T01:05:05.969-07:00",
+            "variantAnnotationId": 1448531830
+          },
+          "sentence": "Genotype AA is associated with increased response to ticagrelor in healthy individuals as compared to genotypes AG + GG.",
+          "sequenceLocation": {
+            "id": 1447998821,
+            "altHgvs": {},
+            "assembly": "GRCh37",
+            "begin": 156869714,
+            "end": 156869714,
+            "intronicOffset": 0,
+            "referenceAllele": "G",
+            "referenceHgvs": "NC_000001.10:g.156869714=",
+            "sequence": {
+              "id": 1447949551,
+              "name": "[GRCh37]chr1",
+              "resource": "RefSeq DNA",
+              "resourceId": "NC_000001.10",
+              "_url": "https://www.ncbi.nlm.nih.gov/nuccore/NC_000001.10",
+              "version": 2
+            },
+            "source": "dbSnp",
+            "type": "genomic",
+            "variantAlleles": [
+              "A"
+            ],
+            "variantHgvs": [
+              "NC_000001.10:g.156869714G>A"
+            ],
+            "version": 1
+          },
+          "significance": {
+            "id": 769229666,
+            "parents": [],
+            "resource": "Association Significance",
+            "synonyms": [],
+            "term": "yes",
+            "termId": "variantAnnotationSignificance:769229666",
+            "valid": true,
+            "version": 0
+          },
+          "studyParameters": [
+            {
+              "id": 1448531835,
+              "alleleOfFreqInCases": "A",
+              "characteristics": "ticagrelor ",
+              "characteristicsType": "Drug",
+              "confidenceIntervalStart": -1.0,
+              "confidenceIntervalStop": -1.0,
+              "description": "Between genotype comparisons were AA vs GG p = 0.020, AA vs GA p = 0.033.",
+              "frequencyInCases": 0.5,
+              "frequencyInControls": -1.0,
+              "pediatric": false,
+              "populationEthnicity": {
+                "custom": false,
+                "ethnicities": [
+                  "East Asian"
+                ],
+                "mixed": false,
+                "notes": "Chinese",
+                "unknown": false
+              },
+              "populationTypes": [
+                {
+                  "id": 1183702745,
+                  "parents": [],
+                  "resource": "Population Type",
+                  "synonyms": [],
+                  "term": "men",
+                  "termId": "populationType:1183702745",
+                  "valid": true,
+                  "version": 0
+                },
+                {
+                  "id": 1183702746,
+                  "parents": [],
+                  "resource": "Population Type",
+                  "synonyms": [],
+                  "term": "women",
+                  "termId": "populationType:1183702746",
+                  "valid": true,
+                  "version": 0
+                },
+                {
+                  "id": 1183702747,
+                  "parents": [],
+                  "resource": "Population Type",
+                  "synonyms": [],
+                  "term": "healthy individuals",
+                  "termId": "populationType:1183702747",
+                  "valid": true,
+                  "version": 0
+                }
+              ],
+              "pvalue": 0.02,
+              "pvalueOp": {
+                "id": 1183492001,
+                "parents": [],
+                "resource": "Equality Symbols",
+                "synonyms": [],
+                "term": "=",
+                "termId": "equality:1183492001",
+                "valid": true,
+                "version": 0
+              },
+              "pvalueString": "0.020",
+              "ratioStat": -1.0,
+              "ratioStatType": {
+                "id": 1183624559,
+                "parents": [],
+                "resource": "Statistic Analysis",
+                "synonyms": [],
+                "term": "OR",
+                "termId": "statAnalysis:1183624559",
+                "valid": true,
+                "version": 0
+              },
+              "statTests": [
+                {
+                  "id": 1183698597,
+                  "parents": [
+                    1183698596
+                  ],
+                  "resource": "Statistical Test Tags",
+                  "synonyms": [],
+                  "term": "one-way ANOVA",
+                  "termId": "statTest:1183698597",
+                  "valid": true,
+                  "version": 0
+                }
+              ],
+              "studyCases": 18,
+              "studyControls": -1,
+              "studyTypes": [
+                "clinical trial"
+              ],
+              "usedForScoring": true,
+              "version": 0
+            }
+          ],
+          "useForCaScoring": true,
+          "version": 10
+        },
+        {
+          "id": 1448531836,
+          "accessionId": "PA166174990",
+          "alleleGenotype": "AA",
+          "comparison": "GG",
+          "connWords1": {
+            "id": 769229670,
+            "parents": [],
+            "resource": "Drug Connecting words 1",
+            "synonyms": [],
+            "term": "response to",
+            "termId": "variantAnnotationDrugConnWords1:769229670",
+            "valid": true,
+            "version": 0
+          },
+          "description": "Healthy controls plasma incubated with 50uM ticagrelor.",
+          "drugsConnWord": {
+            "id": 827698395,
+            "parents": [],
+            "resource": "Collection Operator - And/Or",
+            "synonyms": [],
+            "term": "and",
+            "termId": "drugsConnWord:827698395",
+            "valid": true,
+            "version": 0
+          },
+          "formatVersion": 1,
+          "history": [
+            {
+              "id": 1448531840,
+              "date": "2017-01-17T14:01:37.876-08:00",
+              "type": "Create",
+              "version": 0
+            },
+            {
+              "id": 1449755518,
+              "date": "2018-11-05T13:51:16.973-08:00",
+              "description": "Updated OMB race to appropriate biogeographical group",
+              "type": "Update",
+              "version": 0
+            }
+          ],
+          "isAssociated": true,
+          "isPlural": false,
+          "literature": {
+            "id": 15098208,
+            "title": "Association of PEAR1 rs12041331 polymorphism and pharmacodynamics of ticagrelor in healthy Chinese volunteers.",
+            "_sameAs": "https://www.ncbi.nlm.nih.gov/pubmed/27937053",
+            "authors": [
+              "Li Mupeng",
+              "Hu Yaodong",
+              "Wen Zhipeng",
+              "Li Huilan",
+              "Hu Xiaolei",
+              "Zhang Yanjiao",
+              "Zhang Zanling",
+              "Xiao Jian",
+              "Tang Jie",
+              "Chen Xiaoping"
+            ],
+            "crossReferences": [
+              {
+                "id": 1449293299,
+                "resource": "PubMed",
+                "resourceId": "27937053",
+                "_url": "https://www.ncbi.nlm.nih.gov/pubmed/27937053",
+                "version": 0
+              },
+              {
+                "id": 1449293300,
+                "resource": "DOI",
+                "resourceId": "10.1080/00498254.2016.1271962",
+                "_url": "http://dx.doi.org/10.1080%2F00498254.2016.1271962",
+                "version": 0
+              }
+            ],
+            "day": -1,
+            "hasKeyword": true,
+            "journal": "Xenobiotica; the fate of foreign compounds in biological systems",
+            "meshTerms": [
+              "Adenosine",
+              "Adult",
+              "China",
+              "Healthy Volunteers",
+              "Humans",
+              "Male",
+              "Middle Aged",
+              "Polymorphism, Genetic",
+              "Purinergic P2Y Receptor Antagonists",
+              "Receptors, Cell Surface",
+              "Ticagrelor"
+            ],
+            "month": 12,
+            "nonHuman": false,
+            "objCls": "Literature",
+            "page": "1130-1138",
+            "pediatric": false,
+            "pgkbPublication": false,
+            "pubDate": "2017-12-01T00:00:00-08:00",
+            "pubmedMeshTerms": [],
+            "summary": "1.\u2003Genetic polymorphisms in platelet endothelial aggregation receptor 1 (PEAR1) were associated with responsiveness to aspirin and P2Y12 receptor antagonists. This study aimed to investigate whether PEAR1 polymorphism is associated with ticagrelor pharmacodynamics in healthy Chinese subjects. 2.\u2003The in vitro inhibition of platelet aggregation (IPA) was evaluated before and after ticagrelor incubated with platelet-rich plasma from 196 healthy Chinese male subjects. Eight polymorphisms at PEAR1 locus were genotyped. Eighteen volunteers (six in each rs12041331 genotype group) were randomly selected. After a single oral 180\u2009mg dose of ticagrelor, plasma levels of ticagrelor and the active metabolite AR-C124910XX were measured and pharmacodynamics parameters including IPA and VASP-platelet reactivity index (PRI) were assessed. 3.\u2003No significant difference in ticagrelor pharmacokinetics among rs12041331 genotype was observed. As compared with rs12041331\u2009G allele carriers, AA homozygotes exhibited increased IPA after 15\u2009\u03bcM ticagrelor incubation (p\u2009&lt;\u20090.01), increased area under the time-effect curve of IPA and lower PRI at 2\u2009h after ticagrelor administration (p\u2009&lt;\u20090.05, respectively). Rs4661012 GG homozygotes showed increased IPA after 50\u2009\u03bcM ticagrelor incubation as compared to T allele carriers (p\u2009&lt;\u20090.01). 4.\u2003PEAR1 polymorphism may influence ticagrelor pharmacodynamics in healthy Chinese subjects.",
+            "terms": [],
+            "type": "Literature",
+            "version": 3,
+            "volume": "47",
+            "year": 2017
+          },
+          "location": {
+            "id": 1448531839,
+            "buildVersion": "GRCh37",
+            "chromosomeId": "PA503",
+            "chromosomeName": "chr1",
+            "copyNumber": "1",
+            "diplotypes": [],
+            "displayName": "rs12041331",
+            "genes": [
+              {
+                "objCls": "Gene",
+                "id": "PA162399233",
+                "symbol": "PEAR1",
+                "name": "platelet endothelial aggregation receptor 1",
+                "version": 9
+              }
+            ],
+            "gpPosition": 156869714,
+            "haplotypes": [],
+            "linkedObjects": [
+              {
+                "objCls": "Variant",
+                "id": "PA166153839",
+                "symbol": "rs12041331",
+                "name": "rs12041331",
+                "version": 4
+              }
+            ],
+            "refSeqCrossReference": {
+              "id": 556603510,
+              "resource": "RefSeq RNA",
+              "resourceId": "NM_001080471.1",
+              "_url": "https://www.ncbi.nlm.nih.gov/nuccore/NM_001080471.1",
+              "version": 0
+            },
+            "refSeqPosition": -9,
+            "rsid": "rs12041331",
+            "tagGene": false,
+            "type": "SNP",
+            "variant": {
+              "objCls": "Variant",
+              "id": "PA166153839",
+              "symbol": "rs12041331",
+              "name": "rs12041331",
+              "version": 4
+            },
+            "version": 0
+          },
+          "metabolizers1": [],
+          "metabolizers2": [],
+          "objCls": "Variant Drug Annotation",
+          "pediatric": false,
+          "phenotypeCategories": [
+            {
+              "id": 769229934,
+              "description": "[PD]",
+              "parents": [],
+              "resource": "Phenotype Categories",
+              "synonyms": [],
+              "term": "Efficacy",
+              "termId": "secondaryCat:769229934",
+              "valid": true,
+              "version": 2
+            }
+          ],
+          "polarity": {
+            "id": 769229639,
+            "parents": [],
+            "resource": "Polarity",
+            "synonyms": [],
+            "term": "increased",
+            "termId": "variantAnnotationPolarity:769229639",
+            "valid": true,
+            "version": 0
+          },
+          "populationPhenotypeLinksConnWord": {
+            "id": 827698395,
+            "parents": [],
+            "resource": "Collection Operator - And/Or",
+            "synonyms": [],
+            "term": "and",
+            "termId": "drugsConnWord:827698395",
+            "valid": true,
+            "version": 0
+          },
+          "populationPhenotypes": [],
+          "populationTerm": {
+            "id": 827566960,
+            "parents": [],
+            "resource": "Population",
+            "synonyms": [],
+            "term": "in healthy individuals",
+            "termId": "connWords3:827566960",
+            "valid": true,
+            "version": 0
+          },
+          "relatedChemicals": [
+            {
+              "objCls": "Chemical",
+              "id": "PA165374673",
+              "name": "ticagrelor",
+              "version": 6
+            }
+          ],
+          "relatedVariations": [
+            {
+              "objCls": "Allele",
+              "id": "PA166389171",
+              "symbol": "CA1140312222",
+              "name": "NM_001080471.3(PEAR1):c.-9-3996G=",
+              "version": 1
+            },
+            {
+              "objCls": "Allele",
+              "id": "PA166389172",
+              "symbol": "CA16067254",
+              "name": "NM_001080471.3(PEAR1):c.-9-3996G>A",
+              "version": 1
+            }
+          ],
+          "score": 1.5,
+          "scoreDetails": {
+            "step5A": 1.0,
+            "step5B": 1.0,
+            "chosenSpId": 1448531838,
+            "step1Score": 1.0,
+            "step2Score": 0.5,
+            "step3Score": 0.0,
+            "step4Score": 0.0,
+            "totalScore": 1.5,
+            "chosenSpIndex": "1 of 1",
+            "generatedDate": "2021-03-21T01:06:08.660-07:00",
+            "variantAnnotationId": 1448531836
+          },
+          "sentence": "Genotype AA is associated with increased response to ticagrelor in healthy individuals as compared to genotype GG.",
+          "sequenceLocation": {
+            "id": 1447998821,
+            "altHgvs": {},
+            "assembly": "GRCh37",
+            "begin": 156869714,
+            "end": 156869714,
+            "intronicOffset": 0,
+            "referenceAllele": "G",
+            "referenceHgvs": "NC_000001.10:g.156869714=",
+            "sequence": {
+              "id": 1447949551,
+              "name": "[GRCh37]chr1",
+              "resource": "RefSeq DNA",
+              "resourceId": "NC_000001.10",
+              "_url": "https://www.ncbi.nlm.nih.gov/nuccore/NC_000001.10",
+              "version": 2
+            },
+            "source": "dbSnp",
+            "type": "genomic",
+            "variantAlleles": [
+              "A"
+            ],
+            "variantHgvs": [
+              "NC_000001.10:g.156869714G>A"
+            ],
+            "version": 1
+          },
+          "significance": {
+            "id": 769229666,
+            "parents": [],
+            "resource": "Association Significance",
+            "synonyms": [],
+            "term": "yes",
+            "termId": "variantAnnotationSignificance:769229666",
+            "valid": true,
+            "version": 0
+          },
+          "studyParameters": [
+            {
+              "id": 1448531838,
+              "alleleOfFreqInCases": "A",
+              "characteristics": "ticagrelor ",
+              "characteristicsType": "Drug",
+              "confidenceIntervalStart": -1.0,
+              "confidenceIntervalStop": -1.0,
+              "description": "Between genotype comparisons were AA vs GG p = 0.033, AA vs GA p = 0.166.",
+              "frequencyInCases": 0.5,
+              "frequencyInControls": -1.0,
+              "pediatric": false,
+              "populationEthnicity": {
+                "custom": false,
+                "ethnicities": [
+                  "East Asian"
+                ],
+                "mixed": false,
+                "notes": "Chinese",
+                "unknown": false
+              },
+              "populationTypes": [
+                {
+                  "id": 1183702745,
+                  "parents": [],
+                  "resource": "Population Type",
+                  "synonyms": [],
+                  "term": "men",
+                  "termId": "populationType:1183702745",
+                  "valid": true,
+                  "version": 0
+                },
+                {
+                  "id": 1183702746,
+                  "parents": [],
+                  "resource": "Population Type",
+                  "synonyms": [],
+                  "term": "women",
+                  "termId": "populationType:1183702746",
+                  "valid": true,
+                  "version": 0
+                },
+                {
+                  "id": 1183702747,
+                  "parents": [],
+                  "resource": "Population Type",
+                  "synonyms": [],
+                  "term": "healthy individuals",
+                  "termId": "populationType:1183702747",
+                  "valid": true,
+                  "version": 0
+                }
+              ],
+              "pvalue": 0.033,
+              "pvalueOp": {
+                "id": 1183492001,
+                "parents": [],
+                "resource": "Equality Symbols",
+                "synonyms": [],
+                "term": "=",
+                "termId": "equality:1183492001",
+                "valid": true,
+                "version": 0
+              },
+              "pvalueString": "0.033",
+              "ratioStat": -1.0,
+              "ratioStatType": {
+                "id": 1183624559,
+                "parents": [],
+                "resource": "Statistic Analysis",
+                "synonyms": [],
+                "term": "OR",
+                "termId": "statAnalysis:1183624559",
+                "valid": true,
+                "version": 0
+              },
+              "statTests": [
+                {
+                  "id": 1183698597,
+                  "parents": [
+                    1183698596
+                  ],
+                  "resource": "Statistical Test Tags",
+                  "synonyms": [],
+                  "term": "one-way ANOVA",
+                  "termId": "statTest:1183698597",
+                  "valid": true,
+                  "version": 0
+                }
+              ],
+              "studyCases": 18,
+              "studyControls": -1,
+              "studyTypes": [
+                "clinical trial"
+              ],
+              "usedForScoring": true,
+              "version": 0
+            }
+          ],
+          "useForCaScoring": true,
+          "version": 10
+        }
+      ],
+      "version": 4
+    },
+    {
+      "id": 1448531868,
+      "accessionId": "PA166162374",
+      "allelePhenotypes": [
+        {
+          "id": 1448531870,
+          "allele": "GG",
+          "limitedEvidence": false,
+          "phenotype": "People with the GG genotype may have increased inhibition of platelet aggregation when taking ticagrelor compared to people with the GT and TT genotypes. Other clinical and genetic factors may affect response to ticagrelor.",
+          "version": 0
+        },
+        {
+          "id": 1448531871,
+          "allele": "GT",
+          "limitedEvidence": false,
+          "phenotype": "People with the GT genotype may have decreased inhibition of platelet aggregation when taking ticagrelor compared to people with the GG genotype. Other clinical and genetic factors may affect response to ticagrelor.",
+          "version": 0
+        },
+        {
+          "id": 1448531872,
+          "allele": "TT",
+          "limitedEvidence": false,
+          "phenotype": "People with the TT genotype may have decreased inhibition of platelet aggregation when taking ticagrelor compared to people with the GG genotype. Other clinical and genetic factors may affect response to ticagrelor.",
+          "version": 0
+        }
+      ],
+      "conflictingVariantAnnotationIds": [],
+      "history": [
+        {
+          "id": 1448531869,
+          "date": "2017-01-17T15:16:00.793-08:00",
+          "type": "Create",
+          "version": 0
+        },
+        {
+          "id": 1449764248,
+          "date": "2018-11-05T14:23:51.209-08:00",
+          "description": "Updated OMB race to appropriate biogeographical group",
+          "type": "Update",
+          "version": 0
+        },
+        {
+          "id": 1451395021,
+          "date": "2021-03-24T20:27:46.021-07:00",
+          "description": "CA score added as part of scoring system release. LOE may have automatically changed based on new score but may be subject to further changes upon curator review.",
+          "type": "Update",
+          "version": 0
+        }
+      ],
+      "levelOfEvidence": {
+        "id": 827923056,
+        "description": "Level 3 clinical annotations describe variant-drug combinations with a low level of evidence supporting the association. This association may be based on a single study annotated in PharmGKB, or there may be several studies that failed to replicate the association. The annotation may also be based on preliminary evidence (e.g., a case report, non-significant study, or in vitro, molecular, or functional assay evidence), resulting in a lower calculated score.",
+        "parents": [],
+        "resource": "Level of Evidence",
+        "synonyms": [],
+        "term": "3",
+        "termId": "levelsOfEvidence:827923056",
+        "valid": true,
+        "version": 2
+      },
+      "location": {
+        "id": 1448531873,
+        "buildVersion": "GRCh37",
+        "chromosomeId": "PA503",
+        "chromosomeName": "chr1",
+        "copyNumber": "1",
+        "diplotypes": [],
+        "displayName": "rs4661012",
+        "genes": [
+          {
+            "objCls": "Gene",
+            "id": "PA162399233",
+            "symbol": "PEAR1",
+            "name": "platelet endothelial aggregation receptor 1",
+            "version": 9
+          }
+        ],
+        "gpPosition": 156885491,
+        "haplotypes": [],
+        "linkedObjects": [
+          {
+            "objCls": "Variant",
+            "id": "PA166162370",
+            "symbol": "rs4661012",
+            "name": "rs4661012",
+            "version": 4
+          }
+        ],
+        "refSeqPosition": -1,
+        "rsid": "rs4661012",
+        "tagGene": false,
+        "type": "SNP",
+        "variant": {
+          "objCls": "Variant",
+          "id": "PA166162370",
+          "symbol": "rs4661012",
+          "name": "rs4661012",
+          "version": 4
+        },
+        "version": 0
+      },
+      "name": "rs4661012 (PEAR1); ticagrelor (level 3 Efficacy)",
+      "objCls": "Clinical Annotation",
+      "overrideLevel": false,
+      "pediatric": false,
+      "relatedChemicals": [
+        {
+          "objCls": "Chemical",
+          "id": "PA165374673",
+          "name": "ticagrelor",
+          "version": 6
+        }
+      ],
+      "relatedChemicalsLogic": "Or",
+      "relatedDiseases": [],
+      "relatedGuidelines": [],
+      "relatedLabels": [],
+      "relatedVariations": [
+        {
+          "objCls": "Allele",
+          "id": "PA166393082",
+          "symbol": "CA10865067",
+          "name": "NM_001080471.3(PEAR1):c.*901T>G",
+          "version": 1
+        },
+        {
+          "objCls": "Allele",
+          "id": "PA166393081",
+          "symbol": "CA1140042481",
+          "name": "NM_001080471.3(PEAR1):c.*901T=",
+          "version": 1
+        }
+      ],
+      "score": 1.5,
+      "scoreDetails": "{\"vaScores\": [{\"step5A\": 1.0, \"step5B\": 1.0, \"chosenSpId\": 1448531854, \"step1Score\": 1.0, \"step2Score\": 0.5, \"step3Score\": 0.0, \"step4Score\": 0.0, \"totalScore\": 1.5, \"chosenSpIndex\": \"1 of 1\", \"generatedDate\": \"2021-03-21T05:04:20.224-07:00\", \"variantAnnotationId\": 1448531852}], \"totalScore\": 1.5, \"vaScoreTotal\": 1.5, \"generatedDate\": \"2021-03-21T05:04:20.224-07:00\", \"labelScoreTotal\": 0.0, \"guidelineScoreTotal\": 0.0}",
+      "types": [
+        "Efficacy"
+      ],
+      "variantAnnotations": [
+        {
+          "id": 1448531852,
+          "accessionId": "PA166174991",
+          "alleleGenotype": "GT + TT",
+          "comparison": "GG",
+          "connWords1": {
+            "id": 769229670,
+            "parents": [],
+            "resource": "Drug Connecting words 1",
+            "synonyms": [],
+            "term": "response to",
+            "termId": "variantAnnotationDrugConnWords1:769229670",
+            "valid": true,
+            "version": 0
+          },
+          "description": "Healthy control plasma incubated with 15uM and 50uM ticagrelor as separate comparisons.",
+          "drugsConnWord": {
+            "id": 827698395,
+            "parents": [],
+            "resource": "Collection Operator - And/Or",
+            "synonyms": [],
+            "term": "and",
+            "termId": "drugsConnWord:827698395",
+            "valid": true,
+            "version": 0
+          },
+          "formatVersion": 1,
+          "history": [
+            {
+              "id": 1448531856,
+              "date": "2017-01-17T14:38:31.775-08:00",
+              "type": "Create",
+              "version": 0
+            },
+            {
+              "id": 1449755484,
+              "date": "2018-11-05T13:51:15.630-08:00",
+              "description": "Updated OMB race to appropriate biogeographical group",
+              "type": "Update",
+              "version": 0
+            }
+          ],
+          "isAssociated": true,
+          "isPlural": false,
+          "literature": {
+            "id": 15098208,
+            "title": "Association of PEAR1 rs12041331 polymorphism and pharmacodynamics of ticagrelor in healthy Chinese volunteers.",
+            "_sameAs": "https://www.ncbi.nlm.nih.gov/pubmed/27937053",
+            "authors": [
+              "Li Mupeng",
+              "Hu Yaodong",
+              "Wen Zhipeng",
+              "Li Huilan",
+              "Hu Xiaolei",
+              "Zhang Yanjiao",
+              "Zhang Zanling",
+              "Xiao Jian",
+              "Tang Jie",
+              "Chen Xiaoping"
+            ],
+            "crossReferences": [
+              {
+                "id": 1449293299,
+                "resource": "PubMed",
+                "resourceId": "27937053",
+                "_url": "https://www.ncbi.nlm.nih.gov/pubmed/27937053",
+                "version": 0
+              },
+              {
+                "id": 1449293300,
+                "resource": "DOI",
+                "resourceId": "10.1080/00498254.2016.1271962",
+                "_url": "http://dx.doi.org/10.1080%2F00498254.2016.1271962",
+                "version": 0
+              }
+            ],
+            "day": -1,
+            "hasKeyword": true,
+            "journal": "Xenobiotica; the fate of foreign compounds in biological systems",
+            "meshTerms": [
+              "Adenosine",
+              "Adult",
+              "China",
+              "Healthy Volunteers",
+              "Humans",
+              "Male",
+              "Middle Aged",
+              "Polymorphism, Genetic",
+              "Purinergic P2Y Receptor Antagonists",
+              "Receptors, Cell Surface",
+              "Ticagrelor"
+            ],
+            "month": 12,
+            "nonHuman": false,
+            "objCls": "Literature",
+            "page": "1130-1138",
+            "pediatric": false,
+            "pgkbPublication": false,
+            "pubDate": "2017-12-01T00:00:00-08:00",
+            "pubmedMeshTerms": [],
+            "summary": "1.\u2003Genetic polymorphisms in platelet endothelial aggregation receptor 1 (PEAR1) were associated with responsiveness to aspirin and P2Y12 receptor antagonists. This study aimed to investigate whether PEAR1 polymorphism is associated with ticagrelor pharmacodynamics in healthy Chinese subjects. 2.\u2003The in vitro inhibition of platelet aggregation (IPA) was evaluated before and after ticagrelor incubated with platelet-rich plasma from 196 healthy Chinese male subjects. Eight polymorphisms at PEAR1 locus were genotyped. Eighteen volunteers (six in each rs12041331 genotype group) were randomly selected. After a single oral 180\u2009mg dose of ticagrelor, plasma levels of ticagrelor and the active metabolite AR-C124910XX were measured and pharmacodynamics parameters including IPA and VASP-platelet reactivity index (PRI) were assessed. 3.\u2003No significant difference in ticagrelor pharmacokinetics among rs12041331 genotype was observed. As compared with rs12041331\u2009G allele carriers, AA homozygotes exhibited increased IPA after 15\u2009\u03bcM ticagrelor incubation (p\u2009&lt;\u20090.01), increased area under the time-effect curve of IPA and lower PRI at 2\u2009h after ticagrelor administration (p\u2009&lt;\u20090.05, respectively). Rs4661012 GG homozygotes showed increased IPA after 50\u2009\u03bcM ticagrelor incubation as compared to T allele carriers (p\u2009&lt;\u20090.01). 4.\u2003PEAR1 polymorphism may influence ticagrelor pharmacodynamics in healthy Chinese subjects.",
+            "terms": [],
+            "type": "Literature",
+            "version": 3,
+            "volume": "47",
+            "year": 2017
+          },
+          "location": {
+            "id": 1448531855,
+            "buildVersion": "GRCh37",
+            "chromosomeId": "PA503",
+            "chromosomeName": "chr1",
+            "copyNumber": "1",
+            "diplotypes": [],
+            "displayName": "rs4661012",
+            "genes": [
+              {
+                "objCls": "Gene",
+                "id": "PA162399233",
+                "symbol": "PEAR1",
+                "name": "platelet endothelial aggregation receptor 1",
+                "version": 9
+              }
+            ],
+            "gpPosition": 156885491,
+            "haplotypes": [],
+            "linkedObjects": [
+              {
+                "objCls": "Variant",
+                "id": "PA166162370",
+                "symbol": "rs4661012",
+                "name": "rs4661012",
+                "version": 4
+              }
+            ],
+            "refSeqPosition": -1,
+            "rsid": "rs4661012",
+            "tagGene": false,
+            "type": "SNP",
+            "variant": {
+              "objCls": "Variant",
+              "id": "PA166162370",
+              "symbol": "rs4661012",
+              "name": "rs4661012",
+              "version": 4
+            },
+            "version": 0
+          },
+          "metabolizers1": [],
+          "metabolizers2": [],
+          "objCls": "Variant Drug Annotation",
+          "pediatric": false,
+          "phenotypeCategories": [
+            {
+              "id": 769229934,
+              "description": "[PD]",
+              "parents": [],
+              "resource": "Phenotype Categories",
+              "synonyms": [],
+              "term": "Efficacy",
+              "termId": "secondaryCat:769229934",
+              "valid": true,
+              "version": 2
+            }
+          ],
+          "polarity": {
+            "id": 769229640,
+            "parents": [],
+            "resource": "Polarity",
+            "synonyms": [],
+            "term": "decreased",
+            "termId": "variantAnnotationPolarity:769229640",
+            "valid": true,
+            "version": 0
+          },
+          "populationPhenotypeLinksConnWord": {
+            "id": 827698395,
+            "parents": [],
+            "resource": "Collection Operator - And/Or",
+            "synonyms": [],
+            "term": "and",
+            "termId": "drugsConnWord:827698395",
+            "valid": true,
+            "version": 0
+          },
+          "populationPhenotypes": [],
+          "populationTerm": {
+            "id": 827566960,
+            "parents": [],
+            "resource": "Population",
+            "synonyms": [],
+            "term": "in healthy individuals",
+            "termId": "connWords3:827566960",
+            "valid": true,
+            "version": 0
+          },
+          "relatedChemicals": [
+            {
+              "objCls": "Chemical",
+              "id": "PA165374673",
+              "name": "ticagrelor",
+              "version": 6
+            }
+          ],
+          "relatedVariations": [
+            {
+              "objCls": "Allele",
+              "id": "PA166393082",
+              "symbol": "CA10865067",
+              "name": "NM_001080471.3(PEAR1):c.*901T>G",
+              "version": 1
+            },
+            {
+              "objCls": "Allele",
+              "id": "PA166393081",
+              "symbol": "CA1140042481",
+              "name": "NM_001080471.3(PEAR1):c.*901T=",
+              "version": 1
+            }
+          ],
+          "score": 1.5,
+          "scoreDetails": {
+            "step5A": 1.0,
+            "step5B": 1.0,
+            "chosenSpId": 1448531854,
+            "step1Score": 1.0,
+            "step2Score": 0.5,
+            "step3Score": 0.0,
+            "step4Score": 0.0,
+            "totalScore": 1.5,
+            "chosenSpIndex": "1 of 1",
+            "generatedDate": "2021-03-21T01:06:05.743-07:00",
+            "variantAnnotationId": 1448531852
+          },
+          "sentence": "Genotypes GT + TT is associated with decreased response to ticagrelor in healthy individuals as compared to genotype GG.",
+          "sequenceLocation": {
+            "id": 1451192395,
+            "altHgvs": {},
+            "assembly": "GRCh37",
+            "begin": 156885491,
+            "end": 156885491,
+            "intronicOffset": 0,
+            "referenceAllele": "T",
+            "referenceHgvs": "NC_000001.10:g.156885491=",
+            "sequence": {
+              "id": 1447949551,
+              "name": "[GRCh37]chr1",
+              "resource": "RefSeq DNA",
+              "resourceId": "NC_000001.10",
+              "_url": "https://www.ncbi.nlm.nih.gov/nuccore/NC_000001.10",
+              "version": 2
+            },
+            "source": "dbSnp",
+            "type": "genomic",
+            "variantAlleles": [
+              "G"
+            ],
+            "variantHgvs": [
+              "NC_000001.10:g.156885491T>G"
+            ],
+            "version": 0
+          },
+          "significance": {
+            "id": 769229666,
+            "parents": [],
+            "resource": "Association Significance",
+            "synonyms": [],
+            "term": "yes",
+            "termId": "variantAnnotationSignificance:769229666",
+            "valid": true,
+            "version": 0
+          },
+          "studyParameters": [
+            {
+              "id": 1448531854,
+              "alleleOfFreqInCases": "G",
+              "characteristics": "ticagrelor ",
+              "characteristicsType": "Drug",
+              "confidenceIntervalStart": -1.0,
+              "confidenceIntervalStop": -1.0,
+              "description": "Between genotype comparisons were GT vs GG p = 0.018, TT vs GG p = 0.083 for 15uM. Between genotype comparisons were GT vs GG p = 0.011, TT vs GG p = 0.031 for 50uM.",
+              "frequencyInCases": 0.5,
+              "frequencyInControls": -1.0,
+              "pediatric": false,
+              "populationEthnicity": {
+                "custom": false,
+                "ethnicities": [
+                  "East Asian"
+                ],
+                "mixed": false,
+                "notes": "Chinese",
+                "unknown": false
+              },
+              "populationTypes": [
+                {
+                  "id": 1183702745,
+                  "parents": [],
+                  "resource": "Population Type",
+                  "synonyms": [],
+                  "term": "men",
+                  "termId": "populationType:1183702745",
+                  "valid": true,
+                  "version": 0
+                },
+                {
+                  "id": 1183702746,
+                  "parents": [],
+                  "resource": "Population Type",
+                  "synonyms": [],
+                  "term": "women",
+                  "termId": "populationType:1183702746",
+                  "valid": true,
+                  "version": 0
+                },
+                {
+                  "id": 1183702747,
+                  "parents": [],
+                  "resource": "Population Type",
+                  "synonyms": [],
+                  "term": "healthy individuals",
+                  "termId": "populationType:1183702747",
+                  "valid": true,
+                  "version": 0
+                }
+              ],
+              "pvalue": 0.018,
+              "pvalueOp": {
+                "id": 1183492001,
+                "parents": [],
+                "resource": "Equality Symbols",
+                "synonyms": [],
+                "term": "=",
+                "termId": "equality:1183492001",
+                "valid": true,
+                "version": 0
+              },
+              "pvalueString": "0.018",
+              "ratioStat": -1.0,
+              "ratioStatType": {
+                "id": 1183624559,
+                "parents": [],
+                "resource": "Statistic Analysis",
+                "synonyms": [],
+                "term": "OR",
+                "termId": "statAnalysis:1183624559",
+                "valid": true,
+                "version": 0
+              },
+              "statTests": [
+                {
+                  "id": 1183698597,
+                  "parents": [
+                    1183698596
+                  ],
+                  "resource": "Statistical Test Tags",
+                  "synonyms": [],
+                  "term": "one-way ANOVA",
+                  "termId": "statTest:1183698597",
+                  "valid": true,
+                  "version": 0
+                }
+              ],
+              "studyCases": 18,
+              "studyControls": -1,
+              "studyTypes": [
+                "clinical trial"
+              ],
+              "usedForScoring": true,
+              "version": 0
+            }
+          ],
+          "useForCaScoring": true,
+          "version": 10
+        }
+      ],
+      "version": 4
+    },
+    {
+      "id": 1448100326,
+      "accessionId": "PA166158965",
+      "allelePhenotypes": [
+        {
+          "id": 1448100328,
+          "allele": "CT",
+          "limitedEvidence": false,
+          "phenotype": "Patients with the CT genotype and acute coronary syndrome may have increased concentrations of ticagrelor compared to patients with the TT genotype. Other factors may affect concentrations of ticagrelor.",
+          "version": 0
+        },
+        {
+          "id": 1448100329,
+          "allele": "TT",
+          "limitedEvidence": false,
+          "phenotype": "Patients with the TT genotype and acute coronary syndrome may have decreased concentrations of ticagrelor compared to patients with the CT genotype. Other factors may affect concentrations of ticagrelor.",
+          "version": 0
+        }
+      ],
+      "conflictingVariantAnnotationIds": [],
+      "history": [
+        {
+          "id": 1448100327,
+          "date": "2016-06-09T11:07:53.287-07:00",
+          "type": "Create",
+          "version": 0
+        },
+        {
+          "id": 1449765478,
+          "date": "2018-11-05T14:24:50.442-08:00",
+          "description": "Updated OMB race to appropriate biogeographical group",
+          "type": "Update",
+          "version": 0
+        },
+        {
+          "id": 1451394763,
+          "date": "2021-03-24T20:25:51.990-07:00",
+          "description": "CA score added as part of scoring system release. LOE may have automatically changed based on new score but may be subject to further changes upon curator review.",
+          "type": "Update",
+          "version": 0
+        }
+      ],
+      "levelOfEvidence": {
+        "id": 827923056,
+        "description": "Level 3 clinical annotations describe variant-drug combinations with a low level of evidence supporting the association. This association may be based on a single study annotated in PharmGKB, or there may be several studies that failed to replicate the association. The annotation may also be based on preliminary evidence (e.g., a case report, non-significant study, or in vitro, molecular, or functional assay evidence), resulting in a lower calculated score.",
+        "parents": [],
+        "resource": "Level of Evidence",
+        "synonyms": [],
+        "term": "3",
+        "termId": "levelsOfEvidence:827923056",
+        "valid": true,
+        "version": 2
+      },
+      "location": {
+        "id": 1448100330,
+        "buildVersion": "hg38",
+        "chromosomeId": "PA529",
+        "chromosomeName": "chr4",
+        "copyNumber": "1",
+        "diplotypes": [],
+        "displayName": "rs61361928",
+        "genes": [
+          {
+            "objCls": "Gene",
+            "id": "PA361",
+            "symbol": "UGT2B7",
+            "name": "UDP glucuronosyltransferase family 2 member B7",
+            "version": 2564
+          }
+        ],
+        "gpPosition": 69962375,
+        "haplotypes": [],
+        "linkedObjects": [
+          {
+            "objCls": "Variant",
+            "id": "PA166156689",
+            "symbol": "rs61361928",
+            "name": "rs61361928",
+            "version": 4
+          }
+        ],
+        "refSeqCrossReference": {
+          "id": 1444703558,
+          "resource": "RefSeq RNA",
+          "resourceId": "NM_001074.2",
+          "_url": "https://www.ncbi.nlm.nih.gov/nuccore/NM_001074.2",
+          "version": 0
+        },
+        "refSeqPosition": 137,
+        "rsid": "rs61361928",
+        "tagGene": false,
+        "type": "SNP",
+        "variant": {
+          "objCls": "Variant",
+          "id": "PA166156689",
+          "symbol": "rs61361928",
+          "name": "rs61361928",
+          "version": 4
+        },
+        "version": 1
+      },
+      "name": "rs61361928 (UGT2B7); ticagrelor; Acute coronary syndrome (level 3 Metabolism/PK)",
+      "objCls": "Clinical Annotation",
+      "overrideLevel": false,
+      "pediatric": false,
+      "relatedChemicals": [
+        {
+          "objCls": "Chemical",
+          "id": "PA165374673",
+          "name": "ticagrelor",
+          "version": 6
+        }
+      ],
+      "relatedChemicalsLogic": "Or",
+      "relatedDiseases": [
+        {
+          "objCls": "Disease",
+          "id": "PA165108401",
+          "name": "Acute coronary syndrome",
+          "version": 4
+        }
+      ],
+      "relatedGuidelines": [],
+      "relatedLabels": [],
+      "relatedVariations": [
+        {
+          "objCls": "Allele",
+          "id": "PA166387375",
+          "symbol": "CA1466049336",
+          "name": "NM_001074.4(UGT2B7):c.137T= (p.Leu46=)",
+          "version": 1
+        },
+        {
+          "objCls": "Allele",
+          "id": "PA166387374",
+          "symbol": "CA2944517",
+          "name": "NM_001074.4(UGT2B7):c.137T>C (p.Leu46Pro)",
+          "version": 1
+        }
+      ],
+      "score": 0.0,
+      "scoreDetails": "{\"vaScores\": [{\"step5A\": 1.0, \"step5B\": 0.0, \"chosenSpId\": 1447987291, \"step1Score\": 0.5, \"step2Score\": 0.5, \"step3Score\": 1.0, \"step4Score\": 0.0, \"totalScore\": 0.0, \"chosenSpIndex\": \"1 of 1\", \"generatedDate\": \"2021-03-21T05:25:35.152-07:00\", \"variantAnnotationId\": 1447987289}], \"totalScore\": 0.0, \"vaScoreTotal\": 0.0, \"generatedDate\": \"2021-03-21T05:25:35.152-07:00\", \"labelScoreTotal\": 0.0, \"guidelineScoreTotal\": 0.0}",
+      "types": [
+        "Metabolism/PK"
+      ],
+      "variantAnnotations": [
+        {
+          "id": 1447987289,
+          "accessionId": "PA166173782",
+          "alleleGenotype": "TT",
+          "comparison": "CT",
+          "connWords1": {
+            "id": 1184746916,
+            "parents": [],
+            "resource": "Drug Connecting words 1",
+            "synonyms": [],
+            "term": "concentrations of",
+            "termId": "drug_ConnWords1:1184746916",
+            "valid": true,
+            "version": 0
+          },
+          "description": "Part of a GWAS study with replication cohort. This study did not find changes in primary coronary event outcomes on ticagrelor, but did find differences in AUC of ticagrelor metabolite ARC (AR-C124910XX).",
+          "drugsConnWord": {
+            "id": 827698395,
+            "parents": [],
+            "resource": "Collection Operator - And/Or",
+            "synonyms": [],
+            "term": "and",
+            "termId": "drugsConnWord:827698395",
+            "valid": true,
+            "version": 0
+          },
+          "formatVersion": 1,
+          "history": [
+            {
+              "id": 1447987294,
+              "date": "2016-05-13T11:34:29.373-07:00",
+              "type": "Create",
+              "version": 0
+            },
+            {
+              "id": 1450367297,
+              "date": "2019-01-29T09:18:44.252-08:00",
+              "description": "Updated OMB race to appropriate biogeographical group",
+              "type": "Update",
+              "version": 0
+            }
+          ],
+          "isAssociated": true,
+          "isPlural": false,
+          "literature": {
+            "id": 15097388,
+            "title": "Effect of genetic variations on ticagrelor plasma levels and clinical outcomes.",
+            "_sameAs": "https://www.ncbi.nlm.nih.gov/pubmed/25935875",
+            "authors": [
+              "Varenhorst Christoph",
+              "Eriksson Niclas",
+              "Johansson \u00c5sa",
+              "Barratt Bryan J",
+              "Hagstr\u00f6m Emil",
+              "\u00c5kerblom Axel",
+              "Syv\u00e4nen Ann-Christine",
+              "Becker Richard C",
+              "James Stefan K",
+              "Katus Hugo A",
+              "Husted Steen",
+              "Steg Ph Gabriel",
+              "Siegbahn Agneta",
+              "Voora Deepak",
+              "Teng Renli",
+              "Storey Robert F",
+              "Wallentin Lars",
+              "PLATO Investigators"
+            ],
+            "crossReferences": [
+              {
+                "id": 1449288277,
+                "resource": "PubMed",
+                "resourceId": "25935875",
+                "_url": "https://www.ncbi.nlm.nih.gov/pubmed/25935875",
+                "version": 0
+              },
+              {
+                "id": 1449288278,
+                "resource": "DOI",
+                "resourceId": "10.1093/eurheartj/ehv116",
+                "_url": "http://dx.doi.org/10.1093%2Feurheartj%2Fehv116",
+                "version": 0
+              }
+            ],
+            "day": -1,
+            "hasKeyword": true,
+            "journal": "European heart journal",
+            "meshTerms": [
+              "Acute Coronary Syndrome",
+              "Adenosine",
+              "Adult",
+              "Cytochrome P-450 CYP3A",
+              "Female",
+              "Genome-Wide Association Study",
+              "Genotype",
+              "Glucuronosyltransferase",
+              "Humans",
+              "Liver-Specific Organic Anion Transporter 1",
+              "Male",
+              "Middle Aged",
+              "Organic Anion Transporters",
+              "Polymorphism, Single Nucleotide",
+              "Purinergic P2Y Receptor Antagonists",
+              "Ticagrelor",
+              "Treatment Outcome"
+            ],
+            "month": 8,
+            "nonHuman": false,
+            "objCls": "Literature",
+            "page": "1901-12",
+            "pediatric": false,
+            "pgkbPublication": false,
+            "pubDate": "2015-08-01T00:00:00-07:00",
+            "pubmedMeshTerms": [],
+            "summary": "AIMS: Ticagrelor, a direct-acting P2Y12-receptor antagonist, is rapidly absorbed and partly metabolized to the major metabolite AR-C124910XX (ARC). To identify single-nucleotide polymorphisms (SNPs) associated with pharmacokinetics of ticagrelor and clinical outcomes, we performed a genome-wide association study (GWAS) in patients treated with ticagrelor in the PLATO trial.\n\nMETHODS AND RESULTS: A two-stage design was used for the GWAS with discovery (discovery phase: n = 1812) and replication cohorts (replication phase: n = 1941). The steady-state area under the curve (AUCss) values, estimated by the population pharmacokinetic (PK) models, were log transformed and analysed on a genome-wide scale using linear regression. SNPs were analysed against clinical events using Cox-regression in 4990 patients. An SNP (rs113681054) in SLCO1B1 was associated with levels of ticagrelor (P = 1.1 \u00d7 10(-6)) and ARC (P = 4.6 \u00d7 10(-13)). This SNP is in linkage disequilibrium with a functional variant (rs4149056) that results in decreased OATP1B1 transporter activity. Ticagrelor levels were also associated with two independent SNPs (rs62471956, P = 7.7 \u00d7 10(-15) and rs56324128, P = 9.7 \u00d7 10(-12)) in the CYP3A4 region. Further, ARC levels were associated with rs61361928 (P = 3.0 \u00d7 10(-14)) in UGT2B7. At all loci, the effects were small. None of the identified SNPs that affected ticagrelor PK were associated with the primary composite outcome (cardiovascular death myocardial infarction, and stroke), non-CABG-related bleeds or investigator-reported dyspnoea.\n\nCONCLUSION: In patients with ACS, ticagrelor pharmacokinetics is influenced by three genetic loci (SLCO1B1, UGT2B7, and CYP3A4). However, the modest genetic effects on ticagrelor plasma levels did not translate into any detectable effect on efficacy or safety during ticagrelor treatment.\n\nCLINICAL TRIAL REGISTRATION: NCT00391872.",
+            "terms": [],
+            "type": "Literature",
+            "version": 3,
+            "volume": "36",
+            "year": 2015
+          },
+          "location": {
+            "id": 1447987293,
+            "buildVersion": "hg38",
+            "chromosomeId": "PA529",
+            "chromosomeName": "chr4",
+            "copyNumber": "1",
+            "diplotypes": [],
+            "displayName": "rs61361928",
+            "genes": [
+              {
+                "objCls": "Gene",
+                "id": "PA361",
+                "symbol": "UGT2B7",
+                "name": "UDP glucuronosyltransferase family 2 member B7",
+                "version": 2564
+              }
+            ],
+            "gpPosition": 69962375,
+            "haplotypes": [],
+            "linkedObjects": [
+              {
+                "objCls": "Variant",
+                "id": "PA166156689",
+                "symbol": "rs61361928",
+                "name": "rs61361928",
+                "version": 4
+              }
+            ],
+            "refSeqCrossReference": {
+              "id": 1444703558,
+              "resource": "RefSeq RNA",
+              "resourceId": "NM_001074.2",
+              "_url": "https://www.ncbi.nlm.nih.gov/nuccore/NM_001074.2",
+              "version": 0
+            },
+            "refSeqPosition": 137,
+            "rsid": "rs61361928",
+            "tagGene": false,
+            "type": "SNP",
+            "variant": {
+              "objCls": "Variant",
+              "id": "PA166156689",
+              "symbol": "rs61361928",
+              "name": "rs61361928",
+              "version": 4
+            },
+            "version": 1
+          },
+          "metabolizers1": [],
+          "metabolizers2": [],
+          "objCls": "Variant Drug Annotation",
+          "pediatric": false,
+          "phenotypeCategories": [
+            {
+              "id": 981344088,
+              "description": "Includes all drug metabolism and pharmacokinetic options.\n[PK]",
+              "parents": [],
+              "resource": "Phenotype Categories",
+              "synonyms": [],
+              "term": "Metabolism/PK",
+              "termId": "secondaryCat:981344088",
+              "valid": true,
+              "version": 2
+            }
+          ],
+          "polarity": {
+            "id": 769229640,
+            "parents": [],
+            "resource": "Polarity",
+            "synonyms": [],
+            "term": "decreased",
+            "termId": "variantAnnotationPolarity:769229640",
+            "valid": true,
+            "version": 0
+          },
+          "populationPhenotypeLinksConnWord": {
+            "id": 827698395,
+            "parents": [],
+            "resource": "Collection Operator - And/Or",
+            "synonyms": [],
+            "term": "and",
+            "termId": "drugsConnWord:827698395",
+            "valid": true,
+            "version": 0
+          },
+          "populationPhenotypes": [
+            {
+              "id": 1447987292,
+              "disease": {
+                "objCls": "Disease",
+                "id": "PA165108401",
+                "name": "Acute coronary syndrome",
+                "version": 4
+              },
+              "phenotype": "Acute coronary syndrome",
+              "phenotypeContext": "Disease",
+              "version": 0
+            }
+          ],
+          "populationTerm": {
+            "id": 769229662,
+            "parents": [],
+            "resource": "Population",
+            "synonyms": [],
+            "term": "in people with",
+            "termId": "variantAnnotationPhenotypeConnWords3:769229662",
+            "valid": true,
+            "version": 0
+          },
+          "relatedChemicals": [
+            {
+              "objCls": "Chemical",
+              "id": "PA165374673",
+              "name": "ticagrelor",
+              "version": 6
+            }
+          ],
+          "relatedVariations": [
+            {
+              "objCls": "Allele",
+              "id": "PA166387375",
+              "symbol": "CA1466049336",
+              "name": "NM_001074.4(UGT2B7):c.137T= (p.Leu46=)",
+              "version": 1
+            },
+            {
+              "objCls": "Allele",
+              "id": "PA166387374",
+              "symbol": "CA2944517",
+              "name": "NM_001074.4(UGT2B7):c.137T>C (p.Leu46Pro)",
+              "version": 1
+            }
+          ],
+          "score": 0.0,
+          "scoreDetails": {
+            "step5A": 1.0,
+            "step5B": 0.0,
+            "chosenSpId": 1447987291,
+            "step1Score": 0.5,
+            "step2Score": 0.5,
+            "step3Score": 1.0,
+            "step4Score": 0.0,
+            "totalScore": 0.0,
+            "chosenSpIndex": "1 of 1",
+            "generatedDate": "2021-03-21T01:17:24.095-07:00",
+            "variantAnnotationId": 1447987289
+          },
+          "sentence": "Genotype TT is associated with decreased concentrations of ticagrelor in people with Acute coronary syndrome as compared to genotype CT.",
+          "sequenceLocation": {
+            "id": 1448066368,
+            "altHgvs": {},
+            "assembly": "GRCh37",
+            "begin": 69962375,
+            "end": 69962375,
+            "intronicOffset": 0,
+            "referenceAllele": "T",
+            "referenceHgvs": "NC_000004.11:g.69962375=",
+            "sequence": {
+              "id": 1447949554,
+              "name": "[GRCh37]chr4",
+              "resource": "RefSeq DNA",
+              "resourceId": "NC_000004.11",
+              "_url": "https://www.ncbi.nlm.nih.gov/nuccore/NC_000004.11",
+              "version": 2
+            },
+            "source": "dbSnp",
+            "type": "genomic",
+            "variantAlleles": [
+              "C"
+            ],
+            "variantHgvs": [
+              "NC_000004.11:g.69962375T>C"
+            ],
+            "version": 1
+          },
+          "significance": {
+            "id": 769229666,
+            "parents": [],
+            "resource": "Association Significance",
+            "synonyms": [],
+            "term": "yes",
+            "termId": "variantAnnotationSignificance:769229666",
+            "valid": true,
+            "version": 0
+          },
+          "studyParameters": [
+            {
+              "id": 1447987291,
+              "alleleOfFreqInCases": "C",
+              "characteristics": "PLATO trial on effect of ticagrelor vs clopidogrel",
+              "characteristicsType": "Study Cohort",
+              "confidenceIntervalStart": -1.0,
+              "confidenceIntervalStop": -1.0,
+              "description": "Significant in the combined dataset (n=3752, p=2.13E-12)",
+              "frequencyInCases": 0.005,
+              "frequencyInControls": -1.0,
+              "pediatric": false,
+              "populationEthnicity": {
+                "custom": false,
+                "ethnicities": [
+                  "European"
+                ],
+                "mixed": false,
+                "notes": "99% caucasian",
+                "unknown": false
+              },
+              "populationTypes": [
+                {
+                  "id": 1183702745,
+                  "parents": [],
+                  "resource": "Population Type",
+                  "synonyms": [],
+                  "term": "men",
+                  "termId": "populationType:1183702745",
+                  "valid": true,
+                  "version": 0
+                },
+                {
+                  "id": 1183702746,
+                  "parents": [],
+                  "resource": "Population Type",
+                  "synonyms": [],
+                  "term": "women",
+                  "termId": "populationType:1183702746",
+                  "valid": true,
+                  "version": 0
+                }
+              ],
+              "pvalue": 7.7e-14,
+              "pvalueOp": {
+                "id": 1183492001,
+                "parents": [],
+                "resource": "Equality Symbols",
+                "synonyms": [],
+                "term": "=",
+                "termId": "equality:1183492001",
+                "valid": true,
+                "version": 0
+              },
+              "pvalueString": "7.7E-14",
+              "ratioStat": -1.0,
+              "ratioStatType": {
+                "id": 1183624559,
+                "parents": [],
+                "resource": "Statistic Analysis",
+                "synonyms": [],
+                "term": "OR",
+                "termId": "statAnalysis:1183624559",
+                "valid": true,
+                "version": 0
+              },
+              "statTests": [
+                {
+                  "id": 1183703105,
+                  "parents": [],
+                  "resource": "Statistical Test Tags",
+                  "synonyms": [],
+                  "term": "Cox regression analysis",
+                  "termId": "statTest:1183703105",
+                  "valid": true,
+                  "version": 0
+                },
+                {
+                  "id": 1183704993,
+                  "parents": [],
+                  "resource": "Statistical Test Tags",
+                  "synonyms": [],
+                  "term": "Bonferroni correction",
+                  "termId": "statTest:1183704993",
+                  "valid": true,
+                  "version": 0
+                }
+              ],
+              "studyCases": 3752,
+              "studyControls": -1,
+              "studyTypes": [
+                "cohort",
+                "clinical trial",
+                "GWAS"
+              ],
+              "usedForScoring": true,
+              "version": 0
+            }
+          ],
+          "useForCaScoring": true,
+          "version": 9
+        }
+      ],
+      "version": 5
+    },
+    {
+      "id": 1448100334,
+      "accessionId": "PA166158967",
+      "allelePhenotypes": [
+        {
+          "id": 1448100336,
+          "allele": "CC",
+          "limitedEvidence": false,
+          "phenotype": "Patients with the CC genotype and acute coronary syndrome may have decreased concentrations of ticagrelor compared to patients with the CT genotype. Other factors may affect concentrations of ticagrelor.",
+          "version": 0
+        },
+        {
+          "id": 1448100337,
+          "allele": "CT",
+          "limitedEvidence": false,
+          "phenotype": "Patients with the CT genotype and acute coronary syndrome may have increased concentrations of ticagrelor compared to patients with the TT genotype. Other factors may affect concentrations of ticagrelor.",
+          "version": 0
+        }
+      ],
+      "conflictingVariantAnnotationIds": [],
+      "history": [
+        {
+          "id": 1448100335,
+          "date": "2016-06-09T11:10:32.602-07:00",
+          "type": "Create",
+          "version": 0
+        },
+        {
+          "id": 1449765465,
+          "date": "2018-11-05T14:24:49.600-08:00",
+          "description": "Updated OMB race to appropriate biogeographical group",
+          "type": "Update",
+          "version": 0
+        },
+        {
+          "id": 1451394764,
+          "date": "2021-03-24T20:25:52.439-07:00",
+          "description": "CA score added as part of scoring system release. LOE may have automatically changed based on new score but may be subject to further changes upon curator review.",
+          "type": "Update",
+          "version": 0
+        }
+      ],
+      "levelOfEvidence": {
+        "id": 827923056,
+        "description": "Level 3 clinical annotations describe variant-drug combinations with a low level of evidence supporting the association. This association may be based on a single study annotated in PharmGKB, or there may be several studies that failed to replicate the association. The annotation may also be based on preliminary evidence (e.g., a case report, non-significant study, or in vitro, molecular, or functional assay evidence), resulting in a lower calculated score.",
+        "parents": [],
+        "resource": "Level of Evidence",
+        "synonyms": [],
+        "term": "3",
+        "termId": "levelsOfEvidence:827923056",
+        "valid": true,
+        "version": 2
+      },
+      "location": {
+        "id": 1448100338,
+        "buildVersion": "hg38",
+        "chromosomeId": "PA534",
+        "chromosomeName": "chr7",
+        "copyNumber": "1",
+        "diplotypes": [],
+        "displayName": "rs56324128",
+        "genes": [
+          {
+            "objCls": "Gene",
+            "id": "PA130",
+            "symbol": "CYP3A4",
+            "name": "cytochrome P450 family 3 subfamily A member 4",
+            "version": 8039
+          }
+        ],
+        "gpPosition": 99375702,
+        "haplotypes": [],
+        "linkedObjects": [
+          {
+            "objCls": "Variant",
+            "id": "PA166157496",
+            "symbol": "rs56324128",
+            "name": "rs56324128",
+            "version": 5
+          }
+        ],
+        "refSeqCrossReference": {
+          "id": 1444704103,
+          "resource": "RefSeq RNA",
+          "resourceId": "NM_001202855.2",
+          "_url": "https://www.ncbi.nlm.nih.gov/nuccore/NM_001202855.2",
+          "version": 0
+        },
+        "refSeqPosition": 167,
+        "rsid": "rs56324128",
+        "tagGene": false,
+        "type": "SNP",
+        "variant": {
+          "objCls": "Variant",
+          "id": "PA166157496",
+          "symbol": "rs56324128",
+          "name": "rs56324128",
+          "version": 5
+        },
+        "version": 1
+      },
+      "name": "rs56324128 (CYP3A4); ticagrelor; Acute coronary syndrome (level 3 Metabolism/PK)",
+      "objCls": "Clinical Annotation",
+      "overrideLevel": false,
+      "pediatric": false,
+      "relatedChemicals": [
+        {
+          "objCls": "Chemical",
+          "id": "PA165374673",
+          "name": "ticagrelor",
+          "version": 6
+        }
+      ],
+      "relatedChemicalsLogic": "Or",
+      "relatedDiseases": [
+        {
+          "objCls": "Disease",
+          "id": "PA165108401",
+          "name": "Acute coronary syndrome",
+          "version": 4
+        }
+      ],
+      "relatedGuidelines": [],
+      "relatedLabels": [],
+      "relatedVariations": [
+        {
+          "objCls": "Allele",
+          "id": "PA166389347",
+          "symbol": "CA1729191238",
+          "name": "NM_017460.6(CYP3A4):c.167G= (p.Gly56=)",
+          "version": 1
+        },
+        {
+          "objCls": "Allele",
+          "id": "PA166389348",
+          "symbol": "CA4369863",
+          "name": "NM_017460.6(CYP3A4):c.167G>A (p.Gly56Asp)",
+          "version": 1
+        }
+      ],
+      "score": 0.0,
+      "scoreDetails": "{\"vaScores\": [{\"step5A\": 1.0, \"step5B\": 0.0, \"chosenSpId\": 1447987344, \"step1Score\": 0.5, \"step2Score\": 0.5, \"step3Score\": 1.0, \"step4Score\": 0.0, \"totalScore\": 0.0, \"chosenSpIndex\": \"1 of 1\", \"generatedDate\": \"2021-03-21T05:15:03.919-07:00\", \"variantAnnotationId\": 1447987342}], \"totalScore\": 0.0, \"vaScoreTotal\": 0.0, \"generatedDate\": \"2021-03-21T05:15:03.919-07:00\", \"labelScoreTotal\": 0.0, \"guidelineScoreTotal\": 0.0}",
+      "types": [
+        "Metabolism/PK"
+      ],
+      "variantAnnotations": [
+        {
+          "id": 1447987342,
+          "accessionId": "PA166173611",
+          "alleleGenotype": "CC",
+          "comparison": "CT",
+          "connWords1": {
+            "id": 1184746916,
+            "parents": [],
+            "resource": "Drug Connecting words 1",
+            "synonyms": [],
+            "term": "concentrations of",
+            "termId": "drug_ConnWords1:1184746916",
+            "valid": true,
+            "version": 0
+          },
+          "description": "Part of a GWAS study with replication cohort. This study did not find changes in primary coronary event outcomes on ticagrelor, but did find differences in AUC of ticagrelor.",
+          "drugsConnWord": {
+            "id": 827698395,
+            "parents": [],
+            "resource": "Collection Operator - And/Or",
+            "synonyms": [],
+            "term": "and",
+            "termId": "drugsConnWord:827698395",
+            "valid": true,
+            "version": 0
+          },
+          "formatVersion": 1,
+          "history": [
+            {
+              "id": 1447987347,
+              "date": "2016-05-13T12:16:03.667-07:00",
+              "type": "Create",
+              "version": 0
+            },
+            {
+              "id": 1450367383,
+              "date": "2019-01-29T09:19:14.466-08:00",
+              "description": "Updated OMB race to appropriate biogeographical group",
+              "type": "Update",
+              "version": 0
+            }
+          ],
+          "isAssociated": true,
+          "isPlural": false,
+          "literature": {
+            "id": 15097388,
+            "title": "Effect of genetic variations on ticagrelor plasma levels and clinical outcomes.",
+            "_sameAs": "https://www.ncbi.nlm.nih.gov/pubmed/25935875",
+            "authors": [
+              "Varenhorst Christoph",
+              "Eriksson Niclas",
+              "Johansson \u00c5sa",
+              "Barratt Bryan J",
+              "Hagstr\u00f6m Emil",
+              "\u00c5kerblom Axel",
+              "Syv\u00e4nen Ann-Christine",
+              "Becker Richard C",
+              "James Stefan K",
+              "Katus Hugo A",
+              "Husted Steen",
+              "Steg Ph Gabriel",
+              "Siegbahn Agneta",
+              "Voora Deepak",
+              "Teng Renli",
+              "Storey Robert F",
+              "Wallentin Lars",
+              "PLATO Investigators"
+            ],
+            "crossReferences": [
+              {
+                "id": 1449288277,
+                "resource": "PubMed",
+                "resourceId": "25935875",
+                "_url": "https://www.ncbi.nlm.nih.gov/pubmed/25935875",
+                "version": 0
+              },
+              {
+                "id": 1449288278,
+                "resource": "DOI",
+                "resourceId": "10.1093/eurheartj/ehv116",
+                "_url": "http://dx.doi.org/10.1093%2Feurheartj%2Fehv116",
+                "version": 0
+              }
+            ],
+            "day": -1,
+            "hasKeyword": true,
+            "journal": "European heart journal",
+            "meshTerms": [
+              "Acute Coronary Syndrome",
+              "Adenosine",
+              "Adult",
+              "Cytochrome P-450 CYP3A",
+              "Female",
+              "Genome-Wide Association Study",
+              "Genotype",
+              "Glucuronosyltransferase",
+              "Humans",
+              "Liver-Specific Organic Anion Transporter 1",
+              "Male",
+              "Middle Aged",
+              "Organic Anion Transporters",
+              "Polymorphism, Single Nucleotide",
+              "Purinergic P2Y Receptor Antagonists",
+              "Ticagrelor",
+              "Treatment Outcome"
+            ],
+            "month": 8,
+            "nonHuman": false,
+            "objCls": "Literature",
+            "page": "1901-12",
+            "pediatric": false,
+            "pgkbPublication": false,
+            "pubDate": "2015-08-01T00:00:00-07:00",
+            "pubmedMeshTerms": [],
+            "summary": "AIMS: Ticagrelor, a direct-acting P2Y12-receptor antagonist, is rapidly absorbed and partly metabolized to the major metabolite AR-C124910XX (ARC). To identify single-nucleotide polymorphisms (SNPs) associated with pharmacokinetics of ticagrelor and clinical outcomes, we performed a genome-wide association study (GWAS) in patients treated with ticagrelor in the PLATO trial.\n\nMETHODS AND RESULTS: A two-stage design was used for the GWAS with discovery (discovery phase: n = 1812) and replication cohorts (replication phase: n = 1941). The steady-state area under the curve (AUCss) values, estimated by the population pharmacokinetic (PK) models, were log transformed and analysed on a genome-wide scale using linear regression. SNPs were analysed against clinical events using Cox-regression in 4990 patients. An SNP (rs113681054) in SLCO1B1 was associated with levels of ticagrelor (P = 1.1 \u00d7 10(-6)) and ARC (P = 4.6 \u00d7 10(-13)). This SNP is in linkage disequilibrium with a functional variant (rs4149056) that results in decreased OATP1B1 transporter activity. Ticagrelor levels were also associated with two independent SNPs (rs62471956, P = 7.7 \u00d7 10(-15) and rs56324128, P = 9.7 \u00d7 10(-12)) in the CYP3A4 region. Further, ARC levels were associated with rs61361928 (P = 3.0 \u00d7 10(-14)) in UGT2B7. At all loci, the effects were small. None of the identified SNPs that affected ticagrelor PK were associated with the primary composite outcome (cardiovascular death myocardial infarction, and stroke), non-CABG-related bleeds or investigator-reported dyspnoea.\n\nCONCLUSION: In patients with ACS, ticagrelor pharmacokinetics is influenced by three genetic loci (SLCO1B1, UGT2B7, and CYP3A4). However, the modest genetic effects on ticagrelor plasma levels did not translate into any detectable effect on efficacy or safety during ticagrelor treatment.\n\nCLINICAL TRIAL REGISTRATION: NCT00391872.",
+            "terms": [],
+            "type": "Literature",
+            "version": 3,
+            "volume": "36",
+            "year": 2015
+          },
+          "location": {
+            "id": 1447987346,
+            "buildVersion": "hg38",
+            "chromosomeId": "PA534",
+            "chromosomeName": "chr7",
+            "copyNumber": "1",
+            "diplotypes": [],
+            "displayName": "rs56324128",
+            "genes": [
+              {
+                "objCls": "Gene",
+                "id": "PA130",
+                "symbol": "CYP3A4",
+                "name": "cytochrome P450 family 3 subfamily A member 4",
+                "version": 8039
+              }
+            ],
+            "gpPosition": 99375702,
+            "haplotypes": [],
+            "linkedObjects": [
+              {
+                "objCls": "Variant",
+                "id": "PA166157496",
+                "symbol": "rs56324128",
+                "name": "rs56324128",
+                "version": 5
+              }
+            ],
+            "refSeqCrossReference": {
+              "id": 1444704103,
+              "resource": "RefSeq RNA",
+              "resourceId": "NM_001202855.2",
+              "_url": "https://www.ncbi.nlm.nih.gov/nuccore/NM_001202855.2",
+              "version": 0
+            },
+            "refSeqPosition": 167,
+            "rsid": "rs56324128",
+            "tagGene": false,
+            "type": "SNP",
+            "variant": {
+              "objCls": "Variant",
+              "id": "PA166157496",
+              "symbol": "rs56324128",
+              "name": "rs56324128",
+              "version": 5
+            },
+            "version": 1
+          },
+          "metabolizers1": [],
+          "metabolizers2": [],
+          "objCls": "Variant Drug Annotation",
+          "pediatric": false,
+          "phenotypeCategories": [
+            {
+              "id": 981344088,
+              "description": "Includes all drug metabolism and pharmacokinetic options.\n[PK]",
+              "parents": [],
+              "resource": "Phenotype Categories",
+              "synonyms": [],
+              "term": "Metabolism/PK",
+              "termId": "secondaryCat:981344088",
+              "valid": true,
+              "version": 2
+            }
+          ],
+          "polarity": {
+            "id": 769229640,
+            "parents": [],
+            "resource": "Polarity",
+            "synonyms": [],
+            "term": "decreased",
+            "termId": "variantAnnotationPolarity:769229640",
+            "valid": true,
+            "version": 0
+          },
+          "populationPhenotypeLinksConnWord": {
+            "id": 827698395,
+            "parents": [],
+            "resource": "Collection Operator - And/Or",
+            "synonyms": [],
+            "term": "and",
+            "termId": "drugsConnWord:827698395",
+            "valid": true,
+            "version": 0
+          },
+          "populationPhenotypes": [
+            {
+              "id": 1447987345,
+              "disease": {
+                "objCls": "Disease",
+                "id": "PA165108401",
+                "name": "Acute coronary syndrome",
+                "version": 4
+              },
+              "phenotype": "Acute coronary syndrome",
+              "phenotypeContext": "Disease",
+              "version": 0
+            }
+          ],
+          "populationTerm": {
+            "id": 769229662,
+            "parents": [],
+            "resource": "Population",
+            "synonyms": [],
+            "term": "in people with",
+            "termId": "variantAnnotationPhenotypeConnWords3:769229662",
+            "valid": true,
+            "version": 0
+          },
+          "relatedChemicals": [
+            {
+              "objCls": "Chemical",
+              "id": "PA165374673",
+              "name": "ticagrelor",
+              "version": 6
+            }
+          ],
+          "relatedVariations": [
+            {
+              "objCls": "Allele",
+              "id": "PA166389347",
+              "symbol": "CA1729191238",
+              "name": "NM_017460.6(CYP3A4):c.167G= (p.Gly56=)",
+              "version": 1
+            },
+            {
+              "objCls": "Allele",
+              "id": "PA166389348",
+              "symbol": "CA4369863",
+              "name": "NM_017460.6(CYP3A4):c.167G>A (p.Gly56Asp)",
+              "version": 1
+            }
+          ],
+          "score": 0.0,
+          "scoreDetails": {
+            "step5A": 1.0,
+            "step5B": 0.0,
+            "chosenSpId": 1447987344,
+            "step1Score": 0.5,
+            "step2Score": 0.5,
+            "step3Score": 1.0,
+            "step4Score": 0.0,
+            "totalScore": 0.0,
+            "chosenSpIndex": "1 of 1",
+            "generatedDate": "2021-03-21T01:17:27.098-07:00",
+            "variantAnnotationId": 1447987342
+          },
+          "sentence": "Genotype CC is associated with decreased concentrations of ticagrelor in people with Acute coronary syndrome as compared to genotype CT.",
+          "sequenceLocation": {
+            "id": 1448088553,
+            "altHgvs": {},
+            "assembly": "GRCh37",
+            "begin": 99375702,
+            "end": 99375702,
+            "intronicOffset": 0,
+            "referenceAllele": "C",
+            "referenceHgvs": "NC_000007.13:g.99375702=",
+            "sequence": {
+              "id": 1447949557,
+              "name": "[GRCh37]chr7",
+              "resource": "RefSeq DNA",
+              "resourceId": "NC_000007.13",
+              "_url": "https://www.ncbi.nlm.nih.gov/nuccore/NC_000007.13",
+              "version": 2
+            },
+            "source": "dbSnp",
+            "type": "genomic",
+            "variantAlleles": [
+              "T"
+            ],
+            "variantHgvs": [
+              "NC_000007.13:g.99375702C>T"
+            ],
+            "version": 1
+          },
+          "significance": {
+            "id": 769229666,
+            "parents": [],
+            "resource": "Association Significance",
+            "synonyms": [],
+            "term": "yes",
+            "termId": "variantAnnotationSignificance:769229666",
+            "valid": true,
+            "version": 0
+          },
+          "studyParameters": [
+            {
+              "id": 1447987344,
+              "alleleOfFreqInCases": "C",
+              "characteristics": "PLATO trial on effect of ticagrelor vs clopidogrel",
+              "characteristicsType": "Study Cohort",
+              "confidenceIntervalStart": -1.0,
+              "confidenceIntervalStop": -1.0,
+              "description": "Significant in the combined dataset.",
+              "frequencyInCases": 0.005,
+              "frequencyInControls": -1.0,
+              "pediatric": false,
+              "populationEthnicity": {
+                "custom": false,
+                "ethnicities": [
+                  "European"
+                ],
+                "mixed": false,
+                "notes": "99% caucasian",
+                "unknown": false
+              },
+              "populationTypes": [
+                {
+                  "id": 1183702745,
+                  "parents": [],
+                  "resource": "Population Type",
+                  "synonyms": [],
+                  "term": "men",
+                  "termId": "populationType:1183702745",
+                  "valid": true,
+                  "version": 0
+                },
+                {
+                  "id": 1183702746,
+                  "parents": [],
+                  "resource": "Population Type",
+                  "synonyms": [],
+                  "term": "women",
+                  "termId": "populationType:1183702746",
+                  "valid": true,
+                  "version": 0
+                }
+              ],
+              "pvalue": 8.64e-12,
+              "pvalueOp": {
+                "id": 1183492001,
+                "parents": [],
+                "resource": "Equality Symbols",
+                "synonyms": [],
+                "term": "=",
+                "termId": "equality:1183492001",
+                "valid": true,
+                "version": 0
+              },
+              "pvalueString": "8.64E-12",
+              "ratioStat": -1.0,
+              "ratioStatType": {
+                "id": 1183624559,
+                "parents": [],
+                "resource": "Statistic Analysis",
+                "synonyms": [],
+                "term": "OR",
+                "termId": "statAnalysis:1183624559",
+                "valid": true,
+                "version": 0
+              },
+              "statTests": [
+                {
+                  "id": 1183703105,
+                  "parents": [],
+                  "resource": "Statistical Test Tags",
+                  "synonyms": [],
+                  "term": "Cox regression analysis",
+                  "termId": "statTest:1183703105",
+                  "valid": true,
+                  "version": 0
+                },
+                {
+                  "id": 1183704993,
+                  "parents": [],
+                  "resource": "Statistical Test Tags",
+                  "synonyms": [],
+                  "term": "Bonferroni correction",
+                  "termId": "statTest:1183704993",
+                  "valid": true,
+                  "version": 0
+                }
+              ],
+              "studyCases": 3752,
+              "studyControls": -1,
+              "studyTypes": [
+                "cohort",
+                "clinical trial",
+                "GWAS"
+              ],
+              "usedForScoring": true,
+              "version": 0
+            }
+          ],
+          "useForCaScoring": true,
+          "version": 9
+        }
+      ],
+      "version": 5
+    },
+    {
+      "id": 1448100340,
+      "accessionId": "PA166158968",
+      "allelePhenotypes": [
+        {
+          "id": 1448106586,
+          "allele": "AA",
+          "limitedEvidence": false,
+          "phenotype": "Patients with the AA genotype and acute coronary syndrome may have increased concentrations of ticagrelor compared to patients with the AG or GG genotypes. Other factors may affect concentrations of ticagrelor.",
+          "version": 0
+        },
+        {
+          "id": 1448106587,
+          "allele": "AG",
+          "limitedEvidence": false,
+          "phenotype": "Patients with the AG genotype and acute coronary syndrome may have increased concentrations of ticagrelor compared to patients with the GG genotypes. Other factors may affect concentrations of ticagrelor.",
+          "version": 0
+        },
+        {
+          "id": 1448106588,
+          "allele": "GG",
+          "limitedEvidence": false,
+          "phenotype": "Patients with the GG genotype and acute coronary syndrome may have decreased concentrations of ticagrelor compared to patients with the AA or AG genotypes. Other factors may affect concentrations of ticagrelor.",
+          "version": 0
+        }
+      ],
+      "conflictingVariantAnnotationIds": [],
+      "history": [
+        {
+          "id": 1448100341,
+          "date": "2016-06-09T11:12:08.645-07:00",
+          "type": "Create",
+          "version": 0
+        },
+        {
+          "id": 1448106585,
+          "date": "2016-06-22T10:20:38.621-07:00",
+          "description": "added gene 6/22/16 AEF",
+          "type": "Update",
+          "version": 0
+        },
+        {
+          "id": 1449765568,
+          "date": "2018-11-05T14:24:56.790-08:00",
+          "description": "Updated OMB race to appropriate biogeographical group",
+          "type": "Update",
+          "version": 0
+        },
+        {
+          "id": 1451394765,
+          "date": "2021-03-24T20:25:52.871-07:00",
+          "description": "CA score added as part of scoring system release. LOE may have automatically changed based on new score but may be subject to further changes upon curator review.",
+          "type": "Update",
+          "version": 0
+        }
+      ],
+      "levelOfEvidence": {
+        "id": 827923056,
+        "description": "Level 3 clinical annotations describe variant-drug combinations with a low level of evidence supporting the association. This association may be based on a single study annotated in PharmGKB, or there may be several studies that failed to replicate the association. The annotation may also be based on preliminary evidence (e.g., a case report, non-significant study, or in vitro, molecular, or functional assay evidence), resulting in a lower calculated score.",
+        "parents": [],
+        "resource": "Level of Evidence",
+        "synonyms": [],
+        "term": "3",
+        "termId": "levelsOfEvidence:827923056",
+        "valid": true,
+        "version": 2
+      },
+      "location": {
+        "id": 1448106589,
+        "buildVersion": "hg38",
+        "chromosomeId": "PA534",
+        "chromosomeName": "chr7",
+        "copyNumber": "1",
+        "diplotypes": [],
+        "displayName": "rs62471956",
+        "genes": [
+          {
+            "objCls": "Gene",
+            "id": "PA427",
+            "symbol": "CYP3A43",
+            "name": "cytochrome P450 family 3 subfamily A member 43",
+            "version": 16
+          }
+        ],
+        "gpPosition": 99421085,
+        "haplotypes": [],
+        "linkedObjects": [
+          {
+            "objCls": "Variant",
+            "id": "PA166157501",
+            "symbol": "rs62471956",
+            "name": "rs62471956",
+            "version": 4
+          }
+        ],
+        "refSeqPosition": -1,
+        "rsid": "rs62471956",
+        "tagGene": false,
+        "type": "SNP",
+        "variant": {
+          "objCls": "Variant",
+          "id": "PA166157501",
+          "symbol": "rs62471956",
+          "name": "rs62471956",
+          "version": 4
+        },
+        "version": 1
+      },
+      "name": "rs62471956 (CYP3A43); ticagrelor; Acute coronary syndrome (level 3 Metabolism/PK)",
+      "objCls": "Clinical Annotation",
+      "overrideLevel": false,
+      "pediatric": false,
+      "relatedChemicals": [
+        {
+          "objCls": "Chemical",
+          "id": "PA165374673",
+          "name": "ticagrelor",
+          "version": 6
+        }
+      ],
+      "relatedChemicalsLogic": "Or",
+      "relatedDiseases": [
+        {
+          "objCls": "Disease",
+          "id": "PA165108401",
+          "name": "Acute coronary syndrome",
+          "version": 4
+        }
+      ],
+      "relatedGuidelines": [],
+      "relatedLabels": [],
+      "relatedVariations": [
+        {
+          "objCls": "Allele",
+          "id": "PA166389351",
+          "symbol": "CA15537807",
+          "name": "NC_000007.14:g.99823462G>A",
+          "version": 1
+        },
+        {
+          "objCls": "Allele",
+          "id": "PA166389352",
+          "symbol": "CA1729263624",
+          "name": "NC_000007.14:g.99823462G=",
+          "version": 1
+        }
+      ],
+      "score": 0.0,
+      "scoreDetails": "{\"vaScores\": [{\"step5A\": 1.0, \"step5B\": 0.0, \"chosenSpId\": 1447987297, \"step1Score\": 0.5, \"step2Score\": 0.5, \"step3Score\": 1.0, \"step4Score\": 0.0, \"totalScore\": 0.0, \"chosenSpIndex\": \"1 of 1\", \"generatedDate\": \"2021-03-21T05:15:05.278-07:00\", \"variantAnnotationId\": 1447987295}], \"totalScore\": 0.0, \"vaScoreTotal\": 0.0, \"generatedDate\": \"2021-03-21T05:15:05.278-07:00\", \"labelScoreTotal\": 0.0, \"guidelineScoreTotal\": 0.0}",
+      "types": [
+        "Metabolism/PK"
+      ],
+      "variantAnnotations": [
+        {
+          "id": 1447987295,
+          "accessionId": "PA166173610",
+          "alleleGenotype": "G",
+          "comparison": "A",
+          "connWords1": {
+            "id": 1184746916,
+            "parents": [],
+            "resource": "Drug Connecting words 1",
+            "synonyms": [],
+            "term": "concentrations of",
+            "termId": "drug_ConnWords1:1184746916",
+            "valid": true,
+            "version": 0
+          },
+          "description": "This is a dose effect where GG concentration < AG < AA. Part of a GWAS study with replication cohort. This study did not find changes in primary coronary event outcomes on ticagrelor, but did find differences in AUC of ticagrelor.",
+          "drugsConnWord": {
+            "id": 827698395,
+            "parents": [],
+            "resource": "Collection Operator - And/Or",
+            "synonyms": [],
+            "term": "and",
+            "termId": "drugsConnWord:827698395",
+            "valid": true,
+            "version": 0
+          },
+          "formatVersion": 1,
+          "history": [
+            {
+              "id": 1447987319,
+              "date": "2016-05-13T12:07:08.767-07:00",
+              "type": "Create",
+              "version": 0
+            },
+            {
+              "id": 1450367296,
+              "date": "2019-01-29T09:18:43.911-08:00",
+              "description": "Updated OMB race to appropriate biogeographical group",
+              "type": "Update",
+              "version": 0
+            }
+          ],
+          "isAssociated": true,
+          "isPlural": false,
+          "literature": {
+            "id": 15097388,
+            "title": "Effect of genetic variations on ticagrelor plasma levels and clinical outcomes.",
+            "_sameAs": "https://www.ncbi.nlm.nih.gov/pubmed/25935875",
+            "authors": [
+              "Varenhorst Christoph",
+              "Eriksson Niclas",
+              "Johansson \u00c5sa",
+              "Barratt Bryan J",
+              "Hagstr\u00f6m Emil",
+              "\u00c5kerblom Axel",
+              "Syv\u00e4nen Ann-Christine",
+              "Becker Richard C",
+              "James Stefan K",
+              "Katus Hugo A",
+              "Husted Steen",
+              "Steg Ph Gabriel",
+              "Siegbahn Agneta",
+              "Voora Deepak",
+              "Teng Renli",
+              "Storey Robert F",
+              "Wallentin Lars",
+              "PLATO Investigators"
+            ],
+            "crossReferences": [
+              {
+                "id": 1449288277,
+                "resource": "PubMed",
+                "resourceId": "25935875",
+                "_url": "https://www.ncbi.nlm.nih.gov/pubmed/25935875",
+                "version": 0
+              },
+              {
+                "id": 1449288278,
+                "resource": "DOI",
+                "resourceId": "10.1093/eurheartj/ehv116",
+                "_url": "http://dx.doi.org/10.1093%2Feurheartj%2Fehv116",
+                "version": 0
+              }
+            ],
+            "day": -1,
+            "hasKeyword": true,
+            "journal": "European heart journal",
+            "meshTerms": [
+              "Acute Coronary Syndrome",
+              "Adenosine",
+              "Adult",
+              "Cytochrome P-450 CYP3A",
+              "Female",
+              "Genome-Wide Association Study",
+              "Genotype",
+              "Glucuronosyltransferase",
+              "Humans",
+              "Liver-Specific Organic Anion Transporter 1",
+              "Male",
+              "Middle Aged",
+              "Organic Anion Transporters",
+              "Polymorphism, Single Nucleotide",
+              "Purinergic P2Y Receptor Antagonists",
+              "Ticagrelor",
+              "Treatment Outcome"
+            ],
+            "month": 8,
+            "nonHuman": false,
+            "objCls": "Literature",
+            "page": "1901-12",
+            "pediatric": false,
+            "pgkbPublication": false,
+            "pubDate": "2015-08-01T00:00:00-07:00",
+            "pubmedMeshTerms": [],
+            "summary": "AIMS: Ticagrelor, a direct-acting P2Y12-receptor antagonist, is rapidly absorbed and partly metabolized to the major metabolite AR-C124910XX (ARC). To identify single-nucleotide polymorphisms (SNPs) associated with pharmacokinetics of ticagrelor and clinical outcomes, we performed a genome-wide association study (GWAS) in patients treated with ticagrelor in the PLATO trial.\n\nMETHODS AND RESULTS: A two-stage design was used for the GWAS with discovery (discovery phase: n = 1812) and replication cohorts (replication phase: n = 1941). The steady-state area under the curve (AUCss) values, estimated by the population pharmacokinetic (PK) models, were log transformed and analysed on a genome-wide scale using linear regression. SNPs were analysed against clinical events using Cox-regression in 4990 patients. An SNP (rs113681054) in SLCO1B1 was associated with levels of ticagrelor (P = 1.1 \u00d7 10(-6)) and ARC (P = 4.6 \u00d7 10(-13)). This SNP is in linkage disequilibrium with a functional variant (rs4149056) that results in decreased OATP1B1 transporter activity. Ticagrelor levels were also associated with two independent SNPs (rs62471956, P = 7.7 \u00d7 10(-15) and rs56324128, P = 9.7 \u00d7 10(-12)) in the CYP3A4 region. Further, ARC levels were associated with rs61361928 (P = 3.0 \u00d7 10(-14)) in UGT2B7. At all loci, the effects were small. None of the identified SNPs that affected ticagrelor PK were associated with the primary composite outcome (cardiovascular death myocardial infarction, and stroke), non-CABG-related bleeds or investigator-reported dyspnoea.\n\nCONCLUSION: In patients with ACS, ticagrelor pharmacokinetics is influenced by three genetic loci (SLCO1B1, UGT2B7, and CYP3A4). However, the modest genetic effects on ticagrelor plasma levels did not translate into any detectable effect on efficacy or safety during ticagrelor treatment.\n\nCLINICAL TRIAL REGISTRATION: NCT00391872.",
+            "terms": [],
+            "type": "Literature",
+            "version": 3,
+            "volume": "36",
+            "year": 2015
+          },
+          "location": {
+            "id": 1447987318,
+            "buildVersion": "hg38",
+            "chromosomeId": "PA534",
+            "chromosomeName": "chr7",
+            "copyNumber": "1",
+            "diplotypes": [],
+            "displayName": "rs62471956",
+            "genes": [
+              {
+                "objCls": "Gene",
+                "id": "PA427",
+                "symbol": "CYP3A43",
+                "name": "cytochrome P450 family 3 subfamily A member 43",
+                "version": 16
+              }
+            ],
+            "gpPosition": 99421085,
+            "haplotypes": [],
+            "linkedObjects": [
+              {
+                "objCls": "Variant",
+                "id": "PA166157501",
+                "symbol": "rs62471956",
+                "name": "rs62471956",
+                "version": 4
+              }
+            ],
+            "refSeqPosition": -1,
+            "rsid": "rs62471956",
+            "tagGene": false,
+            "type": "SNP",
+            "variant": {
+              "objCls": "Variant",
+              "id": "PA166157501",
+              "symbol": "rs62471956",
+              "name": "rs62471956",
+              "version": 4
+            },
+            "version": 1
+          },
+          "metabolizers1": [],
+          "metabolizers2": [],
+          "objCls": "Variant Drug Annotation",
+          "pediatric": false,
+          "phenotypeCategories": [
+            {
+              "id": 981344088,
+              "description": "Includes all drug metabolism and pharmacokinetic options.\n[PK]",
+              "parents": [],
+              "resource": "Phenotype Categories",
+              "synonyms": [],
+              "term": "Metabolism/PK",
+              "termId": "secondaryCat:981344088",
+              "valid": true,
+              "version": 2
+            }
+          ],
+          "polarity": {
+            "id": 769229640,
+            "parents": [],
+            "resource": "Polarity",
+            "synonyms": [],
+            "term": "decreased",
+            "termId": "variantAnnotationPolarity:769229640",
+            "valid": true,
+            "version": 0
+          },
+          "populationPhenotypeLinksConnWord": {
+            "id": 827698395,
+            "parents": [],
+            "resource": "Collection Operator - And/Or",
+            "synonyms": [],
+            "term": "and",
+            "termId": "drugsConnWord:827698395",
+            "valid": true,
+            "version": 0
+          },
+          "populationPhenotypes": [
+            {
+              "id": 1447987317,
+              "disease": {
+                "objCls": "Disease",
+                "id": "PA165108401",
+                "name": "Acute coronary syndrome",
+                "version": 4
+              },
+              "phenotype": "Acute coronary syndrome",
+              "phenotypeContext": "Disease",
+              "version": 0
+            }
+          ],
+          "populationTerm": {
+            "id": 769229662,
+            "parents": [],
+            "resource": "Population",
+            "synonyms": [],
+            "term": "in people with",
+            "termId": "variantAnnotationPhenotypeConnWords3:769229662",
+            "valid": true,
+            "version": 0
+          },
+          "relatedChemicals": [
+            {
+              "objCls": "Chemical",
+              "id": "PA165374673",
+              "name": "ticagrelor",
+              "version": 6
+            }
+          ],
+          "relatedVariations": [
+            {
+              "objCls": "Allele",
+              "id": "PA166389351",
+              "symbol": "CA15537807",
+              "name": "NC_000007.14:g.99823462G>A",
+              "version": 1
+            },
+            {
+              "objCls": "Allele",
+              "id": "PA166389352",
+              "symbol": "CA1729263624",
+              "name": "NC_000007.14:g.99823462G=",
+              "version": 1
+            }
+          ],
+          "score": 0.0,
+          "scoreDetails": {
+            "step5A": 1.0,
+            "step5B": 0.0,
+            "chosenSpId": 1447987297,
+            "step1Score": 0.5,
+            "step2Score": 0.5,
+            "step3Score": 1.0,
+            "step4Score": 0.0,
+            "totalScore": 0.0,
+            "chosenSpIndex": "1 of 1",
+            "generatedDate": "2021-03-21T01:17:25.600-07:00",
+            "variantAnnotationId": 1447987295
+          },
+          "sentence": "Allele G is associated with decreased concentrations of ticagrelor in people with Acute coronary syndrome as compared to allele A.",
+          "sequenceLocation": {
+            "id": 1448088670,
+            "altHgvs": {},
+            "assembly": "GRCh37",
+            "begin": 99421085,
+            "end": 99421085,
+            "intronicOffset": 0,
+            "referenceAllele": "G",
+            "referenceHgvs": "NC_000007.13:g.99421085=",
+            "sequence": {
+              "id": 1447949557,
+              "name": "[GRCh37]chr7",
+              "resource": "RefSeq DNA",
+              "resourceId": "NC_000007.13",
+              "_url": "https://www.ncbi.nlm.nih.gov/nuccore/NC_000007.13",
+              "version": 2
+            },
+            "source": "dbSnp",
+            "type": "genomic",
+            "variantAlleles": [
+              "A"
+            ],
+            "variantHgvs": [
+              "NC_000007.13:g.99421085G>A"
+            ],
+            "version": 1
+          },
+          "significance": {
+            "id": 769229666,
+            "parents": [],
+            "resource": "Association Significance",
+            "synonyms": [],
+            "term": "yes",
+            "termId": "variantAnnotationSignificance:769229666",
+            "valid": true,
+            "version": 0
+          },
+          "studyParameters": [
+            {
+              "id": 1447987297,
+              "alleleOfFreqInCases": "A",
+              "characteristics": "PLATO trial on effect of ticagrelor vs clopidogrel",
+              "characteristicsType": "Study Cohort",
+              "confidenceIntervalStart": -1.0,
+              "confidenceIntervalStop": -1.0,
+              "description": "Significant in the combined dataset (n=3752, p=1.32E-14)",
+              "frequencyInCases": 0.034,
+              "frequencyInControls": -1.0,
+              "pediatric": false,
+              "populationEthnicity": {
+                "custom": false,
+                "ethnicities": [
+                  "European"
+                ],
+                "mixed": false,
+                "notes": "99% caucasian",
+                "unknown": false
+              },
+              "populationTypes": [
+                {
+                  "id": 1183702745,
+                  "parents": [],
+                  "resource": "Population Type",
+                  "synonyms": [],
+                  "term": "men",
+                  "termId": "populationType:1183702745",
+                  "valid": true,
+                  "version": 0
+                },
+                {
+                  "id": 1183702746,
+                  "parents": [],
+                  "resource": "Population Type",
+                  "synonyms": [],
+                  "term": "women",
+                  "termId": "populationType:1183702746",
+                  "valid": true,
+                  "version": 0
+                }
+              ],
+              "pvalue": 1.32e-14,
+              "pvalueOp": {
+                "id": 1183492001,
+                "parents": [],
+                "resource": "Equality Symbols",
+                "synonyms": [],
+                "term": "=",
+                "termId": "equality:1183492001",
+                "valid": true,
+                "version": 0
+              },
+              "pvalueString": "1.32E-14",
+              "ratioStat": -1.0,
+              "ratioStatType": {
+                "id": 1183624559,
+                "parents": [],
+                "resource": "Statistic Analysis",
+                "synonyms": [],
+                "term": "OR",
+                "termId": "statAnalysis:1183624559",
+                "valid": true,
+                "version": 0
+              },
+              "statTests": [
+                {
+                  "id": 1183703105,
+                  "parents": [],
+                  "resource": "Statistical Test Tags",
+                  "synonyms": [],
+                  "term": "Cox regression analysis",
+                  "termId": "statTest:1183703105",
+                  "valid": true,
+                  "version": 0
+                },
+                {
+                  "id": 1183704993,
+                  "parents": [],
+                  "resource": "Statistical Test Tags",
+                  "synonyms": [],
+                  "term": "Bonferroni correction",
+                  "termId": "statTest:1183704993",
+                  "valid": true,
+                  "version": 0
+                }
+              ],
+              "studyCases": 3752,
+              "studyControls": -1,
+              "studyTypes": [
+                "cohort",
+                "clinical trial",
+                "GWAS"
+              ],
+              "usedForScoring": true,
+              "version": 0
+            }
+          ],
+          "useForCaScoring": true,
+          "version": 9
+        }
+      ],
+      "version": 6
+    },
+    {
+      "id": 1448100347,
+      "accessionId": "PA166158969",
+      "allelePhenotypes": [
+        {
+          "id": 1448100349,
+          "allele": "CC",
+          "limitedEvidence": false,
+          "phenotype": "Patients with the CC genotype and acute coronary syndrome may have increased concentrations of ticagrelor compared to patients with the CT and TT genotypes. Other factors may affect concentrations of ticagrelor.",
+          "version": 0
+        },
+        {
+          "id": 1448100350,
+          "allele": "CT",
+          "limitedEvidence": false,
+          "phenotype": "Patients with the CT genotype and acute coronary syndrome may have increased concentrations of ticagrelor compared to patients with the TT genotype. Other factors may affect concentrations of ticagrelor.",
+          "version": 0
+        },
+        {
+          "id": 1448100351,
+          "allele": "TT",
+          "limitedEvidence": false,
+          "phenotype": "Patients with the TT genotype and acute coronary syndrome may have decreased concentrations of ticagrelor compared to patients with the CC and CT genotypes. Other factors may affect concentrations of ticagrelor.",
+          "version": 0
+        }
+      ],
+      "conflictingVariantAnnotationIds": [],
+      "history": [
+        {
+          "id": 1448100348,
+          "date": "2016-06-09T11:14:38.031-07:00",
+          "type": "Create",
+          "version": 0
+        },
+        {
+          "id": 1449765576,
+          "date": "2018-11-05T14:24:57.359-08:00",
+          "description": "Updated OMB race to appropriate biogeographical group",
+          "type": "Update",
+          "version": 0
+        },
+        {
+          "id": 1451394766,
+          "date": "2021-03-24T20:25:53.322-07:00",
+          "description": "CA score added as part of scoring system release. LOE may have automatically changed based on new score but may be subject to further changes upon curator review.",
+          "type": "Update",
+          "version": 0
+        }
+      ],
+      "levelOfEvidence": {
+        "id": 827923056,
+        "description": "Level 3 clinical annotations describe variant-drug combinations with a low level of evidence supporting the association. This association may be based on a single study annotated in PharmGKB, or there may be several studies that failed to replicate the association. The annotation may also be based on preliminary evidence (e.g., a case report, non-significant study, or in vitro, molecular, or functional assay evidence), resulting in a lower calculated score.",
+        "parents": [],
+        "resource": "Level of Evidence",
+        "synonyms": [],
+        "term": "3",
+        "termId": "levelsOfEvidence:827923056",
+        "valid": true,
+        "version": 2
+      },
+      "location": {
+        "id": 1448100352,
+        "buildVersion": "hg38",
+        "chromosomeId": "PA508",
+        "chromosomeName": "chr12",
+        "copyNumber": "1",
+        "diplotypes": [],
+        "displayName": "rs4149056",
+        "genes": [
+          {
+            "objCls": "Gene",
+            "id": "PA134865839",
+            "symbol": "SLCO1B1",
+            "name": "solute carrier organic anion transporter family member 1B1",
+            "version": 49
+          }
+        ],
+        "gpPosition": 21331549,
+        "haplotypes": [],
+        "linkedObjects": [
+          {
+            "objCls": "Variant",
+            "id": "PA166154579",
+            "symbol": "rs4149056",
+            "name": "rs4149056",
+            "version": 6
+          }
+        ],
+        "refSeqCrossReference": {
+          "id": 1444698349,
+          "resource": "RefSeq RNA",
+          "resourceId": "NM_006446.4",
+          "_url": "https://www.ncbi.nlm.nih.gov/nuccore/NM_006446.4",
+          "version": 0
+        },
+        "refSeqPosition": 521,
+        "rsid": "rs4149056",
+        "tagGene": false,
+        "type": "SNP",
+        "variant": {
+          "objCls": "Variant",
+          "id": "PA166154579",
+          "symbol": "rs4149056",
+          "name": "rs4149056",
+          "version": 6
+        },
+        "version": 1
+      },
+      "name": "rs4149056 (SLCO1B1); ticagrelor; Acute coronary syndrome (level 3 Metabolism/PK)",
+      "objCls": "Clinical Annotation",
+      "overrideLevel": false,
+      "pediatric": false,
+      "relatedChemicals": [
+        {
+          "objCls": "Chemical",
+          "id": "PA165374673",
+          "name": "ticagrelor",
+          "version": 6
+        }
+      ],
+      "relatedChemicalsLogic": "Or",
+      "relatedDiseases": [
+        {
+          "objCls": "Disease",
+          "id": "PA165108401",
+          "name": "Acute coronary syndrome",
+          "version": 4
+        }
+      ],
+      "relatedGuidelines": [],
+      "relatedLabels": [],
+      "relatedVariations": [
+        {
+          "objCls": "Allele",
+          "id": "PA166375177",
+          "symbol": "CA2020991446",
+          "name": "NM_006446.5(SLCO1B1):c.521T= (p.Val174=)",
+          "version": 1
+        },
+        {
+          "objCls": "Allele",
+          "id": "PA166375178",
+          "symbol": "CA6476722",
+          "name": "NM_006446.5(SLCO1B1):c.521T>C (p.Val174Ala)",
+          "version": 1
+        }
+      ],
+      "score": 0.0,
+      "scoreDetails": "{\"vaScores\": [{\"step5A\": 1.0, \"step5B\": 0.0, \"chosenSpId\": 1447987284, \"step1Score\": 0.5, \"step2Score\": 0.5, \"step3Score\": 1.0, \"step4Score\": 0.0, \"totalScore\": 0.0, \"chosenSpIndex\": \"1 of 1\", \"generatedDate\": \"2021-03-21T05:15:06.649-07:00\", \"variantAnnotationId\": 1447987282}], \"totalScore\": 0.0, \"vaScoreTotal\": 0.0, \"generatedDate\": \"2021-03-21T05:15:06.649-07:00\", \"labelScoreTotal\": 0.0, \"guidelineScoreTotal\": 0.0}",
+      "types": [
+        "Metabolism/PK"
+      ],
+      "variantAnnotations": [
+        {
+          "id": 1447987282,
+          "accessionId": "PA166174251",
+          "alleleGenotype": "T",
+          "comparison": "C",
+          "connWords1": {
+            "id": 1184746916,
+            "parents": [],
+            "resource": "Drug Connecting words 1",
+            "synonyms": [],
+            "term": "concentrations of",
+            "termId": "drug_ConnWords1:1184746916",
+            "valid": true,
+            "version": 0
+          },
+          "description": "Alleles given as A/G. Part of a GWAS study with replication cohort. This study did not find changes in primary outcomes on ticagrelor, but did find differences in AUC of ticagrelor and the metabolite ARC (AR-C124910XX). Significantly associated with AUC in the discovery phase, replication phase, and combined.",
+          "drugsConnWord": {
+            "id": 827698395,
+            "parents": [],
+            "resource": "Collection Operator - And/Or",
+            "synonyms": [],
+            "term": "and",
+            "termId": "drugsConnWord:827698395",
+            "valid": true,
+            "version": 0
+          },
+          "formatVersion": 1,
+          "history": [
+            {
+              "id": 1447987287,
+              "date": "2016-05-13T11:16:09.128-07:00",
+              "type": "Create",
+              "version": 0
+            },
+            {
+              "id": 1450367298,
+              "date": "2019-01-29T09:18:44.576-08:00",
+              "description": "Updated OMB race to appropriate biogeographical group",
+              "type": "Update",
+              "version": 0
+            }
+          ],
+          "isAssociated": true,
+          "isPlural": false,
+          "literature": {
+            "id": 15097388,
+            "title": "Effect of genetic variations on ticagrelor plasma levels and clinical outcomes.",
+            "_sameAs": "https://www.ncbi.nlm.nih.gov/pubmed/25935875",
+            "authors": [
+              "Varenhorst Christoph",
+              "Eriksson Niclas",
+              "Johansson \u00c5sa",
+              "Barratt Bryan J",
+              "Hagstr\u00f6m Emil",
+              "\u00c5kerblom Axel",
+              "Syv\u00e4nen Ann-Christine",
+              "Becker Richard C",
+              "James Stefan K",
+              "Katus Hugo A",
+              "Husted Steen",
+              "Steg Ph Gabriel",
+              "Siegbahn Agneta",
+              "Voora Deepak",
+              "Teng Renli",
+              "Storey Robert F",
+              "Wallentin Lars",
+              "PLATO Investigators"
+            ],
+            "crossReferences": [
+              {
+                "id": 1449288277,
+                "resource": "PubMed",
+                "resourceId": "25935875",
+                "_url": "https://www.ncbi.nlm.nih.gov/pubmed/25935875",
+                "version": 0
+              },
+              {
+                "id": 1449288278,
+                "resource": "DOI",
+                "resourceId": "10.1093/eurheartj/ehv116",
+                "_url": "http://dx.doi.org/10.1093%2Feurheartj%2Fehv116",
+                "version": 0
+              }
+            ],
+            "day": -1,
+            "hasKeyword": true,
+            "journal": "European heart journal",
+            "meshTerms": [
+              "Acute Coronary Syndrome",
+              "Adenosine",
+              "Adult",
+              "Cytochrome P-450 CYP3A",
+              "Female",
+              "Genome-Wide Association Study",
+              "Genotype",
+              "Glucuronosyltransferase",
+              "Humans",
+              "Liver-Specific Organic Anion Transporter 1",
+              "Male",
+              "Middle Aged",
+              "Organic Anion Transporters",
+              "Polymorphism, Single Nucleotide",
+              "Purinergic P2Y Receptor Antagonists",
+              "Ticagrelor",
+              "Treatment Outcome"
+            ],
+            "month": 8,
+            "nonHuman": false,
+            "objCls": "Literature",
+            "page": "1901-12",
+            "pediatric": false,
+            "pgkbPublication": false,
+            "pubDate": "2015-08-01T00:00:00-07:00",
+            "pubmedMeshTerms": [],
+            "summary": "AIMS: Ticagrelor, a direct-acting P2Y12-receptor antagonist, is rapidly absorbed and partly metabolized to the major metabolite AR-C124910XX (ARC). To identify single-nucleotide polymorphisms (SNPs) associated with pharmacokinetics of ticagrelor and clinical outcomes, we performed a genome-wide association study (GWAS) in patients treated with ticagrelor in the PLATO trial.\n\nMETHODS AND RESULTS: A two-stage design was used for the GWAS with discovery (discovery phase: n = 1812) and replication cohorts (replication phase: n = 1941). The steady-state area under the curve (AUCss) values, estimated by the population pharmacokinetic (PK) models, were log transformed and analysed on a genome-wide scale using linear regression. SNPs were analysed against clinical events using Cox-regression in 4990 patients. An SNP (rs113681054) in SLCO1B1 was associated with levels of ticagrelor (P = 1.1 \u00d7 10(-6)) and ARC (P = 4.6 \u00d7 10(-13)). This SNP is in linkage disequilibrium with a functional variant (rs4149056) that results in decreased OATP1B1 transporter activity. Ticagrelor levels were also associated with two independent SNPs (rs62471956, P = 7.7 \u00d7 10(-15) and rs56324128, P = 9.7 \u00d7 10(-12)) in the CYP3A4 region. Further, ARC levels were associated with rs61361928 (P = 3.0 \u00d7 10(-14)) in UGT2B7. At all loci, the effects were small. None of the identified SNPs that affected ticagrelor PK were associated with the primary composite outcome (cardiovascular death myocardial infarction, and stroke), non-CABG-related bleeds or investigator-reported dyspnoea.\n\nCONCLUSION: In patients with ACS, ticagrelor pharmacokinetics is influenced by three genetic loci (SLCO1B1, UGT2B7, and CYP3A4). However, the modest genetic effects on ticagrelor plasma levels did not translate into any detectable effect on efficacy or safety during ticagrelor treatment.\n\nCLINICAL TRIAL REGISTRATION: NCT00391872.",
+            "terms": [],
+            "type": "Literature",
+            "version": 3,
+            "volume": "36",
+            "year": 2015
+          },
+          "location": {
+            "id": 1447987286,
+            "buildVersion": "hg38",
+            "chromosomeId": "PA508",
+            "chromosomeName": "chr12",
+            "copyNumber": "1",
+            "diplotypes": [],
+            "displayName": "rs4149056",
+            "genes": [
+              {
+                "objCls": "Gene",
+                "id": "PA134865839",
+                "symbol": "SLCO1B1",
+                "name": "solute carrier organic anion transporter family member 1B1",
+                "version": 49
+              }
+            ],
+            "gpPosition": 21331549,
+            "haplotypes": [],
+            "linkedObjects": [
+              {
+                "objCls": "Variant",
+                "id": "PA166154579",
+                "symbol": "rs4149056",
+                "name": "rs4149056",
+                "version": 6
+              }
+            ],
+            "refSeqCrossReference": {
+              "id": 1444698349,
+              "resource": "RefSeq RNA",
+              "resourceId": "NM_006446.4",
+              "_url": "https://www.ncbi.nlm.nih.gov/nuccore/NM_006446.4",
+              "version": 0
+            },
+            "refSeqPosition": 521,
+            "rsid": "rs4149056",
+            "tagGene": false,
+            "type": "SNP",
+            "variant": {
+              "objCls": "Variant",
+              "id": "PA166154579",
+              "symbol": "rs4149056",
+              "name": "rs4149056",
+              "version": 6
+            },
+            "version": 1
+          },
+          "metabolizers1": [],
+          "metabolizers2": [],
+          "objCls": "Variant Drug Annotation",
+          "pediatric": false,
+          "phenotypeCategories": [
+            {
+              "id": 981344088,
+              "description": "Includes all drug metabolism and pharmacokinetic options.\n[PK]",
+              "parents": [],
+              "resource": "Phenotype Categories",
+              "synonyms": [],
+              "term": "Metabolism/PK",
+              "termId": "secondaryCat:981344088",
+              "valid": true,
+              "version": 2
+            }
+          ],
+          "polarity": {
+            "id": 769229640,
+            "parents": [],
+            "resource": "Polarity",
+            "synonyms": [],
+            "term": "decreased",
+            "termId": "variantAnnotationPolarity:769229640",
+            "valid": true,
+            "version": 0
+          },
+          "populationPhenotypeLinksConnWord": {
+            "id": 827698395,
+            "parents": [],
+            "resource": "Collection Operator - And/Or",
+            "synonyms": [],
+            "term": "and",
+            "termId": "drugsConnWord:827698395",
+            "valid": true,
+            "version": 0
+          },
+          "populationPhenotypes": [
+            {
+              "id": 1447987285,
+              "disease": {
+                "objCls": "Disease",
+                "id": "PA165108401",
+                "name": "Acute coronary syndrome",
+                "version": 4
+              },
+              "phenotype": "Acute coronary syndrome",
+              "phenotypeContext": "Disease",
+              "version": 0
+            }
+          ],
+          "populationTerm": {
+            "id": 769229662,
+            "parents": [],
+            "resource": "Population",
+            "synonyms": [],
+            "term": "in people with",
+            "termId": "variantAnnotationPhenotypeConnWords3:769229662",
+            "valid": true,
+            "version": 0
+          },
+          "relatedChemicals": [
+            {
+              "objCls": "Chemical",
+              "id": "PA165374673",
+              "name": "ticagrelor",
+              "version": 6
+            }
+          ],
+          "relatedVariations": [
+            {
+              "objCls": "Allele",
+              "id": "PA166375177",
+              "symbol": "CA2020991446",
+              "name": "NM_006446.5(SLCO1B1):c.521T= (p.Val174=)",
+              "version": 1
+            },
+            {
+              "objCls": "Allele",
+              "id": "PA166375178",
+              "symbol": "CA6476722",
+              "name": "NM_006446.5(SLCO1B1):c.521T>C (p.Val174Ala)",
+              "version": 1
+            }
+          ],
+          "score": 0.0,
+          "scoreDetails": {
+            "step5A": 1.0,
+            "step5B": 0.0,
+            "chosenSpId": 1447987284,
+            "step1Score": 0.5,
+            "step2Score": 0.5,
+            "step3Score": 1.0,
+            "step4Score": 0.0,
+            "totalScore": 0.0,
+            "chosenSpIndex": "1 of 1",
+            "generatedDate": "2021-03-21T01:49:45.153-07:00",
+            "variantAnnotationId": 1447987282
+          },
+          "sentence": "Allele T is associated with decreased concentrations of ticagrelor in people with Acute coronary syndrome as compared to allele C.",
+          "sequenceLocation": {
+            "id": 1448014876,
+            "altHgvs": {},
+            "assembly": "GRCh37",
+            "begin": 21331549,
+            "end": 21331549,
+            "intronicOffset": 0,
+            "referenceAllele": "T",
+            "referenceHgvs": "NC_000012.11:g.21331549=",
+            "sequence": {
+              "id": 1447949562,
+              "name": "[GRCh37]chr12",
+              "resource": "RefSeq DNA",
+              "resourceId": "NC_000012.11",
+              "_url": "https://www.ncbi.nlm.nih.gov/nuccore/NC_000012.11",
+              "version": 2
+            },
+            "source": "dbSnp",
+            "type": "genomic",
+            "variantAlleles": [
+              "C"
+            ],
+            "variantHgvs": [
+              "NC_000012.11:g.21331549T>C"
+            ],
+            "version": 2
+          },
+          "significance": {
+            "id": 769229666,
+            "parents": [],
+            "resource": "Association Significance",
+            "synonyms": [],
+            "term": "yes",
+            "termId": "variantAnnotationSignificance:769229666",
+            "valid": true,
+            "version": 0
+          },
+          "studyParameters": [
+            {
+              "id": 1447987284,
+              "alleleOfFreqInCases": "C",
+              "characteristics": "PLATO trial on effect of ticagrelor vs clopidogrel",
+              "characteristicsType": "Study Cohort",
+              "confidenceIntervalStart": -1.0,
+              "confidenceIntervalStop": -1.0,
+              "description": "Three phases of the study:\r\ndiscovery (n= 1806, p=2.18E-8)\r\nreplication (n=1942, p=1.61E-5)\r\ncombined (n=3752, p=2.13E-12)",
+              "frequencyInCases": 0.173,
+              "frequencyInControls": -1.0,
+              "pediatric": false,
+              "populationEthnicity": {
+                "custom": false,
+                "ethnicities": [
+                  "European"
+                ],
+                "mixed": false,
+                "notes": "99% caucasian",
+                "unknown": false
+              },
+              "populationTypes": [
+                {
+                  "id": 1183702745,
+                  "parents": [],
+                  "resource": "Population Type",
+                  "synonyms": [],
+                  "term": "men",
+                  "termId": "populationType:1183702745",
+                  "valid": true,
+                  "version": 0
+                },
+                {
+                  "id": 1183702746,
+                  "parents": [],
+                  "resource": "Population Type",
+                  "synonyms": [],
+                  "term": "women",
+                  "termId": "populationType:1183702746",
+                  "valid": true,
+                  "version": 0
+                }
+              ],
+              "pvalue": 2.13e-12,
+              "pvalueOp": {
+                "id": 1183492001,
+                "parents": [],
+                "resource": "Equality Symbols",
+                "synonyms": [],
+                "term": "=",
+                "termId": "equality:1183492001",
+                "valid": true,
+                "version": 0
+              },
+              "pvalueString": "2.13E-12",
+              "ratioStat": -1.0,
+              "ratioStatType": {
+                "id": 1183624559,
+                "parents": [],
+                "resource": "Statistic Analysis",
+                "synonyms": [],
+                "term": "OR",
+                "termId": "statAnalysis:1183624559",
+                "valid": true,
+                "version": 0
+              },
+              "statTests": [
+                {
+                  "id": 1183703105,
+                  "parents": [],
+                  "resource": "Statistical Test Tags",
+                  "synonyms": [],
+                  "term": "Cox regression analysis",
+                  "termId": "statTest:1183703105",
+                  "valid": true,
+                  "version": 0
+                },
+                {
+                  "id": 1183704993,
+                  "parents": [],
+                  "resource": "Statistical Test Tags",
+                  "synonyms": [],
+                  "term": "Bonferroni correction",
+                  "termId": "statTest:1183704993",
+                  "valid": true,
+                  "version": 0
+                }
+              ],
+              "studyCases": 3752,
+              "studyControls": -1,
+              "studyTypes": [
+                "cohort",
+                "clinical trial",
+                "GWAS"
+              ],
+              "usedForScoring": true,
+              "version": 0
+            }
+          ],
+          "useForCaScoring": true,
+          "version": 9
+        }
+      ],
+      "version": 5
+    },
+    {
+      "id": 1448100354,
+      "accessionId": "PA166158970",
+      "allelePhenotypes": [
+        {
+          "id": 1448106592,
+          "allele": "CC",
+          "limitedEvidence": false,
+          "phenotype": "Patients with the CC genotype and acute coronary syndrome may have increased concentrations of ticagrelor compared to patients with the CT and TT genotypes. Other factors may affect concentrations of ticagrelor.",
+          "version": 0
+        },
+        {
+          "id": 1448106593,
+          "allele": "CT",
+          "limitedEvidence": false,
+          "phenotype": "Patients with the CT genotype and acute coronary syndrome may have increased concentrations of ticagrelor compared to patients with the TT genotype. Other factors may affect concentrations of ticagrelor.",
+          "version": 0
+        },
+        {
+          "id": 1448106594,
+          "allele": "TT",
+          "limitedEvidence": false,
+          "phenotype": "Patients with the TT genotype and acute coronary syndrome may have decreased concentrations of ticagrelor compared to patients with the CC and CT genotypes. Other factors may affect concentrations of ticagrelor.",
+          "version": 0
+        }
+      ],
+      "conflictingVariantAnnotationIds": [],
+      "history": [
+        {
+          "id": 1448100355,
+          "date": "2016-06-09T11:16:19.783-07:00",
+          "type": "Create",
+          "version": 0
+        },
+        {
+          "id": 1448106591,
+          "date": "2016-06-22T10:21:19.706-07:00",
+          "description": "added gene 6/22/16 AEF",
+          "type": "Update",
+          "version": 0
+        },
+        {
+          "id": 1449765561,
+          "date": "2018-11-05T14:24:56.254-08:00",
+          "description": "Updated OMB race to appropriate biogeographical group",
+          "type": "Update",
+          "version": 0
+        },
+        {
+          "id": 1451394767,
+          "date": "2021-03-24T20:25:53.752-07:00",
+          "description": "CA score added as part of scoring system release. LOE may have automatically changed based on new score but may be subject to further changes upon curator review.",
+          "type": "Update",
+          "version": 0
+        }
+      ],
+      "levelOfEvidence": {
+        "id": 827923056,
+        "description": "Level 3 clinical annotations describe variant-drug combinations with a low level of evidence supporting the association. This association may be based on a single study annotated in PharmGKB, or there may be several studies that failed to replicate the association. The annotation may also be based on preliminary evidence (e.g., a case report, non-significant study, or in vitro, molecular, or functional assay evidence), resulting in a lower calculated score.",
+        "parents": [],
+        "resource": "Level of Evidence",
+        "synonyms": [],
+        "term": "3",
+        "termId": "levelsOfEvidence:827923056",
+        "valid": true,
+        "version": 2
+      },
+      "location": {
+        "id": 1448106595,
+        "buildVersion": "hg38",
+        "chromosomeId": "PA508",
+        "chromosomeName": "chr12",
+        "copyNumber": "1",
+        "diplotypes": [],
+        "displayName": "rs113681054",
+        "genes": [
+          {
+            "objCls": "Gene",
+            "id": "PA134865839",
+            "symbol": "SLCO1B1",
+            "name": "solute carrier organic anion transporter family member 1B1",
+            "version": 49
+          }
+        ],
+        "gpPosition": 21402979,
+        "haplotypes": [],
+        "linkedObjects": [
+          {
+            "objCls": "Variant",
+            "id": "PA166154664",
+            "symbol": "rs113681054",
+            "name": "rs113681054",
+            "version": 4
+          }
+        ],
+        "refSeqPosition": -1,
+        "rsid": "rs113681054",
+        "tagGene": false,
+        "type": "SNP",
+        "variant": {
+          "objCls": "Variant",
+          "id": "PA166154664",
+          "symbol": "rs113681054",
+          "name": "rs113681054",
+          "version": 4
+        },
+        "version": 1
+      },
+      "name": "rs113681054 (SLCO1B1); ticagrelor; Acute coronary syndrome (level 3 Metabolism/PK)",
+      "objCls": "Clinical Annotation",
+      "overrideLevel": false,
+      "pediatric": false,
+      "relatedChemicals": [
+        {
+          "objCls": "Chemical",
+          "id": "PA165374673",
+          "name": "ticagrelor",
+          "version": 6
+        }
+      ],
+      "relatedChemicalsLogic": "Or",
+      "relatedDiseases": [
+        {
+          "objCls": "Disease",
+          "id": "PA165108401",
+          "name": "Acute coronary syndrome",
+          "version": 4
+        }
+      ],
+      "relatedGuidelines": [],
+      "relatedLabels": [],
+      "relatedVariations": [
+        {
+          "objCls": "Allele",
+          "id": "PA166381443",
+          "symbol": "CA16438707",
+          "name": "NC_000012.12:g.21250045T>C",
+          "version": 1
+        },
+        {
+          "objCls": "Allele",
+          "id": "PA166381442",
+          "symbol": "CA2021035832",
+          "name": "NC_000012.12:g.21250045T=",
+          "version": 1
+        }
+      ],
+      "score": 0.0,
+      "scoreDetails": "{\"vaScores\": [{\"step5A\": 1.0, \"step5B\": 0.0, \"chosenSpId\": 1447987281, \"step1Score\": 0.5, \"step2Score\": 0.5, \"step3Score\": 1.0, \"step4Score\": 0.0, \"totalScore\": 0.0, \"chosenSpIndex\": \"1 of 1\", \"generatedDate\": \"2021-03-21T05:31:32.466-07:00\", \"variantAnnotationId\": 1447987275}], \"totalScore\": 0.0, \"vaScoreTotal\": 0.0, \"generatedDate\": \"2021-03-21T05:31:32.466-07:00\", \"labelScoreTotal\": 0.0, \"guidelineScoreTotal\": 0.0}",
+      "types": [
+        "Metabolism/PK"
+      ],
+      "variantAnnotations": [
+        {
+          "id": 1447987275,
+          "accessionId": "PA166153202",
+          "alleleGenotype": "C",
+          "comparison": "T",
+          "connWords1": {
+            "id": 1184746916,
+            "parents": [],
+            "resource": "Drug Connecting words 1",
+            "synonyms": [],
+            "term": "concentrations of",
+            "termId": "drug_ConnWords1:1184746916",
+            "valid": true,
+            "version": 0
+          },
+          "description": "GWAS study. Does not specifically say which allele was associated with directionality of concentration. Minor allele found on dbSNP. This study did not find changes in primary outcomes on ticagrelor, but did find differences in AUC of ticagrelor and the metabolite ARC (AR-C124910XX).",
+          "drugsConnWord": {
+            "id": 827698395,
+            "parents": [],
+            "resource": "Collection Operator - And/Or",
+            "synonyms": [],
+            "term": "and",
+            "termId": "drugsConnWord:827698395",
+            "valid": true,
+            "version": 0
+          },
+          "formatVersion": 1,
+          "history": [
+            {
+              "id": 1447987279,
+              "date": "2016-05-13T11:02:15.061-07:00",
+              "type": "Create",
+              "version": 0
+            },
+            {
+              "id": 1450367294,
+              "date": "2019-01-29T09:18:43.210-08:00",
+              "description": "Updated OMB race to appropriate biogeographical group",
+              "type": "Update",
+              "version": 0
+            }
+          ],
+          "isAssociated": true,
+          "isPlural": false,
+          "literature": {
+            "id": 15097388,
+            "title": "Effect of genetic variations on ticagrelor plasma levels and clinical outcomes.",
+            "_sameAs": "https://www.ncbi.nlm.nih.gov/pubmed/25935875",
+            "authors": [
+              "Varenhorst Christoph",
+              "Eriksson Niclas",
+              "Johansson \u00c5sa",
+              "Barratt Bryan J",
+              "Hagstr\u00f6m Emil",
+              "\u00c5kerblom Axel",
+              "Syv\u00e4nen Ann-Christine",
+              "Becker Richard C",
+              "James Stefan K",
+              "Katus Hugo A",
+              "Husted Steen",
+              "Steg Ph Gabriel",
+              "Siegbahn Agneta",
+              "Voora Deepak",
+              "Teng Renli",
+              "Storey Robert F",
+              "Wallentin Lars",
+              "PLATO Investigators"
+            ],
+            "crossReferences": [
+              {
+                "id": 1449288277,
+                "resource": "PubMed",
+                "resourceId": "25935875",
+                "_url": "https://www.ncbi.nlm.nih.gov/pubmed/25935875",
+                "version": 0
+              },
+              {
+                "id": 1449288278,
+                "resource": "DOI",
+                "resourceId": "10.1093/eurheartj/ehv116",
+                "_url": "http://dx.doi.org/10.1093%2Feurheartj%2Fehv116",
+                "version": 0
+              }
+            ],
+            "day": -1,
+            "hasKeyword": true,
+            "journal": "European heart journal",
+            "meshTerms": [
+              "Acute Coronary Syndrome",
+              "Adenosine",
+              "Adult",
+              "Cytochrome P-450 CYP3A",
+              "Female",
+              "Genome-Wide Association Study",
+              "Genotype",
+              "Glucuronosyltransferase",
+              "Humans",
+              "Liver-Specific Organic Anion Transporter 1",
+              "Male",
+              "Middle Aged",
+              "Organic Anion Transporters",
+              "Polymorphism, Single Nucleotide",
+              "Purinergic P2Y Receptor Antagonists",
+              "Ticagrelor",
+              "Treatment Outcome"
+            ],
+            "month": 8,
+            "nonHuman": false,
+            "objCls": "Literature",
+            "page": "1901-12",
+            "pediatric": false,
+            "pgkbPublication": false,
+            "pubDate": "2015-08-01T00:00:00-07:00",
+            "pubmedMeshTerms": [],
+            "summary": "AIMS: Ticagrelor, a direct-acting P2Y12-receptor antagonist, is rapidly absorbed and partly metabolized to the major metabolite AR-C124910XX (ARC). To identify single-nucleotide polymorphisms (SNPs) associated with pharmacokinetics of ticagrelor and clinical outcomes, we performed a genome-wide association study (GWAS) in patients treated with ticagrelor in the PLATO trial.\n\nMETHODS AND RESULTS: A two-stage design was used for the GWAS with discovery (discovery phase: n = 1812) and replication cohorts (replication phase: n = 1941). The steady-state area under the curve (AUCss) values, estimated by the population pharmacokinetic (PK) models, were log transformed and analysed on a genome-wide scale using linear regression. SNPs were analysed against clinical events using Cox-regression in 4990 patients. An SNP (rs113681054) in SLCO1B1 was associated with levels of ticagrelor (P = 1.1 \u00d7 10(-6)) and ARC (P = 4.6 \u00d7 10(-13)). This SNP is in linkage disequilibrium with a functional variant (rs4149056) that results in decreased OATP1B1 transporter activity. Ticagrelor levels were also associated with two independent SNPs (rs62471956, P = 7.7 \u00d7 10(-15) and rs56324128, P = 9.7 \u00d7 10(-12)) in the CYP3A4 region. Further, ARC levels were associated with rs61361928 (P = 3.0 \u00d7 10(-14)) in UGT2B7. At all loci, the effects were small. None of the identified SNPs that affected ticagrelor PK were associated with the primary composite outcome (cardiovascular death myocardial infarction, and stroke), non-CABG-related bleeds or investigator-reported dyspnoea.\n\nCONCLUSION: In patients with ACS, ticagrelor pharmacokinetics is influenced by three genetic loci (SLCO1B1, UGT2B7, and CYP3A4). However, the modest genetic effects on ticagrelor plasma levels did not translate into any detectable effect on efficacy or safety during ticagrelor treatment.\n\nCLINICAL TRIAL REGISTRATION: NCT00391872.",
+            "terms": [],
+            "type": "Literature",
+            "version": 3,
+            "volume": "36",
+            "year": 2015
+          },
+          "location": {
+            "id": 1447987278,
+            "buildVersion": "hg38",
+            "chromosomeId": "PA508",
+            "chromosomeName": "chr12",
+            "copyNumber": "1",
+            "diplotypes": [],
+            "displayName": "rs113681054",
+            "genes": [
+              {
+                "objCls": "Gene",
+                "id": "PA134865839",
+                "symbol": "SLCO1B1",
+                "name": "solute carrier organic anion transporter family member 1B1",
+                "version": 49
+              }
+            ],
+            "gpPosition": 21402979,
+            "haplotypes": [],
+            "linkedObjects": [
+              {
+                "objCls": "Variant",
+                "id": "PA166154664",
+                "symbol": "rs113681054",
+                "name": "rs113681054",
+                "version": 4
+              }
+            ],
+            "refSeqPosition": -1,
+            "rsid": "rs113681054",
+            "tagGene": false,
+            "type": "SNP",
+            "variant": {
+              "objCls": "Variant",
+              "id": "PA166154664",
+              "symbol": "rs113681054",
+              "name": "rs113681054",
+              "version": 4
+            },
+            "version": 1
+          },
+          "metabolizers1": [],
+          "metabolizers2": [],
+          "objCls": "Variant Drug Annotation",
+          "pediatric": false,
+          "phenotypeCategories": [
+            {
+              "id": 981344088,
+              "description": "Includes all drug metabolism and pharmacokinetic options.\n[PK]",
+              "parents": [],
+              "resource": "Phenotype Categories",
+              "synonyms": [],
+              "term": "Metabolism/PK",
+              "termId": "secondaryCat:981344088",
+              "valid": true,
+              "version": 2
+            }
+          ],
+          "polarity": {
+            "id": 769229639,
+            "parents": [],
+            "resource": "Polarity",
+            "synonyms": [],
+            "term": "increased",
+            "termId": "variantAnnotationPolarity:769229639",
+            "valid": true,
+            "version": 0
+          },
+          "populationPhenotypeLinksConnWord": {
+            "id": 827698395,
+            "parents": [],
+            "resource": "Collection Operator - And/Or",
+            "synonyms": [],
+            "term": "and",
+            "termId": "drugsConnWord:827698395",
+            "valid": true,
+            "version": 0
+          },
+          "populationPhenotypes": [
+            {
+              "id": 1447987277,
+              "disease": {
+                "objCls": "Disease",
+                "id": "PA165108401",
+                "name": "Acute coronary syndrome",
+                "version": 4
+              },
+              "phenotype": "Acute coronary syndrome",
+              "phenotypeContext": "Disease",
+              "version": 0
+            }
+          ],
+          "populationTerm": {
+            "id": 769229662,
+            "parents": [],
+            "resource": "Population",
+            "synonyms": [],
+            "term": "in people with",
+            "termId": "variantAnnotationPhenotypeConnWords3:769229662",
+            "valid": true,
+            "version": 0
+          },
+          "relatedChemicals": [
+            {
+              "objCls": "Chemical",
+              "id": "PA165374673",
+              "name": "ticagrelor",
+              "version": 6
+            }
+          ],
+          "relatedVariations": [
+            {
+              "objCls": "Allele",
+              "id": "PA166381443",
+              "symbol": "CA16438707",
+              "name": "NC_000012.12:g.21250045T>C",
+              "version": 1
+            },
+            {
+              "objCls": "Allele",
+              "id": "PA166381442",
+              "symbol": "CA2021035832",
+              "name": "NC_000012.12:g.21250045T=",
+              "version": 1
+            }
+          ],
+          "score": 0.0,
+          "scoreDetails": {
+            "step5A": 1.0,
+            "step5B": 0.0,
+            "chosenSpId": 1447987281,
+            "step1Score": 0.5,
+            "step2Score": 0.5,
+            "step3Score": 1.0,
+            "step4Score": 0.0,
+            "totalScore": 0.0,
+            "chosenSpIndex": "1 of 1",
+            "generatedDate": "2021-03-21T02:14:48.394-07:00",
+            "variantAnnotationId": 1447987275
+          },
+          "sentence": "Allele C is associated with increased concentrations of ticagrelor in people with Acute coronary syndrome as compared to allele T.",
+          "sequenceLocation": {
+            "id": 1448016530,
+            "altHgvs": {},
+            "assembly": "GRCh37",
+            "begin": 21402979,
+            "end": 21402979,
+            "intronicOffset": 0,
+            "referenceAllele": "T",
+            "referenceHgvs": "NC_000012.11:g.21402979=",
+            "sequence": {
+              "id": 1447949562,
+              "name": "[GRCh37]chr12",
+              "resource": "RefSeq DNA",
+              "resourceId": "NC_000012.11",
+              "_url": "https://www.ncbi.nlm.nih.gov/nuccore/NC_000012.11",
+              "version": 2
+            },
+            "source": "dbSnp",
+            "type": "genomic",
+            "variantAlleles": [
+              "C"
+            ],
+            "variantHgvs": [
+              "NC_000012.11:g.21402979T>C"
+            ],
+            "version": 1
+          },
+          "significance": {
+            "id": 769229666,
+            "parents": [],
+            "resource": "Association Significance",
+            "synonyms": [],
+            "term": "yes",
+            "termId": "variantAnnotationSignificance:769229666",
+            "valid": true,
+            "version": 0
+          },
+          "studyParameters": [
+            {
+              "id": 1447987281,
+              "alleleOfFreqInCases": "C",
+              "characteristics": "PLATO trial on effect of ticagrelor vs clopidogrel",
+              "characteristicsType": "Study Cohort",
+              "confidenceIntervalStart": -1.0,
+              "confidenceIntervalStop": -1.0,
+              "frequencyInCases": 0.184,
+              "frequencyInControls": -1.0,
+              "pediatric": false,
+              "populationEthnicity": {
+                "custom": false,
+                "ethnicities": [
+                  "European"
+                ],
+                "mixed": false,
+                "notes": "99% caucasian",
+                "unknown": false
+              },
+              "populationTypes": [
+                {
+                  "id": 1183702745,
+                  "parents": [],
+                  "resource": "Population Type",
+                  "synonyms": [],
+                  "term": "men",
+                  "termId": "populationType:1183702745",
+                  "valid": true,
+                  "version": 0
+                },
+                {
+                  "id": 1183702746,
+                  "parents": [],
+                  "resource": "Population Type",
+                  "synonyms": [],
+                  "term": "women",
+                  "termId": "populationType:1183702746",
+                  "valid": true,
+                  "version": 0
+                }
+              ],
+              "pvalue": 3.63e-13,
+              "pvalueOp": {
+                "id": 1183492001,
+                "parents": [],
+                "resource": "Equality Symbols",
+                "synonyms": [],
+                "term": "=",
+                "termId": "equality:1183492001",
+                "valid": true,
+                "version": 0
+              },
+              "pvalueString": "3.63E-13",
+              "ratioStat": -1.0,
+              "ratioStatType": {
+                "id": 1183624559,
+                "parents": [],
+                "resource": "Statistic Analysis",
+                "synonyms": [],
+                "term": "OR",
+                "termId": "statAnalysis:1183624559",
+                "valid": true,
+                "version": 0
+              },
+              "statTests": [
+                {
+                  "id": 1183703105,
+                  "parents": [],
+                  "resource": "Statistical Test Tags",
+                  "synonyms": [],
+                  "term": "Cox regression analysis",
+                  "termId": "statTest:1183703105",
+                  "valid": true,
+                  "version": 0
+                },
+                {
+                  "id": 1183704993,
+                  "parents": [],
+                  "resource": "Statistical Test Tags",
+                  "synonyms": [],
+                  "term": "Bonferroni correction",
+                  "termId": "statTest:1183704993",
+                  "valid": true,
+                  "version": 0
+                }
+              ],
+              "studyCases": 6381,
+              "studyControls": -1,
+              "studyTypes": [
+                "cohort",
+                "clinical trial",
+                "GWAS"
+              ],
+              "usedForScoring": true,
+              "version": 0
+            }
+          ],
+          "useForCaScoring": true,
+          "version": 9
+        }
+      ],
+      "version": 6
+    }
+  ],
+  "status": "success"
+}

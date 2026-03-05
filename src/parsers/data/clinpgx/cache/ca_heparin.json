@@ -1,0 +1,559 @@
+{
+  "data": [
+    {
+      "id": 1448635968,
+      "accessionId": "PA166165295",
+      "allelePhenotypes": [
+        {
+          "id": 1448635976,
+          "allele": "*01:01",
+          "limitedEvidence": false,
+          "phenotype": "Patients with one or two copies of the HLA-DRB3*01:01 allele who are treated with heparin may have an increased risk of heparin-induced thrombocytopenia as compared to patients with no HLA-DRB3*01:01 alleles, or who test negative for the HLA-DRB3*01:01 allele. Other clinical and genetic factors may also influence the risk of developing heparin-induced thrombocytopenia.",
+          "version": 1
+        }
+      ],
+      "conflictingVariantAnnotationIds": [],
+      "history": [
+        {
+          "id": 1448635969,
+          "date": "2017-07-14T03:13:56.268-07:00",
+          "type": "Create",
+          "version": 0
+        },
+        {
+          "id": 1451395110,
+          "date": "2021-03-24T20:28:25.800-07:00",
+          "description": "CA score added as part of scoring system release. LOE may have automatically changed based on new score but may be subject to further changes upon curator review.",
+          "type": "Update",
+          "version": 0
+        }
+      ],
+      "levelOfEvidence": {
+        "id": 827923056,
+        "description": "Level 3 clinical annotations describe variant-drug combinations with a low level of evidence supporting the association. This association may be based on a single study annotated in PharmGKB, or there may be several studies that failed to replicate the association. The annotation may also be based on preliminary evidence (e.g., a case report, non-significant study, or in vitro, molecular, or functional assay evidence), resulting in a lower calculated score.",
+        "parents": [],
+        "resource": "Level of Evidence",
+        "synonyms": [],
+        "term": "3",
+        "termId": "levelsOfEvidence:827923056",
+        "valid": true,
+        "version": 2
+      },
+      "location": {
+        "id": 1448635977,
+        "copyNumber": "1",
+        "diplotypes": [
+          {
+            "id": 1448635978,
+            "allele1": "*01:01:02:01",
+            "version": 0
+          }
+        ],
+        "displayName": "HLA-DRB3*01:01",
+        "genes": [
+          {
+            "objCls": "Gene",
+            "id": "PA35074",
+            "symbol": "HLA-DRB3",
+            "name": "major histocompatibility complex, class II, DR beta 3",
+            "version": 12
+          }
+        ],
+        "gpPosition": -1,
+        "haplotypes": [
+          {
+            "objCls": "Haplotype",
+            "id": "PA165952388",
+            "symbol": "HLA-DRB3*01:01",
+            "name": "*01:01",
+            "version": 5
+          }
+        ],
+        "linkedObjects": [
+          {
+            "objCls": "Haplotype",
+            "id": "PA165952388",
+            "symbol": "HLA-DRB3*01:01",
+            "name": "*01:01",
+            "version": 5
+          }
+        ],
+        "refSeqPosition": -1,
+        "tagGene": false,
+        "type": "haplotype",
+        "version": 0
+      },
+      "name": "HLA-DRB3*01:01; heparin; heparin-induced thrombocytopenia (level 3 Toxicity)",
+      "objCls": "Clinical Annotation",
+      "overrideLevel": false,
+      "pediatric": false,
+      "relatedChemicals": [
+        {
+          "objCls": "Chemical",
+          "id": "PA449855",
+          "name": "heparin",
+          "version": 8
+        }
+      ],
+      "relatedChemicalsLogic": "Or",
+      "relatedDiseases": [
+        {
+          "objCls": "Disease",
+          "id": "PA447264",
+          "name": "Heparin-induced thrombocytopenia",
+          "version": 5
+        }
+      ],
+      "relatedGuidelines": [],
+      "relatedLabels": [],
+      "relatedVariations": [],
+      "score": 3.75,
+      "scoreDetails": "{\"vaScores\": [{\"step5A\": 1.0, \"step5B\": 1.0, \"chosenSpId\": 1448635951, \"step1Score\": 1.0, \"step2Score\": 1.5, \"step3Score\": 0.75, \"step4Score\": 0.5, \"totalScore\": 3.75, \"chosenSpIndex\": \"1 of 2\", \"generatedDate\": \"2021-03-21T05:26:57.672-07:00\", \"variantAnnotationId\": 1448635943}], \"totalScore\": 3.75, \"vaScoreTotal\": 3.75, \"generatedDate\": \"2021-03-21T05:26:57.672-07:00\", \"labelScoreTotal\": 0.0, \"guidelineScoreTotal\": 0.0}",
+      "types": [
+        "Toxicity"
+      ],
+      "variantAnnotations": [
+        {
+          "id": 1448635943,
+          "accessionId": "PA166165294",
+          "alleleGenotype": "*01:01",
+          "connWords1": {
+            "id": 769229644,
+            "parents": [],
+            "resource": "Phenotype Connecting words 1",
+            "synonyms": [],
+            "term": "likelihood of",
+            "termId": "variantAnnotationPhenoConnWords1:769229644",
+            "valid": true,
+            "version": 0
+          },
+          "connWords2": {
+            "id": 769229659,
+            "parents": [],
+            "resource": "Phenotype or Gene to Drug Connecting Words",
+            "synonyms": [],
+            "term": "when treated with",
+            "termId": "variantAnnotationPhenotypeConnWords2:769229659",
+            "valid": true,
+            "version": 0
+          },
+          "description": "The authors refer to the allele as HLA-DRB3*01:01. It was associated with likelihood of heparin induced thrombocytopenia (HIT) in the overall population and when it was assessed only in individuals whose European ancestry was inferred.",
+          "drugsConnWord": {
+            "id": 827698395,
+            "parents": [],
+            "resource": "Collection Operator - And/Or",
+            "synonyms": [],
+            "term": "and",
+            "termId": "drugsConnWord:827698395",
+            "valid": true,
+            "version": 0
+          },
+          "formatVersion": 1,
+          "history": [
+            {
+              "id": 1448635949,
+              "date": "2017-07-14T03:03:16.208-07:00",
+              "type": "Create",
+              "version": 0
+            },
+            {
+              "id": 1450366312,
+              "date": "2019-01-29T09:13:06.042-08:00",
+              "description": "Updated OMB race to appropriate biogeographical group",
+              "type": "Update",
+              "version": 0
+            }
+          ],
+          "isAssociated": true,
+          "isPlural": false,
+          "literature": {
+            "id": 15099019,
+            "title": "Influence of Human Leukocyte Antigen (HLA) Alleles and Killer Cell Immunoglobulin-Like Receptors (KIR) Types on Heparin-Induced Thrombocytopenia (HIT).",
+            "_sameAs": "https://www.ncbi.nlm.nih.gov/pmc/articles/PMC5600645",
+            "authors": [
+              "Karnes Jason H",
+              "Shaffer Christian M",
+              "Cronin Robert",
+              "Bastarache Lisa",
+              "Gaudieri Silvana",
+              "James Ian",
+              "Pavlos Rebecca",
+              "Steiner Heidi E",
+              "Mosley Jonathan D",
+              "Mallal Simon",
+              "Denny Joshua C",
+              "Phillips Elizabeth J",
+              "Roden Dan M"
+            ],
+            "crossReferences": [
+              {
+                "id": 1449289299,
+                "resource": "PubMed Central",
+                "resourceId": "PMC5600645",
+                "_url": "https://www.ncbi.nlm.nih.gov/pmc/articles/PMC5600645",
+                "version": 0
+              },
+              {
+                "id": 1449289298,
+                "resource": "PubMed",
+                "resourceId": "28688202",
+                "_url": "https://www.ncbi.nlm.nih.gov/pubmed/28688202",
+                "version": 0
+              },
+              {
+                "id": 1449289300,
+                "resource": "DOI",
+                "resourceId": "10.1002/phar.1983",
+                "_url": "http://dx.doi.org/10.1002%2Fphar.1983",
+                "version": 0
+              }
+            ],
+            "day": -1,
+            "hasKeyword": true,
+            "journal": "Pharmacotherapy",
+            "meshTerms": [
+              "Adult",
+              "Aged",
+              "Alleles",
+              "Anticoagulants",
+              "Case-Control Studies",
+              "Databases, Nucleic Acid",
+              "Female",
+              "HLA Antigens",
+              "Heparin",
+              "Humans",
+              "Male",
+              "Middle Aged",
+              "Receptors, KIR",
+              "Thrombocytopenia"
+            ],
+            "month": 9,
+            "nonHuman": false,
+            "objCls": "Literature",
+            "page": "1164-1171",
+            "pediatric": false,
+            "pgkbPublication": false,
+            "pubDate": "2017-09-01T00:00:00-07:00",
+            "pubmedMeshTerms": [],
+            "summary": "Heparin-induced thrombocytopenia (HIT) is an unpredictable, life-threatening, immune-mediated reaction to heparin. Variation in human leukocyte antigen (HLA) genes is now used to prevent immune-mediated adverse drug reactions. Combinations of HLA alleles and killer cell immunoglobulin-like receptors (KIR) are associated with multiple autoimmune diseases and infections. The objective of this study is to evaluate the association of HLA alleles and KIR types, alone or in the presence of different HLA ligands, with HIT. HIT cases and heparin-exposed controls were identified in BioVU, an electronic health record coupled to a DNA biobank. HLA sequencing and KIR type imputation using Illumina OMNI-Quad data were performed. Odds ratios for HLA alleles and KIR types and HLA*KIR interactions using conditional logistic regressions were determined in the overall population and by race/ethnicity. Analysis was restricted to KIR types and HLA alleles with a frequency greater than 0.01. The p values for HLA and KIR association were corrected by using a false discovery rate q&lt;0.05 and HLA*KIR interactions were considered significant at p&lt;0.05. Sixty-five HIT cases and 350 matched controls were identified. No statistical differences in baseline characteristics were observed between cases and controls. The HLA-DRB3*01:01 allele was significantly associated with HIT in the overall population (odds ratio 2.81 [1.57-5.02], p=2.1\u00d710-4 , q=0.02) and in individuals with European ancestry, independent of other alleles. No KIR types were associated with HIT, although a significant interaction was observed between KIR2DS5 and the HLA-C1 KIR binding group (p=0.03). The HLA-DRB3*01:01 allele was identified as a potential risk factor for HIT. This class II HLA gene and allele represent biologically plausible candidates for influencing HIT pathogenesis. We found limited evidence of the role of KIR types in HIT pathogenesis. Replication and further study of the HLA-DRB3*01:01 association is necessary.",
+            "terms": [],
+            "type": "Literature",
+            "version": 4,
+            "volume": "37",
+            "year": 2017
+          },
+          "location": {
+            "id": 1448635947,
+            "copyNumber": "1",
+            "diplotypes": [
+              {
+                "id": 1448635948,
+                "allele1": "*01:01:02:01",
+                "version": 0
+              }
+            ],
+            "displayName": "HLA-DRB3*01:01",
+            "genes": [
+              {
+                "objCls": "Gene",
+                "id": "PA35074",
+                "symbol": "HLA-DRB3",
+                "name": "major histocompatibility complex, class II, DR beta 3",
+                "version": 12
+              }
+            ],
+            "gpPosition": -1,
+            "haplotypes": [
+              {
+                "objCls": "Haplotype",
+                "id": "PA165952388",
+                "symbol": "HLA-DRB3*01:01",
+                "name": "*01:01",
+                "version": 5
+              }
+            ],
+            "linkedObjects": [
+              {
+                "objCls": "Haplotype",
+                "id": "PA165952388",
+                "symbol": "HLA-DRB3*01:01",
+                "name": "*01:01",
+                "version": 5
+              }
+            ],
+            "refSeqPosition": -1,
+            "tagGene": false,
+            "type": "haplotype",
+            "version": 0
+          },
+          "metabolizers1": [],
+          "metabolizers2": [],
+          "objCls": "Variant Phenotype Annotation",
+          "pediatric": false,
+          "phenotypeCategories": [
+            {
+              "id": 769229935,
+              "description": "toxicity/adr\n[PD]",
+              "parents": [],
+              "resource": "Phenotype Categories",
+              "synonyms": [],
+              "term": "Toxicity",
+              "termId": "secondaryCat:769229935",
+              "valid": true,
+              "version": 2
+            }
+          ],
+          "phenotypeLinksConnWord": {
+            "id": 827698395,
+            "parents": [],
+            "resource": "Collection Operator - And/Or",
+            "synonyms": [],
+            "term": "and",
+            "termId": "drugsConnWord:827698395",
+            "valid": true,
+            "version": 0
+          },
+          "phenotypes": [
+            {
+              "id": 1448635945,
+              "disease": {
+                "objCls": "Disease",
+                "id": "PA447264",
+                "name": "Heparin-induced thrombocytopenia",
+                "version": 5
+              },
+              "phenotype": "heparin-induced thrombocytopenia",
+              "phenotypeContext": "Side Effect",
+              "version": 0
+            }
+          ],
+          "polarity": {
+            "id": 769229639,
+            "parents": [],
+            "resource": "Polarity",
+            "synonyms": [],
+            "term": "increased",
+            "termId": "variantAnnotationPolarity:769229639",
+            "valid": true,
+            "version": 0
+          },
+          "populationPhenotypeLinksConnWord": {
+            "id": 827698395,
+            "parents": [],
+            "resource": "Collection Operator - And/Or",
+            "synonyms": [],
+            "term": "and",
+            "termId": "drugsConnWord:827698395",
+            "valid": true,
+            "version": 0
+          },
+          "populationPhenotypes": [],
+          "relatedChemicals": [
+            {
+              "objCls": "Chemical",
+              "id": "PA449855",
+              "name": "heparin",
+              "version": 8
+            }
+          ],
+          "relatedVariations": [],
+          "score": 3.75,
+          "scoreDetails": {
+            "step5A": 1.0,
+            "step5B": 1.0,
+            "chosenSpId": 1448635951,
+            "step1Score": 1.0,
+            "step2Score": 1.5,
+            "step3Score": 0.75,
+            "step4Score": 0.5,
+            "totalScore": 3.75,
+            "chosenSpIndex": "1 of 2",
+            "generatedDate": "2021-03-20T22:46:20.361-07:00",
+            "variantAnnotationId": 1448635943
+          },
+          "sentence": "HLA-DRB3 *01:01 is associated with increased likelihood of heparin-induced thrombocytopenia when treated with heparin.",
+          "significance": {
+            "id": 769229666,
+            "parents": [],
+            "resource": "Association Significance",
+            "synonyms": [],
+            "term": "yes",
+            "termId": "variantAnnotationSignificance:769229666",
+            "valid": true,
+            "version": 0
+          },
+          "studyParameters": [
+            {
+              "id": 1448635951,
+              "characteristics": "HIT in all population",
+              "characteristicsType": "Disease",
+              "confidenceIntervalStart": 1.57,
+              "confidenceIntervalStop": 5.02,
+              "frequencyInCases": -1.0,
+              "frequencyInControls": -1.0,
+              "pediatric": false,
+              "populationEthnicity": {
+                "custom": false,
+                "ethnicities": [],
+                "mixed": true,
+                "unknown": false
+              },
+              "populationTypes": [
+                {
+                  "id": 1183702745,
+                  "parents": [],
+                  "resource": "Population Type",
+                  "synonyms": [],
+                  "term": "men",
+                  "termId": "populationType:1183702745",
+                  "valid": true,
+                  "version": 0
+                },
+                {
+                  "id": 1183702746,
+                  "parents": [],
+                  "resource": "Population Type",
+                  "synonyms": [],
+                  "term": "women",
+                  "termId": "populationType:1183702746",
+                  "valid": true,
+                  "version": 0
+                }
+              ],
+              "pvalue": 0.0002,
+              "pvalueOp": {
+                "id": 1183492001,
+                "parents": [],
+                "resource": "Equality Symbols",
+                "synonyms": [],
+                "term": "=",
+                "termId": "equality:1183492001",
+                "valid": true,
+                "version": 0
+              },
+              "pvalueString": "2.0E-4",
+              "ratioStat": 2.81,
+              "ratioStatType": {
+                "id": 1183624559,
+                "parents": [],
+                "resource": "Statistic Analysis",
+                "synonyms": [],
+                "term": "OR",
+                "termId": "statAnalysis:1183624559",
+                "valid": true,
+                "version": 0
+              },
+              "statTests": [
+                {
+                  "id": 1183698617,
+                  "parents": [],
+                  "resource": "Statistical Test Tags",
+                  "synonyms": [],
+                  "term": "multivariate logistic regression",
+                  "termId": "statTest:1183698617",
+                  "valid": true,
+                  "version": 0
+                }
+              ],
+              "studyCases": 65,
+              "studyControls": 350,
+              "studyTypes": [
+                "case/control",
+                "retrospective"
+              ],
+              "usedForScoring": true,
+              "version": 0
+            },
+            {
+              "id": 1448635953,
+              "characteristics": "HIT in European Population (inferred from ancestry informative markers)",
+              "characteristicsType": "Disease",
+              "confidenceIntervalStart": 1.59,
+              "confidenceIntervalStop": 5.62,
+              "frequencyInCases": -1.0,
+              "frequencyInControls": -1.0,
+              "pediatric": false,
+              "populationEthnicity": {
+                "custom": false,
+                "ethnicities": [
+                  "European"
+                ],
+                "mixed": false,
+                "unknown": false
+              },
+              "populationTypes": [
+                {
+                  "id": 1183702745,
+                  "parents": [],
+                  "resource": "Population Type",
+                  "synonyms": [],
+                  "term": "men",
+                  "termId": "populationType:1183702745",
+                  "valid": true,
+                  "version": 0
+                },
+                {
+                  "id": 1183702746,
+                  "parents": [],
+                  "resource": "Population Type",
+                  "synonyms": [],
+                  "term": "women",
+                  "termId": "populationType:1183702746",
+                  "valid": true,
+                  "version": 0
+                }
+              ],
+              "pvalue": 0.000267,
+              "pvalueOp": {
+                "id": 1183492001,
+                "parents": [],
+                "resource": "Equality Symbols",
+                "synonyms": [],
+                "term": "=",
+                "termId": "equality:1183492001",
+                "valid": true,
+                "version": 0
+              },
+              "pvalueString": "2.67E-4",
+              "ratioStat": 3.0,
+              "ratioStatType": {
+                "id": 1183624559,
+                "parents": [],
+                "resource": "Statistic Analysis",
+                "synonyms": [],
+                "term": "OR",
+                "termId": "statAnalysis:1183624559",
+                "valid": true,
+                "version": 0
+              },
+              "statTests": [
+                {
+                  "id": 1183698617,
+                  "parents": [],
+                  "resource": "Statistical Test Tags",
+                  "synonyms": [],
+                  "term": "multivariate logistic regression",
+                  "termId": "statTest:1183698617",
+                  "valid": true,
+                  "version": 0
+                }
+              ],
+              "studyCases": 88,
+              "studyControls": 89,
+              "studyTypes": [
+                "case/control",
+                "retrospective"
+              ],
+              "usedForScoring": false,
+              "version": 0
+            }
+          ],
+          "useForCaScoring": true,
+          "version": 7
+        }
+      ],
+      "version": 2
+    }
+  ],
+  "status": "success"
+}

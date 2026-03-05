@@ -1,0 +1,2752 @@
+{
+  "data": [
+    {
+      "id": 619523389,
+      "accessionId": "PA166134046",
+      "allelePhenotypes": [
+        {
+          "id": 619523390,
+          "allele": "AA",
+          "limitedEvidence": false,
+          "phenotype": "Patients with the AA genotype may have increased risk for Torsades de Point when treated with amiodarone as compared to patients with the GG genotype. Other genetic and clinical factors may also influence a patient's risk for adverse events.",
+          "version": 1
+        },
+        {
+          "id": 619523391,
+          "allele": "AG",
+          "limitedEvidence": false,
+          "phenotype": "Patients with the AG genotype may have increased risk for Torsades de Point when treated with amiodarone as compared to patients with the GG genotype. Other genetic and clinical factors may also influence a patient's risk for adverse events.",
+          "version": 1
+        },
+        {
+          "id": 619523392,
+          "allele": "GG",
+          "limitedEvidence": false,
+          "phenotype": "Patients with the GG genotype may have decreased risk for Torsades de Point when treated with amiodarone as compared to patients with the AA or AG genotype. Patients with the GG genotype may still be at risk for adverse events when taking amiodarone based on their genotype. Other genetic and clinical factors may also influence a patient's risk for adverse events.",
+          "version": 1
+        }
+      ],
+      "conflictingVariantAnnotationIds": [],
+      "history": [
+        {
+          "id": 1448119476,
+          "date": "2016-07-11T15:42:18.090-07:00",
+          "type": "Approve",
+          "version": 0
+        },
+        {
+          "id": 1451392315,
+          "date": "2021-03-24T20:08:22.460-07:00",
+          "description": "CA score added as part of scoring system release. LOE may have automatically changed based on new score but may be subject to further changes upon curator review.",
+          "type": "Update",
+          "version": 0
+        }
+      ],
+      "levelOfEvidence": {
+        "id": 827923056,
+        "description": "Level 3 clinical annotations describe variant-drug combinations with a low level of evidence supporting the association. This association may be based on a single study annotated in PharmGKB, or there may be several studies that failed to replicate the association. The annotation may also be based on preliminary evidence (e.g., a case report, non-significant study, or in vitro, molecular, or functional assay evidence), resulting in a lower calculated score.",
+        "parents": [],
+        "resource": "Level of Evidence",
+        "synonyms": [],
+        "term": "3",
+        "termId": "levelsOfEvidence:827923056",
+        "valid": true,
+        "version": 2
+      },
+      "location": {
+        "id": 981418805,
+        "chromosomeId": "PA534",
+        "chromosomeName": "chr7",
+        "copyNumber": "1",
+        "diplotypes": [],
+        "displayName": "rs12720441",
+        "genes": [
+          {
+            "objCls": "Gene",
+            "id": "PA212",
+            "symbol": "KCNH2",
+            "name": "potassium voltage-gated channel subfamily H member 2",
+            "version": 192
+          }
+        ],
+        "gpPosition": 150647304,
+        "haplotypes": [],
+        "linkedObjects": [
+          {
+            "objCls": "Variant",
+            "id": "PA166157459",
+            "symbol": "rs12720441",
+            "name": "rs12720441",
+            "version": 4
+          }
+        ],
+        "refSeqPosition": -1,
+        "rsid": "rs12720441",
+        "tagGene": false,
+        "type": "SNP",
+        "variant": {
+          "objCls": "Variant",
+          "id": "PA166157459",
+          "symbol": "rs12720441",
+          "name": "rs12720441",
+          "version": 4
+        },
+        "version": 1
+      },
+      "name": "rs12720441 (KCNH2); amiodarone; Torsades de Pointes (level 3 Toxicity)",
+      "objCls": "Clinical Annotation",
+      "overrideLevel": false,
+      "pediatric": false,
+      "relatedChemicals": [
+        {
+          "objCls": "Chemical",
+          "id": "PA448383",
+          "name": "amiodarone",
+          "version": 14
+        }
+      ],
+      "relatedChemicalsLogic": "Or",
+      "relatedDiseases": [
+        {
+          "objCls": "Disease",
+          "id": "PA446294",
+          "name": "Torsades de Pointes",
+          "version": 4
+        }
+      ],
+      "relatedGuidelines": [],
+      "relatedLabels": [],
+      "relatedVariations": [
+        {
+          "objCls": "Allele",
+          "id": "PA166388432",
+          "symbol": "CA006462",
+          "name": "NM_000238.4(KCNH2):c.2350C>T (p.Arg784Trp)",
+          "version": 1
+        },
+        {
+          "objCls": "Allele",
+          "id": "PA166388433",
+          "symbol": "CA1752433391",
+          "name": "NM_000238.4(KCNH2):c.2350C= (p.Arg784=)",
+          "version": 1
+        }
+      ],
+      "score": 0.0,
+      "scoreDetails": "{\"vaScores\": [{\"step5A\": 1.0, \"step5B\": 0.0, \"chosenSpId\": 655385774, \"step1Score\": 1.0, \"step2Score\": 0.0, \"step3Score\": 0.25, \"step4Score\": 0.0, \"totalScore\": 0.0, \"chosenSpIndex\": \"1 of 1\", \"generatedDate\": \"2021-03-21T04:14:04.330-07:00\", \"variantAnnotationId\": 655385772}], \"totalScore\": 0.0, \"vaScoreTotal\": 0.0, \"generatedDate\": \"2021-03-21T04:14:04.332-07:00\", \"labelScoreTotal\": 0.0, \"guidelineScoreTotal\": 0.0}",
+      "types": [
+        "Toxicity"
+      ],
+      "variantAnnotations": [
+        {
+          "id": 655385772,
+          "accessionId": "PA166136747",
+          "alleleGenotype": "A",
+          "comparison": "G",
+          "connWords1": {
+            "id": 769229641,
+            "parents": [],
+            "resource": "Phenotype Connecting words 1",
+            "synonyms": [],
+            "term": "risk of",
+            "termId": "variantAnnotationPhenoConnWords1:769229641",
+            "valid": true,
+            "version": 0
+          },
+          "connWords2": {
+            "id": 769229659,
+            "parents": [],
+            "resource": "Phenotype or Gene to Drug Connecting Words",
+            "synonyms": [],
+            "term": "when treated with",
+            "termId": "variantAnnotationPhenotypeConnWords2:769229659",
+            "valid": true,
+            "version": 0
+          },
+          "description": "found in 1 person",
+          "drugsConnWord": {
+            "id": 827698395,
+            "parents": [],
+            "resource": "Collection Operator - And/Or",
+            "synonyms": [],
+            "term": "and",
+            "termId": "drugsConnWord:827698395",
+            "valid": true,
+            "version": 0
+          },
+          "formatVersion": 1,
+          "history": [
+            {
+              "id": 1449760094,
+              "date": "2018-11-05T14:02:07.650-08:00",
+              "description": "Updated OMB race to appropriate biogeographical group",
+              "type": "Update",
+              "version": 0
+            }
+          ],
+          "isAssociated": true,
+          "isPlural": false,
+          "literature": {
+            "id": 6381922,
+            "title": "Allelic variants in long-QT disease genes in patients with drug-associated torsades de pointes.",
+            "_sameAs": "https://www.ncbi.nlm.nih.gov/pubmed/11997281",
+            "authors": [
+              "Yang Ping",
+              "Kanki Hideaki",
+              "Drolet Benoit",
+              "Yang Tao",
+              "Wei Jian",
+              "Viswanathan Prakash C",
+              "Hohnloser Stefan H",
+              "Shimizu Wataru",
+              "Schwartz Peter J",
+              "Stanton Marshall",
+              "Murray Katherine T",
+              "Norris Kris",
+              "George Alfred L",
+              "Roden Dan M"
+            ],
+            "crossReferences": [
+              {
+                "id": 124665,
+                "resource": "PubMed",
+                "resourceId": "11997281",
+                "_url": "https://www.ncbi.nlm.nih.gov/pubmed/11997281",
+                "version": 1
+              },
+              {
+                "id": 1452655390,
+                "resource": "DOI",
+                "resourceId": "10.1161/01.cir.0000014448.19052.4c",
+                "_url": "http://dx.doi.org/10.1161%2F01.cir.0000014448.19052.4c",
+                "version": 0
+              }
+            ],
+            "day": -1,
+            "hasKeyword": true,
+            "journal": "Circulation",
+            "meshTerms": [
+              "Alleles",
+              "Animals",
+              "Anti-Arrhythmia Agents",
+              "CHO Cells",
+              "Cation Transport Proteins",
+              "Cell Line",
+              "Cricetinae",
+              "DNA-Binding Proteins",
+              "ERG1 Potassium Channel",
+              "Electric Conductivity",
+              "Ether-A-Go-Go Potassium Channels",
+              "Female",
+              "Gene Frequency",
+              "Genetic Predisposition to Disease",
+              "Genetic Variation",
+              "Humans",
+              "KCNQ Potassium Channels",
+              "KCNQ1 Potassium Channel",
+              "Long QT Syndrome",
+              "Male",
+              "Mutation",
+              "NAV1.5 Voltage-Gated Sodium Channel",
+              "Polymorphism, Genetic",
+              "Potassium Channels",
+              "Potassium Channels, Voltage-Gated",
+              "Sodium Channels",
+              "Torsades de Pointes",
+              "Trans-Activators",
+              "Transcriptional Regulator ERG"
+            ],
+            "month": 4,
+            "nonHuman": false,
+            "objCls": "Literature",
+            "page": "1943-8",
+            "pediatric": false,
+            "pgkbPublication": false,
+            "pubDate": "2002-04-01T00:00:00-08:00",
+            "pubmedMeshTerms": [],
+            "summary": "BACKGROUND: DNA variants appearing to predispose to drug-associated \"acquired\" long-QT syndrome (aLQTS) have been reported in congenital long-QT disease genes. However, the incidence of these genetic risk factors has not been systematically evaluated in a large set of patients with aLQTS. We have previously identified functionally important DNA variants in genes encoding K+ channel ancillary subunits in 11% of an aLQTS cohort.\n\nMETHODS AND RESULTS: The coding regions of the genes encoding the pore-forming channel proteins KvLQT1, HERG, and SCN5A were screened in (1) the same aLQTS cohort (n=92) and (2) controls, drawn from patients tolerating QT-prolonging drugs (n=67) and cross sections of the Middle Tennessee (n=71) and US populations (n=90). The frequency of three common nonsynonymous coding region polymorphisms was no different between aLQTS and control subjects, as follows: 24% versus 19% for H558R (SCN5A), 3% versus 3% for R34C (SCN5A), and 14% versus 14% for K897T (HERG). Missense mutations (absent in controls) were identified in 5 of 92 patients. KvLQT1 and HERG mutations (one each) reduced K+ currents in vitro, consistent with the idea that they augment risk for aLQTS. However, three SCN5A variants did not alter I(Na), which argues that they played no role in the aLQTS phenotype.\n\nCONCLUSIONS: DNA variants in the coding regions of congenital long-QT disease genes predisposing to aLQTS can be identified in approximately 10% to 15% of affected subjects, predominantly in genes encoding ancillary subunits.",
+            "terms": [],
+            "type": "Literature",
+            "version": 6,
+            "volume": "105",
+            "year": 2002
+          },
+          "location": {
+            "id": 619523393,
+            "buildVersion": "hg19",
+            "chromosomeId": "PA534",
+            "chromosomeName": "chr7",
+            "copyNumber": "1",
+            "diplotypes": [],
+            "displayName": "rs12720441",
+            "genes": [
+              {
+                "objCls": "Gene",
+                "id": "PA212",
+                "symbol": "KCNH2",
+                "name": "potassium voltage-gated channel subfamily H member 2",
+                "version": 192
+              }
+            ],
+            "gpPosition": 150647304,
+            "haplotypes": [],
+            "linkedObjects": [
+              {
+                "objCls": "Variant",
+                "id": "PA166157459",
+                "symbol": "rs12720441",
+                "name": "rs12720441",
+                "version": 4
+              }
+            ],
+            "refSeqPosition": -1,
+            "rsid": "rs12720441",
+            "tagGene": false,
+            "type": "SNP",
+            "variant": {
+              "objCls": "Variant",
+              "id": "PA166157459",
+              "symbol": "rs12720441",
+              "name": "rs12720441",
+              "version": 4
+            },
+            "version": 1
+          },
+          "metabolizers1": [],
+          "metabolizers2": [],
+          "objCls": "Variant Phenotype Annotation",
+          "pediatric": false,
+          "phenotypeCategories": [
+            {
+              "id": 769229935,
+              "description": "toxicity/adr\n[PD]",
+              "parents": [],
+              "resource": "Phenotype Categories",
+              "synonyms": [],
+              "term": "Toxicity",
+              "termId": "secondaryCat:769229935",
+              "valid": true,
+              "version": 2
+            }
+          ],
+          "phenotypes": [
+            {
+              "id": 50557059,
+              "disease": {
+                "objCls": "Disease",
+                "id": "PA446294",
+                "name": "Torsades de Pointes",
+                "version": 4
+              },
+              "phenotype": "Torsades de Pointes",
+              "phenotypeContext": "Disease",
+              "version": 2
+            }
+          ],
+          "polarity": {
+            "id": 769229639,
+            "parents": [],
+            "resource": "Polarity",
+            "synonyms": [],
+            "term": "increased",
+            "termId": "variantAnnotationPolarity:769229639",
+            "valid": true,
+            "version": 0
+          },
+          "populationPhenotypes": [],
+          "relatedChemicals": [
+            {
+              "objCls": "Chemical",
+              "id": "PA448383",
+              "name": "amiodarone",
+              "version": 14
+            }
+          ],
+          "relatedVariations": [
+            {
+              "objCls": "Allele",
+              "id": "PA166388432",
+              "symbol": "CA006462",
+              "name": "NM_000238.4(KCNH2):c.2350C>T (p.Arg784Trp)",
+              "version": 1
+            },
+            {
+              "objCls": "Allele",
+              "id": "PA166388433",
+              "symbol": "CA1752433391",
+              "name": "NM_000238.4(KCNH2):c.2350C= (p.Arg784=)",
+              "version": 1
+            }
+          ],
+          "score": 0.0,
+          "scoreDetails": {
+            "step5A": 1.0,
+            "step5B": 0.0,
+            "chosenSpId": 655385774,
+            "step1Score": 1.0,
+            "step2Score": 0.0,
+            "step3Score": 0.25,
+            "step4Score": 0.0,
+            "totalScore": 0.0,
+            "chosenSpIndex": "1 of 1",
+            "generatedDate": "2021-03-20T22:23:19.362-07:00",
+            "variantAnnotationId": 655385772
+          },
+          "sentence": "Allele A is associated with increased risk of Torsades de Pointes when treated with amiodarone as compared to allele G.",
+          "sequenceLocation": {
+            "id": 1448087549,
+            "altHgvs": {},
+            "assembly": "GRCh37",
+            "begin": 150647304,
+            "end": 150647304,
+            "intronicOffset": 0,
+            "referenceAllele": "G",
+            "referenceHgvs": "NC_000007.13:g.150647304=",
+            "sequence": {
+              "id": 1447949557,
+              "name": "[GRCh37]chr7",
+              "resource": "RefSeq DNA",
+              "resourceId": "NC_000007.13",
+              "_url": "https://www.ncbi.nlm.nih.gov/nuccore/NC_000007.13",
+              "version": 2
+            },
+            "source": "dbSnp",
+            "type": "genomic",
+            "variantAlleles": [
+              "A",
+              "C"
+            ],
+            "variantHgvs": [
+              "NC_000007.13:g.150647304G>A",
+              "NC_000007.13:g.150647304G>C"
+            ],
+            "version": 1
+          },
+          "significance": {
+            "id": 769229668,
+            "parents": [],
+            "resource": "Association Significance",
+            "synonyms": [],
+            "term": "not stated",
+            "termId": "variantAnnotationSignificance:769229668",
+            "valid": true,
+            "version": 0
+          },
+          "studyParameters": [
+            {
+              "id": 655385774,
+              "characteristicsType": "Unknown",
+              "confidenceIntervalStart": -1.0,
+              "confidenceIntervalStop": -1.0,
+              "frequencyInCases": -1.0,
+              "frequencyInControls": -1.0,
+              "pediatric": false,
+              "populationEthnicity": {
+                "custom": false,
+                "ethnicities": [],
+                "mixed": false,
+                "notes": "found in 1 case.",
+                "unknown": true
+              },
+              "populationTypes": [],
+              "pvalue": -1.0,
+              "pvalueOp": {
+                "id": 1183492001,
+                "parents": [],
+                "resource": "Equality Symbols",
+                "synonyms": [],
+                "term": "=",
+                "termId": "equality:1183492001",
+                "valid": true,
+                "version": 0
+              },
+              "ratioStat": -1.0,
+              "ratioStatType": {
+                "id": 1183624557,
+                "description": "Default value.  Please do not modify this value!",
+                "parents": [],
+                "resource": "Statistic Analysis",
+                "synonyms": [],
+                "term": "Unknown",
+                "termId": "statAnalysis:1183624557",
+                "valid": true,
+                "version": 1
+              },
+              "statTests": [],
+              "studyCases": 60,
+              "studyControls": 32,
+              "studyTypes": [
+                "case/control"
+              ],
+              "usedForScoring": true,
+              "version": 0
+            }
+          ],
+          "useForCaScoring": true,
+          "version": 18
+        }
+      ],
+      "version": 5
+    },
+    {
+      "id": 981478113,
+      "accessionId": "PA166134639",
+      "allelePhenotypes": [
+        {
+          "id": 1183700532,
+          "allele": "CC",
+          "limitedEvidence": false,
+          "phenotype": "Patients with the CC genotype may have decreased risk of drug-induced ventricular arrhythmia and QT prolongation when treated with amiodarone as compared to patients with the TT genotype. Other genetic and clinical factors may also influence a patient's risk of drug-induced ventricular arrhythmia and QT prolongation.",
+          "version": 0
+        },
+        {
+          "id": 1183700533,
+          "allele": "CT",
+          "limitedEvidence": false,
+          "phenotype": "Patients with the CT genotype may have increased risk of drug-induced ventricular arrhythmia and QT prolongation when treated with amiodarone as compared to patients with the CC genotype. Other genetic and clinical factors may also influence a patient's risk of drug-induced ventricular arrhythmia and QT prolongation.",
+          "version": 0
+        },
+        {
+          "id": 1183700534,
+          "allele": "TT",
+          "limitedEvidence": false,
+          "phenotype": "Patients with the TT genotype may have increased risk of drug-induced ventricular arrhythmia and QT prolongation when treated with amiodarone as compared to patients with the CC genotype. Other genetic and clinical factors may also influence a patient's risk of drug-induced ventricular arrhythmia and QT prolongation.",
+          "version": 0
+        }
+      ],
+      "conflictingVariantAnnotationIds": [],
+      "history": [
+        {
+          "id": 1448120105,
+          "date": "2016-07-11T15:59:03.191-07:00",
+          "type": "Approve",
+          "version": 0
+        },
+        {
+          "id": 1449764624,
+          "date": "2018-11-05T14:24:05.652-08:00",
+          "description": "Updated OMB race to appropriate biogeographical group",
+          "type": "Update",
+          "version": 0
+        },
+        {
+          "id": 1451392781,
+          "date": "2021-03-24T20:11:37.013-07:00",
+          "description": "CA score added as part of scoring system release. LOE may have automatically changed based on new score but may be subject to further changes upon curator review.",
+          "type": "Update",
+          "version": 0
+        }
+      ],
+      "levelOfEvidence": {
+        "id": 827923056,
+        "description": "Level 3 clinical annotations describe variant-drug combinations with a low level of evidence supporting the association. This association may be based on a single study annotated in PharmGKB, or there may be several studies that failed to replicate the association. The annotation may also be based on preliminary evidence (e.g., a case report, non-significant study, or in vitro, molecular, or functional assay evidence), resulting in a lower calculated score.",
+        "parents": [],
+        "resource": "Level of Evidence",
+        "synonyms": [],
+        "term": "3",
+        "termId": "levelsOfEvidence:827923056",
+        "valid": true,
+        "version": 2
+      },
+      "location": {
+        "id": 1183700535,
+        "chromosomeName": "chr1",
+        "copyNumber": "1",
+        "diplotypes": [],
+        "displayName": "rs10800397",
+        "genes": [
+          {
+            "objCls": "Gene",
+            "id": "PA142671259",
+            "symbol": "NOS1AP",
+            "name": "nitric oxide synthase 1 adaptor protein",
+            "version": 8
+          }
+        ],
+        "gpPosition": 162237090,
+        "haplotypes": [],
+        "linkedObjects": [
+          {
+            "objCls": "Variant",
+            "id": "PA166153809",
+            "symbol": "rs10800397",
+            "name": "rs10800397",
+            "version": 4
+          }
+        ],
+        "refSeqPosition": -1,
+        "rsid": "rs10800397",
+        "tagGene": false,
+        "type": "SNP",
+        "variant": {
+          "objCls": "Variant",
+          "id": "PA166153809",
+          "symbol": "rs10800397",
+          "name": "rs10800397",
+          "version": 4
+        },
+        "version": 1
+      },
+      "name": "rs10800397 (NOS1AP); amiodarone; Long QT Syndrome (level 3 Toxicity)",
+      "objCls": "Clinical Annotation",
+      "overrideLevel": false,
+      "pediatric": false,
+      "relatedChemicals": [
+        {
+          "objCls": "Chemical",
+          "id": "PA448383",
+          "name": "amiodarone",
+          "version": 14
+        }
+      ],
+      "relatedChemicalsLogic": "Or",
+      "relatedDiseases": [
+        {
+          "objCls": "Disease",
+          "id": "PA444807",
+          "name": "Long QT Syndrome",
+          "version": 4
+        }
+      ],
+      "relatedGuidelines": [],
+      "relatedLabels": [],
+      "relatedVariations": [
+        {
+          "objCls": "Allele",
+          "id": "PA166388022",
+          "symbol": "CA1140204777",
+          "name": "NM_014697.3(NOS1AP):c.178-20044C=",
+          "version": 1
+        },
+        {
+          "objCls": "Allele",
+          "id": "PA166388021",
+          "symbol": "CA15071290",
+          "name": "NM_014697.3(NOS1AP):c.178-20044C>T",
+          "version": 1
+        }
+      ],
+      "score": 5.0,
+      "scoreDetails": "{\"vaScores\": [{\"step5A\": 1.0, \"step5B\": 1.0, \"chosenSpId\": 981478034, \"step1Score\": 1.0, \"step2Score\": 1.0, \"step3Score\": 0.5, \"step4Score\": 0.0, \"totalScore\": 2.5, \"chosenSpIndex\": \"1 of 1\", \"generatedDate\": \"2021-03-21T04:29:00.307-07:00\", \"variantAnnotationId\": 981478023}, {\"step5A\": 1.0, \"step5B\": 1.0, \"chosenSpId\": 981478045, \"step1Score\": 1.0, \"step2Score\": 1.0, \"step3Score\": 0.5, \"step4Score\": 0.0, \"totalScore\": 2.5, \"chosenSpIndex\": \"1 of 1\", \"generatedDate\": \"2021-03-21T04:29:00.307-07:00\", \"variantAnnotationId\": 981478039}], \"totalScore\": 5.0, \"vaScoreTotal\": 5.0, \"generatedDate\": \"2021-03-21T04:29:00.307-07:00\", \"labelScoreTotal\": 0.0, \"guidelineScoreTotal\": 0.0}",
+      "types": [
+        "Toxicity"
+      ],
+      "variantAnnotations": [
+        {
+          "id": 981478023,
+          "accessionId": "PA166141217",
+          "alleleGenotype": "T",
+          "comparison": "C",
+          "connWords2": {
+            "id": 769229659,
+            "parents": [],
+            "resource": "Phenotype or Gene to Drug Connecting Words",
+            "synonyms": [],
+            "term": "when treated with",
+            "termId": "variantAnnotationPhenotypeConnWords2:769229659",
+            "valid": true,
+            "version": 0
+          },
+          "description": "The association is driven largely by the group of amiodarone users.",
+          "drugsConnWord": {
+            "id": 827698396,
+            "parents": [],
+            "resource": "Collection Operator - And/Or",
+            "synonyms": [],
+            "term": "or",
+            "termId": "drugsConnWord:827698396",
+            "valid": true,
+            "version": 0
+          },
+          "formatVersion": 1,
+          "history": [
+            {
+              "id": 1450364940,
+              "date": "2019-01-29T09:06:12.202-08:00",
+              "description": "Updated OMB race to appropriate biogeographical group",
+              "type": "Update",
+              "version": 0
+            }
+          ],
+          "isAssociated": true,
+          "isPlural": false,
+          "literature": {
+            "id": 15031905,
+            "title": "Common variation in the NOS1AP gene is associated with drug-induced QT prolongation and ventricular arrhythmia.",
+            "_sameAs": "https://www.ncbi.nlm.nih.gov/pmc/articles/PMC3753216",
+            "authors": [
+              "Jamshidi Yalda",
+              "Nolte Ilja M",
+              "Dalageorgou Chrysoula",
+              "Zheng Dongling",
+              "Johnson Toby",
+              "Bastiaenen Rachel",
+              "Ruddy Suzanne",
+              "Talbott Daniel",
+              "Norris Kris J",
+              "Snieder Harold",
+              "George Alfred L",
+              "Marshall Vanessa",
+              "Shakir Saad",
+              "Kannankeril Prince J",
+              "Munroe Patricia B",
+              "Camm A John",
+              "Jeffery Steve",
+              "Roden Dan M",
+              "Behr Elijah R"
+            ],
+            "crossReferences": [
+              {
+                "id": 1449273955,
+                "resource": "PubMed Central",
+                "resourceId": "PMC3753216",
+                "_url": "https://www.ncbi.nlm.nih.gov/pmc/articles/PMC3753216",
+                "version": 0
+              },
+              {
+                "id": 1449273954,
+                "resource": "PubMed",
+                "resourceId": "22682551",
+                "_url": "https://www.ncbi.nlm.nih.gov/pubmed/22682551",
+                "version": 0
+              },
+              {
+                "id": 1449273956,
+                "resource": "DOI",
+                "resourceId": "10.1016/j.jacc.2012.03.031",
+                "_url": "http://dx.doi.org/10.1016%2Fj.jacc.2012.03.031",
+                "version": 0
+              }
+            ],
+            "day": -1,
+            "hasKeyword": true,
+            "journal": "Journal of the American College of Cardiology",
+            "meshTerms": [
+              "Adaptor Proteins, Signal Transducing",
+              "Adult",
+              "Aged",
+              "Aged, 80 and over",
+              "Amiodarone",
+              "Anti-Arrhythmia Agents",
+              "Case-Control Studies",
+              "Female",
+              "Humans",
+              "Long QT Syndrome",
+              "Male",
+              "Middle Aged",
+              "Polymorphism, Single Nucleotide",
+              "Sequence Analysis, DNA",
+              "Torsades de Pointes",
+              "Ventricular Fibrillation",
+              "Young Adult"
+            ],
+            "month": 8,
+            "nonHuman": false,
+            "objCls": "Literature",
+            "page": "841-50",
+            "pediatric": false,
+            "pgkbPublication": false,
+            "pubDate": "2012-08-01T00:00:00-07:00",
+            "pubmedMeshTerms": [],
+            "summary": "OBJECTIVES: This study sought to determine whether variations in NOS1AP affect drug-induced long QT syndrome (LQTS).\n\nBACKGROUND: Use of antiarrhythmic drugs is limited by the high incidence of serious adverse events including QT prolongation and torsades de pointes. NOS1AP gene variants play a role in modulating QT intervals in healthy subjects and severity of presentation in LQTS.\n\nMETHODS: This study carried out an association study using 167 single nucleotide polymorphisms (SNP) spanning the NOS1AP gene in 58 Caucasian patients experiencing drug-induced LQTS (dLQTS) and 87 Caucasian controls from the DARE (Drug-Induced Arrhythmia Risk Evaluation) study.\n\nRESULTS: The rs10800397 SNP was significantly associated with dLQTS (odds ratio [OR]: 3.3, 99.95% confidence interval [CI]: 1.0 to 10.8, p = 3.7 \u00d7 10(-4)). The associations were more pronounced in the subgroup of amiodarone users, in which 3 SNPs, including rs10800397, were significantly associated (most significant SNP: rs10919035: OR: 5.5, 99.95% CI: 1.1 to 27.9, p = 3.0 \u00d7 10(-4)). We genotyped rs10919035 in an independent replication cohort of 28 amiodarone dLQTS cases versus 173 control subjects (meta-analysis of both studies: OR: 2.81, 99.95% CI: 1.62 to 4.89, p = 2.4 \u00d7 10(-4)). Analysis of corrected QT interval among 74 control subjects from our dataset showed a similar pattern of significance over the gene region as the case-control analysis. This pattern was confirmed in 1,480 control subjects from the BRIGHT (British Genetics of Hypertension Study) cohort (top SNP from DARE: rs12734991 in meta-analysis: increase in corrected QT interval per C allele: 9.1 \u00b1 3.2 ms, p = 1.7 \u00d7 10(-4)).\n\nCONCLUSIONS: These results provide the first demonstration that common variations in the NOS1AP gene are associated with a significant increase in the risk of dLQTS. This study suggests that common variations in the NOS1AP gene may have relevance for future pharmacogenomic applications in clinical practice permitting safer prescription of drugs for vulnerable patients.",
+            "terms": [],
+            "type": "Literature",
+            "version": 6,
+            "volume": "60",
+            "year": 2012
+          },
+          "location": {
+            "id": 981478029,
+            "chromosomeName": "chr1",
+            "copyNumber": "1",
+            "diplotypes": [],
+            "displayName": "rs10800397",
+            "genes": [
+              {
+                "objCls": "Gene",
+                "id": "PA142671259",
+                "symbol": "NOS1AP",
+                "name": "nitric oxide synthase 1 adaptor protein",
+                "version": 8
+              }
+            ],
+            "gpPosition": 162237089,
+            "haplotypes": [],
+            "linkedObjects": [
+              {
+                "objCls": "Variant",
+                "id": "PA166153809",
+                "symbol": "rs10800397",
+                "name": "rs10800397",
+                "version": 4
+              }
+            ],
+            "refSeqPosition": -1,
+            "rsid": "rs10800397",
+            "tagGene": false,
+            "type": "SNP",
+            "variant": {
+              "objCls": "Variant",
+              "id": "PA166153809",
+              "symbol": "rs10800397",
+              "name": "rs10800397",
+              "version": 4
+            },
+            "version": 2
+          },
+          "metabolizers1": [],
+          "metabolizers2": [],
+          "objCls": "Variant Phenotype Annotation",
+          "pediatric": false,
+          "phenotypeCategories": [
+            {
+              "id": 769229935,
+              "description": "toxicity/adr\n[PD]",
+              "parents": [],
+              "resource": "Phenotype Categories",
+              "synonyms": [],
+              "term": "Toxicity",
+              "termId": "secondaryCat:769229935",
+              "valid": true,
+              "version": 2
+            }
+          ],
+          "phenotypes": [
+            {
+              "id": 376649310,
+              "phenotype": "drug-induced ventricular arrhythmia and QT prolongation",
+              "phenotypeContext": "Side Effect",
+              "version": 1
+            }
+          ],
+          "populationPhenotypes": [],
+          "relatedChemicals": [
+            {
+              "objCls": "Chemical",
+              "id": "PA448383",
+              "name": "amiodarone",
+              "version": 14
+            },
+            {
+              "objCls": "Chemical",
+              "id": "PA151249535",
+              "name": "diuretics",
+              "version": 6
+            },
+            {
+              "objCls": "Chemical",
+              "id": "PA451457",
+              "name": "sotalol",
+              "version": 13
+            }
+          ],
+          "relatedVariations": [
+            {
+              "objCls": "Allele",
+              "id": "PA166388022",
+              "symbol": "CA1140204777",
+              "name": "NM_014697.3(NOS1AP):c.178-20044C=",
+              "version": 1
+            },
+            {
+              "objCls": "Allele",
+              "id": "PA166388021",
+              "symbol": "CA15071290",
+              "name": "NM_014697.3(NOS1AP):c.178-20044C>T",
+              "version": 1
+            }
+          ],
+          "score": 2.5,
+          "scoreDetails": {
+            "step5A": 1.0,
+            "step5B": 1.0,
+            "chosenSpId": 981478034,
+            "step1Score": 1.0,
+            "step2Score": 1.0,
+            "step3Score": 0.5,
+            "step4Score": 0.0,
+            "totalScore": 2.5,
+            "chosenSpIndex": "1 of 1",
+            "generatedDate": "2021-03-20T21:28:06.185-07:00",
+            "variantAnnotationId": 981478023
+          },
+          "sentence": "Allele T is associated with drug-induced ventricular arrhythmia and QT prolongation when treated with amiodarone, diuretics or sotalol as compared to allele C.",
+          "sequenceLocation": {
+            "id": 1447998348,
+            "altHgvs": {},
+            "assembly": "GRCh37",
+            "begin": 162237090,
+            "end": 162237090,
+            "intronicOffset": 0,
+            "referenceAllele": "C",
+            "referenceHgvs": "NC_000001.10:g.162237090=",
+            "sequence": {
+              "id": 1447949551,
+              "name": "[GRCh37]chr1",
+              "resource": "RefSeq DNA",
+              "resourceId": "NC_000001.10",
+              "_url": "https://www.ncbi.nlm.nih.gov/nuccore/NC_000001.10",
+              "version": 2
+            },
+            "source": "dbSnp",
+            "type": "genomic",
+            "variantAlleles": [
+              "G",
+              "T"
+            ],
+            "variantHgvs": [
+              "NC_000001.10:g.162237090C>G",
+              "NC_000001.10:g.162237090C>T"
+            ],
+            "version": 1
+          },
+          "significance": {
+            "id": 769229666,
+            "parents": [],
+            "resource": "Association Significance",
+            "synonyms": [],
+            "term": "yes",
+            "termId": "variantAnnotationSignificance:769229666",
+            "valid": true,
+            "version": 0
+          },
+          "studyParameters": [
+            {
+              "id": 981478034,
+              "characteristics": "cases were patients experiencing drug-induced ventricular arrhythmias and/or severe QT interval prolongation. ",
+              "characteristicsType": "Study Cohort",
+              "confidenceIntervalStart": 1.0,
+              "confidenceIntervalStop": 10.8,
+              "frequencyInCases": -1.0,
+              "frequencyInControls": -1.0,
+              "pediatric": false,
+              "populationEthnicity": {
+                "custom": false,
+                "ethnicities": [
+                  "European"
+                ],
+                "mixed": false,
+                "unknown": false
+              },
+              "populationTypes": [],
+              "pvalue": 0.00037,
+              "pvalueOp": {
+                "id": 1183492001,
+                "parents": [],
+                "resource": "Equality Symbols",
+                "synonyms": [],
+                "term": "=",
+                "termId": "equality:1183492001",
+                "valid": true,
+                "version": 0
+              },
+              "pvalueString": "3.7E-4",
+              "ratioStat": 3.3,
+              "ratioStatType": {
+                "id": 1183624559,
+                "parents": [],
+                "resource": "Statistic Analysis",
+                "synonyms": [],
+                "term": "OR",
+                "termId": "statAnalysis:1183624559",
+                "valid": true,
+                "version": 0
+              },
+              "statTests": [],
+              "studyCases": 58,
+              "studyControls": 87,
+              "studyTypes": [
+                "case/control"
+              ],
+              "usedForScoring": true,
+              "version": 0
+            }
+          ],
+          "useForCaScoring": true,
+          "version": 15
+        },
+        {
+          "id": 981478039,
+          "accessionId": "PA166141218",
+          "alleleGenotype": "T",
+          "comparison": "C",
+          "connWords2": {
+            "id": 769229659,
+            "parents": [],
+            "resource": "Phenotype or Gene to Drug Connecting Words",
+            "synonyms": [],
+            "term": "when treated with",
+            "termId": "variantAnnotationPhenotypeConnWords2:769229659",
+            "valid": true,
+            "version": 0
+          },
+          "drugsConnWord": {
+            "id": 827698396,
+            "parents": [],
+            "resource": "Collection Operator - And/Or",
+            "synonyms": [],
+            "term": "or",
+            "termId": "drugsConnWord:827698396",
+            "valid": true,
+            "version": 0
+          },
+          "formatVersion": 1,
+          "history": [
+            {
+              "id": 1450364947,
+              "date": "2019-01-29T09:06:14.138-08:00",
+              "description": "Updated OMB race to appropriate biogeographical group",
+              "type": "Update",
+              "version": 0
+            }
+          ],
+          "isAssociated": true,
+          "isPlural": false,
+          "literature": {
+            "id": 15031905,
+            "title": "Common variation in the NOS1AP gene is associated with drug-induced QT prolongation and ventricular arrhythmia.",
+            "_sameAs": "https://www.ncbi.nlm.nih.gov/pmc/articles/PMC3753216",
+            "authors": [
+              "Jamshidi Yalda",
+              "Nolte Ilja M",
+              "Dalageorgou Chrysoula",
+              "Zheng Dongling",
+              "Johnson Toby",
+              "Bastiaenen Rachel",
+              "Ruddy Suzanne",
+              "Talbott Daniel",
+              "Norris Kris J",
+              "Snieder Harold",
+              "George Alfred L",
+              "Marshall Vanessa",
+              "Shakir Saad",
+              "Kannankeril Prince J",
+              "Munroe Patricia B",
+              "Camm A John",
+              "Jeffery Steve",
+              "Roden Dan M",
+              "Behr Elijah R"
+            ],
+            "crossReferences": [
+              {
+                "id": 1449273955,
+                "resource": "PubMed Central",
+                "resourceId": "PMC3753216",
+                "_url": "https://www.ncbi.nlm.nih.gov/pmc/articles/PMC3753216",
+                "version": 0
+              },
+              {
+                "id": 1449273954,
+                "resource": "PubMed",
+                "resourceId": "22682551",
+                "_url": "https://www.ncbi.nlm.nih.gov/pubmed/22682551",
+                "version": 0
+              },
+              {
+                "id": 1449273956,
+                "resource": "DOI",
+                "resourceId": "10.1016/j.jacc.2012.03.031",
+                "_url": "http://dx.doi.org/10.1016%2Fj.jacc.2012.03.031",
+                "version": 0
+              }
+            ],
+            "day": -1,
+            "hasKeyword": true,
+            "journal": "Journal of the American College of Cardiology",
+            "meshTerms": [
+              "Adaptor Proteins, Signal Transducing",
+              "Adult",
+              "Aged",
+              "Aged, 80 and over",
+              "Amiodarone",
+              "Anti-Arrhythmia Agents",
+              "Case-Control Studies",
+              "Female",
+              "Humans",
+              "Long QT Syndrome",
+              "Male",
+              "Middle Aged",
+              "Polymorphism, Single Nucleotide",
+              "Sequence Analysis, DNA",
+              "Torsades de Pointes",
+              "Ventricular Fibrillation",
+              "Young Adult"
+            ],
+            "month": 8,
+            "nonHuman": false,
+            "objCls": "Literature",
+            "page": "841-50",
+            "pediatric": false,
+            "pgkbPublication": false,
+            "pubDate": "2012-08-01T00:00:00-07:00",
+            "pubmedMeshTerms": [],
+            "summary": "OBJECTIVES: This study sought to determine whether variations in NOS1AP affect drug-induced long QT syndrome (LQTS).\n\nBACKGROUND: Use of antiarrhythmic drugs is limited by the high incidence of serious adverse events including QT prolongation and torsades de pointes. NOS1AP gene variants play a role in modulating QT intervals in healthy subjects and severity of presentation in LQTS.\n\nMETHODS: This study carried out an association study using 167 single nucleotide polymorphisms (SNP) spanning the NOS1AP gene in 58 Caucasian patients experiencing drug-induced LQTS (dLQTS) and 87 Caucasian controls from the DARE (Drug-Induced Arrhythmia Risk Evaluation) study.\n\nRESULTS: The rs10800397 SNP was significantly associated with dLQTS (odds ratio [OR]: 3.3, 99.95% confidence interval [CI]: 1.0 to 10.8, p = 3.7 \u00d7 10(-4)). The associations were more pronounced in the subgroup of amiodarone users, in which 3 SNPs, including rs10800397, were significantly associated (most significant SNP: rs10919035: OR: 5.5, 99.95% CI: 1.1 to 27.9, p = 3.0 \u00d7 10(-4)). We genotyped rs10919035 in an independent replication cohort of 28 amiodarone dLQTS cases versus 173 control subjects (meta-analysis of both studies: OR: 2.81, 99.95% CI: 1.62 to 4.89, p = 2.4 \u00d7 10(-4)). Analysis of corrected QT interval among 74 control subjects from our dataset showed a similar pattern of significance over the gene region as the case-control analysis. This pattern was confirmed in 1,480 control subjects from the BRIGHT (British Genetics of Hypertension Study) cohort (top SNP from DARE: rs12734991 in meta-analysis: increase in corrected QT interval per C allele: 9.1 \u00b1 3.2 ms, p = 1.7 \u00d7 10(-4)).\n\nCONCLUSIONS: These results provide the first demonstration that common variations in the NOS1AP gene are associated with a significant increase in the risk of dLQTS. This study suggests that common variations in the NOS1AP gene may have relevance for future pharmacogenomic applications in clinical practice permitting safer prescription of drugs for vulnerable patients.",
+            "terms": [],
+            "type": "Literature",
+            "version": 6,
+            "volume": "60",
+            "year": 2012
+          },
+          "location": {
+            "id": 981478046,
+            "chromosomeName": "chr1",
+            "copyNumber": "1",
+            "diplotypes": [],
+            "displayName": "rs10800397",
+            "genes": [
+              {
+                "objCls": "Gene",
+                "id": "PA142671259",
+                "symbol": "NOS1AP",
+                "name": "nitric oxide synthase 1 adaptor protein",
+                "version": 8
+              }
+            ],
+            "gpPosition": 162237089,
+            "haplotypes": [],
+            "linkedObjects": [
+              {
+                "objCls": "Variant",
+                "id": "PA166153809",
+                "symbol": "rs10800397",
+                "name": "rs10800397",
+                "version": 4
+              }
+            ],
+            "refSeqPosition": -1,
+            "rsid": "rs10800397",
+            "tagGene": false,
+            "type": "SNP",
+            "variant": {
+              "objCls": "Variant",
+              "id": "PA166153809",
+              "symbol": "rs10800397",
+              "name": "rs10800397",
+              "version": 4
+            },
+            "version": 1
+          },
+          "metabolizers1": [],
+          "metabolizers2": [],
+          "objCls": "Variant Phenotype Annotation",
+          "pediatric": false,
+          "phenotypeCategories": [
+            {
+              "id": 769229935,
+              "description": "toxicity/adr\n[PD]",
+              "parents": [],
+              "resource": "Phenotype Categories",
+              "synonyms": [],
+              "term": "Toxicity",
+              "termId": "secondaryCat:769229935",
+              "valid": true,
+              "version": 2
+            }
+          ],
+          "phenotypes": [
+            {
+              "id": 376649326,
+              "phenotype": "amiodarone-induced ventricular arrhythmia and QT prolongation",
+              "phenotypeContext": "Side Effect",
+              "version": 1
+            }
+          ],
+          "populationPhenotypes": [],
+          "relatedChemicals": [
+            {
+              "objCls": "Chemical",
+              "id": "PA448383",
+              "name": "amiodarone",
+              "version": 14
+            }
+          ],
+          "relatedVariations": [
+            {
+              "objCls": "Allele",
+              "id": "PA166388022",
+              "symbol": "CA1140204777",
+              "name": "NM_014697.3(NOS1AP):c.178-20044C=",
+              "version": 1
+            },
+            {
+              "objCls": "Allele",
+              "id": "PA166388021",
+              "symbol": "CA15071290",
+              "name": "NM_014697.3(NOS1AP):c.178-20044C>T",
+              "version": 1
+            }
+          ],
+          "score": 2.5,
+          "scoreDetails": {
+            "step5A": 1.0,
+            "step5B": 1.0,
+            "chosenSpId": 981478045,
+            "step1Score": 1.0,
+            "step2Score": 1.0,
+            "step3Score": 0.5,
+            "step4Score": 0.0,
+            "totalScore": 2.5,
+            "chosenSpIndex": "1 of 1",
+            "generatedDate": "2021-03-20T22:22:14.029-07:00",
+            "variantAnnotationId": 981478039
+          },
+          "sentence": "Allele T is associated with amiodarone-induced ventricular arrhythmia and QT prolongation when treated with amiodarone as compared to allele C.",
+          "sequenceLocation": {
+            "id": 1447998348,
+            "altHgvs": {},
+            "assembly": "GRCh37",
+            "begin": 162237090,
+            "end": 162237090,
+            "intronicOffset": 0,
+            "referenceAllele": "C",
+            "referenceHgvs": "NC_000001.10:g.162237090=",
+            "sequence": {
+              "id": 1447949551,
+              "name": "[GRCh37]chr1",
+              "resource": "RefSeq DNA",
+              "resourceId": "NC_000001.10",
+              "_url": "https://www.ncbi.nlm.nih.gov/nuccore/NC_000001.10",
+              "version": 2
+            },
+            "source": "dbSnp",
+            "type": "genomic",
+            "variantAlleles": [
+              "G",
+              "T"
+            ],
+            "variantHgvs": [
+              "NC_000001.10:g.162237090C>G",
+              "NC_000001.10:g.162237090C>T"
+            ],
+            "version": 1
+          },
+          "significance": {
+            "id": 769229666,
+            "parents": [],
+            "resource": "Association Significance",
+            "synonyms": [],
+            "term": "yes",
+            "termId": "variantAnnotationSignificance:769229666",
+            "valid": true,
+            "version": 0
+          },
+          "studyParameters": [
+            {
+              "id": 981478045,
+              "characteristics": "cases were patients experiencing drug-induced ventricular arrhythmias and/or severe QT interval prolongation. ",
+              "characteristicsType": "Study Cohort",
+              "confidenceIntervalStart": 1.0,
+              "confidenceIntervalStop": 19.8,
+              "frequencyInCases": -1.0,
+              "frequencyInControls": -1.0,
+              "pediatric": false,
+              "populationEthnicity": {
+                "custom": false,
+                "ethnicities": [
+                  "European"
+                ],
+                "mixed": false,
+                "unknown": false
+              },
+              "populationTypes": [],
+              "pvalue": 0.00043,
+              "pvalueOp": {
+                "id": 1183492001,
+                "parents": [],
+                "resource": "Equality Symbols",
+                "synonyms": [],
+                "term": "=",
+                "termId": "equality:1183492001",
+                "valid": true,
+                "version": 0
+              },
+              "pvalueString": "4.3E-4",
+              "ratioStat": 4.5,
+              "ratioStatType": {
+                "id": 1183624559,
+                "parents": [],
+                "resource": "Statistic Analysis",
+                "synonyms": [],
+                "term": "OR",
+                "termId": "statAnalysis:1183624559",
+                "valid": true,
+                "version": 0
+              },
+              "statTests": [],
+              "studyCases": 27,
+              "studyControls": 87,
+              "studyTypes": [
+                "case/control"
+              ],
+              "usedForScoring": true,
+              "version": 0
+            }
+          ],
+          "useForCaScoring": true,
+          "version": 13
+        }
+      ],
+      "version": 6
+    },
+    {
+      "id": 981478131,
+      "accessionId": "PA166134640",
+      "allelePhenotypes": [
+        {
+          "id": 981478134,
+          "allele": "CC",
+          "limitedEvidence": false,
+          "phenotype": "Patients with the CC genotype may have decreased risk of drug-induced ventricular arrhythmia and QT prolongation when treated with amiodarone as compared to patients with the TT genotype. Other genetic and clinical factors may also influence a patient's risk of drug-induced ventricular arrhythmia and QT prolongation.",
+          "version": 0
+        },
+        {
+          "id": 981478133,
+          "allele": "CT",
+          "limitedEvidence": false,
+          "phenotype": "Patients with the CT genotype may have increased risk of drug-induced ventricular arrhythmia and QT prolongation when treated with amiodarone as compared to patients with the CC genotype. Other genetic and clinical factors may also influence a patient's risk of drug-induced ventricular arrhythmia and QT prolongation.",
+          "version": 0
+        },
+        {
+          "id": 981478132,
+          "allele": "TT",
+          "limitedEvidence": false,
+          "phenotype": "Patients with the TT genotype may have increased risk of drug-induced ventricular arrhythmia and QT prolongation when treated with amiodarone as compared to patients with the CC genotype. Other genetic and clinical factors may also influence a patient's risk of drug-induced ventricular arrhythmia and QT prolongation.",
+          "version": 0
+        }
+      ],
+      "conflictingVariantAnnotationIds": [],
+      "history": [
+        {
+          "id": 1448120106,
+          "date": "2016-07-11T15:59:03.465-07:00",
+          "type": "Approve",
+          "version": 0
+        },
+        {
+          "id": 1449764710,
+          "date": "2018-11-05T14:24:09.231-08:00",
+          "description": "Updated OMB race to appropriate biogeographical group",
+          "type": "Update",
+          "version": 0
+        },
+        {
+          "id": 1451392782,
+          "date": "2021-03-24T20:11:37.432-07:00",
+          "description": "CA score added as part of scoring system release. LOE may have automatically changed based on new score but may be subject to further changes upon curator review.",
+          "type": "Update",
+          "version": 0
+        }
+      ],
+      "levelOfEvidence": {
+        "id": 827923056,
+        "description": "Level 3 clinical annotations describe variant-drug combinations with a low level of evidence supporting the association. This association may be based on a single study annotated in PharmGKB, or there may be several studies that failed to replicate the association. The annotation may also be based on preliminary evidence (e.g., a case report, non-significant study, or in vitro, molecular, or functional assay evidence), resulting in a lower calculated score.",
+        "parents": [],
+        "resource": "Level of Evidence",
+        "synonyms": [],
+        "term": "3",
+        "termId": "levelsOfEvidence:827923056",
+        "valid": true,
+        "version": 2
+      },
+      "location": {
+        "id": 981478135,
+        "chromosomeName": "chr1",
+        "copyNumber": "1",
+        "diplotypes": [],
+        "displayName": "rs10919035",
+        "genes": [
+          {
+            "objCls": "Gene",
+            "id": "PA142671259",
+            "symbol": "NOS1AP",
+            "name": "nitric oxide synthase 1 adaptor protein",
+            "version": 8
+          }
+        ],
+        "gpPosition": 162244011,
+        "haplotypes": [],
+        "linkedObjects": [
+          {
+            "objCls": "Variant",
+            "id": "PA166153817",
+            "symbol": "rs10919035",
+            "name": "rs10919035",
+            "version": 4
+          }
+        ],
+        "refSeqPosition": -1,
+        "rsid": "rs10919035",
+        "tagGene": false,
+        "type": "SNP",
+        "variant": {
+          "objCls": "Variant",
+          "id": "PA166153817",
+          "symbol": "rs10919035",
+          "name": "rs10919035",
+          "version": 4
+        },
+        "version": 1
+      },
+      "name": "rs10919035 (NOS1AP); amiodarone; Long QT Syndrome (level 3 Toxicity)",
+      "objCls": "Clinical Annotation",
+      "overrideLevel": false,
+      "pediatric": false,
+      "relatedChemicals": [
+        {
+          "objCls": "Chemical",
+          "id": "PA448383",
+          "name": "amiodarone",
+          "version": 14
+        }
+      ],
+      "relatedChemicalsLogic": "Or",
+      "relatedDiseases": [
+        {
+          "objCls": "Disease",
+          "id": "PA444807",
+          "name": "Long QT Syndrome",
+          "version": 4
+        }
+      ],
+      "relatedGuidelines": [],
+      "relatedLabels": [],
+      "relatedVariations": [
+        {
+          "objCls": "Allele",
+          "id": "PA166388081",
+          "symbol": "CA10817101",
+          "name": "NM_014697.3(NOS1AP):c.178-13122C>T",
+          "version": 1
+        },
+        {
+          "objCls": "Allele",
+          "id": "PA166388063",
+          "symbol": "CA1140222697",
+          "name": "NM_014697.3(NOS1AP):c.178-13122C=",
+          "version": 1
+        }
+      ],
+      "score": 3.0,
+      "scoreDetails": "{\"vaScores\": [{\"step5A\": 1.0, \"step5B\": 1.0, \"chosenSpId\": 981478053, \"step1Score\": 1.0, \"step2Score\": 1.0, \"step3Score\": 0.5, \"step4Score\": 0.5, \"totalScore\": 3.0, \"chosenSpIndex\": \"1 of 1\", \"generatedDate\": \"2021-03-21T04:28:03.732-07:00\", \"variantAnnotationId\": 981478047}, {\"step5A\": 1.0, \"step5B\": 0.0, \"chosenSpId\": 981478065, \"step1Score\": 1.0, \"step2Score\": 0.0, \"step3Score\": 0.5, \"step4Score\": 0.0, \"totalScore\": 0.0, \"chosenSpIndex\": \"1 of 1\", \"generatedDate\": \"2021-03-21T04:28:03.732-07:00\", \"variantAnnotationId\": 981478059}], \"totalScore\": 3.0, \"vaScoreTotal\": 3.0, \"generatedDate\": \"2021-03-21T04:28:03.733-07:00\", \"labelScoreTotal\": 0.0, \"guidelineScoreTotal\": 0.0}",
+      "types": [
+        "Toxicity"
+      ],
+      "variantAnnotations": [
+        {
+          "id": 981478047,
+          "accessionId": "PA166141169",
+          "alleleGenotype": "T",
+          "comparison": "C",
+          "connWords2": {
+            "id": 769229659,
+            "parents": [],
+            "resource": "Phenotype or Gene to Drug Connecting Words",
+            "synonyms": [],
+            "term": "when treated with",
+            "termId": "variantAnnotationPhenotypeConnWords2:769229659",
+            "valid": true,
+            "version": 0
+          },
+          "drugsConnWord": {
+            "id": 827698396,
+            "parents": [],
+            "resource": "Collection Operator - And/Or",
+            "synonyms": [],
+            "term": "or",
+            "termId": "drugsConnWord:827698396",
+            "valid": true,
+            "version": 0
+          },
+          "formatVersion": 1,
+          "history": [
+            {
+              "id": 1450364954,
+              "date": "2019-01-29T09:06:16.086-08:00",
+              "description": "Updated OMB race to appropriate biogeographical group",
+              "type": "Update",
+              "version": 0
+            }
+          ],
+          "isAssociated": true,
+          "isPlural": false,
+          "literature": {
+            "id": 15031905,
+            "title": "Common variation in the NOS1AP gene is associated with drug-induced QT prolongation and ventricular arrhythmia.",
+            "_sameAs": "https://www.ncbi.nlm.nih.gov/pmc/articles/PMC3753216",
+            "authors": [
+              "Jamshidi Yalda",
+              "Nolte Ilja M",
+              "Dalageorgou Chrysoula",
+              "Zheng Dongling",
+              "Johnson Toby",
+              "Bastiaenen Rachel",
+              "Ruddy Suzanne",
+              "Talbott Daniel",
+              "Norris Kris J",
+              "Snieder Harold",
+              "George Alfred L",
+              "Marshall Vanessa",
+              "Shakir Saad",
+              "Kannankeril Prince J",
+              "Munroe Patricia B",
+              "Camm A John",
+              "Jeffery Steve",
+              "Roden Dan M",
+              "Behr Elijah R"
+            ],
+            "crossReferences": [
+              {
+                "id": 1449273955,
+                "resource": "PubMed Central",
+                "resourceId": "PMC3753216",
+                "_url": "https://www.ncbi.nlm.nih.gov/pmc/articles/PMC3753216",
+                "version": 0
+              },
+              {
+                "id": 1449273954,
+                "resource": "PubMed",
+                "resourceId": "22682551",
+                "_url": "https://www.ncbi.nlm.nih.gov/pubmed/22682551",
+                "version": 0
+              },
+              {
+                "id": 1449273956,
+                "resource": "DOI",
+                "resourceId": "10.1016/j.jacc.2012.03.031",
+                "_url": "http://dx.doi.org/10.1016%2Fj.jacc.2012.03.031",
+                "version": 0
+              }
+            ],
+            "day": -1,
+            "hasKeyword": true,
+            "journal": "Journal of the American College of Cardiology",
+            "meshTerms": [
+              "Adaptor Proteins, Signal Transducing",
+              "Adult",
+              "Aged",
+              "Aged, 80 and over",
+              "Amiodarone",
+              "Anti-Arrhythmia Agents",
+              "Case-Control Studies",
+              "Female",
+              "Humans",
+              "Long QT Syndrome",
+              "Male",
+              "Middle Aged",
+              "Polymorphism, Single Nucleotide",
+              "Sequence Analysis, DNA",
+              "Torsades de Pointes",
+              "Ventricular Fibrillation",
+              "Young Adult"
+            ],
+            "month": 8,
+            "nonHuman": false,
+            "objCls": "Literature",
+            "page": "841-50",
+            "pediatric": false,
+            "pgkbPublication": false,
+            "pubDate": "2012-08-01T00:00:00-07:00",
+            "pubmedMeshTerms": [],
+            "summary": "OBJECTIVES: This study sought to determine whether variations in NOS1AP affect drug-induced long QT syndrome (LQTS).\n\nBACKGROUND: Use of antiarrhythmic drugs is limited by the high incidence of serious adverse events including QT prolongation and torsades de pointes. NOS1AP gene variants play a role in modulating QT intervals in healthy subjects and severity of presentation in LQTS.\n\nMETHODS: This study carried out an association study using 167 single nucleotide polymorphisms (SNP) spanning the NOS1AP gene in 58 Caucasian patients experiencing drug-induced LQTS (dLQTS) and 87 Caucasian controls from the DARE (Drug-Induced Arrhythmia Risk Evaluation) study.\n\nRESULTS: The rs10800397 SNP was significantly associated with dLQTS (odds ratio [OR]: 3.3, 99.95% confidence interval [CI]: 1.0 to 10.8, p = 3.7 \u00d7 10(-4)). The associations were more pronounced in the subgroup of amiodarone users, in which 3 SNPs, including rs10800397, were significantly associated (most significant SNP: rs10919035: OR: 5.5, 99.95% CI: 1.1 to 27.9, p = 3.0 \u00d7 10(-4)). We genotyped rs10919035 in an independent replication cohort of 28 amiodarone dLQTS cases versus 173 control subjects (meta-analysis of both studies: OR: 2.81, 99.95% CI: 1.62 to 4.89, p = 2.4 \u00d7 10(-4)). Analysis of corrected QT interval among 74 control subjects from our dataset showed a similar pattern of significance over the gene region as the case-control analysis. This pattern was confirmed in 1,480 control subjects from the BRIGHT (British Genetics of Hypertension Study) cohort (top SNP from DARE: rs12734991 in meta-analysis: increase in corrected QT interval per C allele: 9.1 \u00b1 3.2 ms, p = 1.7 \u00d7 10(-4)).\n\nCONCLUSIONS: These results provide the first demonstration that common variations in the NOS1AP gene are associated with a significant increase in the risk of dLQTS. This study suggests that common variations in the NOS1AP gene may have relevance for future pharmacogenomic applications in clinical practice permitting safer prescription of drugs for vulnerable patients.",
+            "terms": [],
+            "type": "Literature",
+            "version": 6,
+            "volume": "60",
+            "year": 2012
+          },
+          "location": {
+            "id": 981478055,
+            "chromosomeName": "chr1",
+            "copyNumber": "1",
+            "diplotypes": [],
+            "displayName": "rs10919035",
+            "genes": [
+              {
+                "objCls": "Gene",
+                "id": "PA142671259",
+                "symbol": "NOS1AP",
+                "name": "nitric oxide synthase 1 adaptor protein",
+                "version": 8
+              }
+            ],
+            "gpPosition": 162244011,
+            "haplotypes": [],
+            "linkedObjects": [
+              {
+                "objCls": "Variant",
+                "id": "PA166153817",
+                "symbol": "rs10919035",
+                "name": "rs10919035",
+                "version": 4
+              }
+            ],
+            "refSeqPosition": -1,
+            "rsid": "rs10919035",
+            "tagGene": false,
+            "type": "SNP",
+            "variant": {
+              "objCls": "Variant",
+              "id": "PA166153817",
+              "symbol": "rs10919035",
+              "name": "rs10919035",
+              "version": 4
+            },
+            "version": 1
+          },
+          "metabolizers1": [],
+          "metabolizers2": [],
+          "objCls": "Variant Phenotype Annotation",
+          "pediatric": false,
+          "phenotypeCategories": [
+            {
+              "id": 769229935,
+              "description": "toxicity/adr\n[PD]",
+              "parents": [],
+              "resource": "Phenotype Categories",
+              "synonyms": [],
+              "term": "Toxicity",
+              "termId": "secondaryCat:769229935",
+              "valid": true,
+              "version": 2
+            }
+          ],
+          "phenotypes": [
+            {
+              "id": 376649334,
+              "phenotype": "amiodarone-induced ventricular arrhythmia and QT prolongation",
+              "phenotypeContext": "Side Effect",
+              "version": 1
+            }
+          ],
+          "populationPhenotypes": [],
+          "relatedChemicals": [
+            {
+              "objCls": "Chemical",
+              "id": "PA448383",
+              "name": "amiodarone",
+              "version": 14
+            }
+          ],
+          "relatedVariations": [
+            {
+              "objCls": "Allele",
+              "id": "PA166388081",
+              "symbol": "CA10817101",
+              "name": "NM_014697.3(NOS1AP):c.178-13122C>T",
+              "version": 1
+            },
+            {
+              "objCls": "Allele",
+              "id": "PA166388063",
+              "symbol": "CA1140222697",
+              "name": "NM_014697.3(NOS1AP):c.178-13122C=",
+              "version": 1
+            }
+          ],
+          "score": 3.0,
+          "scoreDetails": {
+            "step5A": 1.0,
+            "step5B": 1.0,
+            "chosenSpId": 981478053,
+            "step1Score": 1.0,
+            "step2Score": 1.0,
+            "step3Score": 0.5,
+            "step4Score": 0.5,
+            "totalScore": 3.0,
+            "chosenSpIndex": "1 of 1",
+            "generatedDate": "2021-03-20T21:27:56.079-07:00",
+            "variantAnnotationId": 981478047
+          },
+          "sentence": "Allele T is associated with amiodarone-induced ventricular arrhythmia and QT prolongation when treated with amiodarone as compared to allele C.",
+          "sequenceLocation": {
+            "id": 1447998456,
+            "altHgvs": {},
+            "assembly": "GRCh37",
+            "begin": 162244012,
+            "end": 162244012,
+            "intronicOffset": 0,
+            "referenceAllele": "C",
+            "referenceHgvs": "NC_000001.10:g.162244012=",
+            "sequence": {
+              "id": 1447949551,
+              "name": "[GRCh37]chr1",
+              "resource": "RefSeq DNA",
+              "resourceId": "NC_000001.10",
+              "_url": "https://www.ncbi.nlm.nih.gov/nuccore/NC_000001.10",
+              "version": 2
+            },
+            "source": "dbSnp",
+            "type": "genomic",
+            "variantAlleles": [
+              "G",
+              "T"
+            ],
+            "variantHgvs": [
+              "NC_000001.10:g.162244012C>G",
+              "NC_000001.10:g.162244012C>T"
+            ],
+            "version": 1
+          },
+          "significance": {
+            "id": 769229666,
+            "parents": [],
+            "resource": "Association Significance",
+            "synonyms": [],
+            "term": "yes",
+            "termId": "variantAnnotationSignificance:769229666",
+            "valid": true,
+            "version": 0
+          },
+          "studyParameters": [
+            {
+              "id": 981478053,
+              "characteristics": "cases were patients experiencing drug-induced ventricular arrhythmias and/or severe QT interval prolongation. ",
+              "characteristicsType": "Study Cohort",
+              "confidenceIntervalStart": 1.1,
+              "confidenceIntervalStop": 27.9,
+              "frequencyInCases": -1.0,
+              "frequencyInControls": -1.0,
+              "pediatric": false,
+              "populationEthnicity": {
+                "custom": false,
+                "ethnicities": [
+                  "European"
+                ],
+                "mixed": false,
+                "unknown": false
+              },
+              "populationTypes": [],
+              "pvalue": 0.0003,
+              "pvalueOp": {
+                "id": 1183492001,
+                "parents": [],
+                "resource": "Equality Symbols",
+                "synonyms": [],
+                "term": "=",
+                "termId": "equality:1183492001",
+                "valid": true,
+                "version": 0
+              },
+              "pvalueString": "3.0E-4",
+              "ratioStat": 5.5,
+              "ratioStatType": {
+                "id": 1183624559,
+                "parents": [],
+                "resource": "Statistic Analysis",
+                "synonyms": [],
+                "term": "OR",
+                "termId": "statAnalysis:1183624559",
+                "valid": true,
+                "version": 0
+              },
+              "statTests": [],
+              "studyCases": 27,
+              "studyControls": 87,
+              "studyTypes": [
+                "case/control"
+              ],
+              "usedForScoring": true,
+              "version": 0
+            }
+          ],
+          "useForCaScoring": true,
+          "version": 13
+        },
+        {
+          "id": 981478059,
+          "accessionId": "PA166140401",
+          "alleleGenotype": "T",
+          "comparison": "C",
+          "connWords2": {
+            "id": 769229659,
+            "parents": [],
+            "resource": "Phenotype or Gene to Drug Connecting Words",
+            "synonyms": [],
+            "term": "when treated with",
+            "termId": "variantAnnotationPhenotypeConnWords2:769229659",
+            "valid": true,
+            "version": 0
+          },
+          "description": "(meta-analysis of both studies(replication and discovery): OR: 2.81, 99.95% CI: 1.62 to 4.89, p=2.4x10-4).",
+          "drugsConnWord": {
+            "id": 827698396,
+            "parents": [],
+            "resource": "Collection Operator - And/Or",
+            "synonyms": [],
+            "term": "or",
+            "termId": "drugsConnWord:827698396",
+            "valid": true,
+            "version": 0
+          },
+          "formatVersion": 1,
+          "history": [
+            {
+              "id": 1450364960,
+              "date": "2019-01-29T09:06:17.686-08:00",
+              "description": "Updated OMB race to appropriate biogeographical group",
+              "type": "Update",
+              "version": 0
+            }
+          ],
+          "isAssociated": true,
+          "isPlural": false,
+          "literature": {
+            "id": 15031905,
+            "title": "Common variation in the NOS1AP gene is associated with drug-induced QT prolongation and ventricular arrhythmia.",
+            "_sameAs": "https://www.ncbi.nlm.nih.gov/pmc/articles/PMC3753216",
+            "authors": [
+              "Jamshidi Yalda",
+              "Nolte Ilja M",
+              "Dalageorgou Chrysoula",
+              "Zheng Dongling",
+              "Johnson Toby",
+              "Bastiaenen Rachel",
+              "Ruddy Suzanne",
+              "Talbott Daniel",
+              "Norris Kris J",
+              "Snieder Harold",
+              "George Alfred L",
+              "Marshall Vanessa",
+              "Shakir Saad",
+              "Kannankeril Prince J",
+              "Munroe Patricia B",
+              "Camm A John",
+              "Jeffery Steve",
+              "Roden Dan M",
+              "Behr Elijah R"
+            ],
+            "crossReferences": [
+              {
+                "id": 1449273955,
+                "resource": "PubMed Central",
+                "resourceId": "PMC3753216",
+                "_url": "https://www.ncbi.nlm.nih.gov/pmc/articles/PMC3753216",
+                "version": 0
+              },
+              {
+                "id": 1449273954,
+                "resource": "PubMed",
+                "resourceId": "22682551",
+                "_url": "https://www.ncbi.nlm.nih.gov/pubmed/22682551",
+                "version": 0
+              },
+              {
+                "id": 1449273956,
+                "resource": "DOI",
+                "resourceId": "10.1016/j.jacc.2012.03.031",
+                "_url": "http://dx.doi.org/10.1016%2Fj.jacc.2012.03.031",
+                "version": 0
+              }
+            ],
+            "day": -1,
+            "hasKeyword": true,
+            "journal": "Journal of the American College of Cardiology",
+            "meshTerms": [
+              "Adaptor Proteins, Signal Transducing",
+              "Adult",
+              "Aged",
+              "Aged, 80 and over",
+              "Amiodarone",
+              "Anti-Arrhythmia Agents",
+              "Case-Control Studies",
+              "Female",
+              "Humans",
+              "Long QT Syndrome",
+              "Male",
+              "Middle Aged",
+              "Polymorphism, Single Nucleotide",
+              "Sequence Analysis, DNA",
+              "Torsades de Pointes",
+              "Ventricular Fibrillation",
+              "Young Adult"
+            ],
+            "month": 8,
+            "nonHuman": false,
+            "objCls": "Literature",
+            "page": "841-50",
+            "pediatric": false,
+            "pgkbPublication": false,
+            "pubDate": "2012-08-01T00:00:00-07:00",
+            "pubmedMeshTerms": [],
+            "summary": "OBJECTIVES: This study sought to determine whether variations in NOS1AP affect drug-induced long QT syndrome (LQTS).\n\nBACKGROUND: Use of antiarrhythmic drugs is limited by the high incidence of serious adverse events including QT prolongation and torsades de pointes. NOS1AP gene variants play a role in modulating QT intervals in healthy subjects and severity of presentation in LQTS.\n\nMETHODS: This study carried out an association study using 167 single nucleotide polymorphisms (SNP) spanning the NOS1AP gene in 58 Caucasian patients experiencing drug-induced LQTS (dLQTS) and 87 Caucasian controls from the DARE (Drug-Induced Arrhythmia Risk Evaluation) study.\n\nRESULTS: The rs10800397 SNP was significantly associated with dLQTS (odds ratio [OR]: 3.3, 99.95% confidence interval [CI]: 1.0 to 10.8, p = 3.7 \u00d7 10(-4)). The associations were more pronounced in the subgroup of amiodarone users, in which 3 SNPs, including rs10800397, were significantly associated (most significant SNP: rs10919035: OR: 5.5, 99.95% CI: 1.1 to 27.9, p = 3.0 \u00d7 10(-4)). We genotyped rs10919035 in an independent replication cohort of 28 amiodarone dLQTS cases versus 173 control subjects (meta-analysis of both studies: OR: 2.81, 99.95% CI: 1.62 to 4.89, p = 2.4 \u00d7 10(-4)). Analysis of corrected QT interval among 74 control subjects from our dataset showed a similar pattern of significance over the gene region as the case-control analysis. This pattern was confirmed in 1,480 control subjects from the BRIGHT (British Genetics of Hypertension Study) cohort (top SNP from DARE: rs12734991 in meta-analysis: increase in corrected QT interval per C allele: 9.1 \u00b1 3.2 ms, p = 1.7 \u00d7 10(-4)).\n\nCONCLUSIONS: These results provide the first demonstration that common variations in the NOS1AP gene are associated with a significant increase in the risk of dLQTS. This study suggests that common variations in the NOS1AP gene may have relevance for future pharmacogenomic applications in clinical practice permitting safer prescription of drugs for vulnerable patients.",
+            "terms": [],
+            "type": "Literature",
+            "version": 6,
+            "volume": "60",
+            "year": 2012
+          },
+          "location": {
+            "id": 981478066,
+            "chromosomeName": "chr1",
+            "copyNumber": "1",
+            "diplotypes": [],
+            "displayName": "rs10919035",
+            "genes": [
+              {
+                "objCls": "Gene",
+                "id": "PA142671259",
+                "symbol": "NOS1AP",
+                "name": "nitric oxide synthase 1 adaptor protein",
+                "version": 8
+              }
+            ],
+            "gpPosition": 162244011,
+            "haplotypes": [],
+            "linkedObjects": [
+              {
+                "objCls": "Variant",
+                "id": "PA166153817",
+                "symbol": "rs10919035",
+                "name": "rs10919035",
+                "version": 4
+              }
+            ],
+            "refSeqPosition": -1,
+            "rsid": "rs10919035",
+            "tagGene": false,
+            "type": "SNP",
+            "variant": {
+              "objCls": "Variant",
+              "id": "PA166153817",
+              "symbol": "rs10919035",
+              "name": "rs10919035",
+              "version": 4
+            },
+            "version": 1
+          },
+          "metabolizers1": [],
+          "metabolizers2": [],
+          "objCls": "Variant Phenotype Annotation",
+          "pediatric": false,
+          "phenotypeCategories": [
+            {
+              "id": 769229935,
+              "description": "toxicity/adr\n[PD]",
+              "parents": [],
+              "resource": "Phenotype Categories",
+              "synonyms": [],
+              "term": "Toxicity",
+              "termId": "secondaryCat:769229935",
+              "valid": true,
+              "version": 2
+            }
+          ],
+          "phenotypes": [
+            {
+              "id": 376649346,
+              "phenotype": "amiodarone-induced ventricular arrhythmia and QT prolongation",
+              "phenotypeContext": "Side Effect",
+              "version": 1
+            }
+          ],
+          "populationPhenotypes": [],
+          "relatedChemicals": [
+            {
+              "objCls": "Chemical",
+              "id": "PA448383",
+              "name": "amiodarone",
+              "version": 14
+            }
+          ],
+          "relatedVariations": [
+            {
+              "objCls": "Allele",
+              "id": "PA166388081",
+              "symbol": "CA10817101",
+              "name": "NM_014697.3(NOS1AP):c.178-13122C>T",
+              "version": 1
+            },
+            {
+              "objCls": "Allele",
+              "id": "PA166388063",
+              "symbol": "CA1140222697",
+              "name": "NM_014697.3(NOS1AP):c.178-13122C=",
+              "version": 1
+            }
+          ],
+          "score": 0.0,
+          "scoreDetails": {
+            "step5A": 1.0,
+            "step5B": 0.0,
+            "chosenSpId": 981478065,
+            "step1Score": 1.0,
+            "step2Score": 0.0,
+            "step3Score": 0.5,
+            "step4Score": 0.0,
+            "totalScore": 0.0,
+            "chosenSpIndex": "1 of 1",
+            "generatedDate": "2021-03-20T21:45:18.554-07:00",
+            "variantAnnotationId": 981478059
+          },
+          "sentence": "Allele T is associated with amiodarone-induced ventricular arrhythmia and QT prolongation when treated with amiodarone as compared to allele C.",
+          "sequenceLocation": {
+            "id": 1447998456,
+            "altHgvs": {},
+            "assembly": "GRCh37",
+            "begin": 162244012,
+            "end": 162244012,
+            "intronicOffset": 0,
+            "referenceAllele": "C",
+            "referenceHgvs": "NC_000001.10:g.162244012=",
+            "sequence": {
+              "id": 1447949551,
+              "name": "[GRCh37]chr1",
+              "resource": "RefSeq DNA",
+              "resourceId": "NC_000001.10",
+              "_url": "https://www.ncbi.nlm.nih.gov/nuccore/NC_000001.10",
+              "version": 2
+            },
+            "source": "dbSnp",
+            "type": "genomic",
+            "variantAlleles": [
+              "G",
+              "T"
+            ],
+            "variantHgvs": [
+              "NC_000001.10:g.162244012C>G",
+              "NC_000001.10:g.162244012C>T"
+            ],
+            "version": 1
+          },
+          "significance": {
+            "id": 769229666,
+            "parents": [],
+            "resource": "Association Significance",
+            "synonyms": [],
+            "term": "yes",
+            "termId": "variantAnnotationSignificance:769229666",
+            "valid": true,
+            "version": 0
+          },
+          "studyParameters": [
+            {
+              "id": 981478065,
+              "characteristics": "replication cohort of 28 cases and 173 drug-challenged control subjects.",
+              "characteristicsType": "Study Cohort",
+              "confidenceIntervalStart": -1.0,
+              "confidenceIntervalStop": -1.0,
+              "frequencyInCases": -1.0,
+              "frequencyInControls": -1.0,
+              "pediatric": false,
+              "populationEthnicity": {
+                "custom": false,
+                "ethnicities": [
+                  "European"
+                ],
+                "mixed": false,
+                "unknown": false
+              },
+              "populationTypes": [],
+              "pvalue": 0.06,
+              "pvalueOp": {
+                "id": 1183492001,
+                "parents": [],
+                "resource": "Equality Symbols",
+                "synonyms": [],
+                "term": "=",
+                "termId": "equality:1183492001",
+                "valid": true,
+                "version": 0
+              },
+              "pvalueString": "0.06",
+              "ratioStat": -1.0,
+              "ratioStatType": {
+                "id": 1183624559,
+                "parents": [],
+                "resource": "Statistic Analysis",
+                "synonyms": [],
+                "term": "OR",
+                "termId": "statAnalysis:1183624559",
+                "valid": true,
+                "version": 0
+              },
+              "statTests": [],
+              "studyCases": 28,
+              "studyControls": 173,
+              "studyTypes": [
+                "case/control"
+              ],
+              "usedForScoring": true,
+              "version": 0
+            }
+          ],
+          "useForCaScoring": true,
+          "version": 13
+        }
+      ],
+      "version": 5
+    },
+    {
+      "id": 1448102346,
+      "accessionId": "PA166159159",
+      "allelePhenotypes": [
+        {
+          "id": 1448102348,
+          "allele": "CC",
+          "limitedEvidence": false,
+          "phenotype": "Patients with the CC genotype may have a decreased risk of drug-induced torsades de pointes as compared to patients with the TT genotype. Other genetic and clinical factors may also influence risk of torsades de pointes. \n",
+          "version": 0
+        },
+        {
+          "id": 1448102349,
+          "allele": "CT",
+          "limitedEvidence": false,
+          "phenotype": "Patients with the CT genotype may have a decreased risk of drug-induced torsades de pointes as compared to patients with the TT genotype, or an increased risk as compared to patients with the CC genotype. Other genetic and clinical factors may also influence risk of torsades de pointes. ",
+          "version": 0
+        },
+        {
+          "id": 1448102350,
+          "allele": "TT",
+          "limitedEvidence": false,
+          "phenotype": "Patients with the TT genotype may have an increased risk of drug-induced torsades de pointes as compared to patients with the CC genotype. Other genetic and clinical factors may also influence risk of torsades de pointes. ",
+          "version": 0
+        }
+      ],
+      "conflictingVariantAnnotationIds": [],
+      "history": [
+        {
+          "id": 1448102347,
+          "date": "2016-06-14T11:10:40.865-07:00",
+          "type": "Create",
+          "version": 0
+        },
+        {
+          "id": 1449764674,
+          "date": "2018-11-05T14:24:07.685-08:00",
+          "description": "Updated OMB race to appropriate biogeographical group",
+          "type": "Update",
+          "version": 0
+        },
+        {
+          "id": 1451394828,
+          "date": "2021-03-24T20:26:20.665-07:00",
+          "description": "CA score added as part of scoring system release. LOE may have automatically changed based on new score but may be subject to further changes upon curator review.",
+          "type": "Update",
+          "version": 0
+        }
+      ],
+      "levelOfEvidence": {
+        "id": 827923056,
+        "description": "Level 3 clinical annotations describe variant-drug combinations with a low level of evidence supporting the association. This association may be based on a single study annotated in PharmGKB, or there may be several studies that failed to replicate the association. The annotation may also be based on preliminary evidence (e.g., a case report, non-significant study, or in vitro, molecular, or functional assay evidence), resulting in a lower calculated score.",
+        "parents": [],
+        "resource": "Level of Evidence",
+        "synonyms": [],
+        "term": "3",
+        "termId": "levelsOfEvidence:827923056",
+        "valid": true,
+        "version": 2
+      },
+      "location": {
+        "id": 1448102351,
+        "buildVersion": "hg38",
+        "chromosomeId": "PA502",
+        "chromosomeName": "chr21",
+        "copyNumber": "1",
+        "diplotypes": [],
+        "displayName": "rs1805128",
+        "genes": [
+          {
+            "objCls": "Gene",
+            "id": "PA211",
+            "symbol": "KCNE1",
+            "name": "potassium voltage-gated channel subfamily E regulatory subunit 1",
+            "version": 54
+          }
+        ],
+        "gpPosition": 35821680,
+        "haplotypes": [],
+        "linkedObjects": [
+          {
+            "objCls": "Variant",
+            "id": "PA166155994",
+            "symbol": "rs1805128",
+            "name": "rs1805128",
+            "version": 5
+          }
+        ],
+        "refSeqCrossReference": {
+          "id": 1448102352,
+          "resource": "RefSeq RNA",
+          "resourceId": "NM_000219.3",
+          "_url": "https://www.ncbi.nlm.nih.gov/nuccore/NM_000219.3",
+          "version": 0
+        },
+        "refSeqPosition": 253,
+        "rsid": "rs1805128",
+        "tagGene": false,
+        "type": "SNP",
+        "variant": {
+          "objCls": "Variant",
+          "id": "PA166155994",
+          "symbol": "rs1805128",
+          "name": "rs1805128",
+          "version": 5
+        },
+        "version": 1
+      },
+      "name": "rs1805128 (KCNE1); amiodarone, Antibiotics, antipsychotics, diuretics, quinidine or sotalol (level 3 Toxicity)",
+      "objCls": "Clinical Annotation",
+      "overrideLevel": false,
+      "pediatric": false,
+      "relatedChemicals": [
+        {
+          "objCls": "Chemical",
+          "id": "PA448383",
+          "name": "amiodarone",
+          "version": 14
+        },
+        {
+          "objCls": "Chemical",
+          "id": "PA164712406",
+          "name": "Antibiotics",
+          "version": 4
+        },
+        {
+          "objCls": "Chemical",
+          "id": "PA452233",
+          "name": "antipsychotics",
+          "version": 4
+        },
+        {
+          "objCls": "Chemical",
+          "id": "PA151249535",
+          "name": "diuretics",
+          "version": 6
+        },
+        {
+          "objCls": "Chemical",
+          "id": "PA451209",
+          "name": "quinidine",
+          "version": 12
+        },
+        {
+          "objCls": "Chemical",
+          "id": "PA451457",
+          "name": "sotalol",
+          "version": 13
+        }
+      ],
+      "relatedChemicalsLogic": "Or",
+      "relatedDiseases": [],
+      "relatedGuidelines": [],
+      "relatedLabels": [],
+      "relatedVariations": [
+        {
+          "objCls": "Allele",
+          "id": "PA166375017",
+          "symbol": "CA123130",
+          "name": "NM_000219.6(KCNE1):c.253G>A (p.Asp85Asn)",
+          "version": 1
+        },
+        {
+          "objCls": "Allele",
+          "id": "PA166375016",
+          "symbol": "CA2387113391",
+          "name": "NM_000219.6(KCNE1):c.253G= (p.Asp85=)",
+          "version": 1
+        }
+      ],
+      "score": 3.25,
+      "scoreDetails": "{\"vaScores\": [{\"step5A\": 1.0, \"step5B\": 1.0, \"chosenSpId\": 827808595, \"step1Score\": 1.0, \"step2Score\": 1.0, \"step3Score\": 0.75, \"step4Score\": 0.5, \"totalScore\": 3.25, \"chosenSpIndex\": \"1 of 2\", \"generatedDate\": \"2021-03-21T05:09:58.679-07:00\", \"variantAnnotationId\": 827808581}], \"totalScore\": 3.25, \"vaScoreTotal\": 3.25, \"generatedDate\": \"2021-03-21T05:09:58.679-07:00\", \"labelScoreTotal\": 0.0, \"guidelineScoreTotal\": 0.0}",
+      "types": [
+        "Toxicity"
+      ],
+      "variantAnnotations": [
+        {
+          "id": 827808581,
+          "accessionId": "PA166139863",
+          "alleleGenotype": "T",
+          "comparison": "C",
+          "connWords1": {
+            "id": 769229641,
+            "parents": [],
+            "resource": "Phenotype Connecting words 1",
+            "synonyms": [],
+            "term": "risk of",
+            "termId": "variantAnnotationPhenoConnWords1:769229641",
+            "valid": true,
+            "version": 0
+          },
+          "connWords2": {
+            "id": 769229659,
+            "parents": [],
+            "resource": "Phenotype or Gene to Drug Connecting Words",
+            "synonyms": [],
+            "term": "when treated with",
+            "termId": "variantAnnotationPhenotypeConnWords2:769229659",
+            "valid": true,
+            "version": 0
+          },
+          "description": "Though significance level was set less stringently than if a complete Bonferroni correction had been applied.",
+          "drugsConnWord": {
+            "id": 827698396,
+            "parents": [],
+            "resource": "Collection Operator - And/Or",
+            "synonyms": [],
+            "term": "or",
+            "termId": "drugsConnWord:827698396",
+            "valid": true,
+            "version": 0
+          },
+          "formatVersion": 1,
+          "history": [
+            {
+              "id": 1450363695,
+              "date": "2019-01-29T09:00:58.832-08:00",
+              "description": "Updated OMB race to appropriate biogeographical group",
+              "type": "Update",
+              "version": 0
+            },
+            {
+              "id": 1454163783,
+              "date": "2025-06-27T16:14:32.395-07:00",
+              "description": "fixed typo",
+              "type": "Update",
+              "version": 0
+            }
+          ],
+          "isAssociated": true,
+          "isPlural": false,
+          "literature": {
+            "id": 14453453,
+            "title": "A large candidate gene survey identifies the KCNE1 D85N polymorphism as a possible modulator of drug-induced torsades de pointes.",
+            "_sameAs": "https://www.ncbi.nlm.nih.gov/pmc/articles/PMC3288202",
+            "authors": [
+              "K\u00e4\u00e4b Stefan",
+              "Crawford Dana C",
+              "Sinner Moritz F",
+              "Behr Elijah R",
+              "Kannankeril Prince J",
+              "Wilde Arthur A M",
+              "Bezzina Connie R",
+              "Schulze-Bahr Eric",
+              "Guicheney Pascale",
+              "Bishopric Nanette H",
+              "Myerburg Robert J",
+              "Schott Jean-Jacques",
+              "Pfeufer Arne",
+              "Beckmann Britt-Maria",
+              "Martens Eimo",
+              "Zhang Taifang",
+              "Stallmeyer Birgit",
+              "Zumhagen Sven",
+              "Denjoy Isabelle",
+              "Bardai Abdennasser",
+              "Van Gelder Isabelle C",
+              "Jamshidi Yalda",
+              "Dalageorgou Chrysoula",
+              "Marshall Vanessa",
+              "Jeffery Steve",
+              "Shakir Saad",
+              "Camm A John",
+              "Steinbeck Gerhard",
+              "Perz Siegfried",
+              "Lichtner Peter",
+              "Meitinger Thomas",
+              "Peters Annette",
+              "Wichmann H-Erich",
+              "Ingram Christiana",
+              "Bradford Yuki",
+              "Carter Shannon",
+              "Norris Kris",
+              "Ritchie Marylyn D",
+              "George Alfred L",
+              "Roden Dan M"
+            ],
+            "crossReferences": [
+              {
+                "id": 1449264097,
+                "resource": "PubMed Central",
+                "resourceId": "PMC3288202",
+                "_url": "https://www.ncbi.nlm.nih.gov/pmc/articles/PMC3288202",
+                "version": 0
+              },
+              {
+                "id": 827803466,
+                "resource": "PubMed",
+                "resourceId": "22100668",
+                "_url": "https://www.ncbi.nlm.nih.gov/pubmed/22100668",
+                "version": 0
+              },
+              {
+                "id": 1449264098,
+                "resource": "DOI",
+                "resourceId": "10.1161/CIRCGENETICS.111.960930",
+                "_url": "http://dx.doi.org/10.1161%2FCIRCGENETICS.111.960930",
+                "version": 0
+              }
+            ],
+            "day": -1,
+            "hasKeyword": true,
+            "journal": "Circulation. Cardiovascular genetics",
+            "meshTerms": [
+              "Aged",
+              "Aged, 80 and over",
+              "Alleles",
+              "Amino Acid Substitution",
+              "Anti-Arrhythmia Agents",
+              "Case-Control Studies",
+              "Cohort Studies",
+              "Female",
+              "Genotype",
+              "Haplotypes",
+              "Humans",
+              "Long QT Syndrome",
+              "Male",
+              "Middle Aged",
+              "Odds Ratio",
+              "Polymorphism, Single Nucleotide",
+              "Potassium",
+              "Potassium Channels, Voltage-Gated",
+              "Torsades de Pointes"
+            ],
+            "month": 2,
+            "nonHuman": false,
+            "objCls": "Literature",
+            "page": "91-9",
+            "pediatric": false,
+            "pgkbPublication": false,
+            "pubDate": "2012-02-01T00:00:00-08:00",
+            "pubmedMeshTerms": [],
+            "summary": "BACKGROUND: Drug-induced long-QT syndrome (diLQTS) is an adverse drug effect that has an important impact on drug use, development, and regulation. We tested the hypothesis that common variants in key genes controlling cardiac electric properties modify the risk of diLQTS.\n\nMETHODS AND RESULTS: In a case-control setting, we included 176 patients of European descent from North America and Europe with diLQTS, defined as documented torsades de pointes during treatment with a QT-prolonging drug. Control samples were obtained from 207 patients of European ancestry who displayed &lt;50 ms QT lengthening during initiation of therapy with a QT-prolonging drug and 837 control subjects from the population-based KORA study. Subjects were successfully genotyped at 1424 single-nucleotide polymorphisms (SNPs) in 18 candidate genes including 1386 SNPs tagging common haplotype blocks and 38 nonsynonymous ion channel gene SNPs. For validation, we used a set of cases (n=57) and population-based control subjects of European descent. The SNP KCNE1 D85N (rs1805128), known to modulate an important potassium current in the heart, predicted diLQTS with an odds ratio of 9.0 (95% confidence interval, 3.5-22.9). The variant allele was present in 8.6% of cases, 2.9% of drug-exposed control subjects, and 1.8% of population control subjects. In the validation cohort, the variant allele was present in 3.5% of cases and in 1.4% of control subjects.\n\nCONCLUSIONS: This high-density candidate SNP approach identified a key potassium channel susceptibility allele that may be associated with the rare adverse drug reaction torsades de pointes.",
+            "terms": [],
+            "type": "Literature",
+            "version": 4,
+            "volume": "5",
+            "year": 2012
+          },
+          "location": {
+            "id": 1454163781,
+            "buildVersion": "GRCh38",
+            "chromosomeId": "PA502",
+            "chromosomeName": "chr21",
+            "copyNumber": "1",
+            "diplotypes": [],
+            "displayName": "rs1805128",
+            "genes": [
+              {
+                "objCls": "Gene",
+                "id": "PA211",
+                "symbol": "KCNE1",
+                "name": "potassium voltage-gated channel subfamily E regulatory subunit 1",
+                "version": 54
+              }
+            ],
+            "gpPosition": 34449382,
+            "haplotypes": [],
+            "linkedObjects": [
+              {
+                "objCls": "Variant",
+                "id": "PA166155994",
+                "symbol": "rs1805128",
+                "name": "rs1805128",
+                "version": 5
+              }
+            ],
+            "refSeqCrossReference": {
+              "id": 1446906617,
+              "name": "[GRCh38]chr21",
+              "resource": "RefSeq DNA",
+              "resourceId": "NC_000021.9",
+              "_url": "https://www.ncbi.nlm.nih.gov/nuccore/NC_000021.9",
+              "version": 2
+            },
+            "refSeqPosition": 34449382,
+            "rsid": "rs1805128",
+            "tagGene": false,
+            "type": "SNP",
+            "variant": {
+              "objCls": "Variant",
+              "id": "PA166155994",
+              "symbol": "rs1805128",
+              "name": "rs1805128",
+              "version": 5
+            },
+            "version": 0
+          },
+          "metabolizers1": [],
+          "metabolizers2": [],
+          "objCls": "Variant Phenotype Annotation",
+          "pediatric": false,
+          "phenotypeCategories": [
+            {
+              "id": 769229935,
+              "description": "toxicity/adr\n[PD]",
+              "parents": [],
+              "resource": "Phenotype Categories",
+              "synonyms": [],
+              "term": "Toxicity",
+              "termId": "secondaryCat:769229935",
+              "valid": true,
+              "version": 2
+            }
+          ],
+          "phenotypeLinksConnWord": {
+            "id": 827698395,
+            "parents": [],
+            "resource": "Collection Operator - And/Or",
+            "synonyms": [],
+            "term": "and",
+            "termId": "drugsConnWord:827698395",
+            "valid": true,
+            "version": 0
+          },
+          "phenotypes": [
+            {
+              "id": 1454163782,
+              "disease": {
+                "objCls": "Disease",
+                "id": "PA446294",
+                "name": "Torsades de Pointes",
+                "version": 4
+              },
+              "phenotype": "Torsades de Pointes",
+              "phenotypeContext": "Disease",
+              "version": 0
+            }
+          ],
+          "polarity": {
+            "id": 769229639,
+            "parents": [],
+            "resource": "Polarity",
+            "synonyms": [],
+            "term": "increased",
+            "termId": "variantAnnotationPolarity:769229639",
+            "valid": true,
+            "version": 0
+          },
+          "populationPhenotypeLinksConnWord": {
+            "id": 827698395,
+            "parents": [],
+            "resource": "Collection Operator - And/Or",
+            "synonyms": [],
+            "term": "and",
+            "termId": "drugsConnWord:827698395",
+            "valid": true,
+            "version": 0
+          },
+          "populationPhenotypes": [],
+          "relatedChemicals": [
+            {
+              "objCls": "Chemical",
+              "id": "PA448383",
+              "name": "amiodarone",
+              "version": 14
+            },
+            {
+              "objCls": "Chemical",
+              "id": "PA164712406",
+              "name": "Antibiotics",
+              "version": 4
+            },
+            {
+              "objCls": "Chemical",
+              "id": "PA452233",
+              "name": "antipsychotics",
+              "version": 4
+            },
+            {
+              "objCls": "Chemical",
+              "id": "PA151249535",
+              "name": "diuretics",
+              "version": 6
+            },
+            {
+              "objCls": "Chemical",
+              "id": "PA451209",
+              "name": "quinidine",
+              "version": 12
+            },
+            {
+              "objCls": "Chemical",
+              "id": "PA451457",
+              "name": "sotalol",
+              "version": 13
+            }
+          ],
+          "relatedVariations": [
+            {
+              "objCls": "Allele",
+              "id": "PA166375017",
+              "symbol": "CA123130",
+              "name": "NM_000219.6(KCNE1):c.253G>A (p.Asp85Asn)",
+              "version": 1
+            },
+            {
+              "objCls": "Allele",
+              "id": "PA166375016",
+              "symbol": "CA2387113391",
+              "name": "NM_000219.6(KCNE1):c.253G= (p.Asp85=)",
+              "version": 1
+            }
+          ],
+          "score": 3.25,
+          "scoreDetails": {
+            "step5A": 1.0,
+            "step5B": 1.0,
+            "chosenSpId": 827808595,
+            "step1Score": 1.0,
+            "step2Score": 1.0,
+            "step3Score": 0.75,
+            "step4Score": 0.5,
+            "totalScore": 3.25,
+            "chosenSpIndex": "1 of 2",
+            "generatedDate": "2025-06-27T16:14:32.394-07:00",
+            "variantAnnotationId": 827808581
+          },
+          "sentence": "Allele T is associated with increased risk of Torsades de Pointes when treated with amiodarone, Antibiotics, antipsychotics, diuretics, quinidine or sotalol as compared to allele C.",
+          "sequenceLocation": {
+            "id": 1451177819,
+            "altHgvs": {},
+            "assembly": "GRCh38",
+            "begin": 34449382,
+            "end": 34449382,
+            "intronicOffset": 0,
+            "referenceAllele": "C",
+            "referenceHgvs": "NC_000021.9:g.34449382=",
+            "sequence": {
+              "id": 1446906617,
+              "name": "[GRCh38]chr21",
+              "resource": "RefSeq DNA",
+              "resourceId": "NC_000021.9",
+              "_url": "https://www.ncbi.nlm.nih.gov/nuccore/NC_000021.9",
+              "version": 2
+            },
+            "source": "dbSnp",
+            "type": "genomic",
+            "variantAlleles": [
+              "T"
+            ],
+            "variantHgvs": [
+              "NC_000021.9:g.34449382C>T"
+            ],
+            "version": 1
+          },
+          "significance": {
+            "id": 769229666,
+            "parents": [],
+            "resource": "Association Significance",
+            "synonyms": [],
+            "term": "yes",
+            "termId": "variantAnnotationSignificance:769229666",
+            "valid": true,
+            "version": 0
+          },
+          "studyParameters": [
+            {
+              "id": 827808595,
+              "alleleOfFreqInCases": "T",
+              "alleleOfFreqInControls": "T",
+              "characteristics": "frequency of T in population controls was 0.018.\r\np below is uncorrected.  Number SNPs = 1354.\r\nAuthors used a different standard.",
+              "characteristicsType": "Study Cohort",
+              "confidenceIntervalStart": 2.36,
+              "confidenceIntervalStop": 41.8,
+              "description": "",
+              "frequencyInCases": 0.086,
+              "frequencyInControls": 0.029,
+              "pediatric": false,
+              "populationEthnicity": {
+                "custom": false,
+                "ethnicities": [
+                  "European"
+                ],
+                "mixed": false,
+                "notes": "cases: self-declared European descent from North America and Europe. drug controls: European ancestry (from clinical study at Vanderbilt Med Center).  Also 837 population based controls (KORA study).",
+                "unknown": false
+              },
+              "populationTypes": [],
+              "pvalue": 0.00177,
+              "pvalueOp": {
+                "id": 1183492001,
+                "parents": [],
+                "resource": "Equality Symbols",
+                "synonyms": [],
+                "term": "=",
+                "termId": "equality:1183492001",
+                "valid": true,
+                "version": 0
+              },
+              "pvalueString": "0.00177",
+              "ratioStat": 9.92,
+              "ratioStatType": {
+                "id": 1183624559,
+                "parents": [],
+                "resource": "Statistic Analysis",
+                "synonyms": [],
+                "term": "OR",
+                "termId": "statAnalysis:1183624559",
+                "valid": true,
+                "version": 0
+              },
+              "statTests": [],
+              "studyCases": 176,
+              "studyControls": 207,
+              "studyTypes": [
+                "case/control"
+              ],
+              "usedForScoring": true,
+              "version": 0
+            },
+            {
+              "id": 827808597,
+              "alleleOfFreqInCases": "T",
+              "alleleOfFreqInControls": "T",
+              "characteristics": "p is not Bonferroni corrected.  number SNPs = 1354.  Authors used a different standard.",
+              "characteristicsType": "Study Cohort",
+              "confidenceIntervalStart": 0.35,
+              "confidenceIntervalStop": 6.57,
+              "frequencyInCases": 0.035,
+              "frequencyInControls": 0.014,
+              "pediatric": false,
+              "populationEthnicity": {
+                "custom": false,
+                "ethnicities": [
+                  "European"
+                ],
+                "mixed": false,
+                "notes": "European descent.",
+                "unknown": false
+              },
+              "populationTypes": [],
+              "pvalue": 0.58,
+              "pvalueOp": {
+                "id": 1183492001,
+                "parents": [],
+                "resource": "Equality Symbols",
+                "synonyms": [],
+                "term": "=",
+                "termId": "equality:1183492001",
+                "valid": true,
+                "version": 0
+              },
+              "pvalueString": "0.58",
+              "ratioStat": 1.51,
+              "ratioStatType": {
+                "id": 1183624559,
+                "parents": [],
+                "resource": "Statistic Analysis",
+                "synonyms": [],
+                "term": "OR",
+                "termId": "statAnalysis:1183624559",
+                "valid": true,
+                "version": 0
+              },
+              "statTests": [],
+              "studyCases": 57,
+              "studyControls": 211,
+              "studyTypes": [
+                "case/control"
+              ],
+              "usedForScoring": false,
+              "version": 0
+            }
+          ],
+          "useForCaScoring": true,
+          "version": 21
+        }
+      ],
+      "version": 5
+    }
+  ],
+  "status": "success"
+}

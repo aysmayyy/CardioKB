@@ -1,0 +1,1937 @@
+{
+  "data": [
+    {
+      "objCls": "Variant",
+      "id": "PA166153553",
+      "symbol": "rs6018",
+      "name": "rs6018",
+      "altNames": {
+        "synonym": [
+          "NC_000001.10:g.169511878T>G",
+          "NC_000001.11:g.169542640T>G",
+          "NG_011806.1:g.48892A>C",
+          "NM_000130.4:c.2450A>C",
+          "NP_000121.2:p.Asn817Thr",
+          "rs13306324",
+          "rs52823616",
+          "rs60636513"
+        ]
+      },
+      "changeClassification": "Missense",
+      "crossReferences": [
+        {
+          "id": 1447992724,
+          "resource": "dbSNP",
+          "resourceId": "rs6018",
+          "_url": "https://www.ncbi.nlm.nih.gov/snp/rs6018",
+          "version": 0
+        },
+        {
+          "id": 1451195340,
+          "resource": "dbSNP",
+          "resourceId": "rs13306324",
+          "_url": "https://www.ncbi.nlm.nih.gov/snp/rs13306324",
+          "version": 1
+        },
+        {
+          "id": 1451195341,
+          "resource": "dbSNP",
+          "resourceId": "rs52823616",
+          "_url": "https://www.ncbi.nlm.nih.gov/snp/rs52823616",
+          "version": 1
+        },
+        {
+          "id": 1451195342,
+          "resource": "dbSNP",
+          "resourceId": "rs60636513",
+          "_url": "https://www.ncbi.nlm.nih.gov/snp/rs60636513",
+          "version": 1
+        }
+      ],
+      "history": [],
+      "lastUpdatedFromDbsnp": "2020-06-18T21:41:23.977114",
+      "locations": [
+        {
+          "id": 1451195335,
+          "altHgvs": {},
+          "assembly": "GRCh38",
+          "begin": 169542640,
+          "end": 169542640,
+          "intronicOffset": 0,
+          "referenceAllele": "T",
+          "referenceHgvs": "NC_000001.11:g.169542640=",
+          "sequence": {
+            "id": 1445125164,
+            "name": "[GRCh38]chr1",
+            "resource": "RefSeq DNA",
+            "resourceId": "NC_000001.11",
+            "_url": "https://www.ncbi.nlm.nih.gov/nuccore/NC_000001.11",
+            "version": 2
+          },
+          "source": "dbSnp",
+          "type": "genomic",
+          "variantAlleles": [
+            "G"
+          ],
+          "variantHgvs": [
+            "NC_000001.11:g.169542640T>G"
+          ],
+          "version": 0
+        },
+        {
+          "id": 1447992721,
+          "altHgvs": {},
+          "assembly": "GRCh37",
+          "begin": 169511878,
+          "end": 169511878,
+          "intronicOffset": 0,
+          "referenceAllele": "T",
+          "referenceHgvs": "NC_000001.10:g.169511878=",
+          "sequence": {
+            "id": 1447949551,
+            "name": "[GRCh37]chr1",
+            "resource": "RefSeq DNA",
+            "resourceId": "NC_000001.10",
+            "_url": "https://www.ncbi.nlm.nih.gov/nuccore/NC_000001.10",
+            "version": 2
+          },
+          "source": "dbSnp",
+          "type": "genomic",
+          "variantAlleles": [
+            "G"
+          ],
+          "variantHgvs": [
+            "NC_000001.10:g.169511878T>G"
+          ],
+          "version": 1
+        },
+        {
+          "id": 1451195338,
+          "altHgvs": {},
+          "begin": 48892,
+          "end": 48892,
+          "intronicOffset": 0,
+          "referenceAllele": "A",
+          "referenceHgvs": "NG_011806.1:g.48892=",
+          "sequence": {
+            "id": 1451195337,
+            "name": "NG_011806.1",
+            "resource": "RefSeq DNA",
+            "resourceId": "NG_011806.1",
+            "_url": "https://www.ncbi.nlm.nih.gov/nuccore/NG_011806.1",
+            "version": 0
+          },
+          "source": "dbSnp",
+          "type": "genomic",
+          "variantAlleles": [
+            "C"
+          ],
+          "variantHgvs": [
+            "NG_011806.1:g.48892A>C"
+          ],
+          "version": 0
+        },
+        {
+          "id": 1447992722,
+          "altHgvs": {},
+          "begin": 817,
+          "end": 817,
+          "intronicOffset": 0,
+          "referenceAllele": "N",
+          "referenceHgvs": "NP_000121.2:p.Asn817=",
+          "sequence": {
+            "id": 1447992723,
+            "name": "NP_000121.2",
+            "resource": "RefSeq Protein",
+            "resourceId": "NP_000121.2",
+            "_url": "https://www.ncbi.nlm.nih.gov/nuccore/NP_000121.2",
+            "version": 0
+          },
+          "source": "dbSnp",
+          "type": "protein",
+          "variantAlleles": [
+            "T"
+          ],
+          "variantHgvs": [
+            "NP_000121.2:p.Asn817Thr"
+          ],
+          "version": 1
+        }
+      ],
+      "obsolete": false,
+      "rare": false,
+      "raritySource": "gnomAD Genomes",
+      "relatedGenes": [
+        {
+          "objCls": "Gene",
+          "id": "PA159",
+          "symbol": "F5",
+          "name": "coagulation factor V",
+          "version": 141
+        }
+      ],
+      "terms": [],
+      "type": "SNP",
+      "version": 4
+    },
+    {
+      "objCls": "Variant",
+      "id": "PA166153554",
+      "symbol": "rs6025",
+      "name": "rs6025",
+      "altNames": {
+        "synonym": [
+          "NC_000001.10:g.169519049T=",
+          "NC_000001.10:g.169519049T>C",
+          "NC_000001.11:g.169549811C=",
+          "NC_000001.11:g.169549811C>T",
+          "NG_011806.1:g.41721G=",
+          "NG_011806.1:g.41721G>A",
+          "NM_000130.4:c.1601G=",
+          "NM_000130.4:c.1601G>A",
+          "NP_000121.2:p.Arg534=",
+          "NP_000121.2:p.Arg534Gln",
+          "rs1801711",
+          "rs60031897"
+        ]
+      },
+      "changeClassification": "Missense",
+      "clinicalSignificance": "Pathogenic",
+      "crossReferences": [
+        {
+          "id": 1447992740,
+          "resource": "dbSNP",
+          "resourceId": "rs6025",
+          "_url": "https://www.ncbi.nlm.nih.gov/snp/rs6025",
+          "version": 0
+        },
+        {
+          "id": 1451195350,
+          "resource": "dbSNP",
+          "resourceId": "rs1801711",
+          "_url": "https://www.ncbi.nlm.nih.gov/snp/rs1801711",
+          "version": 1
+        },
+        {
+          "id": 1451195351,
+          "resource": "dbSNP",
+          "resourceId": "rs60031897",
+          "_url": "https://www.ncbi.nlm.nih.gov/snp/rs60031897",
+          "version": 1
+        },
+        {
+          "id": 1448103526,
+          "name": "NM_000130.4(F5):c.1601G= (p.Arg534=)",
+          "resource": "ClinVar",
+          "resourceId": "226007",
+          "_url": "https://www.ncbi.nlm.nih.gov/clinvar/?term=226007",
+          "version": 0
+        }
+      ],
+      "history": [],
+      "lastUpdatedFromDbsnp": "2020-06-18T21:41:30.483277",
+      "locations": [
+        {
+          "id": 1451195346,
+          "altHgvs": {},
+          "assembly": "GRCh38",
+          "begin": 169549811,
+          "end": 169549811,
+          "intronicOffset": 0,
+          "referenceAllele": "C",
+          "referenceHgvs": "NC_000001.11:g.169549811=",
+          "sequence": {
+            "id": 1445125164,
+            "name": "[GRCh38]chr1",
+            "resource": "RefSeq DNA",
+            "resourceId": "NC_000001.11",
+            "_url": "https://www.ncbi.nlm.nih.gov/nuccore/NC_000001.11",
+            "version": 2
+          },
+          "source": "dbSnp",
+          "type": "genomic",
+          "variantAlleles": [
+            "A",
+            "T"
+          ],
+          "variantHgvs": [
+            "NC_000001.11:g.169549811C>A",
+            "NC_000001.11:g.169549811C>T"
+          ],
+          "version": 0
+        },
+        {
+          "id": 1451195347,
+          "altHgvs": {},
+          "assembly": "GRCh37",
+          "begin": 169519049,
+          "end": 169519049,
+          "intronicOffset": 0,
+          "referenceAllele": "T",
+          "referenceHgvs": "NC_000001.10:g.169519049T>C",
+          "sequence": {
+            "id": 1447949551,
+            "name": "[GRCh37]chr1",
+            "resource": "RefSeq DNA",
+            "resourceId": "NC_000001.10",
+            "_url": "https://www.ncbi.nlm.nih.gov/nuccore/NC_000001.10",
+            "version": 2
+          },
+          "source": "dbSnp",
+          "type": "genomic",
+          "variantAlleles": [
+            "A",
+            "C"
+          ],
+          "variantHgvs": [
+            "NC_000001.10:g.169519049T>A",
+            "NC_000001.10:g.169519049T>C"
+          ],
+          "version": 0
+        },
+        {
+          "id": 1451195348,
+          "altHgvs": {},
+          "begin": 41721,
+          "end": 41721,
+          "intronicOffset": 0,
+          "referenceAllele": "G",
+          "referenceHgvs": "NG_011806.1:g.41721=",
+          "sequence": {
+            "id": 1451195337,
+            "name": "NG_011806.1",
+            "resource": "RefSeq DNA",
+            "resourceId": "NG_011806.1",
+            "_url": "https://www.ncbi.nlm.nih.gov/nuccore/NG_011806.1",
+            "version": 0
+          },
+          "source": "dbSnp",
+          "type": "genomic",
+          "variantAlleles": [
+            "A",
+            "T"
+          ],
+          "variantHgvs": [
+            "NG_011806.1:g.41721G>A",
+            "NG_011806.1:g.41721G>T"
+          ],
+          "version": 0
+        },
+        {
+          "id": 1447992739,
+          "altHgvs": {},
+          "begin": 534,
+          "end": 534,
+          "intronicOffset": 0,
+          "referenceAllele": "R",
+          "referenceHgvs": "NP_000121.2:p.Arg534=",
+          "sequence": {
+            "id": 1447992723,
+            "name": "NP_000121.2",
+            "resource": "RefSeq Protein",
+            "resourceId": "NP_000121.2",
+            "_url": "https://www.ncbi.nlm.nih.gov/nuccore/NP_000121.2",
+            "version": 0
+          },
+          "source": "dbSnp",
+          "type": "protein",
+          "variantAlleles": [
+            "L",
+            "Q"
+          ],
+          "variantHgvs": [
+            "NP_000121.2:p.Arg534Gln",
+            "NP_000121.2:p.Arg534Leu"
+          ],
+          "version": 1
+        },
+        {
+          "id": 1452089241,
+          "altHgvs": {
+            "c": [
+              "NC_000001.11:g.169549811C>T"
+            ],
+            "g": [
+              "NG_011806.1:g.41721G>A"
+            ],
+            "name": "Factor V Leiden",
+            "p": [
+              "NP_000121.2:p.R534Q"
+            ]
+          },
+          "assembly": "GRCh38",
+          "begin": 169549811,
+          "end": 169549811,
+          "intronicOffset": 0,
+          "referenceAllele": "C",
+          "sequence": {
+            "id": 1445125164,
+            "name": "[GRCh38]chr1",
+            "resource": "RefSeq DNA",
+            "resourceId": "NC_000001.11",
+            "_url": "https://www.ncbi.nlm.nih.gov/nuccore/NC_000001.11",
+            "version": 2
+          },
+          "source": "ClinPGx Haplotype",
+          "type": "genomic",
+          "variantAlleles": [
+            "T"
+          ],
+          "variantHgvs": [
+            "NC_000001.11:g.169549811C>T"
+          ],
+          "version": 1
+        }
+      ],
+      "obsolete": false,
+      "rare": false,
+      "raritySource": "gnomAD Genomes",
+      "relatedGenes": [
+        {
+          "objCls": "Gene",
+          "id": "PA159",
+          "symbol": "F5",
+          "name": "coagulation factor V",
+          "version": 141
+        }
+      ],
+      "terms": [],
+      "type": "SNP",
+      "version": 5
+    },
+    {
+      "objCls": "Variant",
+      "id": "PA166153792",
+      "symbol": "rs7542281",
+      "name": "rs7542281",
+      "altNames": {
+        "synonym": [
+          "NC_000001.10:g.169536439C>T",
+          "NC_000001.11:g.169567201C>T",
+          "NG_011806.1:g.24331G>A",
+          "NM_000130.4:c.373+5020G>A",
+          "rs9332558"
+        ]
+      },
+      "changeClassification": "Intronic",
+      "crossReferences": [
+        {
+          "id": 1447998077,
+          "resource": "dbSNP",
+          "resourceId": "rs7542281",
+          "_url": "https://www.ncbi.nlm.nih.gov/snp/rs7542281",
+          "version": 0
+        },
+        {
+          "id": 1451199995,
+          "resource": "dbSNP",
+          "resourceId": "rs9332558",
+          "_url": "https://www.ncbi.nlm.nih.gov/snp/rs9332558",
+          "version": 1
+        }
+      ],
+      "history": [],
+      "lastUpdatedFromDbsnp": "2020-06-19T23:10:30.964722",
+      "locations": [
+        {
+          "id": 1451199992,
+          "altHgvs": {},
+          "assembly": "GRCh38",
+          "begin": 169567201,
+          "end": 169567201,
+          "intronicOffset": 0,
+          "referenceAllele": "C",
+          "referenceHgvs": "NC_000001.11:g.169567201=",
+          "sequence": {
+            "id": 1445125164,
+            "name": "[GRCh38]chr1",
+            "resource": "RefSeq DNA",
+            "resourceId": "NC_000001.11",
+            "_url": "https://www.ncbi.nlm.nih.gov/nuccore/NC_000001.11",
+            "version": 2
+          },
+          "source": "dbSnp",
+          "type": "genomic",
+          "variantAlleles": [
+            "G",
+            "T"
+          ],
+          "variantHgvs": [
+            "NC_000001.11:g.169567201C>G",
+            "NC_000001.11:g.169567201C>T"
+          ],
+          "version": 0
+        },
+        {
+          "id": 1447998076,
+          "altHgvs": {},
+          "assembly": "GRCh37",
+          "begin": 169536439,
+          "end": 169536439,
+          "intronicOffset": 0,
+          "referenceAllele": "C",
+          "referenceHgvs": "NC_000001.10:g.169536439=",
+          "sequence": {
+            "id": 1447949551,
+            "name": "[GRCh37]chr1",
+            "resource": "RefSeq DNA",
+            "resourceId": "NC_000001.10",
+            "_url": "https://www.ncbi.nlm.nih.gov/nuccore/NC_000001.10",
+            "version": 2
+          },
+          "source": "dbSnp",
+          "type": "genomic",
+          "variantAlleles": [
+            "G",
+            "T"
+          ],
+          "variantHgvs": [
+            "NC_000001.10:g.169536439C>G",
+            "NC_000001.10:g.169536439C>T"
+          ],
+          "version": 1
+        },
+        {
+          "id": 1451199994,
+          "altHgvs": {},
+          "begin": 24331,
+          "end": 24331,
+          "intronicOffset": 0,
+          "referenceAllele": "G",
+          "referenceHgvs": "NG_011806.1:g.24331=",
+          "sequence": {
+            "id": 1451195337,
+            "name": "NG_011806.1",
+            "resource": "RefSeq DNA",
+            "resourceId": "NG_011806.1",
+            "_url": "https://www.ncbi.nlm.nih.gov/nuccore/NG_011806.1",
+            "version": 0
+          },
+          "source": "dbSnp",
+          "type": "genomic",
+          "variantAlleles": [
+            "A",
+            "C"
+          ],
+          "variantHgvs": [
+            "NG_011806.1:g.24331G>A",
+            "NG_011806.1:g.24331G>C"
+          ],
+          "version": 0
+        }
+      ],
+      "obsolete": false,
+      "rare": false,
+      "raritySource": "gnomAD Genomes",
+      "relatedGenes": [
+        {
+          "objCls": "Gene",
+          "id": "PA159",
+          "symbol": "F5",
+          "name": "coagulation factor V",
+          "version": 141
+        }
+      ],
+      "terms": [],
+      "type": "SNP",
+      "version": 4
+    },
+    {
+      "objCls": "Variant",
+      "id": "PA166232821",
+      "symbol": "rs4524",
+      "name": "rs4524",
+      "altNames": {},
+      "changeClassification": "Missense",
+      "crossReferences": [
+        {
+          "id": 1451355744,
+          "resource": "dbSNP",
+          "resourceId": "rs4524",
+          "_url": "https://www.ncbi.nlm.nih.gov/snp/rs4524",
+          "version": 0
+        },
+        {
+          "id": 1451355747,
+          "resource": "dbSNP",
+          "resourceId": "rs386593571",
+          "_url": "https://www.ncbi.nlm.nih.gov/snp/rs386593571",
+          "version": 1
+        },
+        {
+          "id": 1451355745,
+          "resource": "dbSNP",
+          "resourceId": "rs52817149",
+          "_url": "https://www.ncbi.nlm.nih.gov/snp/rs52817149",
+          "version": 1
+        },
+        {
+          "id": 1451355746,
+          "resource": "dbSNP",
+          "resourceId": "rs59950571",
+          "_url": "https://www.ncbi.nlm.nih.gov/snp/rs59950571",
+          "version": 1
+        }
+      ],
+      "history": [
+        {
+          "id": 1451355748,
+          "date": "2021-03-16T11:02:17.674-07:00",
+          "description": "Imported from dbSNP",
+          "type": "Create",
+          "version": 0
+        }
+      ],
+      "lastUpdatedFromDbsnp": "2021-03-16T11:02:17.667",
+      "locations": [
+        {
+          "id": 1451355740,
+          "altHgvs": {},
+          "assembly": "GRCh38",
+          "begin": 169542517,
+          "end": 169542517,
+          "intronicOffset": 0,
+          "referenceAllele": "T",
+          "referenceHgvs": "NC_000001.11:g.169542517=",
+          "sequence": {
+            "id": 1445125164,
+            "name": "[GRCh38]chr1",
+            "resource": "RefSeq DNA",
+            "resourceId": "NC_000001.11",
+            "_url": "https://www.ncbi.nlm.nih.gov/nuccore/NC_000001.11",
+            "version": 2
+          },
+          "source": "dbSnp",
+          "type": "genomic",
+          "variantAlleles": [
+            "C"
+          ],
+          "variantHgvs": [
+            "NC_000001.11:g.169542517T>C"
+          ],
+          "version": 0
+        },
+        {
+          "id": 1451355741,
+          "altHgvs": {},
+          "assembly": "GRCh37",
+          "begin": 169511755,
+          "end": 169511755,
+          "intronicOffset": 0,
+          "referenceAllele": "T",
+          "referenceHgvs": "NC_000001.10:g.169511755=",
+          "sequence": {
+            "id": 1447949551,
+            "name": "[GRCh37]chr1",
+            "resource": "RefSeq DNA",
+            "resourceId": "NC_000001.10",
+            "_url": "https://www.ncbi.nlm.nih.gov/nuccore/NC_000001.10",
+            "version": 2
+          },
+          "source": "dbSnp",
+          "type": "genomic",
+          "variantAlleles": [
+            "C"
+          ],
+          "variantHgvs": [
+            "NC_000001.10:g.169511755T>C"
+          ],
+          "version": 0
+        },
+        {
+          "id": 1451355742,
+          "altHgvs": {},
+          "begin": 49015,
+          "end": 49015,
+          "intronicOffset": 0,
+          "referenceAllele": "A",
+          "referenceHgvs": "NG_011806.1:g.49015=",
+          "sequence": {
+            "id": 1451195337,
+            "name": "NG_011806.1",
+            "resource": "RefSeq DNA",
+            "resourceId": "NG_011806.1",
+            "_url": "https://www.ncbi.nlm.nih.gov/nuccore/NG_011806.1",
+            "version": 0
+          },
+          "source": "dbSnp",
+          "type": "genomic",
+          "variantAlleles": [
+            "G"
+          ],
+          "variantHgvs": [
+            "NG_011806.1:g.49015A>G"
+          ],
+          "version": 0
+        },
+        {
+          "id": 1451355743,
+          "altHgvs": {},
+          "begin": 858,
+          "end": 858,
+          "intronicOffset": 0,
+          "referenceAllele": "K",
+          "referenceHgvs": "NP_000121.2:p.Lys858=",
+          "sequence": {
+            "id": 1447992723,
+            "name": "NP_000121.2",
+            "resource": "RefSeq Protein",
+            "resourceId": "NP_000121.2",
+            "_url": "https://www.ncbi.nlm.nih.gov/nuccore/NP_000121.2",
+            "version": 0
+          },
+          "source": "dbSnp",
+          "type": "protein",
+          "variantAlleles": [
+            "R"
+          ],
+          "variantHgvs": [
+            "NP_000121.2:p.Lys858Arg"
+          ],
+          "version": 0
+        }
+      ],
+      "obsolete": false,
+      "rare": false,
+      "raritySource": "gnomAD Genomes",
+      "relatedGenes": [
+        {
+          "objCls": "Gene",
+          "id": "PA159",
+          "symbol": "F5",
+          "name": "coagulation factor V",
+          "version": 141
+        }
+      ],
+      "terms": [],
+      "type": "SNP",
+      "version": 3
+    },
+    {
+      "objCls": "Variant",
+      "id": "PA166232822",
+      "symbol": "rs6020",
+      "name": "rs6020",
+      "altNames": {},
+      "changeClassification": "Missense",
+      "crossReferences": [
+        {
+          "id": 1451355757,
+          "resource": "dbSNP",
+          "resourceId": "rs6020",
+          "_url": "https://www.ncbi.nlm.nih.gov/snp/rs6020",
+          "version": 0
+        },
+        {
+          "id": 1451355780,
+          "resource": "dbSNP",
+          "resourceId": "rs117835136",
+          "_url": "https://www.ncbi.nlm.nih.gov/snp/rs117835136",
+          "version": 1
+        },
+        {
+          "id": 1451355758,
+          "resource": "dbSNP",
+          "resourceId": "rs56575896",
+          "_url": "https://www.ncbi.nlm.nih.gov/snp/rs56575896",
+          "version": 1
+        },
+        {
+          "id": 1451355759,
+          "resource": "dbSNP",
+          "resourceId": "rs58846881",
+          "_url": "https://www.ncbi.nlm.nih.gov/snp/rs58846881",
+          "version": 1
+        }
+      ],
+      "history": [
+        {
+          "id": 1451355781,
+          "date": "2021-03-16T11:05:50.793-07:00",
+          "description": "Imported from dbSNP",
+          "type": "Create",
+          "version": 0
+        }
+      ],
+      "lastUpdatedFromDbsnp": "2021-03-16T11:05:50.79",
+      "locations": [
+        {
+          "id": 1451355753,
+          "altHgvs": {},
+          "assembly": "GRCh38",
+          "begin": 169549874,
+          "end": 169549874,
+          "intronicOffset": 0,
+          "referenceAllele": "C",
+          "referenceHgvs": "NC_000001.11:g.169549874=",
+          "sequence": {
+            "id": 1445125164,
+            "name": "[GRCh38]chr1",
+            "resource": "RefSeq DNA",
+            "resourceId": "NC_000001.11",
+            "_url": "https://www.ncbi.nlm.nih.gov/nuccore/NC_000001.11",
+            "version": 2
+          },
+          "source": "dbSnp",
+          "type": "genomic",
+          "variantAlleles": [
+            "A",
+            "T"
+          ],
+          "variantHgvs": [
+            "NC_000001.11:g.169549874C>A",
+            "NC_000001.11:g.169549874C>T"
+          ],
+          "version": 0
+        },
+        {
+          "id": 1451355754,
+          "altHgvs": {},
+          "assembly": "GRCh37",
+          "begin": 169519112,
+          "end": 169519112,
+          "intronicOffset": 0,
+          "referenceAllele": "C",
+          "referenceHgvs": "NC_000001.10:g.169519112=",
+          "sequence": {
+            "id": 1447949551,
+            "name": "[GRCh37]chr1",
+            "resource": "RefSeq DNA",
+            "resourceId": "NC_000001.10",
+            "_url": "https://www.ncbi.nlm.nih.gov/nuccore/NC_000001.10",
+            "version": 2
+          },
+          "source": "dbSnp",
+          "type": "genomic",
+          "variantAlleles": [
+            "A",
+            "T"
+          ],
+          "variantHgvs": [
+            "NC_000001.10:g.169519112C>A",
+            "NC_000001.10:g.169519112C>T"
+          ],
+          "version": 0
+        },
+        {
+          "id": 1451355755,
+          "altHgvs": {},
+          "begin": 41658,
+          "end": 41658,
+          "intronicOffset": 0,
+          "referenceAllele": "G",
+          "referenceHgvs": "NG_011806.1:g.41658=",
+          "sequence": {
+            "id": 1451195337,
+            "name": "NG_011806.1",
+            "resource": "RefSeq DNA",
+            "resourceId": "NG_011806.1",
+            "_url": "https://www.ncbi.nlm.nih.gov/nuccore/NG_011806.1",
+            "version": 0
+          },
+          "source": "dbSnp",
+          "type": "genomic",
+          "variantAlleles": [
+            "A",
+            "T"
+          ],
+          "variantHgvs": [
+            "NG_011806.1:g.41658G>A",
+            "NG_011806.1:g.41658G>T"
+          ],
+          "version": 0
+        },
+        {
+          "id": 1451355756,
+          "altHgvs": {},
+          "begin": 513,
+          "end": 513,
+          "intronicOffset": 0,
+          "referenceAllele": "R",
+          "referenceHgvs": "NP_000121.2:p.Arg513=",
+          "sequence": {
+            "id": 1447992723,
+            "name": "NP_000121.2",
+            "resource": "RefSeq Protein",
+            "resourceId": "NP_000121.2",
+            "_url": "https://www.ncbi.nlm.nih.gov/nuccore/NP_000121.2",
+            "version": 0
+          },
+          "source": "dbSnp",
+          "type": "protein",
+          "variantAlleles": [
+            "I",
+            "K"
+          ],
+          "variantHgvs": [
+            "NP_000121.2:p.Arg513Ile",
+            "NP_000121.2:p.Arg513Lys"
+          ],
+          "version": 0
+        }
+      ],
+      "obsolete": false,
+      "rare": false,
+      "raritySource": "gnomAD Genomes",
+      "relatedGenes": [
+        {
+          "objCls": "Gene",
+          "id": "PA159",
+          "symbol": "F5",
+          "name": "coagulation factor V",
+          "version": 141
+        }
+      ],
+      "terms": [],
+      "type": "SNP",
+      "version": 3
+    },
+    {
+      "objCls": "Variant",
+      "id": "PA166232823",
+      "symbol": "rs200157005",
+      "name": "rs200157005",
+      "altNames": {},
+      "changeClassification": "Missense",
+      "crossReferences": [
+        {
+          "id": 1451355786,
+          "resource": "dbSNP",
+          "resourceId": "rs200157005",
+          "_url": "https://www.ncbi.nlm.nih.gov/snp/rs200157005",
+          "version": 0
+        }
+      ],
+      "history": [
+        {
+          "id": 1451355787,
+          "date": "2021-03-16T11:09:21.033-07:00",
+          "description": "Imported from dbSNP",
+          "type": "Create",
+          "version": 0
+        }
+      ],
+      "lastUpdatedFromDbsnp": "2021-03-16T11:09:21.03",
+      "locations": [
+        {
+          "id": 1451355782,
+          "altHgvs": {},
+          "assembly": "GRCh38",
+          "begin": 169530994,
+          "end": 169530994,
+          "intronicOffset": 0,
+          "referenceAllele": "G",
+          "referenceHgvs": "NC_000001.11:g.169530994=",
+          "sequence": {
+            "id": 1445125164,
+            "name": "[GRCh38]chr1",
+            "resource": "RefSeq DNA",
+            "resourceId": "NC_000001.11",
+            "_url": "https://www.ncbi.nlm.nih.gov/nuccore/NC_000001.11",
+            "version": 2
+          },
+          "source": "dbSnp",
+          "type": "genomic",
+          "variantAlleles": [
+            "A"
+          ],
+          "variantHgvs": [
+            "NC_000001.11:g.169530994G>A"
+          ],
+          "version": 0
+        },
+        {
+          "id": 1451355783,
+          "altHgvs": {},
+          "assembly": "GRCh37",
+          "begin": 169500232,
+          "end": 169500232,
+          "intronicOffset": 0,
+          "referenceAllele": "G",
+          "referenceHgvs": "NC_000001.10:g.169500232=",
+          "sequence": {
+            "id": 1447949551,
+            "name": "[GRCh37]chr1",
+            "resource": "RefSeq DNA",
+            "resourceId": "NC_000001.10",
+            "_url": "https://www.ncbi.nlm.nih.gov/nuccore/NC_000001.10",
+            "version": 2
+          },
+          "source": "dbSnp",
+          "type": "genomic",
+          "variantAlleles": [
+            "A"
+          ],
+          "variantHgvs": [
+            "NC_000001.10:g.169500232G>A"
+          ],
+          "version": 0
+        },
+        {
+          "id": 1451355784,
+          "altHgvs": {},
+          "begin": 60538,
+          "end": 60538,
+          "intronicOffset": 0,
+          "referenceAllele": "C",
+          "referenceHgvs": "NG_011806.1:g.60538=",
+          "sequence": {
+            "id": 1451195337,
+            "name": "NG_011806.1",
+            "resource": "RefSeq DNA",
+            "resourceId": "NG_011806.1",
+            "_url": "https://www.ncbi.nlm.nih.gov/nuccore/NG_011806.1",
+            "version": 0
+          },
+          "source": "dbSnp",
+          "type": "genomic",
+          "variantAlleles": [
+            "T"
+          ],
+          "variantHgvs": [
+            "NG_011806.1:g.60538C>T"
+          ],
+          "version": 0
+        },
+        {
+          "id": 1451355785,
+          "altHgvs": {},
+          "begin": 1667,
+          "end": 1667,
+          "intronicOffset": 0,
+          "referenceAllele": "P",
+          "referenceHgvs": "NP_000121.2:p.Pro1667=",
+          "sequence": {
+            "id": 1447992723,
+            "name": "NP_000121.2",
+            "resource": "RefSeq Protein",
+            "resourceId": "NP_000121.2",
+            "_url": "https://www.ncbi.nlm.nih.gov/nuccore/NP_000121.2",
+            "version": 0
+          },
+          "source": "dbSnp",
+          "type": "protein",
+          "variantAlleles": [
+            "L"
+          ],
+          "variantHgvs": [
+            "NP_000121.2:p.Pro1667Leu"
+          ],
+          "version": 0
+        }
+      ],
+      "obsolete": false,
+      "rare": true,
+      "raritySource": "gnomAD Genomes",
+      "relatedGenes": [
+        {
+          "objCls": "Gene",
+          "id": "PA159",
+          "symbol": "F5",
+          "name": "coagulation factor V",
+          "version": 141
+        }
+      ],
+      "terms": [],
+      "type": "SNP",
+      "version": 3
+    },
+    {
+      "objCls": "Variant",
+      "id": "PA166232861",
+      "symbol": "rs149389480",
+      "name": "rs149389480",
+      "altNames": {},
+      "changeClassification": "Missense",
+      "crossReferences": [
+        {
+          "id": 1451355710,
+          "resource": "dbSNP",
+          "resourceId": "rs149389480",
+          "_url": "https://www.ncbi.nlm.nih.gov/snp/rs149389480",
+          "version": 0
+        }
+      ],
+      "history": [
+        {
+          "id": 1451355711,
+          "date": "2021-03-16T11:12:37.930-07:00",
+          "description": "Imported from dbSNP",
+          "type": "Create",
+          "version": 0
+        }
+      ],
+      "lastUpdatedFromDbsnp": "2021-03-16T11:12:37.926",
+      "locations": [
+        {
+          "id": 1451355706,
+          "altHgvs": {},
+          "assembly": "GRCh38",
+          "begin": 169542338,
+          "end": 169542338,
+          "intronicOffset": 0,
+          "referenceAllele": "G",
+          "referenceHgvs": "NC_000001.11:g.169542338=",
+          "sequence": {
+            "id": 1445125164,
+            "name": "[GRCh38]chr1",
+            "resource": "RefSeq DNA",
+            "resourceId": "NC_000001.11",
+            "_url": "https://www.ncbi.nlm.nih.gov/nuccore/NC_000001.11",
+            "version": 2
+          },
+          "source": "dbSnp",
+          "type": "genomic",
+          "variantAlleles": [
+            "A"
+          ],
+          "variantHgvs": [
+            "NC_000001.11:g.169542338G>A"
+          ],
+          "version": 0
+        },
+        {
+          "id": 1451355707,
+          "altHgvs": {},
+          "assembly": "GRCh37",
+          "begin": 169511576,
+          "end": 169511576,
+          "intronicOffset": 0,
+          "referenceAllele": "G",
+          "referenceHgvs": "NC_000001.10:g.169511576=",
+          "sequence": {
+            "id": 1447949551,
+            "name": "[GRCh37]chr1",
+            "resource": "RefSeq DNA",
+            "resourceId": "NC_000001.10",
+            "_url": "https://www.ncbi.nlm.nih.gov/nuccore/NC_000001.10",
+            "version": 2
+          },
+          "source": "dbSnp",
+          "type": "genomic",
+          "variantAlleles": [
+            "A"
+          ],
+          "variantHgvs": [
+            "NC_000001.10:g.169511576G>A"
+          ],
+          "version": 0
+        },
+        {
+          "id": 1451355708,
+          "altHgvs": {},
+          "begin": 49194,
+          "end": 49194,
+          "intronicOffset": 0,
+          "referenceAllele": "C",
+          "referenceHgvs": "NG_011806.1:g.49194=",
+          "sequence": {
+            "id": 1451195337,
+            "name": "NG_011806.1",
+            "resource": "RefSeq DNA",
+            "resourceId": "NG_011806.1",
+            "_url": "https://www.ncbi.nlm.nih.gov/nuccore/NG_011806.1",
+            "version": 0
+          },
+          "source": "dbSnp",
+          "type": "genomic",
+          "variantAlleles": [
+            "T"
+          ],
+          "variantHgvs": [
+            "NG_011806.1:g.49194C>T"
+          ],
+          "version": 0
+        },
+        {
+          "id": 1451355709,
+          "altHgvs": {},
+          "begin": 918,
+          "end": 918,
+          "intronicOffset": 0,
+          "referenceAllele": "P",
+          "referenceHgvs": "NP_000121.2:p.Pro918=",
+          "sequence": {
+            "id": 1447992723,
+            "name": "NP_000121.2",
+            "resource": "RefSeq Protein",
+            "resourceId": "NP_000121.2",
+            "_url": "https://www.ncbi.nlm.nih.gov/nuccore/NP_000121.2",
+            "version": 0
+          },
+          "source": "dbSnp",
+          "type": "protein",
+          "variantAlleles": [
+            "S"
+          ],
+          "variantHgvs": [
+            "NP_000121.2:p.Pro918Ser"
+          ],
+          "version": 0
+        }
+      ],
+      "obsolete": false,
+      "rare": true,
+      "raritySource": "gnomAD Genomes",
+      "relatedGenes": [
+        {
+          "objCls": "Gene",
+          "id": "PA159",
+          "symbol": "F5",
+          "name": "coagulation factor V",
+          "version": 141
+        }
+      ],
+      "terms": [],
+      "type": "SNP",
+      "version": 3
+    },
+    {
+      "objCls": "Variant",
+      "id": "PA166232863",
+      "symbol": "rs143509841",
+      "name": "rs143509841",
+      "altNames": {},
+      "changeClassification": "Missense",
+      "crossReferences": [
+        {
+          "id": 1451355862,
+          "resource": "dbSNP",
+          "resourceId": "rs143509841",
+          "_url": "https://www.ncbi.nlm.nih.gov/snp/rs143509841",
+          "version": 0
+        }
+      ],
+      "history": [
+        {
+          "id": 1451355863,
+          "date": "2021-03-16T11:17:53.975-07:00",
+          "description": "Imported from dbSNP",
+          "type": "Create",
+          "version": 0
+        }
+      ],
+      "lastUpdatedFromDbsnp": "2021-03-16T11:17:53.97",
+      "locations": [
+        {
+          "id": 1451355718,
+          "altHgvs": {},
+          "assembly": "GRCh38",
+          "begin": 169555304,
+          "end": 169555304,
+          "intronicOffset": 0,
+          "referenceAllele": "T",
+          "referenceHgvs": "NC_000001.11:g.169555304=",
+          "sequence": {
+            "id": 1445125164,
+            "name": "[GRCh38]chr1",
+            "resource": "RefSeq DNA",
+            "resourceId": "NC_000001.11",
+            "_url": "https://www.ncbi.nlm.nih.gov/nuccore/NC_000001.11",
+            "version": 2
+          },
+          "source": "dbSnp",
+          "type": "genomic",
+          "variantAlleles": [
+            "G"
+          ],
+          "variantHgvs": [
+            "NC_000001.11:g.169555304T>G"
+          ],
+          "version": 0
+        },
+        {
+          "id": 1451355719,
+          "altHgvs": {},
+          "assembly": "GRCh37",
+          "begin": 169524542,
+          "end": 169524542,
+          "intronicOffset": 0,
+          "referenceAllele": "T",
+          "referenceHgvs": "NC_000001.10:g.169524542=",
+          "sequence": {
+            "id": 1447949551,
+            "name": "[GRCh37]chr1",
+            "resource": "RefSeq DNA",
+            "resourceId": "NC_000001.10",
+            "_url": "https://www.ncbi.nlm.nih.gov/nuccore/NC_000001.10",
+            "version": 2
+          },
+          "source": "dbSnp",
+          "type": "genomic",
+          "variantAlleles": [
+            "G"
+          ],
+          "variantHgvs": [
+            "NC_000001.10:g.169524542T>G"
+          ],
+          "version": 0
+        },
+        {
+          "id": 1451355860,
+          "altHgvs": {},
+          "begin": 36228,
+          "end": 36228,
+          "intronicOffset": 0,
+          "referenceAllele": "A",
+          "referenceHgvs": "NG_011806.1:g.36228=",
+          "sequence": {
+            "id": 1451195337,
+            "name": "NG_011806.1",
+            "resource": "RefSeq DNA",
+            "resourceId": "NG_011806.1",
+            "_url": "https://www.ncbi.nlm.nih.gov/nuccore/NG_011806.1",
+            "version": 0
+          },
+          "source": "dbSnp",
+          "type": "genomic",
+          "variantAlleles": [
+            "C"
+          ],
+          "variantHgvs": [
+            "NG_011806.1:g.36228A>C"
+          ],
+          "version": 0
+        },
+        {
+          "id": 1451355861,
+          "altHgvs": {},
+          "begin": 332,
+          "end": 332,
+          "intronicOffset": 0,
+          "referenceAllele": "K",
+          "referenceHgvs": "NP_000121.2:p.Lys332=",
+          "sequence": {
+            "id": 1447992723,
+            "name": "NP_000121.2",
+            "resource": "RefSeq Protein",
+            "resourceId": "NP_000121.2",
+            "_url": "https://www.ncbi.nlm.nih.gov/nuccore/NP_000121.2",
+            "version": 0
+          },
+          "source": "dbSnp",
+          "type": "protein",
+          "variantAlleles": [
+            "N"
+          ],
+          "variantHgvs": [
+            "NP_000121.2:p.Lys332Asn"
+          ],
+          "version": 0
+        }
+      ],
+      "obsolete": false,
+      "rare": true,
+      "raritySource": "gnomAD Genomes",
+      "relatedGenes": [
+        {
+          "objCls": "Gene",
+          "id": "PA159",
+          "symbol": "F5",
+          "name": "coagulation factor V",
+          "version": 141
+        }
+      ],
+      "terms": [],
+      "type": "SNP",
+      "version": 3
+    },
+    {
+      "objCls": "Variant",
+      "id": "PA166232826",
+      "symbol": "rs9332695",
+      "name": "rs9332695",
+      "altNames": {},
+      "changeClassification": "Missense",
+      "crossReferences": [
+        {
+          "id": 1451355882,
+          "resource": "dbSNP",
+          "resourceId": "rs9332695",
+          "_url": "https://www.ncbi.nlm.nih.gov/snp/rs9332695",
+          "version": 0
+        },
+        {
+          "id": 1451355883,
+          "resource": "dbSNP",
+          "resourceId": "rs386429315",
+          "_url": "https://www.ncbi.nlm.nih.gov/snp/rs386429315",
+          "version": 1
+        }
+      ],
+      "history": [
+        {
+          "id": 1451355884,
+          "date": "2021-03-16T11:20:10.877-07:00",
+          "description": "Imported from dbSNP",
+          "type": "Create",
+          "version": 0
+        }
+      ],
+      "lastUpdatedFromDbsnp": "2021-03-16T11:20:10.874",
+      "locations": [
+        {
+          "id": 1451355798,
+          "altHgvs": {},
+          "assembly": "GRCh38",
+          "begin": 169542347,
+          "end": 169542347,
+          "intronicOffset": 0,
+          "referenceAllele": "T",
+          "referenceHgvs": "NC_000001.11:g.169542347=",
+          "sequence": {
+            "id": 1445125164,
+            "name": "[GRCh38]chr1",
+            "resource": "RefSeq DNA",
+            "resourceId": "NC_000001.11",
+            "_url": "https://www.ncbi.nlm.nih.gov/nuccore/NC_000001.11",
+            "version": 2
+          },
+          "source": "dbSnp",
+          "type": "genomic",
+          "variantAlleles": [
+            "A"
+          ],
+          "variantHgvs": [
+            "NC_000001.11:g.169542347T>A"
+          ],
+          "version": 0
+        },
+        {
+          "id": 1451355799,
+          "altHgvs": {},
+          "assembly": "GRCh37",
+          "begin": 169511585,
+          "end": 169511585,
+          "intronicOffset": 0,
+          "referenceAllele": "T",
+          "referenceHgvs": "NC_000001.10:g.169511585=",
+          "sequence": {
+            "id": 1447949551,
+            "name": "[GRCh37]chr1",
+            "resource": "RefSeq DNA",
+            "resourceId": "NC_000001.10",
+            "_url": "https://www.ncbi.nlm.nih.gov/nuccore/NC_000001.10",
+            "version": 2
+          },
+          "source": "dbSnp",
+          "type": "genomic",
+          "variantAlleles": [
+            "A"
+          ],
+          "variantHgvs": [
+            "NC_000001.10:g.169511585T>A"
+          ],
+          "version": 0
+        },
+        {
+          "id": 1451355880,
+          "altHgvs": {},
+          "begin": 49185,
+          "end": 49185,
+          "intronicOffset": 0,
+          "referenceAllele": "A",
+          "referenceHgvs": "NG_011806.1:g.49185=",
+          "sequence": {
+            "id": 1451195337,
+            "name": "NG_011806.1",
+            "resource": "RefSeq DNA",
+            "resourceId": "NG_011806.1",
+            "_url": "https://www.ncbi.nlm.nih.gov/nuccore/NG_011806.1",
+            "version": 0
+          },
+          "source": "dbSnp",
+          "type": "genomic",
+          "variantAlleles": [
+            "T"
+          ],
+          "variantHgvs": [
+            "NG_011806.1:g.49185A>T"
+          ],
+          "version": 0
+        },
+        {
+          "id": 1451355881,
+          "altHgvs": {},
+          "begin": 915,
+          "end": 915,
+          "intronicOffset": 0,
+          "referenceAllele": "T",
+          "referenceHgvs": "NP_000121.2:p.Thr915=",
+          "sequence": {
+            "id": 1447992723,
+            "name": "NP_000121.2",
+            "resource": "RefSeq Protein",
+            "resourceId": "NP_000121.2",
+            "_url": "https://www.ncbi.nlm.nih.gov/nuccore/NP_000121.2",
+            "version": 0
+          },
+          "source": "dbSnp",
+          "type": "protein",
+          "variantAlleles": [
+            "S"
+          ],
+          "variantHgvs": [
+            "NP_000121.2:p.Thr915Ser"
+          ],
+          "version": 0
+        }
+      ],
+      "obsolete": false,
+      "rare": false,
+      "raritySource": "gnomAD Genomes",
+      "relatedGenes": [
+        {
+          "objCls": "Gene",
+          "id": "PA159",
+          "symbol": "F5",
+          "name": "coagulation factor V",
+          "version": 141
+        }
+      ],
+      "terms": [],
+      "type": "SNP",
+      "version": 3
+    },
+    {
+      "objCls": "Variant",
+      "id": "PA166232881",
+      "symbol": "rs6019",
+      "name": "rs6019",
+      "altNames": {},
+      "changeClassification": "5' UTR",
+      "crossReferences": [
+        {
+          "id": 1451355904,
+          "resource": "dbSNP",
+          "resourceId": "rs6019",
+          "_url": "https://www.ncbi.nlm.nih.gov/snp/rs6019",
+          "version": 0
+        },
+        {
+          "id": 1451355905,
+          "resource": "dbSNP",
+          "resourceId": "rs52823153",
+          "_url": "https://www.ncbi.nlm.nih.gov/snp/rs52823153",
+          "version": 1
+        }
+      ],
+      "history": [
+        {
+          "id": 1451355906,
+          "date": "2021-03-16T11:23:29.108-07:00",
+          "description": "Imported from dbSNP",
+          "type": "Create",
+          "version": 0
+        }
+      ],
+      "lastUpdatedFromDbsnp": "2021-03-16T11:23:29.104",
+      "locations": [
+        {
+          "id": 1451355900,
+          "altHgvs": {},
+          "assembly": "GRCh38",
+          "begin": 169572275,
+          "end": 169572275,
+          "intronicOffset": 0,
+          "referenceAllele": "C",
+          "referenceHgvs": "NC_000001.11:g.169572275=",
+          "sequence": {
+            "id": 1445125164,
+            "name": "[GRCh38]chr1",
+            "resource": "RefSeq DNA",
+            "resourceId": "NC_000001.11",
+            "_url": "https://www.ncbi.nlm.nih.gov/nuccore/NC_000001.11",
+            "version": 2
+          },
+          "source": "dbSnp",
+          "type": "genomic",
+          "variantAlleles": [
+            "G",
+            "T"
+          ],
+          "variantHgvs": [
+            "NC_000001.11:g.169572275C>G",
+            "NC_000001.11:g.169572275C>T"
+          ],
+          "version": 0
+        },
+        {
+          "id": 1451355901,
+          "altHgvs": {},
+          "assembly": "GRCh37",
+          "begin": 169541513,
+          "end": 169541513,
+          "intronicOffset": 0,
+          "referenceAllele": "C",
+          "referenceHgvs": "NC_000001.10:g.169541513=",
+          "sequence": {
+            "id": 1447949551,
+            "name": "[GRCh37]chr1",
+            "resource": "RefSeq DNA",
+            "resourceId": "NC_000001.10",
+            "_url": "https://www.ncbi.nlm.nih.gov/nuccore/NC_000001.10",
+            "version": 2
+          },
+          "source": "dbSnp",
+          "type": "genomic",
+          "variantAlleles": [
+            "G",
+            "T"
+          ],
+          "variantHgvs": [
+            "NC_000001.10:g.169541513C>G",
+            "NC_000001.10:g.169541513C>T"
+          ],
+          "version": 0
+        },
+        {
+          "id": 1451355902,
+          "altHgvs": {},
+          "begin": 19257,
+          "end": 19257,
+          "intronicOffset": 0,
+          "referenceAllele": "G",
+          "referenceHgvs": "NG_011806.1:g.19257=",
+          "sequence": {
+            "id": 1451195337,
+            "name": "NG_011806.1",
+            "resource": "RefSeq DNA",
+            "resourceId": "NG_011806.1",
+            "_url": "https://www.ncbi.nlm.nih.gov/nuccore/NG_011806.1",
+            "version": 0
+          },
+          "source": "dbSnp",
+          "type": "genomic",
+          "variantAlleles": [
+            "A",
+            "C"
+          ],
+          "variantHgvs": [
+            "NG_011806.1:g.19257G>A",
+            "NG_011806.1:g.19257G>C"
+          ],
+          "version": 0
+        },
+        {
+          "id": 1451355903,
+          "altHgvs": {},
+          "begin": 107,
+          "end": 107,
+          "intronicOffset": 0,
+          "referenceAllele": "D",
+          "referenceHgvs": "NP_000121.2:p.Asp107=",
+          "sequence": {
+            "id": 1447992723,
+            "name": "NP_000121.2",
+            "resource": "RefSeq Protein",
+            "resourceId": "NP_000121.2",
+            "_url": "https://www.ncbi.nlm.nih.gov/nuccore/NP_000121.2",
+            "version": 0
+          },
+          "source": "dbSnp",
+          "type": "protein",
+          "variantAlleles": [
+            "H",
+            "N"
+          ],
+          "variantHgvs": [
+            "NP_000121.2:p.Asp107Asn",
+            "NP_000121.2:p.Asp107His"
+          ],
+          "version": 0
+        }
+      ],
+      "obsolete": false,
+      "rare": false,
+      "raritySource": "gnomAD Genomes",
+      "relatedGenes": [
+        {
+          "objCls": "Gene",
+          "id": "PA159",
+          "symbol": "F5",
+          "name": "coagulation factor V",
+          "version": 141
+        }
+      ],
+      "terms": [],
+      "type": "SNP",
+      "version": 3
+    },
+    {
+      "objCls": "Variant",
+      "id": "PA166232901",
+      "symbol": "rs140530655",
+      "name": "rs140530655",
+      "altNames": {},
+      "changeClassification": "Missense",
+      "crossReferences": [
+        {
+          "id": 1451355925,
+          "resource": "dbSNP",
+          "resourceId": "rs140530655",
+          "_url": "https://www.ncbi.nlm.nih.gov/snp/rs140530655",
+          "version": 0
+        }
+      ],
+      "history": [
+        {
+          "id": 1451355926,
+          "date": "2021-03-16T11:25:34.426-07:00",
+          "description": "Imported from dbSNP",
+          "type": "Create",
+          "version": 0
+        }
+      ],
+      "lastUpdatedFromDbsnp": "2021-03-16T11:25:34.422",
+      "locations": [
+        {
+          "id": 1451355921,
+          "altHgvs": {},
+          "assembly": "GRCh38",
+          "begin": 169544331,
+          "end": 169544331,
+          "intronicOffset": 0,
+          "referenceAllele": "C",
+          "referenceHgvs": "NC_000001.11:g.169544331=",
+          "sequence": {
+            "id": 1445125164,
+            "name": "[GRCh38]chr1",
+            "resource": "RefSeq DNA",
+            "resourceId": "NC_000001.11",
+            "_url": "https://www.ncbi.nlm.nih.gov/nuccore/NC_000001.11",
+            "version": 2
+          },
+          "source": "dbSnp",
+          "type": "genomic",
+          "variantAlleles": [
+            "T"
+          ],
+          "variantHgvs": [
+            "NC_000001.11:g.169544331C>T"
+          ],
+          "version": 0
+        },
+        {
+          "id": 1451355922,
+          "altHgvs": {},
+          "assembly": "GRCh37",
+          "begin": 169513569,
+          "end": 169513569,
+          "intronicOffset": 0,
+          "referenceAllele": "C",
+          "referenceHgvs": "NC_000001.10:g.169513569=",
+          "sequence": {
+            "id": 1447949551,
+            "name": "[GRCh37]chr1",
+            "resource": "RefSeq DNA",
+            "resourceId": "NC_000001.10",
+            "_url": "https://www.ncbi.nlm.nih.gov/nuccore/NC_000001.10",
+            "version": 2
+          },
+          "source": "dbSnp",
+          "type": "genomic",
+          "variantAlleles": [
+            "T"
+          ],
+          "variantHgvs": [
+            "NC_000001.10:g.169513569C>T"
+          ],
+          "version": 0
+        },
+        {
+          "id": 1451355923,
+          "altHgvs": {},
+          "begin": 47201,
+          "end": 47201,
+          "intronicOffset": 0,
+          "referenceAllele": "G",
+          "referenceHgvs": "NG_011806.1:g.47201=",
+          "sequence": {
+            "id": 1451195337,
+            "name": "NG_011806.1",
+            "resource": "RefSeq DNA",
+            "resourceId": "NG_011806.1",
+            "_url": "https://www.ncbi.nlm.nih.gov/nuccore/NG_011806.1",
+            "version": 0
+          },
+          "source": "dbSnp",
+          "type": "genomic",
+          "variantAlleles": [
+            "A"
+          ],
+          "variantHgvs": [
+            "NG_011806.1:g.47201G>A"
+          ],
+          "version": 0
+        },
+        {
+          "id": 1451355924,
+          "altHgvs": {},
+          "begin": 647,
+          "end": 647,
+          "intronicOffset": 0,
+          "referenceAllele": "R",
+          "referenceHgvs": "NP_000121.2:p.Arg647=",
+          "sequence": {
+            "id": 1447992723,
+            "name": "NP_000121.2",
+            "resource": "RefSeq Protein",
+            "resourceId": "NP_000121.2",
+            "_url": "https://www.ncbi.nlm.nih.gov/nuccore/NP_000121.2",
+            "version": 0
+          },
+          "source": "dbSnp",
+          "type": "protein",
+          "variantAlleles": [
+            "H"
+          ],
+          "variantHgvs": [
+            "NP_000121.2:p.Arg647His"
+          ],
+          "version": 0
+        }
+      ],
+      "obsolete": false,
+      "rare": true,
+      "raritySource": "gnomAD Genomes",
+      "relatedGenes": [
+        {
+          "objCls": "Gene",
+          "id": "PA159",
+          "symbol": "F5",
+          "name": "coagulation factor V",
+          "version": 141
+        }
+      ],
+      "terms": [],
+      "type": "SNP",
+      "version": 3
+    },
+    {
+      "objCls": "Variant",
+      "id": "PA166232921",
+      "symbol": "rs368967198",
+      "name": "rs368967198",
+      "altNames": {},
+      "changeClassification": "Intronic",
+      "crossReferences": [
+        {
+          "id": 1451355983,
+          "resource": "dbSNP",
+          "resourceId": "rs368967198",
+          "_url": "https://www.ncbi.nlm.nih.gov/snp/rs368967198",
+          "version": 0
+        }
+      ],
+      "history": [
+        {
+          "id": 1451355984,
+          "date": "2021-03-16T11:29:31.880-07:00",
+          "description": "Imported from dbSNP",
+          "type": "Create",
+          "version": 0
+        }
+      ],
+      "lastUpdatedFromDbsnp": "2021-03-16T11:29:31.876",
+      "locations": [
+        {
+          "id": 1451355980,
+          "altHgvs": {},
+          "assembly": "GRCh38",
+          "begin": 169529903,
+          "end": 169529903,
+          "intronicOffset": 0,
+          "referenceAllele": "A",
+          "referenceHgvs": "NC_000001.11:g.169529903=",
+          "sequence": {
+            "id": 1445125164,
+            "name": "[GRCh38]chr1",
+            "resource": "RefSeq DNA",
+            "resourceId": "NC_000001.11",
+            "_url": "https://www.ncbi.nlm.nih.gov/nuccore/NC_000001.11",
+            "version": 2
+          },
+          "source": "dbSnp",
+          "type": "genomic",
+          "variantAlleles": [
+            "G"
+          ],
+          "variantHgvs": [
+            "NC_000001.11:g.169529903A>G"
+          ],
+          "version": 0
+        },
+        {
+          "id": 1451355981,
+          "altHgvs": {},
+          "assembly": "GRCh37",
+          "begin": 169499141,
+          "end": 169499141,
+          "intronicOffset": 0,
+          "referenceAllele": "A",
+          "referenceHgvs": "NC_000001.10:g.169499141=",
+          "sequence": {
+            "id": 1447949551,
+            "name": "[GRCh37]chr1",
+            "resource": "RefSeq DNA",
+            "resourceId": "NC_000001.10",
+            "_url": "https://www.ncbi.nlm.nih.gov/nuccore/NC_000001.10",
+            "version": 2
+          },
+          "source": "dbSnp",
+          "type": "genomic",
+          "variantAlleles": [
+            "G"
+          ],
+          "variantHgvs": [
+            "NC_000001.10:g.169499141A>G"
+          ],
+          "version": 0
+        },
+        {
+          "id": 1451355982,
+          "altHgvs": {},
+          "begin": 61629,
+          "end": 61629,
+          "intronicOffset": 0,
+          "referenceAllele": "T",
+          "referenceHgvs": "NG_011806.1:g.61629=",
+          "sequence": {
+            "id": 1451195337,
+            "name": "NG_011806.1",
+            "resource": "RefSeq DNA",
+            "resourceId": "NG_011806.1",
+            "_url": "https://www.ncbi.nlm.nih.gov/nuccore/NG_011806.1",
+            "version": 0
+          },
+          "source": "dbSnp",
+          "type": "genomic",
+          "variantAlleles": [
+            "C"
+          ],
+          "variantHgvs": [
+            "NG_011806.1:g.61629T>C"
+          ],
+          "version": 0
+        }
+      ],
+      "obsolete": false,
+      "rare": true,
+      "raritySource": "gnomAD Genomes",
+      "relatedGenes": [
+        {
+          "objCls": "Gene",
+          "id": "PA159",
+          "symbol": "F5",
+          "name": "coagulation factor V",
+          "version": 141
+        }
+      ],
+      "terms": [],
+      "type": "SNP",
+      "version": 3
+    }
+  ],
+  "status": "success"
+}

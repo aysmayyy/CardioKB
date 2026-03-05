@@ -1,0 +1,1612 @@
+{
+  "data": [
+    {
+      "objCls": "Variant",
+      "id": "PA166155143",
+      "symbol": "rs4291",
+      "name": "rs4291",
+      "altNames": {
+        "synonym": [
+          "NC_000017.10:g.61554194T>A",
+          "NC_000017.11:g.63476833T>A",
+          "NG_011648.1:g.4761T>A",
+          "NM_000789.3:c.-262T>A",
+          "XM_005257110.1:c.-717T>A"
+        ]
+      },
+      "changeClassification": "5' Flanking",
+      "crossReferences": [
+        {
+          "id": 1448027028,
+          "resource": "dbSNP",
+          "resourceId": "rs4291",
+          "_url": "https://www.ncbi.nlm.nih.gov/snp/rs4291",
+          "version": 0
+        }
+      ],
+      "history": [],
+      "lastUpdatedFromDbsnp": "2020-06-18T20:58:34.551564",
+      "locations": [
+        {
+          "id": 1451191441,
+          "altHgvs": {},
+          "assembly": "GRCh38",
+          "begin": 63476833,
+          "end": 63476833,
+          "intronicOffset": 0,
+          "referenceAllele": "T",
+          "referenceHgvs": "NC_000017.11:g.63476833=",
+          "sequence": {
+            "id": 1446906624,
+            "name": "[GRCh38]chr17",
+            "resource": "RefSeq DNA",
+            "resourceId": "NC_000017.11",
+            "_url": "https://www.ncbi.nlm.nih.gov/nuccore/NC_000017.11",
+            "version": 2
+          },
+          "source": "dbSnp",
+          "type": "genomic",
+          "variantAlleles": [
+            "A",
+            "C"
+          ],
+          "variantHgvs": [
+            "NC_000017.11:g.63476833T>A",
+            "NC_000017.11:g.63476833T>C"
+          ],
+          "version": 0
+        },
+        {
+          "id": 1448027027,
+          "altHgvs": {},
+          "assembly": "GRCh37",
+          "begin": 61554194,
+          "end": 61554194,
+          "intronicOffset": 0,
+          "referenceAllele": "T",
+          "referenceHgvs": "NC_000017.10:g.61554194=",
+          "sequence": {
+            "id": 1447949567,
+            "name": "[GRCh37]chr17",
+            "resource": "RefSeq DNA",
+            "resourceId": "NC_000017.10",
+            "_url": "https://www.ncbi.nlm.nih.gov/nuccore/NC_000017.10",
+            "version": 2
+          },
+          "source": "dbSnp",
+          "type": "genomic",
+          "variantAlleles": [
+            "A",
+            "C"
+          ],
+          "variantHgvs": [
+            "NC_000017.10:g.61554194T>A",
+            "NC_000017.10:g.61554194T>C"
+          ],
+          "version": 1
+        },
+        {
+          "id": 1451191443,
+          "altHgvs": {},
+          "begin": 4761,
+          "end": 4761,
+          "intronicOffset": 0,
+          "referenceAllele": "T",
+          "referenceHgvs": "NG_011648.1:g.4761=",
+          "sequence": {
+            "id": 1451176846,
+            "name": "NG_011648.1",
+            "resource": "RefSeq DNA",
+            "resourceId": "NG_011648.1",
+            "_url": "https://www.ncbi.nlm.nih.gov/nuccore/NG_011648.1",
+            "version": 0
+          },
+          "source": "dbSnp",
+          "type": "genomic",
+          "variantAlleles": [
+            "A",
+            "C"
+          ],
+          "variantHgvs": [
+            "NG_011648.1:g.4761T>A",
+            "NG_011648.1:g.4761T>C"
+          ],
+          "version": 0
+        }
+      ],
+      "obsolete": false,
+      "rare": false,
+      "raritySource": "gnomAD Genomes",
+      "relatedGenes": [
+        {
+          "objCls": "Gene",
+          "id": "PA139",
+          "symbol": "ACE",
+          "name": "angiotensin I converting enzyme",
+          "version": 176
+        }
+      ],
+      "terms": [],
+      "type": "SNP",
+      "version": 4
+    },
+    {
+      "objCls": "Variant",
+      "id": "PA166155144",
+      "symbol": "rs4292",
+      "name": "rs4292",
+      "altNames": {
+        "synonym": [
+          "NC_000017.10:g.61554341C>T",
+          "NC_000017.11:g.63476980C>T",
+          "NG_011648.1:g.4908C>T",
+          "NM_000789.3:c.-115C>T",
+          "XM_005257110.1:c.-570C>T"
+        ]
+      },
+      "changeClassification": "5' Flanking",
+      "crossReferences": [
+        {
+          "id": 1448027039,
+          "resource": "dbSNP",
+          "resourceId": "rs4292",
+          "_url": "https://www.ncbi.nlm.nih.gov/snp/rs4292",
+          "version": 0
+        }
+      ],
+      "history": [],
+      "lastUpdatedFromDbsnp": "2020-06-18T20:58:37.262859",
+      "locations": [
+        {
+          "id": 1451191444,
+          "altHgvs": {},
+          "assembly": "GRCh38",
+          "begin": 63476980,
+          "end": 63476980,
+          "intronicOffset": 0,
+          "referenceAllele": "C",
+          "referenceHgvs": "NC_000017.11:g.63476980=",
+          "sequence": {
+            "id": 1446906624,
+            "name": "[GRCh38]chr17",
+            "resource": "RefSeq DNA",
+            "resourceId": "NC_000017.11",
+            "_url": "https://www.ncbi.nlm.nih.gov/nuccore/NC_000017.11",
+            "version": 2
+          },
+          "source": "dbSnp",
+          "type": "genomic",
+          "variantAlleles": [
+            "A",
+            "G",
+            "T"
+          ],
+          "variantHgvs": [
+            "NC_000017.11:g.63476980C>A",
+            "NC_000017.11:g.63476980C>G",
+            "NC_000017.11:g.63476980C>T"
+          ],
+          "version": 0
+        },
+        {
+          "id": 1448027038,
+          "altHgvs": {},
+          "assembly": "GRCh37",
+          "begin": 61554341,
+          "end": 61554341,
+          "intronicOffset": 0,
+          "referenceAllele": "C",
+          "referenceHgvs": "NC_000017.10:g.61554341=",
+          "sequence": {
+            "id": 1447949567,
+            "name": "[GRCh37]chr17",
+            "resource": "RefSeq DNA",
+            "resourceId": "NC_000017.10",
+            "_url": "https://www.ncbi.nlm.nih.gov/nuccore/NC_000017.10",
+            "version": 2
+          },
+          "source": "dbSnp",
+          "type": "genomic",
+          "variantAlleles": [
+            "A",
+            "G",
+            "T"
+          ],
+          "variantHgvs": [
+            "NC_000017.10:g.61554341C>A",
+            "NC_000017.10:g.61554341C>G",
+            "NC_000017.10:g.61554341C>T"
+          ],
+          "version": 1
+        },
+        {
+          "id": 1451191446,
+          "altHgvs": {},
+          "begin": 4908,
+          "end": 4908,
+          "intronicOffset": 0,
+          "referenceAllele": "C",
+          "referenceHgvs": "NG_011648.1:g.4908=",
+          "sequence": {
+            "id": 1451176846,
+            "name": "NG_011648.1",
+            "resource": "RefSeq DNA",
+            "resourceId": "NG_011648.1",
+            "_url": "https://www.ncbi.nlm.nih.gov/nuccore/NG_011648.1",
+            "version": 0
+          },
+          "source": "dbSnp",
+          "type": "genomic",
+          "variantAlleles": [
+            "A",
+            "G",
+            "T"
+          ],
+          "variantHgvs": [
+            "NG_011648.1:g.4908C>A",
+            "NG_011648.1:g.4908C>G",
+            "NG_011648.1:g.4908C>T"
+          ],
+          "version": 0
+        }
+      ],
+      "obsolete": false,
+      "rare": false,
+      "raritySource": "gnomAD Genomes",
+      "relatedGenes": [
+        {
+          "objCls": "Gene",
+          "id": "PA139",
+          "symbol": "ACE",
+          "name": "angiotensin I converting enzyme",
+          "version": 176
+        }
+      ],
+      "terms": [],
+      "type": "SNP",
+      "version": 4
+    },
+    {
+      "objCls": "Variant",
+      "id": "PA166155145",
+      "symbol": "rs4331",
+      "name": "rs4331",
+      "altNames": {
+        "synonym": [
+          "NC_000017.10:g.61564052A>G",
+          "NC_000017.11:g.63486691A>G",
+          "NG_011648.1:g.14619A>G",
+          "NM_000789.3:c.2193A>G",
+          "NM_001178057.1:c.471A>G",
+          "NM_152830.2:c.471A>G",
+          "NP_000780.1:p.Ala731=",
+          "NP_001171528.1:p.Ala157=",
+          "NP_690043.1:p.Ala157=",
+          "XM_005257110.1:c.1644A>G",
+          "XM_006721737.2:c.531A>G",
+          "XP_005257167.1:p.Ala548=",
+          "XP_006721800.2:p.Ala177=",
+          "rs17230334",
+          "rs17403344",
+          "rs17853604",
+          "rs2229837",
+          "rs3730030",
+          "rs386592477",
+          "rs4973",
+          "rs57496360"
+        ]
+      },
+      "changeClassification": "Synonymous",
+      "crossReferences": [
+        {
+          "id": 1448027052,
+          "resource": "dbSNP",
+          "resourceId": "rs4331",
+          "_url": "https://www.ncbi.nlm.nih.gov/snp/rs4331",
+          "version": 0
+        },
+        {
+          "id": 1451191520,
+          "resource": "dbSNP",
+          "resourceId": "rs17230334",
+          "_url": "https://www.ncbi.nlm.nih.gov/snp/rs17230334",
+          "version": 1
+        },
+        {
+          "id": 1451191521,
+          "resource": "dbSNP",
+          "resourceId": "rs17403344",
+          "_url": "https://www.ncbi.nlm.nih.gov/snp/rs17403344",
+          "version": 1
+        },
+        {
+          "id": 1451191522,
+          "resource": "dbSNP",
+          "resourceId": "rs17853604",
+          "_url": "https://www.ncbi.nlm.nih.gov/snp/rs17853604",
+          "version": 1
+        },
+        {
+          "id": 1451191518,
+          "resource": "dbSNP",
+          "resourceId": "rs2229837",
+          "_url": "https://www.ncbi.nlm.nih.gov/snp/rs2229837",
+          "version": 1
+        },
+        {
+          "id": 1451191519,
+          "resource": "dbSNP",
+          "resourceId": "rs3730030",
+          "_url": "https://www.ncbi.nlm.nih.gov/snp/rs3730030",
+          "version": 1
+        },
+        {
+          "id": 1451191524,
+          "resource": "dbSNP",
+          "resourceId": "rs386592477",
+          "_url": "https://www.ncbi.nlm.nih.gov/snp/rs386592477",
+          "version": 1
+        },
+        {
+          "id": 1451191517,
+          "resource": "dbSNP",
+          "resourceId": "rs4973",
+          "_url": "https://www.ncbi.nlm.nih.gov/snp/rs4973",
+          "version": 1
+        },
+        {
+          "id": 1451191523,
+          "resource": "dbSNP",
+          "resourceId": "rs57496360",
+          "_url": "https://www.ncbi.nlm.nih.gov/snp/rs57496360",
+          "version": 1
+        }
+      ],
+      "history": [],
+      "lastUpdatedFromDbsnp": "2020-06-18T20:59:25.163929",
+      "locations": [
+        {
+          "id": 1451191513,
+          "altHgvs": {},
+          "assembly": "GRCh38",
+          "begin": 63486691,
+          "end": 63486691,
+          "intronicOffset": 0,
+          "referenceAllele": "A",
+          "referenceHgvs": "NC_000017.11:g.63486691=",
+          "sequence": {
+            "id": 1446906624,
+            "name": "[GRCh38]chr17",
+            "resource": "RefSeq DNA",
+            "resourceId": "NC_000017.11",
+            "_url": "https://www.ncbi.nlm.nih.gov/nuccore/NC_000017.11",
+            "version": 2
+          },
+          "source": "dbSnp",
+          "type": "genomic",
+          "variantAlleles": [
+            "C",
+            "G",
+            "T"
+          ],
+          "variantHgvs": [
+            "NC_000017.11:g.63486691A>C",
+            "NC_000017.11:g.63486691A>G",
+            "NC_000017.11:g.63486691A>T"
+          ],
+          "version": 0
+        },
+        {
+          "id": 1448027049,
+          "altHgvs": {},
+          "assembly": "GRCh37",
+          "begin": 61564052,
+          "end": 61564052,
+          "intronicOffset": 0,
+          "referenceAllele": "A",
+          "referenceHgvs": "NC_000017.10:g.61564052=",
+          "sequence": {
+            "id": 1447949567,
+            "name": "[GRCh37]chr17",
+            "resource": "RefSeq DNA",
+            "resourceId": "NC_000017.10",
+            "_url": "https://www.ncbi.nlm.nih.gov/nuccore/NC_000017.10",
+            "version": 2
+          },
+          "source": "dbSnp",
+          "type": "genomic",
+          "variantAlleles": [
+            "C",
+            "G",
+            "T"
+          ],
+          "variantHgvs": [
+            "NC_000017.10:g.61564052A>C",
+            "NC_000017.10:g.61564052A>G",
+            "NC_000017.10:g.61564052A>T"
+          ],
+          "version": 1
+        },
+        {
+          "id": 1451191515,
+          "altHgvs": {},
+          "begin": 14619,
+          "end": 14619,
+          "intronicOffset": 0,
+          "referenceAllele": "A",
+          "referenceHgvs": "NG_011648.1:g.14619=",
+          "sequence": {
+            "id": 1451176846,
+            "name": "NG_011648.1",
+            "resource": "RefSeq DNA",
+            "resourceId": "NG_011648.1",
+            "_url": "https://www.ncbi.nlm.nih.gov/nuccore/NG_011648.1",
+            "version": 0
+          },
+          "source": "dbSnp",
+          "type": "genomic",
+          "variantAlleles": [
+            "C",
+            "G",
+            "T"
+          ],
+          "variantHgvs": [
+            "NG_011648.1:g.14619A>C",
+            "NG_011648.1:g.14619A>G",
+            "NG_011648.1:g.14619A>T"
+          ],
+          "version": 0
+        },
+        {
+          "id": 1448027050,
+          "altHgvs": {},
+          "begin": 731,
+          "end": 731,
+          "intronicOffset": 0,
+          "referenceAllele": "A",
+          "referenceHgvs": "NP_000780.1:p.Ala731=",
+          "sequence": {
+            "id": 1448027051,
+            "name": "NP_000780.1",
+            "resource": "RefSeq Protein",
+            "resourceId": "NP_000780.1",
+            "_url": "https://www.ncbi.nlm.nih.gov/nuccore/NP_000780.1",
+            "version": 0
+          },
+          "source": "dbSnp",
+          "type": "protein",
+          "variantAlleles": [],
+          "variantHgvs": [],
+          "version": 1
+        }
+      ],
+      "obsolete": false,
+      "rare": false,
+      "raritySource": "gnomAD Genomes",
+      "relatedGenes": [
+        {
+          "objCls": "Gene",
+          "id": "PA139",
+          "symbol": "ACE",
+          "name": "angiotensin I converting enzyme",
+          "version": 176
+        }
+      ],
+      "terms": [],
+      "type": "SNP",
+      "version": 4
+    },
+    {
+      "objCls": "Variant",
+      "id": "PA166155146",
+      "symbol": "rs4341",
+      "name": "rs4341",
+      "altNames": {
+        "synonym": [
+          "NC_000017.10:g.61565990G>C",
+          "NC_000017.11:g.63488629G>C",
+          "NG_011648.1:g.16557G>C",
+          "NM_000789.3:c.2306-19G>C",
+          "NM_001178057.1:c.584-19G>C",
+          "NM_152830.2:c.584-19G>C",
+          "XM_005257110.1:c.1757-19G>C",
+          "XM_006721737.2:c.644-19G>C",
+          "rs17442272",
+          "rs59314714"
+        ]
+      },
+      "changeClassification": "Intronic",
+      "crossReferences": [
+        {
+          "id": 1448027084,
+          "resource": "dbSNP",
+          "resourceId": "rs4341",
+          "_url": "https://www.ncbi.nlm.nih.gov/snp/rs4341",
+          "version": 0
+        },
+        {
+          "id": 1451191531,
+          "resource": "dbSNP",
+          "resourceId": "rs17442272",
+          "_url": "https://www.ncbi.nlm.nih.gov/snp/rs17442272",
+          "version": 1
+        },
+        {
+          "id": 1451191532,
+          "resource": "dbSNP",
+          "resourceId": "rs59314714",
+          "_url": "https://www.ncbi.nlm.nih.gov/snp/rs59314714",
+          "version": 1
+        }
+      ],
+      "history": [],
+      "lastUpdatedFromDbsnp": "2020-06-18T20:59:31.901742",
+      "locations": [
+        {
+          "id": 1451191528,
+          "altHgvs": {},
+          "assembly": "GRCh38",
+          "begin": 63488629,
+          "end": 63488629,
+          "intronicOffset": 0,
+          "referenceAllele": "G",
+          "referenceHgvs": "NC_000017.11:g.63488629=",
+          "sequence": {
+            "id": 1446906624,
+            "name": "[GRCh38]chr17",
+            "resource": "RefSeq DNA",
+            "resourceId": "NC_000017.11",
+            "_url": "https://www.ncbi.nlm.nih.gov/nuccore/NC_000017.11",
+            "version": 2
+          },
+          "source": "dbSnp",
+          "type": "genomic",
+          "variantAlleles": [
+            "A",
+            "C",
+            "T"
+          ],
+          "variantHgvs": [
+            "NC_000017.11:g.63488629G>A",
+            "NC_000017.11:g.63488629G>C",
+            "NC_000017.11:g.63488629G>T"
+          ],
+          "version": 0
+        },
+        {
+          "id": 1448027083,
+          "altHgvs": {},
+          "assembly": "GRCh37",
+          "begin": 61565990,
+          "end": 61565990,
+          "intronicOffset": 0,
+          "referenceAllele": "G",
+          "referenceHgvs": "NC_000017.10:g.61565990=",
+          "sequence": {
+            "id": 1447949567,
+            "name": "[GRCh37]chr17",
+            "resource": "RefSeq DNA",
+            "resourceId": "NC_000017.10",
+            "_url": "https://www.ncbi.nlm.nih.gov/nuccore/NC_000017.10",
+            "version": 2
+          },
+          "source": "dbSnp",
+          "type": "genomic",
+          "variantAlleles": [
+            "A",
+            "C",
+            "T"
+          ],
+          "variantHgvs": [
+            "NC_000017.10:g.61565990G>A",
+            "NC_000017.10:g.61565990G>C",
+            "NC_000017.10:g.61565990G>T"
+          ],
+          "version": 1
+        },
+        {
+          "id": 1451191530,
+          "altHgvs": {},
+          "begin": 16557,
+          "end": 16557,
+          "intronicOffset": 0,
+          "referenceAllele": "G",
+          "referenceHgvs": "NG_011648.1:g.16557=",
+          "sequence": {
+            "id": 1451176846,
+            "name": "NG_011648.1",
+            "resource": "RefSeq DNA",
+            "resourceId": "NG_011648.1",
+            "_url": "https://www.ncbi.nlm.nih.gov/nuccore/NG_011648.1",
+            "version": 0
+          },
+          "source": "dbSnp",
+          "type": "genomic",
+          "variantAlleles": [
+            "A",
+            "C",
+            "T"
+          ],
+          "variantHgvs": [
+            "NG_011648.1:g.16557G>A",
+            "NG_011648.1:g.16557G>C",
+            "NG_011648.1:g.16557G>T"
+          ],
+          "version": 0
+        }
+      ],
+      "obsolete": false,
+      "rare": false,
+      "raritySource": "gnomAD Genomes",
+      "relatedGenes": [
+        {
+          "objCls": "Gene",
+          "id": "PA139",
+          "symbol": "ACE",
+          "name": "angiotensin I converting enzyme",
+          "version": 176
+        }
+      ],
+      "terms": [],
+      "type": "SNP",
+      "version": 4
+    },
+    {
+      "objCls": "Variant",
+      "id": "PA166155147",
+      "symbol": "rs4343",
+      "name": "rs4343",
+      "altNames": {
+        "synonym": [
+          "NC_000017.10:g.61566031G>A",
+          "NC_000017.11:g.63488670G>A",
+          "NG_011648.1:g.16598G>A",
+          "NM_000789.3:c.2328G>A",
+          "NM_001178057.1:c.606G>A",
+          "NM_152830.2:c.606G>A",
+          "NP_000780.1:p.Thr776=",
+          "NP_001171528.1:p.Thr202=",
+          "NP_690043.1:p.Thr202=",
+          "XM_005257110.1:c.1779G>A",
+          "XM_006721737.2:c.666G>A",
+          "XP_005257167.1:p.Thr593=",
+          "XP_006721800.2:p.Thr222=",
+          "rs16946944",
+          "rs17853605",
+          "rs2228582",
+          "rs3730035",
+          "rs4974",
+          "rs56513988",
+          "rs58890782"
+        ]
+      },
+      "changeClassification": "Synonymous",
+      "crossReferences": [
+        {
+          "id": 1448027103,
+          "resource": "dbSNP",
+          "resourceId": "rs4343",
+          "_url": "https://www.ncbi.nlm.nih.gov/snp/rs4343",
+          "version": 0
+        },
+        {
+          "id": 1451191540,
+          "resource": "dbSNP",
+          "resourceId": "rs16946944",
+          "_url": "https://www.ncbi.nlm.nih.gov/snp/rs16946944",
+          "version": 1
+        },
+        {
+          "id": 1451191541,
+          "resource": "dbSNP",
+          "resourceId": "rs17853605",
+          "_url": "https://www.ncbi.nlm.nih.gov/snp/rs17853605",
+          "version": 1
+        },
+        {
+          "id": 1451191538,
+          "resource": "dbSNP",
+          "resourceId": "rs2228582",
+          "_url": "https://www.ncbi.nlm.nih.gov/snp/rs2228582",
+          "version": 1
+        },
+        {
+          "id": 1451191539,
+          "resource": "dbSNP",
+          "resourceId": "rs3730035",
+          "_url": "https://www.ncbi.nlm.nih.gov/snp/rs3730035",
+          "version": 1
+        },
+        {
+          "id": 1451191537,
+          "resource": "dbSNP",
+          "resourceId": "rs4974",
+          "_url": "https://www.ncbi.nlm.nih.gov/snp/rs4974",
+          "version": 1
+        },
+        {
+          "id": 1451191542,
+          "resource": "dbSNP",
+          "resourceId": "rs56513988",
+          "_url": "https://www.ncbi.nlm.nih.gov/snp/rs56513988",
+          "version": 1
+        },
+        {
+          "id": 1451191543,
+          "resource": "dbSNP",
+          "resourceId": "rs58890782",
+          "_url": "https://www.ncbi.nlm.nih.gov/snp/rs58890782",
+          "version": 1
+        }
+      ],
+      "history": [],
+      "lastUpdatedFromDbsnp": "2020-06-18T20:59:34.904725",
+      "locations": [
+        {
+          "id": 1451191533,
+          "altHgvs": {},
+          "assembly": "GRCh38",
+          "begin": 63488670,
+          "end": 63488670,
+          "intronicOffset": 0,
+          "referenceAllele": "G",
+          "referenceHgvs": "NC_000017.11:g.63488670=",
+          "sequence": {
+            "id": 1446906624,
+            "name": "[GRCh38]chr17",
+            "resource": "RefSeq DNA",
+            "resourceId": "NC_000017.11",
+            "_url": "https://www.ncbi.nlm.nih.gov/nuccore/NC_000017.11",
+            "version": 2
+          },
+          "source": "dbSnp",
+          "type": "genomic",
+          "variantAlleles": [
+            "A"
+          ],
+          "variantHgvs": [
+            "NC_000017.11:g.63488670G>A"
+          ],
+          "version": 0
+        },
+        {
+          "id": 1448027101,
+          "altHgvs": {},
+          "assembly": "GRCh37",
+          "begin": 61566031,
+          "end": 61566031,
+          "intronicOffset": 0,
+          "referenceAllele": "G",
+          "referenceHgvs": "NC_000017.10:g.61566031=",
+          "sequence": {
+            "id": 1447949567,
+            "name": "[GRCh37]chr17",
+            "resource": "RefSeq DNA",
+            "resourceId": "NC_000017.10",
+            "_url": "https://www.ncbi.nlm.nih.gov/nuccore/NC_000017.10",
+            "version": 2
+          },
+          "source": "dbSnp",
+          "type": "genomic",
+          "variantAlleles": [
+            "A"
+          ],
+          "variantHgvs": [
+            "NC_000017.10:g.61566031G>A"
+          ],
+          "version": 1
+        },
+        {
+          "id": 1451191535,
+          "altHgvs": {},
+          "begin": 16598,
+          "end": 16598,
+          "intronicOffset": 0,
+          "referenceAllele": "G",
+          "referenceHgvs": "NG_011648.1:g.16598=",
+          "sequence": {
+            "id": 1451176846,
+            "name": "NG_011648.1",
+            "resource": "RefSeq DNA",
+            "resourceId": "NG_011648.1",
+            "_url": "https://www.ncbi.nlm.nih.gov/nuccore/NG_011648.1",
+            "version": 0
+          },
+          "source": "dbSnp",
+          "type": "genomic",
+          "variantAlleles": [
+            "A"
+          ],
+          "variantHgvs": [
+            "NG_011648.1:g.16598G>A"
+          ],
+          "version": 0
+        },
+        {
+          "id": 1448027102,
+          "altHgvs": {},
+          "begin": 776,
+          "end": 776,
+          "intronicOffset": 0,
+          "referenceAllele": "T",
+          "referenceHgvs": "NP_000780.1:p.Thr776=",
+          "sequence": {
+            "id": 1448027051,
+            "name": "NP_000780.1",
+            "resource": "RefSeq Protein",
+            "resourceId": "NP_000780.1",
+            "_url": "https://www.ncbi.nlm.nih.gov/nuccore/NP_000780.1",
+            "version": 0
+          },
+          "source": "dbSnp",
+          "type": "protein",
+          "variantAlleles": [],
+          "variantHgvs": [],
+          "version": 1
+        }
+      ],
+      "obsolete": false,
+      "rare": false,
+      "raritySource": "gnomAD Genomes",
+      "relatedGenes": [
+        {
+          "objCls": "Gene",
+          "id": "PA139",
+          "symbol": "ACE",
+          "name": "angiotensin I converting enzyme",
+          "version": 176
+        }
+      ],
+      "terms": [],
+      "type": "SNP",
+      "version": 4
+    },
+    {
+      "objCls": "Variant",
+      "id": "PA166155148",
+      "symbol": "rs4344",
+      "name": "rs4344",
+      "altNames": {
+        "synonym": [
+          "NC_000017.10:g.61566724G>A",
+          "NC_000017.11:g.63489363G>A",
+          "NG_011648.1:g.17291G>A",
+          "NM_000789.3:c.2641+231G>A",
+          "NM_001178057.1:c.919+231G>A",
+          "NM_152830.2:c.919+231G>A",
+          "XM_005257110.1:c.2092+231G>A",
+          "XM_006721737.2:c.979+231G>A",
+          "rs17236716",
+          "rs17539537",
+          "rs60974995"
+        ]
+      },
+      "changeClassification": "Intronic",
+      "crossReferences": [
+        {
+          "id": 1448027134,
+          "resource": "dbSNP",
+          "resourceId": "rs4344",
+          "_url": "https://www.ncbi.nlm.nih.gov/snp/rs4344",
+          "version": 0
+        },
+        {
+          "id": 1451191547,
+          "resource": "dbSNP",
+          "resourceId": "rs17236716",
+          "_url": "https://www.ncbi.nlm.nih.gov/snp/rs17236716",
+          "version": 1
+        },
+        {
+          "id": 1451191548,
+          "resource": "dbSNP",
+          "resourceId": "rs17539537",
+          "_url": "https://www.ncbi.nlm.nih.gov/snp/rs17539537",
+          "version": 1
+        },
+        {
+          "id": 1451191549,
+          "resource": "dbSNP",
+          "resourceId": "rs60974995",
+          "_url": "https://www.ncbi.nlm.nih.gov/snp/rs60974995",
+          "version": 1
+        }
+      ],
+      "history": [],
+      "lastUpdatedFromDbsnp": "2020-06-18T20:59:38.209463",
+      "locations": [
+        {
+          "id": 1451191544,
+          "altHgvs": {},
+          "assembly": "GRCh38",
+          "begin": 63489363,
+          "end": 63489363,
+          "intronicOffset": 0,
+          "referenceAllele": "G",
+          "referenceHgvs": "NC_000017.11:g.63489363=",
+          "sequence": {
+            "id": 1446906624,
+            "name": "[GRCh38]chr17",
+            "resource": "RefSeq DNA",
+            "resourceId": "NC_000017.11",
+            "_url": "https://www.ncbi.nlm.nih.gov/nuccore/NC_000017.11",
+            "version": 2
+          },
+          "source": "dbSnp",
+          "type": "genomic",
+          "variantAlleles": [
+            "A",
+            "C"
+          ],
+          "variantHgvs": [
+            "NC_000017.11:g.63489363G>A",
+            "NC_000017.11:g.63489363G>C"
+          ],
+          "version": 0
+        },
+        {
+          "id": 1448027133,
+          "altHgvs": {},
+          "assembly": "GRCh37",
+          "begin": 61566724,
+          "end": 61566724,
+          "intronicOffset": 0,
+          "referenceAllele": "G",
+          "referenceHgvs": "NC_000017.10:g.61566724=",
+          "sequence": {
+            "id": 1447949567,
+            "name": "[GRCh37]chr17",
+            "resource": "RefSeq DNA",
+            "resourceId": "NC_000017.10",
+            "_url": "https://www.ncbi.nlm.nih.gov/nuccore/NC_000017.10",
+            "version": 2
+          },
+          "source": "dbSnp",
+          "type": "genomic",
+          "variantAlleles": [
+            "A",
+            "C"
+          ],
+          "variantHgvs": [
+            "NC_000017.10:g.61566724G>A",
+            "NC_000017.10:g.61566724G>C"
+          ],
+          "version": 1
+        },
+        {
+          "id": 1451191546,
+          "altHgvs": {},
+          "begin": 17291,
+          "end": 17291,
+          "intronicOffset": 0,
+          "referenceAllele": "G",
+          "referenceHgvs": "NG_011648.1:g.17291=",
+          "sequence": {
+            "id": 1451176846,
+            "name": "NG_011648.1",
+            "resource": "RefSeq DNA",
+            "resourceId": "NG_011648.1",
+            "_url": "https://www.ncbi.nlm.nih.gov/nuccore/NG_011648.1",
+            "version": 0
+          },
+          "source": "dbSnp",
+          "type": "genomic",
+          "variantAlleles": [
+            "A",
+            "C"
+          ],
+          "variantHgvs": [
+            "NG_011648.1:g.17291G>A",
+            "NG_011648.1:g.17291G>C"
+          ],
+          "version": 0
+        }
+      ],
+      "obsolete": false,
+      "rare": false,
+      "raritySource": "gnomAD Genomes",
+      "relatedGenes": [
+        {
+          "objCls": "Gene",
+          "id": "PA139",
+          "symbol": "ACE",
+          "name": "angiotensin I converting enzyme",
+          "version": 176
+        }
+      ],
+      "terms": [],
+      "type": "SNP",
+      "version": 4
+    },
+    {
+      "objCls": "Variant",
+      "id": "PA166155149",
+      "symbol": "rs4359",
+      "name": "rs4359",
+      "altNames": {
+        "synonym": [
+          "NC_000017.10:g.61572343T>C",
+          "NC_000017.11:g.63494982T>C",
+          "NG_011648.1:g.22910T>C",
+          "NM_000789.3:c.3380+512T>C",
+          "NM_001178057.1:c.1658+512T>C",
+          "NM_152830.2:c.1658+512T>C",
+          "XM_005257110.1:c.2831+512T>C",
+          "XM_006721737.2:c.1718+512T>C",
+          "rs17236744",
+          "rs57607973"
+        ]
+      },
+      "changeClassification": "Intronic",
+      "crossReferences": [
+        {
+          "id": 1448027153,
+          "resource": "dbSNP",
+          "resourceId": "rs4359",
+          "_url": "https://www.ncbi.nlm.nih.gov/snp/rs4359",
+          "version": 0
+        },
+        {
+          "id": 1451191572,
+          "resource": "dbSNP",
+          "resourceId": "rs17236744",
+          "_url": "https://www.ncbi.nlm.nih.gov/snp/rs17236744",
+          "version": 1
+        },
+        {
+          "id": 1451191573,
+          "resource": "dbSNP",
+          "resourceId": "rs57607973",
+          "_url": "https://www.ncbi.nlm.nih.gov/snp/rs57607973",
+          "version": 1
+        }
+      ],
+      "history": [],
+      "lastUpdatedFromDbsnp": "2020-06-18T20:59:56.349763",
+      "locations": [
+        {
+          "id": 1451191569,
+          "altHgvs": {},
+          "assembly": "GRCh38",
+          "begin": 63494982,
+          "end": 63494982,
+          "intronicOffset": 0,
+          "referenceAllele": "T",
+          "referenceHgvs": "NC_000017.11:g.63494982=",
+          "sequence": {
+            "id": 1446906624,
+            "name": "[GRCh38]chr17",
+            "resource": "RefSeq DNA",
+            "resourceId": "NC_000017.11",
+            "_url": "https://www.ncbi.nlm.nih.gov/nuccore/NC_000017.11",
+            "version": 2
+          },
+          "source": "dbSnp",
+          "type": "genomic",
+          "variantAlleles": [
+            "A",
+            "C"
+          ],
+          "variantHgvs": [
+            "NC_000017.11:g.63494982T>A",
+            "NC_000017.11:g.63494982T>C"
+          ],
+          "version": 0
+        },
+        {
+          "id": 1448027152,
+          "altHgvs": {},
+          "assembly": "GRCh37",
+          "begin": 61572343,
+          "end": 61572343,
+          "intronicOffset": 0,
+          "referenceAllele": "T",
+          "referenceHgvs": "NC_000017.10:g.61572343=",
+          "sequence": {
+            "id": 1447949567,
+            "name": "[GRCh37]chr17",
+            "resource": "RefSeq DNA",
+            "resourceId": "NC_000017.10",
+            "_url": "https://www.ncbi.nlm.nih.gov/nuccore/NC_000017.10",
+            "version": 2
+          },
+          "source": "dbSnp",
+          "type": "genomic",
+          "variantAlleles": [
+            "A",
+            "C"
+          ],
+          "variantHgvs": [
+            "NC_000017.10:g.61572343T>A",
+            "NC_000017.10:g.61572343T>C"
+          ],
+          "version": 1
+        },
+        {
+          "id": 1451191571,
+          "altHgvs": {},
+          "begin": 22910,
+          "end": 22910,
+          "intronicOffset": 0,
+          "referenceAllele": "T",
+          "referenceHgvs": "NG_011648.1:g.22910=",
+          "sequence": {
+            "id": 1451176846,
+            "name": "NG_011648.1",
+            "resource": "RefSeq DNA",
+            "resourceId": "NG_011648.1",
+            "_url": "https://www.ncbi.nlm.nih.gov/nuccore/NG_011648.1",
+            "version": 0
+          },
+          "source": "dbSnp",
+          "type": "genomic",
+          "variantAlleles": [
+            "A",
+            "C"
+          ],
+          "variantHgvs": [
+            "NG_011648.1:g.22910T>A",
+            "NG_011648.1:g.22910T>C"
+          ],
+          "version": 0
+        }
+      ],
+      "obsolete": false,
+      "rare": false,
+      "raritySource": "gnomAD Genomes",
+      "relatedGenes": [
+        {
+          "objCls": "Gene",
+          "id": "PA139",
+          "symbol": "ACE",
+          "name": "angiotensin I converting enzyme",
+          "version": 176
+        }
+      ],
+      "terms": [],
+      "type": "SNP",
+      "version": 4
+    },
+    {
+      "objCls": "Variant",
+      "id": "PA166155150",
+      "symbol": "rs4363",
+      "name": "rs4363",
+      "altNames": {
+        "synonym": [
+          "NC_000017.10:g.61574492G>A",
+          "NC_000017.11:g.63497131G>A",
+          "NG_011648.1:g.25059G>A",
+          "NM_000789.3:c.3692-6G>A",
+          "NM_001178057.1:c.1847-6G>A",
+          "NM_152830.2:c.1970-6G>A",
+          "XM_005257110.1:c.3143-6G>A",
+          "XM_006721737.2:c.2030-6G>A",
+          "rs16946968",
+          "rs17236750",
+          "rs3730049",
+          "rs61045345",
+          "rs74251230"
+        ]
+      },
+      "changeClassification": "Intronic",
+      "crossReferences": [
+        {
+          "id": 1448027171,
+          "resource": "dbSNP",
+          "resourceId": "rs4363",
+          "_url": "https://www.ncbi.nlm.nih.gov/snp/rs4363",
+          "version": 0
+        },
+        {
+          "id": 1451191578,
+          "resource": "dbSNP",
+          "resourceId": "rs16946968",
+          "_url": "https://www.ncbi.nlm.nih.gov/snp/rs16946968",
+          "version": 1
+        },
+        {
+          "id": 1451191579,
+          "resource": "dbSNP",
+          "resourceId": "rs17236750",
+          "_url": "https://www.ncbi.nlm.nih.gov/snp/rs17236750",
+          "version": 1
+        },
+        {
+          "id": 1451191577,
+          "resource": "dbSNP",
+          "resourceId": "rs3730049",
+          "_url": "https://www.ncbi.nlm.nih.gov/snp/rs3730049",
+          "version": 1
+        },
+        {
+          "id": 1451191580,
+          "resource": "dbSNP",
+          "resourceId": "rs61045345",
+          "_url": "https://www.ncbi.nlm.nih.gov/snp/rs61045345",
+          "version": 1
+        },
+        {
+          "id": 1451191581,
+          "resource": "dbSNP",
+          "resourceId": "rs74251230",
+          "_url": "https://www.ncbi.nlm.nih.gov/snp/rs74251230",
+          "version": 1
+        }
+      ],
+      "history": [],
+      "lastUpdatedFromDbsnp": "2020-06-18T20:59:59.679477",
+      "locations": [
+        {
+          "id": 1451191574,
+          "altHgvs": {},
+          "assembly": "GRCh38",
+          "begin": 63497131,
+          "end": 63497131,
+          "intronicOffset": 0,
+          "referenceAllele": "G",
+          "referenceHgvs": "NC_000017.11:g.63497131=",
+          "sequence": {
+            "id": 1446906624,
+            "name": "[GRCh38]chr17",
+            "resource": "RefSeq DNA",
+            "resourceId": "NC_000017.11",
+            "_url": "https://www.ncbi.nlm.nih.gov/nuccore/NC_000017.11",
+            "version": 2
+          },
+          "source": "dbSnp",
+          "type": "genomic",
+          "variantAlleles": [
+            "A",
+            "C"
+          ],
+          "variantHgvs": [
+            "NC_000017.11:g.63497131G>A",
+            "NC_000017.11:g.63497131G>C"
+          ],
+          "version": 0
+        },
+        {
+          "id": 1448027170,
+          "altHgvs": {},
+          "assembly": "GRCh37",
+          "begin": 61574492,
+          "end": 61574492,
+          "intronicOffset": 0,
+          "referenceAllele": "G",
+          "referenceHgvs": "NC_000017.10:g.61574492=",
+          "sequence": {
+            "id": 1447949567,
+            "name": "[GRCh37]chr17",
+            "resource": "RefSeq DNA",
+            "resourceId": "NC_000017.10",
+            "_url": "https://www.ncbi.nlm.nih.gov/nuccore/NC_000017.10",
+            "version": 2
+          },
+          "source": "dbSnp",
+          "type": "genomic",
+          "variantAlleles": [
+            "A",
+            "C"
+          ],
+          "variantHgvs": [
+            "NC_000017.10:g.61574492G>A",
+            "NC_000017.10:g.61574492G>C"
+          ],
+          "version": 1
+        },
+        {
+          "id": 1451191576,
+          "altHgvs": {},
+          "begin": 25059,
+          "end": 25059,
+          "intronicOffset": 0,
+          "referenceAllele": "G",
+          "referenceHgvs": "NG_011648.1:g.25059=",
+          "sequence": {
+            "id": 1451176846,
+            "name": "NG_011648.1",
+            "resource": "RefSeq DNA",
+            "resourceId": "NG_011648.1",
+            "_url": "https://www.ncbi.nlm.nih.gov/nuccore/NG_011648.1",
+            "version": 0
+          },
+          "source": "dbSnp",
+          "type": "genomic",
+          "variantAlleles": [
+            "A",
+            "C"
+          ],
+          "variantHgvs": [
+            "NG_011648.1:g.25059G>A",
+            "NG_011648.1:g.25059G>C"
+          ],
+          "version": 0
+        }
+      ],
+      "obsolete": false,
+      "rare": false,
+      "raritySource": "gnomAD Genomes",
+      "relatedGenes": [
+        {
+          "objCls": "Gene",
+          "id": "PA139",
+          "symbol": "ACE",
+          "name": "angiotensin I converting enzyme",
+          "version": 176
+        }
+      ],
+      "terms": [],
+      "type": "SNP",
+      "version": 4
+    },
+    {
+      "objCls": "Variant",
+      "id": "PA166155187",
+      "symbol": "rs1799752",
+      "name": "rs1799752",
+      "altNames": {
+        "synonym": [
+          "NC_000017.10:g.61565890_61565891insATACAGTCACTTTTTTTTTTTTTTTGAGACGGAGTCTCGCTCTGTCGCCC",
+          "NC_000017.10:g.61565890_61565891insG",
+          "NC_000017.11:g.63488529_63488530insATACAGTCACTTTTTTTTTTTTTTTGAGACGGAGTCTCGCTCTGTCGCCC",
+          "NC_000017.11:g.63488529_63488530insG",
+          "NG_011648.1:g.16457_16458insATACAGTCACTTTTTTTTTTTTTTTGAGACGGAGTCTCGCTCTGTCGCCC",
+          "NG_011648.1:g.16457_16458insG",
+          "NM_000789.3:c.2306-119_2306-118insATACAGTCACTTTTTTTTTTTTTTTGAGACGGAGTCTCGCTCTGTCGCCC",
+          "NM_000789.3:c.2306-119_2306-118insG",
+          "NM_001178057.1:c.584-119_584-118insATACAGTCACTTTTTTTTTTTTTTTGAGACGGAGTCTCGCTCTGTCGCCC",
+          "NM_001178057.1:c.584-119_584-118insG",
+          "NM_152830.2:c.584-119_584-118insATACAGTCACTTTTTTTTTTTTTTTGAGACGGAGTCTCGCTCTGTCGCCC",
+          "NM_152830.2:c.584-119_584-118insG",
+          "XM_005257110.1:c.1757-119_1757-118insATACAGTCACTTTTTTTTTTTTTTTGAGACGGAGTCTCGCTCTGTCGCCC",
+          "XM_005257110.1:c.1757-119_1757-118insG",
+          "XM_006721737.2:c.644-119_644-118insATACAGTCACTTTTTTTTTTTTTTTGAGACGGAGTCTCGCTCTGTCGCCC",
+          "XM_006721737.2:c.644-119_644-118insG",
+          "rs13447447 (retired)",
+          "rs4340 (retired)",
+          "rs4646994"
+        ]
+      },
+      "changeClassification": "Intronic",
+      "crossReferences": [
+        {
+          "id": 1448028397,
+          "resource": "dbSNP",
+          "resourceId": "rs1799752",
+          "_url": "https://www.ncbi.nlm.nih.gov/snp/rs1799752",
+          "version": 0
+        },
+        {
+          "id": 1448103630,
+          "name": "NM_000789.3(ACE):c.2306-119_2306-118insG",
+          "resource": "ClinVar",
+          "resourceId": "225962",
+          "_url": "https://www.ncbi.nlm.nih.gov/clinvar/?term=225962",
+          "version": 0
+        },
+        {
+          "id": 1449158271,
+          "name": "NM_000789.3(ACE):c.2306-119_2306-118insATACAGTCACTTTTTTTTTTTTTTTGAGACGGAGTCTCGCTCTGTCGCCC",
+          "resource": "ClinVar",
+          "resourceId": "375659",
+          "_url": "https://www.ncbi.nlm.nih.gov/clinvar/?term=375659",
+          "version": 0
+        }
+      ],
+      "history": [],
+      "lastUpdatedFromDbsnp": "2020-06-18T08:00:38.328625",
+      "locations": [
+        {
+          "id": 1448028396,
+          "altHgvs": {},
+          "assembly": "GRCh37",
+          "begin": 61565890,
+          "end": 61565891,
+          "intronicOffset": 0,
+          "notes": "Auto-converted to PharmGKB location due to dbSNP update",
+          "referenceAllele": "-",
+          "sequence": {
+            "id": 1447949567,
+            "name": "[GRCh37]chr17",
+            "resource": "RefSeq DNA",
+            "resourceId": "NC_000017.10",
+            "_url": "https://www.ncbi.nlm.nih.gov/nuccore/NC_000017.10",
+            "version": 2
+          },
+          "source": "ClinPGx",
+          "type": "genomic",
+          "variantAlleles": [
+            "ATACAGTCACTTTTTTTTTTTTTTTGAGACGGAGTCTCGCTCTGTCGCCC",
+            "G"
+          ],
+          "variantHgvs": [],
+          "version": 3
+        },
+        {
+          "id": 1451176844,
+          "altHgvs": {},
+          "assembly": "GRCh38",
+          "begin": 63488544,
+          "end": 63488544,
+          "intronicOffset": 0,
+          "referenceAllele": "-",
+          "referenceHgvs": "NC_000017.11:g.63488530_63488543=",
+          "sequence": {
+            "id": 1446906624,
+            "name": "[GRCh38]chr17",
+            "resource": "RefSeq DNA",
+            "resourceId": "NC_000017.11",
+            "_url": "https://www.ncbi.nlm.nih.gov/nuccore/NC_000017.11",
+            "version": 2
+          },
+          "source": "dbSnp",
+          "type": "genomic",
+          "variantAlleles": [
+            "TTTTTTTTTTTGAGACGGAGTCTCGCTCTGTCGCCCATACAGTCACTTTT"
+          ],
+          "variantHgvs": [
+            "NC_000017.11:g.63488543_63488544insTTTTTTTTTTTGAGACGGAGTCTCGCTCTGTCGCCCATACAGTCACTTTT"
+          ],
+          "version": 0
+        },
+        {
+          "id": 1451176845,
+          "altHgvs": {},
+          "assembly": "GRCh37",
+          "begin": 61565905,
+          "end": 61565905,
+          "intronicOffset": 0,
+          "referenceAllele": "-",
+          "referenceHgvs": "NC_000017.10:g.61565891_61565904=",
+          "sequence": {
+            "id": 1447949567,
+            "name": "[GRCh37]chr17",
+            "resource": "RefSeq DNA",
+            "resourceId": "NC_000017.10",
+            "_url": "https://www.ncbi.nlm.nih.gov/nuccore/NC_000017.10",
+            "version": 2
+          },
+          "source": "dbSnp",
+          "type": "genomic",
+          "variantAlleles": [
+            "TTTTTTTTTTTGAGACGGAGTCTCGCTCTGTCGCCCATACAGTCACTTTT"
+          ],
+          "variantHgvs": [
+            "NC_000017.10:g.61565904_61565905insTTTTTTTTTTTGAGACGGAGTCTCGCTCTGTCGCCCATACAGTCACTTTT"
+          ],
+          "version": 0
+        },
+        {
+          "id": 1451176847,
+          "altHgvs": {},
+          "begin": 16472,
+          "end": 16472,
+          "intronicOffset": 0,
+          "referenceAllele": "-",
+          "referenceHgvs": "NG_011648.1:g.16458_16471=",
+          "sequence": {
+            "id": 1451176846,
+            "name": "NG_011648.1",
+            "resource": "RefSeq DNA",
+            "resourceId": "NG_011648.1",
+            "_url": "https://www.ncbi.nlm.nih.gov/nuccore/NG_011648.1",
+            "version": 0
+          },
+          "source": "dbSnp",
+          "type": "genomic",
+          "variantAlleles": [
+            "TTTTTTTTTTTGAGACGGAGTCTCGCTCTGTCGCCCATACAGTCACTTTT"
+          ],
+          "variantHgvs": [
+            "NG_011648.1:g.16471_16472insTTTTTTTTTTTGAGACGGAGTCTCGCTCTGTCGCCCATACAGTCACTTTT"
+          ],
+          "version": 0
+        }
+      ],
+      "obsolete": false,
+      "rare": false,
+      "raritySource": "Unknown",
+      "relatedGenes": [
+        {
+          "objCls": "Gene",
+          "id": "PA139",
+          "symbol": "ACE",
+          "name": "angiotensin I converting enzyme",
+          "version": 176
+        }
+      ],
+      "terms": [],
+      "type": "indel",
+      "version": 5
+    },
+    {
+      "objCls": "Variant",
+      "id": "PA166159221",
+      "symbol": "rs4646994",
+      "name": "rs4646994",
+      "altNames": {
+        "synonym": [
+          "rs1799752"
+        ]
+      },
+      "changeClassification": "Not Available",
+      "crossReferences": [
+        {
+          "id": 1448103991,
+          "resource": "dbSNP",
+          "resourceId": "rs4646994",
+          "_url": "https://www.ncbi.nlm.nih.gov/snp/rs4646994",
+          "version": 0
+        }
+      ],
+      "history": [],
+      "locations": [
+        {
+          "id": 1449171431,
+          "altHgvs": {},
+          "assembly": "GRCh38",
+          "begin": 63488539,
+          "end": 63488539,
+          "intronicOffset": 0,
+          "referenceAllele": "-",
+          "sequence": {
+            "id": 1446906624,
+            "name": "[GRCh38]chr17",
+            "resource": "RefSeq DNA",
+            "resourceId": "NC_000017.11",
+            "_url": "https://www.ncbi.nlm.nih.gov/nuccore/NC_000017.11",
+            "version": 2
+          },
+          "source": "dbSnp",
+          "type": "unknown",
+          "variantAlleles": [
+            "(289BP ALU)"
+          ],
+          "variantHgvs": [],
+          "version": 1
+        },
+        {
+          "id": 1449171425,
+          "altHgvs": {},
+          "assembly": "GRCh37",
+          "begin": 61565900,
+          "end": 61565900,
+          "intronicOffset": 0,
+          "referenceAllele": "-",
+          "sequence": {
+            "id": 1447949567,
+            "name": "[GRCh37]chr17",
+            "resource": "RefSeq DNA",
+            "resourceId": "NC_000017.10",
+            "_url": "https://www.ncbi.nlm.nih.gov/nuccore/NC_000017.10",
+            "version": 2
+          },
+          "source": "dbSnp",
+          "type": "genomic",
+          "variantAlleles": [
+            "(289BP ALU)"
+          ],
+          "variantHgvs": [],
+          "version": 1
+        }
+      ],
+      "obsolete": false,
+      "rare": false,
+      "raritySource": "Unknown",
+      "relatedGenes": [
+        {
+          "objCls": "Gene",
+          "id": "PA139",
+          "symbol": "ACE",
+          "name": "angiotensin I converting enzyme",
+          "version": 176
+        }
+      ],
+      "terms": [],
+      "type": "unknown",
+      "version": 4
+    }
+  ],
+  "status": "success"
+}

@@ -1,0 +1,361 @@
+{
+  "data": [
+    {
+      "objCls": "Variant",
+      "id": "PA166153976",
+      "symbol": "rs1801252",
+      "name": "rs1801252",
+      "altNames": {
+        "synonym": [
+          "NC_000010.10:g.115804036A>G",
+          "NC_000010.11:g.114044277A>G",
+          "NG_012187.1:g.5231A>G",
+          "NM_000684.2:c.145A>G",
+          "NP_000675.1:p.Ser49Gly",
+          "rs12720482",
+          "rs3740152"
+        ]
+      },
+      "changeClassification": "Missense",
+      "clinicalSignificance": "other",
+      "crossReferences": [
+        {
+          "id": 1448001536,
+          "resource": "dbSNP",
+          "resourceId": "rs1801252",
+          "_url": "https://www.ncbi.nlm.nih.gov/snp/rs1801252",
+          "version": 0
+        },
+        {
+          "id": 1451177566,
+          "resource": "dbSNP",
+          "resourceId": "rs12720482",
+          "_url": "https://www.ncbi.nlm.nih.gov/snp/rs12720482",
+          "version": 1
+        },
+        {
+          "id": 1451177565,
+          "resource": "dbSNP",
+          "resourceId": "rs3740152",
+          "_url": "https://www.ncbi.nlm.nih.gov/snp/rs3740152",
+          "version": 1
+        }
+      ],
+      "history": [],
+      "lastUpdatedFromDbsnp": "2020-06-18T13:16:26.045279",
+      "locations": [
+        {
+          "id": 1449001319,
+          "altHgvs": {},
+          "assembly": "GRCh38",
+          "begin": 114044277,
+          "end": 114044277,
+          "intronicOffset": 0,
+          "referenceAllele": "A",
+          "referenceHgvs": "NC_000010.11:g.114044277=",
+          "sequence": {
+            "id": 1446906616,
+            "name": "[GRCh38]chr10",
+            "resource": "RefSeq DNA",
+            "resourceId": "NC_000010.11",
+            "_url": "https://www.ncbi.nlm.nih.gov/nuccore/NC_000010.11",
+            "version": 2
+          },
+          "source": "dbSnp",
+          "type": "genomic",
+          "variantAlleles": [
+            "G"
+          ],
+          "variantHgvs": [
+            "NC_000010.11:g.114044277A>G"
+          ],
+          "version": 2
+        },
+        {
+          "id": 1448001533,
+          "altHgvs": {},
+          "assembly": "GRCh37",
+          "begin": 115804036,
+          "end": 115804036,
+          "intronicOffset": 0,
+          "referenceAllele": "A",
+          "referenceHgvs": "NC_000010.10:g.115804036=",
+          "sequence": {
+            "id": 1447949560,
+            "name": "[GRCh37]chr10",
+            "resource": "RefSeq DNA",
+            "resourceId": "NC_000010.10",
+            "_url": "https://www.ncbi.nlm.nih.gov/nuccore/NC_000010.10",
+            "version": 2
+          },
+          "source": "dbSnp",
+          "type": "genomic",
+          "variantAlleles": [
+            "G"
+          ],
+          "variantHgvs": [
+            "NC_000010.10:g.115804036A>G"
+          ],
+          "version": 2
+        },
+        {
+          "id": 1451177563,
+          "altHgvs": {},
+          "begin": 5231,
+          "end": 5231,
+          "intronicOffset": 0,
+          "referenceAllele": "A",
+          "referenceHgvs": "NG_012187.1:g.5231=",
+          "sequence": {
+            "id": 1451177562,
+            "name": "NG_012187.1",
+            "resource": "RefSeq DNA",
+            "resourceId": "NG_012187.1",
+            "_url": "https://www.ncbi.nlm.nih.gov/nuccore/NG_012187.1",
+            "version": 0
+          },
+          "source": "dbSnp",
+          "type": "genomic",
+          "variantAlleles": [
+            "G"
+          ],
+          "variantHgvs": [
+            "NG_012187.1:g.5231A>G"
+          ],
+          "version": 1
+        },
+        {
+          "id": 1448001534,
+          "altHgvs": {},
+          "begin": 49,
+          "end": 49,
+          "intronicOffset": 0,
+          "referenceAllele": "S",
+          "referenceHgvs": "NP_000675.1:p.Ser49=",
+          "sequence": {
+            "id": 1448001535,
+            "name": "NP_000675.1",
+            "resource": "RefSeq Protein",
+            "resourceId": "NP_000675.1",
+            "_url": "https://www.ncbi.nlm.nih.gov/nuccore/NP_000675.1",
+            "version": 0
+          },
+          "source": "dbSnp",
+          "type": "protein",
+          "variantAlleles": [
+            "G"
+          ],
+          "variantHgvs": [
+            "NP_000675.1:p.Ser49Gly"
+          ],
+          "version": 2
+        }
+      ],
+      "obsolete": false,
+      "rare": false,
+      "raritySource": "gnomAD Genomes",
+      "relatedGenes": [
+        {
+          "objCls": "Gene",
+          "id": "PA38",
+          "symbol": "ADRB1",
+          "name": "adrenoceptor beta 1",
+          "version": 7178
+        }
+      ],
+      "terms": [],
+      "type": "SNP",
+      "version": 6
+    },
+    {
+      "objCls": "Variant",
+      "id": "PA166153977",
+      "symbol": "rs1801253",
+      "name": "rs1801253",
+      "altNames": {
+        "synonym": [
+          "NC_000010.10:g.115805056G>C",
+          "NC_000010.11:g.114045297G>C",
+          "NG_012187.1:g.6251G>C",
+          "NM_000684.2:c.1165G>C",
+          "NP_000675.1:p.Gly389Arg",
+          "rs12718339",
+          "rs17091259",
+          "rs28365052",
+          "rs59130083"
+        ]
+      },
+      "changeClassification": "Missense",
+      "clinicalSignificance": "drug-response",
+      "crossReferences": [
+        {
+          "id": 1448001551,
+          "resource": "dbSNP",
+          "resourceId": "rs1801253",
+          "_url": "https://www.ncbi.nlm.nih.gov/snp/rs1801253",
+          "version": 0
+        },
+        {
+          "id": 1451177571,
+          "resource": "dbSNP",
+          "resourceId": "rs12718339",
+          "_url": "https://www.ncbi.nlm.nih.gov/snp/rs12718339",
+          "version": 1
+        },
+        {
+          "id": 1451177572,
+          "resource": "dbSNP",
+          "resourceId": "rs17091259",
+          "_url": "https://www.ncbi.nlm.nih.gov/snp/rs17091259",
+          "version": 1
+        },
+        {
+          "id": 1451177573,
+          "resource": "dbSNP",
+          "resourceId": "rs28365052",
+          "_url": "https://www.ncbi.nlm.nih.gov/snp/rs28365052",
+          "version": 1
+        },
+        {
+          "id": 1451177574,
+          "resource": "dbSNP",
+          "resourceId": "rs59130083",
+          "_url": "https://www.ncbi.nlm.nih.gov/snp/rs59130083",
+          "version": 1
+        }
+      ],
+      "history": [],
+      "lastUpdatedFromDbsnp": "2020-06-18T13:16:28.579154",
+      "locations": [
+        {
+          "id": 1449001318,
+          "altHgvs": {},
+          "assembly": "GRCh38",
+          "begin": 114045297,
+          "end": 114045297,
+          "intronicOffset": 0,
+          "referenceAllele": "G",
+          "referenceHgvs": "NC_000010.11:g.114045297=",
+          "sequence": {
+            "id": 1446906616,
+            "name": "[GRCh38]chr10",
+            "resource": "RefSeq DNA",
+            "resourceId": "NC_000010.11",
+            "_url": "https://www.ncbi.nlm.nih.gov/nuccore/NC_000010.11",
+            "version": 2
+          },
+          "source": "dbSnp",
+          "type": "genomic",
+          "variantAlleles": [
+            "A",
+            "C"
+          ],
+          "variantHgvs": [
+            "NC_000010.11:g.114045297G>A",
+            "NC_000010.11:g.114045297G>C"
+          ],
+          "version": 2
+        },
+        {
+          "id": 1448001549,
+          "altHgvs": {},
+          "assembly": "GRCh37",
+          "begin": 115805056,
+          "end": 115805056,
+          "intronicOffset": 0,
+          "referenceAllele": "G",
+          "referenceHgvs": "NC_000010.10:g.115805056=",
+          "sequence": {
+            "id": 1447949560,
+            "name": "[GRCh37]chr10",
+            "resource": "RefSeq DNA",
+            "resourceId": "NC_000010.10",
+            "_url": "https://www.ncbi.nlm.nih.gov/nuccore/NC_000010.10",
+            "version": 2
+          },
+          "source": "dbSnp",
+          "type": "genomic",
+          "variantAlleles": [
+            "A",
+            "C"
+          ],
+          "variantHgvs": [
+            "NC_000010.10:g.115805056G>A",
+            "NC_000010.10:g.115805056G>C"
+          ],
+          "version": 2
+        },
+        {
+          "id": 1451177569,
+          "altHgvs": {},
+          "begin": 6251,
+          "end": 6251,
+          "intronicOffset": 0,
+          "referenceAllele": "G",
+          "referenceHgvs": "NG_012187.1:g.6251=",
+          "sequence": {
+            "id": 1451177562,
+            "name": "NG_012187.1",
+            "resource": "RefSeq DNA",
+            "resourceId": "NG_012187.1",
+            "_url": "https://www.ncbi.nlm.nih.gov/nuccore/NG_012187.1",
+            "version": 0
+          },
+          "source": "dbSnp",
+          "type": "genomic",
+          "variantAlleles": [
+            "A",
+            "C"
+          ],
+          "variantHgvs": [
+            "NG_012187.1:g.6251G>A",
+            "NG_012187.1:g.6251G>C"
+          ],
+          "version": 1
+        },
+        {
+          "id": 1448001550,
+          "altHgvs": {},
+          "begin": 389,
+          "end": 389,
+          "intronicOffset": 0,
+          "referenceAllele": "G",
+          "referenceHgvs": "NP_000675.1:p.Gly389=",
+          "sequence": {
+            "id": 1448001535,
+            "name": "NP_000675.1",
+            "resource": "RefSeq Protein",
+            "resourceId": "NP_000675.1",
+            "_url": "https://www.ncbi.nlm.nih.gov/nuccore/NP_000675.1",
+            "version": 0
+          },
+          "source": "dbSnp",
+          "type": "protein",
+          "variantAlleles": [
+            "R"
+          ],
+          "variantHgvs": [
+            "NP_000675.1:p.Gly389Arg"
+          ],
+          "version": 2
+        }
+      ],
+      "obsolete": false,
+      "rare": false,
+      "raritySource": "gnomAD Genomes",
+      "relatedGenes": [
+        {
+          "objCls": "Gene",
+          "id": "PA38",
+          "symbol": "ADRB1",
+          "name": "adrenoceptor beta 1",
+          "version": 7178
+        }
+      ],
+      "terms": [],
+      "type": "SNP",
+      "version": 6
+    }
+  ],
+  "status": "success"
+}

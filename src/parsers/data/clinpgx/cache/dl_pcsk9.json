@@ -1,0 +1,512 @@
+{
+  "data": [
+    {
+      "objCls": "Label Annotation",
+      "id": "PA166121250",
+      "name": "Annotation of EMA Label for lomitapide and APOB, LDLR, PCSK9",
+      "alternateDrugAvailable": false,
+      "cancerGenome": false,
+      "crossReferences": [],
+      "dosingInformation": false,
+      "history": [
+        {
+          "id": 1184512656,
+          "date": "2013-10-27T00:00:00-07:00",
+          "type": "Update",
+          "version": 0
+        },
+        {
+          "id": 1450933202,
+          "date": "2019-12-04T13:21:19.770-08:00",
+          "description": "Added source literature",
+          "type": "Update",
+          "version": 0
+        },
+        {
+          "id": 1452253420,
+          "date": "2023-09-28T07:19:19.232-07:00",
+          "description": "Added indication tag. Fixed block quote on testing to show as quote.",
+          "type": "Update",
+          "version": 0
+        },
+        {
+          "id": 1452551560,
+          "date": "2024-08-08T14:03:55.240-07:00",
+          "description": "updated label",
+          "type": "Update",
+          "version": 0
+        }
+      ],
+      "indication": true,
+      "labelApplications": [],
+      "labelDocumentAvailable": true,
+      "literature": [
+        {
+          "id": 15103647,
+          "title": "Lojuxta | European Medicines Agency",
+          "_sameAs": "https://www.ema.europa.eu/en/medicines/human/EPAR/lojuxta",
+          "crossReferences": [
+            {
+              "id": 1450932878,
+              "resource": "URL",
+              "resourceId": "https://www.ema.europa.eu/en/medicines/human/EPAR/lojuxta",
+              "_url": "https://www.ema.europa.eu/en/medicines/human/EPAR/lojuxta"
+            }
+          ],
+          "objCls": "Literature",
+          "terms": [],
+          "type": "Drug Label"
+        }
+      ],
+      "otherPrescribingGuidance": false,
+      "pediatric": false,
+      "pgxRelated": true,
+      "prescribingGenes": [],
+      "relatedAlleles": [],
+      "relatedChemicals": [
+        {
+          "objCls": "Chemical",
+          "id": "PA166114922",
+          "name": "lomitapide",
+          "version": 5
+        }
+      ],
+      "relatedGenes": [
+        {
+          "objCls": "Gene",
+          "id": "PA50",
+          "symbol": "APOB",
+          "name": "apolipoprotein B",
+          "version": 55
+        },
+        {
+          "objCls": "Gene",
+          "id": "PA227",
+          "symbol": "LDLR",
+          "name": "low density lipoprotein receptor",
+          "version": 53
+        },
+        {
+          "objCls": "Gene",
+          "id": "PA38617",
+          "symbol": "PCSK9",
+          "name": "proprotein convertase subtilisin/kexin type 9",
+          "version": 11
+        }
+      ],
+      "source": "EMA",
+      "summaryMarkdown": {
+        "id": 1447981970,
+        "html": "<p>The EMA European Public Assessment Report (EPAR) for lomitapide (Lojuxta) states it is indicated only for use in adult patients with homozygous familial hypercholesterolemia and that genetic confirmation should be obtained whenever possible. Genetic tests include screening for variants in the LDLR, APOB and PCSK9 genes (see the <a rel=\"noopener noreferrer\" href=\"http://www.ncbi.nlm.nih.gov/gtr/\" target=\"_blank\">Genetic Test Registry</a> for more information).</p>\n",
+        "version": 9
+      },
+      "terms": [],
+      "testing": {
+        "id": 1183672041,
+        "description": "The label states or implies that some sort of gene, protein or chromosomal testing, including genetic testing, functional protein assays, cytogenetic studies, etc., should be conducted before using this drug. This requirement may only be for a particular subset of patients. PharmGKB considers labels that state the variant is an indication for the drug, as implying a test requirement. If the label states a test \"should be\" performed, this is also interpreted as a requirement.",
+        "parents": [],
+        "resource": "Genetic Testing Level",
+        "synonyms": [],
+        "term": "Testing Required",
+        "termId": "geneTestLevel:1183672041",
+        "valid": true,
+        "version": 3
+      },
+      "textMarkdown": {
+        "id": 1447981969,
+        "html": "<p>Excerpts from the lomitapide (Lojuxta) EPAR:</p>\n<blockquote class=\"blockquote\">\n<p>Lojuxta is indicated as an adjunct to a low-fat diet and other lipid-lowering medicinal products with or without low density lipoprotein (LDL) apheresis in adult patients with homozygous familial hypercholesterolaemia (HoFH).</p>\n</blockquote>\n<blockquote class=\"blockquote\">\n<p>Genetic confirmation of HoFH should be obtained whenever possible. Other forms of primary hyperlipoproteinemia and secondary causes of hypercholesterolaemia (e.g., nephrotic syndrome, hypothyroidism) must be excluded.</p>\n</blockquote>\n<p>For the complete EPAR text with sections containing pharmacogenetic information highlighted, see the <a download=\"Lomitapide_2024_08_08_EMA.pdf\" href=\"https://api.clinpgx.org/v1/download/file/attachment/Lomitapide_2024_08_08_EMA.pdf\">lomitapide EPAR PDF</a>.</p>\n",
+        "version": 11
+      },
+      "version": 18
+    },
+    {
+      "objCls": "Label Annotation",
+      "id": "PA166273561",
+      "name": "Annotation of FDA Label for inclisiran and APOB, LDLR, PCSK9",
+      "alternateDrugAvailable": false,
+      "biomarkerStatus": "On FDA Biomarker List",
+      "cancerGenome": false,
+      "crossReferences": [],
+      "dosingInformation": false,
+      "history": [
+        {
+          "id": 1452079921,
+          "date": "2023-04-24T11:15:37.532-07:00",
+          "description": "Changed to testing required since it is indicated for a genetic condition.",
+          "type": "Update",
+          "version": 0
+        },
+        {
+          "id": 1452211920,
+          "date": "2023-08-21T21:05:53.072-07:00",
+          "description": "Added Indication tag",
+          "type": "Update",
+          "version": 0
+        },
+        {
+          "id": 1452536240,
+          "date": "2024-07-23T12:52:42.914-07:00",
+          "description": "removed Testing Required (Indication, no PGx)",
+          "type": "Update",
+          "version": 0
+        }
+      ],
+      "indication": true,
+      "labelApplications": [],
+      "labelDocumentAvailable": true,
+      "literature": [
+        {
+          "id": 15133542,
+          "title": "Drugs@FDA: Drug Product LEQVIO (inclisiran), NDA214012, Novartis Pharmaceuticals Corporation",
+          "_sameAs": "https://www.accessdata.fda.gov/scripts/cder/daf/index.cfm?event=overview.process&varApplNo=214012",
+          "crossReferences": [
+            {
+              "id": 1451827903,
+              "resource": "FDA Application",
+              "resourceId": "NDA214012",
+              "_url": "https://www.accessdata.fda.gov/scripts/cder/daf/index.cfm?event=overview.process&varApplNo=214012"
+            }
+          ],
+          "notes": "Biomarker is Nonspecific(Heterozygous Familial Hypercholesterolemia).",
+          "objCls": "Literature",
+          "terms": [
+            {
+              "id": 1452267781,
+              "resource": "ClinPGx Tags",
+              "term": "Has No PGx",
+              "termId": "pgkbTags:1452267781"
+            }
+          ],
+          "type": "Drug Label"
+        }
+      ],
+      "otherPrescribingGuidance": false,
+      "pediatric": false,
+      "pgxRelated": true,
+      "prescribingGenes": [],
+      "relatedAlleles": [],
+      "relatedChemicals": [
+        {
+          "objCls": "Chemical",
+          "id": "PA166268802",
+          "name": "inclisiran",
+          "version": 3
+        }
+      ],
+      "relatedGenes": [
+        {
+          "objCls": "Gene",
+          "id": "PA50",
+          "symbol": "APOB",
+          "name": "apolipoprotein B",
+          "version": 55
+        },
+        {
+          "objCls": "Gene",
+          "id": "PA227",
+          "symbol": "LDLR",
+          "name": "low density lipoprotein receptor",
+          "version": 53
+        },
+        {
+          "objCls": "Gene",
+          "id": "PA38617",
+          "symbol": "PCSK9",
+          "name": "proprotein convertase subtilisin/kexin type 9",
+          "version": 11
+        }
+      ],
+      "source": "FDA",
+      "summaryMarkdown": {
+        "id": 1451827900,
+        "html": "<p>Inclisiran is FDA indicated for the treatment of heterozygous familial hypercholesterolemia (HeFH). The label does not describe testing for HeFH but tests could include screening for variants in the LDLR, APOB and PCSK9 genes (see the Genetic Test Registry for more information). Inclisiran is a small interfering RNA directed against PCSK9.</p>\n",
+        "version": 0
+      },
+      "terms": [],
+      "textMarkdown": {
+        "id": 1451827901,
+        "html": "<p>Excerpts from the <em><strong>Inclisiran</strong></em> (<em><strong>LEQVIO</strong></em>) label:</p>\n<blockquote class=\"blockquote\">\n<p>LEQVIO\u00ae is indicated as an adjunct to diet and maximally tolerated statin therapy for the treatment of adults with heterozygous familial hypercholesterolemia (HeFH) or clinical atherosclerotic cardiovascular disease (ASCVD), who require additional lowering of low-density lipoprotein cholesterol (LDL-C).</p>\n</blockquote>\n<blockquote class=\"blockquote\">\n<p>LEQVIO contains inclisiran sodium, a small interfering RNA (siRNA) directed to PCSK9 (proprotein convertase subtilisin kexin type 9) mRNA.</p>\n</blockquote>\n<p>For the complete drug label text with sections containing pharmacogenetic information highlighted, see the <a download=\"Inclisiran_FDA_2022_07_19.pdf\" href=\"https://api.clinpgx.org/v1/download/file/attachment/Inclisiran_FDA_2022_07_19.pdf\"><em><strong>Inclisiran</strong></em> drug label</a>.</p>\n",
+        "version": 1
+      },
+      "version": 7
+    },
+    {
+      "objCls": "Label Annotation",
+      "id": "PA166283901",
+      "name": "Annotation of HCSC Label for inclisiran and APOB, LDLR, PCSK9",
+      "alternateDrugAvailable": false,
+      "cancerGenome": false,
+      "crossReferences": [],
+      "dosingInformation": false,
+      "history": [
+        {
+          "id": 1452117760,
+          "date": "2023-06-02T09:45:58.558-07:00",
+          "description": "fixed typo",
+          "type": "Update",
+          "version": 0
+        },
+        {
+          "id": 1452536300,
+          "date": "2024-07-23T13:04:52.594-07:00",
+          "description": "removed Actionable PGx level, added Indication",
+          "type": "Update",
+          "version": 0
+        }
+      ],
+      "indication": true,
+      "labelApplications": [],
+      "labelDocumentAvailable": true,
+      "literature": [
+        {
+          "id": 15161662,
+          "title": "Drugs@HCSC: Drug Product LEQVIO (inclisiran), Novartis Pharmaceuticals Canada Inc.",
+          "_sameAs": "https://pdf.hres.ca/dpd_pm/00072515.PDF",
+          "crossReferences": [
+            {
+              "id": 1452536282,
+              "resource": "URL",
+              "resourceId": "https://pdf.hres.ca/dpd_pm/00072515.PDF",
+              "_url": "https://pdf.hres.ca/dpd_pm/00072515.PDF"
+            }
+          ],
+          "objCls": "Literature",
+          "terms": [
+            {
+              "id": 1452267781,
+              "resource": "ClinPGx Tags",
+              "term": "Has No PGx",
+              "termId": "pgkbTags:1452267781"
+            }
+          ],
+          "type": "Drug Label"
+        }
+      ],
+      "otherPrescribingGuidance": false,
+      "pediatric": false,
+      "pgxRelated": true,
+      "prescribingGenes": [],
+      "relatedAlleles": [],
+      "relatedChemicals": [
+        {
+          "objCls": "Chemical",
+          "id": "PA166268802",
+          "name": "inclisiran",
+          "version": 3
+        }
+      ],
+      "relatedGenes": [
+        {
+          "objCls": "Gene",
+          "id": "PA50",
+          "symbol": "APOB",
+          "name": "apolipoprotein B",
+          "version": 55
+        },
+        {
+          "objCls": "Gene",
+          "id": "PA227",
+          "symbol": "LDLR",
+          "name": "low density lipoprotein receptor",
+          "version": 53
+        },
+        {
+          "objCls": "Gene",
+          "id": "PA38617",
+          "symbol": "PCSK9",
+          "name": "proprotein convertase subtilisin/kexin type 9",
+          "version": 11
+        }
+      ],
+      "source": "HCSC",
+      "summaryMarkdown": {
+        "id": 1451951240,
+        "html": "<p>Inclisiran is HCSC indicated for the treatment of heterozygous familial hypercholesterolemia (HeFH). In one of the studies discussed HeFH was diagnosed by genotyping but the genes tested were not discussed. Inclisiran acts by limiting the amount of PCSK9.</p>\n",
+        "version": 1
+      },
+      "terms": [],
+      "textMarkdown": {
+        "id": 1451951241,
+        "html": "<p>Excerpts from the Inclisiran (LEQVIO) product monograph:</p>\n<blockquote class=\"blockquote\">\n<p>LEQVIO is indicated as an adjunct to lifestyle changes, including diet, to further reduce low-density lipoprotein cholesterol (LDL-C) level in adults with the following conditions who are on maximally tolerated dose of a statin, with or without other LDL-C -lowering therapies:\n-Heterozygous familial hypercholesterolemia (HeFH), or\n-Non-familial hypercholesterolemia with atherosclerotic cardiovascular disease</p>\n</blockquote>\n<blockquote class=\"blockquote\">\n<p>Inclisiran is a double-stranded small interfering ribonucleic acid (siRNA) that causes the degradation of proprotein convertase subtilisin/kexin type 9 (PCSK9) mRNA.</p>\n</blockquote>\n<blockquote class=\"blockquote\">\n<p>ORION-9 was an international, multicenter, double-blind, randomized, placebo-controlled 18-month trial in 482 patients with heterozygous familial hypercholesterolemia (HeFH). All patients had HeFH, were taking maximally tolerated doses of statins with or without other lipid modifying therapy, such as ezetimibe, and required additional LDL-C reduction. The diagnosis of HeFH was made either by genotyping or clinical criteria (&quot;definite FH&quot; using either the Simon Broome or WHO/Dutch Lipid Network criteria).</p>\n</blockquote>\n<p>For the complete product monograph text with sections containing pharmacogenetic information highlighted, see the <a download=\"Inclisiran_2024_07_23_HCSC.pdf\" href=\"https://api.clinpgx.org/v1/download/file/attachment/Inclisiran_2024_07_23_HCSC.pdf\">inclisiran product monograph</a>.</p>\n",
+        "version": 2
+      },
+      "version": 3
+    },
+    {
+      "objCls": "Label Annotation",
+      "id": "PA166273581",
+      "name": "Annotation of EMA Label for inclisiran and APOB, LDLR, PCSK9",
+      "alternateDrugAvailable": false,
+      "cancerGenome": false,
+      "crossReferences": [],
+      "dosingInformation": false,
+      "history": [
+        {
+          "id": 1452536002,
+          "date": "2024-07-23T10:50:12.020-07:00",
+          "description": "added Indication, removed Actionable PGx",
+          "type": "Update",
+          "version": 0
+        }
+      ],
+      "indication": true,
+      "labelApplications": [],
+      "labelDocumentAvailable": true,
+      "literature": [
+        {
+          "id": 15133562,
+          "title": "Inclisiran | European Medicines Agency.",
+          "_sameAs": "https://www.ema.europa.eu/en/medicines/human/EPAR/leqvio",
+          "crossReferences": [
+            {
+              "id": 1451827920,
+              "resource": "URL",
+              "resourceId": "https://www.ema.europa.eu/en/medicines/human/EPAR/leqvio",
+              "_url": "https://www.ema.europa.eu/en/medicines/human/EPAR/leqvio"
+            }
+          ],
+          "objCls": "Literature",
+          "terms": [],
+          "type": "Drug Label"
+        }
+      ],
+      "otherPrescribingGuidance": false,
+      "pediatric": false,
+      "pgxRelated": true,
+      "prescribingGenes": [],
+      "relatedAlleles": [],
+      "relatedChemicals": [
+        {
+          "objCls": "Chemical",
+          "id": "PA166268802",
+          "name": "inclisiran",
+          "version": 3
+        }
+      ],
+      "relatedGenes": [
+        {
+          "objCls": "Gene",
+          "id": "PA50",
+          "symbol": "APOB",
+          "name": "apolipoprotein B",
+          "version": 55
+        },
+        {
+          "objCls": "Gene",
+          "id": "PA227",
+          "symbol": "LDLR",
+          "name": "low density lipoprotein receptor",
+          "version": 53
+        },
+        {
+          "objCls": "Gene",
+          "id": "PA38617",
+          "symbol": "PCSK9",
+          "name": "proprotein convertase subtilisin/kexin type 9",
+          "version": 11
+        }
+      ],
+      "source": "EMA",
+      "summaryMarkdown": {
+        "id": 1451827921,
+        "html": "<p>Inclisiran is EMA indicated for the treatment of primary hypercholesterolaemia (heterozygous familial and non-familial) or mixed dyslipidaemia). The label does not describe testing for heterozygous familial hypercholesterolaemia but tests could include screening for variants in the LDLR, APOB and PCSK9 genes (see the <a rel=\"noopener noreferrer\" href=\"http://www.ncbi.nlm.nih.gov/gtr/\" target=\"_blank\">Genetic Test Registry</a> for more information). Inclisiran is a small interfering RNA directed against PCSK9.</p>\n",
+        "version": 0
+      },
+      "terms": [],
+      "textMarkdown": {
+        "id": 1451827922,
+        "html": "<p>Excerpts from the <em><strong>inclisiran</strong></em> (<em><strong>Leqvio</strong></em>) EPAR:</p>\n<blockquote class=\"blockquote\">\n<p>Therapeutic indications\nLeqvio is indicated in adults with primary hypercholesterolaemia (heterozygous familial and non-familial) or mixed dyslipidaemia, as an adjunct to diet:\n\u2022 in combination with a statin or statin with other lipid-lowering therapies in patients unable to reach LDL-C goals with the maximum tolerated dose of a statin, or\n\u2022 alone or in combination with other lipid-lowering therapies in patients who are statin-intolerant, or for whom a statin is contraindicated.</p>\n</blockquote>\n<blockquote class=\"blockquote\">\n<p>Mechanism of action\nInclisiran is a cholesterol-lowering, double-stranded, small interfering ribonucleic acid (siRNA), conjugated on the sense strand with triantennary N-acetylgalactosamine (GalNAc) to facilitate uptake by hepatocytes. In hepatocytes, inclisiran utilises the RNA interference mechanism and directs catalytic breakdown of mRNA for proprotein convertase subtilisin kexin type 9. This increases LDL-C receptor recycling and expression on the hepatocyte cell surface, which increases LDL-C uptake and lowers LDL-C levels in the circulation.</p>\n</blockquote>\n<blockquote class=\"blockquote\">\n<p>The diagnosis of HeFH was made either by genotyping or clinical criteria</p>\n</blockquote>\n<p>For the complete EPAR text with sections containing pharmacogenetic information highlighted, see the <a download=\"Inclisiran_EMA_2022_07_19.pdf\" href=\"https://api.clinpgx.org/v1/download/file/attachment/Inclisiran_EMA_2022_07_19.pdf\"><em><strong>inclisiran</strong></em> EPAR PDF</a>.</p>\n",
+        "version": 1
+      },
+      "version": 2
+    },
+    {
+      "objCls": "Label Annotation",
+      "id": "PA166353161",
+      "name": "Annotation of FDA Label for pitavastatin and APOB, LDLR, PCSK9",
+      "alternateDrugAvailable": false,
+      "biomarkerStatus": "On FDA Biomarker List",
+      "cancerGenome": false,
+      "crossReferences": [],
+      "dosingInformation": false,
+      "history": [],
+      "indication": true,
+      "labelApplications": [],
+      "labelDocumentAvailable": true,
+      "literature": [
+        {
+          "id": 15166422,
+          "title": "Drugs@FDA: Drug Product Livalo (pitavastatin calcium), Kowa Pharmaceuticals America, Inc. - NDA022363/SUPPL-22, 03/14/2024",
+          "_sameAs": "https://www.accessdata.fda.gov/scripts/cder/daf/index.cfm?event=overview.process&varApplNo=022363",
+          "crossReferences": [
+            {
+              "id": 1452612181,
+              "resource": "FDA Application",
+              "resourceId": "NDA022363/SUPPL-22",
+              "_url": "https://www.accessdata.fda.gov/scripts/cder/daf/index.cfm?event=overview.process&varApplNo=022363"
+            }
+          ],
+          "objCls": "Literature",
+          "pubDate": "2024-03-14T00:00:00-07:00",
+          "terms": [],
+          "type": "Drug Label"
+        }
+      ],
+      "otherPrescribingGuidance": false,
+      "pediatric": true,
+      "pediatricMarkdown": {
+        "id": 1452612184,
+        "html": "<blockquote class=\"blockquote\">\n<p>LIVALO is a HMG-CoA reductase inhibitor (statin) indicated as an adjunct to diet to reduce low-density lipoprotein cholesterol (LDL-C) in: [...]</p>\n<ul>\n<li>Adults and pediatric patients aged 8 years and older with heterozygous familial hypercholesterolemia (HeFH).</li>\n</ul>\n</blockquote>\n",
+        "version": 0
+      },
+      "pgxRelated": true,
+      "prescribingGenes": [],
+      "relatedAlleles": [],
+      "relatedChemicals": [
+        {
+          "objCls": "Chemical",
+          "id": "PA142650384",
+          "name": "pitavastatin",
+          "version": 4
+        }
+      ],
+      "relatedGenes": [
+        {
+          "objCls": "Gene",
+          "id": "PA50",
+          "symbol": "APOB",
+          "name": "apolipoprotein B",
+          "version": 55
+        },
+        {
+          "objCls": "Gene",
+          "id": "PA227",
+          "symbol": "LDLR",
+          "name": "low density lipoprotein receptor",
+          "version": 53
+        },
+        {
+          "objCls": "Gene",
+          "id": "PA38617",
+          "symbol": "PCSK9",
+          "name": "proprotein convertase subtilisin/kexin type 9",
+          "version": 11
+        }
+      ],
+      "source": "FDA",
+      "summaryMarkdown": {
+        "id": 1452612182,
+        "html": "<p>The FDA-approved drug label for pitavastatin (LIVALO) states that it is also indicated for the treatment of adults and pediatric patients 8 years and older with heterozygous familial hypercholesterolemia (HeFH). Genetic confirmation of HeFH is mentioned in the context of pediatric clinical trials. Familial hypercholesterolemia can be caused by variants in the LDLR, PCSK9 or APOB genes.</p>\n",
+        "version": 0
+      },
+      "terms": [],
+      "textMarkdown": {
+        "id": 1452612183,
+        "html": "<p>Excerpts from the pitavastatin (LIVALO) label:</p>\n<blockquote class=\"blockquote\">\n<p>LIVALO is a HMG-CoA reductase inhibitor (statin) indicated as an adjunct to diet to reduce low-density lipoprotein cholesterol (LDL-C) in: [...]</p>\n<ul>\n<li>Adults and pediatric patients aged 8 years and older with heterozygous familial hypercholesterolemia (HeFH).</li>\n</ul>\n</blockquote>\n<p>For the complete drug label text with sections containing pharmacogenetic information highlighted, see the <a download=\"Pitavastatin_2024_09_27_FDA.pdf\" href=\"https://api.clinpgx.org/v1/download/file/attachment/Pitavastatin_2024_09_27_FDA.pdf\">pitavastatin drug label</a>.</p>\n",
+        "version": 1
+      },
+      "version": 0
+    }
+  ],
+  "status": "success"
+}

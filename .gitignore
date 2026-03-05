@@ -143,6 +143,7 @@ venv/
 ENV/
 env.bak/
 venv.bak/
+cardiokb/  # Project-specific conda environment
 
 # Spyder project settings
 .spyderproject
@@ -213,8 +214,10 @@ __marimo__/
 # Data files (don't commit large datasets)
 data/raw/*
 data/processed/*
+data/output/*
 !data/raw/.gitkeep
 !data/processed/.gitkeep
+!data/output/.gitkeep
 
 # Neo4j database files
 neo4j/
@@ -238,6 +241,9 @@ models/trained/*
 secrets.json
 config/credentials.json
 
+# Conda environment exports
+requirements-conda-export.txt
+
 # Large files
 *.csv.gz
 *.tsv.gz
@@ -248,3 +254,4 @@ config/credentials.json
 # OS files
 .DS_Store
 Thumbs.db
+~$*

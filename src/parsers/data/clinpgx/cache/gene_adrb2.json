@@ -1,0 +1,679 @@
+{
+  "data": [
+    {
+      "objCls": "Gene",
+      "id": "PA39",
+      "symbol": "ADRB2",
+      "name": "adrenoceptor beta 2",
+      "alleleType": "None",
+      "altNames": {
+        "synonym": [
+          "adrenoceptor beta 2, surface"
+        ],
+        "symbol": [
+          "ADRB2R",
+          "ADRBR",
+          "ARB2",
+          "B2AR",
+          "BAR"
+        ]
+      },
+      "amp": false,
+      "buildVersion": "GRCh38.p7",
+      "cbStart": "q32",
+      "cbStop": "q32",
+      "chr": {
+        "objCls": "Chromosome",
+        "id": "PA531",
+        "name": "chr5",
+        "version": 3
+      },
+      "chrStartPosB37": 148206156,
+      "chrStartPosB38": 148826593,
+      "chrStopPosB37": 148254628,
+      "chrStopPosB38": 148828634,
+      "cpicGene": false,
+      "crossReferences": [
+        {
+          "id": 553239546,
+          "resource": "Comparative Toxicogenomics Database",
+          "resourceId": "154",
+          "_url": "http://ctdbase.org/detail.go?type=gene&acc=154",
+          "version": 0
+        },
+        {
+          "id": 132250651,
+          "resource": "Ensembl",
+          "resourceId": "ENSG00000169252",
+          "_url": "https://www.ensembl.org/Homo_sapiens/Gene/Summary?g=ENSG00000169252",
+          "version": 0
+        },
+        {
+          "id": 70613,
+          "resource": "GenAtlas",
+          "resourceId": "ADRB2",
+          "_url": "http://genatlas.medecine.univ-paris5.fr/fiche.php?symbol=ADRB2",
+          "version": 1
+        },
+        {
+          "id": 85541,
+          "resource": "GeneCard",
+          "resourceId": "ADRB2",
+          "_url": "https://www.genecards.org/cgi-bin/carddisp.pl?gene=ADRB2",
+          "version": 1
+        },
+        {
+          "id": 608122372,
+          "resource": "HGNC",
+          "resourceId": "HGNC:286",
+          "_url": "https://www.genenames.org/data/gene-symbol-report/#!/hgnc_id/HGNC%3A286",
+          "version": 1
+        },
+        {
+          "id": 608122374,
+          "resource": "HumanCyc Gene",
+          "resourceId": "HS09917",
+          "_url": "http://biocyc.org/HUMAN/NEW-IMAGE?object=HS09917",
+          "version": 0
+        },
+        {
+          "id": 570652718,
+          "name": "&beta;<sub>2</sub>-adrenoceptor",
+          "resource": "IUPHAR Receptor",
+          "resourceId": "29",
+          "_url": "https://www.guidetopharmacology.org/GRAC/ObjectDisplayForward?objectId=29",
+          "version": 1
+        },
+        {
+          "id": 560935866,
+          "resource": "ModBase",
+          "resourceId": "Q8NEQ9",
+          "_url": "http://salilab.org/modbase/search?modelflag=longest&databaseID=Q8NEQ9",
+          "version": 0
+        },
+        {
+          "id": 10721,
+          "resource": "NCBI Gene",
+          "resourceId": "154",
+          "_url": "https://www.ncbi.nlm.nih.gov/gene/154",
+          "version": 1
+        },
+        {
+          "id": 339,
+          "resource": "OMIM",
+          "resourceId": "109690",
+          "_url": "https://omim.org/entry/109690",
+          "version": 1
+        },
+        {
+          "id": 560528917,
+          "resource": "OMIM",
+          "resourceId": "600807",
+          "_url": "https://omim.org/entry/600807",
+          "version": 0
+        },
+        {
+          "id": 556598658,
+          "resource": "OMIM",
+          "resourceId": "601665",
+          "_url": "https://omim.org/entry/601665",
+          "version": 0
+        },
+        {
+          "id": 608122373,
+          "resource": "RefSeq DNA",
+          "resourceId": "NG_016421",
+          "_url": "https://www.ncbi.nlm.nih.gov/nuccore/NG_016421",
+          "version": 0
+        },
+        {
+          "id": 37026,
+          "resource": "RefSeq DNA",
+          "resourceId": "NT_029289",
+          "_url": "https://www.ncbi.nlm.nih.gov/nuccore/NT_029289",
+          "version": 1
+        },
+        {
+          "id": 37198,
+          "resource": "RefSeq Protein",
+          "resourceId": "NP_000015",
+          "_url": "https://www.ncbi.nlm.nih.gov/nuccore/NP_000015",
+          "version": 1
+        },
+        {
+          "id": 46273,
+          "resource": "RefSeq RNA",
+          "resourceId": "NM_000024",
+          "_url": "https://www.ncbi.nlm.nih.gov/nuccore/NM_000024",
+          "version": 1
+        },
+        {
+          "id": 121590,
+          "resource": "UCSC Genome Browser",
+          "resourceId": "NM_000024",
+          "_url": "https://genome.ucsc.edu/cgi-bin/hgTracks?Submit=Submit&position=NM_000024",
+          "version": 1
+        },
+        {
+          "id": 62330164,
+          "name": "ADRB2_HUMAN",
+          "resource": "UniProtKB",
+          "resourceId": "P07550",
+          "_url": "https://www.uniprot.org/uniprot/P07550",
+          "version": 1
+        }
+      ],
+      "hasNonStandardHaplotypes": false,
+      "hideHaplotypes": false,
+      "pharmVarGene": false,
+      "strand": "plus",
+      "terms": [
+        {
+          "id": 560495262,
+          "_url": "http://amigo.geneontology.org/amigo/term/GO:0000187",
+          "resource": "Gene Ontology",
+          "term": "activation of MAPK activity",
+          "termId": "GO:0000187"
+        },
+        {
+          "id": 560496872,
+          "_url": "http://amigo.geneontology.org/amigo/term/GO:0002024",
+          "resource": "Gene Ontology",
+          "term": "diet induced thermogenesis",
+          "termId": "GO:0002024"
+        },
+        {
+          "id": 560496874,
+          "_url": "http://amigo.geneontology.org/amigo/term/GO:0002025",
+          "resource": "Gene Ontology",
+          "term": "vasodilation by norepinephrine-epinephrine involved in regulation of systemic arterial blood pressure",
+          "termId": "GO:0002025"
+        },
+        {
+          "id": 560496878,
+          "_url": "http://amigo.geneontology.org/amigo/term/GO:0002028",
+          "resource": "Gene Ontology",
+          "term": "regulation of sodium ion transport",
+          "termId": "GO:0002028"
+        },
+        {
+          "id": 560496885,
+          "_url": "http://amigo.geneontology.org/amigo/term/GO:0002032",
+          "resource": "Gene Ontology",
+          "term": "desensitization of G-protein coupled receptor protein signaling pathway by arrestin",
+          "termId": "GO:0002032"
+        },
+        {
+          "id": 560496173,
+          "_url": "http://amigo.geneontology.org/amigo/term/GO:0004872",
+          "resource": "Gene Ontology",
+          "term": "receptor activity",
+          "termId": "GO:0004872"
+        },
+        {
+          "id": 560496236,
+          "_url": "http://amigo.geneontology.org/amigo/term/GO:0004930",
+          "resource": "Gene Ontology",
+          "term": "G-protein coupled receptor activity",
+          "termId": "GO:0004930"
+        },
+        {
+          "id": 560499336,
+          "_url": "http://amigo.geneontology.org/amigo/term/GO:0004935",
+          "resource": "Gene Ontology",
+          "term": "adrenoceptor activity",
+          "termId": "GO:0004935"
+        },
+        {
+          "id": 560499342,
+          "_url": "http://amigo.geneontology.org/amigo/term/GO:0004941",
+          "resource": "Gene Ontology",
+          "term": "beta2-adrenergic receptor activity",
+          "termId": "GO:0004941"
+        },
+        {
+          "id": 560495229,
+          "_url": "http://amigo.geneontology.org/amigo/term/GO:0005515",
+          "resource": "Gene Ontology",
+          "term": "protein binding",
+          "termId": "GO:0005515"
+        },
+        {
+          "id": 560495464,
+          "_url": "http://amigo.geneontology.org/amigo/term/GO:0005624",
+          "resource": "Gene Ontology",
+          "term": "membrane fraction",
+          "termId": "GO:0005624"
+        },
+        {
+          "id": 560499978,
+          "_url": "http://amigo.geneontology.org/amigo/term/GO:0005634",
+          "resource": "Gene Ontology",
+          "term": "nucleus",
+          "termId": "GO:0005634"
+        },
+        {
+          "id": 560500113,
+          "_url": "http://amigo.geneontology.org/amigo/term/GO:0005764",
+          "resource": "Gene Ontology",
+          "term": "lysosome",
+          "termId": "GO:0005764"
+        },
+        {
+          "id": 560500117,
+          "_url": "http://amigo.geneontology.org/amigo/term/GO:0005768",
+          "resource": "Gene Ontology",
+          "term": "endosome",
+          "termId": "GO:0005768"
+        },
+        {
+          "id": 560500144,
+          "_url": "http://amigo.geneontology.org/amigo/term/GO:0005792",
+          "resource": "Gene Ontology",
+          "term": "microsome",
+          "termId": "GO:0005792"
+        },
+        {
+          "id": 560500224,
+          "_url": "http://amigo.geneontology.org/amigo/term/GO:0005886",
+          "resource": "Gene Ontology",
+          "term": "plasma membrane",
+          "termId": "GO:0005886"
+        },
+        {
+          "id": 560500225,
+          "_url": "http://amigo.geneontology.org/amigo/term/GO:0005887",
+          "resource": "Gene Ontology",
+          "term": "integral to plasma membrane",
+          "termId": "GO:0005887"
+        },
+        {
+          "id": 560500243,
+          "_url": "http://amigo.geneontology.org/amigo/term/GO:0005901",
+          "resource": "Gene Ontology",
+          "term": "caveola",
+          "termId": "GO:0005901"
+        },
+        {
+          "id": 560501570,
+          "_url": "http://amigo.geneontology.org/amigo/term/GO:0006898",
+          "resource": "Gene Ontology",
+          "term": "receptor-mediated endocytosis",
+          "termId": "GO:0006898"
+        },
+        {
+          "id": 560497704,
+          "_url": "http://amigo.geneontology.org/amigo/term/GO:0007166",
+          "resource": "Gene Ontology",
+          "term": "cell surface receptor linked signal transduction",
+          "termId": "GO:0007166"
+        },
+        {
+          "id": 560501866,
+          "_url": "http://amigo.geneontology.org/amigo/term/GO:0007171",
+          "resource": "Gene Ontology",
+          "term": "activation of transmembrane receptor protein tyrosine kinase activity",
+          "termId": "GO:0007171"
+        },
+        {
+          "id": 560495794,
+          "_url": "http://amigo.geneontology.org/amigo/term/GO:0007186",
+          "resource": "Gene Ontology",
+          "term": "G-protein coupled receptor protein signaling pathway",
+          "termId": "GO:0007186"
+        },
+        {
+          "id": 560501885,
+          "_url": "http://amigo.geneontology.org/amigo/term/GO:0007188",
+          "resource": "Gene Ontology",
+          "term": "G-protein signaling, coupled to cAMP nucleotide second messenger",
+          "termId": "GO:0007188"
+        },
+        {
+          "id": 560501887,
+          "_url": "http://amigo.geneontology.org/amigo/term/GO:0007189",
+          "resource": "Gene Ontology",
+          "term": "activation of adenylate cyclase activity by G-protein signaling pathway",
+          "termId": "GO:0007189"
+        },
+        {
+          "id": 560501888,
+          "_url": "http://amigo.geneontology.org/amigo/term/GO:0007190",
+          "resource": "Gene Ontology",
+          "term": "activation of adenylate cyclase activity",
+          "termId": "GO:0007190"
+        },
+        {
+          "id": 560495255,
+          "_url": "http://amigo.geneontology.org/amigo/term/GO:0007243",
+          "resource": "Gene Ontology",
+          "term": "protein kinase cascade",
+          "termId": "GO:0007243"
+        },
+        {
+          "id": 560499864,
+          "_url": "http://amigo.geneontology.org/amigo/term/GO:0008144",
+          "resource": "Gene Ontology",
+          "term": "drug binding",
+          "termId": "GO:0008144"
+        },
+        {
+          "id": 560502573,
+          "_url": "http://amigo.geneontology.org/amigo/term/GO:0008179",
+          "resource": "Gene Ontology",
+          "term": "adenylate cyclase binding",
+          "termId": "GO:0008179"
+        },
+        {
+          "id": 560496726,
+          "_url": "http://amigo.geneontology.org/amigo/term/GO:0008284",
+          "resource": "Gene Ontology",
+          "term": "positive regulation of cell proliferation",
+          "termId": "GO:0008284"
+        },
+        {
+          "id": 560502689,
+          "_url": "http://amigo.geneontology.org/amigo/term/GO:0008333",
+          "resource": "Gene Ontology",
+          "term": "endosome to lysosome transport",
+          "termId": "GO:0008333"
+        },
+        {
+          "id": 560503737,
+          "_url": "http://amigo.geneontology.org/amigo/term/GO:0009409",
+          "resource": "Gene Ontology",
+          "term": "response to cold",
+          "termId": "GO:0009409"
+        },
+        {
+          "id": 560505263,
+          "_url": "http://amigo.geneontology.org/amigo/term/GO:0010765",
+          "resource": "Gene Ontology",
+          "term": "positive regulation of sodium ion transport",
+          "termId": "GO:0010765"
+        },
+        {
+          "id": 560506157,
+          "_url": "http://amigo.geneontology.org/amigo/term/GO:0015459",
+          "resource": "Gene Ontology",
+          "term": "potassium channel regulator activity",
+          "termId": "GO:0015459"
+        },
+        {
+          "id": 560506900,
+          "_url": "http://amigo.geneontology.org/amigo/term/GO:0016324",
+          "resource": "Gene Ontology",
+          "term": "apical plasma membrane",
+          "termId": "GO:0016324"
+        },
+        {
+          "id": 560510244,
+          "_url": "http://amigo.geneontology.org/amigo/term/GO:0030279",
+          "resource": "Gene Ontology",
+          "term": "negative regulation of ossification",
+          "termId": "GO:0030279"
+        },
+        {
+          "id": 560510386,
+          "_url": "http://amigo.geneontology.org/amigo/term/GO:0030424",
+          "resource": "Gene Ontology",
+          "term": "axon",
+          "termId": "GO:0030424"
+        },
+        {
+          "id": 560510388,
+          "_url": "http://amigo.geneontology.org/amigo/term/GO:0030425",
+          "resource": "Gene Ontology",
+          "term": "dendrite",
+          "termId": "GO:0030425"
+        },
+        {
+          "id": 560510443,
+          "_url": "http://amigo.geneontology.org/amigo/term/GO:0030501",
+          "resource": "Gene Ontology",
+          "term": "positive regulation of bone mineralization",
+          "termId": "GO:0030501"
+        },
+        {
+          "id": 560496295,
+          "_url": "http://amigo.geneontology.org/amigo/term/GO:0031649",
+          "resource": "Gene Ontology",
+          "term": "heat generation",
+          "termId": "GO:0031649"
+        },
+        {
+          "id": 560499552,
+          "_url": "http://amigo.geneontology.org/amigo/term/GO:0032403",
+          "resource": "Gene Ontology",
+          "term": "protein complex binding",
+          "termId": "GO:0032403"
+        },
+        {
+          "id": 560499355,
+          "_url": "http://amigo.geneontology.org/amigo/term/GO:0035240",
+          "resource": "Gene Ontology",
+          "term": "dopamine binding",
+          "termId": "GO:0035240"
+        },
+        {
+          "id": 560515115,
+          "_url": "http://amigo.geneontology.org/amigo/term/GO:0040015",
+          "resource": "Gene Ontology",
+          "term": "negative regulation of multicellular organism growth",
+          "termId": "GO:0040015"
+        },
+        {
+          "id": 560515417,
+          "_url": "http://amigo.geneontology.org/amigo/term/GO:0042383",
+          "resource": "Gene Ontology",
+          "term": "sarcolemma",
+          "termId": "GO:0042383"
+        },
+        {
+          "id": 560513251,
+          "_url": "http://amigo.geneontology.org/amigo/term/GO:0042803",
+          "resource": "Gene Ontology",
+          "term": "protein homodimerization activity",
+          "termId": "GO:0042803"
+        },
+        {
+          "id": 560501590,
+          "_url": "http://amigo.geneontology.org/amigo/term/GO:0043065",
+          "resource": "Gene Ontology",
+          "term": "positive regulation of apoptosis",
+          "termId": "GO:0043065"
+        },
+        {
+          "id": 560497004,
+          "_url": "http://amigo.geneontology.org/amigo/term/GO:0043235",
+          "resource": "Gene Ontology",
+          "term": "receptor complex",
+          "termId": "GO:0043235"
+        },
+        {
+          "id": 560516095,
+          "_url": "http://amigo.geneontology.org/amigo/term/GO:0043268",
+          "resource": "Gene Ontology",
+          "term": "positive regulation of potassium ion transport",
+          "termId": "GO:0043268"
+        },
+        {
+          "id": 560512745,
+          "_url": "http://amigo.geneontology.org/amigo/term/GO:0043410",
+          "resource": "Gene Ontology",
+          "term": "positive regulation of MAPKKK cascade",
+          "termId": "GO:0043410"
+        },
+        {
+          "id": 560495197,
+          "_url": "http://amigo.geneontology.org/amigo/term/GO:0044424",
+          "resource": "Gene Ontology",
+          "term": "intracellular part",
+          "termId": "GO:0044424"
+        },
+        {
+          "id": 560517228,
+          "_url": "http://amigo.geneontology.org/amigo/term/GO:0045453",
+          "resource": "Gene Ontology",
+          "term": "bone resorption",
+          "termId": "GO:0045453"
+        },
+        {
+          "id": 560496816,
+          "_url": "http://amigo.geneontology.org/amigo/term/GO:0045823",
+          "resource": "Gene Ontology",
+          "term": "positive regulation of heart contraction",
+          "termId": "GO:0045823"
+        },
+        {
+          "id": 560517597,
+          "_url": "http://amigo.geneontology.org/amigo/term/GO:0045909",
+          "resource": "Gene Ontology",
+          "term": "positive regulation of vasodilation",
+          "termId": "GO:0045909"
+        },
+        {
+          "id": 560495635,
+          "_url": "http://amigo.geneontology.org/amigo/term/GO:0045944",
+          "resource": "Gene Ontology",
+          "term": "positive regulation of transcription from RNA polymerase II promoter",
+          "termId": "GO:0045944"
+        },
+        {
+          "id": 560517640,
+          "_url": "http://amigo.geneontology.org/amigo/term/GO:0045986",
+          "resource": "Gene Ontology",
+          "term": "negative regulation of smooth muscle contraction",
+          "termId": "GO:0045986"
+        },
+        {
+          "id": 560519767,
+          "_url": "http://amigo.geneontology.org/amigo/term/GO:0048633",
+          "resource": "Gene Ontology",
+          "term": "positive regulation of skeletal muscle growth",
+          "termId": "GO:0048633"
+        },
+        {
+          "id": 560497600,
+          "_url": "http://amigo.geneontology.org/amigo/term/GO:0050728",
+          "resource": "Gene Ontology",
+          "term": "negative regulation of inflammatory response",
+          "termId": "GO:0050728"
+        },
+        {
+          "id": 560520808,
+          "_url": "http://amigo.geneontology.org/amigo/term/GO:0050873",
+          "resource": "Gene Ontology",
+          "term": "brown fat cell differentiation",
+          "termId": "GO:0050873"
+        },
+        {
+          "id": 560521116,
+          "_url": "http://amigo.geneontology.org/amigo/term/GO:0051380",
+          "resource": "Gene Ontology",
+          "term": "norepinephrine binding",
+          "termId": "GO:0051380"
+        },
+        {
+          "id": 560521544,
+          "_url": "http://amigo.geneontology.org/amigo/term/GO:0051927",
+          "resource": "Gene Ontology",
+          "term": "negative regulation of calcium ion transport via voltage-gated calcium channel activity",
+          "termId": "GO:0051927"
+        },
+        {
+          "id": 560521546,
+          "_url": "http://amigo.geneontology.org/amigo/term/GO:0051930",
+          "resource": "Gene Ontology",
+          "term": "regulation of sensory perception of pain",
+          "termId": "GO:0051930"
+        }
+      ],
+      "version": 7936,
+      "vipCitation": {
+        "id": 7198448,
+        "title": "Very important pharmacogene summary ADRB2.",
+        "_sameAs": "https://www.ncbi.nlm.nih.gov/pmc/articles/PMC3098753",
+        "authors": [
+          "Litonjua Augusto A",
+          "Gong Li",
+          "Duan Qing Ling",
+          "Shin Jaekyu",
+          "Moore Mariellen J",
+          "Weiss Scott T",
+          "Johnson Julie A",
+          "Klein Teri E",
+          "Altman Russ B"
+        ],
+        "crossReferences": [
+          {
+            "id": 1449247561,
+            "resource": "PubMed Central",
+            "resourceId": "PMC3098753",
+            "_url": "https://www.ncbi.nlm.nih.gov/pmc/articles/PMC3098753",
+            "version": 0
+          },
+          {
+            "id": 569549694,
+            "resource": "PubMed",
+            "resourceId": "19927042",
+            "_url": "https://www.ncbi.nlm.nih.gov/pubmed/19927042",
+            "version": 0
+          },
+          {
+            "id": 1449247562,
+            "resource": "DOI",
+            "resourceId": "10.1097/FPC.0b013e328333dae6",
+            "_url": "http://dx.doi.org/10.1097%2FFPC.0b013e328333dae6",
+            "version": 0
+          }
+        ],
+        "day": -1,
+        "hasKeyword": true,
+        "journal": "Pharmacogenetics and genomics",
+        "meshTerms": [
+          "Genetic Association Studies",
+          "Humans",
+          "Pharmacokinetics",
+          "Polymorphism, Genetic",
+          "Polymorphism, Single Nucleotide",
+          "Receptors, Adrenergic, beta-2"
+        ],
+        "month": 1,
+        "nonHuman": false,
+        "objCls": "Literature",
+        "page": "64-9",
+        "pediatric": false,
+        "pgkbPublication": true,
+        "pubDate": "2010-01-01T00:00:00-08:00",
+        "pubmedMeshTerms": [],
+        "terms": [
+          {
+            "id": 1454108640,
+            "resource": "ClinPGx Tags",
+            "term": "PharmGKB",
+            "termId": "pgkbTags:1454108640"
+          },
+          {
+            "id": 1451577482,
+            "resource": "PGx Paper Types",
+            "term": "Review",
+            "termId": "pgxPaperTypes:1451577482"
+          }
+        ],
+        "type": "Literature",
+        "version": 8,
+        "volume": "20",
+        "year": 2010
+      },
+      "vipId": "PA166165410",
+      "vipSummary": {
+        "id": 1448637564,
+        "html": "<p>ADRB2 encodes the beta-2-adrenergic receptor (beta2-AR), a G-protein-coupled adrenergic receptor that plays important roles in the regulation of the cardiac, pulmonary, vascular, endocrine and central nervous systems. Beta2-AR is the target of clinically important drugs for asthma and cardiovascular conditions including hypertension and congestive heart failure.</p>\n",
+        "version": 0
+      },
+      "vipTier": "Tier 1"
+    }
+  ],
+  "status": "success"
+}
