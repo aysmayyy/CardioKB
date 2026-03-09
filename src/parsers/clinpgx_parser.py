@@ -368,7 +368,7 @@ class ClinPGxParser(BaseParser):
                 'gene': '; '.join(genes) if genes else '',
                 'source': item.get('source', ''),
                 'biomarker_status': item.get('biomarkerStatus', ''),
-                'testing': item.get('testing', ''),
+                'testing': item.get('testing', {}).get('term', '') if isinstance(item.get('testing'), dict) else str(item.get('testing', '')),
                 'alternate_drug_available': item.get('alternateDrugAvailable', ''),
                 'source_database': 'ClinPGx'
             })

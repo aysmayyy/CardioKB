@@ -246,6 +246,13 @@ class CardioKBPipeline:
                     cpgx['variant_in_gene'] = vig
                     logger.info(f"Created {len(vig)} variant_in_gene edges")
 
+        # Post-processing: remap PubTator MESH IDs to DOID
+        from src.id_mapping import remap_pubtator_mesh_to_doid, remap_gwas_disease_to_doid
+        if 'pubtator' in parsed_data and 'disease_ontology' in parsed_data:
+            remap_pubtator_mesh_to_doid(parsed_data)
+        if 'gwas' in parsed_data and 'disease_ontology' in parsed_data:
+            remap_gwas_disease_to_doid(parsed_data)
+
         return parsed_data
 
     def _get_parsers(self) -> Dict:

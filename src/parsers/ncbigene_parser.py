@@ -30,6 +30,8 @@ class NCBIGeneParser(BaseParser):
 
     GENE_INFO_URL = "https://ftp.ncbi.nlm.nih.gov/gene/DATA/GENE_INFO/Mammalia/Homo_sapiens.gene_info.gz"
     GENE_INFO_FILE = "Homo_sapiens.gene_info"
+    GENE2ENSEMBL_URL = "https://ftp.ncbi.nlm.nih.gov/gene/DATA/gene2ensembl.gz"
+    GENE2ENSEMBL_FILE = "gene2ensembl"
     BGEE_URL = "https://bgee.org/ftp/bgee_v15_0/download/calls/expr_calls/Homo_sapiens_expr_advanced.tsv.gz"
     BGEE_FILE = "Homo_sapiens_expr_advanced.tsv"
 
@@ -64,6 +66,15 @@ class NCBIGeneParser(BaseParser):
         if not gene_info_file:
             logger.error("Failed to extract NCBI gene info file")
             return False
+
+        # Download gene2ensembl for Ensembl cross-reference enrichment
+        logger.info("Downloading gene2ensembl data for Ensembl enrichment...")
+        try:
+            g2e_gz = self.download_file(self.GENE2ENSEMBL_URL, Path(self.GENE2ENSEMBL_URL).name)
+            if g2e_gz:
+                self.extract_gzip(g2e_gz)
+        except Exception as e:
+            logger.warning(f"Could not download gene2ensembl (optional): {e}")
 
         # Optionally download Bgee expression data
         logger.info("Attempting to download Bgee expression data (optional)...")
@@ -112,6 +123,7 @@ class NCBIGeneParser(BaseParser):
             logger.info(f"Gene types: {dict(gene_types)}")
 
             genes_df = self.parse_dbxrefs(genes_df)
+            genes_df = self.supplement_ensembl_xrefs(genes_df)
 
             if self.tissue_filter:
                 genes_df = self.filter_genes_by_tissue(genes_df, self.tissue_filter)
@@ -153,6 +165,57 @@ class NCBIGeneParser(BaseParser):
 
         logger.info("Parsed cross-references")
         return df
+
+    def supplement_ensembl_xrefs(self, genes_df: pd.DataFrame) -> pd.DataFrame:
+        """
+        Supplement missing xref_Ensembl values using NCBI gene2ensembl mapping.
+
+        gene2ensembl provides GeneID -> Ensembl_gene_identifier for all organisms.
+        We filter to human (tax_id=9606) and fill only genes that lack an Ensembl xref
+        from the dbXrefs column.
+        """
+        g2e_file = Path(self.get_file_path(self.GENE2ENSEMBL_FILE))
+        if not g2e_file.exists():
+            logger.warning(f"gene2ensembl file not found at {g2e_file}; skipping Ensembl enrichment")
+            return genes_df
+
+        logger.info("Loading gene2ensembl for Ensembl cross-reference enrichment...")
+        try:
+            g2e_df = pd.read_csv(
+                g2e_file, sep='\t', comment='#',
+                usecols=[0, 1, 2],
+                names=['tax_id', 'GeneID', 'Ensembl_gene'],
+                skiprows=1, low_memory=False,
+            )
+            # Human only
+            g2e_df = g2e_df[g2e_df['tax_id'] == 9606].copy()
+            # Drop rows with missing Ensembl gene
+            g2e_df = g2e_df.dropna(subset=['Ensembl_gene'])
+            g2e_df = g2e_df[g2e_df['Ensembl_gene'] != '-']
+            # Deduplicate: one GeneID -> one Ensembl gene (keep first)
+            g2e_df = g2e_df.drop_duplicates(subset='GeneID', keep='first')
+
+            gene_to_ensembl = dict(zip(g2e_df['GeneID'], g2e_df['Ensembl_gene']))
+            logger.info(f"Loaded {len(gene_to_ensembl)} human GeneID->Ensembl mappings from gene2ensembl")
+
+            missing_before = genes_df['xref_Ensembl'].isna().sum()
+            # Fill only where xref_Ensembl is missing
+            mask = genes_df['xref_Ensembl'].isna()
+            genes_df.loc[mask, 'xref_Ensembl'] = genes_df.loc[mask, 'GeneID'].map(gene_to_ensembl)
+            missing_after = genes_df['xref_Ensembl'].isna().sum()
+
+            filled = missing_before - missing_after
+            total = len(genes_df)
+            coverage = (total - missing_after) / total * 100 if total > 0 else 0
+            logger.info(
+                f"Ensembl enrichment: filled {filled} missing xrefs "
+                f"({missing_before} -> {missing_after} missing, {coverage:.1f}% coverage)"
+            )
+
+        except Exception as e:
+            logger.error(f"Error during Ensembl enrichment: {e}")
+
+        return genes_df
 
     def filter_genes_by_tissue(self, genes_df: pd.DataFrame, tissue_name: str) -> pd.DataFrame:
         """

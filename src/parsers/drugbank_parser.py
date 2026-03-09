@@ -10,6 +10,7 @@ Note: Requires free academic account for access.
 Adapted from AlzKB (disease-agnostic).
 """
 
+import base64
 import logging
 import os
 import pandas as pd
@@ -87,6 +88,9 @@ class DrugBankParser(BaseParser):
         """
         Download DrugBank data with HTTP Basic Authentication.
 
+        Uses an explicit Authorization header so credentials persist across
+        redirects (requests drops session.auth on cross-host redirects).
+
         Returns:
             True if successful, False otherwise.
         """
@@ -95,18 +99,44 @@ class DrugBankParser(BaseParser):
         download_url = f"{self.BASE_URL}/releases/{self.version}/downloads/all-drug-links"
         logger.info(f"Downloading from: {download_url}")
 
+        # Build explicit Authorization header so it persists across redirects
+        credentials = base64.b64encode(
+            f"{self.username}:{self.password}".encode()
+        ).decode()
+        headers = {"Authorization": f"Basic {credentials}"}
+
         try:
             response = self.session.get(
-                download_url, timeout=120, allow_redirects=True, stream=True
+                download_url, headers=headers,
+                timeout=120, allow_redirects=True, stream=True,
             )
             response.raise_for_status()
+
+            content = response.content
+
+            # Validate response isn't an HTML error page
+            content_start = content[:500].decode('utf-8', errors='replace').strip().lower()
+            if content_start.startswith('<!doctype') or content_start.startswith('<html'):
+                logger.error(
+                    "DrugBank returned HTML instead of CSV — authentication "
+                    "may have failed or the download URL has changed"
+                )
+                return False
+
+            # Sanity check: DrugBank CSV should be >10 KB
+            if len(content) < 10_000:
+                logger.error(
+                    f"DrugBank response too small ({len(content)} bytes) — "
+                    "expected CSV data, likely got an error page"
+                )
+                return False
 
             output_path = self.get_file_path(f"{DRUGBANK_DRUGS}.csv")
             content_type = response.headers.get('content-type', '')
 
             if 'zip' in content_type or download_url.endswith('.zip'):
                 logger.info("Extracting ZIP archive...")
-                with zipfile.ZipFile(io.BytesIO(response.content)) as zf:
+                with zipfile.ZipFile(io.BytesIO(content)) as zf:
                     csv_files = [f for f in zf.namelist() if f.endswith('.csv')]
                     if csv_files:
                         with zf.open(csv_files[0]) as csv_file:
@@ -118,7 +148,7 @@ class DrugBankParser(BaseParser):
                         return False
             else:
                 with open(output_path, 'wb') as f:
-                    f.write(response.content)
+                    f.write(content)
                 logger.info(f"Downloaded to {output_path}")
 
             return True
