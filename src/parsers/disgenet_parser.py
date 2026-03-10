@@ -407,19 +407,40 @@ class DisGeNETParser(BaseParser):
                 pass
 
         # Post-processing: fix data formats for Neo4j loading
-        if 'disease_mappings' in result:
-            dm = result['disease_mappings']
-            if 'DO' in dm.columns:
-                # Convert bare numeric DO IDs (e.g. 1287.0) to DOID:1287 format
-                dm['DO'] = dm['DO'].apply(
-                    lambda x: f'DOID:{int(float(x))}' if pd.notna(x) and str(x) not in ('', '0', '0.0') else x
-                )
-
         if 'gene_disease_associations' in result:
             gda = result['gene_disease_associations']
             if 'diseaseType' in gda.columns:
                 # Strip brackets from diseaseType (e.g. "[disease]" → "disease")
                 gda['diseaseType'] = gda['diseaseType'].str.strip('[]')
+
+        # Merge disease_mappings DOID into disease_classifications to produce
+        # a single 'diseases' DataFrame with optional xrefDiseaseOntology.
+        # This enables the loader to match existing Disease Ontology nodes by
+        # DOID and enrich them with xrefUmlsCUI, instead of creating duplicates.
+        if 'disease_classifications' in result:
+            diseases = result['disease_classifications'].copy()
+
+            if 'disease_mappings' in result:
+                dm = result['disease_mappings']
+                if 'DO' in dm.columns:
+                    # Convert bare numeric DO IDs to DOID:NNN format
+                    dm = dm.copy()
+                    dm['DO'] = dm['DO'].apply(
+                        lambda x: f'DOID:{int(float(x))}' if pd.notna(x) and str(x) not in ('', '0', '0.0') else ''
+                    )
+                    # Merge DOID into diseases by diseaseId
+                    doid_map = dm[['diseaseId', 'DO']].copy()
+                    doid_map = doid_map[doid_map['DO'] != '']
+                    diseases = diseases.merge(doid_map, on='diseaseId', how='left')
+                    diseases['DO'] = diseases['DO'].fillna('')
+                    with_doid = (diseases['DO'] != '').sum()
+                    logger.info(f"Merged DOID mappings: {with_doid} with DOID, "
+                                f"{len(diseases) - with_doid} without")
+
+            result['diseases'] = diseases
+            # Remove the raw intermediates — 'diseases' replaces both
+            result.pop('disease_classifications', None)
+            result.pop('disease_mappings', None)
 
         return result
 

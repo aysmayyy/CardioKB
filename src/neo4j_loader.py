@@ -446,6 +446,74 @@ class Neo4jLoader:
         return total
 
     # -------------------------------------------------------------------------
+    # Custom loaders (source-specific logic beyond config system)
+    # -------------------------------------------------------------------------
+
+    def load_disgenet_diseases(self, diseases_df: pd.DataFrame) -> Dict[str, int]:
+        """
+        Load DisGeNET diseases with DOID-aware merging.
+
+        For diseases WITH a DOID mapping: matches the existing Disease
+        Ontology node by xrefDiseaseOntology and enriches it with xrefUmlsCUI.
+        For diseases WITHOUT a DOID mapping: creates a new Disease node
+        keyed by xrefUmlsCUI.
+
+        Args:
+            diseases_df: DataFrame with columns diseaseId, diseaseName, DO,
+                         sourceDatabase.
+
+        Returns:
+            Dict with counts: enriched, created.
+        """
+        import pandas as pd
+
+        counts = {'enriched': 0, 'created': 0}
+
+        # Split: diseases with DOID vs without
+        has_doid = diseases_df[
+            diseases_df['DO'].notna() &
+            (diseases_df['DO'] != '') &
+            (diseases_df['DO'] != '0')
+        ].copy()
+
+        no_doid = diseases_df[
+            ~diseases_df['diseaseId'].isin(has_doid['diseaseId'])
+        ].copy()
+
+        logger.info(f"  DisGeNET diseases: {len(has_doid)} with DOID, {len(no_doid)} without")
+
+        # Pass 1: Enrich existing Disease Ontology nodes by DOID
+        if len(has_doid) > 0:
+            has_doid = has_doid.where(pd.notna(has_doid), None)
+            rows_doid = has_doid[['diseaseId', 'diseaseName', 'DO']].to_dict('records')
+
+            query_enrich = (
+                "UNWIND $rows AS row "
+                "MATCH (d:Disease {xrefDiseaseOntology: row.DO}) "
+                "SET d.xrefUmlsCUI = row.diseaseId"
+            )
+            counts['enriched'] = self._execute_batch(query_enrich, rows_doid)
+            self.stats['nodes_merged'] += counts['enriched']
+            logger.info(f"  disgenet.diseases: enriched {counts['enriched']} existing Disease nodes with xrefUmlsCUI")
+
+        # Pass 2: Create new Disease nodes for those without DOID match
+        if len(no_doid) > 0:
+            no_doid = no_doid.where(pd.notna(no_doid), None)
+            rows_new = no_doid[['diseaseId', 'diseaseName']].to_dict('records')
+
+            query_create = (
+                "UNWIND $rows AS row "
+                "MERGE (d:Disease {xrefUmlsCUI: row.diseaseId}) "
+                "ON CREATE SET d.commonName = row.diseaseName, "
+                "d.sourceDatabase = 'DisGeNET'"
+            )
+            counts['created'] = self._execute_batch(query_create, rows_new)
+            self.stats['nodes_created'] += counts['created']
+            logger.info(f"  disgenet.diseases: created {counts['created']} new Disease nodes")
+
+        return counts
+
+    # -------------------------------------------------------------------------
     # Verification
     # -------------------------------------------------------------------------
 

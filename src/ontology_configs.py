@@ -24,6 +24,7 @@ AOPDB_DRUGS = 'drugs'
 # DisGeNET
 DISGENET_DISEASE_CLASSIFICATIONS = 'disease_classifications'
 DISGENET_DISEASE_MAPPINGS = 'disease_mappings'
+DISGENET_DISEASES = 'diseases'
 DISGENET_GENE_DISEASE_ASSOCIATIONS = 'gene_disease_associations'
 # DrugBank
 DRUGBANK_DRUGS = 'drugs'
@@ -160,6 +161,11 @@ ONTOLOGY_CONFIGS = {
     # =========================================================================
     # DisGeNET - Gene-Disease Associations (CVD-scoped via parser)
     # =========================================================================
+    # NOTE: disease_classifications and disease_mappings are superseded by the
+    # merged 'diseases' DataFrame. Disease loading uses custom Cypher in
+    # main.py post-processing to match existing Disease Ontology nodes by DOID
+    # and enrich them with xrefUmlsCUI, creating new nodes only when no DOID
+    # match exists. These legacy configs are kept but skipped.
     f'disgenet.{DISGENET_DISEASE_CLASSIFICATIONS}': {
         'data_type': 'node',
         'node_type': 'Disease',
@@ -174,7 +180,7 @@ ONTOLOGY_CONFIGS = {
             },
         },
         'merge': False,
-        'skip': False,
+        'skip': True,
     },
     f'disgenet.{DISGENET_DISEASE_MAPPINGS}': {
         'data_type': 'node',
@@ -195,7 +201,7 @@ ONTOLOGY_CONFIGS = {
             },
         },
         'merge': True,
-        'skip': False,
+        'skip': True,
     },
     f'disgenet.{DISGENET_GENE_DISEASE_ASSOCIATIONS}': {
         'data_type': 'relationship',
