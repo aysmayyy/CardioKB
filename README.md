@@ -2,7 +2,7 @@
 
 A biomedical knowledge graph pipeline that integrates 22 data sources (20 parsers) into a Neo4j graph for cardiovascular disease research, feature selection, and precision medicine. Adapted from the AlzKB (Alzheimer's Knowledge Base) architecture with additional custom parsers and Hetionet component integrations.
 
-**Graph stats:** 329,586 nodes | 7,320,477 relationships | 15 node types | 19 relationship types
+**Graph stats:** 329,245 nodes | 7,317,731 relationships | 15 node types | 19 relationship types
 
 ## Pipeline Status
 
@@ -26,7 +26,7 @@ A biomedical knowledge graph pipeline that integrates 22 data sources (20 parser
 | 3 | NCBI Gene | Public FTP | Working (193,687 genes) |
 | 4 | DoRothEA (OmniPath) | Public API | Working (15,092 TF-gene interactions) |
 | 5 | OMIM | API key required | Working (credential-gated) |
-| 6 | DisGeNET | API key required | Working (900 CVD diseases, 5,443 gene-disease associations) |
+| 6 | DisGeNET | API key required | Working (341 DO-matched + 559 new diseases, 5,010 gene-disease edges) |
 | 7 | DrugBank | XML file or login | Working (19,842 drugs from full database XML) |
 | 8 | AOP-DB | SQL dump or MySQL | Working (173,500 chemicals, 4,646 pathways, 187,247 gene-pathway edges) |
 
@@ -51,7 +51,7 @@ A biomedical knowledge graph pipeline that integrates 22 data sources (20 parser
 
 ## Neo4j Graph Schema
 
-**Node types (15):** Gene (193,687), Disease (12,912), Drug (41,566), Pathway (4,646), TranscriptionFactor (367), ClinicalTrial (14,856), Variant (1,060), DrugLabel (378), SideEffect (5,734), PharmacologicClass, Symptom (966), BodyPart (14,675), BiologicalProcess (24,547), MolecularFunction (10,123), CellularComponent (4,069)
+**Node types (15):** Gene (193,687), Disease (12,571), Drug (41,566), Pathway (4,646), TranscriptionFactor (367), ClinicalTrial (14,856), Variant (1,060), DrugLabel (378), SideEffect (5,734), PharmacologicClass, Symptom (966), BodyPart (14,675), BiologicalProcess (24,547), MolecularFunction (10,123), CellularComponent (4,069)
 
 **Key relationship types:** geneAssociatesWithDisease, geneInPathway, chemicalBindsGene, drugTreatsDisease, drugPalliatesDisease, compoundCausesSideEffect, compoundUpregulatesGene, compoundDownregulatesGene, geneRegulatesGene, geneCovariesWithGene, geneInteractsWithGene, diseasePresentsSymptom, diseaseLocalizesToAnatomy, diseaseResemblesDisease, transcriptionFactorInteractsWithGene, STUDIES_CONDITION, TESTS_INTERVENTION, AFFECTS_RESPONSE_TO, VARIANT_IN
 
