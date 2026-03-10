@@ -7,6 +7,11 @@ drug targets, interactions, and pharmacology.
 Source: https://go.drugbank.com/releases/latest
 Note: Requires free academic account for access.
 
+Supports three data modes:
+1. Authenticated CSV download (drug-links endpoint)
+2. Manual CSV file (drugs.csv)
+3. Full database XML file (full database.xml)
+
 Adapted from AlzKB (disease-agnostic).
 """
 
@@ -17,20 +22,23 @@ import pandas as pd
 import requests
 import zipfile
 import io
+import xml.etree.ElementTree as ET
 
 from pathlib import Path
-from typing import Dict, Optional
+from typing import Dict, Optional, List
 from .base_parser import BaseParser
 from ..ontology_configs import DRUGBANK_DRUGS
 
 logger = logging.getLogger(__name__)
+
+NS = '{http://www.drugbank.ca}'
 
 
 class DrugBankParser(BaseParser):
     """
     Parser for DrugBank data with HTTP Basic Authentication support.
 
-    Supports both authenticated download and manual file-based parsing.
+    Supports authenticated download, manual CSV, and full database XML parsing.
     """
 
     BASE_URL = "https://go.drugbank.com"
@@ -50,13 +58,22 @@ class DrugBankParser(BaseParser):
         self.username = username or os.getenv('DRUGBANK_USERNAME')
         self.password = password or os.getenv('DRUGBANK_PASSWORD')
         self.version = version
+        self._xml_path = self._find_xml()
         self.session = requests.Session()
 
         if self.username and self.password:
             self.session.auth = (self.username, self.password)
             logger.info("DrugBank credentials configured with HTTP Basic Auth")
+        elif self._xml_path:
+            logger.info(f"Found DrugBank XML: {self._xml_path}")
         else:
-            logger.warning("No DrugBank credentials provided. Will attempt file-based parsing.")
+            logger.warning("No DrugBank credentials or XML file provided. Will attempt CSV-based parsing.")
+
+    def _find_xml(self) -> Optional[Path]:
+        """Look for a DrugBank XML file in the data directory."""
+        for f in self.source_dir.glob('*.xml'):
+            return f
+        return None
 
     def download_data(self) -> bool:
         """
@@ -65,6 +82,12 @@ class DrugBankParser(BaseParser):
         Returns:
             True if data is available, False otherwise.
         """
+        # Check for XML first (richest data source)
+        if self._xml_path and self._xml_path.exists():
+            size_gb = self._xml_path.stat().st_size / (1024**3)
+            logger.info(f"DrugBank XML available: {self._xml_path} ({size_gb:.1f} GB)")
+            return True
+
         if self.username and self.password:
             return self._download_with_auth()
         else:
@@ -81,7 +104,7 @@ class DrugBankParser(BaseParser):
             return True
         else:
             logger.error(f"{DRUGBANK_DRUGS}.csv not found at: {drug_links_path}")
-            logger.error("Please download manually or provide credentials")
+            logger.error("Please download manually, provide credentials, or place XML file in data/raw/drugbank/")
             return False
 
     def _download_with_auth(self) -> bool:
@@ -170,16 +193,110 @@ class DrugBankParser(BaseParser):
             logger.error(f"Unexpected error during download: {e}")
             return False
 
+    def _parse_from_xml(self, xml_path: Path) -> Dict[str, pd.DataFrame]:
+        """
+        Parse DrugBank full database XML via streaming iterparse.
+
+        Extracts drug ID, name, CAS number, type, and cross-references
+        without loading the entire 1.8GB XML into memory.
+
+        Args:
+            xml_path: Path to the DrugBank XML file.
+
+        Returns:
+            Dictionary with 'drugs' DataFrame.
+        """
+        logger.info(f"Parsing DrugBank XML: {xml_path}")
+
+        rows: List[dict] = []
+        drug_tag = f'{NS}drug'
+        count = 0
+
+        context = ET.iterparse(str(xml_path), events=('start', 'end'))
+        depth = 0
+
+        for event, elem in context:
+            if event == 'start' and elem.tag == drug_tag:
+                depth += 1
+            elif event == 'end' and elem.tag == drug_tag:
+                depth -= 1
+                if depth == 0:
+                    # Top-level <drug> element
+                    dbid_elem = elem.find(f'{NS}drugbank-id[@primary="true"]')
+                    name_elem = elem.find(f'{NS}name')
+                    cas_elem = elem.find(f'{NS}cas-number')
+                    drug_type = elem.attrib.get('type', '')
+
+                    drugbank_id = dbid_elem.text if dbid_elem is not None else None
+                    drug_name = name_elem.text if name_elem is not None else None
+                    cas_number = cas_elem.text if cas_elem is not None else None
+
+                    if not drugbank_id:
+                        elem.clear()
+                        continue
+
+                    row = {
+                        'drugbank_id': drugbank_id,
+                        'drug_name': drug_name or '',
+                        'cas_number': cas_number or '',
+                        'drug_type': drug_type,
+                    }
+
+                    # Extract external identifiers for cross-references
+                    for ei in elem.findall(f'.//{NS}external-identifier'):
+                        res = ei.find(f'{NS}resource')
+                        ident = ei.find(f'{NS}identifier')
+                        if res is None or ident is None:
+                            continue
+                        resource = res.text
+                        identifier = ident.text
+                        if resource == 'PubChem Compound':
+                            row['pubchem_cid'] = identifier
+                        elif resource == 'PubChem Substance':
+                            row['pubchem_sid'] = identifier
+                        elif resource == 'ChEMBL':
+                            row['chembl_id'] = identifier
+                        elif resource == 'ChEBI':
+                            row['chebi_id'] = identifier
+                        elif resource == 'KEGG Compound':
+                            row['kegg_compound_id'] = identifier
+                        elif resource == 'KEGG Drug':
+                            row['kegg_drug_id'] = identifier
+                        elif resource == 'PharmGKB':
+                            row['pharmgkb_id'] = identifier
+                        elif resource == 'UniProtKB':
+                            row['uniprot_id'] = identifier
+
+                    rows.append(row)
+                    count += 1
+
+                    if count % 5000 == 0:
+                        logger.info(f"  Parsed {count:,} drugs...")
+
+                    # Free memory
+                    elem.clear()
+
+        logger.info(f"Parsed {count:,} drugs from XML")
+
+        drugs_df = pd.DataFrame(rows)
+        drugs_df['source_database'] = 'DrugBank'
+
+        return {'drugs': drugs_df}
+
     def parse_data(self) -> Dict[str, pd.DataFrame]:
         """
-        Parse DrugBank data.
+        Parse DrugBank data from XML or CSV.
 
         Returns:
             Dictionary with 'drugs' DataFrame.
         """
         logger.info("Parsing DrugBank data...")
-        result = {}
 
+        # Prefer XML if available
+        if self._xml_path and self._xml_path.exists():
+            return self._parse_from_xml(self._xml_path)
+
+        result = {}
         drug_links_file = self.get_file_path(f"{DRUGBANK_DRUGS}.csv")
         if not Path(drug_links_file).exists():
             logger.error(f"Drug links file not found: {drug_links_file}")

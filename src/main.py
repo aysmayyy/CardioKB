@@ -349,7 +349,14 @@ class CardioKBPipeline:
                 password=os.getenv('DRUGBANK_PASSWORD'),
             )
         else:
-            logger.warning("DRUGBANK credentials not set - DrugBank parser disabled")
+            # Check for XML file (no credentials required)
+            drugbank_dir = self.raw_dir / 'drugbank'
+            xml_files = list(drugbank_dir.glob('*.xml')) if drugbank_dir.exists() else []
+            if xml_files:
+                logger.info("DRUGBANK credentials not set, but XML found - enabling DrugBank parser")
+                parsers['drugbank'] = DrugBankParser(data_dir=str(self.raw_dir))
+            else:
+                logger.warning("DRUGBANK credentials not set and no XML found - DrugBank parser disabled")
 
         mysql_user = os.getenv('MYSQL_USERNAME')
         mysql_pass = os.getenv('MYSQL_PASSWORD')
