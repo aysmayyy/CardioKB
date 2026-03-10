@@ -39,11 +39,14 @@ class DrugCentralParser(BaseParser):
     DRUGCENTRAL_URL = "https://unmtid-dbs.net/download/drugcentral.dump.11012023.sql.gz"
 
     # Valid pharmacologic class types for hetionet
+    # DrugCentral uses abbreviated codes: PE, MoA, Chemical/Ingredient, CS, PA, EPC, EXT
     VALID_CLASS_TYPES = {
-        'Physiologic Effect',
-        'Mechanism of Action',
-        'Chemical/Ingredient',
-        'Chemical Structure'
+        'PE',                    # Physiologic Effect
+        'MoA',                   # Mechanism of Action
+        'Chemical/Ingredient',   # Chemical/Ingredient
+        'CS',                    # Chemical Structure
+        'PA',                    # Pharmacologic Action
+        'EPC',                   # Established Pharmacologic Class
     }
 
     def __init__(self, data_dir: str):
@@ -92,6 +95,10 @@ class DrugCentralParser(BaseParser):
         result = {}
 
         try:
+            # First extract struct_id → DrugBank ID mapping from identifier table
+            identifiers = self._parse_identifiers(sql_path)
+            logger.info(f"Found {len(identifiers)} struct_id → DrugBank ID mappings")
+
             # Parse the SQL dump to extract relevant tables
             omop_relationships = self._parse_omop_relationships(sql_path)
 
@@ -104,10 +111,18 @@ class DrugCentralParser(BaseParser):
                 logger.info(f"Found {len(palliates)} palliation relationships")
 
                 if treats:
-                    result["drug_treats_disease"] = pd.DataFrame(treats)
+                    df = pd.DataFrame(treats)
+                    df['drugbank_id'] = df['struct_id'].map(identifiers)
+                    df = df.dropna(subset=['drugbank_id'])
+                    result["drug_treats_disease"] = df
+                    logger.info(f"  {len(df)} with DrugBank ID mapping")
 
                 if palliates:
-                    result["drug_palliates_disease"] = pd.DataFrame(palliates)
+                    df = pd.DataFrame(palliates)
+                    df['drugbank_id'] = df['struct_id'].map(identifiers)
+                    df = df.dropna(subset=['drugbank_id'])
+                    result["drug_palliates_disease"] = df
+                    logger.info(f"  {len(df)} with DrugBank ID mapping")
             else:
                 logger.warning("No drug-disease relationships found")
 
@@ -127,6 +142,40 @@ class DrugCentralParser(BaseParser):
         except Exception as e:
             logger.error(f"Error parsing DrugCentral: {e}")
             return {}
+
+    def _parse_identifiers(self, sql_path: Path) -> Dict[str, str]:
+        """
+        Parse identifier table to build struct_id → DrugBank ID mapping.
+
+        Args:
+            sql_path: Path to SQL dump file
+
+        Returns:
+            Dict mapping struct_id (str) to drugbank_id (str)
+        """
+        identifiers = {}
+        in_table = False
+
+        try:
+            with gzip.open(sql_path, 'rt', encoding='utf-8', errors='ignore') as f:
+                for line in f:
+                    if line.lower().startswith('copy ') and 'identifier' in line.lower():
+                        in_table = True
+                        continue
+
+                    if in_table and line.strip() == '\\.':
+                        break
+
+                    if in_table and line.strip():
+                        parts = line.strip().split('\t')
+                        # identifier: id, identifier, id_type, struct_id
+                        if len(parts) >= 4 and parts[2] == 'DRUGBANK_ID':
+                            identifiers[parts[3]] = parts[1]
+
+        except Exception as e:
+            logger.error(f"Error parsing identifiers: {e}")
+
+        return identifiers
 
     def _parse_omop_relationships(self, sql_path: Path) -> List[Dict]:
         """
@@ -238,7 +287,9 @@ class DrugCentralParser(BaseParser):
 
                     # Detect table context from COPY statements (PostgreSQL)
                     if line_lower.startswith('copy '):
-                        if 'pharma_class' in line_lower and 'struct_id' not in line_lower:
+                        if 'struct2pharma_class' in line_lower:
+                            current_table = 'struct2pharma_class'
+                        elif 'pharma_class' in line_lower:
                             current_table = 'pharma_class'
                         elif 'struct2atc' in line_lower:
                             current_table = 'struct2atc'
@@ -257,16 +308,18 @@ class DrugCentralParser(BaseParser):
                     if current_table and line.strip() and not line.startswith('--'):
                         parts = line.strip().split('\t')
 
-                        if current_table == 'pharma_class' and len(parts) >= 4:
-                            # pharma_class: class_id, class_name, class_source, class_type
-                            class_type = parts[3] if len(parts) > 3 else ''
+                        if current_table == 'pharma_class' and len(parts) >= 6:
+                            # pharma_class: id, struct_id, type, name, class_code, source
+                            row_id, struct_id, class_type, class_name = parts[0], parts[1], parts[2], parts[3]
+                            class_code, class_source = parts[4], parts[5]
                             if class_type in self.VALID_CLASS_TYPES:
                                 pharma_classes.append({
-                                    'class_id': parts[0],
-                                    'class_name': parts[1],
-                                    'class_source': parts[2],
+                                    'class_id': class_code,
+                                    'class_name': class_name,
+                                    'class_source': class_source,
                                     'class_type': class_type,
-                                    'source': f'{parts[2]} via DrugCentral',
+                                    'struct_id': struct_id,
+                                    'source': f'{class_source} via DrugCentral',
                                     'license': 'CC BY 4.0',
                                     'sourceDatabase': 'DrugCentral'
                                 })
@@ -304,15 +357,29 @@ class DrugCentralParser(BaseParser):
             classes_df = None
             logger.warning("No pharmacologic classes found")
 
-        # Create drug-to-class relationships
-        # Note: The original hetionet uses a more complex mapping through ATC codes
-        # For simplicity, we'll try to map directly using struct_id to DrugBank ID
+        # Create drug-to-class relationships directly from pharma_class rows
+        # (each row has struct_id → class_code mapping)
         if pharma_classes and identifiers:
-            # Parse struct2pharma_class table for direct mappings
-            drug_class_edges = self._parse_struct_pharma_class(sql_path, identifiers, classes_df)
-            if drug_class_edges is not None and len(drug_class_edges) > 0:
-                logger.info(f"Parsed {len(drug_class_edges)} drug-class relationships")
-                return classes_df, drug_class_edges
+            drug_class_edges = []
+            valid_class_ids = set(classes_df['class_id'].values) if classes_df is not None else set()
+            for pc in pharma_classes:
+                struct_id = pc.get('struct_id', '')
+                class_id = pc.get('class_id', '')
+                if struct_id in identifiers and class_id in valid_class_ids:
+                    drug_class_edges.append({
+                        'drugbank_id': identifiers[struct_id],
+                        'class_id': class_id,
+                        'source': 'DrugCentral',
+                        'license': 'CC BY 4.0',
+                        'unbiased': False,
+                        'sourceDatabase': 'DrugCentral'
+                    })
+
+            if drug_class_edges:
+                edges_df = pd.DataFrame(drug_class_edges)
+                edges_df = edges_df.drop_duplicates(subset=['drugbank_id', 'class_id'])
+                logger.info(f"Parsed {len(edges_df)} drug-class relationships")
+                return classes_df, edges_df
 
         return classes_df, None
 

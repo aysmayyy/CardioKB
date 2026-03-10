@@ -42,6 +42,7 @@ CLINPGX_CLINICAL_ANNOTATIONS = 'clinical_annotations'
 CLINPGX_DRUG_LABELS = 'drug_labels'
 CLINPGX_VARIANTS = 'variants'
 CLINPGX_VARIANT_IN_GENE = 'variant_in_gene'
+CLINPGX_CLINICAL_ANNOTATIONS_PHARMA_CLASS = 'clinical_annotations_pharma_class'
 
 # OMIM
 OMIM_GENE_PHENOTYPE_MAP = 'gene_phenotype_map'
@@ -504,6 +505,23 @@ ONTOLOGY_CONFIGS = {
         'merge': False,
         'skip': False,
     },
+    f'clinpgx.{CLINPGX_CLINICAL_ANNOTATIONS_PHARMA_CLASS}': {
+        'data_type': 'relationship',
+        'relationship_type': 'AFFECTS_RESPONSE_TO',
+        'source_label': 'ClinPGx',
+        'source_filename': f'{CLINPGX_CLINICAL_ANNOTATIONS_PHARMA_CLASS}.tsv',
+        'parse_config': {
+            'headers': True,
+            'subject_node_type': 'Gene',
+            'subject_column_name': 'gene',
+            'subject_match_property': 'geneSymbol',
+            'object_node_type': 'PharmacologicClass',
+            'object_column_name': 'pharma_class',
+            'object_match_property': 'commonName',
+        },
+        'merge': False,
+        'skip': False,
+    },
 
     # =========================================================================
     # Hetionet Components (Phase 2)
@@ -866,8 +884,8 @@ ONTOLOGY_CONFIGS = {
         'parse_config': {
             'headers': True,
             'subject_node_type': 'Drug',
-            'subject_column_name': 'struct_id',
-            'subject_match_property': 'xrefDrugCentralStruct',
+            'subject_column_name': 'drugbank_id',
+            'subject_match_property': 'xrefDrugbank',
             'object_node_type': 'Disease',
             'object_column_name': 'umls_cui',
             'object_match_property': 'xrefUmlsCUI',
@@ -883,8 +901,8 @@ ONTOLOGY_CONFIGS = {
         'parse_config': {
             'headers': True,
             'subject_node_type': 'Drug',
-            'subject_column_name': 'struct_id',
-            'subject_match_property': 'xrefDrugCentralStruct',
+            'subject_column_name': 'drugbank_id',
+            'subject_match_property': 'xrefDrugbank',
             'object_node_type': 'Disease',
             'object_column_name': 'umls_cui',
             'object_match_property': 'xrefUmlsCUI',
@@ -960,8 +978,8 @@ ONTOLOGY_CONFIGS = {
             'subject_column_name': 'drugbank_id',
             'subject_match_property': 'xrefDrugbank',
             'object_node_type': 'Gene',
-            'object_column_name': 'uniprot_id',
-            'object_match_property': 'xrefUniProt',
+            'object_column_name': 'entrez_gene_id',
+            'object_match_property': 'xrefNcbiGene',
         },
         'merge': False,
         'skip': False,
@@ -1049,10 +1067,10 @@ ONTOLOGY_CONFIGS = {
             'headers': True,
             'subject_node_type': 'Gene',
             'subject_column_name': 'gene1_symbol',
-            'subject_match_property': 'geneSymbol',
+            'subject_match_property': 'xrefNcbiGene',
             'object_node_type': 'Gene',
             'object_column_name': 'gene2_symbol',
-            'object_match_property': 'geneSymbol',
+            'object_match_property': 'xrefNcbiGene',
         },
         'merge': False,
         'skip': False,
@@ -1066,10 +1084,10 @@ ONTOLOGY_CONFIGS = {
             'headers': True,
             'subject_node_type': 'Gene',
             'subject_column_name': 'gene1_symbol',
-            'subject_match_property': 'geneSymbol',
+            'subject_match_property': 'xrefNcbiGene',
             'object_node_type': 'Gene',
             'object_column_name': 'gene2_symbol',
-            'object_match_property': 'geneSymbol',
+            'object_match_property': 'xrefNcbiGene',
         },
         'merge': False,
         'skip': False,
@@ -1083,10 +1101,10 @@ ONTOLOGY_CONFIGS = {
             'headers': True,
             'subject_node_type': 'Gene',
             'subject_column_name': 'gene1_symbol',
-            'subject_match_property': 'geneSymbol',
+            'subject_match_property': 'xrefNcbiGene',
             'object_node_type': 'Gene',
             'object_column_name': 'gene2_symbol',
-            'object_match_property': 'geneSymbol',
+            'object_match_property': 'xrefNcbiGene',
         },
         'merge': False,
         'skip': False,

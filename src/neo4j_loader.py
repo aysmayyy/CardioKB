@@ -379,14 +379,15 @@ class Neo4jLoader:
         needed_cols = list(set([subj_col, obj_col] + rel_cols))
         needed_cols = [c for c in needed_cols if c in df.columns]
         rows = df[needed_cols].copy()
-        # Convert all values to strings for matching, handle NaN
+        # Handle NaN → None
         rows = rows.where(pd.notna(rows), None)
-        # Convert numeric IDs to string for consistent matching
+        # Coerce match columns: float-that-are-ints → int, keep str as str.
+        # This preserves Neo4j type matching (int stays int, str stays str).
         for col in [subj_col, obj_col]:
             if col in rows.columns:
                 rows[col] = rows[col].apply(
-                    lambda x: str(int(x)) if isinstance(x, float) and x == int(x) and x is not None
-                    else str(x) if x is not None else None
+                    lambda x: int(x) if isinstance(x, float) and x == int(x) and x is not None
+                    else x if x is not None else None
                 )
         row_dicts = rows.to_dict('records')
 

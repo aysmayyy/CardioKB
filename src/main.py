@@ -23,7 +23,13 @@ _project_root = str(Path(__file__).parent.parent)
 if _project_root not in sys.path:
     sys.path.insert(0, _project_root)
 
-from src.ontology_configs import ONTOLOGY_CONFIGS, CT_TRIAL_STUDIES_CONDITION, CT_TRIAL_TESTS_INTERVENTION
+from src.ontology_configs import (
+    ONTOLOGY_CONFIGS,
+    CT_TRIAL_STUDIES_CONDITION,
+    CT_TRIAL_TESTS_INTERVENTION,
+    CLINPGX_CLINICAL_ANNOTATIONS,
+    CLINPGX_CLINICAL_ANNOTATIONS_PHARMA_CLASS,
+)
 from src.neo4j_loader import Neo4jLoader
 from src.parsers import (
     ClinicalTrialsParser,
@@ -246,6 +252,17 @@ class CardioKBPipeline:
                     cpgx['variant_in_gene'] = vig
                     logger.info(f"Created {len(vig)} variant_in_gene edges")
 
+        # Post-processing: normalize ClinPGx clinical_annotations drug names
+        if 'clinpgx' in parsed_data:
+            cpgx = parsed_data['clinpgx']
+            drug_df, pharma_df = self._normalize_clinpgx_annotations(
+                cpgx, parsed_data
+            )
+            if drug_df is not None:
+                cpgx[CLINPGX_CLINICAL_ANNOTATIONS] = drug_df
+            if pharma_df is not None:
+                cpgx[CLINPGX_CLINICAL_ANNOTATIONS_PHARMA_CLASS] = pharma_df
+
         # Post-processing: prepare OMIM CVD gene-disease edges
         if 'omim' in parsed_data:
             omim_data = parsed_data['omim']
@@ -271,6 +288,17 @@ class CardioKBPipeline:
                     f"Created {len(gdr)} OMIM CVD gene-disease edges "
                     f"({gdr['primary_gene_symbol'].nunique()} unique genes)"
                 )
+
+        # Post-processing: prefix CTD chemical_id with 'MESH:' to match Drug.xrefMeSH
+        if 'ctd' in parsed_data:
+            for key in ('chemical_increases_expression', 'chemical_decreases_expression'):
+                if key in parsed_data['ctd']:
+                    df = parsed_data['ctd'][key]
+                    if 'chemical_id' in df.columns:
+                        df['chemical_id'] = df['chemical_id'].apply(
+                            lambda x: f'MESH:{x}' if pd.notna(x) and not str(x).startswith('MESH:') else x
+                        )
+                        logger.info(f"Prefixed CTD {key} chemical_id with MESH:")
 
         # Post-processing: remap PubTator MESH IDs to DOID
         from src.id_mapping import remap_pubtator_mesh_to_doid, remap_gwas_disease_to_doid
@@ -458,6 +486,109 @@ class CardioKBPipeline:
                 logger.info(f"Created {len(rows)} trial-intervention edges")
 
         return result
+
+    # Manual synonym map: ClinPGx drug name -> (node_type, exact_name)
+    CLINPGX_DRUG_SYNONYMS = {
+        'aspirin': ('Drug', 'Acetylsalicylic acid'),
+        'simvastatin acid': ('Drug', 'Simvastatin'),
+        'HMG-CoA reductase inhibitors': ('PharmacologicClass', 'HMG-CoA Reductase Inhibitor'),
+        'Bisphosphonates': ('PharmacologicClass', 'Bisphosphonate'),
+        'diuretics': ('PharmacologicClass', 'Diuretics'),
+        'Beta Blocking Agents': ('PharmacologicClass', 'beta-Adrenergic Blocker'),
+        'Antibiotics': ('PharmacologicClass', 'Antibiotics, Antineoplastic'),
+        'Ace Inhibitors, Plain': ('PharmacologicClass', 'Angiotensin-converting Enzyme Inhibitors'),
+        'Angiotensin II Antagonists': ('PharmacologicClass', 'Angiotensin II Type 1 Receptor Blockers'),
+        'antipsychotics': ('PharmacologicClass', 'Antipsychotic Agents'),
+    }
+
+    # Drug entries with no match (drug class names without a good node)
+    CLINPGX_DROP = {
+        'Antiinflammatory agents, non-steroids',
+        'Pyrazolones',
+        'propionic acid derivatives',
+    }
+
+    def _normalize_clinpgx_annotations(
+        self, cpgx: Dict[str, pd.DataFrame], parsed_data: Dict
+    ):
+        """
+        Normalize ClinPGx clinical_annotations: explode semicolons,
+        case-match drug names to DrugBank, and split Drug vs PharmacologicClass.
+
+        Returns:
+            (drug_df, pharma_df) — two DataFrames, or (None, None) if no data.
+        """
+        if CLINPGX_CLINICAL_ANNOTATIONS not in cpgx:
+            return None, None
+
+        ann = cpgx[CLINPGX_CLINICAL_ANNOTATIONS].copy()
+        if 'drug' not in ann.columns or 'gene' not in ann.columns:
+            return None, None
+
+        # Step 1: Explode semicolon-delimited drug entries
+        ann['drug'] = ann['drug'].astype(str)
+        ann = ann.assign(drug=ann['drug'].str.split('; ')).explode('drug')
+        ann['drug'] = ann['drug'].str.strip()
+        ann = ann[ann['drug'].notna() & (ann['drug'] != '') & (ann['drug'] != 'nan')]
+
+        # Build DrugBank case-insensitive lookup
+        db_lookup = {}
+        if 'drugbank' in parsed_data and 'drugs' in parsed_data['drugbank']:
+            db_drugs = parsed_data['drugbank']['drugs']
+            if 'drug_name' in db_drugs.columns:
+                for name in db_drugs['drug_name'].dropna():
+                    db_lookup[name.lower()] = name
+
+        drug_rows = []
+        pharma_rows = []
+
+        for _, row in ann.iterrows():
+            drug_name = row['drug']
+            gene = row.get('gene', '')
+
+            if not gene or pd.isna(gene) or str(gene).strip() == '':
+                continue
+
+            # Check if it should be dropped
+            if drug_name in self.CLINPGX_DROP:
+                continue
+
+            # Check synonym map first
+            if drug_name in self.CLINPGX_DRUG_SYNONYMS:
+                node_type, exact_name = self.CLINPGX_DRUG_SYNONYMS[drug_name]
+                new_row = row.to_dict()
+                if node_type == 'Drug':
+                    new_row['drug'] = exact_name
+                    drug_rows.append(new_row)
+                else:
+                    new_row['pharma_class'] = exact_name
+                    pharma_rows.append(new_row)
+                continue
+
+            # Try case-insensitive DrugBank match
+            db_match = db_lookup.get(drug_name.lower())
+            if db_match:
+                new_row = row.to_dict()
+                new_row['drug'] = db_match
+                drug_rows.append(new_row)
+            else:
+                logger.debug(f"ClinPGx drug not matched: {drug_name}")
+
+        drug_df = pd.DataFrame(drug_rows) if drug_rows else None
+        pharma_df = pd.DataFrame(pharma_rows) if pharma_rows else None
+
+        if drug_df is not None:
+            drug_df = drug_df.drop_duplicates(subset=['gene', 'drug'])
+            logger.info(
+                f"ClinPGx AFFECTS_RESPONSE_TO (Drug): {len(drug_df)} edges"
+            )
+        if pharma_df is not None:
+            pharma_df = pharma_df.drop_duplicates(subset=['gene', 'pharma_class'])
+            logger.info(
+                f"ClinPGx AFFECTS_RESPONSE_TO (PharmacologicClass): {len(pharma_df)} edges"
+            )
+
+        return drug_df, pharma_df
 
     def export_to_tsv(self, parsed_data: Dict[str, Dict]):
         """

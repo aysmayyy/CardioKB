@@ -11,7 +11,7 @@
 12-week rotation project (Jan–Apr 2026) building a cardiovascular disease knowledge base. The base KB structure is adapted from AlzKB (Alzheimer's Knowledge Base) files. BaseAgent (agentic AI tool) handles building the core knowledge graph from databases similar to AlzKB. On top of that, additional data sources are integrated via custom parsers. The final KB is stored in a Neo4j knowledge graph for CVD research, feature selection, and precision medicine.
 
 ## Current Graph Stats
-- **330,801 nodes** | **7,469,592 relationships** | **14 node types** | **15 relationship types**
+- **332,447 nodes** | **8,869,944 relationships** | **15 node types** | **30 relationship types**
 - All relationships carry a `source` property identifying the originating database (e.g., `source: "OMIM"`)
 
 ## Tech Stack
@@ -25,7 +25,7 @@
 - `src/main.py` — Pipeline orchestrator (supports `--skip-neo4j`, `--skip-download`)
 - `src/parsers/` — 20 data source parsers (inherit from `BaseParser` in `base_parser.py`)
   - `src/parsers/hetionet_components/` — 13 Hetionet-derived component parsers
-- `src/ontology_configs.py` — 52 ontology configs mapping source data to Neo4j schema
+- `src/ontology_configs.py` — 53 ontology configs mapping source data to Neo4j schema
 - `src/neo4j_loader.py` — Cypher-based Neo4j batch loader (auto-sets `r.source` from config `source_label`)
 - `src/id_mapping.py` — Cross-database ID remapping (PubTator MeSH→DOID, GWAS→DOID)
 - `src/utils.py` — Shared utilities (CVD filtering)
@@ -70,11 +70,11 @@ All cardiovascular diseases: arrhythmias, coronary artery disease, heart failure
 
 ## Parsers — 20 Total
 
-### Active & Loaded (17)
+### Active & Loaded (19)
 | Parser | Source | Notes |
 |--------|--------|-------|
 | ClinicalTrialsParser | ClinicalTrials.gov API v2 | Public API, 14,856 CVD trials |
-| ClinPGxParser | ClinPGx (PharmGKB successor) | Public API, 454 annotations, 1,060 variants |
+| ClinPGxParser | ClinPGx (PharmGKB successor) | Public API, 454 annotations, 1,060 variants, 294 AFFECTS_RESPONSE_TO edges |
 | NCBIGeneParser | NCBI Gene FTP | Public FTP, 193,687 genes |
 | DoRothEAParser | OmniPath API (DoRothEA) | Public API, 15,092 TF-gene interactions |
 | OMIMParser | OMIM genetic disorders | API key required, 1,556 CVD diseases, 1,632 gene-disease edges |
@@ -90,13 +90,13 @@ All cardiovascular diseases: arrhythmias, coronary artery disease, heart failure
 | BgeeParser | Bgee gene expression | Hetionet component, 4.8M+ expression edges |
 | HetionetPrecomputedParser | Hetionet precomputed edges | Hetionet component |
 | GWASParser | GWAS Catalog | Hetionet component, 43,453 gene-disease edges |
+| BindingDBParser | BindingDB drug-target | Hetionet component, 22,254 chemicalBindsGene edges (UniProt→Entrez mapped) |
+| MEDLINECooccurrenceParser | MEDLINE co-occurrences | Hetionet component, 7,213 cooccurrence edges |
 
-### Stale URLs / Download Failures (3)
+### Stale URLs / Download Failures (1)
 | Parser | Source | Issue |
 |--------|--------|-------|
 | MeSHParser | MeSH symptom terms | Nodes loaded (966), no relationship data |
-| MEDLINECooccurrenceParser | MEDLINE co-occurrences | 7,502 edges loaded from cached data |
-| BindingDBParser | BindingDB drug-target | TSV cached (1.6M rows) but NaN conversion error on load |
 
 ### Credential-Gated (requires env vars, currently loaded)
 | Parser | Source | Required Env Vars | Status |
@@ -107,7 +107,7 @@ All cardiovascular diseases: arrhythmias, coronary artery disease, heart failure
 | AOPDBParser | AOP-DB adverse outcome pathways | `MYSQL_USERNAME`, `MYSQL_PASSWORD` (or SQL dump) | Loaded via SQL dump |
 
 ## Ontology Configs
-52 entries in `src/ontology_configs.py` mapping parsed TSV files to Neo4j node/relationship types, properties, and loading strategies. Each relationship config includes a `source_label` field that the loader sets as `r.source` on every relationship.
+53 entries in `src/ontology_configs.py` mapping parsed TSV files to Neo4j node/relationship types, properties, and loading strategies. Each relationship config includes a `source_label` field that the loader sets as `r.source` on every relationship.
 
 ## Relationship Source Labels
 All relationships carry a `source` property. Current labels:

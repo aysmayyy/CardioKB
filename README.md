@@ -2,17 +2,17 @@
 
 A biomedical knowledge graph pipeline that integrates 22 data sources (20 parsers) into a Neo4j graph for cardiovascular disease research, feature selection, and precision medicine. Adapted from the AlzKB (Alzheimer's Knowledge Base) architecture with additional custom parsers and Hetionet component integrations.
 
-**Graph stats:** 330,801 nodes | 7,469,592 relationships | 14 node types | 15 relationship types
+**Graph stats:** 332,447 nodes | 8,869,944 relationships | 15 node types | 30 relationship types
 
 ## Pipeline Status
 
 | Category | Count | Details |
 |----------|-------|---------|
 | Total databases | 22 | 20 parsers (some parsers handle multiple sources) |
-| Active & loaded | 17 | Successfully parsed + loaded into Neo4j |
+| Active & loaded | 19 | Successfully parsed + loaded into Neo4j |
 | Credential-gated (loaded) | 4 | OMIM, DisGeNET, DrugBank (XML), AOP-DB (SQL dump) |
-| Stale/partial | 3 | MeSH (nodes only), MEDLINE (cached), BindingDB (NaN error) |
-| Ontology configs | 52 | Neo4j node/relationship type mappings |
+| Stale/partial | 1 | MeSH (nodes only, no relationship data) |
+| Ontology configs | 53 | Neo4j node/relationship type mappings |
 | Source-labeled relationships | 18 | All relationships carry `r.source` property |
 
 ## Data Sources
@@ -22,7 +22,7 @@ A biomedical knowledge graph pipeline that integrates 22 data sources (20 parser
 | # | Source | Access | Status |
 |---|--------|--------|--------|
 | 1 | ClinicalTrials.gov | Public API v2 | Working (14,856 CVD trials) |
-| 2 | ClinPGx (PharmGKB successor) | Public API | Working (454 annotations, 1,060 variants) |
+| 2 | ClinPGx (PharmGKB successor) | Public API | Working (454 annotations, 1,060 variants, 294 AFFECTS_RESPONSE_TO edges) |
 | 3 | NCBI Gene | Public FTP | Working (193,687 genes) |
 | 4 | DoRothEA (OmniPath) | Public API | Working (15,092 TF-gene interactions) |
 | 5 | OMIM | API key required | Working (1,556 CVD diseases, 1,632 gene-disease edges) |
@@ -40,10 +40,10 @@ A biomedical knowledge graph pipeline that integrates 22 data sources (20 parser
 | 12 | MeSH (symptoms) | Public | Working (966 symptom nodes) |
 | 13 | SIDER (side effects) | Public | Working (5,734 side effects, 153,663 edges) |
 | 14 | LINCS L1000 (gene expression) | Public | Working (336,999 edges) |
-| 15 | MEDLINE (literature cooccurrence) | Public | Working (7,502 cooccurrence edges) |
+| 15 | MEDLINE (literature cooccurrence) | Public | Working (7,213 cooccurrence edges) |
 | 16 | DrugCentral (drug-disease) | Public | Working (14,572 relationships) |
 | 17 | GWAS Catalog (associations) | Public | Working (760,270 gene-disease associations) |
-| 18 | BindingDB (drug-target) | Public | Working (1,632,198 drug-gene bindings) |
+| 18 | BindingDB (drug-target) | Public | Working (22,254 drug-gene bindings via UniProt→Entrez mapping) |
 | 19 | PubTator Central (literature mining) | Public FTP | Working (69M+ literature edges) |
 | 20 | CTD (chemical-gene) | Public | Working (677,015 expression edges) |
 | 21 | Bgee (gene expression) | Public FTP | Working (6,609,112 expression edges) |
@@ -51,9 +51,9 @@ A biomedical knowledge graph pipeline that integrates 22 data sources (20 parser
 
 ## Neo4j Graph Schema
 
-**Node types (14):** Gene (193,687), Disease (14,127), Drug (41,566), Pathway (4,646), TranscriptionFactor (367), ClinicalTrial (14,856), Variant (1,060), DrugLabel (378), SideEffect (5,734), Symptom (966), BodyPart (14,675), BiologicalProcess (24,547), MolecularFunction (10,123), CellularComponent (4,069)
+**Node types (15):** Gene (193,687), Disease (14,127), Drug (41,566), Pathway (4,646), TranscriptionFactor (367), ClinicalTrial (14,856), Variant (1,060), DrugLabel (378), SideEffect (5,734), PharmacologicClass (1,646), Symptom (966), BodyPart (14,675), BiologicalProcess (24,547), MolecularFunction (10,123), CellularComponent (4,069)
 
-**Key relationship types (15):** geneAssociatesWithDisease, geneParticipatesInBiologicalProcess, geneHasMolecularFunction, geneAssociatedWithCellularComponent, bodyPartUnderexpressesGene, bodyPartOverexpressesGene, diseaseAssociatesWithDisease, compoundCausesSideEffect, transcriptionFactorInteractsWithGene, diseaseLocalizesToAnatomy, diseasePresentsSymptom, diseaseResemblesDisease, STUDIES_CONDITION, TESTS_INTERVENTION, VARIANT_IN
+**Key relationship types (30):** geneAssociatesWithDisease, geneParticipatesInBiologicalProcess, geneHasMolecularFunction, geneAssociatedWithCellularComponent, geneInteractsWithGene, geneCovariesWithGene, geneRegulatesGene, geneInPathway, bodyPartUnderexpressesGene, bodyPartOverexpressesGene, chemicalIncreasesExpression, chemicalDecreasesExpression, chemicalBindsGene, compoundCausesSideEffect, compoundUpregulatesGene, compoundDownregulatesGene, pharmacologicClassIncludesCompound, compoundInPharmacologicClass, pathwayContainsGene, drugTreatsDisease, drugPalliatesDisease, diseaseAssociatesWithDisease, diseaseLocalizesToAnatomy, diseasePresentsSymptom, diseaseResemblesDisease, transcriptionFactorInteractsWithGene, AFFECTS_RESPONSE_TO, STUDIES_CONDITION, TESTS_INTERVENTION, VARIANT_IN
 
 **Relationship source labels:** All relationships carry a `source` property (e.g., `OMIM`, `DisGeNET`, `GWAS Catalog`, `PubTator`, `Bgee`, etc.) for provenance tracking across 18 databases.
 
@@ -190,7 +190,7 @@ All cardiovascular diseases including arrhythmias, coronary artery disease, hear
 - All parsers extend `BaseParser` from `src/parsers/base_parser.py`
 - Neo4j loading uses UNWIND-based Cypher batching (batch size: 1000) with MERGE to prevent duplicates
 - All relationships are tagged with `r.source` property from the config's `source_label` for provenance tracking
-- Graph schema is defined declaratively in `src/ontology_configs.py` (52 configs)
+- Graph schema is defined declaratively in `src/ontology_configs.py` (53 configs)
 - Parsers with missing credentials are automatically skipped at runtime
 - DrugBank and AOP-DB auto-detect local data files (XML / SQL dump) and work without credentials
 - Phase 2 Hetionet component parsers are adapted from the AlzKB updater; integration is functional but not yet fully aligned with the original AlzKB graph structure
