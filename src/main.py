@@ -364,7 +364,14 @@ class CardioKBPipeline:
                 }
             )
         else:
-            logger.warning("MySQL credentials not set - AOP-DB parser disabled")
+            # Check for SQL dump file (no MySQL required)
+            aopdb_dir = self.raw_dir / 'aopdb'
+            sql_dumps = list(aopdb_dir.glob('*.sql')) if aopdb_dir.exists() else []
+            if sql_dumps:
+                logger.info("MySQL credentials not set, but SQL dump found - enabling AOP-DB parser")
+                parsers['aopdb'] = AOPDBParser(data_dir=str(self.raw_dir))
+            else:
+                logger.warning("MySQL credentials not set and no SQL dump found - AOP-DB parser disabled")
 
         return parsers
 

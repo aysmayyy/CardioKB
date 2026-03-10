@@ -120,7 +120,7 @@ ONTOLOGY_CONFIGS = {
             },
         },
         'merge': True,
-        'skip': True,
+        'skip': False,
     },
     f'aopdb.{AOPDB_PATHWAYS}': {
         'data_type': 'node',
@@ -137,7 +137,7 @@ ONTOLOGY_CONFIGS = {
             },
         },
         'merge': False,
-        'skip': True,
+        'skip': False,
     },
     f'aopdb.{AOPDB_GENE_PATHWAY_RELATIONSHIPS}': {
         'data_type': 'relationship',
@@ -154,7 +154,7 @@ ONTOLOGY_CONFIGS = {
             'object_match_property': 'pathwayName',
         },
         'merge': False,
-        'skip': True,
+        'skip': False,
     },
 
     # =========================================================================
