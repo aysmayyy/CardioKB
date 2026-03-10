@@ -406,6 +406,21 @@ class DisGeNETParser(BaseParser):
             except (FileNotFoundError, Exception):
                 pass
 
+        # Post-processing: fix data formats for Neo4j loading
+        if 'disease_mappings' in result:
+            dm = result['disease_mappings']
+            if 'DO' in dm.columns:
+                # Convert bare numeric DO IDs (e.g. 1287.0) to DOID:1287 format
+                dm['DO'] = dm['DO'].apply(
+                    lambda x: f'DOID:{int(float(x))}' if pd.notna(x) and str(x) not in ('', '0', '0.0') else x
+                )
+
+        if 'gene_disease_associations' in result:
+            gda = result['gene_disease_associations']
+            if 'diseaseType' in gda.columns:
+                # Strip brackets from diseaseType (e.g. "[disease]" → "disease")
+                gda['diseaseType'] = gda['diseaseType'].str.strip('[]')
+
         return result
 
     def get_schema(self) -> Dict[str, Dict[str, str]]:

@@ -174,7 +174,7 @@ ONTOLOGY_CONFIGS = {
             },
         },
         'merge': False,
-        'skip': True,
+        'skip': False,
     },
     f'disgenet.{DISGENET_DISEASE_MAPPINGS}': {
         'data_type': 'node',
@@ -195,7 +195,7 @@ ONTOLOGY_CONFIGS = {
             },
         },
         'merge': True,
-        'skip': True,
+        'skip': False,
     },
     f'disgenet.{DISGENET_GENE_DISEASE_ASSOCIATIONS}': {
         'data_type': 'relationship',
@@ -213,7 +213,7 @@ ONTOLOGY_CONFIGS = {
             'filter_value': 'disease',
         },
         'merge': False,
-        'skip': True,
+        'skip': False,
     },
 
     # =========================================================================
