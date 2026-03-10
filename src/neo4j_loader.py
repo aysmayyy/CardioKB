@@ -356,6 +356,9 @@ class Neo4jLoader:
                 rel_cols.append(src_col)
         rel_set_str = ', '.join(rel_set_parts)
 
+        # Source label (set once per config, not per row)
+        source_label = config.get('source_label')
+
         # Forward relationship query
         query = (
             f"UNWIND $rows AS row "
@@ -363,8 +366,14 @@ class Neo4jLoader:
             f"MATCH (o:{obj_node_type} {{{obj_match_prop}: row.{obj_col}}}) "
             f"MERGE (s)-[r:{rel_type}]->(o) "
         )
+        # Build SET clause: source label + any data properties
+        set_parts = []
+        if source_label:
+            set_parts.append("r.source = $source_label")
         if rel_set_str:
-            query += f"SET {rel_set_str}"
+            set_parts.append(rel_set_str)
+        if set_parts:
+            query += f"SET {', '.join(set_parts)}"
 
         # Prepare rows
         needed_cols = list(set([subj_col, obj_col] + rel_cols))
@@ -381,7 +390,7 @@ class Neo4jLoader:
                 )
         row_dicts = rows.to_dict('records')
 
-        count = self._execute_batch(query, row_dicts)
+        count = self._execute_batch(query, row_dicts, source_label=source_label)
         logger.info(f"  {config_key}: merged {count} {rel_type} relationships")
         self.stats['relationships_merged'] += count
 
@@ -393,10 +402,15 @@ class Neo4jLoader:
                 f"MATCH (o:{obj_node_type} {{{obj_match_prop}: row.{obj_col}}}) "
                 f"MERGE (o)-[r:{inverse_rel_type}]->(s) "
             )
+            inv_set_parts = []
+            if source_label:
+                inv_set_parts.append("r.source = $source_label")
             if rel_set_str:
-                inv_query += f"SET {rel_set_str}"
+                inv_set_parts.append(rel_set_str)
+            if inv_set_parts:
+                inv_query += f"SET {', '.join(inv_set_parts)}"
 
-            inv_count = self._execute_batch(inv_query, row_dicts)
+            inv_count = self._execute_batch(inv_query, row_dicts, source_label=source_label)
             logger.info(f"  {config_key}: merged {inv_count} {inverse_rel_type} (inverse) relationships")
             self.stats['relationships_merged'] += inv_count
 
@@ -419,24 +433,29 @@ class Neo4jLoader:
 
         return df
 
-    def _execute_batch(self, query: str, rows: List[Dict[str, Any]]) -> int:
+    def _execute_batch(self, query: str, rows: List[Dict[str, Any]],
+                       source_label: Optional[str] = None) -> int:
         """
         Execute a Cypher query in batches using UNWIND.
 
         Args:
             query: Cypher query with $rows parameter.
             rows: List of row dictionaries.
+            source_label: Optional source label passed as a top-level Cypher parameter.
 
         Returns:
             Total rows processed.
         """
         total = 0
+        params: Dict[str, Any] = {}
+        if source_label:
+            params['source_label'] = source_label
 
         with self.driver.session(database=self.database) as session:
             for i in range(0, len(rows), BATCH_SIZE):
                 batch = rows[i:i + BATCH_SIZE]
                 try:
-                    result = session.run(query, rows=batch)
+                    result = session.run(query, rows=batch, **params)
                     summary = result.consume()
                     total += len(batch)
                 except Exception as e:

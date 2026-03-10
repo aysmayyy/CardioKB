@@ -2,18 +2,18 @@
 
 A biomedical knowledge graph pipeline that integrates 22 data sources (20 parsers) into a Neo4j graph for cardiovascular disease research, feature selection, and precision medicine. Adapted from the AlzKB (Alzheimer's Knowledge Base) architecture with additional custom parsers and Hetionet component integrations.
 
-**Graph stats:** 329,245 nodes | 7,317,731 relationships | 15 node types | 19 relationship types
+**Graph stats:** 330,801 nodes | 7,469,592 relationships | 14 node types | 15 relationship types
 
 ## Pipeline Status
 
 | Category | Count | Details |
 |----------|-------|---------|
 | Total databases | 22 | 20 parsers (some parsers handle multiple sources) |
-| Working | 20 | Successfully download, parse, and export TSV |
-| Credential-gated | 1 | OMIM (working but disabled without API key) |
-| File-based (no credentials) | 2 | DrugBank (XML), AOP-DB (SQL dump) — auto-detected |
-| Skipped in `--skip-download` | 1 | ClinicalTrials.gov (live API; works fine on normal runs — 14,856 trials) |
-| Ontology configs | 50 | Neo4j node/relationship type mappings |
+| Active & loaded | 17 | Successfully parsed + loaded into Neo4j |
+| Credential-gated (loaded) | 4 | OMIM, DisGeNET, DrugBank (XML), AOP-DB (SQL dump) |
+| Stale/partial | 3 | MeSH (nodes only), MEDLINE (cached), BindingDB (NaN error) |
+| Ontology configs | 52 | Neo4j node/relationship type mappings |
+| Source-labeled relationships | 18 | All relationships carry `r.source` property |
 
 ## Data Sources
 
@@ -25,7 +25,7 @@ A biomedical knowledge graph pipeline that integrates 22 data sources (20 parser
 | 2 | ClinPGx (PharmGKB successor) | Public API | Working (454 annotations, 1,060 variants) |
 | 3 | NCBI Gene | Public FTP | Working (193,687 genes) |
 | 4 | DoRothEA (OmniPath) | Public API | Working (15,092 TF-gene interactions) |
-| 5 | OMIM | API key required | Working (credential-gated) |
+| 5 | OMIM | API key required | Working (1,556 CVD diseases, 1,632 gene-disease edges) |
 | 6 | DisGeNET | API key required | Working (341 DO-matched + 559 new diseases, 5,010 gene-disease edges) |
 | 7 | DrugBank | XML file or login | Working (19,842 drugs from full database XML) |
 | 8 | AOP-DB | SQL dump or MySQL | Working (173,500 chemicals, 4,646 pathways, 187,247 gene-pathway edges) |
@@ -51,9 +51,11 @@ A biomedical knowledge graph pipeline that integrates 22 data sources (20 parser
 
 ## Neo4j Graph Schema
 
-**Node types (15):** Gene (193,687), Disease (12,571), Drug (41,566), Pathway (4,646), TranscriptionFactor (367), ClinicalTrial (14,856), Variant (1,060), DrugLabel (378), SideEffect (5,734), PharmacologicClass, Symptom (966), BodyPart (14,675), BiologicalProcess (24,547), MolecularFunction (10,123), CellularComponent (4,069)
+**Node types (14):** Gene (193,687), Disease (14,127), Drug (41,566), Pathway (4,646), TranscriptionFactor (367), ClinicalTrial (14,856), Variant (1,060), DrugLabel (378), SideEffect (5,734), Symptom (966), BodyPart (14,675), BiologicalProcess (24,547), MolecularFunction (10,123), CellularComponent (4,069)
 
-**Key relationship types:** geneAssociatesWithDisease, geneInPathway, chemicalBindsGene, drugTreatsDisease, drugPalliatesDisease, compoundCausesSideEffect, compoundUpregulatesGene, compoundDownregulatesGene, geneRegulatesGene, geneCovariesWithGene, geneInteractsWithGene, diseasePresentsSymptom, diseaseLocalizesToAnatomy, diseaseResemblesDisease, transcriptionFactorInteractsWithGene, STUDIES_CONDITION, TESTS_INTERVENTION, AFFECTS_RESPONSE_TO, VARIANT_IN
+**Key relationship types (15):** geneAssociatesWithDisease, geneParticipatesInBiologicalProcess, geneHasMolecularFunction, geneAssociatedWithCellularComponent, bodyPartUnderexpressesGene, bodyPartOverexpressesGene, diseaseAssociatesWithDisease, compoundCausesSideEffect, transcriptionFactorInteractsWithGene, diseaseLocalizesToAnatomy, diseasePresentsSymptom, diseaseResemblesDisease, STUDIES_CONDITION, TESTS_INTERVENTION, VARIANT_IN
+
+**Relationship source labels:** All relationships carry a `source` property (e.g., `OMIM`, `DisGeNET`, `GWAS Catalog`, `PubTator`, `Bgee`, etc.) for provenance tracking across 18 databases.
 
 ## Project Structure
 
@@ -62,7 +64,7 @@ Cardio-KB/
 ├── src/
 │   ├── main.py                 # Pipeline orchestrator (--skip-neo4j, --skip-download)
 │   ├── neo4j_loader.py         # Cypher-based Neo4j batch loader
-│   ├── ontology_configs.py     # 50 ontology configs for Neo4j schema mapping
+│   ├── ontology_configs.py     # 52 ontology configs for Neo4j schema mapping
 │   ├── utils.py                # CVD term filtering utilities
 │   └── parsers/
 │       ├── base_parser.py      # Abstract base class for all parsers
@@ -187,7 +189,8 @@ All cardiovascular diseases including arrhythmias, coronary artery disease, hear
 
 - All parsers extend `BaseParser` from `src/parsers/base_parser.py`
 - Neo4j loading uses UNWIND-based Cypher batching (batch size: 1000) with MERGE to prevent duplicates
-- Graph schema is defined declaratively in `src/ontology_configs.py` (50 configs)
+- All relationships are tagged with `r.source` property from the config's `source_label` for provenance tracking
+- Graph schema is defined declaratively in `src/ontology_configs.py` (52 configs)
 - Parsers with missing credentials are automatically skipped at runtime
 - DrugBank and AOP-DB auto-detect local data files (XML / SQL dump) and work without credentials
 - Phase 2 Hetionet component parsers are adapted from the AlzKB updater; integration is functional but not yet fully aligned with the original AlzKB graph structure

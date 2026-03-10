@@ -246,6 +246,32 @@ class CardioKBPipeline:
                     cpgx['variant_in_gene'] = vig
                     logger.info(f"Created {len(vig)} variant_in_gene edges")
 
+        # Post-processing: prepare OMIM CVD gene-disease edges
+        if 'omim' in parsed_data:
+            omim_data = parsed_data['omim']
+            if 'gene_disease_relationships' in omim_data:
+                gdr = omim_data['gene_disease_relationships'].copy()
+                # Filter to CVD-related only
+                gdr = gdr[gdr['is_cvd'] == True].copy()
+                # Extract primary gene symbol (first before comma)
+                gdr['primary_gene_symbol'] = (
+                    gdr['gene_symbols'].str.split(',').str[0].str.strip()
+                )
+                # Keep rows with valid gene symbol and phenotype MIM
+                gdr = gdr.dropna(subset=['primary_gene_symbol', 'phenotype_mim'])
+                gdr = gdr[
+                    (gdr['primary_gene_symbol'] != '') &
+                    (gdr['phenotype_mim'] != '')
+                ].copy()
+                omim_data['cvd_gene_disease'] = gdr
+                # Also store under node config key so both configs use
+                # in-memory data with consistent string types
+                omim_data['cvd_gene_disease_nodes'] = gdr
+                logger.info(
+                    f"Created {len(gdr)} OMIM CVD gene-disease edges "
+                    f"({gdr['primary_gene_symbol'].nunique()} unique genes)"
+                )
+
         # Post-processing: remap PubTator MESH IDs to DOID
         from src.id_mapping import remap_pubtator_mesh_to_doid, remap_gwas_disease_to_doid
         if 'pubtator' in parsed_data and 'disease_ontology' in parsed_data:

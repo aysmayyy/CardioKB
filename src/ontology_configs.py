@@ -43,6 +43,10 @@ CLINPGX_DRUG_LABELS = 'drug_labels'
 CLINPGX_VARIANTS = 'variants'
 CLINPGX_VARIANT_IN_GENE = 'variant_in_gene'
 
+# OMIM
+OMIM_GENE_PHENOTYPE_MAP = 'gene_phenotype_map'
+OMIM_CVD_GENE_DISEASE = 'cvd_gene_disease'
+
 # Hetionet Components — Disease Ontology
 DO_DISEASE_NODES = 'disease_nodes'
 DO_DISEASE_ANATOMY = 'disease_anatomy'
@@ -144,6 +148,7 @@ ONTOLOGY_CONFIGS = {
         'data_type': 'relationship',
         'relationship_type': 'geneInPathway',
         'inverse_relationship_type': 'pathwayContainsGene',
+        'source_label': 'AOP-DB',
         'source_filename': f'{AOPDB_GENE_PATHWAY_RELATIONSHIPS}.tsv',
         'parse_config': {
             'headers': True,
@@ -206,6 +211,7 @@ ONTOLOGY_CONFIGS = {
     f'disgenet.{DISGENET_GENE_DISEASE_ASSOCIATIONS}': {
         'data_type': 'relationship',
         'relationship_type': 'geneAssociatesWithDisease',
+        'source_label': 'DisGeNET',
         'source_filename': f'{DISGENET_GENE_DISEASE_ASSOCIATIONS}.tsv',
         'parse_config': {
             'headers': True,
@@ -244,6 +250,50 @@ ONTOLOGY_CONFIGS = {
             },
         },
         'merge': True,
+        'skip': False,
+    },
+
+    # =========================================================================
+    # OMIM - Online Mendelian Inheritance in Man
+    # =========================================================================
+    # Disease nodes from OMIM CVD gene-disease relationships.
+    # Creates/merges Disease nodes keyed by MIM number (xrefOMIM).
+    f'omim.{OMIM_CVD_GENE_DISEASE}_nodes': {
+        'data_type': 'node',
+        'node_type': 'Disease',
+        'source_filename': f'{OMIM_CVD_GENE_DISEASE}.tsv',
+        'parse_config': {
+            'headers': True,
+            'iri_column_name': 'phenotype_mim',
+            'data_property_map': {
+                'phenotype_mim': 'xrefOMIM',
+                'phenotype': 'commonName',
+                'source_database': 'sourceDatabase',
+            },
+        },
+        'merge': True,
+        'skip': False,
+    },
+    # Gene-disease relationships from OMIM (CVD-scoped, pre-filtered in main.py).
+    f'omim.{OMIM_CVD_GENE_DISEASE}': {
+        'data_type': 'relationship',
+        'relationship_type': 'geneAssociatesWithDisease',
+        'source_label': 'OMIM',
+        'source_filename': f'{OMIM_CVD_GENE_DISEASE}.tsv',
+        'parse_config': {
+            'headers': True,
+            'subject_node_type': 'Gene',
+            'subject_column_name': 'primary_gene_symbol',
+            'subject_match_property': 'geneSymbol',
+            'object_node_type': 'Disease',
+            'object_column_name': 'phenotype_mim',
+            'object_match_property': 'xrefOMIM',
+            'data_property_map': {
+                'mapping_key': 'mappingKey',
+                'inheritance': 'inheritance',
+            },
+        },
+        'merge': False,
         'skip': False,
     },
 
@@ -297,6 +347,7 @@ ONTOLOGY_CONFIGS = {
     f'dorothea.{DOROTHEA_TF_GENE_INTERACTIONS}': {
         'data_type': 'relationship',
         'relationship_type': 'transcriptionFactorInteractsWithGene',
+        'source_label': 'DoRothEA',
         'source_filename': f'{DOROTHEA_TF_GENE_INTERACTIONS}.tsv',
         'parse_config': {
             'headers': True,
@@ -337,6 +388,7 @@ ONTOLOGY_CONFIGS = {
     f'clinicaltrials.{CT_TRIAL_STUDIES_CONDITION}': {
         'data_type': 'relationship',
         'relationship_type': 'STUDIES_CONDITION',
+        'source_label': 'ClinicalTrials.gov',
         'source_filename': f'{CT_TRIAL_STUDIES_CONDITION}.tsv',
         'parse_config': {
             'headers': True,
@@ -353,6 +405,7 @@ ONTOLOGY_CONFIGS = {
     f'clinicaltrials.{CT_TRIAL_TESTS_INTERVENTION}': {
         'data_type': 'relationship',
         'relationship_type': 'TESTS_INTERVENTION',
+        'source_label': 'ClinicalTrials.gov',
         'source_filename': f'{CT_TRIAL_TESTS_INTERVENTION}.tsv',
         'parse_config': {
             'headers': True,
@@ -415,6 +468,7 @@ ONTOLOGY_CONFIGS = {
     f'clinpgx.{CLINPGX_CLINICAL_ANNOTATIONS}': {
         'data_type': 'relationship',
         'relationship_type': 'AFFECTS_RESPONSE_TO',
+        'source_label': 'ClinPGx',
         'source_filename': f'{CLINPGX_CLINICAL_ANNOTATIONS}.tsv',
         'parse_config': {
             'headers': True,
@@ -436,6 +490,7 @@ ONTOLOGY_CONFIGS = {
     f'clinpgx.{CLINPGX_VARIANT_IN_GENE}': {
         'data_type': 'relationship',
         'relationship_type': 'VARIANT_IN',
+        'source_label': 'ClinPGx',
         'source_filename': f'{CLINPGX_VARIANT_IN_GENE}.tsv',
         'parse_config': {
             'headers': True,
@@ -474,6 +529,7 @@ ONTOLOGY_CONFIGS = {
     f'disease_ontology.{DO_DISEASE_ANATOMY}': {
         'data_type': 'relationship',
         'relationship_type': 'diseaseLocalizesToAnatomy',
+        'source_label': 'Disease Ontology',
         'source_filename': f'{DO_DISEASE_ANATOMY}.tsv',
         'parse_config': {
             'headers': True,
@@ -540,6 +596,7 @@ ONTOLOGY_CONFIGS = {
     f'gene_ontology.{GO_GENE_BP}': {
         'data_type': 'relationship',
         'relationship_type': 'geneParticipatesInBiologicalProcess',
+        'source_label': 'Gene Ontology',
         'source_filename': f'{GO_GENE_BP}.tsv',
         'parse_config': {
             'headers': True,
@@ -556,6 +613,7 @@ ONTOLOGY_CONFIGS = {
     f'gene_ontology.{GO_GENE_MF}': {
         'data_type': 'relationship',
         'relationship_type': 'geneHasMolecularFunction',
+        'source_label': 'Gene Ontology',
         'source_filename': f'{GO_GENE_MF}.tsv',
         'parse_config': {
             'headers': True,
@@ -572,6 +630,7 @@ ONTOLOGY_CONFIGS = {
     f'gene_ontology.{GO_GENE_CC}': {
         'data_type': 'relationship',
         'relationship_type': 'geneAssociatedWithCellularComponent',
+        'source_label': 'Gene Ontology',
         'source_filename': f'{GO_GENE_CC}.tsv',
         'parse_config': {
             'headers': True,
@@ -642,6 +701,7 @@ ONTOLOGY_CONFIGS = {
     f'sider.{SIDER_COMPOUND_CAUSES_SE}': {
         'data_type': 'relationship',
         'relationship_type': 'compoundCausesSideEffect',
+        'source_label': 'SIDER',
         'source_filename': f'{SIDER_COMPOUND_CAUSES_SE}.tsv',
         'parse_config': {
             'headers': True,
@@ -660,6 +720,7 @@ ONTOLOGY_CONFIGS = {
     f'lincs.{LINCS_CUG}': {
         'data_type': 'relationship',
         'relationship_type': 'compoundUpregulatesGene',
+        'source_label': 'LINCS L1000',
         'source_filename': f'{LINCS_CUG}.tsv',
         'parse_config': {
             'headers': True,
@@ -676,6 +737,7 @@ ONTOLOGY_CONFIGS = {
     f'lincs.{LINCS_CDG}': {
         'data_type': 'relationship',
         'relationship_type': 'compoundDownregulatesGene',
+        'source_label': 'LINCS L1000',
         'source_filename': f'{LINCS_CDG}.tsv',
         'parse_config': {
             'headers': True,
@@ -692,6 +754,7 @@ ONTOLOGY_CONFIGS = {
     f'lincs.{LINCS_GRG}': {
         'data_type': 'relationship',
         'relationship_type': 'geneRegulatesGene',
+        'source_label': 'LINCS L1000',
         'source_filename': f'{LINCS_GRG}.tsv',
         'parse_config': {
             'headers': True,
@@ -710,6 +773,7 @@ ONTOLOGY_CONFIGS = {
     f'medline.{MEDLINE_DPS}': {
         'data_type': 'relationship',
         'relationship_type': 'diseasePresentsSymptom',
+        'source_label': 'MEDLINE',
         'source_filename': f'{MEDLINE_DPS}.tsv',
         'parse_config': {
             'headers': True,
@@ -726,6 +790,7 @@ ONTOLOGY_CONFIGS = {
     f'medline.{MEDLINE_DLA}': {
         'data_type': 'relationship',
         'relationship_type': 'diseaseLocalizesToAnatomy',
+        'source_label': 'MEDLINE',
         'source_filename': f'{MEDLINE_DLA}.tsv',
         'parse_config': {
             'headers': True,
@@ -742,6 +807,7 @@ ONTOLOGY_CONFIGS = {
     f'medline.{MEDLINE_DRD}': {
         'data_type': 'relationship',
         'relationship_type': 'diseaseResemblesDisease',
+        'source_label': 'MEDLINE',
         'source_filename': f'{MEDLINE_DRD}.tsv',
         'parse_config': {
             'headers': True,
@@ -778,6 +844,7 @@ ONTOLOGY_CONFIGS = {
         'data_type': 'relationship',
         'relationship_type': 'pharmacologicClassIncludesCompound',
         'inverse_relationship_type': 'compoundInPharmacologicClass',
+        'source_label': 'DrugCentral',
         'source_filename': f'{DC_PCIC}.tsv',
         'parse_config': {
             'headers': True,
@@ -794,6 +861,7 @@ ONTOLOGY_CONFIGS = {
     f'drugcentral.{DC_DRUG_TREATS}': {
         'data_type': 'relationship',
         'relationship_type': 'drugTreatsDisease',
+        'source_label': 'DrugCentral',
         'source_filename': f'{DC_DRUG_TREATS}.tsv',
         'parse_config': {
             'headers': True,
@@ -810,6 +878,7 @@ ONTOLOGY_CONFIGS = {
     f'drugcentral.{DC_DRUG_PALLIATES}': {
         'data_type': 'relationship',
         'relationship_type': 'drugPalliatesDisease',
+        'source_label': 'DrugCentral',
         'source_filename': f'{DC_DRUG_PALLIATES}.tsv',
         'parse_config': {
             'headers': True,
@@ -828,6 +897,7 @@ ONTOLOGY_CONFIGS = {
     f'gwas.{GWAS_GENE_DISEASE}': {
         'data_type': 'relationship',
         'relationship_type': 'geneAssociatesWithDisease',
+        'source_label': 'GWAS Catalog',
         'source_filename': f'{GWAS_GENE_DISEASE}.tsv',
         'parse_config': {
             'headers': True,
@@ -846,6 +916,7 @@ ONTOLOGY_CONFIGS = {
     f'pubtator.{PUBTATOR_DD_COOCCURRENCE}': {
         'data_type': 'relationship',
         'relationship_type': 'diseaseAssociatesWithDisease',
+        'source_label': 'PubTator',
         'source_filename': f'{PUBTATOR_DD_COOCCURRENCE}.tsv',
         'parse_config': {
             'headers': True,
@@ -862,6 +933,7 @@ ONTOLOGY_CONFIGS = {
     f'pubtator.{PUBTATOR_GD_LITERATURE}': {
         'data_type': 'relationship',
         'relationship_type': 'geneAssociatesWithDisease',
+        'source_label': 'PubTator',
         'source_filename': f'{PUBTATOR_GD_LITERATURE}.tsv',
         'parse_config': {
             'headers': True,
@@ -880,6 +952,7 @@ ONTOLOGY_CONFIGS = {
     f'bindingdb.{BINDINGDB_DRUG_BINDS_GENE}': {
         'data_type': 'relationship',
         'relationship_type': 'chemicalBindsGene',
+        'source_label': 'BindingDB',
         'source_filename': f'{BINDINGDB_DRUG_BINDS_GENE}.tsv',
         'parse_config': {
             'headers': True,
@@ -898,6 +971,7 @@ ONTOLOGY_CONFIGS = {
     f'ctd.{CTD_CHEM_INCREASES_EXPR}': {
         'data_type': 'relationship',
         'relationship_type': 'chemicalIncreasesExpression',
+        'source_label': 'CTD',
         'source_filename': f'{CTD_CHEM_INCREASES_EXPR}.tsv',
         'parse_config': {
             'headers': True,
@@ -914,6 +988,7 @@ ONTOLOGY_CONFIGS = {
     f'ctd.{CTD_CHEM_DECREASES_EXPR}': {
         'data_type': 'relationship',
         'relationship_type': 'chemicalDecreasesExpression',
+        'source_label': 'CTD',
         'source_filename': f'{CTD_CHEM_DECREASES_EXPR}.tsv',
         'parse_config': {
             'headers': True,
@@ -932,6 +1007,7 @@ ONTOLOGY_CONFIGS = {
     f'bgee.{BGEE_OVEREXPRESSES}': {
         'data_type': 'relationship',
         'relationship_type': 'bodyPartOverexpressesGene',
+        'source_label': 'Bgee',
         'source_filename': f'{BGEE_OVEREXPRESSES}.tsv',
         'parse_config': {
             'headers': True,
@@ -948,6 +1024,7 @@ ONTOLOGY_CONFIGS = {
     f'bgee.{BGEE_UNDEREXPRESSES}': {
         'data_type': 'relationship',
         'relationship_type': 'bodyPartUnderexpressesGene',
+        'source_label': 'Bgee',
         'source_filename': f'{BGEE_UNDEREXPRESSES}.tsv',
         'parse_config': {
             'headers': True,
@@ -966,6 +1043,7 @@ ONTOLOGY_CONFIGS = {
     f'hetionet_precomputed.{HETIO_GENE_INTERACTS}': {
         'data_type': 'relationship',
         'relationship_type': 'geneInteractsWithGene',
+        'source_label': 'Hetionet',
         'source_filename': f'{HETIO_GENE_INTERACTS}.tsv',
         'parse_config': {
             'headers': True,
@@ -982,6 +1060,7 @@ ONTOLOGY_CONFIGS = {
     f'hetionet_precomputed.{HETIO_GENE_COVARIES}': {
         'data_type': 'relationship',
         'relationship_type': 'geneCovariesWithGene',
+        'source_label': 'Hetionet',
         'source_filename': f'{HETIO_GENE_COVARIES}.tsv',
         'parse_config': {
             'headers': True,
@@ -998,6 +1077,7 @@ ONTOLOGY_CONFIGS = {
     f'hetionet_precomputed.{HETIO_GENE_REGULATES}': {
         'data_type': 'relationship',
         'relationship_type': 'geneRegulatesGene',
+        'source_label': 'Hetionet',
         'source_filename': f'{HETIO_GENE_REGULATES}.tsv',
         'parse_config': {
             'headers': True,
