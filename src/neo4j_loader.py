@@ -299,14 +299,18 @@ class Neo4jLoader:
         rows = rows.where(pd.notna(rows), None)
         row_dicts = rows.to_dict('records')
 
-        count = self._execute_batch(query, row_dicts)
+        result = self._execute_batch(query, row_dicts)
         action = "merged" if merge else "created/merged"
-        logger.info(f"  {config_key}: {action} {count} {node_type} nodes")
+        created = result['nodes_created']
+        logger.info(
+            f"  {config_key}: {action} {result['rows_sent']} {node_type} nodes "
+            f"({created} new)"
+        )
 
         if merge:
-            self.stats['nodes_merged'] += count
+            self.stats['nodes_merged'] += result['rows_sent']
         else:
-            self.stats['nodes_created'] += count
+            self.stats['nodes_created'] += result['rows_sent']
 
     # -------------------------------------------------------------------------
     # Relationship loading
@@ -394,9 +398,15 @@ class Neo4jLoader:
                 )
         row_dicts = rows.to_dict('records')
 
-        count = self._execute_batch(query, row_dicts, source_label=source_label)
-        logger.info(f"  {config_key}: merged {count} {rel_type} relationships")
-        self.stats['relationships_merged'] += count
+        result = self._execute_batch(query, row_dicts, source_label=source_label)
+        created = result['relationships_created']
+        sent = result['rows_sent']
+        matched = sent - created if sent > created else sent
+        logger.info(
+            f"  {config_key}: {sent} rows -> {created} new + "
+            f"{matched} existing {rel_type} relationships"
+        )
+        self.stats['relationships_merged'] += sent
 
         # Inverse relationship
         if inverse_rel_type:
@@ -414,9 +424,15 @@ class Neo4jLoader:
             if inv_set_parts:
                 inv_query += f"SET {', '.join(inv_set_parts)}"
 
-            inv_count = self._execute_batch(inv_query, row_dicts, source_label=source_label)
-            logger.info(f"  {config_key}: merged {inv_count} {inverse_rel_type} (inverse) relationships")
-            self.stats['relationships_merged'] += inv_count
+            inv_result = self._execute_batch(inv_query, row_dicts, source_label=source_label)
+            inv_created = inv_result['relationships_created']
+            inv_sent = inv_result['rows_sent']
+            inv_matched = inv_sent - inv_created if inv_sent > inv_created else inv_sent
+            logger.info(
+                f"  {config_key}: {inv_sent} rows -> {inv_created} new + "
+                f"{inv_matched} existing {inverse_rel_type} (inverse) relationships"
+            )
+            self.stats['relationships_merged'] += inv_sent
 
     # -------------------------------------------------------------------------
     # Helpers
@@ -438,7 +454,7 @@ class Neo4jLoader:
         return df
 
     def _execute_batch(self, query: str, rows: List[Dict[str, Any]],
-                       source_label: Optional[str] = None) -> int:
+                       source_label: Optional[str] = None) -> dict:
         """
         Execute a Cypher query in batches using UNWIND.
 
@@ -448,9 +464,15 @@ class Neo4jLoader:
             source_label: Optional source label passed as a top-level Cypher parameter.
 
         Returns:
-            Total rows processed.
+            Dict with 'rows_sent', 'relationships_created', 'nodes_created',
+            'properties_set' counts from Neo4j counters.
         """
-        total = 0
+        totals = {
+            'rows_sent': 0,
+            'relationships_created': 0,
+            'nodes_created': 0,
+            'properties_set': 0,
+        }
         params: Dict[str, Any] = {}
         if source_label:
             params['source_label'] = source_label
@@ -461,12 +483,15 @@ class Neo4jLoader:
                 try:
                     result = session.run(query, rows=batch, **params)
                     summary = result.consume()
-                    total += len(batch)
+                    totals['rows_sent'] += len(batch)
+                    totals['relationships_created'] += summary.counters.relationships_created
+                    totals['nodes_created'] += summary.counters.nodes_created
+                    totals['properties_set'] += summary.counters.properties_set
                 except Exception as e:
                     logger.error(f"Batch error at offset {i}: {e}")
                     self.stats['errors'].append(str(e))
 
-        return total
+        return totals
 
     # -------------------------------------------------------------------------
     # Custom loaders (source-specific logic beyond config system)
@@ -515,7 +540,8 @@ class Neo4jLoader:
                 "MATCH (d:Disease {xrefDiseaseOntology: row.DO}) "
                 "SET d.xrefUmlsCUI = row.diseaseId"
             )
-            counts['enriched'] = self._execute_batch(query_enrich, rows_doid)
+            enrich_result = self._execute_batch(query_enrich, rows_doid)
+            counts['enriched'] = enrich_result['rows_sent']
             self.stats['nodes_merged'] += counts['enriched']
             logger.info(f"  disgenet.diseases: enriched {counts['enriched']} existing Disease nodes with xrefUmlsCUI")
 
@@ -530,7 +556,8 @@ class Neo4jLoader:
                 "ON CREATE SET d.commonName = row.diseaseName, "
                 "d.sourceDatabase = 'DisGeNET'"
             )
-            counts['created'] = self._execute_batch(query_create, rows_new)
+            create_result = self._execute_batch(query_create, rows_new)
+            counts['created'] = create_result['nodes_created']
             self.stats['nodes_created'] += counts['created']
             logger.info(f"  disgenet.diseases: created {counts['created']} new Disease nodes")
 

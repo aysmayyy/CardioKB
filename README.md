@@ -2,7 +2,7 @@
 
 A biomedical knowledge graph pipeline that integrates 22 data sources (20 parsers) into a Neo4j graph for cardiovascular disease research, feature selection, and precision medicine. Adapted from the AlzKB (Alzheimer's Knowledge Base) architecture with additional custom parsers and Hetionet component integrations.
 
-**Graph stats:** 332,447 nodes | 23,578,789 relationships | 15 node types | 30 relationship types
+**Graph stats:** 332,447 nodes | 23,597,115 relationships | 15 node types | 30 relationship types
 
 ## Pipeline Status
 
@@ -42,8 +42,8 @@ A biomedical knowledge graph pipeline that integrates 22 data sources (20 parser
 | 14 | LINCS L1000 (gene expression) | Public | Working (336,999 edges) |
 | 15 | MEDLINE (literature cooccurrence) | Public | Working (7,213 cooccurrence edges) |
 | 16 | DrugCentral (drug-disease) | Public | Working (14,572 relationships) |
-| 17 | GWAS Catalog (associations) | Public | Working (760,270 gene-disease associations) |
-| 18 | BindingDB (drug-target) | Public | Working (22,254 drug-gene bindings via UniProt→Entrez mapping) |
+| 17 | GWAS Catalog (associations) | Public | Working (90,578 gene-disease associations after 3-strategy DOID remap) |
+| 18 | BindingDB (drug-target) | Public | Working (23,954 drug-gene bindings via UniProt→Entrez mapping) |
 | 19 | PubTator Central (literature mining) | Public FTP | Working (69M+ literature edges) |
 | 20 | CTD (chemical-gene) | Public | Working (677,015 expression edges) |
 | 21 | Bgee (gene expression) | Public FTP | Working (6,609,112 expression edges) |
@@ -64,7 +64,7 @@ Cardio-KB/
 ├── src/
 │   ├── main.py                 # Pipeline orchestrator (--skip-neo4j, --skip-download)
 │   ├── neo4j_loader.py         # Cypher-based Neo4j batch loader
-│   ├── ontology_configs.py     # 52 ontology configs for Neo4j schema mapping
+│   ├── ontology_configs.py     # 53 ontology configs for Neo4j schema mapping
 │   ├── utils.py                # CVD term filtering utilities
 │   └── parsers/
 │       ├── base_parser.py      # Abstract base class for all parsers

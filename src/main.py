@@ -201,12 +201,34 @@ class CardioKBPipeline:
 
         parsers = self._get_parsers()
 
+        # Sources with very slow raw-file parsing; prefer cached TSVs when available
+        SLOW_PARSERS = {'pubtator', 'bgee'}
+
         for source_name, parser in parsers.items():
             logger.info(f"{'=' * 60}")
             logger.info(f"Processing {source_name.upper()}")
             logger.info(f"{'=' * 60}")
 
             try:
+                # For slow parsers with --skip-download, prefer cached TSVs
+                if skip_download and source_name in SLOW_PARSERS:
+                    src_dir = self.processed_dir / source_name
+                    if src_dir.exists():
+                        tsv_files = list(src_dir.glob('*.tsv'))
+                        tsv_data = {}
+                        for tsv_path in tsv_files:
+                            df = pd.read_csv(tsv_path, sep='\t')
+                            if len(df) > 0:
+                                tsv_data[tsv_path.stem] = df
+                        if tsv_data:
+                            parsed_data[source_name] = tsv_data
+                            self.stats['sources_processed'] += 1
+                            logger.info(f"Loaded {source_name} from cached TSVs (skipped slow re-parse)")
+                            for key, df in tsv_data.items():
+                                logger.info(f"  - {key}: {len(df)} records")
+                                self.stats['source_details'][f"{source_name}.{key}"] = len(df)
+                            continue
+
                 if not skip_download:
                     logger.info(f"Downloading {source_name} data...")
                     download_success = parser.download_data()
@@ -303,19 +325,33 @@ class CardioKBPipeline:
         # Post-processing: remap PubTator MESH IDs to DOID, GWAS trait to DOID
         from src.id_mapping import remap_pubtator_mesh_to_doid, remap_gwas_disease_to_doid
 
-        # Fall back to existing TSVs if disease_ontology parser failed (e.g. obonet not installed)
-        if 'disease_ontology' not in parsed_data:
-            do_dir = self.processed_dir / 'disease_ontology'
-            xrefs_path = do_dir / 'disease_xrefs.tsv'
-            nodes_path = do_dir / 'disease_nodes.tsv'
-            if xrefs_path.exists() or nodes_path.exists():
-                parsed_data['disease_ontology'] = {}
-                if xrefs_path.exists():
-                    parsed_data['disease_ontology']['disease_xrefs'] = pd.read_csv(xrefs_path, sep='\t')
-                    logger.info(f"Loaded disease_xrefs from TSV fallback ({len(parsed_data['disease_ontology']['disease_xrefs'])} rows)")
-                if nodes_path.exists():
-                    parsed_data['disease_ontology']['disease_nodes'] = pd.read_csv(nodes_path, sep='\t')
-                    logger.info(f"Loaded disease_nodes from TSV fallback ({len(parsed_data['disease_ontology']['disease_nodes'])} rows)")
+        # TSV fallback: for sources that failed parsing or returned all-empty
+        # DataFrames, load from existing processed TSVs
+        for source_name in list(parsers.keys()):
+            needs_fallback = source_name not in parsed_data
+            if not needs_fallback and source_name in parsed_data:
+                # Check if all DataFrames are empty (e.g. ClinPGx with --skip-download)
+                all_empty = all(
+                    hasattr(df, '__len__') and len(df) == 0
+                    for df in parsed_data[source_name].values()
+                )
+                if all_empty and parsed_data[source_name]:
+                    needs_fallback = True
+
+            if needs_fallback:
+                src_dir = self.processed_dir / source_name
+                if src_dir.exists():
+                    tsv_files = list(src_dir.glob('*.tsv'))
+                    if tsv_files:
+                        fallback_data = {}
+                        for tsv_path in tsv_files:
+                            data_name = tsv_path.stem
+                            df = pd.read_csv(tsv_path, sep='\t')
+                            if len(df) > 0:
+                                fallback_data[data_name] = df
+                                logger.info(f"Loaded {source_name}/{data_name} from TSV fallback ({len(df)} rows)")
+                        if fallback_data:
+                            parsed_data[source_name] = fallback_data
 
         if 'pubtator' in parsed_data and 'disease_ontology' in parsed_data:
             remap_pubtator_mesh_to_doid(parsed_data)
@@ -621,6 +657,15 @@ class CardioKBPipeline:
             try:
                 for data_name, df in data.items():
                     tsv_file = output_dir / f"{data_name}.tsv"
+                    # Guard: never overwrite a non-empty TSV with an empty DataFrame
+                    if len(df) == 0 and tsv_file.exists():
+                        existing_lines = sum(1 for _ in open(tsv_file)) - 1  # subtract header
+                        if existing_lines > 0:
+                            logger.warning(
+                                f"  Skipping export of empty {data_name} "
+                                f"(existing TSV has {existing_lines} rows)"
+                            )
+                            continue
                     df.to_csv(tsv_file, sep='\t', index=False)
                     logger.info(f"  Exported {data_name} ({len(df)} records)")
             except Exception as e:
