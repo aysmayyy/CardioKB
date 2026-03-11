@@ -68,35 +68,37 @@ python src/main.py --skip-download --skip-neo4j
 ## CVD Scope
 All cardiovascular diseases: arrhythmias, coronary artery disease, heart failure, cardiomyopathies, hypertension, stroke, valvular heart disease.
 
-## Parsers — 20 Total
+## Data Sources — 22 Sources (20 Parsers)
 
-### Active & Loaded (19)
-| Parser | Source | Notes |
-|--------|--------|-------|
-| ClinicalTrialsParser | ClinicalTrials.gov API v2 | Public API, 14,856 CVD trials |
-| ClinPGxParser | ClinPGx (PharmGKB successor) | Public API, 454 annotations, 1,060 variants, 294 AFFECTS_RESPONSE_TO edges |
-| NCBIGeneParser | NCBI Gene FTP | Public FTP, 193,687 genes |
-| DoRothEAParser | OmniPath API (DoRothEA) | Public API, 15,092 TF-gene interactions |
-| OMIMParser | OMIM genetic disorders | API key required, 1,556 CVD diseases, 1,632 gene-disease edges |
-| DisGeNETParser | DisGeNET gene-disease | API key required, 5,010 gene-disease edges |
-| DrugBankParser | DrugBank drugs | XML file or login, 19,842 drugs |
-| AOPDBParser | AOP-DB adverse outcome pathways | SQL dump or MySQL, 187,247 gene-pathway edges |
-| DiseaseOntologyParser | Disease Ontology (DOID) | Hetionet component, 12,012 diseases |
-| GeneOntologyParser | Gene Ontology (GO) | Hetionet component, 376,442 annotations |
-| UberonParser | Uberon anatomy ontology | Hetionet component, 14,675 anatomy nodes |
-| SIDERParser | SIDER side effects | Hetionet component, 148,518 compound-side effect edges |
-| PubTatorParser | PubTator literature mining | Hetionet component, 2.1M+ disease-disease edges |
-| CTDParser | CTD chemical-gene interactions | Hetionet component, 677K expression edges |
-| BgeeParser | Bgee gene expression | Hetionet component, 4.8M+ expression edges |
-| HetionetPrecomputedParser | Hetionet precomputed edges | Hetionet component |
-| GWASParser | GWAS Catalog | Hetionet component, 43,453 gene-disease edges |
-| BindingDBParser | BindingDB drug-target | Hetionet component, 22,254 chemicalBindsGene edges (UniProt→Entrez mapped) |
-| MEDLINECooccurrenceParser | MEDLINE co-occurrences | Hetionet component, 7,213 cooccurrence edges |
+### Phase 1: Core Parsers
+| # | Source | Parser | Access | Status |
+|---|--------|--------|--------|--------|
+| 1 | ClinicalTrials.gov | ClinicalTrialsParser | Public API v2 | Working (14,856 CVD trials) |
+| 2 | ClinPGx (PharmGKB successor) | ClinPGxParser | Public API | Working (454 annotations, 1,060 variants, 294 AFFECTS_RESPONSE_TO edges) |
+| 3 | NCBI Gene | NCBIGeneParser | Public FTP | Working (193,687 genes) |
+| 4 | DoRothEA (OmniPath) | DoRothEAParser | Public API | Working (15,092 TF-gene interactions) |
+| 5 | OMIM | OMIMParser | API key required | Working (1,556 CVD diseases, 1,632 gene-disease edges) |
+| 6 | DisGeNET | DisGeNETParser | API key required | Working (341 DO-matched + 559 new diseases, 5,010 gene-disease edges) |
+| 7 | DrugBank | DrugBankParser | XML file or login | Working (19,842 drugs from full database XML) |
+| 8 | AOP-DB | AOPDBParser | SQL dump or MySQL | Working (173,500 chemicals, 4,646 pathways, 187,247 gene-pathway edges) |
 
-### Stale URLs / Download Failures (1)
-| Parser | Source | Issue |
-|--------|--------|-------|
-| MeSHParser | MeSH symptom terms | Nodes loaded (966), no relationship data |
+### Phase 2: Hetionet Component Parsers
+| # | Source | Parser | Access | Status |
+|---|--------|--------|--------|--------|
+| 9 | Disease Ontology (DOID) | DiseaseOntologyParser | Public | Working (12,012 diseases) |
+| 10 | Gene Ontology (GO) | GeneOntologyParser | Public | Working (38,739 GO terms, 376,442 annotations) |
+| 11 | Uberon (anatomy) | UberonParser | Public | Working (14,675 anatomy nodes) |
+| 12 | MeSH (symptoms) | MeSHParser | Public | Working (966 symptom nodes, no relationship data) |
+| 13 | SIDER (side effects) | SIDERParser | Public | Working (5,734 side effects, 153,663 edges) |
+| 14 | LINCS L1000 (gene expression) | LINCS1000Parser | Public | Working (336,999 edges) |
+| 15 | MEDLINE (literature cooccurrence) | MEDLINECooccurrenceParser | Public | Working (7,213 cooccurrence edges) |
+| 16 | DrugCentral (drug-disease) | DrugCentralParser | Public | Working (14,572 relationships) |
+| 17 | GWAS Catalog (associations) | GWASParser | Public | Working (90,578 gene-disease associations after 3-strategy DOID remap) |
+| 18 | BindingDB (drug-target) | BindingDBParser | Public | Working (23,954 drug-gene bindings via UniProt→Entrez mapping) |
+| 19 | PubTator Central (literature mining) | PubTatorParser | Public FTP | Working (69M+ literature edges) |
+| 20 | CTD (chemical-gene) | CTDParser | Public | Working (677,015 expression edges) |
+| 21 | Bgee (gene expression) | BgeeParser | Public FTP | Working (6,609,112 expression edges) |
+| 22 | Hetionet (precomputed edges) | HetionetPrecomputedParser | Public | Working (613,470 precomputed edges) |
 
 ### Credential-Gated (requires env vars, currently loaded)
 | Parser | Source | Required Env Vars | Status |
