@@ -11,7 +11,7 @@
 12-week rotation project (Jan–Apr 2026) building a cardiovascular disease knowledge base. The base KB structure is adapted from AlzKB (Alzheimer's Knowledge Base) files. BaseAgent (agentic AI tool) handles building the core knowledge graph from databases similar to AlzKB. On top of that, additional data sources are integrated via custom parsers. The final KB is stored in a Neo4j knowledge graph for CVD research, feature selection, and precision medicine.
 
 ## Current Graph Stats
-- **332,447 nodes** | **8,869,944 relationships** | **15 node types** | **30 relationship types**
+- **332,447 nodes** | **23,578,789 relationships** | **15 node types** | **30 relationship types**
 - All relationships carry a `source` property identifying the originating database (e.g., `source: "OMIM"`)
 
 ## Tech Stack

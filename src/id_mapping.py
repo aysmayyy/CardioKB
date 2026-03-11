@@ -39,13 +39,20 @@ def remap_pubtator_mesh_to_doid(parsed_data: Dict[str, Dict[str, pd.DataFrame]])
     mesh_to_doid = dict(zip(mesh_rows['xref'], mesh_rows['doid']))
     logger.info(f"Built MESH->DOID lookup with {len(mesh_to_doid)} entries")
 
+    def _remap_disease_col(col: pd.Series, lookup: dict) -> pd.Series:
+        """Remap MESH IDs to DOID; preserve values already in DOID format."""
+        is_mesh = col.str.startswith('MESH:', na=False)
+        result = col.copy()
+        result[is_mesh] = col[is_mesh].map(lookup)
+        return result
+
     # Remap disease-disease co-occurrence
     dd_key = 'disease_disease_cooccurrence'
     if dd_key in pt_data:
         df = pt_data[dd_key]
         before = len(df)
-        df['disease1_id'] = df['disease1_id'].map(mesh_to_doid)
-        df['disease2_id'] = df['disease2_id'].map(mesh_to_doid)
+        df['disease1_id'] = _remap_disease_col(df['disease1_id'], mesh_to_doid)
+        df['disease2_id'] = _remap_disease_col(df['disease2_id'], mesh_to_doid)
         df = df.dropna(subset=['disease1_id', 'disease2_id'])
         # Remove self-loops created by MESH->DOID many-to-one collapse
         df = df[df['disease1_id'] != df['disease2_id']]
@@ -57,8 +64,22 @@ def remap_pubtator_mesh_to_doid(parsed_data: Dict[str, Dict[str, pd.DataFrame]])
     if gd_key in pt_data:
         df = pt_data[gd_key]
         before = len(df)
-        df['disease_id'] = df['disease_id'].map(mesh_to_doid)
+        df['disease_id'] = _remap_disease_col(df['disease_id'], mesh_to_doid)
         df = df.dropna(subset=['disease_id'])
+
+        # Explode semicolon-delimited gene_ids (PubTator multi-gene annotations)
+        df['gene_id'] = df['gene_id'].astype(str)
+        has_semi = df['gene_id'].str.contains(';', na=False)
+        if has_semi.any():
+            df = df.assign(gene_id=df['gene_id'].str.split(';')).explode('gene_id')
+            df['gene_id'] = df['gene_id'].str.strip()
+            logger.info(f"PubTator {gd_key}: exploded semicolons -> {len(df)} rows")
+
+        # Coerce gene_id to int (required for Neo4j xrefNcbiGene matching)
+        df['gene_id'] = pd.to_numeric(df['gene_id'], errors='coerce')
+        df = df.dropna(subset=['gene_id'])
+        df['gene_id'] = df['gene_id'].astype(int)
+
         pt_data[gd_key] = df
         logger.info(f"PubTator {gd_key}: {before} -> {len(df)} rows after MESH->DOID remap")
 

@@ -2,7 +2,7 @@
 
 A biomedical knowledge graph pipeline that integrates 22 data sources (20 parsers) into a Neo4j graph for cardiovascular disease research, feature selection, and precision medicine. Adapted from the AlzKB (Alzheimer's Knowledge Base) architecture with additional custom parsers and Hetionet component integrations.
 
-**Graph stats:** 332,447 nodes | 8,869,944 relationships | 15 node types | 30 relationship types
+**Graph stats:** 332,447 nodes | 23,578,789 relationships | 15 node types | 30 relationship types
 
 ## Pipeline Status
 

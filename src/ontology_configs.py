@@ -559,7 +559,7 @@ ONTOLOGY_CONFIGS = {
             'object_match_property': 'xrefUberon',
         },
         'merge': False,
-        'skip': False,
+        'skip': True,  # No TSV produced; MEDLINE covers diseaseLocalizesToAnatomy
     },
 
     # ---- Gene Ontology ----
@@ -1107,6 +1107,6 @@ ONTOLOGY_CONFIGS = {
             'object_match_property': 'xrefNcbiGene',
         },
         'merge': False,
-        'skip': False,
+        'skip': True,  # Subset of LINCS L1000 geneRegulatesGene; LINCS overwrites r.source
     },
 }

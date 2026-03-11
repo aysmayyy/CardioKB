@@ -300,8 +300,23 @@ class CardioKBPipeline:
                         )
                         logger.info(f"Prefixed CTD {key} chemical_id with MESH:")
 
-        # Post-processing: remap PubTator MESH IDs to DOID
+        # Post-processing: remap PubTator MESH IDs to DOID, GWAS trait to DOID
         from src.id_mapping import remap_pubtator_mesh_to_doid, remap_gwas_disease_to_doid
+
+        # Fall back to existing TSVs if disease_ontology parser failed (e.g. obonet not installed)
+        if 'disease_ontology' not in parsed_data:
+            do_dir = self.processed_dir / 'disease_ontology'
+            xrefs_path = do_dir / 'disease_xrefs.tsv'
+            nodes_path = do_dir / 'disease_nodes.tsv'
+            if xrefs_path.exists() or nodes_path.exists():
+                parsed_data['disease_ontology'] = {}
+                if xrefs_path.exists():
+                    parsed_data['disease_ontology']['disease_xrefs'] = pd.read_csv(xrefs_path, sep='\t')
+                    logger.info(f"Loaded disease_xrefs from TSV fallback ({len(parsed_data['disease_ontology']['disease_xrefs'])} rows)")
+                if nodes_path.exists():
+                    parsed_data['disease_ontology']['disease_nodes'] = pd.read_csv(nodes_path, sep='\t')
+                    logger.info(f"Loaded disease_nodes from TSV fallback ({len(parsed_data['disease_ontology']['disease_nodes'])} rows)")
+
         if 'pubtator' in parsed_data and 'disease_ontology' in parsed_data:
             remap_pubtator_mesh_to_doid(parsed_data)
         if 'gwas' in parsed_data and 'disease_ontology' in parsed_data:
