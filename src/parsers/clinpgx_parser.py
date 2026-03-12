@@ -286,14 +286,95 @@ class ClinPGxParser(BaseParser):
 
         return success
 
+    def _load_from_cache(self) -> bool:
+        """
+        Load data from cached JSON files when download was skipped.
+
+        Reads the cache directory and populates in-memory lists from
+        previously cached API responses, matching the same logic as
+        download_data().
+
+        Returns:
+            True if any cached data was loaded, False otherwise.
+        """
+        if not self.cache_dir.exists():
+            return False
+
+        cache_files = list(self.cache_dir.glob("*.json"))
+        if not cache_files:
+            return False
+
+        logger.info(f"Loading ClinPGx data from {len(cache_files)} cached files...")
+
+        seen_label_ids = set()
+
+        for cache_file in sorted(cache_files):
+            try:
+                with open(cache_file, 'r') as f:
+                    resp = json.load(f)
+            except (json.JSONDecodeError, IOError) as e:
+                logger.warning(f"Failed to read cache file {cache_file.name}: {e}")
+                continue
+
+            items = self._extract_data_list(resp)
+            if not items:
+                continue
+
+            prefix = cache_file.stem.split('_')[0]
+
+            if prefix == 'ca':
+                # Clinical annotations — infer drug from filename
+                drug = cache_file.stem[3:].replace('_', ' ')
+                for item in items:
+                    item.setdefault('_queried_drug', drug)
+                self._clinical_annotations.extend(items)
+
+            elif prefix == 'dl':
+                # Drug labels — deduplicate by label id
+                gene = cache_file.stem[3:].upper()
+                for item in items:
+                    label_id = item.get('id', '')
+                    if label_id not in seen_label_ids:
+                        seen_label_ids.add(label_id)
+                        item.setdefault('_queried_gene', gene)
+                        self._drug_labels.append(item)
+
+            elif prefix == 'var':
+                # Variants
+                gene = cache_file.stem[4:].upper()
+                for item in items:
+                    item.setdefault('_queried_gene', gene)
+                self._variants.extend(items)
+
+            elif prefix == 'gene':
+                # Gene info
+                self._gene_info.extend(items)
+
+        loaded = (len(self._clinical_annotations) + len(self._drug_labels)
+                  + len(self._variants) + len(self._gene_info))
+        logger.info(f"  Loaded from cache: {len(self._clinical_annotations)} annotations, "
+                    f"{len(self._drug_labels)} drug labels, "
+                    f"{len(self._variants)} variants, "
+                    f"{len(self._gene_info)} gene records")
+        return loaded > 0
+
     def parse_data(self) -> Dict[str, pd.DataFrame]:
         """
         Parse ClinPGx API responses into structured DataFrames.
+
+        If in-memory data is empty (e.g. --skip-download), loads from
+        cached JSON files in data/raw/clinpgx/cache/.
 
         Returns:
             Dictionary with DataFrames for clinical_annotations, drug_labels,
             variants, and gene_info.
         """
+        # Load from cache if download was skipped
+        has_data = (self._clinical_annotations or self._drug_labels
+                    or self._variants or self._gene_info)
+        if not has_data:
+            self._load_from_cache()
+
         logger.info("Parsing ClinPGx data...")
 
         result = {}
