@@ -56,6 +56,8 @@ from src.parsers import (
     LINCS1000Parser,
     MEDLINECooccurrenceParser,
     JensenLabParser,
+    JensenTissuesParser,
+    HPOParser,
 )
 
 logger = logging.getLogger(__name__)
@@ -431,6 +433,12 @@ class CardioKBPipeline:
             data_dir=str(self.raw_dir),
         )
         parsers['jensenlab'] = JensenLabParser(
+            data_dir=str(self.raw_dir),
+        )
+        parsers['jensentissues'] = JensenTissuesParser(
+            data_dir=str(self.raw_dir),
+        )
+        parsers['hpo'] = HPOParser(
             data_dir=str(self.raw_dir),
         )
 

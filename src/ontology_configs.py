@@ -99,6 +99,13 @@ HETIO_GENE_REGULATES = 'gene_regulates'
 # Jensen Lab DISEASES
 JENSENLAB_GENE_DISEASE = 'gene_disease_associations'
 
+# Jensen Lab TISSUES
+JENSEN_TISSUES_GENE_TISSUE = 'gene_tissue_associations'
+
+# HPO (Human Phenotype Ontology)
+HPO_PHENOTYPE_NODES = 'phenotype_nodes'
+HPO_GENE_PHENOTYPE = 'gene_phenotype_associations'
+
 # AOPDB table mapping for MySQL queries
 AOPDB_TABLE_MAPPING = {
     AOPDB_AOPS: 'aop_info',
@@ -1133,6 +1140,71 @@ ONTOLOGY_CONFIGS = {
                 'confidence': 'confidence',
                 'channel': 'channel',
             },
+        },
+        'merge': False,
+        'skip': False,
+    },
+
+    # =========================================================================
+    # Jensen Lab TISSUES — Gene-Tissue Expression Associations
+    # =========================================================================
+    f'jensentissues.{JENSEN_TISSUES_GENE_TISSUE}': {
+        'data_type': 'relationship',
+        'relationship_type': 'geneExpressedInBodyPart',
+        'source_label': 'Jensen TISSUES',
+        'source_filename': f'{JENSEN_TISSUES_GENE_TISSUE}.tsv',
+        'parse_config': {
+            'headers': True,
+            'subject_node_type': 'Gene',
+            'subject_column_name': 'gene_symbol',
+            'subject_match_property': 'geneSymbol',
+            'object_node_type': 'BodyPart',
+            'object_column_name': 'tissue_name',
+            'object_match_property': 'commonName',
+            'data_property_map': {
+                'confidence': 'confidence',
+                'channel': 'channel',
+            },
+        },
+        'merge': False,
+        'skip': False,
+    },
+
+    # =========================================================================
+    # HPO — Human Phenotype Ontology Nodes
+    # =========================================================================
+    f'hpo.{HPO_PHENOTYPE_NODES}': {
+        'data_type': 'node',
+        'node_type': 'Phenotype',
+        'source_filename': f'{HPO_PHENOTYPE_NODES}.tsv',
+        'parse_config': {
+            'headers': True,
+            'iri_column_name': 'hpo_id',
+            'data_property_map': {
+                'hpo_id': 'xrefHPO',
+                'name': 'commonName',
+                'definition': 'definition',
+                'synonyms': 'synonyms',
+            },
+        },
+        'merge': False,
+        'skip': False,
+    },
+
+    # ---- HPO Gene-Phenotype Associations ----
+    f'hpo.{HPO_GENE_PHENOTYPE}': {
+        'data_type': 'relationship',
+        'relationship_type': 'geneAssociatesWithPhenotype',
+        'source_label': 'HPO',
+        'source_filename': f'{HPO_GENE_PHENOTYPE}.tsv',
+        'parse_config': {
+            'headers': True,
+            'subject_node_type': 'Gene',
+            'subject_column_name': 'gene_id',
+            'subject_match_property': 'xrefNcbiGene',
+            'object_node_type': 'Phenotype',
+            'object_column_name': 'hpo_id',
+            'object_match_property': 'xrefHPO',
         },
         'merge': False,
         'skip': False,

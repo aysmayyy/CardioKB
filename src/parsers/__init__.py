@@ -45,6 +45,8 @@ from .aopdb_parser import AOPDBParser
 from .dorothea_parser import DoRothEAParser
 from .disgenet_parser import DisGeNETParser
 from .jensenlab_parser import JensenLabParser
+from .jensen_tissues_parser import JensenTissuesParser
+from .hpo_parser import HPOParser
 from .hetionet_components import (
     DiseaseOntologyParser,
     GeneOntologyParser,
@@ -90,4 +92,6 @@ __all__ = [
     'LINCS1000Parser',
     'MEDLINECooccurrenceParser',
     'JensenLabParser',
+    'JensenTissuesParser',
+    'HPOParser',
 ]
