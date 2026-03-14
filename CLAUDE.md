@@ -28,8 +28,8 @@
 - `src/ontology_configs.py` — 53 ontology configs mapping source data to Neo4j schema
 - `src/neo4j_loader.py` — Cypher-based Neo4j batch loader (auto-sets `r.source` from config `source_label`)
 - `src/id_mapping.py` — Cross-database ID remapping (PubTator MeSH→DOID, GWAS→DOID)
-- `src/utils.py` — Shared utilities (CVD filtering)
-- `ontology/` — CVD disease hierarchy (115 terms)
+- `src/utils.py` — Shared utilities (disease filtering via `ontology/disease_filter.txt`)
+- `ontology/disease_filter.txt` — Single config file for disease-scope filtering (115 CVD terms by default)
 - `data/raw/` — Downloaded source data
 - `data/processed/` — Exported TSV files for Neo4j loading
 - `data/output/` — Release notes and build artifacts
@@ -65,8 +65,12 @@ python src/main.py --skip-download --skip-neo4j
 - Run tests with `pytest tests/`
 - Every relationship ontology config must include a `source_label` field
 
-## CVD Scope
-All cardiovascular diseases: arrhythmias, coronary artery disease, heart failure, cardiomyopathies, hypertension, stroke, valvular heart disease.
+## Disease Scope & Filtering
+All disease-scoped queries are controlled by `ontology/disease_filter.txt` (one term per line, comments with `#`). Currently configured for CVD: arrhythmias, coronary artery disease, heart failure, cardiomyopathies, hypertension, stroke, valvular heart disease. Only two parsers read this file:
+- **ClinicalTrialsParser** — builds API condition queries from the term list
+- **DisGeNETParser** — searches the API for diseases matching the term list
+
+All other parsers are disease-agnostic. To build a KB for a different disease area, edit `ontology/disease_filter.txt` and re-run those two parsers.
 
 ## Data Sources — 23 Sources (21 Parsers)
 

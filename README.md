@@ -102,7 +102,7 @@ Cardio-KB/
 │   ├── processed/              # Exported TSV files per source (gitignored)
 │   └── output/                 # Release notes and build artifacts (gitignored)
 ├── ontology/
-│   └── disease_filter.txt         # 115 CVD terms for filtering
+│   └── disease_filter.txt         # Disease-scope config (edit to retarget KB)
 ├── docs/                       # Research plan, specific aims, data inventory xlsx
 ├── examples/                   # Example scripts for individual parsers
 ├── notebooks/                  # Jupyter notebooks for exploration
@@ -183,9 +183,15 @@ python scripts/verify_graph.py --uri bolt://localhost:7687 --username neo4j --pa
 
 The script also reads from `NEO4J_URI`, `NEO4J_USERNAME`, and `NEO4J_PASSWORD` environment variables.
 
-## CVD Scope
+## Disease Scope & Filtering
 
-All cardiovascular diseases including arrhythmias, coronary artery disease, heart failure, cardiomyopathies, hypertension, stroke, valvular heart disease, peripheral artery disease, and lipid disorders. The full term list (115 terms) is in `ontology/disease_filter.txt`.
+Disease-scoped queries are controlled by a single config file: **`ontology/disease_filter.txt`** (one term per line, `#` for comments). Currently configured with 115 cardiovascular disease terms covering arrhythmias, coronary artery disease, heart failure, cardiomyopathies, hypertension, stroke, valvular heart disease, peripheral artery disease, and lipid disorders.
+
+Only two parsers read this file:
+- **ClinicalTrialsParser** — builds API condition queries from the term list
+- **DisGeNETParser** — searches the API for diseases matching the term list
+
+All other 19 parsers are disease-agnostic and load their full datasets regardless of the filter file. **To build a knowledge base for a different disease area**, edit `ontology/disease_filter.txt` with your terms and re-run those two parsers — no code changes required.
 
 ## Architecture Notes
 

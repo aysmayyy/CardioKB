@@ -204,7 +204,7 @@ class ClinicalTrialsParser(BaseParser):
             logger.info(f"  Added {new_count} new trials (total unique: {len(all_trials)})")
 
             # Delay between category batches
-            if i < len(self.CVD_CATEGORY_QUERIES):
+            if i < len(category_queries):
                 time.sleep(2.0)
 
         self._trials_data = all_trials
