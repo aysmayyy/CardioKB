@@ -109,6 +109,9 @@ Cardio-KB/
 ├── examples/                   # Example scripts for individual parsers
 ├── notebooks/                  # Jupyter notebooks for exploration
 ├── tests/                      # pytest test files
+├── .claude/
+│   └── skills/                 # Claude Code skill files (auto-loaded for AI-assisted development)
+│       └── database-parsing/   # Step-by-step guide for adding new data source parsers
 ├── models/                     # (Future) ML models
 └── web/                        # (Future) Web interface
 ```

@@ -40,7 +40,19 @@
 - `tests/` — pytest test files
 - `models/` — Future ML models
 - `web/` — Future web interface
-- `.claude/skills/` — Claude Code custom skills
+- `.claude/skills/` — Claude Code custom skills (see below)
+
+## Claude Code Skills
+Reusable skill files in `.claude/skills/` that Claude Code auto-loads when relevant tasks are detected. These are committed to the repo so any Claude Code instance working on this project has access.
+
+| Skill | File | Purpose |
+|-------|------|---------|
+| `database-parsing` | `.claude/skills/database-parsing/SKILL.md` | Step-by-step guide for adding a new data source parser to CardioKB. Covers access type determination, parser creation, ontology config, pipeline registration, and verification. **Use this skill whenever integrating a new database.** |
+| `aopdb-parser` | `.claude/skills/aopdb-parser/SKILL.md` | AOP-DB adverse outcome pathway parsing reference |
+| `clinicaltrials-cvd` | `.claude/skills/clinicaltrials-cvd/SKILL.md` | ClinicalTrials.gov API v2 query reference |
+| `clinpgx-parser` | `.claude/skills/clinpgx-parser/SKILL.md` | ClinPGx REST API parsing reference |
+| `clinpgx-database` | `.claude/skills/clinpgx-database/SKILL.md` | ClinPGx pharmacogenomics data access reference |
+| `omim-parser` | `.claude/skills/omim-parser/SKILL.md` | OMIM genetic disease parsing reference |
 
 ## Running the Pipeline
 ```bash
