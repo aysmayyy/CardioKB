@@ -315,7 +315,7 @@ class ClinicalTrialsParser(BaseParser):
         """
         Filter trials for cardiovascular diseases.
 
-        Uses comprehensive CVD terminology from ontology/cvd_disease_hierarchy.txt.
+        Uses comprehensive CVD terminology from ontology/disease_filter.txt.
         Most useful when query_mode is "rna" or "custom" to post-filter results.
 
         Args:

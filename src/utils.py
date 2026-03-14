@@ -23,9 +23,9 @@ def load_cvd_terms(ontology_file: str = None) -> FrozenSet[str]:
         FrozenSet of lowercase CVD terms for case-insensitive matching.
     """
     if ontology_file is None:
-        # Default location: ontology/cvd_disease_hierarchy.txt
+        # Default location: ontology/disease_filter.txt
         project_root = Path(__file__).parent.parent
-        ontology_file = project_root / "ontology" / "cvd_disease_hierarchy.txt"
+        ontology_file = project_root / "ontology" / "disease_filter.txt"
 
     return _load_cvd_terms_cached(str(ontology_file))
 

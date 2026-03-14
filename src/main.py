@@ -733,7 +733,7 @@ class CardioKBPipeline:
         """
         import re
 
-        ontology_path = self.base_dir / "ontology" / "cvd_disease_hierarchy.txt"
+        ontology_path = self.base_dir / "ontology" / "disease_filter.txt"
         if not ontology_path.exists():
             logger.warning(f"CVD ontology file not found: {ontology_path}")
             return

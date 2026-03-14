@@ -68,7 +68,7 @@ data = parser.parse_data()
 
 ### `"cvd"` (default)
 
-Queries ClinicalTrials.gov by **condition** using 10 grouped CVD category searches. Each category is an OR-joined query covering terms from `ontology/cvd_disease_hierarchy.txt`. Results are deduplicated by NCT ID across categories.
+Queries ClinicalTrials.gov by **condition** using 10 grouped CVD category searches. Each category is an OR-joined query covering terms from `ontology/disease_filter.txt`. Results are deduplicated by NCT ID across categories.
 
 **CVD categories queried:**
 1. Cardiovascular disease, heart disease, cardiac disease

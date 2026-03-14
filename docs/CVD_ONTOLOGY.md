@@ -6,7 +6,7 @@ CardioKB uses a comprehensive cardiovascular disease (CVD) ontology for filterin
 
 ## Ontology File
 
-**Location**: [`ontology/cvd_disease_hierarchy.txt`](../ontology/cvd_disease_hierarchy.txt)
+**Location**: [`ontology/disease_filter.txt`](../ontology/disease_filter.txt)
 
 This file contains 35+ curated CVD terms organized hierarchically:
 
@@ -101,7 +101,7 @@ pattern = get_cvd_search_pattern()
 
 To add new CVD terms:
 
-1. Edit [`ontology/cvd_disease_hierarchy.txt`](../ontology/cvd_disease_hierarchy.txt)
+1. Edit [`ontology/disease_filter.txt`](../ontology/disease_filter.txt)
 2. Add terms one per line (comments start with `#`)
 3. All parsers will automatically use the updated terms
 

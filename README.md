@@ -102,7 +102,7 @@ Cardio-KB/
 │   ├── processed/              # Exported TSV files per source (gitignored)
 │   └── output/                 # Release notes and build artifacts (gitignored)
 ├── ontology/
-│   └── cvd_disease_hierarchy.txt  # 115 CVD terms for filtering
+│   └── disease_filter.txt         # 115 CVD terms for filtering
 ├── docs/                       # Research plan, specific aims, data inventory xlsx
 ├── examples/                   # Example scripts for individual parsers
 ├── notebooks/                  # Jupyter notebooks for exploration
@@ -185,7 +185,7 @@ The script also reads from `NEO4J_URI`, `NEO4J_USERNAME`, and `NEO4J_PASSWORD` e
 
 ## CVD Scope
 
-All cardiovascular diseases including arrhythmias, coronary artery disease, heart failure, cardiomyopathies, hypertension, stroke, valvular heart disease, peripheral artery disease, and lipid disorders. The full term list (115 terms) is in `ontology/cvd_disease_hierarchy.txt`.
+All cardiovascular diseases including arrhythmias, coronary artery disease, heart failure, cardiomyopathies, hypertension, stroke, valvular heart disease, peripheral artery disease, and lipid disorders. The full term list (115 terms) is in `ontology/disease_filter.txt`.
 
 ## Architecture Notes
 
