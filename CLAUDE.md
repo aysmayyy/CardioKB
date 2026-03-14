@@ -11,8 +11,8 @@
 12-week rotation project (Jan–Apr 2026) building a cardiovascular disease knowledge base. The base KB structure is adapted from AlzKB (Alzheimer's Knowledge Base) files. BaseAgent (agentic AI tool) handles building the core knowledge graph from databases similar to AlzKB. On top of that, additional data sources are integrated via custom parsers. The final KB is stored in a Neo4j knowledge graph for CVD research, feature selection, and precision medicine.
 
 ## Current Graph Stats
-- **332,447 nodes** | **23,597,115 relationships** | **15 node types** | **30 relationship types**
-- All relationships carry a `source` property identifying the originating database (e.g., `source: "OMIM"`)
+- **343,162 nodes** | **23,610,033 relationships** | **15 node types** | **30 relationship types**
+- All relationships carry a `source` property identifying the originating database (e.g., `source: "DisGeNET"`)
 
 ## Tech Stack
 - **Language**: Python 3.11 (conda env: `cardiokb`)
@@ -23,13 +23,13 @@
 
 ## Project Structure
 - `src/main.py` — Pipeline orchestrator (supports `--skip-neo4j`, `--skip-download`)
-- `src/parsers/` — 21 data source parsers (inherit from `BaseParser` in `base_parser.py`)
+- `src/parsers/` — 23 data source parsers (inherit from `BaseParser` in `base_parser.py`)
   - `src/parsers/hetionet_components/` — 14 Hetionet-derived component parsers
-- `src/ontology_configs.py` — 53 ontology configs mapping source data to Neo4j schema
+- `src/ontology_configs.py` — 54 ontology configs mapping source data to Neo4j schema
 - `src/neo4j_loader.py` — Cypher-based Neo4j batch loader (auto-sets `r.source` from config `source_label`)
 - `src/id_mapping.py` — Cross-database ID remapping (PubTator MeSH→DOID, GWAS→DOID)
 - `src/utils.py` — Shared utilities (disease filtering via `ontology/disease_filter.txt`)
-- `ontology/disease_filter.txt` — Single config file for disease-scope filtering (115 CVD terms by default)
+- `ontology/disease_filter.txt` — Single config file for disease-scope filtering (90 CVD terms by default)
 - `data/raw/` — Downloaded source data
 - `data/processed/` — Exported TSV files for Neo4j loading
 - `data/output/` — Release notes and build artifacts
@@ -66,18 +66,18 @@ python src/main.py --skip-download --skip-neo4j
 - Every relationship ontology config must include a `source_label` field
 
 ## Disease Scope & Filtering
-All disease-scoped queries are controlled by `ontology/disease_filter.txt` (one term per line, comments with `#`). Currently configured for CVD: arrhythmias, coronary artery disease, heart failure, cardiomyopathies, hypertension, stroke, valvular heart disease. Only two parsers read this file:
+All disease-scoped queries are controlled by `ontology/disease_filter.txt` (one term per line, comments with `#`). Currently configured with 90 CVD terms covering arrhythmias, coronary artery disease, heart failure, cardiomyopathies, hypertension, stroke, valvular heart disease. Only two parsers filter by this file:
 - **ClinicalTrialsParser** — builds API condition queries from the term list
 - **DisGeNETParser** — searches the API for diseases matching the term list
 
-All other parsers are disease-agnostic. To build a KB for a different disease area, edit `ontology/disease_filter.txt` and re-run those two parsers.
+OMIMParser also reads the file but only to tag rows with `is_cvd` — it loads all data regardless. All other parsers are fully disease-agnostic. To build a KB for a different disease area, edit `ontology/disease_filter.txt` and re-run those two parsers.
 
-## Data Sources — 23 Sources (21 Parsers)
+## Data Sources — 23 Sources (23 Parsers)
 
 ### Phase 1: Core Parsers
 | # | Source | Parser | Access | Status |
 |---|--------|--------|--------|--------|
-| 1 | ClinicalTrials.gov | ClinicalTrialsParser | Public API v2 | Working (14,856 CVD trials) |
+| 1 | ClinicalTrials.gov | ClinicalTrialsParser | Public API v2 | Working (20,219 CVD trials) |
 | 2 | ClinPGx (PharmGKB successor) | ClinPGxParser | Public API | Working (454 annotations, 1,060 variants, 294 AFFECTS_RESPONSE_TO edges) |
 | 3 | NCBI Gene | NCBIGeneParser | Public FTP | Working (193,687 genes) |
 | 4 | DoRothEA (OmniPath) | DoRothEAParser | Public API | Working (15,092 TF-gene interactions) |
@@ -114,8 +114,9 @@ All other parsers are disease-agnostic. To build a KB for a different disease ar
 | AOPDBParser | AOP-DB adverse outcome pathways | `MYSQL_USERNAME`, `MYSQL_PASSWORD` (or SQL dump) | Loaded via SQL dump |
 
 ## Ontology Configs
-53 entries in `src/ontology_configs.py` mapping parsed TSV files to Neo4j node/relationship types, properties, and loading strategies. Each relationship config includes a `source_label` field that the loader sets as `r.source` on every relationship.
+54 entries in `src/ontology_configs.py` mapping parsed TSV files to Neo4j node/relationship types, properties, and loading strategies. Each relationship config includes a `source_label` field that the loader sets as `r.source` on every relationship.
 
 ## Relationship Source Labels
-All relationships carry a `source` property. Current labels:
-`AOP-DB`, `Bgee`, `BindingDB`, `CTD`, `ClinPGx`, `ClinicalTrials.gov`, `DisGeNET`, `Disease Ontology`, `DoRothEA`, `DrugCentral`, `Gene Ontology`, `GWAS Catalog`, `Hetionet`, `Jensen DISEASES`, `LINCS L1000`, `MEDLINE`, `OMIM`, `PubTator`, `SIDER`
+All relationships carry a `source` property. Current labels (17 with edges in graph):
+`AOP-DB`, `Bgee`, `BindingDB`, `CTD`, `ClinPGx`, `ClinicalTrials.gov`, `DisGeNET`, `DoRothEA`, `DrugCentral`, `Gene Ontology`, `GWAS Catalog`, `Hetionet`, `Jensen DISEASES`, `LINCS L1000`, `MEDLINE`, `PubTator`, `SIDER`
+Note: OMIM and Disease Ontology contribute nodes only (no relationship `source` labels).
