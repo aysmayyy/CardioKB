@@ -11,7 +11,7 @@
 12-week rotation project (Jan–Apr 2026) building a cardiovascular disease knowledge base. The base KB structure is adapted from AlzKB (Alzheimer's Knowledge Base) files. BaseAgent (agentic AI tool) handles building the core knowledge graph from databases similar to AlzKB. On top of that, additional data sources are integrated via custom parsers. The final KB is stored in a Neo4j knowledge graph for CVD research, feature selection, and precision medicine.
 
 ## Current Graph Stats
-- **343,162 nodes** | **23,610,033 relationships** | **15 node types** | **30 relationship types**
+- **362,551 nodes** | **23,880,305 relationships** | **16 node types** | **31 relationship types**
 - All relationships carry a `source` property identifying the originating database (e.g., `source: "DisGeNET"`)
 
 ## Tech Stack
@@ -23,9 +23,9 @@
 
 ## Project Structure
 - `src/main.py` — Pipeline orchestrator (supports `--skip-neo4j`, `--skip-download`)
-- `src/parsers/` — 23 data source parsers (inherit from `BaseParser` in `base_parser.py`)
+- `src/parsers/` — 24 data source parsers (inherit from `BaseParser` in `base_parser.py`)
   - `src/parsers/hetionet_components/` — 14 Hetionet-derived component parsers
-- `src/ontology_configs.py` — 54 ontology configs mapping source data to Neo4j schema
+- `src/ontology_configs.py` — 56 ontology configs mapping source data to Neo4j schema
 - `src/neo4j_loader.py` — Cypher-based Neo4j batch loader (auto-sets `r.source` from config `source_label`)
 - `src/id_mapping.py` — Cross-database ID remapping (PubTator MeSH→DOID, GWAS→DOID)
 - `src/utils.py` — Shared utilities (disease filtering via `ontology/disease_filter.txt`)
@@ -72,7 +72,7 @@ All disease-scoped queries are controlled by `ontology/disease_filter.txt` (one 
 
 OMIMParser also reads the file but only to tag rows with `is_cvd` — it loads all data regardless. All other parsers are fully disease-agnostic. To build a KB for a different disease area, edit `ontology/disease_filter.txt` and re-run those two parsers.
 
-## Data Sources — 23 Sources (23 Parsers)
+## Data Sources — 24 Sources (24 Parsers)
 
 ### Phase 1: Core Parsers
 | # | Source | Parser | Access | Status |
@@ -104,6 +104,7 @@ OMIMParser also reads the file but only to tag rows with `is_cvd` — it loads a
 | 21 | Bgee (gene expression) | BgeeParser | Public FTP | Working (6,609,112 expression edges) |
 | 22 | Hetionet (precomputed edges) | HetionetPrecomputedParser | Public | Working (613,470 precomputed edges) |
 | 23 | Jensen Lab DISEASES | JensenLabParser | Public | Working (gene-disease associations) |
+| 24 | HPO (Human Phenotype Ontology) | HPOParser | Public | Working (19,389 phenotypes, 270,272 gene-phenotype edges) |
 
 ### Credential-Gated (requires env vars, currently loaded)
 | Parser | Source | Required Env Vars | Status |
@@ -114,9 +115,9 @@ OMIMParser also reads the file but only to tag rows with `is_cvd` — it loads a
 | AOPDBParser | AOP-DB adverse outcome pathways | `MYSQL_USERNAME`, `MYSQL_PASSWORD` (or SQL dump) | Loaded via SQL dump |
 
 ## Ontology Configs
-54 entries in `src/ontology_configs.py` mapping parsed TSV files to Neo4j node/relationship types, properties, and loading strategies. Each relationship config includes a `source_label` field that the loader sets as `r.source` on every relationship.
+56 entries in `src/ontology_configs.py` mapping parsed TSV files to Neo4j node/relationship types, properties, and loading strategies. Each relationship config includes a `source_label` field that the loader sets as `r.source` on every relationship.
 
 ## Relationship Source Labels
-All relationships carry a `source` property. Current labels (17 with edges in graph):
-`AOP-DB`, `Bgee`, `BindingDB`, `CTD`, `ClinPGx`, `ClinicalTrials.gov`, `DisGeNET`, `DoRothEA`, `DrugCentral`, `Gene Ontology`, `GWAS Catalog`, `Hetionet`, `Jensen DISEASES`, `LINCS L1000`, `MEDLINE`, `PubTator`, `SIDER`
+All relationships carry a `source` property. Current labels (18 with edges in graph):
+`AOP-DB`, `Bgee`, `BindingDB`, `CTD`, `ClinPGx`, `ClinicalTrials.gov`, `DisGeNET`, `DoRothEA`, `DrugCentral`, `Gene Ontology`, `GWAS Catalog`, `Hetionet`, `HPO`, `Jensen DISEASES`, `LINCS L1000`, `MEDLINE`, `PubTator`, `SIDER`
 Note: OMIM and Disease Ontology contribute nodes only (no relationship `source` labels).

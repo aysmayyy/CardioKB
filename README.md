@@ -1,19 +1,19 @@
 # CardioKB: Cardiovascular Disease Knowledge Base
 
-A biomedical knowledge graph pipeline that integrates 23 data sources (23 parsers) into a Neo4j graph for cardiovascular disease research, feature selection, and precision medicine. Adapted from the AlzKB (Alzheimer's Knowledge Base) architecture with additional custom parsers and Hetionet component integrations.
+A biomedical knowledge graph pipeline that integrates 24 data sources (24 parsers) into a Neo4j graph for cardiovascular disease research, feature selection, and precision medicine. Adapted from the AlzKB (Alzheimer's Knowledge Base) architecture with additional custom parsers and Hetionet component integrations.
 
-**Graph stats:** 343,162 nodes | 23,610,033 relationships | 15 node types | 30 relationship types
+**Graph stats:** 362,551 nodes | 23,880,305 relationships | 16 node types | 31 relationship types
 
 ## Pipeline Status
 
 | Category | Count | Details |
 |----------|-------|---------|
-| Total databases | 23 | 23 parsers (1 per source) |
-| Active & loaded | 23 | Successfully parsed + loaded into Neo4j |
+| Total databases | 24 | 24 parsers (1 per source) |
+| Active & loaded | 24 | Successfully parsed + loaded into Neo4j |
 | Credential-gated (loaded) | 4 | OMIM, DisGeNET, DrugBank (XML), AOP-DB (SQL dump) |
 | Stale/partial | 1 | MeSH (nodes only, no relationship data) |
-| Ontology configs | 54 | Neo4j node/relationship type mappings |
-| Source-labeled relationships | 17 | All relationships carry `r.source` property |
+| Ontology configs | 56 | Neo4j node/relationship type mappings |
+| Source-labeled relationships | 18 | All relationships carry `r.source` property |
 
 ## Data Sources
 
@@ -49,14 +49,15 @@ A biomedical knowledge graph pipeline that integrates 23 data sources (23 parser
 | 21 | Bgee (gene expression) | Public FTP | Working (6,609,112 expression edges) |
 | 22 | Hetionet (precomputed edges) | Public | Working (613,470 precomputed edges) |
 | 23 | Jensen Lab DISEASES | Public | Working (gene-disease associations) |
+| 24 | HPO (Human Phenotype Ontology) | Public | Working (19,389 phenotypes, 270,272 gene-phenotype edges) |
 
 ## Neo4j Graph Schema
 
-**Node types (15):** Gene (193,687), Disease (19,479), Drug (41,566), Pathway (4,646), TranscriptionFactor (367), ClinicalTrial (20,219), Variant (1,060), DrugLabel (378), SideEffect (5,734), PharmacologicClass (1,646), Symptom (966), BodyPart (14,675), BiologicalProcess (24,547), MolecularFunction (10,123), CellularComponent (4,069)
+**Node types (16):** Gene (193,687), Disease (19,479), Drug (41,566), Pathway (4,646), TranscriptionFactor (367), ClinicalTrial (20,219), Variant (1,060), DrugLabel (378), SideEffect (5,734), PharmacologicClass (1,646), Symptom (966), BodyPart (14,675), BiologicalProcess (24,547), MolecularFunction (10,123), CellularComponent (4,069), Phenotype (19,389)
 
-**Key relationship types (30):** geneAssociatesWithDisease, geneParticipatesInBiologicalProcess, geneHasMolecularFunction, geneAssociatedWithCellularComponent, geneInteractsWithGene, geneCovariesWithGene, geneRegulatesGene, geneInPathway, bodyPartUnderexpressesGene, bodyPartOverexpressesGene, chemicalIncreasesExpression, chemicalDecreasesExpression, chemicalBindsGene, compoundCausesSideEffect, compoundUpregulatesGene, compoundDownregulatesGene, pharmacologicClassIncludesCompound, compoundInPharmacologicClass, pathwayContainsGene, drugTreatsDisease, drugPalliatesDisease, diseaseAssociatesWithDisease, diseaseLocalizesToAnatomy, diseasePresentsSymptom, diseaseResemblesDisease, transcriptionFactorInteractsWithGene, AFFECTS_RESPONSE_TO, STUDIES_CONDITION, TESTS_INTERVENTION, VARIANT_IN
+**Key relationship types (31):** geneAssociatesWithDisease, geneAssociatesWithPhenotype, geneParticipatesInBiologicalProcess, geneHasMolecularFunction, geneAssociatedWithCellularComponent, geneInteractsWithGene, geneCovariesWithGene, geneRegulatesGene, geneInPathway, bodyPartUnderexpressesGene, bodyPartOverexpressesGene, chemicalIncreasesExpression, chemicalDecreasesExpression, chemicalBindsGene, compoundCausesSideEffect, compoundUpregulatesGene, compoundDownregulatesGene, pharmacologicClassIncludesCompound, compoundInPharmacologicClass, pathwayContainsGene, drugTreatsDisease, drugPalliatesDisease, diseaseAssociatesWithDisease, diseaseLocalizesToAnatomy, diseasePresentsSymptom, diseaseResemblesDisease, transcriptionFactorInteractsWithGene, AFFECTS_RESPONSE_TO, STUDIES_CONDITION, TESTS_INTERVENTION, VARIANT_IN
 
-**Relationship source labels:** All relationships carry a `source` property (e.g., `DisGeNET`, `GWAS Catalog`, `PubTator`, `Bgee`, etc.) for provenance tracking across 17 source-labeled databases. OMIM and Disease Ontology contribute nodes only (no relationship source labels).
+**Relationship source labels:** All relationships carry a `source` property (e.g., `DisGeNET`, `GWAS Catalog`, `PubTator`, `Bgee`, etc.) for provenance tracking across 18 source-labeled databases. OMIM and Disease Ontology contribute nodes only (no relationship source labels).
 
 ## Project Structure
 
@@ -65,7 +66,7 @@ Cardio-KB/
 ├── src/
 │   ├── main.py                 # Pipeline orchestrator (--skip-neo4j, --skip-download)
 │   ├── neo4j_loader.py         # Cypher-based Neo4j batch loader
-│   ├── ontology_configs.py     # 54 ontology configs for Neo4j schema mapping
+│   ├── ontology_configs.py     # 56 ontology configs for Neo4j schema mapping
 │   ├── utils.py                # Disease filtering utilities (reads ontology/disease_filter.txt)
 │   └── parsers/
 │       ├── base_parser.py      # Abstract base class for all parsers
@@ -78,6 +79,7 @@ Cardio-KB/
 │       ├── drugbank_parser.py
 │       ├── aopdb_parser.py
 │       ├── jensenlab_parser.py
+│       ├── hpo_parser.py
 │       └── hetionet_components/    # 14 Hetionet-derived component parsers
 │           ├── disease_ontology_parser.py
 │           ├── gene_ontology_parser.py
@@ -191,14 +193,14 @@ Only two parsers filter by this file:
 - **ClinicalTrialsParser** — builds API condition queries from the term list
 - **DisGeNETParser** — searches the API for diseases matching the term list
 
-OMIMParser also reads the file but only to tag rows with `is_cvd` — it loads all data regardless. All other 20 parsers are fully disease-agnostic and load their complete datasets. **To build a knowledge base for a different disease area**, edit `ontology/disease_filter.txt` with your terms and re-run those two parsers — no code changes required.
+OMIMParser also reads the file but only to tag rows with `is_cvd` — it loads all data regardless. All other 21 parsers are fully disease-agnostic and load their complete datasets. **To build a knowledge base for a different disease area**, edit `ontology/disease_filter.txt` with your terms and re-run those two parsers — no code changes required.
 
 ## Architecture Notes
 
 - All parsers extend `BaseParser` from `src/parsers/base_parser.py`
 - Neo4j loading uses UNWIND-based Cypher batching (batch size: 1000) with MERGE to prevent duplicates
 - All relationships are tagged with `r.source` property from the config's `source_label` for provenance tracking
-- Graph schema is defined declaratively in `src/ontology_configs.py` (54 configs)
+- Graph schema is defined declaratively in `src/ontology_configs.py` (56 configs)
 - Parsers with missing credentials are automatically skipped at runtime
 - DrugBank and AOP-DB auto-detect local data files (XML / SQL dump) and work without credentials
 - Phase 2 Hetionet component parsers are adapted from the AlzKB updater; integration is functional but not yet fully aligned with the original AlzKB graph structure
