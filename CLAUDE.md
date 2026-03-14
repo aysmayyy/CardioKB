@@ -23,8 +23,8 @@
 
 ## Project Structure
 - `src/main.py` — Pipeline orchestrator (supports `--skip-neo4j`, `--skip-download`)
-- `src/parsers/` — 20 data source parsers (inherit from `BaseParser` in `base_parser.py`)
-  - `src/parsers/hetionet_components/` — 13 Hetionet-derived component parsers
+- `src/parsers/` — 21 data source parsers (inherit from `BaseParser` in `base_parser.py`)
+  - `src/parsers/hetionet_components/` — 14 Hetionet-derived component parsers
 - `src/ontology_configs.py` — 53 ontology configs mapping source data to Neo4j schema
 - `src/neo4j_loader.py` — Cypher-based Neo4j batch loader (auto-sets `r.source` from config `source_label`)
 - `src/id_mapping.py` — Cross-database ID remapping (PubTator MeSH→DOID, GWAS→DOID)
@@ -68,7 +68,7 @@ python src/main.py --skip-download --skip-neo4j
 ## CVD Scope
 All cardiovascular diseases: arrhythmias, coronary artery disease, heart failure, cardiomyopathies, hypertension, stroke, valvular heart disease.
 
-## Data Sources — 22 Sources (20 Parsers)
+## Data Sources — 23 Sources (21 Parsers)
 
 ### Phase 1: Core Parsers
 | # | Source | Parser | Access | Status |
@@ -99,6 +99,7 @@ All cardiovascular diseases: arrhythmias, coronary artery disease, heart failure
 | 20 | CTD (chemical-gene) | CTDParser | Public | Working (677,015 expression edges) |
 | 21 | Bgee (gene expression) | BgeeParser | Public FTP | Working (6,609,112 expression edges) |
 | 22 | Hetionet (precomputed edges) | HetionetPrecomputedParser | Public | Working (613,470 precomputed edges) |
+| 23 | Jensen Lab DISEASES | JensenLabParser | Public | Working (gene-disease associations) |
 
 ### Credential-Gated (requires env vars, currently loaded)
 | Parser | Source | Required Env Vars | Status |
@@ -113,4 +114,4 @@ All cardiovascular diseases: arrhythmias, coronary artery disease, heart failure
 
 ## Relationship Source Labels
 All relationships carry a `source` property. Current labels:
-`AOP-DB`, `Bgee`, `BindingDB`, `CTD`, `ClinPGx`, `ClinicalTrials.gov`, `DisGeNET`, `Disease Ontology`, `DoRothEA`, `DrugCentral`, `Gene Ontology`, `GWAS Catalog`, `Hetionet`, `LINCS L1000`, `MEDLINE`, `OMIM`, `PubTator`, `SIDER`
+`AOP-DB`, `Bgee`, `BindingDB`, `CTD`, `ClinPGx`, `ClinicalTrials.gov`, `DisGeNET`, `Disease Ontology`, `DoRothEA`, `DrugCentral`, `Gene Ontology`, `GWAS Catalog`, `Hetionet`, `Jensen DISEASES`, `LINCS L1000`, `MEDLINE`, `OMIM`, `PubTator`, `SIDER`

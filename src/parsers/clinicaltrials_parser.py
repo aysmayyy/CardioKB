@@ -16,9 +16,25 @@ from typing import Dict, Optional, List
 import pandas as pd
 import requests
 from .base_parser import BaseParser
-from ..utils import get_cvd_search_pattern
+from ..utils import get_cvd_search_pattern, load_cvd_terms
 
 logger = logging.getLogger(__name__)
+
+# Maximum terms per API query (ClinicalTrials.gov query length limit)
+_MAX_TERMS_PER_QUERY = 8
+
+
+def _build_category_queries() -> List[str]:
+    """Build OR-joined query batches from the CVD ontology file."""
+    terms = sorted(load_cvd_terms())
+    # Filter out short abbreviations (≤3 chars) that produce noisy API results;
+    # their full forms are already in the ontology.
+    terms = [t for t in terms if len(t) > 3]
+    queries = []
+    for i in range(0, len(terms), _MAX_TERMS_PER_QUERY):
+        batch = terms[i:i + _MAX_TERMS_PER_QUERY]
+        queries.append(" OR ".join(batch))
+    return queries
 
 
 class ClinicalTrialsParser(BaseParser):
@@ -33,21 +49,6 @@ class ClinicalTrialsParser(BaseParser):
     """
 
     BASE_URL = "https://clinicaltrials.gov/api/v2/studies"
-
-    # Broad CVD category queries grouping terms from ontology.
-    # Each string is an OR-joined query for the ClinicalTrials.gov API.
-    CVD_CATEGORY_QUERIES = [
-        "cardiovascular disease OR heart disease OR cardiac disease",
-        "arrhythmia OR atrial fibrillation OR atrial flutter OR ventricular tachycardia OR ventricular fibrillation OR long QT syndrome OR Brugada syndrome OR sick sinus syndrome",
-        "coronary artery disease OR myocardial infarction OR angina OR ischemic heart disease OR atherosclerosis",
-        "heart failure OR congestive heart failure OR HFrEF OR HFpEF",
-        "cardiomyopathy OR hypertrophic cardiomyopathy OR dilated cardiomyopathy OR restrictive cardiomyopathy OR arrhythmogenic right ventricular cardiomyopathy",
-        "hypertension OR pulmonary hypertension OR resistant hypertension",
-        "stroke OR cerebrovascular disease OR ischemic stroke OR hemorrhagic stroke OR transient ischemic attack",
-        "peripheral arterial disease OR peripheral vascular disease OR aortic aneurysm OR aortic dissection OR thromboembolism OR venous thromboembolism",
-        "hypercholesterolemia OR dyslipidemia OR familial hypercholesterolemia",
-        "valvular heart disease OR aortic stenosis OR aortic regurgitation OR mitral stenosis OR mitral regurgitation OR mitral valve prolapse",
-    ]
 
     def __init__(self, data_dir: Optional[str] = None,
                  query_mode: str = "cvd",
@@ -172,13 +173,14 @@ class ClinicalTrialsParser(BaseParser):
 
     def _download_cvd(self) -> bool:
         """Query all CVD categories and deduplicate by NCT ID."""
-        logger.info(f"Querying {len(self.CVD_CATEGORY_QUERIES)} CVD categories...")
+        category_queries = _build_category_queries()
+        logger.info(f"Querying {len(category_queries)} CVD categories (from ontology)...")
 
         all_trials = []
         seen_nct_ids = set()
 
-        for i, category_query in enumerate(self.CVD_CATEGORY_QUERIES, 1):
-            logger.info(f"Category {i}/{len(self.CVD_CATEGORY_QUERIES)}: {category_query[:60]}...")
+        for i, category_query in enumerate(category_queries, 1):
+            logger.info(f"Category {i}/{len(category_queries)}: {category_query[:60]}...")
 
             try:
                 trials = self._fetch_trials(

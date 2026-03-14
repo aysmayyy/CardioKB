@@ -35,24 +35,17 @@ def _load_cvd_terms_cached(ontology_file: str) -> FrozenSet[str]:
     """Cached implementation of CVD term loading."""
     cvd_terms = set()
 
-    try:
-        with open(ontology_file, 'r') as f:
-            for line in f:
-                line = line.strip()
-                # Skip empty lines and comments
-                if line and not line.startswith('#'):
-                    cvd_terms.add(line.lower())
+    with open(ontology_file, 'r') as f:
+        for line in f:
+            line = line.strip()
+            # Skip empty lines and comments
+            if line and not line.startswith('#'):
+                cvd_terms.add(line.lower())
 
-        return frozenset(cvd_terms)
+    if not cvd_terms:
+        raise ValueError(f"No CVD terms found in {ontology_file}")
 
-    except FileNotFoundError:
-        # Fallback to hardcoded terms if file not found
-        return frozenset({
-            'cardiovascular', 'cardiac', 'heart', 'coronary', 'myocardial',
-            'atherosclerosis', 'hypertension', 'arrhythmia', 'cardiomyopathy',
-            'heart failure', 'atrial fibrillation', 'stroke', 'thrombosis',
-            'angina', 'ischemic heart disease', 'ventricular', 'atrial'
-        })
+    return frozenset(cvd_terms)
 
 
 def get_cvd_search_pattern() -> str:

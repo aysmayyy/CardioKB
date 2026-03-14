@@ -46,7 +46,7 @@ CLINPGX_CLINICAL_ANNOTATIONS_PHARMA_CLASS = 'clinical_annotations_pharma_class'
 
 # OMIM
 OMIM_GENE_PHENOTYPE_MAP = 'gene_phenotype_map'
-OMIM_CVD_GENE_DISEASE = 'cvd_gene_disease'
+OMIM_GENE_DISEASE = 'gene_disease'
 
 # Hetionet Components — Disease Ontology
 DO_DISEASE_NODES = 'disease_nodes'
@@ -95,6 +95,9 @@ BGEE_UNDEREXPRESSES = 'bodypart_underexpresses_gene'
 HETIO_GENE_INTERACTS = 'gene_interacts'
 HETIO_GENE_COVARIES = 'gene_covaries'
 HETIO_GENE_REGULATES = 'gene_regulates'
+
+# Jensen Lab DISEASES
+JENSENLAB_GENE_DISEASE = 'gene_disease_associations'
 
 # AOPDB table mapping for MySQL queries
 AOPDB_TABLE_MAPPING = {
@@ -257,12 +260,12 @@ ONTOLOGY_CONFIGS = {
     # =========================================================================
     # OMIM - Online Mendelian Inheritance in Man
     # =========================================================================
-    # Disease nodes from OMIM CVD gene-disease relationships.
+    # Disease nodes from OMIM gene-disease relationships.
     # Creates/merges Disease nodes keyed by MIM number (xrefOMIM).
-    f'omim.{OMIM_CVD_GENE_DISEASE}_nodes': {
+    f'omim.{OMIM_GENE_DISEASE}_nodes': {
         'data_type': 'node',
         'node_type': 'Disease',
-        'source_filename': f'{OMIM_CVD_GENE_DISEASE}.tsv',
+        'source_filename': f'{OMIM_GENE_DISEASE}.tsv',
         'parse_config': {
             'headers': True,
             'iri_column_name': 'phenotype_mim',
@@ -275,12 +278,12 @@ ONTOLOGY_CONFIGS = {
         'merge': True,
         'skip': False,
     },
-    # Gene-disease relationships from OMIM (CVD-scoped, pre-filtered in main.py).
-    f'omim.{OMIM_CVD_GENE_DISEASE}': {
+    # Gene-disease relationships from OMIM (all diseases, pre-processed in main.py).
+    f'omim.{OMIM_GENE_DISEASE}': {
         'data_type': 'relationship',
         'relationship_type': 'geneAssociatesWithDisease',
         'source_label': 'OMIM',
-        'source_filename': f'{OMIM_CVD_GENE_DISEASE}.tsv',
+        'source_filename': f'{OMIM_GENE_DISEASE}.tsv',
         'parse_config': {
             'headers': True,
             'subject_node_type': 'Gene',
@@ -1108,5 +1111,30 @@ ONTOLOGY_CONFIGS = {
         },
         'merge': False,
         'skip': True,  # Subset of LINCS L1000 geneRegulatesGene; LINCS overwrites r.source
+    },
+
+    # =========================================================================
+    # Jensen Lab DISEASES — Gene-Disease Associations
+    # =========================================================================
+    f'jensenlab.{JENSENLAB_GENE_DISEASE}': {
+        'data_type': 'relationship',
+        'relationship_type': 'geneAssociatesWithDisease',
+        'source_label': 'Jensen DISEASES',
+        'source_filename': f'{JENSENLAB_GENE_DISEASE}.tsv',
+        'parse_config': {
+            'headers': True,
+            'subject_node_type': 'Gene',
+            'subject_column_name': 'gene_symbol',
+            'subject_match_property': 'geneSymbol',
+            'object_node_type': 'Disease',
+            'object_column_name': 'disease_id',
+            'object_match_property': 'xrefDiseaseOntology',
+            'data_property_map': {
+                'confidence': 'confidence',
+                'channel': 'channel',
+            },
+        },
+        'merge': False,
+        'skip': False,
     },
 }

@@ -39,25 +39,6 @@ class DisGeNETParser(BaseParser):
 
     API_BASE_URL = "https://api.disgenet.com/api/v1"
 
-    # CVD search terms for DisGeNET free-text search
-    # Each term generates a separate API query; results are combined
-    CVD_SEARCH_TERMS = [
-        "cardiovascular",
-        "coronary artery disease",
-        "heart failure",
-        "myocardial infarction",
-        "atrial fibrillation",
-        "cardiomyopathy",
-        "hypertension",
-        "stroke",
-        "atherosclerosis",
-        "arrhythmia",
-        "aortic",
-        "valvular heart",
-        "thromboembolism",
-        "peripheral arterial disease",
-    ]
-
     def __init__(self, data_dir: str, api_key: Optional[str] = None):
         """
         Initialize DisGeNET parser.
@@ -205,7 +186,14 @@ class DisGeNETParser(BaseParser):
         all_mappings = []
         seen_disease_ids = set()
 
-        for search_term in self.CVD_SEARCH_TERMS:
+        # Load search terms from ontology; filter to multi-word or longer
+        # terms that produce precise API results (short abbreviations are
+        # already covered by their full forms).
+        cvd_terms = load_cvd_terms()
+        search_terms = sorted(t for t in cvd_terms if len(t) > 3)
+        logger.info(f"  Using {len(search_terms)} search terms from ontology")
+
+        for search_term in search_terms:
             logger.info(f"  Searching: '{search_term}'")
 
             endpoint = f"{self.API_BASE_URL}/entity/disease"

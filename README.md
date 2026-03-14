@@ -1,6 +1,6 @@
 # CardioKB: Cardiovascular Disease Knowledge Base
 
-A biomedical knowledge graph pipeline that integrates 22 data sources (20 parsers) into a Neo4j graph for cardiovascular disease research, feature selection, and precision medicine. Adapted from the AlzKB (Alzheimer's Knowledge Base) architecture with additional custom parsers and Hetionet component integrations.
+A biomedical knowledge graph pipeline that integrates 23 data sources (21 parsers) into a Neo4j graph for cardiovascular disease research, feature selection, and precision medicine. Adapted from the AlzKB (Alzheimer's Knowledge Base) architecture with additional custom parsers and Hetionet component integrations.
 
 **Graph stats:** 332,447 nodes | 23,597,115 relationships | 15 node types | 30 relationship types
 
@@ -8,12 +8,12 @@ A biomedical knowledge graph pipeline that integrates 22 data sources (20 parser
 
 | Category | Count | Details |
 |----------|-------|---------|
-| Total databases | 22 | 20 parsers (some parsers handle multiple sources) |
+| Total databases | 23 | 21 parsers (some parsers handle multiple sources) |
 | Active & loaded | 19 | Successfully parsed + loaded into Neo4j |
 | Credential-gated (loaded) | 4 | OMIM, DisGeNET, DrugBank (XML), AOP-DB (SQL dump) |
 | Stale/partial | 1 | MeSH (nodes only, no relationship data) |
 | Ontology configs | 53 | Neo4j node/relationship type mappings |
-| Source-labeled relationships | 18 | All relationships carry `r.source` property |
+| Source-labeled relationships | 19 | All relationships carry `r.source` property |
 
 ## Data Sources
 
@@ -48,6 +48,7 @@ A biomedical knowledge graph pipeline that integrates 22 data sources (20 parser
 | 20 | CTD (chemical-gene) | Public | Working (677,015 expression edges) |
 | 21 | Bgee (gene expression) | Public FTP | Working (6,609,112 expression edges) |
 | 22 | Hetionet (precomputed edges) | Public | Working (613,470 precomputed edges) |
+| 23 | Jensen Lab DISEASES | Public | Working (gene-disease associations) |
 
 ## Neo4j Graph Schema
 
@@ -76,7 +77,8 @@ Cardio-KB/
 │       ├── disgenet_parser.py
 │       ├── drugbank_parser.py
 │       ├── aopdb_parser.py
-│       └── hetionet_components/    # 13 Hetionet-derived component parsers
+│       ├── jensenlab_parser.py
+│       └── hetionet_components/    # 14 Hetionet-derived component parsers
 │           ├── disease_ontology_parser.py
 │           ├── gene_ontology_parser.py
 │           ├── uberon_parser.py

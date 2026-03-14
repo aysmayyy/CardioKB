@@ -55,6 +55,7 @@ from src.parsers import (
     SIDERParser,
     LINCS1000Parser,
     MEDLINECooccurrenceParser,
+    JensenLabParser,
 )
 
 logger = logging.getLogger(__name__)
@@ -285,13 +286,11 @@ class CardioKBPipeline:
             if pharma_df is not None:
                 cpgx[CLINPGX_CLINICAL_ANNOTATIONS_PHARMA_CLASS] = pharma_df
 
-        # Post-processing: prepare OMIM CVD gene-disease edges
+        # Post-processing: prepare OMIM gene-disease edges
         if 'omim' in parsed_data:
             omim_data = parsed_data['omim']
             if 'gene_disease_relationships' in omim_data:
                 gdr = omim_data['gene_disease_relationships'].copy()
-                # Filter to CVD-related only
-                gdr = gdr[gdr['is_cvd'] == True].copy()
                 # Extract primary gene symbol (first before comma)
                 gdr['primary_gene_symbol'] = (
                     gdr['gene_symbols'].str.split(',').str[0].str.strip()
@@ -302,12 +301,14 @@ class CardioKBPipeline:
                     (gdr['primary_gene_symbol'] != '') &
                     (gdr['phenotype_mim'] != '')
                 ].copy()
-                omim_data['cvd_gene_disease'] = gdr
+                # Ensure phenotype_mim is string to match xrefOMIM in Neo4j
+                gdr['phenotype_mim'] = gdr['phenotype_mim'].astype(str)
+                omim_data['gene_disease'] = gdr
                 # Also store under node config key so both configs use
                 # in-memory data with consistent string types
-                omim_data['cvd_gene_disease_nodes'] = gdr
+                omim_data['gene_disease_nodes'] = gdr
                 logger.info(
-                    f"Created {len(gdr)} OMIM CVD gene-disease edges "
+                    f"Created {len(gdr)} OMIM gene-disease edges "
                     f"({gdr['primary_gene_symbol'].nunique()} unique genes)"
                 )
 
@@ -427,6 +428,9 @@ class CardioKBPipeline:
             data_dir=str(self.raw_dir),
         )
         parsers['hetionet_precomputed'] = HetionetPrecomputedParser(
+            data_dir=str(self.raw_dir),
+        )
+        parsers['jensenlab'] = JensenLabParser(
             data_dir=str(self.raw_dir),
         )
 
@@ -713,10 +717,62 @@ class CardioKBPipeline:
                 if load_stats['errors']:
                     logger.warning(f"  Loading errors: {len(load_stats['errors'])}")
 
+                # Post-load: tag CVD-relevant Disease nodes
+                self._tag_cvd_diseases(loader)
+
         except Exception as e:
             logger.error(f"Neo4j loading failed: {e}")
             import traceback
             logger.error(traceback.format_exc())
+
+    def _tag_cvd_diseases(self, loader):
+        """
+        Set cvdRelevant=true on Disease nodes whose commonName
+        case-insensitively matches any term from the CVD ontology file
+        as a whole word (not a substring of another word).
+        """
+        import re
+
+        ontology_path = self.base_dir / "ontology" / "cvd_disease_hierarchy.txt"
+        if not ontology_path.exists():
+            logger.warning(f"CVD ontology file not found: {ontology_path}")
+            return
+
+        terms = []
+        with open(ontology_path) as f:
+            for line in f:
+                line = line.strip()
+                if line and not line.startswith('#'):
+                    terms.append(line)
+
+        if not terms:
+            logger.warning("No CVD terms loaded from ontology file")
+            return
+
+        # Build word-boundary regex patterns for Neo4j (Java regex).
+        # Escape regex metacharacters, then wrap with (?i) and \b.
+        patterns = []
+        for term in terms:
+            escaped = re.escape(term)
+            patterns.append(f"(?i).*\\b{escaped}\\b.*")
+
+        logger.info(
+            f"Tagging CVD-relevant Disease nodes using "
+            f"{len(patterns)} whole-word patterns..."
+        )
+
+        query = (
+            "UNWIND $patterns AS pattern "
+            "MATCH (d:Disease) "
+            "WHERE d.commonName =~ pattern "
+            "SET d.cvdRelevant = true "
+            "RETURN count(DISTINCT d) AS tagged"
+        )
+
+        with loader.driver.session(database=loader.database) as session:
+            result = session.run(query, patterns=patterns)
+            tagged = result.single()['tagged']
+            logger.info(f"  Tagged {tagged} Disease nodes with cvdRelevant=true")
 
     def generate_stats_and_notes(self):
         """Generate release notes for this build."""

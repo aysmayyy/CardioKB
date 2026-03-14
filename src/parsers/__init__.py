@@ -16,6 +16,7 @@ Base KB parsers (adapted from AlzKB):
   - AOPDBParser: AOP-DB MySQL (disease-agnostic)
   - DoRothEAParser: DoRothEA TF network (disease-agnostic)
   - DisGeNETParser: DisGeNET gene-disease associations (CVD-scoped)
+  - JensenLabParser: Jensen Lab DISEASES gene-disease associations
 
 Hetionet component parsers (disease-agnostic):
   - DiseaseOntologyParser: Disease Ontology (DOID) nodes
@@ -43,6 +44,7 @@ from .drugbank_parser import DrugBankParser
 from .aopdb_parser import AOPDBParser
 from .dorothea_parser import DoRothEAParser
 from .disgenet_parser import DisGeNETParser
+from .jensenlab_parser import JensenLabParser
 from .hetionet_components import (
     DiseaseOntologyParser,
     GeneOntologyParser,
@@ -87,4 +89,5 @@ __all__ = [
     'SIDERParser',
     'LINCS1000Parser',
     'MEDLINECooccurrenceParser',
+    'JensenLabParser',
 ]
