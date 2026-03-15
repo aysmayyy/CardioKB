@@ -60,6 +60,10 @@ from src.parsers import (
     JensenLabParser,
     JensenTissuesParser,
     HPOParser,
+    ReactomeParser,
+    WikiPathwaysParser,
+    STRINGParser,
+    OpenTargetsParser,
 )
 
 logger = logging.getLogger(__name__)
@@ -509,6 +513,18 @@ class CardioKBPipeline:
             data_dir=str(self.raw_dir),
         )
         parsers['hpo'] = HPOParser(
+            data_dir=str(self.raw_dir),
+        )
+        parsers['reactome'] = ReactomeParser(
+            data_dir=str(self.raw_dir),
+        )
+        parsers['wikipathways'] = WikiPathwaysParser(
+            data_dir=str(self.raw_dir),
+        )
+        parsers['string'] = STRINGParser(
+            data_dir=str(self.raw_dir),
+        )
+        parsers['opentargets'] = OpenTargetsParser(
             data_dir=str(self.raw_dir),
         )
 

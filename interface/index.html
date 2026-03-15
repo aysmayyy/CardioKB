@@ -395,7 +395,7 @@ th { color: var(--text-muted); font-weight: 600; text-transform: uppercase; font
         The graph contains data for all human diseases. Most sources are disease-agnostic &mdash; search any disease or gene in the Explore tab.
     </div>
 
-    <button class="run-btn" id="runBtn" onclick="runHealthCheck()" data-tip="Check all 25 parsers, Neo4j connectivity, and data integrity">Run Health Check</button>
+    <button class="run-btn" id="runBtn" onclick="runHealthCheck()" data-tip="Check all parsers, Neo4j connectivity, and data integrity">Run Health Check</button>
 
     <div>
         <button class="admin-toggle" id="advancedToggle" onclick="toggleAdvanced()" style="background:var(--bg);font-size:0.82rem;padding:0.6rem 0.75rem">
@@ -430,7 +430,7 @@ th { color: var(--text-muted); font-weight: 600; text-transform: uppercase; font
 <div class="main">
     <!-- Stats bar -->
     <div class="stats-grid" id="statsGrid">
-        <div class="stat-card" data-tip="Total entities in the knowledge graph across all 25 data sources"><div class="value" id="statNodes"><span class="spinner"></span></div><div class="label">Total Nodes</div></div>
+        <div class="stat-card" data-tip="Total entities in the knowledge graph across all integrated data sources"><div class="value" id="statNodes"><span class="spinner"></span></div><div class="label">Total Nodes</div></div>
         <div class="stat-card" data-tip="Total connections between entities (gene-disease, drug-target, etc.)"><div class="value" id="statRels"><span class="spinner"></span></div><div class="label">Total Relationships</div></div>
         <div class="stat-card" data-tip="Distinct entity categories: Gene, Disease, Drug, Pathway, etc."><div class="value" id="statNodeTypes"><span class="spinner"></span></div><div class="label">Node Types</div></div>
         <div class="stat-card" data-tip="Distinct relationship types: ASSOCIATES_WITH, TARGETS, TREATS, etc."><div class="value" id="statRelTypes"><span class="spinner"></span></div><div class="label">Rel Types</div></div>
@@ -592,7 +592,7 @@ th { color: var(--text-muted); font-weight: 600; text-transform: uppercase; font
     <div class="modal">
         <div class="modal-step active" data-step="0">
             <h2>Welcome to CardioKB</h2>
-            <p>CardioKB is a cardiovascular disease knowledge graph integrating <strong>25 biomedical databases</strong> into a single queryable network. It connects genes, diseases, drugs, pathways, clinical trials, phenotypes, and more.</p>
+            <p>CardioKB is a cardiovascular disease knowledge graph integrating <strong>29 biomedical databases</strong> into a single queryable network. It connects genes, diseases, drugs, pathways, clinical trials, phenotypes, and more.</p>
             <ul>
                 <li>370K+ nodes across 17 entity types</li>
                 <li>23M+ relationships from sources like DisGeNET, DrugBank, GWAS Catalog, and PubTator</li>

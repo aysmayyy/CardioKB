@@ -27,7 +27,7 @@ import xml.etree.ElementTree as ET
 from pathlib import Path
 from typing import Dict, Optional, List
 from .base_parser import BaseParser
-from ..ontology_configs import DRUGBANK_DRUGS
+from ..ontology_configs import DRUGBANK_DRUGS, DRUGBANK_DRUG_BINDS_GENE
 
 logger = logging.getLogger(__name__)
 
@@ -209,6 +209,7 @@ class DrugBankParser(BaseParser):
         logger.info(f"Parsing DrugBank XML: {xml_path}")
 
         rows: List[dict] = []
+        target_rows: List[dict] = []
         drug_tag = f'{NS}drug'
         count = 0
 
@@ -268,6 +269,35 @@ class DrugBankParser(BaseParser):
                             row['uniprot_id'] = identifier
 
                     rows.append(row)
+
+                    # Extract drug-target bindings
+                    targets_elem = elem.find(f'{NS}targets')
+                    if targets_elem is not None:
+                        for target in targets_elem.findall(f'{NS}target'):
+                            # Get gene name from polypeptide
+                            polypeptide = target.find(f'{NS}polypeptide')
+                            if polypeptide is None:
+                                continue
+                            gene_name_elem = polypeptide.find(f'{NS}gene-name')
+                            if gene_name_elem is None or not gene_name_elem.text:
+                                continue
+                            gene_symbol = gene_name_elem.text.strip()
+
+                            # Get action(s)
+                            actions = []
+                            actions_elem = target.find(f'{NS}actions')
+                            if actions_elem is not None:
+                                for action in actions_elem.findall(f'{NS}action'):
+                                    if action.text:
+                                        actions.append(action.text)
+
+                            target_rows.append({
+                                'drugbank_id': drugbank_id,
+                                'gene_symbol': gene_symbol,
+                                'actions': '|'.join(actions) if actions else '',
+                                'source_database': 'DrugBank',
+                            })
+
                     count += 1
 
                     if count % 5000 == 0:
@@ -281,7 +311,20 @@ class DrugBankParser(BaseParser):
         drugs_df = pd.DataFrame(rows)
         drugs_df['source_database'] = 'DrugBank'
 
-        return {'drugs': drugs_df}
+        result = {'drugs': drugs_df}
+
+        if target_rows:
+            targets_df = pd.DataFrame(target_rows).drop_duplicates(
+                subset=['drugbank_id', 'gene_symbol']
+            )
+            logger.info(
+                f"DrugBank: {len(targets_df)} drug-target edges "
+                f"({targets_df['drugbank_id'].nunique()} drugs, "
+                f"{targets_df['gene_symbol'].nunique()} genes)"
+            )
+            result[DRUGBANK_DRUG_BINDS_GENE] = targets_df
+
+        return result
 
     def parse_data(self) -> Dict[str, pd.DataFrame]:
         """
@@ -343,5 +386,11 @@ class DrugBankParser(BaseParser):
                 'cas_number': 'CAS Registry Number',
                 'drug_type': 'Drug type',
                 'source_database': 'Source database (DrugBank)',
-            }
+            },
+            DRUGBANK_DRUG_BINDS_GENE: {
+                'drugbank_id': 'DrugBank identifier',
+                'gene_symbol': 'Target gene symbol',
+                'actions': 'Pipe-delimited pharmacological actions',
+                'source_database': 'Source database (DrugBank)',
+            },
         }

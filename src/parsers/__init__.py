@@ -47,6 +47,10 @@ from .disgenet_parser import DisGeNETParser
 from .jensenlab_parser import JensenLabParser
 from .jensen_tissues_parser import JensenTissuesParser
 from .hpo_parser import HPOParser
+from .reactome_parser import ReactomeParser
+from .wikipathways_parser import WikiPathwaysParser
+from .string_parser import STRINGParser
+from .opentargets_parser import OpenTargetsParser
 from .hetionet_components import (
     DiseaseOntologyParser,
     GeneOntologyParser,
@@ -94,4 +98,8 @@ __all__ = [
     'JensenLabParser',
     'JensenTissuesParser',
     'HPOParser',
+    'ReactomeParser',
+    'WikiPathwaysParser',
+    'STRINGParser',
+    'OpenTargetsParser',
 ]

@@ -109,11 +109,16 @@ def graph_stats():
                 rel_counts[rt] = cnt
                 total_rels += cnt
 
-            # Source counts from relationship properties
+            # Source counts from relationship properties (with per-source edge counts)
             source_result = session.run(
                 "MATCH ()-[r]->() WHERE r.source IS NOT NULL "
-                "RETURN DISTINCT r.source AS source")
-            sources = sorted([r['source'] for r in source_result])
+                "RETURN r.source AS source, count(r) AS cnt "
+                "ORDER BY source")
+            source_counts = {}
+            sources = []
+            for r in source_result:
+                sources.append(r['source'])
+                source_counts[r['source']] = r['cnt']
 
         return jsonify({
             'node_counts': node_counts,
@@ -124,6 +129,7 @@ def graph_stats():
             'rel_types': len(rel_counts),
             'source_count': len(sources),
             'sources': sources,
+            'source_edge_counts': source_counts,
         })
     except Exception as e:
         return jsonify({'error': str(e)}), 500

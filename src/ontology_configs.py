@@ -28,6 +28,7 @@ DISGENET_DISEASES = 'diseases'
 DISGENET_GENE_DISEASE_ASSOCIATIONS = 'gene_disease_associations'
 # DrugBank
 DRUGBANK_DRUGS = 'drugs'
+DRUGBANK_DRUG_BINDS_GENE = 'drug_binds_gene'
 # NCBI Gene
 NCBI_GENES = 'genes'
 # DoRothEA
@@ -108,6 +109,20 @@ JENSEN_TISSUES_GENE_TISSUE = 'gene_tissue_associations'
 # HPO (Human Phenotype Ontology)
 HPO_PHENOTYPE_NODES = 'phenotype_nodes'
 HPO_GENE_PHENOTYPE = 'gene_phenotype_associations'
+
+# Reactome
+REACTOME_PATHWAY_NODES = 'pathway_nodes'
+REACTOME_GENE_PATHWAY = 'gene_pathway'
+
+# WikiPathways
+WIKIPATHWAYS_PATHWAY_NODES = 'pathway_nodes'
+WIKIPATHWAYS_GENE_PATHWAY = 'gene_pathway'
+
+# STRING
+STRING_GENE_INTERACTS = 'gene_interacts_gene'
+
+# OpenTargets
+OPENTARGETS_GENE_DISEASE = 'gene_disease'
 
 # AOPDB table mapping for MySQL queries
 AOPDB_TABLE_MAPPING = {
@@ -264,6 +279,28 @@ ONTOLOGY_CONFIGS = {
             },
         },
         'merge': True,
+        'skip': False,
+    },
+
+    # ---- DrugBank Drug-Target Binding Edges ----
+    f'drugbank.{DRUGBANK_DRUG_BINDS_GENE}': {
+        'data_type': 'relationship',
+        'relationship_type': 'drugBindsGene',
+        'source_label': 'DrugBank',
+        'source_filename': f'{DRUGBANK_DRUG_BINDS_GENE}.tsv',
+        'parse_config': {
+            'headers': True,
+            'subject_node_type': 'Drug',
+            'subject_column_name': 'drugbank_id',
+            'subject_match_property': 'xrefDrugbank',
+            'object_node_type': 'Gene',
+            'object_column_name': 'gene_symbol',
+            'object_match_property': 'geneSymbol',
+            'data_property_map': {
+                'actions': 'actions',
+            },
+        },
+        'merge': False,
         'skip': False,
     },
 
@@ -1261,6 +1298,136 @@ ONTOLOGY_CONFIGS = {
             'object_node_type': 'Phenotype',
             'object_column_name': 'hpo_id',
             'object_match_property': 'xrefHPO',
+        },
+        'merge': False,
+        'skip': False,
+    },
+
+    # =========================================================================
+    # Reactome — Pathway Nodes
+    # =========================================================================
+    f'reactome.{REACTOME_PATHWAY_NODES}': {
+        'data_type': 'node',
+        'node_type': 'Pathway',
+        'source_filename': f'{REACTOME_PATHWAY_NODES}.tsv',
+        'parse_config': {
+            'headers': True,
+            'iri_column_name': 'pathwayName',
+            'data_property_map': {
+                'pathwayName': 'pathwayName',
+                'sourceDatabase': 'sourceDatabase',
+            },
+        },
+        'merge': True,
+        'skip': False,
+    },
+
+    # ---- Reactome Gene-Pathway Edges ----
+    f'reactome.{REACTOME_GENE_PATHWAY}': {
+        'data_type': 'relationship',
+        'relationship_type': 'geneInPathway',
+        'inverse_relationship_type': 'pathwayContainsGene',
+        'source_label': 'Reactome',
+        'source_filename': f'{REACTOME_GENE_PATHWAY}.tsv',
+        'parse_config': {
+            'headers': True,
+            'subject_node_type': 'Gene',
+            'subject_column_name': 'ncbi_gene_id',
+            'subject_match_property': 'xrefNcbiGene',
+            'object_node_type': 'Pathway',
+            'object_column_name': 'pathway_name',
+            'object_match_property': 'pathwayName',
+            'data_property_map': {
+                'evidence_code': 'evidenceCode',
+            },
+        },
+        'merge': False,
+        'skip': False,
+    },
+
+    # =========================================================================
+    # WikiPathways — Pathway Nodes
+    # =========================================================================
+    f'wikipathways.{WIKIPATHWAYS_PATHWAY_NODES}': {
+        'data_type': 'node',
+        'node_type': 'Pathway',
+        'source_filename': f'{WIKIPATHWAYS_PATHWAY_NODES}.tsv',
+        'parse_config': {
+            'headers': True,
+            'iri_column_name': 'pathwayName',
+            'data_property_map': {
+                'pathwayName': 'pathwayName',
+                'sourceDatabase': 'sourceDatabase',
+            },
+        },
+        'merge': True,
+        'skip': False,
+    },
+
+    # ---- WikiPathways Gene-Pathway Edges ----
+    f'wikipathways.{WIKIPATHWAYS_GENE_PATHWAY}': {
+        'data_type': 'relationship',
+        'relationship_type': 'geneInPathway',
+        'inverse_relationship_type': 'pathwayContainsGene',
+        'source_label': 'WikiPathways',
+        'source_filename': f'{WIKIPATHWAYS_GENE_PATHWAY}.tsv',
+        'parse_config': {
+            'headers': True,
+            'subject_node_type': 'Gene',
+            'subject_column_name': 'ncbi_gene_id',
+            'subject_match_property': 'xrefNcbiGene',
+            'object_node_type': 'Pathway',
+            'object_column_name': 'pathway_name',
+            'object_match_property': 'pathwayName',
+        },
+        'merge': False,
+        'skip': False,
+    },
+
+    # =========================================================================
+    # STRING — Protein-Protein Interactions (high confidence)
+    # =========================================================================
+    f'string.{STRING_GENE_INTERACTS}': {
+        'data_type': 'relationship',
+        'relationship_type': 'geneInteractsWithGene',
+        'source_label': 'STRING',
+        'source_filename': f'{STRING_GENE_INTERACTS}.tsv',
+        'parse_config': {
+            'headers': True,
+            'subject_node_type': 'Gene',
+            'subject_column_name': 'gene_symbol_a',
+            'subject_match_property': 'geneSymbol',
+            'object_node_type': 'Gene',
+            'object_column_name': 'gene_symbol_b',
+            'object_match_property': 'geneSymbol',
+            'data_property_map': {
+                'combined_score': 'combinedScore',
+            },
+        },
+        'merge': False,
+        'skip': False,
+    },
+
+    # =========================================================================
+    # OpenTargets — Gene-Disease Associations
+    # =========================================================================
+    f'opentargets.{OPENTARGETS_GENE_DISEASE}': {
+        'data_type': 'relationship',
+        'relationship_type': 'geneAssociatesWithDisease',
+        'source_label': 'OpenTargets',
+        'source_filename': f'{OPENTARGETS_GENE_DISEASE}.tsv',
+        'parse_config': {
+            'headers': True,
+            'subject_node_type': 'Gene',
+            'subject_column_name': 'ensembl_id',
+            'subject_match_property': 'xrefEnsembl',
+            'object_node_type': 'Disease',
+            'object_column_name': 'disease_id',
+            'object_match_property': 'xrefDiseaseOntology',
+            'data_property_map': {
+                'score': 'score',
+                'evidenceCount': 'evidenceCount',
+            },
         },
         'merge': False,
         'skip': False,
