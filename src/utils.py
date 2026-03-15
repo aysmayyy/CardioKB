@@ -2,13 +2,14 @@
 Utility functions for CardioKB.
 
 Includes helpers for loading disease term ontologies, filtering data,
-and common operations.
+disease cache management, and common operations.
 """
 
 import functools
 import os
+from datetime import datetime
 from pathlib import Path
-from typing import FrozenSet, List, Set
+from typing import Dict, FrozenSet, List, Optional, Set
 
 # Default disease filter: CVD
 _DEFAULT_DISEASE_FILTER = "ontology/disease_filter.txt"
@@ -98,3 +99,176 @@ def is_disease_related(text: str, disease_filter: str = None,
 load_cvd_terms = load_disease_terms
 get_cvd_search_pattern = get_disease_search_pattern
 is_cardiovascular_related = is_disease_related
+
+
+# ---------------------------------------------------------------------------
+# Disease Cache — tracks which disease filters have been loaded into Neo4j
+# ---------------------------------------------------------------------------
+
+def _get_neo4j_driver():
+    """Create a Neo4j driver from env vars. Returns None if password unset."""
+    from neo4j import GraphDatabase
+    uri = os.getenv('NEO4J_URI', 'bolt://localhost:7687')
+    username = os.getenv('NEO4J_USERNAME', 'neo4j')
+    password = os.getenv('NEO4J_PASSWORD', '')
+    if not password:
+        return None
+    return GraphDatabase.driver(uri, auth=(username, password))
+
+
+def check_disease_cache(disease_name: str) -> Optional[Dict]:
+    """
+    Check if a disease filter has already been loaded into Neo4j.
+
+    Searches by disease_name (exact) first, then checks aliases.
+
+    Args:
+        disease_name: Short key like 'cvd', 'alzheimers', etc.
+
+    Returns:
+        Dict with cache properties if found, None otherwise.
+    """
+    driver = _get_neo4j_driver()
+    if not driver:
+        return None
+
+    try:
+        with driver.session(database='neo4j') as session:
+            # Try exact match on disease_name first
+            rec = session.run(
+                "MATCH (c:DiseaseCache {disease_name: $name}) "
+                "RETURN c.disease_name AS disease_name, "
+                "       c.canonical_name AS canonical_name, "
+                "       c.aliases AS aliases, "
+                "       c.filter_file AS filter_file, "
+                "       c.disgenet_rows AS disgenet_rows, "
+                "       c.date_loaded AS date_loaded, "
+                "       c.sources_loaded AS sources_loaded",
+                name=disease_name,
+            ).single()
+            if rec is not None:
+                return dict(rec)
+
+            # Try alias match (case-insensitive)
+            rec = session.run(
+                "MATCH (c:DiseaseCache) "
+                "WHERE any(a IN c.aliases WHERE toLower(a) = toLower($name)) "
+                "RETURN c.disease_name AS disease_name, "
+                "       c.canonical_name AS canonical_name, "
+                "       c.aliases AS aliases, "
+                "       c.filter_file AS filter_file, "
+                "       c.disgenet_rows AS disgenet_rows, "
+                "       c.date_loaded AS date_loaded, "
+                "       c.sources_loaded AS sources_loaded",
+                name=disease_name,
+            ).single()
+            if rec is not None:
+                return dict(rec)
+
+            return None
+    finally:
+        driver.close()
+
+
+def add_to_disease_cache(disease_name: str, stats: Dict) -> Dict:
+    """
+    Create or update a DiseaseCache node in Neo4j.
+
+    Args:
+        disease_name: Short key like 'cvd', 'alzheimers', etc.
+        stats: Dict with optional keys:
+            - filter_file (str): path to the disease filter file
+            - disgenet_rows (int): number of DisGeNET edges loaded
+            - sources_loaded (list[str]): list of source names loaded
+            - canonical_name (str): standardized disease name
+            - aliases (list[str]): user inputs that resolve to this entry
+
+    Returns:
+        Dict with the stored cache properties.
+    """
+    driver = _get_neo4j_driver()
+    if not driver:
+        raise RuntimeError("NEO4J_PASSWORD not set — cannot write cache")
+
+    try:
+        with driver.session(database='neo4j') as session:
+            # Ensure uniqueness constraint exists
+            session.run(
+                "CREATE CONSTRAINT IF NOT EXISTS "
+                "FOR (c:DiseaseCache) REQUIRE c.disease_name IS UNIQUE"
+            )
+
+            rec = session.run(
+                "MERGE (c:DiseaseCache {disease_name: $name}) "
+                "SET c.canonical_name = $canonical_name, "
+                "    c.filter_file    = $filter_file, "
+                "    c.disgenet_rows  = $disgenet_rows, "
+                "    c.date_loaded    = $date_loaded, "
+                "    c.sources_loaded = $sources_loaded "
+                "RETURN c.disease_name AS disease_name, "
+                "       c.canonical_name AS canonical_name, "
+                "       c.aliases AS aliases, "
+                "       c.filter_file AS filter_file, "
+                "       c.disgenet_rows AS disgenet_rows, "
+                "       c.date_loaded AS date_loaded, "
+                "       c.sources_loaded AS sources_loaded",
+                name=disease_name,
+                canonical_name=stats.get('canonical_name', disease_name),
+                filter_file=stats.get('filter_file', ''),
+                disgenet_rows=stats.get('disgenet_rows', 0),
+                date_loaded=datetime.now().isoformat(),
+                sources_loaded=stats.get('sources_loaded', []),
+            ).single()
+
+            # Append aliases (additive, deduplicated via plain Cypher)
+            new_aliases = [a.lower() for a in stats.get('aliases', []) if a]
+            if new_aliases:
+                for alias in new_aliases:
+                    session.run(
+                        "MATCH (c:DiseaseCache {disease_name: $name}) "
+                        "WHERE NOT toLower($alias) IN "
+                        "  [x IN coalesce(c.aliases, []) | toLower(x)] "
+                        "SET c.aliases = coalesce(c.aliases, []) + [$alias]",
+                        name=disease_name,
+                        alias=alias,
+                    )
+                # Re-read to get updated aliases
+                rec = session.run(
+                    "MATCH (c:DiseaseCache {disease_name: $name}) "
+                    "RETURN c.disease_name AS disease_name, "
+                    "       c.canonical_name AS canonical_name, "
+                    "       c.aliases AS aliases, "
+                    "       c.filter_file AS filter_file, "
+                    "       c.disgenet_rows AS disgenet_rows, "
+                    "       c.date_loaded AS date_loaded, "
+                    "       c.sources_loaded AS sources_loaded",
+                    name=disease_name,
+                ).single()
+
+            return dict(rec)
+    finally:
+        driver.close()
+
+
+def add_alias_to_disease_cache(disease_name: str, alias: str) -> None:
+    """
+    Append an alias to an existing DiseaseCache node.
+
+    Uses plain Cypher list operations (no APOC dependency).
+    """
+    driver = _get_neo4j_driver()
+    if not driver:
+        return
+
+    try:
+        with driver.session(database='neo4j') as session:
+            session.run(
+                "MATCH (c:DiseaseCache {disease_name: $name}) "
+                "WHERE NOT toLower($alias) IN "
+                "  [x IN coalesce(c.aliases, []) | toLower(x)] "
+                "SET c.aliases = coalesce(c.aliases, []) + [toLower($alias)]",
+                name=disease_name,
+                alias=alias,
+            )
+    finally:
+        driver.close()

@@ -142,14 +142,13 @@ th { color: var(--text-muted); font-weight: 600; text-transform: uppercase; font
 </aside>
 
 <div class="main">
-    <!-- Stats -->
+    <!-- Global Stats -->
     <div class="stats-grid" id="statsGrid">
-        <div class="stat-card"><div class="value" id="statNodes">-</div><div class="label">Total Nodes</div></div>
-        <div class="stat-card"><div class="value" id="statRels">-</div><div class="label">Total Relationships</div></div>
-        <div class="stat-card"><div class="value" id="statNodeTypes">-</div><div class="label">Node Types</div></div>
-        <div class="stat-card"><div class="value" id="statRelTypes">-</div><div class="label">Rel Types</div></div>
-        <div class="stat-card"><div class="value" id="statSources">-</div><div class="label">Sources</div></div>
-        <div class="stat-card"><div class="value" id="statDuration">-</div><div class="label">Duration</div></div>
+        <div class="stat-card"><div class="value" id="statNodes"><span class="spinner"></span></div><div class="label">Total Nodes</div></div>
+        <div class="stat-card"><div class="value" id="statRels"><span class="spinner"></span></div><div class="label">Total Relationships</div></div>
+        <div class="stat-card"><div class="value" id="statNodeTypes"><span class="spinner"></span></div><div class="label">Node Types</div></div>
+        <div class="stat-card"><div class="value" id="statRelTypes"><span class="spinner"></span></div><div class="label">Rel Types</div></div>
+        <div class="stat-card"><div class="value" id="statSources"><span class="spinner"></span></div><div class="label">Sources</div></div>
     </div>
 
     <div class="grid-2">
@@ -164,6 +163,25 @@ th { color: var(--text-muted); font-weight: 600; text-transform: uppercase; font
             <div class="chart-container"><canvas id="relChart"></canvas></div>
         </section>
     </div>
+
+    <!-- Disease Subgraph Stats -->
+    <section id="diseaseSection">
+        <h2 id="diseaseStatsTitle">Disease Subgraph: <span id="diseaseStatsLabel">CVD</span></h2>
+        <div class="stats-grid" id="diseaseStatsGrid" style="margin-bottom:1rem">
+            <div class="stat-card"><div class="value" id="statDiseaseMatched"><span class="spinner"></span></div><div class="label">Diseases Matched</div></div>
+            <div class="stat-card"><div class="value" id="statDiseaseNeighbors"><span class="spinner"></span></div><div class="label">Connected Edges</div></div>
+        </div>
+        <div class="grid-2">
+            <section style="border:none;padding:0;margin:0">
+                <h2 style="font-size:0.88rem">Neighbor Node Types</h2>
+                <div class="chart-container" style="height:260px"><canvas id="diseaseNodeChart"></canvas></div>
+            </section>
+            <section style="border:none;padding:0;margin:0">
+                <h2 style="font-size:0.88rem">Relationship Types</h2>
+                <div class="chart-container" style="height:260px"><canvas id="diseaseRelChart"></canvas></div>
+            </section>
+        </div>
+    </section>
 
     <div class="grid-2">
         <!-- Parser table -->
@@ -198,6 +216,8 @@ th { color: var(--text-muted); font-weight: 600; text-transform: uppercase; font
 let selectedDisease = 'cvd';
 let nodeChart = null;
 let relChart = null;
+let diseaseNodeChart = null;
+let diseaseRelChart = null;
 let eventSource = null;
 
 // Theme
@@ -237,6 +257,7 @@ function selectDisease(key) {
     document.querySelectorAll('.disease-list li').forEach(li => {
         li.classList.toggle('active', li.dataset.key === key);
     });
+    loadDiseaseStats(key);
 }
 
 // Logging
@@ -273,8 +294,6 @@ function runHealthCheck() {
     eventSource.addEventListener('log_parsed', e => {
         const d = JSON.parse(e.data);
         log(`Log parsed: ${d.sources_processed} processed, ${d.sources_failed} failed`, 'ok');
-        document.getElementById('statSources').textContent = d.sources_processed;
-        document.getElementById('statDuration').textContent = d.pipeline_duration || '-';
         renderParserTable(d.parsers);
     });
 
@@ -412,23 +431,98 @@ function chartOpts(c) {
 }
 
 function updateChartColors() {
-    // Re-render if we have data
-    if (nodeChart && relChart) {
-        const c = getChartColors();
-        Chart.defaults.color = c.text;
-        nodeChart.options.scales.y.grid.color = c.grid;
-        relChart.options.scales.y.grid.color = c.grid;
-        nodeChart.data.datasets[0].backgroundColor = c.accent + '99';
-        nodeChart.data.datasets[0].borderColor = c.accent;
-        relChart.data.datasets[0].backgroundColor = c.green + '99';
-        relChart.data.datasets[0].borderColor = c.green;
-        nodeChart.update();
-        relChart.update();
+    const c = getChartColors();
+    Chart.defaults.color = c.text;
+    [nodeChart, diseaseNodeChart].forEach(ch => {
+        if (!ch) return;
+        ch.options.scales.y.grid.color = c.grid;
+        ch.data.datasets[0].backgroundColor = c.accent + '99';
+        ch.data.datasets[0].borderColor = c.accent;
+        ch.update();
+    });
+    [relChart, diseaseRelChart].forEach(ch => {
+        if (!ch) return;
+        ch.options.scales.y.grid.color = c.grid;
+        ch.data.datasets[0].backgroundColor = c.green + '99';
+        ch.data.datasets[0].borderColor = c.green;
+        ch.update();
+    });
+}
+
+// Load graph stats on page load
+async function loadGraphStats() {
+    try {
+        const res = await fetch('/api/graph-stats');
+        if (!res.ok) throw new Error('Neo4j unavailable');
+        const d = await res.json();
+        if (d.error) { log(d.error, 'err'); return; }
+        document.getElementById('statNodes').textContent = d.total_nodes.toLocaleString();
+        document.getElementById('statRels').textContent = d.total_relationships.toLocaleString();
+        document.getElementById('statNodeTypes').textContent = d.node_types;
+        document.getElementById('statRelTypes').textContent = d.rel_types;
+        document.getElementById('statSources').textContent = d.source_count;
+        renderCharts(d.node_counts, d.rel_counts);
+    } catch (e) {
+        ['statNodes','statRels','statNodeTypes','statRelTypes','statSources'].forEach(id => {
+            document.getElementById(id).textContent = '-';
+        });
+        log('Failed to load graph stats: ' + e.message, 'err');
     }
+}
+
+// Load disease subgraph stats
+async function loadDiseaseStats(disease) {
+    disease = disease || selectedDisease;
+    const label = disease.replace(/_/g, ' ').replace(/\b\w/g, c => c.toUpperCase());
+    document.getElementById('diseaseStatsLabel').textContent = label;
+    document.getElementById('statDiseaseMatched').innerHTML = '<span class="spinner"></span>';
+    document.getElementById('statDiseaseNeighbors').innerHTML = '<span class="spinner"></span>';
+
+    try {
+        const res = await fetch('/api/disease-stats?disease=' + disease);
+        if (!res.ok) throw new Error('Neo4j unavailable');
+        const d = await res.json();
+        if (d.error) { log(d.error, 'err'); return; }
+        document.getElementById('statDiseaseMatched').textContent = d.diseases_matched.toLocaleString();
+        document.getElementById('statDiseaseNeighbors').textContent = d.total_neighbors.toLocaleString();
+        renderDiseaseCharts(d.node_breakdown, d.rel_breakdown);
+    } catch (e) {
+        document.getElementById('statDiseaseMatched').textContent = '-';
+        document.getElementById('statDiseaseNeighbors').textContent = '-';
+        log('Failed to load disease stats: ' + e.message, 'err');
+    }
+}
+
+function renderDiseaseCharts(nodeBreakdown, relBreakdown) {
+    const c = getChartColors();
+
+    const nodeSorted = Object.entries(nodeBreakdown).sort((a, b) => b[1] - a[1]);
+    const relSorted = Object.entries(relBreakdown).sort((a, b) => b[1] - a[1]);
+
+    if (diseaseNodeChart) diseaseNodeChart.destroy();
+    if (diseaseRelChart) diseaseRelChart.destroy();
+
+    Chart.defaults.color = c.text;
+
+    diseaseNodeChart = new Chart(document.getElementById('diseaseNodeChart'), {
+        type: 'bar',
+        data: { labels: nodeSorted.map(r => r[0]), datasets: [{ data: nodeSorted.map(r => r[1]),
+            backgroundColor: c.accent + '99', borderColor: c.accent, borderWidth: 1, borderRadius: 4 }] },
+        options: chartOpts(c)
+    });
+
+    diseaseRelChart = new Chart(document.getElementById('diseaseRelChart'), {
+        type: 'bar',
+        data: { labels: relSorted.map(r => r[0]), datasets: [{ data: relSorted.map(r => r[1]),
+            backgroundColor: c.green + '99', borderColor: c.green, borderWidth: 1, borderRadius: 4 }] },
+        options: chartOpts(c)
+    });
 }
 
 // Init
 loadDiseases();
+loadGraphStats();
+loadDiseaseStats();
 </script>
 </body>
 </html>

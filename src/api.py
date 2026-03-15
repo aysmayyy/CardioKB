@@ -36,6 +36,17 @@ app = Flask(__name__,
             static_url_path='')
 
 
+def _get_neo4j_driver():
+    """Create a Neo4j driver from environment variables."""
+    from neo4j import GraphDatabase
+    uri = os.getenv('NEO4J_URI', 'bolt://localhost:7687')
+    username = os.getenv('NEO4J_USERNAME', 'neo4j')
+    password = os.getenv('NEO4J_PASSWORD', '')
+    if not password:
+        return None
+    return GraphDatabase.driver(uri, auth=(username, password))
+
+
 @app.route('/')
 def index():
     return send_from_directory(app.static_folder, 'index.html')
@@ -62,6 +73,136 @@ def list_diseases():
 def list_parsers():
     """Return expected parser list."""
     return jsonify(EXPECTED_PARSERS)
+
+
+@app.route('/api/graph-stats')
+def graph_stats():
+    """Query Neo4j for current graph statistics."""
+    driver = _get_neo4j_driver()
+    if not driver:
+        return jsonify({'error': 'NEO4J_PASSWORD not set'}), 503
+
+    try:
+        with driver.session(database='neo4j') as session:
+            # Node counts by label
+            node_counts = {}
+            total_nodes = 0
+            labels = [r['label'] for r in session.run(
+                "CALL db.labels() YIELD label RETURN label")]
+            for label in sorted(labels):
+                cnt = session.run(
+                    f"MATCH (n:{label}) RETURN count(n) AS cnt"
+                ).single()['cnt']
+                node_counts[label] = cnt
+                total_nodes += cnt
+
+            # Relationship counts by type
+            rel_counts = {}
+            total_rels = 0
+            rel_types = [r['relationshipType'] for r in session.run(
+                "CALL db.relationshipTypes() YIELD relationshipType "
+                "RETURN relationshipType")]
+            for rt in sorted(rel_types):
+                cnt = session.run(
+                    f"MATCH ()-[r:`{rt}`]->() RETURN count(r) AS cnt"
+                ).single()['cnt']
+                rel_counts[rt] = cnt
+                total_rels += cnt
+
+            # Source counts from relationship properties
+            source_result = session.run(
+                "MATCH ()-[r]->() WHERE r.source IS NOT NULL "
+                "RETURN DISTINCT r.source AS source")
+            sources = sorted([r['source'] for r in source_result])
+
+        return jsonify({
+            'node_counts': node_counts,
+            'rel_counts': rel_counts,
+            'total_nodes': total_nodes,
+            'total_relationships': total_rels,
+            'node_types': len(node_counts),
+            'rel_types': len(rel_counts),
+            'source_count': len(sources),
+            'sources': sources,
+        })
+    except Exception as e:
+        return jsonify({'error': str(e)}), 500
+    finally:
+        driver.close()
+
+
+@app.route('/api/disease-stats')
+def disease_stats():
+    """Query Neo4j for disease subgraph statistics.
+
+    Query params:
+        disease: Disease key (default: cvd)
+    """
+    from src.utils import load_disease_terms
+
+    disease = request.args.get('disease', 'cvd')
+    if disease not in DISEASE_FILTERS:
+        disease = 'cvd'
+
+    abs_path = str(Path(_project_root) / DISEASE_FILTERS[disease])
+    try:
+        terms = load_disease_terms(abs_path)
+    except Exception as e:
+        return jsonify({'error': f'Failed to load disease terms: {e}'}), 500
+
+    driver = _get_neo4j_driver()
+    if not driver:
+        return jsonify({'error': 'NEO4J_PASSWORD not set'}), 503
+
+    try:
+        with driver.session(database='neo4j') as session:
+            # Find Disease nodes matching the filter terms
+            term_list = list(terms)
+            disease_nodes = session.run(
+                "MATCH (d:Disease) "
+                "WHERE any(term IN $terms WHERE toLower(d.commonName) CONTAINS term) "
+                "RETURN d.commonName AS name, d.xrefDiseaseOntology AS doid",
+                terms=term_list,
+            )
+            diseases_found = []
+            doids = []
+            for rec in disease_nodes:
+                diseases_found.append(rec['name'])
+                if rec['doid']:
+                    doids.append(rec['doid'])
+
+            # Get neighbor counts by label and relationship type
+            node_breakdown = {}
+            rel_breakdown = {}
+            total_neighbors = 0
+
+            if doids:
+                neighbors = session.run(
+                    "MATCH (d:Disease)-[r]-(n) "
+                    "WHERE d.xrefDiseaseOntology IN $doids "
+                    "RETURN labels(n)[0] AS label, type(r) AS rel_type, "
+                    "count(*) AS cnt",
+                    doids=doids,
+                )
+                for row in neighbors:
+                    label = row['label']
+                    rel_type = row['rel_type']
+                    cnt = row['cnt']
+                    node_breakdown[label] = node_breakdown.get(label, 0) + cnt
+                    rel_breakdown[rel_type] = rel_breakdown.get(rel_type, 0) + cnt
+                    total_neighbors += cnt
+
+        return jsonify({
+            'disease': disease,
+            'diseases_matched': len(diseases_found),
+            'node_breakdown': node_breakdown,
+            'rel_breakdown': rel_breakdown,
+            'total_neighbors': total_neighbors,
+        })
+    except Exception as e:
+        return jsonify({'error': str(e)}), 500
+    finally:
+        driver.close()
 
 
 @app.route('/api/health-check')

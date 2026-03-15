@@ -434,7 +434,6 @@ class CardioKBPipeline:
         # Custom parsers (always enabled)
         parsers['clinicaltrials'] = ClinicalTrialsParser(
             data_dir=str(self.raw_dir),
-            query_mode="cvd",
         )
         parsers['clinpgx'] = ClinPGxParser(
             data_dir=str(self.raw_dir),

@@ -21,7 +21,7 @@ A biomedical knowledge graph pipeline that integrates 24 data sources (24 parser
 
 | # | Source | Access | Status |
 |---|--------|--------|--------|
-| 1 | ClinicalTrials.gov | Public API v2 | Working (20,219 CVD trials, 6,327 condition + 1,655 intervention edges) |
+| 1 | ClinicalTrials.gov | AACT bulk download | Working (576,029 trials, all diseases — full database) |
 | 2 | ClinPGx (PharmGKB successor) | Public API | Working (454 annotations, 1,060 variants, 294 AFFECTS_RESPONSE_TO edges) |
 | 3 | NCBI Gene | Public FTP | Working (193,687 genes) |
 | 4 | DoRothEA (OmniPath) | Public API | Working (15,092 TF-gene interactions) |
@@ -209,22 +209,16 @@ Disease term files live in **`ontology/diseases/`** (one term per line, `#` for 
 
 **`ontology/disease_filter.txt`** is a symlink to `diseases/cvd.txt`. Code that reads it directly (OMIM `is_cvd` tagging, Neo4j CVD node tagging) works without changes.
 
-Two parsers accept a `disease_filter` parameter to target any disease area:
-- **ClinicalTrialsParser** — builds API condition queries from the term list
-- **DisGeNETParser** — searches the API for diseases matching the term list
+**ClinicalTrialsParser** downloads the full AACT bulk flat files (~2.4 GB, all 576K+ trials) and is **completely disease-agnostic** — no filtering is applied. Run it once to load all trials.
+
+**DisGeNETParser** is the only parser that accepts a `disease_filter` parameter to target any disease area:
 
 ```python
-# Target a different disease area per-parser:
-ClinicalTrialsParser(data_dir="data/raw", disease_filter="ontology/diseases/alzheimers.txt")
+# Target a specific disease area:
 DisGeNETParser(data_dir="data/raw", disease_filter="ontology/diseases/cancer.txt")
 ```
 
-When `disease_filter` is omitted, both default to `ontology/disease_filter.txt` (→ CVD). OMIMParser reads the symlink to tag rows with `is_cvd` but loads all data regardless. All other 21 parsers are fully disease-agnostic. **To switch disease area globally**, re-point the symlink and re-run those two parsers — no code changes required:
-
-```bash
-ln -sf diseases/alzheimers.txt ontology/disease_filter.txt
-python src/main.py --skip-download
-```
+When `disease_filter` is omitted, DisGeNET defaults to `ontology/disease_filter.txt` (→ CVD). OMIMParser reads the symlink to tag rows with `is_cvd` but loads all data regardless. All other 22 parsers are fully disease-agnostic.
 
 ## Architecture Notes
 

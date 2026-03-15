@@ -93,18 +93,19 @@ Disease term files live in `ontology/diseases/` (one term per line, `#` for comm
 
 `ontology/disease_filter.txt` is a symlink to `diseases/cvd.txt` — existing code that reads it directly (e.g., OMIM `is_cvd` tagging, `main.py` CVD node tagging) works without changes.
 
-Two parsers accept a `disease_filter` parameter to target any disease area:
-- **ClinicalTrialsParser(disease_filter="ontology/diseases/alzheimers.txt")** — builds API condition queries from the term list
+**ClinicalTrialsParser** downloads the full AACT bulk flat files (~2.4 GB, all 576K+ trials) and is **completely disease-agnostic** — no filtering is applied. Run it once to load all trials.
+
+**DisGeNETParser** is the only parser that accepts a `disease_filter` parameter:
 - **DisGeNETParser(disease_filter="ontology/diseases/alzheimers.txt")** — searches the API for diseases matching the term list
 
-When `disease_filter` is omitted (default), both parsers use `ontology/disease_filter.txt` (→ CVD). OMIMParser reads the symlink to tag rows with `is_cvd` but loads all data regardless. All other parsers are fully disease-agnostic. To switch disease area globally, re-point the symlink: `ln -sf diseases/alzheimers.txt ontology/disease_filter.txt`.
+When `disease_filter` is omitted, DisGeNET defaults to `ontology/disease_filter.txt` (→ CVD). OMIMParser reads the symlink to tag rows with `is_cvd` but loads all data regardless. All other 22 parsers are fully disease-agnostic.
 
 ## Data Sources — 24 Sources (24 Parsers)
 
 ### Phase 1: Core Parsers
 | # | Source | Parser | Access | Status |
 |---|--------|--------|--------|--------|
-| 1 | ClinicalTrials.gov | ClinicalTrialsParser | Public API v2 | Working (20,219 CVD trials) |
+| 1 | ClinicalTrials.gov | ClinicalTrialsParser | AACT bulk download | Working (576,029 trials, all diseases) |
 | 2 | ClinPGx (PharmGKB successor) | ClinPGxParser | Public API | Working (454 annotations, 1,060 variants, 294 AFFECTS_RESPONSE_TO edges) |
 | 3 | NCBI Gene | NCBIGeneParser | Public FTP | Working (193,687 genes) |
 | 4 | DoRothEA (OmniPath) | DoRothEAParser | Public API | Working (15,092 TF-gene interactions) |
