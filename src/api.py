@@ -617,12 +617,20 @@ def admin_verify():
 
 @app.route('/api/agent/add-database', methods=['POST'])
 def agent_add_database():
-    """Add a new database source via the agent.
+    """Add a new database source via the autonomous database agent.
+
+    Uses Claude to generate a complete parser, ontology configs, and pipeline
+    registration. Then runs the parser, validates ID mappings, and loads into Neo4j.
 
     Request body (JSON):
-        name: Database name
-        url: Database URL
+        name: Database name (e.g., "PhosphoSitePlus")
+        url: Database URL or data download URL
         password: Admin password
+
+    SSE events:
+        status  - progress updates with phase and message
+        result  - final result dict
+        error   - error message
     """
     body = request.get_json(silent=True) or {}
     admin_pw = os.getenv('ADMIN_PASSWORD', '')
@@ -641,10 +649,8 @@ def agent_add_database():
 
     def run():
         try:
-            from src.agent import run_agent
-            result = run_agent(f"Add database: {name} from {url}",
-                               on_progress=on_progress)
-            q.put(('result', result))
+            from src.database_agent import run_database_agent
+            run_database_agent(name, url, on_progress=on_progress)
         except Exception as e:
             q.put(('error', {'message': str(e)}))
         finally:
