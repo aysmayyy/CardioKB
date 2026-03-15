@@ -1,0 +1,434 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>CardioKB Dashboard</title>
+<script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.7/dist/chart.umd.min.js"></script>
+<style>
+:root {
+    --bg: #0f172a; --surface: #1e293b; --surface2: #334155; --border: #475569;
+    --text: #e2e8f0; --text-muted: #94a3b8; --accent: #38bdf8;
+    --green: #4ade80; --red: #f87171; --yellow: #fbbf24; --sidebar-w: 260px;
+}
+[data-theme="light"] {
+    --bg: #f1f5f9; --surface: #ffffff; --surface2: #e2e8f0; --border: #cbd5e1;
+    --text: #1e293b; --text-muted: #64748b; --accent: #0284c7;
+    --green: #16a34a; --red: #dc2626; --yellow: #ca8a04;
+}
+* { margin: 0; padding: 0; box-sizing: border-box; }
+body {
+    font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', system-ui, sans-serif;
+    background: var(--bg); color: var(--text); line-height: 1.5;
+    display: flex; min-height: 100vh;
+}
+
+/* Sidebar */
+.sidebar {
+    width: var(--sidebar-w); background: var(--surface); border-right: 1px solid var(--border);
+    padding: 1.5rem 1rem; display: flex; flex-direction: column; gap: 1.5rem;
+    position: fixed; top: 0; left: 0; height: 100vh; overflow-y: auto; z-index: 10;
+}
+.sidebar h1 { font-size: 1.2rem; color: var(--accent); }
+.sidebar h1 span { font-size: 0.7rem; color: var(--text-muted); display: block; font-weight: 400; }
+.sidebar h3 { font-size: 0.75rem; text-transform: uppercase; letter-spacing: 0.08em; color: var(--text-muted); margin-bottom: 0.5rem; }
+.disease-list { list-style: none; display: flex; flex-direction: column; gap: 0.25rem; }
+.disease-list li {
+    padding: 0.55rem 0.75rem; border-radius: 6px; cursor: pointer;
+    font-size: 0.88rem; transition: background 0.15s; display: flex; justify-content: space-between; align-items: center;
+}
+.disease-list li:hover { background: var(--surface2); }
+.disease-list li.active { background: var(--accent); color: #0f172a; font-weight: 600; }
+.disease-list li .count { font-size: 0.72rem; opacity: 0.7; }
+.theme-toggle {
+    margin-top: auto; padding: 0.5rem 0.75rem; border-radius: 6px;
+    background: var(--surface2); border: none; color: var(--text); cursor: pointer;
+    font-size: 0.82rem; text-align: center;
+}
+.theme-toggle:hover { opacity: 0.8; }
+.run-btn {
+    padding: 0.65rem; border-radius: 6px; border: none; cursor: pointer;
+    font-size: 0.88rem; font-weight: 600; text-align: center; transition: opacity 0.15s;
+    background: var(--accent); color: #0f172a;
+}
+.run-btn:hover { opacity: 0.85; }
+.run-btn:disabled { opacity: 0.4; cursor: not-allowed; }
+
+/* Main */
+.main { margin-left: var(--sidebar-w); flex: 1; padding: 1.5rem 2rem; }
+.stats-grid {
+    display: grid; grid-template-columns: repeat(auto-fit, minmax(170px, 1fr));
+    gap: 0.75rem; margin-bottom: 1.5rem;
+}
+.stat-card {
+    background: var(--surface); border: 1px solid var(--border); border-radius: 8px;
+    padding: 1rem; text-align: center;
+}
+.stat-card .value { font-size: 1.6rem; font-weight: 700; color: var(--accent); }
+.stat-card .label { color: var(--text-muted); font-size: 0.78rem; margin-top: 0.15rem; }
+
+.grid-2 { display: grid; grid-template-columns: 1fr 1fr; gap: 1rem; margin-bottom: 1rem; }
+@media (max-width: 1000px) { .grid-2 { grid-template-columns: 1fr; } }
+
+section {
+    background: var(--surface); border: 1px solid var(--border);
+    border-radius: 8px; padding: 1.25rem; margin-bottom: 1rem;
+}
+section h2 {
+    font-size: 1rem; color: var(--accent); margin-bottom: 0.75rem;
+    padding-bottom: 0.4rem; border-bottom: 1px solid var(--border);
+}
+
+/* Log panel */
+.log-panel {
+    background: var(--bg); border: 1px solid var(--border); border-radius: 6px;
+    padding: 0.75rem; font-family: 'SF Mono', 'Fira Code', monospace; font-size: 0.78rem;
+    max-height: 280px; overflow-y: auto; color: var(--text-muted); line-height: 1.7;
+}
+.log-panel .log-line { white-space: pre-wrap; word-break: break-all; }
+.log-panel .log-ok { color: var(--green); }
+.log-panel .log-err { color: var(--red); }
+.log-panel .log-info { color: var(--accent); }
+
+/* Parser table */
+table { width: 100%; border-collapse: collapse; font-size: 0.82rem; }
+th, td { padding: 0.4rem 0.6rem; text-align: left; border-bottom: 1px solid var(--surface2); }
+th { color: var(--text-muted); font-weight: 600; text-transform: uppercase; font-size: 0.7rem; letter-spacing: 0.05em; }
+.badge {
+    display: inline-block; padding: 0.1rem 0.45rem; border-radius: 4px;
+    font-size: 0.72rem; font-weight: 600;
+}
+.badge-success { background: rgba(74,222,128,0.15); color: var(--green); }
+.badge-failed { background: rgba(248,113,113,0.15); color: var(--red); }
+.badge-skipped { background: rgba(251,191,36,0.15); color: var(--yellow); }
+.badge-running { background: rgba(56,189,248,0.15); color: var(--accent); }
+
+/* Health checks */
+.health-item {
+    padding: 0.5rem 0.75rem; border-radius: 6px; margin-bottom: 0.4rem; font-size: 0.82rem;
+}
+.health-ok { background: rgba(74,222,128,0.08); border-left: 3px solid var(--green); }
+.health-warn { background: rgba(248,113,113,0.08); border-left: 3px solid var(--red); }
+
+/* Chart containers */
+.chart-container { position: relative; height: 320px; }
+
+/* Spinner */
+.spinner { display: inline-block; width: 14px; height: 14px; border: 2px solid var(--border);
+    border-top-color: var(--accent); border-radius: 50%; animation: spin 0.6s linear infinite;
+    vertical-align: middle; margin-right: 6px; }
+@keyframes spin { to { transform: rotate(360deg); } }
+
+/* Responsive sidebar */
+@media (max-width: 768px) {
+    .sidebar { width: 100%; height: auto; position: relative; }
+    .main { margin-left: 0; padding: 1rem; }
+}
+</style>
+</head>
+<body>
+
+<aside class="sidebar">
+    <h1>CardioKB <span>Knowledge Base Dashboard</span></h1>
+
+    <div>
+        <h3>Disease Filter</h3>
+        <ul class="disease-list" id="diseaseList"></ul>
+    </div>
+
+    <button class="run-btn" id="runBtn" onclick="runHealthCheck()">Run Health Check</button>
+
+    <button class="theme-toggle" onclick="toggleTheme()">Toggle Light / Dark</button>
+</aside>
+
+<div class="main">
+    <!-- Stats -->
+    <div class="stats-grid" id="statsGrid">
+        <div class="stat-card"><div class="value" id="statNodes">-</div><div class="label">Total Nodes</div></div>
+        <div class="stat-card"><div class="value" id="statRels">-</div><div class="label">Total Relationships</div></div>
+        <div class="stat-card"><div class="value" id="statNodeTypes">-</div><div class="label">Node Types</div></div>
+        <div class="stat-card"><div class="value" id="statRelTypes">-</div><div class="label">Rel Types</div></div>
+        <div class="stat-card"><div class="value" id="statSources">-</div><div class="label">Sources</div></div>
+        <div class="stat-card"><div class="value" id="statDuration">-</div><div class="label">Duration</div></div>
+    </div>
+
+    <div class="grid-2">
+        <!-- Node chart -->
+        <section>
+            <h2>Node Counts by Type</h2>
+            <div class="chart-container"><canvas id="nodeChart"></canvas></div>
+        </section>
+        <!-- Rel chart -->
+        <section>
+            <h2>Relationship Counts by Type</h2>
+            <div class="chart-container"><canvas id="relChart"></canvas></div>
+        </section>
+    </div>
+
+    <div class="grid-2">
+        <!-- Parser table -->
+        <section>
+            <h2>Parser Status</h2>
+            <div style="max-height:360px;overflow-y:auto">
+                <table>
+                    <thead><tr><th>Parser</th><th>Status</th><th>Duration</th></tr></thead>
+                    <tbody id="parserBody"></tbody>
+                </table>
+            </div>
+        </section>
+
+        <!-- Health checks -->
+        <section>
+            <h2>Health Checks</h2>
+            <div id="healthPanel"><span style="color:var(--text-muted);font-size:0.85rem">Run a health check to see results</span></div>
+        </section>
+    </div>
+
+    <!-- Log panel -->
+    <section>
+        <h2>Pipeline Log</h2>
+        <div class="log-panel" id="logPanel">
+            <div class="log-line log-info">Ready. Select a disease filter and click "Run Health Check".</div>
+        </div>
+    </section>
+</div>
+
+<script>
+// State
+let selectedDisease = 'cvd';
+let nodeChart = null;
+let relChart = null;
+let eventSource = null;
+
+// Theme
+let currentTheme = '';
+function toggleTheme() {
+    currentTheme = currentTheme === 'light' ? '' : 'light';
+    document.documentElement.setAttribute('data-theme', currentTheme);
+    updateChartColors();
+}
+
+// Load diseases
+async function loadDiseases() {
+    try {
+        const res = await fetch('/api/diseases');
+        const diseases = await res.json();
+        const list = document.getElementById('diseaseList');
+        list.innerHTML = '';
+        diseases.forEach(d => {
+            const li = document.createElement('li');
+            li.textContent = d.label;
+            li.dataset.key = d.key;
+            const span = document.createElement('span');
+            span.className = 'count';
+            span.textContent = d.term_count + ' terms';
+            li.appendChild(span);
+            if (d.key === selectedDisease) li.classList.add('active');
+            li.onclick = () => selectDisease(d.key);
+            list.appendChild(li);
+        });
+    } catch (e) {
+        log('Failed to load diseases: ' + e.message, 'err');
+    }
+}
+
+function selectDisease(key) {
+    selectedDisease = key;
+    document.querySelectorAll('.disease-list li').forEach(li => {
+        li.classList.toggle('active', li.dataset.key === key);
+    });
+}
+
+// Logging
+function log(msg, cls = '') {
+    const panel = document.getElementById('logPanel');
+    const line = document.createElement('div');
+    line.className = 'log-line' + (cls ? ' log-' + cls : '');
+    const ts = new Date().toLocaleTimeString();
+    line.textContent = `[${ts}] ${msg}`;
+    panel.appendChild(line);
+    panel.scrollTop = panel.scrollHeight;
+}
+
+// Run health check via SSE
+function runHealthCheck() {
+    const btn = document.getElementById('runBtn');
+    btn.disabled = true;
+    btn.innerHTML = '<span class="spinner"></span>Running...';
+
+    // Clear previous
+    document.getElementById('logPanel').innerHTML = '';
+    document.getElementById('healthPanel').innerHTML = '';
+    document.getElementById('parserBody').innerHTML = '';
+    log('Starting health check for ' + selectedDisease + '...', 'info');
+
+    if (eventSource) eventSource.close();
+    eventSource = new EventSource('/api/health-check?disease=' + selectedDisease);
+
+    eventSource.addEventListener('status', e => {
+        const d = JSON.parse(e.data);
+        log(d.message, 'info');
+    });
+
+    eventSource.addEventListener('log_parsed', e => {
+        const d = JSON.parse(e.data);
+        log(`Log parsed: ${d.sources_processed} processed, ${d.sources_failed} failed`, 'ok');
+        document.getElementById('statSources').textContent = d.sources_processed;
+        document.getElementById('statDuration').textContent = d.pipeline_duration || '-';
+        renderParserTable(d.parsers);
+    });
+
+    eventSource.addEventListener('neo4j_stats', e => {
+        const d = JSON.parse(e.data);
+        log(`Neo4j: ${d.total_nodes.toLocaleString()} nodes, ${d.total_relationships.toLocaleString()} rels`, 'ok');
+        document.getElementById('statNodes').textContent = d.total_nodes.toLocaleString();
+        document.getElementById('statRels').textContent = d.total_relationships.toLocaleString();
+        document.getElementById('statNodeTypes').textContent = Object.keys(d.node_counts).length;
+        document.getElementById('statRelTypes').textContent = Object.keys(d.rel_counts).length;
+        renderCharts(d.node_counts, d.rel_counts);
+    });
+
+    eventSource.addEventListener('health', e => {
+        const d = JSON.parse(e.data);
+        renderHealth(d.checks);
+    });
+
+    eventSource.addEventListener('disease_info', e => {
+        const d = JSON.parse(e.data);
+        log(`Disease filter: ${d.disease} (${d.term_count} terms)`, 'info');
+    });
+
+    eventSource.addEventListener('error', e => {
+        if (e.data) {
+            const d = JSON.parse(e.data);
+            log(d.message, 'err');
+        }
+    });
+
+    eventSource.addEventListener('done', e => {
+        log('Health check complete.', 'ok');
+        finish();
+    });
+
+    eventSource.onerror = () => {
+        finish();
+    };
+
+    function finish() {
+        if (eventSource) { eventSource.close(); eventSource = null; }
+        btn.disabled = false;
+        btn.textContent = 'Run Health Check';
+    }
+}
+
+// Render parser table
+function renderParserTable(parsers) {
+    const body = document.getElementById('parserBody');
+    body.innerHTML = '';
+    const allParsers = [
+        'clinicaltrials','clinpgx','ncbigene','dorothea','disease_ontology',
+        'gene_ontology','uberon','mesh','sider','lincs','medline','drugcentral',
+        'gwas','pubtator','bindingdb','ctd','bgee','hetionet_precomputed',
+        'jensenlab','jensentissues','hpo','omim','disgenet','drugbank','aopdb'
+    ];
+    allParsers.forEach(name => {
+        const p = parsers[name];
+        const status = p ? p.status : 'skipped';
+        const dur = p && p.duration_sec ? p.duration_sec.toFixed(1) + 's' : '-';
+        const cls = status.includes('success') ? 'success' : (
+            ['failed','no data'].includes(status) ? 'failed' :
+            status === 'running' ? 'running' : 'skipped'
+        );
+        const tr = document.createElement('tr');
+        tr.innerHTML = `<td>${name}</td><td><span class="badge badge-${cls}">${status}</span></td><td>${dur}</td>`;
+        body.appendChild(tr);
+    });
+}
+
+// Render health checks
+function renderHealth(checks) {
+    const panel = document.getElementById('healthPanel');
+    panel.innerHTML = '';
+    checks.forEach(c => {
+        const div = document.createElement('div');
+        div.className = 'health-item ' + (c.ok ? 'health-ok' : 'health-warn');
+        div.textContent = c.message;
+        panel.appendChild(div);
+    });
+}
+
+// Charts
+function getChartColors() {
+    const style = getComputedStyle(document.documentElement);
+    return {
+        accent: style.getPropertyValue('--accent').trim() || '#38bdf8',
+        green: style.getPropertyValue('--green').trim() || '#4ade80',
+        grid: style.getPropertyValue('--surface2').trim() || '#334155',
+        text: style.getPropertyValue('--text-muted').trim() || '#94a3b8',
+    };
+}
+
+function renderCharts(nodeCounts, relCounts) {
+    const c = getChartColors();
+    const nodeLabels = Object.keys(nodeCounts);
+    const nodeValues = Object.values(nodeCounts);
+
+    // Sort rels descending
+    const relSorted = Object.entries(relCounts).sort((a, b) => b[1] - a[1]);
+    const relLabels = relSorted.map(r => r[0]);
+    const relValues = relSorted.map(r => r[1]);
+
+    if (nodeChart) nodeChart.destroy();
+    if (relChart) relChart.destroy();
+
+    Chart.defaults.color = c.text;
+
+    nodeChart = new Chart(document.getElementById('nodeChart'), {
+        type: 'bar',
+        data: { labels: nodeLabels, datasets: [{ data: nodeValues,
+            backgroundColor: c.accent + '99', borderColor: c.accent, borderWidth: 1, borderRadius: 4 }] },
+        options: chartOpts(c)
+    });
+
+    relChart = new Chart(document.getElementById('relChart'), {
+        type: 'bar',
+        data: { labels: relLabels, datasets: [{ data: relValues,
+            backgroundColor: c.green + '99', borderColor: c.green, borderWidth: 1, borderRadius: 4 }] },
+        options: chartOpts(c)
+    });
+}
+
+function chartOpts(c) {
+    return {
+        responsive: true, maintainAspectRatio: false,
+        plugins: { legend: { display: false },
+            tooltip: { callbacks: { label: ctx => ctx.parsed.y.toLocaleString() } } },
+        scales: {
+            y: { type: 'logarithmic', grid: { color: c.grid },
+                ticks: { callback: v => v.toLocaleString() } },
+            x: { grid: { display: false }, ticks: { maxRotation: 55, minRotation: 55, font: { size: 10 } } }
+        }
+    };
+}
+
+function updateChartColors() {
+    // Re-render if we have data
+    if (nodeChart && relChart) {
+        const c = getChartColors();
+        Chart.defaults.color = c.text;
+        nodeChart.options.scales.y.grid.color = c.grid;
+        relChart.options.scales.y.grid.color = c.grid;
+        nodeChart.data.datasets[0].backgroundColor = c.accent + '99';
+        nodeChart.data.datasets[0].borderColor = c.accent;
+        relChart.data.datasets[0].backgroundColor = c.green + '99';
+        relChart.data.datasets[0].borderColor = c.green;
+        nodeChart.update();
+        relChart.update();
+    }
+}
+
+// Init
+loadDiseases();
+</script>
+</body>
+</html>

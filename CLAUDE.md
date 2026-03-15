@@ -17,7 +17,7 @@
 ## Tech Stack
 - **Language**: Python 3.11 (conda env: `cardiokb`)
 - **Database**: Neo4j (knowledge graph)
-- **Key libraries**: pandas, numpy, requests, neo4j, scipy, matplotlib
+- **Key libraries**: pandas, numpy, requests, neo4j, flask, scipy, obonet, lxml
 - **Testing**: pytest
 - **Notebooks**: Jupyter
 
@@ -34,13 +34,15 @@
 - `data/raw/` — Downloaded source data
 - `data/processed/` — Exported TSV files for Neo4j loading
 - `data/output/` — Release notes and build artifacts
+- `interface/index.html` — Web dashboard (served by `src/api.py`)
+- `src/api.py` — Flask backend with SSE streaming for web interface
+- `src/orchestrator.py` — Pipeline health check and HTML report generator
+- `run.sh` — Launches Flask + opens browser
+- `reports/` — Generated pipeline health reports
 - `docs/` — Documentation, research plan, specific aims
-- `examples/` — Example scripts for running parsers
-- `notebooks/` — Jupyter notebooks for exploration
 - `scripts/` — Data processing and verification scripts
 - `tests/` — pytest test files
 - `models/` — Future ML models
-- `web/` — Future web interface
 - `.claude/skills/` — Claude Code custom skills (see below)
 
 ## Claude Code Skills

@@ -95,6 +95,8 @@ Cardio-KB/
 │           ├── ctd_parser.py
 │           ├── bgee_parser.py
 │           └── hetionet_precomputed_parser.py
+├── interface/
+│   └── index.html              # Web dashboard (served by src/api.py)
 ├── scripts/
 │   ├── verify_graph.py         # Neo4j graph verification and validation
 │   ├── run_aopdb.py            # Standalone AOP-DB parser + Neo4j loader
@@ -111,15 +113,14 @@ Cardio-KB/
 │       ├── cancer.txt             # Cancer / oncology (70 terms)
 │       ├── asthma.txt             # Asthma & respiratory (48 terms)
 │       └── diabetes.txt           # Diabetes & metabolic (52 terms)
+├── reports/                    # Generated pipeline health reports
 ├── docs/                       # Research plan, specific aims, data inventory xlsx
-├── examples/                   # Example scripts for individual parsers
-├── notebooks/                  # Jupyter notebooks for exploration
 ├── tests/                      # pytest test files
 ├── .claude/
 │   └── skills/                 # Claude Code skill files (auto-loaded for AI-assisted development)
 │       └── database-parsing/   # Step-by-step guide for adding new data source parsers
 ├── models/                     # (Future) ML models
-└── web/                        # (Future) Web interface
+└── run.sh                      # Launches Flask web interface
 ```
 
 ## Running the Pipeline

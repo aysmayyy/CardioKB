@@ -1,33 +1,34 @@
 # CardioKB Core Requirements
-# Essential dependencies for parsers, data processing, and knowledge graph construction
 
-# HTTP requests and web scraping
+# HTTP requests
 requests>=2.31.0
 
 # Data processing
 pandas>=2.0.0
 numpy>=1.24.0
 
-# Database connectivity
-# mysql-connector-python>=8.0.0  # Uncomment for MySQL/AOP-DB parser
-neo4j>=5.0.0  # For knowledge graph database
+# Database
+neo4j>=5.0.0
+# mysql-connector-python>=8.0.0  # Uncomment for AOP-DB MySQL (SQL dump works without)
 
-# Scientific computing (optional, for advanced analysis)
-scipy>=1.10.0
+# Web interface
+flask>=3.0.0
 
-# Configuration and environment
+# Configuration
 python-dotenv>=1.0.0
-
-# Jupyter notebooks (for development)
-jupyter>=1.0.0
-ipykernel>=6.0.0
-matplotlib>=3.7.0
 
 # Ontology parsing (Disease Ontology, Gene Ontology, Uberon)
 obonet>=0.3.0
+pronto>=2.5.0
 
-# Fast XML parsing (MeSH)
+# XML parsing (MeSH, DrugBank)
 lxml>=4.9.0
 
-# Testing (optional)
+# Scientific computing
+scipy>=1.10.0
+
+# Development / notebooks (optional)
+jupyter>=1.0.0
+ipykernel>=6.0.0
+matplotlib>=3.7.0
 pytest>=7.0.0
