@@ -255,6 +255,180 @@ def agent_build_sse():
                              'X-Accel-Buffering': 'no'})
 
 
+@app.route('/api/graph')
+def graph_data():
+    """Return disease subgraph as nodes + edges for vis.js visualization.
+
+    Query params:
+        disease: Disease key (default: cvd)
+        limit: Max neighbor nodes to return (default: 200)
+    """
+    from src.utils import load_disease_terms
+
+    disease = request.args.get('disease', 'cvd')
+    if disease not in DISEASE_FILTERS:
+        disease = 'cvd'
+    limit = min(int(request.args.get('limit', 200)), 1000)
+
+    abs_path = str(Path(_project_root) / DISEASE_FILTERS[disease])
+    try:
+        terms = load_disease_terms(abs_path)
+    except Exception as e:
+        return jsonify({'error': f'Failed to load disease terms: {e}'}), 500
+
+    driver = _get_neo4j_driver()
+    if not driver:
+        return jsonify({'error': 'NEO4J_PASSWORD not set'}), 503
+
+    try:
+        with driver.session(database='neo4j') as session:
+            term_list = list(terms)
+            result = session.run(
+                "MATCH (d:Disease) "
+                "WHERE any(term IN $terms WHERE toLower(d.commonName) CONTAINS term) "
+                "WITH d LIMIT 50 "
+                "MATCH (d)-[r]-(n) "
+                "WITH d, r, n LIMIT $limit "
+                "RETURN d.commonName AS disease_name, "
+                "       d.xrefDiseaseOntology AS disease_id, "
+                "       labels(d)[0] AS disease_label, "
+                "       type(r) AS rel_type, "
+                "       r.source AS source, "
+                "       labels(n)[0] AS neighbor_label, "
+                "       properties(n) AS neighbor_props, "
+                "       id(d) AS did, id(n) AS nid",
+                terms=term_list,
+                limit=limit,
+            )
+
+            nodes = {}
+            edges = []
+            for row in result:
+                did = str(row['did'])
+                nid = str(row['nid'])
+
+                if did not in nodes:
+                    nodes[did] = {
+                        'id': did,
+                        'label': row['disease_name'] or did,
+                        'type': 'Disease',
+                        'properties': {
+                            'commonName': row['disease_name'],
+                            'xrefDiseaseOntology': row['disease_id'],
+                        },
+                    }
+
+                if nid not in nodes:
+                    props = dict(row['neighbor_props']) if row['neighbor_props'] else {}
+                    display = (props.get('commonName') or props.get('name')
+                               or props.get('symbol') or props.get('title')
+                               or props.get('nctId') or nid)
+                    nodes[nid] = {
+                        'id': nid,
+                        'label': str(display)[:60],
+                        'type': row['neighbor_label'],
+                        'properties': {k: str(v)[:200] for k, v in props.items()
+                                       if v is not None},
+                    }
+
+                edges.append({
+                    'from': did,
+                    'to': nid,
+                    'label': row['rel_type'],
+                    'source': row['source'],
+                })
+
+        return jsonify({
+            'nodes': list(nodes.values()),
+            'edges': edges,
+        })
+    except Exception as e:
+        return jsonify({'error': str(e)}), 500
+    finally:
+        driver.close()
+
+
+@app.route('/api/query', methods=['POST'])
+def run_query():
+    """Execute a Cypher query and return results as JSON.
+
+    Request body (JSON):
+        query: Cypher query string
+
+    Returns nodes/edges if the query returns graph patterns,
+    otherwise returns tabular rows.
+    """
+    body = request.get_json(silent=True) or {}
+    cypher = (body.get('query') or '').strip()
+    if not cypher:
+        return jsonify({'error': 'Missing "query" field'}), 400
+
+    # Block write operations
+    upper = cypher.upper()
+    blocked = ['CREATE', 'MERGE', 'DELETE', 'DETACH', 'SET ', 'REMOVE ',
+               'DROP ', 'CALL {', 'FOREACH']
+    for kw in blocked:
+        if kw in upper:
+            return jsonify({'error': f'Write operations are not allowed ({kw.strip()})'}), 403
+
+    driver = _get_neo4j_driver()
+    if not driver:
+        return jsonify({'error': 'NEO4J_PASSWORD not set'}), 503
+
+    try:
+        with driver.session(database='neo4j') as session:
+            result = session.run(cypher)
+            keys = result.keys()
+            rows = []
+            nodes = {}
+            edges = []
+
+            for record in result:
+                row = {}
+                for key in keys:
+                    val = record[key]
+                    # Check for Node objects
+                    if hasattr(val, 'labels'):
+                        node_id = str(val.id)
+                        props = dict(val)
+                        display = (props.get('commonName') or props.get('name')
+                                   or props.get('symbol') or props.get('title')
+                                   or node_id)
+                        if node_id not in nodes:
+                            nodes[node_id] = {
+                                'id': node_id,
+                                'label': str(display)[:60],
+                                'type': list(val.labels)[0] if val.labels else 'Unknown',
+                                'properties': {k: str(v)[:200] for k, v in props.items()
+                                               if v is not None},
+                            }
+                        row[key] = str(display)
+                    elif hasattr(val, 'type'):
+                        # Relationship
+                        edges.append({
+                            'from': str(val.start_node.id) if hasattr(val, 'start_node') else '',
+                            'to': str(val.end_node.id) if hasattr(val, 'end_node') else '',
+                            'label': val.type,
+                            'source': dict(val).get('source', ''),
+                        })
+                        row[key] = val.type
+                    else:
+                        row[key] = val if isinstance(val, (str, int, float, bool, type(None))) else str(val)
+                rows.append(row)
+
+        return jsonify({
+            'columns': list(keys),
+            'rows': rows[:500],
+            'nodes': list(nodes.values()),
+            'edges': edges,
+            'row_count': len(rows),
+        })
+    except Exception as e:
+        return jsonify({'error': str(e)}), 500
+    finally:
+        driver.close()
+
+
 @app.route('/api/health-check')
 def health_check_sse():
     """

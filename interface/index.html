@@ -5,6 +5,8 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>CardioKB Dashboard</title>
 <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.7/dist/chart.umd.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/vis-network/9.1.9/vis-network.min.js"></script>
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/vis-network/9.1.9/vis-network.min.css" />
 <style>
 :root {
     --bg: #0f172a; --surface: #1e293b; --surface2: #334155; --border: #475569;
@@ -60,10 +62,27 @@ body {
 }
 .agent-input:focus { border-color: var(--accent); }
 .agent-input::placeholder { color: var(--text-muted); }
-.agent-btn { margin-top: 0; }
 
 /* Main */
 .main { margin-left: var(--sidebar-w); flex: 1; padding: 1.5rem 2rem; }
+
+/* Tabs */
+.tabs { display: flex; gap: 0; margin-bottom: 1.5rem; border-bottom: 2px solid var(--border); }
+.tab-btn {
+    padding: 0.7rem 1.5rem; background: none; border: none; color: var(--text-muted);
+    font-size: 0.95rem; font-weight: 600; cursor: pointer; position: relative;
+    transition: color 0.15s;
+}
+.tab-btn:hover { color: var(--text); }
+.tab-btn.active { color: var(--accent); }
+.tab-btn.active::after {
+    content: ''; position: absolute; bottom: -2px; left: 0; right: 0;
+    height: 2px; background: var(--accent);
+}
+.tab-content { display: none; }
+.tab-content.active { display: block; }
+
+/* Stats */
 .stats-grid {
     display: grid; grid-template-columns: repeat(auto-fit, minmax(170px, 1fr));
     gap: 0.75rem; margin-bottom: 1.5rem;
@@ -87,6 +106,126 @@ section h2 {
     padding-bottom: 0.4rem; border-bottom: 1px solid var(--border);
 }
 
+/* Graph visualization */
+.graph-container {
+    width: 100%; height: 550px; background: var(--bg); border: 1px solid var(--border);
+    border-radius: 8px; position: relative;
+}
+.graph-container-small { height: 380px; }
+
+/* Explore controls */
+.explore-bar {
+    display: flex; gap: 0.5rem; margin-bottom: 1rem; align-items: center; flex-wrap: wrap;
+}
+.explore-bar input {
+    flex: 1; min-width: 200px; padding: 0.6rem 0.9rem; border-radius: 6px;
+    border: 1px solid var(--border); background: var(--surface); color: var(--text);
+    font-size: 0.9rem; outline: none;
+}
+.explore-bar input:focus { border-color: var(--accent); }
+.explore-bar input::placeholder { color: var(--text-muted); }
+.explore-bar button { padding: 0.6rem 1rem; border-radius: 6px; border: none; cursor: pointer;
+    font-size: 0.85rem; font-weight: 600; background: var(--accent); color: #0f172a; }
+.explore-bar button:hover { opacity: 0.85; }
+.explore-bar button:disabled { opacity: 0.4; cursor: not-allowed; }
+
+/* Filter chips */
+.filter-chips { display: flex; gap: 0.4rem; flex-wrap: wrap; margin-bottom: 1rem; }
+.chip {
+    padding: 0.3rem 0.7rem; border-radius: 20px; font-size: 0.78rem; font-weight: 600;
+    cursor: pointer; border: 2px solid transparent; transition: all 0.15s; opacity: 0.5;
+}
+.chip.active { opacity: 1; border-color: currentColor; }
+.chip-Gene { background: rgba(59,130,246,0.2); color: #60a5fa; }
+.chip-Disease { background: rgba(248,113,113,0.2); color: #f87171; }
+.chip-Drug { background: rgba(74,222,128,0.2); color: #4ade80; }
+.chip-Pathway { background: rgba(251,191,36,0.2); color: #fbbf24; }
+.chip-Phenotype { background: rgba(192,132,252,0.2); color: #c084fc; }
+.chip-ClinicalTrial { background: rgba(251,146,60,0.2); color: #fb923c; }
+.chip-Anatomy { background: rgba(45,212,191,0.2); color: #2dd4bf; }
+.chip-Other { background: rgba(148,163,184,0.2); color: #94a3b8; }
+
+/* Node detail panel */
+.detail-panel {
+    position: absolute; top: 0; right: 0; width: 320px; height: 100%; background: var(--surface);
+    border-left: 1px solid var(--border); border-radius: 0 8px 8px 0; padding: 1rem;
+    overflow-y: auto; display: none; z-index: 5;
+}
+.detail-panel.visible { display: block; }
+.detail-panel h3 { font-size: 0.95rem; color: var(--accent); margin-bottom: 0.5rem; word-break: break-word; }
+.detail-panel .detail-type {
+    display: inline-block; padding: 0.15rem 0.5rem; border-radius: 4px;
+    font-size: 0.72rem; font-weight: 600; margin-bottom: 0.75rem;
+}
+.detail-panel .close-btn {
+    position: absolute; top: 0.5rem; right: 0.5rem; background: none; border: none;
+    color: var(--text-muted); cursor: pointer; font-size: 1.1rem;
+}
+.detail-panel .close-btn:hover { color: var(--text); }
+.detail-props { font-size: 0.8rem; }
+.detail-props dt { color: var(--text-muted); font-weight: 600; margin-top: 0.4rem; }
+.detail-props dd { word-break: break-word; }
+.detail-neighbors { margin-top: 0.75rem; }
+.detail-neighbors h4 { font-size: 0.82rem; color: var(--text-muted); margin-bottom: 0.3rem; }
+.detail-neighbors ul { list-style: none; font-size: 0.8rem; max-height: 200px; overflow-y: auto; }
+.detail-neighbors li { padding: 0.2rem 0; border-bottom: 1px solid var(--surface2); }
+
+/* Export bar */
+.export-bar { display: flex; gap: 0.5rem; margin-top: 0.75rem; }
+.export-bar button {
+    padding: 0.4rem 0.8rem; border-radius: 6px; border: 1px solid var(--border);
+    background: var(--surface2); color: var(--text); cursor: pointer; font-size: 0.78rem;
+}
+.export-bar button:hover { background: var(--border); }
+
+/* Query tab */
+.query-input-wrap { margin-bottom: 1rem; }
+.query-input-wrap textarea {
+    width: 100%; min-height: 100px; padding: 0.75rem; border-radius: 6px;
+    border: 1px solid var(--border); background: var(--surface); color: var(--text);
+    font-family: 'SF Mono', 'Fira Code', monospace; font-size: 0.85rem;
+    resize: vertical; outline: none;
+}
+.query-input-wrap textarea:focus { border-color: var(--accent); }
+.query-input-wrap textarea::placeholder { color: var(--text-muted); }
+.query-actions { display: flex; gap: 0.5rem; margin-bottom: 1rem; }
+
+/* Templates */
+.templates { margin-bottom: 1rem; }
+.templates h3 { font-size: 0.82rem; color: var(--text-muted); margin-bottom: 0.5rem; }
+.template-list { display: flex; flex-wrap: wrap; gap: 0.4rem; }
+.template-btn {
+    padding: 0.35rem 0.7rem; border-radius: 6px; border: 1px solid var(--border);
+    background: var(--surface); color: var(--text); cursor: pointer; font-size: 0.78rem;
+    transition: all 0.15s;
+}
+.template-btn:hover { background: var(--surface2); border-color: var(--accent); }
+
+/* Results table */
+.results-table-wrap { max-height: 360px; overflow: auto; margin-bottom: 1rem; }
+table { width: 100%; border-collapse: collapse; font-size: 0.82rem; }
+th, td { padding: 0.4rem 0.6rem; text-align: left; border-bottom: 1px solid var(--surface2); }
+th { color: var(--text-muted); font-weight: 600; text-transform: uppercase; font-size: 0.7rem;
+     letter-spacing: 0.05em; position: sticky; top: 0; background: var(--surface); }
+
+/* Badges */
+.badge {
+    display: inline-block; padding: 0.1rem 0.45rem; border-radius: 4px;
+    font-size: 0.72rem; font-weight: 600;
+}
+.badge-success { background: rgba(74,222,128,0.15); color: var(--green); }
+.badge-failed { background: rgba(248,113,113,0.15); color: var(--red); }
+.badge-skipped { background: rgba(251,191,36,0.15); color: var(--yellow); }
+.badge-running { background: rgba(56,189,248,0.15); color: var(--accent); }
+
+/* Health checks */
+.health-item { padding: 0.5rem 0.75rem; border-radius: 6px; margin-bottom: 0.4rem; font-size: 0.82rem; }
+.health-ok { background: rgba(74,222,128,0.08); border-left: 3px solid var(--green); }
+.health-warn { background: rgba(248,113,113,0.08); border-left: 3px solid var(--red); }
+
+/* Chart containers */
+.chart-container { position: relative; height: 320px; }
+
 /* Log panel */
 .log-panel {
     background: var(--bg); border: 1px solid var(--border); border-radius: 6px;
@@ -98,28 +237,22 @@ section h2 {
 .log-panel .log-err { color: var(--red); }
 .log-panel .log-info { color: var(--accent); }
 
-/* Parser table */
-table { width: 100%; border-collapse: collapse; font-size: 0.82rem; }
-th, td { padding: 0.4rem 0.6rem; text-align: left; border-bottom: 1px solid var(--surface2); }
-th { color: var(--text-muted); font-weight: 600; text-transform: uppercase; font-size: 0.7rem; letter-spacing: 0.05em; }
-.badge {
-    display: inline-block; padding: 0.1rem 0.45rem; border-radius: 4px;
-    font-size: 0.72rem; font-weight: 600;
+/* Collapsible admin */
+.admin-toggle {
+    width: 100%; padding: 0.75rem 1rem; background: var(--surface); border: 1px solid var(--border);
+    border-radius: 8px; color: var(--text-muted); cursor: pointer; font-size: 0.88rem;
+    font-weight: 600; text-align: left; display: flex; justify-content: space-between; align-items: center;
+    margin-bottom: 0; transition: border-radius 0.15s;
 }
-.badge-success { background: rgba(74,222,128,0.15); color: var(--green); }
-.badge-failed { background: rgba(248,113,113,0.15); color: var(--red); }
-.badge-skipped { background: rgba(251,191,36,0.15); color: var(--yellow); }
-.badge-running { background: rgba(56,189,248,0.15); color: var(--accent); }
-
-/* Health checks */
-.health-item {
-    padding: 0.5rem 0.75rem; border-radius: 6px; margin-bottom: 0.4rem; font-size: 0.82rem;
+.admin-toggle:hover { color: var(--text); }
+.admin-toggle.open { border-radius: 8px 8px 0 0; margin-bottom: 0; }
+.admin-toggle .arrow { transition: transform 0.2s; }
+.admin-toggle.open .arrow { transform: rotate(180deg); }
+.admin-body {
+    display: none; border: 1px solid var(--border); border-top: none;
+    border-radius: 0 0 8px 8px; padding: 1rem; background: var(--surface);
 }
-.health-ok { background: rgba(74,222,128,0.08); border-left: 3px solid var(--green); }
-.health-warn { background: rgba(248,113,113,0.08); border-left: 3px solid var(--red); }
-
-/* Chart containers */
-.chart-container { position: relative; height: 320px; }
+.admin-body.open { display: block; }
 
 /* Spinner */
 .spinner { display: inline-block; width: 14px; height: 14px; border: 2px solid var(--border);
@@ -127,10 +260,23 @@ th { color: var(--text-muted); font-weight: 600; text-transform: uppercase; font
     vertical-align: middle; margin-right: 6px; }
 @keyframes spin { to { transform: rotate(360deg); } }
 
+/* Query error */
+.query-error { color: var(--red); font-size: 0.85rem; margin-bottom: 0.75rem; padding: 0.5rem;
+    background: rgba(248,113,113,0.1); border-radius: 6px; display: none; }
+.query-error.visible { display: block; }
+
+/* Graph loading overlay */
+.graph-loading {
+    position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%);
+    color: var(--text-muted); font-size: 0.9rem; display: none; align-items: center; gap: 0.5rem;
+}
+.graph-loading.visible { display: flex; }
+
 /* Responsive sidebar */
 @media (max-width: 768px) {
     .sidebar { width: 100%; height: auto; position: relative; }
     .main { margin-left: 0; padding: 1rem; }
+    .detail-panel { width: 100%; position: relative; border-radius: 8px; border-left: none; border: 1px solid var(--border); margin-top: 0.5rem; }
 }
 </style>
 </head>
@@ -147,7 +293,7 @@ th { color: var(--text-muted); font-weight: 600; text-transform: uppercase; font
     <div>
         <h3>Build New Disease</h3>
         <input type="text" class="agent-input" id="agentInput" placeholder="e.g. Parkinson's, PD, lupus..." />
-        <button class="run-btn agent-btn" id="agentBtn" onclick="runAgentBuild()">Build Knowledge Graph</button>
+        <button class="run-btn" id="agentBtn" onclick="runAgentBuild()">Build Knowledge Graph</button>
     </div>
 
     <button class="run-btn" id="runBtn" onclick="runHealthCheck()">Run Health Check</button>
@@ -156,7 +302,7 @@ th { color: var(--text-muted); font-weight: 600; text-transform: uppercase; font
 </aside>
 
 <div class="main">
-    <!-- Global Stats -->
+    <!-- Stats bar -->
     <div class="stats-grid" id="statsGrid">
         <div class="stat-card"><div class="value" id="statNodes"><span class="spinner"></span></div><div class="label">Total Nodes</div></div>
         <div class="stat-card"><div class="value" id="statRels"><span class="spinner"></span></div><div class="label">Total Relationships</div></div>
@@ -165,76 +311,137 @@ th { color: var(--text-muted); font-weight: 600; text-transform: uppercase; font
         <div class="stat-card"><div class="value" id="statSources"><span class="spinner"></span></div><div class="label">Sources</div></div>
     </div>
 
-    <div class="grid-2">
-        <!-- Node chart -->
-        <section>
-            <h2>Node Counts by Type</h2>
-            <div class="chart-container"><canvas id="nodeChart"></canvas></div>
-        </section>
-        <!-- Rel chart -->
-        <section>
-            <h2>Relationship Counts by Type</h2>
-            <div class="chart-container"><canvas id="relChart"></canvas></div>
-        </section>
+    <!-- Tabs -->
+    <div class="tabs">
+        <button class="tab-btn active" data-tab="explore" onclick="switchTab('explore')">Explore</button>
+        <button class="tab-btn" data-tab="query" onclick="switchTab('query')">Query</button>
     </div>
 
-    <!-- Disease Subgraph Stats -->
-    <section id="diseaseSection">
-        <h2 id="diseaseStatsTitle">Disease Subgraph: <span id="diseaseStatsLabel">CVD</span></h2>
-        <div class="stats-grid" id="diseaseStatsGrid" style="margin-bottom:1rem">
-            <div class="stat-card"><div class="value" id="statDiseaseMatched"><span class="spinner"></span></div><div class="label">Diseases Matched</div></div>
-            <div class="stat-card"><div class="value" id="statDiseaseNeighbors"><span class="spinner"></span></div><div class="label">Connected Edges</div></div>
+    <!-- Explore Tab -->
+    <div class="tab-content active" id="tab-explore">
+        <div class="explore-bar">
+            <input type="text" id="exploreSearch" placeholder="Search disease subgraph (uses selected disease filter)..." />
+            <input type="number" id="exploreLimit" value="200" min="10" max="1000" style="width:80px;flex:none" title="Max nodes" />
+            <button id="exploreBtn" onclick="loadExploreGraph()">Explore</button>
         </div>
-        <div class="grid-2">
-            <section style="border:none;padding:0;margin:0">
-                <h2 style="font-size:0.88rem">Neighbor Node Types</h2>
-                <div class="chart-container" style="height:260px"><canvas id="diseaseNodeChart"></canvas></div>
-            </section>
-            <section style="border:none;padding:0;margin:0">
-                <h2 style="font-size:0.88rem">Relationship Types</h2>
-                <div class="chart-container" style="height:260px"><canvas id="diseaseRelChart"></canvas></div>
-            </section>
-        </div>
-    </section>
 
-    <div class="grid-2">
-        <!-- Parser table -->
-        <section>
-            <h2>Parser Status</h2>
-            <div style="max-height:360px;overflow-y:auto">
-                <table>
-                    <thead><tr><th>Parser</th><th>Status</th><th>Duration</th></tr></thead>
-                    <tbody id="parserBody"></tbody>
-                </table>
+        <div class="filter-chips" id="filterChips"></div>
+
+        <div style="position:relative">
+            <div class="graph-container" id="exploreGraph">
+                <div class="graph-loading visible" id="exploreLoading"><span class="spinner"></span> Select a disease filter and click Explore</div>
             </div>
-        </section>
+            <div class="detail-panel" id="detailPanel">
+                <button class="close-btn" onclick="closeDetailPanel()">&times;</button>
+                <h3 id="detailTitle">Node</h3>
+                <div class="detail-type" id="detailType">Type</div>
+                <dl class="detail-props" id="detailProps"></dl>
+                <div class="detail-neighbors" id="detailNeighbors">
+                    <h4>Connected Nodes</h4>
+                    <ul id="detailNeighborList"></ul>
+                </div>
+            </div>
+        </div>
 
-        <!-- Health checks -->
-        <section>
-            <h2>Health Checks</h2>
-            <div id="healthPanel"><span style="color:var(--text-muted);font-size:0.85rem">Run a health check to see results</span></div>
-        </section>
+        <div class="export-bar">
+            <button onclick="exportGraph('csv')">Export CSV</button>
+            <button onclick="exportGraph('json')">Export JSON</button>
+        </div>
     </div>
 
-    <!-- Log panel -->
-    <section>
-        <h2>Pipeline Log</h2>
-        <div class="log-panel" id="logPanel">
-            <div class="log-line log-info">Ready. Select a disease filter and click "Run Health Check".</div>
+    <!-- Query Tab -->
+    <div class="tab-content" id="tab-query">
+        <div class="templates">
+            <h3>Query Templates</h3>
+            <div class="template-list" id="templateList"></div>
         </div>
-    </section>
+
+        <div class="query-input-wrap">
+            <textarea id="cypherInput" placeholder="Enter a Cypher query... (read-only, no writes allowed)"></textarea>
+        </div>
+        <div class="query-actions">
+            <button class="run-btn" id="queryBtn" onclick="runCypherQuery()" style="padding:0.5rem 1.5rem">Run Query</button>
+        </div>
+        <div class="query-error" id="queryError"></div>
+
+        <div class="results-table-wrap" id="queryTableWrap" style="display:none">
+            <table>
+                <thead><tr id="queryTableHead"></tr></thead>
+                <tbody id="queryTableBody"></tbody>
+            </table>
+        </div>
+
+        <div class="graph-container graph-container-small" id="queryGraph" style="display:none">
+            <div class="graph-loading" id="queryLoading"><span class="spinner"></span> Running query...</div>
+        </div>
+    </div>
+
+    <!-- Admin Section (collapsible) -->
+    <div style="margin-top:1.5rem">
+        <button class="admin-toggle" id="adminToggle" onclick="toggleAdmin()">
+            Admin: Parser Status & Pipeline Log <span class="arrow">&#9660;</span>
+        </button>
+        <div class="admin-body" id="adminBody">
+            <div class="grid-2">
+                <section style="margin:0">
+                    <h2>Parser Status</h2>
+                    <div style="max-height:360px;overflow-y:auto">
+                        <table>
+                            <thead><tr><th>Parser</th><th>Status</th><th>Duration</th></tr></thead>
+                            <tbody id="parserBody"></tbody>
+                        </table>
+                    </div>
+                </section>
+                <section style="margin:0">
+                    <h2>Health Checks</h2>
+                    <div id="healthPanel"><span style="color:var(--text-muted);font-size:0.85rem">Run a health check to see results</span></div>
+                </section>
+            </div>
+            <div class="grid-2" style="margin-top:1rem">
+                <section style="margin:0">
+                    <h2>Node Counts by Type</h2>
+                    <div class="chart-container"><canvas id="nodeChart"></canvas></div>
+                </section>
+                <section style="margin:0">
+                    <h2>Relationship Counts by Type</h2>
+                    <div class="chart-container"><canvas id="relChart"></canvas></div>
+                </section>
+            </div>
+            <section style="margin-top:1rem;margin-bottom:0">
+                <h2>Pipeline Log</h2>
+                <div class="log-panel" id="logPanel">
+                    <div class="log-line log-info">Ready. Select a disease filter and click "Run Health Check".</div>
+                </div>
+            </section>
+        </div>
+    </div>
 </div>
 
 <script>
-// State
+// ---- State ----
 let selectedDisease = 'cvd';
-let nodeChart = null;
-let relChart = null;
-let diseaseNodeChart = null;
-let diseaseRelChart = null;
+let nodeChart = null, relChart = null;
 let eventSource = null;
+let exploreNetwork = null, queryNetwork = null;
+let currentGraphData = { nodes: [], edges: [] };
+let activeFilters = new Set();
+const NODE_COLORS = {
+    Gene: '#3b82f6', Disease: '#f87171', Drug: '#4ade80', Pathway: '#fbbf24',
+    Phenotype: '#c084fc', ClinicalTrial: '#fb923c', Anatomy: '#2dd4bf',
+    SideEffect: '#f472b6', GeneOntology: '#818cf8', Chemical: '#a3e635',
+    Symptom: '#f59e0b',
+};
+function nodeColor(type) { return NODE_COLORS[type] || '#94a3b8'; }
+function chipClass(type) { return NODE_COLORS[type] ? 'chip-' + type : 'chip-Other'; }
 
-// Theme
+// ---- Tabs ----
+function switchTab(tab) {
+    document.querySelectorAll('.tab-btn').forEach(b => b.classList.toggle('active', b.dataset.tab === tab));
+    document.querySelectorAll('.tab-content').forEach(c => c.classList.toggle('active', c.id === 'tab-' + tab));
+    if (tab === 'query' && !queryNetwork) initQueryGraph();
+}
+
+// ---- Theme ----
 let currentTheme = '';
 function toggleTheme() {
     currentTheme = currentTheme === 'light' ? '' : 'light';
@@ -242,7 +449,7 @@ function toggleTheme() {
     updateChartColors();
 }
 
-// Load diseases
+// ---- Diseases ----
 async function loadDiseases() {
     try {
         const res = await fetch('/api/diseases');
@@ -261,9 +468,7 @@ async function loadDiseases() {
             li.onclick = () => selectDisease(d.key);
             list.appendChild(li);
         });
-    } catch (e) {
-        log('Failed to load diseases: ' + e.message, 'err');
-    }
+    } catch (e) { log('Failed to load diseases: ' + e.message, 'err'); }
 }
 
 function selectDisease(key) {
@@ -271,27 +476,339 @@ function selectDisease(key) {
     document.querySelectorAll('.disease-list li').forEach(li => {
         li.classList.toggle('active', li.dataset.key === key);
     });
-    loadDiseaseStats(key);
 }
 
-// Logging
+// ---- Logging ----
 function log(msg, cls = '') {
     const panel = document.getElementById('logPanel');
     const line = document.createElement('div');
     line.className = 'log-line' + (cls ? ' log-' + cls : '');
     const ts = new Date().toLocaleTimeString();
-    line.textContent = `[${ts}] ${msg}`;
+    line.textContent = '[' + ts + '] ' + msg;
     panel.appendChild(line);
     panel.scrollTop = panel.scrollHeight;
 }
 
-// Run health check via SSE
+// ---- Admin toggle ----
+function toggleAdmin() {
+    const toggle = document.getElementById('adminToggle');
+    const body = document.getElementById('adminBody');
+    toggle.classList.toggle('open');
+    body.classList.toggle('open');
+}
+
+// ---- Explore Graph ----
+async function loadExploreGraph() {
+    const btn = document.getElementById('exploreBtn');
+    const loading = document.getElementById('exploreLoading');
+    btn.disabled = true;
+    loading.classList.add('visible');
+    loading.innerHTML = '<span class="spinner"></span> Loading graph...';
+
+    const limit = document.getElementById('exploreLimit').value || 200;
+
+    try {
+        const res = await fetch('/api/graph?disease=' + selectedDisease + '&limit=' + limit);
+        if (!res.ok) throw new Error('API error ' + res.status);
+        const data = await res.json();
+        if (data.error) throw new Error(data.error);
+
+        currentGraphData = data;
+        buildFilterChips(data.nodes);
+        activeFilters.clear();
+        renderExploreGraph(data);
+        loading.classList.remove('visible');
+    } catch (e) {
+        loading.innerHTML = 'Error: ' + e.message;
+        log('Explore error: ' + e.message, 'err');
+    }
+    btn.disabled = false;
+}
+
+function buildFilterChips(nodes) {
+    const types = new Set(nodes.map(n => n.type));
+    const container = document.getElementById('filterChips');
+    container.innerHTML = '';
+    [...types].sort().forEach(t => {
+        const chip = document.createElement('span');
+        chip.className = 'chip active ' + chipClass(t);
+        chip.textContent = t;
+        chip.onclick = () => toggleFilter(t, chip);
+        container.appendChild(chip);
+    });
+}
+
+function toggleFilter(type, chip) {
+    if (activeFilters.has(type)) {
+        activeFilters.delete(type);
+        chip.classList.add('active');
+    } else {
+        activeFilters.add(type);
+        chip.classList.remove('active');
+    }
+    renderExploreGraph(currentGraphData);
+}
+
+function renderExploreGraph(data) {
+    const container = document.getElementById('exploreGraph');
+    const hiddenTypes = activeFilters;
+
+    const filteredNodes = data.nodes.filter(n => !hiddenTypes.has(n.type));
+    const nodeIds = new Set(filteredNodes.map(n => n.id));
+    const filteredEdges = data.edges.filter(e => nodeIds.has(e.from) && nodeIds.has(e.to));
+
+    const visNodes = new vis.DataSet(filteredNodes.map(n => ({
+        id: n.id, label: n.label, color: { background: nodeColor(n.type), border: nodeColor(n.type),
+            highlight: { background: '#fff', border: nodeColor(n.type) } },
+        font: { color: '#e2e8f0', size: 10 },
+        shape: n.type === 'Disease' ? 'diamond' : 'dot',
+        size: n.type === 'Disease' ? 18 : 10,
+        title: n.type + ': ' + n.label,
+        _data: n,
+    })));
+
+    const visEdges = new vis.DataSet(filteredEdges.map((e, i) => ({
+        id: 'e' + i, from: e.from, to: e.to, label: e.label,
+        font: { size: 7, color: '#64748b', strokeWidth: 0 },
+        color: { color: '#475569', highlight: '#38bdf8' }, arrows: 'to',
+        _data: e,
+    })));
+
+    if (exploreNetwork) exploreNetwork.destroy();
+
+    exploreNetwork = new vis.Network(container, { nodes: visNodes, edges: visEdges }, {
+        physics: { solver: 'forceAtlas2Based', forceAtlas2Based: { gravitationalConstant: -40, centralGravity: 0.005, springLength: 100 },
+            stabilization: { iterations: 150 } },
+        interaction: { hover: true, tooltipDelay: 100 },
+        edges: { smooth: { type: 'continuous' } },
+    });
+
+    exploreNetwork.on('click', function(params) {
+        if (params.nodes.length > 0) {
+            const nodeId = params.nodes[0];
+            const node = visNodes.get(nodeId);
+            if (node && node._data) showDetailPanel(node._data, visEdges, visNodes);
+        } else {
+            closeDetailPanel();
+        }
+    });
+}
+
+function showDetailPanel(node, visEdges, visNodes) {
+    const panel = document.getElementById('detailPanel');
+    document.getElementById('detailTitle').textContent = node.label;
+    const typeEl = document.getElementById('detailType');
+    typeEl.textContent = node.type;
+    typeEl.style.background = nodeColor(node.type) + '33';
+    typeEl.style.color = nodeColor(node.type);
+
+    const props = document.getElementById('detailProps');
+    props.innerHTML = '';
+    if (node.properties) {
+        Object.entries(node.properties).forEach(([k, v]) => {
+            if (!v) return;
+            const dt = document.createElement('dt');
+            dt.textContent = k;
+            const dd = document.createElement('dd');
+            dd.textContent = v;
+            props.appendChild(dt);
+            props.appendChild(dd);
+        });
+    }
+
+    // Find neighbors
+    const neighbors = [];
+    if (visEdges && visNodes) {
+        visEdges.forEach(e => {
+            if (e.from === node.id) {
+                const target = visNodes.get(e.to);
+                if (target) neighbors.push({ label: target.label || e.to, rel: e.label, type: target._data?.type });
+            } else if (e.to === node.id) {
+                const source = visNodes.get(e.from);
+                if (source) neighbors.push({ label: source.label || e.from, rel: e.label, type: source._data?.type });
+            }
+        });
+    }
+
+    const list = document.getElementById('detailNeighborList');
+    list.innerHTML = '';
+    neighbors.slice(0, 50).forEach(n => {
+        const li = document.createElement('li');
+        li.innerHTML = '<span style="color:' + nodeColor(n.type) + '">' + (n.type || '') + '</span> ' +
+            n.label + ' <span style="color:var(--text-muted);font-size:0.72rem">(' + n.rel + ')</span>';
+        list.appendChild(li);
+    });
+    if (neighbors.length > 50) {
+        const li = document.createElement('li');
+        li.style.color = 'var(--text-muted)';
+        li.textContent = '... and ' + (neighbors.length - 50) + ' more';
+        list.appendChild(li);
+    }
+
+    panel.classList.add('visible');
+}
+
+function closeDetailPanel() {
+    document.getElementById('detailPanel').classList.remove('visible');
+}
+
+// ---- Export ----
+function exportGraph(format) {
+    if (!currentGraphData.nodes.length) return;
+    let content, filename, mime;
+
+    if (format === 'json') {
+        content = JSON.stringify(currentGraphData, null, 2);
+        filename = 'cardiokb_subgraph.json';
+        mime = 'application/json';
+    } else {
+        const lines = ['from_id,from_label,from_type,relationship,to_id,to_label,to_type,source'];
+        const nodeMap = {};
+        currentGraphData.nodes.forEach(n => nodeMap[n.id] = n);
+        currentGraphData.edges.forEach(e => {
+            const from = nodeMap[e.from] || {};
+            const to = nodeMap[e.to] || {};
+            lines.push([e.from, '"' + (from.label || '') + '"', from.type || '',
+                e.label, e.to, '"' + (to.label || '') + '"', to.type || '', e.source || ''].join(','));
+        });
+        content = lines.join('\n');
+        filename = 'cardiokb_subgraph.csv';
+        mime = 'text/csv';
+    }
+
+    const blob = new Blob([content], { type: mime });
+    const a = document.createElement('a');
+    a.href = URL.createObjectURL(blob);
+    a.download = filename;
+    a.click();
+}
+
+// ---- Query Tab ----
+const QUERY_TEMPLATES = [
+    { name: 'Disease Subgraph', query: "MATCH (d:Disease)-[r]-(n)\nWHERE toLower(d.commonName) CONTAINS 'heart failure'\nRETURN d, r, n LIMIT 100" },
+    { name: 'Gene Neighbors', query: "MATCH (g:Gene)-[r]-(n)\nWHERE g.symbol = 'APOE'\nRETURN g, r, n LIMIT 100" },
+    { name: 'Drug Targets for Disease', query: "MATCH (d:Disease)-[:ASSOCIATES_WITH]-(g:Gene)-[:TARGETS]-(dr:Drug)\nWHERE toLower(d.commonName) CONTAINS 'heart failure'\nRETURN d.commonName AS disease, g.symbol AS gene, dr.commonName AS drug LIMIT 50" },
+    { name: 'Clinical Trials', query: "MATCH (t:ClinicalTrial)-[r]-(n)\nWHERE toLower(t.title) CONTAINS 'cardiovascular'\nRETURN t.nctId AS trial, t.title AS title, type(r) AS rel, labels(n)[0] AS neighbor_type LIMIT 50" },
+    { name: 'Pathway Members', query: "MATCH (p:Pathway)-[:PARTICIPATES_IN]-(g:Gene)\nWHERE toLower(p.commonName) CONTAINS 'cardiac'\nRETURN p.commonName AS pathway, collect(g.symbol)[..20] AS genes LIMIT 20" },
+    { name: 'Top Connected Genes', query: "MATCH (g:Gene)-[r]-()\nRETURN g.symbol AS gene, count(r) AS connections\nORDER BY connections DESC LIMIT 25" },
+];
+
+function initTemplates() {
+    const list = document.getElementById('templateList');
+    QUERY_TEMPLATES.forEach(t => {
+        const btn = document.createElement('button');
+        btn.className = 'template-btn';
+        btn.textContent = t.name;
+        btn.onclick = () => { document.getElementById('cypherInput').value = t.query; };
+        list.appendChild(btn);
+    });
+}
+
+function initQueryGraph() {
+    // Just prepare the container; we'll create the network after a query runs
+}
+
+async function runCypherQuery() {
+    const btn = document.getElementById('queryBtn');
+    const input = document.getElementById('cypherInput');
+    const cypher = input.value.trim();
+    if (!cypher) { input.focus(); return; }
+
+    btn.disabled = true;
+    btn.innerHTML = '<span class="spinner"></span> Running...';
+    document.getElementById('queryError').classList.remove('visible');
+    document.getElementById('queryTableWrap').style.display = 'none';
+    document.getElementById('queryGraph').style.display = 'none';
+
+    try {
+        const res = await fetch('/api/query', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ query: cypher }),
+        });
+        const data = await res.json();
+
+        if (data.error) {
+            document.getElementById('queryError').textContent = data.error;
+            document.getElementById('queryError').classList.add('visible');
+            btn.disabled = false;
+            btn.textContent = 'Run Query';
+            return;
+        }
+
+        // Render table
+        if (data.rows && data.rows.length > 0) {
+            const head = document.getElementById('queryTableHead');
+            const body = document.getElementById('queryTableBody');
+            head.innerHTML = '';
+            body.innerHTML = '';
+            data.columns.forEach(c => {
+                const th = document.createElement('th');
+                th.textContent = c;
+                head.appendChild(th);
+            });
+            data.rows.forEach(row => {
+                const tr = document.createElement('tr');
+                data.columns.forEach(c => {
+                    const td = document.createElement('td');
+                    const val = row[c];
+                    td.textContent = val === null ? '' : (typeof val === 'object' ? JSON.stringify(val) : val);
+                    tr.appendChild(td);
+                });
+                body.appendChild(tr);
+            });
+            document.getElementById('queryTableWrap').style.display = 'block';
+        }
+
+        // Render graph if nodes present
+        if (data.nodes && data.nodes.length > 0) {
+            const container = document.getElementById('queryGraph');
+            container.style.display = 'block';
+
+            const visNodes = new vis.DataSet(data.nodes.map(n => ({
+                id: n.id, label: n.label,
+                color: { background: nodeColor(n.type), border: nodeColor(n.type),
+                    highlight: { background: '#fff', border: nodeColor(n.type) } },
+                font: { color: '#e2e8f0', size: 10 },
+                shape: n.type === 'Disease' ? 'diamond' : 'dot',
+                size: n.type === 'Disease' ? 18 : 10,
+                title: n.type + ': ' + n.label,
+            })));
+
+            const visEdges = new vis.DataSet(data.edges.map((e, i) => ({
+                id: 'qe' + i, from: e.from, to: e.to, label: e.label,
+                font: { size: 7, color: '#64748b', strokeWidth: 0 },
+                color: { color: '#475569', highlight: '#38bdf8' }, arrows: 'to',
+            })));
+
+            if (queryNetwork) queryNetwork.destroy();
+            queryNetwork = new vis.Network(container, { nodes: visNodes, edges: visEdges }, {
+                physics: { solver: 'forceAtlas2Based', forceAtlas2Based: { gravitationalConstant: -40, centralGravity: 0.005, springLength: 100 },
+                    stabilization: { iterations: 150 } },
+                interaction: { hover: true },
+                edges: { smooth: { type: 'continuous' } },
+            });
+        }
+    } catch (e) {
+        document.getElementById('queryError').textContent = 'Request failed: ' + e.message;
+        document.getElementById('queryError').classList.add('visible');
+    }
+
+    btn.disabled = false;
+    btn.textContent = 'Run Query';
+}
+
+// ---- Health Check (SSE) ----
 function runHealthCheck() {
+    // Auto-open admin section
+    const toggle = document.getElementById('adminToggle');
+    const body = document.getElementById('adminBody');
+    if (!body.classList.contains('open')) { toggle.classList.add('open'); body.classList.add('open'); }
+
     const btn = document.getElementById('runBtn');
     btn.disabled = true;
     btn.innerHTML = '<span class="spinner"></span>Running...';
 
-    // Clear previous
     document.getElementById('logPanel').innerHTML = '';
     document.getElementById('healthPanel').innerHTML = '';
     document.getElementById('parserBody').innerHTML = '';
@@ -300,52 +817,29 @@ function runHealthCheck() {
     if (eventSource) eventSource.close();
     eventSource = new EventSource('/api/health-check?disease=' + selectedDisease);
 
-    eventSource.addEventListener('status', e => {
-        const d = JSON.parse(e.data);
-        log(d.message, 'info');
-    });
-
+    eventSource.addEventListener('status', e => { log(JSON.parse(e.data).message, 'info'); });
     eventSource.addEventListener('log_parsed', e => {
         const d = JSON.parse(e.data);
-        log(`Log parsed: ${d.sources_processed} processed, ${d.sources_failed} failed`, 'ok');
+        log('Log parsed: ' + d.sources_processed + ' processed, ' + d.sources_failed + ' failed', 'ok');
         renderParserTable(d.parsers);
     });
-
     eventSource.addEventListener('neo4j_stats', e => {
         const d = JSON.parse(e.data);
-        log(`Neo4j: ${d.total_nodes.toLocaleString()} nodes, ${d.total_relationships.toLocaleString()} rels`, 'ok');
+        log('Neo4j: ' + d.total_nodes.toLocaleString() + ' nodes, ' + d.total_relationships.toLocaleString() + ' rels', 'ok');
         document.getElementById('statNodes').textContent = d.total_nodes.toLocaleString();
         document.getElementById('statRels').textContent = d.total_relationships.toLocaleString();
         document.getElementById('statNodeTypes').textContent = Object.keys(d.node_counts).length;
         document.getElementById('statRelTypes').textContent = Object.keys(d.rel_counts).length;
         renderCharts(d.node_counts, d.rel_counts);
     });
-
-    eventSource.addEventListener('health', e => {
-        const d = JSON.parse(e.data);
-        renderHealth(d.checks);
-    });
-
+    eventSource.addEventListener('health', e => { renderHealth(JSON.parse(e.data).checks); });
     eventSource.addEventListener('disease_info', e => {
         const d = JSON.parse(e.data);
-        log(`Disease filter: ${d.disease} (${d.term_count} terms)`, 'info');
+        log('Disease filter: ' + d.disease + ' (' + d.term_count + ' terms)', 'info');
     });
-
-    eventSource.addEventListener('error', e => {
-        if (e.data) {
-            const d = JSON.parse(e.data);
-            log(d.message, 'err');
-        }
-    });
-
-    eventSource.addEventListener('done', e => {
-        log('Health check complete.', 'ok');
-        finish();
-    });
-
-    eventSource.onerror = () => {
-        finish();
-    };
+    eventSource.addEventListener('error', e => { if (e.data) log(JSON.parse(e.data).message, 'err'); });
+    eventSource.addEventListener('done', () => { log('Health check complete.', 'ok'); finish(); });
+    eventSource.onerror = () => { finish(); };
 
     function finish() {
         if (eventSource) { eventSource.close(); eventSource = null; }
@@ -354,17 +848,21 @@ function runHealthCheck() {
     }
 }
 
-// Run agent build via POST + SSE streaming
+// ---- Agent Build (SSE) ----
 async function runAgentBuild() {
     const input = document.getElementById('agentInput');
     const btn = document.getElementById('agentBtn');
     const disease = input.value.trim();
     if (!disease) { input.focus(); return; }
 
+    // Auto-open admin
+    const toggle = document.getElementById('adminToggle');
+    const body = document.getElementById('adminBody');
+    if (!body.classList.contains('open')) { toggle.classList.add('open'); body.classList.add('open'); }
+
     btn.disabled = true;
     btn.innerHTML = '<span class="spinner"></span>Building...';
     input.disabled = true;
-
     document.getElementById('logPanel').innerHTML = '';
     log('Agent: building knowledge graph for "' + disease + '"...', 'info');
 
@@ -374,35 +872,28 @@ async function runAgentBuild() {
             headers: { 'Content-Type': 'application/json' },
             body: JSON.stringify({ disease }),
         });
-
         if (!res.ok) {
             const err = await res.json().catch(() => ({}));
             log('Agent error: ' + (err.error || res.statusText), 'err');
             agentFinish(); return;
         }
-
         const reader = res.body.getReader();
         const decoder = new TextDecoder();
         let buffer = '';
-
         while (true) {
             const { done, value } = await reader.read();
             if (done) break;
             buffer += decoder.decode(value, { stream: true });
-
-            // Parse SSE frames from buffer
             let boundary;
             while ((boundary = buffer.indexOf('\n\n')) !== -1) {
                 const frame = buffer.slice(0, boundary);
                 buffer = buffer.slice(boundary + 2);
-
                 let event = 'message', data = '';
                 for (const line of frame.split('\n')) {
                     if (line.startsWith('event: ')) event = line.slice(7);
                     else if (line.startsWith('data: ')) data = line.slice(6);
                 }
                 if (!data) continue;
-
                 const parsed = JSON.parse(data);
                 if (event === 'status') {
                     log('Agent: ' + parsed.message, 'info');
@@ -415,19 +906,15 @@ async function runAgentBuild() {
                             ' | Diseases: ' + (s.unique_diseases || 0).toLocaleString() +
                             ' | DisGeNET edges: ' + (s.disgenet_edges || 0).toLocaleString(), 'ok');
                     }
-                    // Refresh graph stats
                     loadGraphStats();
                 } else if (event === 'error') {
                     log('Agent error: ' + parsed.message, 'err');
                 }
             }
         }
-    } catch (e) {
-        log('Agent error: ' + e.message, 'err');
-    }
+    } catch (e) { log('Agent error: ' + e.message, 'err'); }
 
     agentFinish();
-
     function agentFinish() {
         btn.disabled = false;
         btn.textContent = 'Build Knowledge Graph';
@@ -435,35 +922,33 @@ async function runAgentBuild() {
     }
 }
 
-// Allow Enter key to trigger build
 document.addEventListener('DOMContentLoaded', () => {
-    document.getElementById('agentInput').addEventListener('keydown', e => {
-        if (e.key === 'Enter') runAgentBuild();
+    document.getElementById('agentInput').addEventListener('keydown', e => { if (e.key === 'Enter') runAgentBuild(); });
+    document.getElementById('exploreSearch').addEventListener('keydown', e => { if (e.key === 'Enter') loadExploreGraph(); });
+    document.getElementById('cypherInput').addEventListener('keydown', e => {
+        if ((e.metaKey || e.ctrlKey) && e.key === 'Enter') runCypherQuery();
     });
 });
 
-// Render parser table (dynamic — uses whatever parsers the backend sends)
+// ---- Parser & Health rendering ----
 function renderParserTable(parsers) {
     const body = document.getElementById('parserBody');
     body.innerHTML = '';
-    const names = Object.keys(parsers).sort();
-    names.forEach(name => {
+    Object.keys(parsers).sort().forEach(name => {
         const p = parsers[name];
         const status = p.status || 'skipped';
         const detail = p.detail || '';
         const dur = p.duration_sec ? p.duration_sec.toFixed(1) + 's' : '-';
-        const cls = status.includes('success') ? 'success' : (
-            ['failed','no data','parsed but not loaded'].includes(status) ? 'failed' :
-            status === 'running' ? 'running' : 'skipped'
-        );
-        const label = detail ? `${status} (${detail})` : status;
+        const cls = status.includes('success') ? 'success' :
+            (['failed','no data','parsed but not loaded'].includes(status) ? 'failed' :
+            status === 'running' ? 'running' : 'skipped');
+        const label = detail ? status + ' (' + detail + ')' : status;
         const tr = document.createElement('tr');
-        tr.innerHTML = `<td>${name}</td><td><span class="badge badge-${cls}">${label}</span></td><td>${dur}</td>`;
+        tr.innerHTML = '<td>' + name + '</td><td><span class="badge badge-' + cls + '">' + label + '</span></td><td>' + dur + '</td>';
         body.appendChild(tr);
     });
 }
 
-// Render health checks
 function renderHealth(checks) {
     const panel = document.getElementById('healthPanel');
     panel.innerHTML = '';
@@ -475,71 +960,60 @@ function renderHealth(checks) {
     });
 }
 
-// Charts
+// ---- Charts ----
 function getChartColors() {
-    const style = getComputedStyle(document.documentElement);
+    const s = getComputedStyle(document.documentElement);
     return {
-        accent: style.getPropertyValue('--accent').trim() || '#38bdf8',
-        green: style.getPropertyValue('--green').trim() || '#4ade80',
-        grid: style.getPropertyValue('--surface2').trim() || '#334155',
-        text: style.getPropertyValue('--text-muted').trim() || '#94a3b8',
+        accent: s.getPropertyValue('--accent').trim() || '#38bdf8',
+        green: s.getPropertyValue('--green').trim() || '#4ade80',
+        grid: s.getPropertyValue('--surface2').trim() || '#334155',
+        text: s.getPropertyValue('--text-muted').trim() || '#94a3b8',
     };
 }
 
 function renderCharts(nodeCounts, relCounts) {
     const c = getChartColors();
-    const nodeLabels = Object.keys(nodeCounts);
-    const nodeValues = Object.values(nodeCounts);
-
-    // Sort rels descending
     const relSorted = Object.entries(relCounts).sort((a, b) => b[1] - a[1]);
-    const relLabels = relSorted.map(r => r[0]);
-    const relValues = relSorted.map(r => r[1]);
-
     if (nodeChart) nodeChart.destroy();
     if (relChart) relChart.destroy();
-
     Chart.defaults.color = c.text;
 
     nodeChart = new Chart(document.getElementById('nodeChart'), {
         type: 'bar',
-        data: { labels: nodeLabels, datasets: [{ data: nodeValues,
+        data: { labels: Object.keys(nodeCounts), datasets: [{ data: Object.values(nodeCounts),
             backgroundColor: c.accent + '99', borderColor: c.accent, borderWidth: 1, borderRadius: 4 }] },
-        options: chartOpts(c)
+        options: chartOpts(c),
     });
-
     relChart = new Chart(document.getElementById('relChart'), {
         type: 'bar',
-        data: { labels: relLabels, datasets: [{ data: relValues,
+        data: { labels: relSorted.map(r => r[0]), datasets: [{ data: relSorted.map(r => r[1]),
             backgroundColor: c.green + '99', borderColor: c.green, borderWidth: 1, borderRadius: 4 }] },
-        options: chartOpts(c)
+        options: chartOpts(c),
     });
 }
 
 function chartOpts(c) {
     return {
         responsive: true, maintainAspectRatio: false,
-        plugins: { legend: { display: false },
-            tooltip: { callbacks: { label: ctx => ctx.parsed.y.toLocaleString() } } },
+        plugins: { legend: { display: false }, tooltip: { callbacks: { label: ctx => ctx.parsed.y.toLocaleString() } } },
         scales: {
-            y: { type: 'logarithmic', grid: { color: c.grid },
-                ticks: { callback: v => v.toLocaleString() } },
-            x: { grid: { display: false }, ticks: { maxRotation: 55, minRotation: 55, font: { size: 10 } } }
-        }
+            y: { type: 'logarithmic', grid: { color: c.grid }, ticks: { callback: v => v.toLocaleString() } },
+            x: { grid: { display: false }, ticks: { maxRotation: 55, minRotation: 55, font: { size: 10 } } },
+        },
     };
 }
 
 function updateChartColors() {
     const c = getChartColors();
     Chart.defaults.color = c.text;
-    [nodeChart, diseaseNodeChart].forEach(ch => {
+    [nodeChart].forEach(ch => {
         if (!ch) return;
         ch.options.scales.y.grid.color = c.grid;
         ch.data.datasets[0].backgroundColor = c.accent + '99';
         ch.data.datasets[0].borderColor = c.accent;
         ch.update();
     });
-    [relChart, diseaseRelChart].forEach(ch => {
+    [relChart].forEach(ch => {
         if (!ch) return;
         ch.options.scales.y.grid.color = c.grid;
         ch.data.datasets[0].backgroundColor = c.green + '99';
@@ -548,7 +1022,7 @@ function updateChartColors() {
     });
 }
 
-// Load graph stats on page load
+// ---- Graph Stats ----
 async function loadGraphStats() {
     try {
         const res = await fetch('/api/graph-stats');
@@ -565,63 +1039,13 @@ async function loadGraphStats() {
         ['statNodes','statRels','statNodeTypes','statRelTypes','statSources'].forEach(id => {
             document.getElementById(id).textContent = '-';
         });
-        log('Failed to load graph stats: ' + e.message, 'err');
     }
 }
 
-// Load disease subgraph stats
-async function loadDiseaseStats(disease) {
-    disease = disease || selectedDisease;
-    const label = disease.replace(/_/g, ' ').replace(/\b\w/g, c => c.toUpperCase());
-    document.getElementById('diseaseStatsLabel').textContent = label;
-    document.getElementById('statDiseaseMatched').innerHTML = '<span class="spinner"></span>';
-    document.getElementById('statDiseaseNeighbors').innerHTML = '<span class="spinner"></span>';
-
-    try {
-        const res = await fetch('/api/disease-stats?disease=' + disease);
-        if (!res.ok) throw new Error('Neo4j unavailable');
-        const d = await res.json();
-        if (d.error) { log(d.error, 'err'); return; }
-        document.getElementById('statDiseaseMatched').textContent = d.diseases_matched.toLocaleString();
-        document.getElementById('statDiseaseNeighbors').textContent = d.total_neighbors.toLocaleString();
-        renderDiseaseCharts(d.node_breakdown, d.rel_breakdown);
-    } catch (e) {
-        document.getElementById('statDiseaseMatched').textContent = '-';
-        document.getElementById('statDiseaseNeighbors').textContent = '-';
-        log('Failed to load disease stats: ' + e.message, 'err');
-    }
-}
-
-function renderDiseaseCharts(nodeBreakdown, relBreakdown) {
-    const c = getChartColors();
-
-    const nodeSorted = Object.entries(nodeBreakdown).sort((a, b) => b[1] - a[1]);
-    const relSorted = Object.entries(relBreakdown).sort((a, b) => b[1] - a[1]);
-
-    if (diseaseNodeChart) diseaseNodeChart.destroy();
-    if (diseaseRelChart) diseaseRelChart.destroy();
-
-    Chart.defaults.color = c.text;
-
-    diseaseNodeChart = new Chart(document.getElementById('diseaseNodeChart'), {
-        type: 'bar',
-        data: { labels: nodeSorted.map(r => r[0]), datasets: [{ data: nodeSorted.map(r => r[1]),
-            backgroundColor: c.accent + '99', borderColor: c.accent, borderWidth: 1, borderRadius: 4 }] },
-        options: chartOpts(c)
-    });
-
-    diseaseRelChart = new Chart(document.getElementById('diseaseRelChart'), {
-        type: 'bar',
-        data: { labels: relSorted.map(r => r[0]), datasets: [{ data: relSorted.map(r => r[1]),
-            backgroundColor: c.green + '99', borderColor: c.green, borderWidth: 1, borderRadius: 4 }] },
-        options: chartOpts(c)
-    });
-}
-
-// Init
+// ---- Init ----
 loadDiseases();
 loadGraphStats();
-loadDiseaseStats();
+initTemplates();
 </script>
 </body>
 </html>

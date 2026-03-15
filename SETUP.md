@@ -2,15 +2,15 @@
 
 ## Prerequisites
 
-- Python 3.9 or higher
+- Python 3.11 (conda recommended)
+- Neo4j 5.x (knowledge graph database)
 - pip or conda package manager
-- (Optional) MySQL for AOP-DB parser
 
 ## Installation
 
 ### 1. Create a Virtual Environment
 
-**Using conda:**
+**Using conda (recommended):**
 ```bash
 conda create -n cardiokb python=3.11
 conda activate cardiokb
@@ -30,135 +30,173 @@ cardiokb\Scripts\activate  # On Windows
 pip install -r requirements.txt
 ```
 
-This will install:
-- **requests**: For API calls (ClinicalTrials.gov, etc.)
-- **pandas & numpy**: Data processing and analysis
-- **neo4j**: Knowledge graph database connectivity
-- **scipy**: Scientific computing (optional)
-- **jupyter**: Notebook environment for exploration
-- **matplotlib**: Visualization
+Key dependencies:
+- **neo4j**: Knowledge graph database driver
+- **pandas & numpy**: Data processing
+- **requests**: API calls (DisGeNET, ClinPGx, DoRothEA, etc.)
+- **flask**: Web dashboard backend
+- **obonet**: OBO ontology parsing (Disease Ontology, Gene Ontology, Uberon)
+- **lxml**: XML parsing (DrugBank)
+- **scipy**: Scientific computing
+- **python-dotenv**: Environment variable management
 - **pytest**: Testing framework
 
-### 3. Optional Dependencies
+## Configuration
 
-For MySQL/AOP-DB parser:
-```bash
-pip install mysql-connector-python
-```
+### Environment Variables
 
-## Verify Installation
-
-Run the example script to test the setup:
+Create a `.env` file in the project root:
 
 ```bash
-python examples/clinicaltrials_rna_example.py
+# Neo4j (required)
+NEO4J_URI=bolt://localhost:7687
+NEO4J_USERNAME=neo4j
+NEO4J_PASSWORD=your_password
+
+# OMIM API key (required for OMIM parser)
+OMIM_API_KEY=your_key
+
+# DisGeNET API key (required for DisGeNET parser)
+DISGENET_API_KEY=your_key
+
+# DrugBank credentials (or place full-database XML at data/raw/drugbank/)
+DRUGBANK_USERNAME=your_email
+DRUGBANK_PASSWORD=your_password
+
+# MySQL for AOP-DB (or use SQL dump at data/raw/aopdb/)
+MYSQL_USERNAME=root
+MYSQL_PASSWORD=your_password
 ```
 
-This should:
-1. Query ClinicalTrials.gov for RNA therapeutics
-2. Parse and display summary statistics
-3. Filter for cardiovascular trials
-4. Save results to CSV files in `examples/`
+### Neo4j Setup
+
+1. Install and start Neo4j (Desktop or Community edition)
+2. Set the password and update `.env` accordingly
+3. Ensure `bolt://localhost:7687` is reachable
+
+## Running the Pipeline
+
+```bash
+# Full pipeline: download -> parse -> TSV export -> Neo4j load
+python src/main.py
+
+# Parse and export only (no Neo4j loading)
+python src/main.py --skip-neo4j
+
+# Use cached downloads (no re-downloading)
+python src/main.py --skip-download
+
+# Both flags (parse from cache, no Neo4j)
+python src/main.py --skip-download --skip-neo4j
+```
+
+## Web Dashboard
+
+The web dashboard provides interactive graph visualization, Cypher querying, and pipeline health monitoring.
+
+```bash
+# Launch Flask server + open browser
+./run.sh
+
+# Or manually
+python src/api.py --port 5050
+```
+
+**Dashboard features:**
+- **Explore tab**: Interactive vis.js force-directed graph of disease subgraphs, click nodes to inspect properties and neighbors, filter by node type, export as CSV/JSON
+- **Query tab**: Run Cypher queries with results displayed as both table and graph visualization, pre-built query templates for common patterns
+- **Sidebar**: Disease filter selector, agent-powered KB builder, health check runner
+- **Admin section**: Parser status, health checks, node/relationship charts, pipeline log
 
 ## Project Structure
 
 ```
 Cardio-KB/
 ├── src/
-│   └── parsers/          # Data source parsers
-│       ├── base_parser.py
-│       └── clinicaltrials_parser.py
-├── examples/             # Example scripts
-├── notebooks/            # Jupyter notebooks
-├── .claude/
-│   └── skills/          # Claude Code skills
-└── requirements.txt      # Python dependencies
+│   ├── main.py                  # Pipeline orchestrator
+│   ├── api.py                   # Flask web backend
+│   ├── agent.py                 # AI-powered disease KB builder
+│   ├── orchestrator.py          # Pipeline health check
+│   ├── neo4j_loader.py          # Cypher-based Neo4j batch loader
+│   ├── ontology_configs.py      # 58 ontology configs (source -> Neo4j schema)
+│   ├── id_mapping.py            # Cross-database ID remapping
+│   ├── utils.py                 # Shared utilities
+│   └── parsers/                 # 25 data source parsers
+│       ├── base_parser.py       # BaseParser abstract class
+│       └── hetionet_components/ # 14 Hetionet-derived component parsers
+├── interface/
+│   └── index.html               # Web dashboard (Explore + Query tabs)
+├── ontology/
+│   ├── disease_filter.txt       # Symlink -> diseases/cvd.txt
+│   └── diseases/                # Disease term files (cvd, alzheimers, cancer, etc.)
+├── data/
+│   ├── raw/                     # Downloaded source data
+│   └── processed/               # Exported TSV files for Neo4j
+├── tests/                       # pytest test files
+├── scripts/                     # Data processing and verification scripts
+├── reports/                     # Generated pipeline health reports
+├── docs/                        # Documentation, research plan
+├── .claude/skills/              # Claude Code custom skills
+├── run.sh                       # Launch script
+└── requirements.txt             # Python dependencies
 ```
 
-## Configuration
+## Data Sources (25 Parsers)
 
-### Environment Variables
+All parsers extend `BaseParser` from `src/parsers/base_parser.py`.
 
-Create a `.env` file in the project root for sensitive configuration:
+**Credential-gated (require env vars):**
+- OMIM (`OMIM_API_KEY`)
+- DisGeNET (`DISGENET_API_KEY`)
+- DrugBank (`DRUGBANK_USERNAME`/`DRUGBANK_PASSWORD` or XML file)
+- AOP-DB (`MYSQL_USERNAME`/`MYSQL_PASSWORD` or SQL dump)
 
-```bash
-# MySQL/AOP-DB (if using)
-AOPDB_HOST=localhost
-AOPDB_USER=root
-AOPDB_PASSWORD=your_password
-AOPDB_DATABASE=aopdb
+**Public sources (no credentials needed):**
+ClinicalTrials.gov, ClinPGx, NCBI Gene, DoRothEA, Disease Ontology, Gene Ontology, Uberon, MeSH, SIDER, LINCS L1000, MEDLINE, DrugCentral, GWAS Catalog, BindingDB, PubTator Central, CTD, Bgee, Hetionet, Jensen Lab DISEASES, Jensen Lab TISSUES, HPO
 
-# Neo4j (for knowledge graph)
-NEO4J_URI=bolt://localhost:7687
-NEO4J_USER=neo4j
-NEO4J_PASSWORD=your_password
+## Disease Scope
 
-# API keys (if needed)
-# NCBI_API_KEY=your_key
-```
+Disease term files in `ontology/diseases/` control which diseases are filtered:
 
-## Development
+| File | Terms | Area |
+|------|-------|------|
+| `cvd.txt` | 90 | Cardiovascular disease (default) |
+| `alzheimers.txt` | 35 | Alzheimer's & related dementias |
+| `cancer.txt` | 70 | Cancer / oncology |
+| `asthma.txt` | 48 | Asthma & respiratory diseases |
+| `diabetes.txt` | 52 | Diabetes & metabolic diseases |
 
-### Running Tests
+The active filter is `ontology/disease_filter.txt` (symlink to `diseases/cvd.txt`). Most parsers are disease-agnostic; only DisGeNET accepts a `disease_filter` parameter.
+
+## Running Tests
 
 ```bash
 pytest tests/
 ```
 
-### Using Parsers
-
-```python
-from src.parsers import ClinicalTrialsParser
-
-# Initialize parser
-parser = ClinicalTrialsParser(
-    query_term="RNA therapeutics",
-    max_results=1000
-)
-
-# Download data
-parser.download_data()
-
-# Parse to DataFrame
-data = parser.parse_data()
-trials_df = data['rna_therapeutics_trials']
-
-# Filter results
-cvd_trials = parser.filter_cardiovascular_trials(trials_df)
-```
-
 ## Troubleshooting
 
 ### Module Not Found Errors
+1. Ensure conda/venv is activated
+2. Install dependencies: `pip install -r requirements.txt`
+3. Run from project root (parsers use relative imports)
 
-If you get `ModuleNotFoundError`, ensure:
-1. Virtual environment is activated
-2. Dependencies are installed: `pip install -r requirements.txt`
-3. Python path includes src: `export PYTHONPATH="${PYTHONPATH}:${PWD}"`
+### Neo4j Connection Issues
+- Verify Neo4j is running: `neo4j status`
+- Check credentials in `.env`
+- Ensure bolt port 7687 is not blocked
 
-### API Rate Limits
+### Large Downloads
+Some sources download large files:
+- **ClinicalTrials.gov (AACT)**: ~2.4 GB bulk flat files
+- **PubTator Central**: ~4 GB FTP files
+- **Bgee**: ~1.5 GB expression data
 
-ClinicalTrials.gov API has rate limits (~50 requests/minute). The parser automatically:
-- Adds 1.5s delays between requests
-- Implements pagination
-- Handles rate limit errors gracefully
-
-### Large Datasets
-
-For large queries, consider:
-- Reducing `max_results` parameter
-- Using more specific query terms
-- Caching results locally
-
-## Next Steps
-
-1. **Create more parsers**: Follow the BaseParser pattern for new data sources
-2. **Build knowledge graph**: Use Neo4j to connect entities
-3. **Add analysis notebooks**: Explore data in Jupyter notebooks
-4. **Extend filtering**: Add domain-specific filters for your use case
+Use `--skip-download` to reuse cached data after the first run.
 
 ## Resources
 
-- [ClinicalTrials.gov API Docs](https://clinicaltrials.gov/data-api/api)
 - [Neo4j Python Driver](https://neo4j.com/docs/python-manual/current/)
-- [Pandas Documentation](https://pandas.pydata.org/docs/)
+- [ClinicalTrials.gov API](https://clinicaltrials.gov/data-api/api)
+- [DisGeNET API](https://www.disgenet.org/api/)
+- [Disease Ontology](https://disease-ontology.org/)
