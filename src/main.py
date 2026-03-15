@@ -64,6 +64,9 @@ from src.parsers import (
     WikiPathwaysParser,
     STRINGParser,
     OpenTargetsParser,
+    ClinVarParser,
+    HGNCFamiliesParser,
+    HGNCParser,
 )
 
 logger = logging.getLogger(__name__)
@@ -528,6 +531,15 @@ class CardioKBPipeline:
             data_dir=str(self.raw_dir),
         )
 
+        parsers['clinvar'] = ClinVarParser(
+            data_dir=str(self.raw_dir),
+        )
+        parsers['hgncfamilies'] = HGNCFamiliesParser(
+            data_dir=str(self.raw_dir),
+        )
+        parsers['hgnc'] = HGNCParser(
+            data_dir=str(self.raw_dir),
+        )
         # Parsers requiring credentials (only add if configured)
         if os.getenv('OMIM_API_KEY'):
             parsers['omim'] = OMIMParser(

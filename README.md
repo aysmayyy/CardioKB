@@ -1,20 +1,21 @@
 # CardioKB: Cardiovascular Disease Knowledge Base
 
-A biomedical knowledge graph pipeline that integrates 29 data sources (29 parsers) into a Neo4j graph for cardiovascular disease research, feature selection, and precision medicine. Adapted from the AlzKB (Alzheimer's Knowledge Base) architecture with additional custom parsers and Hetionet component integrations. Includes an AI-powered disease agent that can build knowledge subgraphs for any disease on demand via Claude API + DisGeNET. Features a web dashboard with interactive graph exploration (specificity-ranked subgraphs) and a Neo4j Browser-style multi-panel query interface.
+A biomedical knowledge graph pipeline that integrates 32 data sources (32 parsers) into a Neo4j graph for cardiovascular disease research, feature selection, and precision medicine. Adapted from the AlzKB (Alzheimer's Knowledge Base) architecture with additional custom parsers and Hetionet component integrations. Includes an AI-powered database agent that can autonomously generate new parsers from a URL, and a disease agent that builds knowledge subgraphs for any disease on demand via Claude API + DisGeNET. Features a web dashboard with interactive graph exploration (specificity-ranked subgraphs) and a Neo4j Browser-style multi-panel query interface.
 
-**Graph stats:** 373,757 nodes | 26,577,802 relationships | 18 node types | 35 relationship types
+**Graph stats:** 375,803 nodes | 26,648,962 relationships | 19 node types | 37 relationship types
 *Stats are current as of last pipeline run; see Neo4j or `GET /api/graph-stats` for live counts.*
 
 ## Pipeline Status
 
 | Category | Count | Details |
 |----------|-------|---------|
-| Total databases | 29 | 29 parsers (1 per source) |
-| Active & loaded | 28 | Successfully parsed + loaded into Neo4j (verified by r.source query) |
+| Total databases | 32 | 32 parsers (1 per source) |
+| Active & loaded | 31 | Successfully parsed + loaded into Neo4j (verified by r.source query) |
 | Credential-gated (loaded) | 4 | OMIM, DisGeNET, DrugBank (XML), AOP-DB (SQL dump) |
+| Agent-generated | 3 | HGNC, HGNC Families, ClinVar (built by DatabaseAgent) |
 | Stale/partial | 1 | MeSH (nodes only, no relationship data) |
-| Ontology configs | 67 | Neo4j node/relationship type mappings |
-| Source-labeled relationships | 25 | All relationships carry `r.source` property (25 unique source labels) |
+| Ontology configs | 77 | Neo4j node/relationship type mappings |
+| Source-labeled relationships | 26 | All relationships carry `r.source` property (26 unique source labels) |
 
 ## Data Sources
 
@@ -57,13 +58,21 @@ A biomedical knowledge graph pipeline that integrates 29 data sources (29 parser
 | 28 | STRING | Public | Working (228,193 geneInteractsWithGene edges, confidence > 700) |
 | 29 | OpenTargets | Public | Working (2,345,386 geneAssociatesWithDisease edges via EFO→DOID mapping) |
 
+### Phase 3: Agent-Generated Parsers
+
+| # | Source | Access | Status |
+|---|--------|--------|--------|
+| 30 | HGNC | Public | Working (44,361 Gene nodes enriched with xrefHGNC, geneName, locusGroup, locusType) |
+| 31 | HGNC Gene Families | Public | Working (1,934 GeneFamily nodes, 33,967 geneInFamily edges) |
+| 32 | ClinVar | Public FTP | Working (4,486,982 Variant nodes, 5,715,838 disease-variant edges, 4,486,982 gene-variant edges) |
+
 ## Neo4j Graph Schema
 
-**Node types (18):** Gene (193,687), Disease (28,596), Drug (41,566), Pathway (6,469), TranscriptionFactor (367), ClinicalTrial (20,219), Variant (1,060), DrugLabel (378), SideEffect (5,734), PharmacologicClass (1,646), Symptom (966), BodyPart (14,937), BiologicalProcess (24,547), MolecularFunction (10,123), CellularComponent (4,069), Phenotype (19,389), DiseaseCache (3), _Metadata (1)
+**Node types (19):** Gene (193,799), Disease (28,596), Drug (41,566), BiologicalProcess (24,547), ClinicalTrial (20,219), Phenotype (19,389), BodyPart (14,937), MolecularFunction (10,123), Pathway (6,469), SideEffect (5,734), CellularComponent (4,069), GeneFamily (1,934), PharmacologicClass (1,646), Variant (1,060), Symptom (966), DrugLabel (378), TranscriptionFactor (367), DiseaseCache (3), _Metadata (1)
 
-**Key relationship types (35):** geneAssociatesWithDisease, geneAssociatesWithPhenotype, geneParticipatesInBiologicalProcess, geneHasMolecularFunction, geneAssociatedWithCellularComponent, geneInteractsWithGene, geneCovariesWithGene, geneRegulatesGene, geneInPathway, geneExpressedInBodyPart, bodyPartUnderexpressesGene, bodyPartOverexpressesGene, chemicalIncreasesExpression, chemicalDecreasesExpression, chemicalBindsGene, drugBindsGene, compoundCausesSideEffect, compoundUpregulatesGene, compoundDownregulatesGene, pharmacologicClassIncludesCompound, compoundInPharmacologicClass, pathwayContainsGene, drugTreatsDisease, drugPalliatesDisease, diseaseAssociatesWithDisease, diseaseLocalizesToAnatomy, diseasePresentsSymptom, diseaseResemblesDisease, transcriptionFactorInteractsWithGene, drugLabelAnnotatesGene, drugLabelDescribesDrug, AFFECTS_RESPONSE_TO, STUDIES_CONDITION, TESTS_INTERVENTION, VARIANT_IN
+**Key relationship types (37):** geneAssociatesWithDisease, geneAssociatesWithPhenotype, geneParticipatesInBiologicalProcess, geneHasMolecularFunction, geneAssociatedWithCellularComponent, geneInteractsWithGene, geneCovariesWithGene, geneRegulatesGene, geneInPathway, geneInFamily, familyContainsGene, geneExpressedInBodyPart, bodyPartUnderexpressesGene, bodyPartOverexpressesGene, chemicalIncreasesExpression, chemicalDecreasesExpression, chemicalBindsGene, drugBindsGene, compoundCausesSideEffect, compoundUpregulatesGene, compoundDownregulatesGene, pharmacologicClassIncludesCompound, compoundInPharmacologicClass, pathwayContainsGene, drugTreatsDisease, drugPalliatesDisease, diseaseAssociatesWithDisease, diseaseLocalizesToAnatomy, diseasePresentsSymptom, diseaseResemblesDisease, transcriptionFactorInteractsWithGene, drugLabelAnnotatesGene, drugLabelDescribesDrug, AFFECTS_RESPONSE_TO, STUDIES_CONDITION, TESTS_INTERVENTION, VARIANT_IN
 
-**Relationship source labels:** All relationships carry a `source` property (e.g., `DisGeNET`, `GWAS Catalog`, `PubTator`, `Bgee`, etc.) for provenance tracking across 25 source-labeled databases. Disease Ontology contributes nodes only (no relationship source label).
+**Relationship source labels:** All relationships carry a `source` property (e.g., `DisGeNET`, `GWAS Catalog`, `PubTator`, `Bgee`, `HGNC`, etc.) for provenance tracking across 26 source-labeled databases. Disease Ontology contributes nodes only (no relationship source label).
 
 ## Project Structure
 
@@ -72,10 +81,11 @@ Cardio-KB/
 ├── src/
 │   ├── main.py                 # Pipeline orchestrator (--skip-neo4j, --skip-download)
 │   ├── agent.py                # AI disease KB builder (Claude API + DisGeNET)
-│   ├── api.py                  # Flask backend with SSE streaming + agent endpoint
+│   ├── database_agent.py       # Autonomous parser generator (Claude API + sample download)
+│   ├── api.py                  # Flask backend with SSE streaming + agent endpoints
 │   ├── orchestrator.py         # Health check with dynamic Neo4j parser detection
 │   ├── neo4j_loader.py         # Cypher-based Neo4j batch loader
-│   ├── ontology_configs.py     # 67 ontology configs for Neo4j schema mapping
+│   ├── ontology_configs.py     # 77 ontology configs for Neo4j schema mapping
 │   ├── id_mapping.py           # Central ID mapping: validate, suggest, create_missing_nodes, CLI
 │   ├── utils.py                # Disease filtering utilities (load_disease_terms, etc.)
 │   └── parsers/
@@ -95,6 +105,9 @@ Cardio-KB/
 │       ├── wikipathways_parser.py
 │       ├── string_parser.py
 │       ├── opentargets_parser.py
+│       ├── hgnc_parser.py          # Agent-generated
+│       ├── hgncfamilies_parser.py  # Agent-generated
+│       ├── clinvar_parser.py       # Agent-generated
 │       └── hetionet_components/    # 14 Hetionet-derived component parsers
 │           ├── disease_ontology_parser.py
 │           ├── gene_ontology_parser.py
@@ -234,7 +247,7 @@ Disease term files live in **`ontology/diseases/`** (one term per line, `#` for 
 DisGeNETParser(data_dir="data/raw", disease_filter="ontology/diseases/cancer.txt")
 ```
 
-When `disease_filter` is omitted, DisGeNET defaults to `ontology/disease_filter.txt` (→ CVD). OMIMParser reads the symlink to tag rows with `is_cvd` but loads all data regardless. All other 27 parsers are fully disease-agnostic.
+When `disease_filter` is omitted, DisGeNET defaults to `ontology/disease_filter.txt` (→ CVD). OMIMParser reads the symlink to tag rows with `is_cvd` but loads all data regardless. All other 30 parsers are fully disease-agnostic.
 
 ## Web Interface
 
@@ -260,7 +273,7 @@ Launch with `bash run.sh` or `python src/api.py --port 5050`. Features:
 - All parsers extend `BaseParser` from `src/parsers/base_parser.py`
 - Neo4j loading uses UNWIND-based Cypher batching (batch size: 1000) with MERGE to prevent duplicates
 - All relationships are tagged with `r.source` property from the config's `source_label` for provenance tracking
-- Graph schema is defined declaratively in `src/ontology_configs.py` (67 configs)
+- Graph schema is defined declaratively in `src/ontology_configs.py` (77 configs)
 - Post-load ID mapping validation automatically checks all relationship match rates and creates missing nodes for low-match configs
 - Parsers with missing credentials are automatically skipped at runtime
 - DrugBank and AOP-DB auto-detect local data files (XML / SQL dump) and work without credentials

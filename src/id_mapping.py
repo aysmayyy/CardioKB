@@ -27,7 +27,6 @@ ID_SYSTEMS: Dict[str, Tuple[str, str]] = {
     # Genes
     'ncbi_gene':     ('Gene', 'xrefNcbiGene'),
     'ensembl':       ('Gene', 'xrefEnsembl'),
-    'hgnc':          ('Gene', 'xrefHGNC'),
     'gene_symbol':   ('Gene', 'geneSymbol'),
     'omim_gene':     ('Gene', 'xrefOMIM'),
     # Diseases
