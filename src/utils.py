@@ -250,6 +250,29 @@ def add_to_disease_cache(disease_name: str, stats: Dict) -> Dict:
         driver.close()
 
 
+def delete_disease_cache(disease_name: str) -> bool:
+    """
+    Delete a DiseaseCache node by disease_name.
+
+    Returns True if a node was deleted, False otherwise.
+    """
+    driver = _get_neo4j_driver()
+    if not driver:
+        return False
+
+    try:
+        with driver.session(database='neo4j') as session:
+            result = session.run(
+                "MATCH (c:DiseaseCache {disease_name: $name}) "
+                "DELETE c RETURN count(*) AS deleted",
+                name=disease_name,
+            )
+            rec = result.single()
+            return (rec['deleted'] > 0) if rec else False
+    finally:
+        driver.close()
+
+
 def add_alias_to_disease_cache(disease_name: str, alias: str) -> None:
     """
     Append an alias to an existing DiseaseCache node.

@@ -5,8 +5,8 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>CardioKB Dashboard</title>
 <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.7/dist/chart.umd.min.js"></script>
-<script src="https://cdnjs.cloudflare.com/ajax/libs/vis-network/9.1.9/vis-network.min.js"></script>
-<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/vis-network/9.1.9/vis-network.min.css" />
+<script src="https://unpkg.com/vis-network@9.1.2/standalone/umd/vis-network.min.js"></script>
+<link rel="stylesheet" href="https://unpkg.com/vis-network@9.1.2/styles/vis-network.min.css" />
 <style>
 :root {
     --bg: #0f172a; --surface: #1e293b; --surface2: #334155; --border: #475569;
@@ -208,6 +208,59 @@ th, td { padding: 0.4rem 0.6rem; text-align: left; border-bottom: 1px solid var(
 th { color: var(--text-muted); font-weight: 600; text-transform: uppercase; font-size: 0.7rem;
      letter-spacing: 0.05em; position: sticky; top: 0; background: var(--surface); }
 
+/* Query result panels (Neo4j Browser style) */
+.query-results-container { display: flex; flex-direction: column; gap: 0.75rem; }
+.query-result-panel {
+    background: var(--surface); border: 1px solid var(--border); border-radius: 8px;
+    overflow: hidden; transition: border-color 0.15s;
+}
+.query-result-panel:first-child { border-color: var(--accent); }
+.qr-header {
+    display: flex; align-items: center; gap: 0.5rem; padding: 0.6rem 0.75rem;
+    background: var(--bg); border-bottom: 1px solid var(--border); cursor: pointer;
+    user-select: none;
+}
+.qr-header:hover { background: var(--surface2); }
+.qr-chevron { font-size: 0.7rem; color: var(--text-muted); transition: transform 0.2s; flex-shrink: 0; }
+.qr-chevron.collapsed { transform: rotate(-90deg); }
+.qr-query {
+    flex: 1; font-family: 'SF Mono', 'Fira Code', monospace; font-size: 0.78rem;
+    color: var(--accent); white-space: nowrap; overflow: hidden; text-overflow: ellipsis;
+}
+.qr-meta { font-size: 0.7rem; color: var(--text-muted); white-space: nowrap; flex-shrink: 0; }
+.qr-close {
+    background: none; border: none; color: var(--text-muted); cursor: pointer;
+    font-size: 1rem; line-height: 1; padding: 0 0.25rem; flex-shrink: 0;
+}
+.qr-close:hover { color: var(--red); }
+.qr-body { padding: 0; }
+.qr-body.collapsed { display: none; }
+.qr-tabs {
+    display: flex; gap: 0; border-bottom: 1px solid var(--border);
+}
+.qr-tab-btn {
+    padding: 0.4rem 0.85rem; font-size: 0.76rem; background: none; border: none;
+    color: var(--text-muted); cursor: pointer; border-bottom: 2px solid transparent;
+    transition: all 0.15s;
+}
+.qr-tab-btn:hover { color: var(--text); }
+.qr-tab-btn.active { color: var(--accent); border-bottom-color: var(--accent); }
+.qr-tab-content { display: none; }
+.qr-tab-content.active { display: block; }
+.qr-graph { height: 320px; }
+.qr-error { color: var(--red); padding: 0.75rem; font-size: 0.85rem; }
+.qr-empty { color: var(--text-muted); padding: 0.75rem; font-size: 0.85rem; font-style: italic; }
+.qr-stats {
+    display: flex; gap: 1rem; padding: 0.4rem 0.75rem; font-size: 0.72rem; color: var(--text-muted);
+    border-top: 1px solid var(--border); background: var(--bg);
+}
+.clear-all-btn {
+    padding: 0.35rem 0.75rem; border-radius: 6px; border: 1px solid var(--border);
+    background: var(--surface); color: var(--text-muted); cursor: pointer; font-size: 0.78rem;
+    transition: all 0.15s;
+}
+.clear-all-btn:hover { background: var(--surface2); color: var(--red); border-color: var(--red); }
+
 /* Badges */
 .badge {
     display: inline-block; padding: 0.1rem 0.45rem; border-radius: 4px;
@@ -269,8 +322,68 @@ th { color: var(--text-muted); font-weight: 600; text-transform: uppercase; font
 .graph-loading {
     position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%);
     color: var(--text-muted); font-size: 0.9rem; display: none; align-items: center; gap: 0.5rem;
+    z-index: 6; pointer-events: none;
 }
 .graph-loading.visible { display: flex; }
+
+/* Modal overlay */
+.modal-overlay {
+    position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.65);
+    z-index: 1000; display: flex; align-items: center; justify-content: center;
+}
+.modal-overlay.hidden { display: none; }
+.modal {
+    background: var(--surface); border: 1px solid var(--border); border-radius: 12px;
+    padding: 2rem; max-width: 540px; width: 90%; max-height: 80vh; overflow-y: auto;
+    box-shadow: 0 20px 60px rgba(0,0,0,0.4);
+}
+.modal h2 { color: var(--accent); font-size: 1.15rem; margin-bottom: 0.75rem; }
+.modal p, .modal li { font-size: 0.88rem; color: var(--text); line-height: 1.6; }
+.modal ul { padding-left: 1.2rem; margin: 0.5rem 0; }
+.modal-step { display: none; }
+.modal-step.active { display: block; }
+.modal-dots { display: flex; gap: 0.4rem; justify-content: center; margin: 1.25rem 0 0.75rem; }
+.modal-dots .dot {
+    width: 8px; height: 8px; border-radius: 50%; background: var(--surface2); transition: background 0.2s;
+}
+.modal-dots .dot.active { background: var(--accent); }
+.modal-actions { display: flex; justify-content: space-between; gap: 0.5rem; margin-top: 1rem; }
+.modal-actions button {
+    padding: 0.5rem 1.2rem; border-radius: 6px; border: none; cursor: pointer;
+    font-size: 0.85rem; font-weight: 600; transition: opacity 0.15s;
+}
+.modal-actions .btn-primary { background: var(--accent); color: #0f172a; }
+.modal-actions .btn-secondary { background: var(--surface2); color: var(--text); }
+.modal-actions button:hover { opacity: 0.85; }
+
+/* Tooltips (JS-positioned) */
+.tip-bubble {
+    position: fixed; padding: 0.4rem 0.7rem; border-radius: 6px;
+    background: #1e293b; color: #e2e8f0; font-size: 0.75rem; font-weight: 400;
+    line-height: 1.45; z-index: 9999; pointer-events: none;
+    border: 1px solid #475569; box-shadow: 0 4px 16px rgba(0,0,0,0.35);
+    max-width: 260px; text-align: center; opacity: 0; transition: opacity 0.15s;
+}
+.tip-bubble.visible { opacity: 1; }
+
+/* Info button */
+.info-btn {
+    width: 26px; height: 26px; border-radius: 50%; border: 1.5px solid var(--border);
+    background: var(--surface); color: var(--text-muted); cursor: pointer;
+    font-size: 0.82rem; font-weight: 700; display: inline-flex; align-items: center;
+    justify-content: center; flex-shrink: 0; transition: all 0.15s;
+}
+.info-btn:hover { border-color: var(--accent); color: var(--accent); }
+
+/* Node type legend panel */
+.node-legend {
+    display: flex; flex-wrap: wrap; gap: 0.5rem 1.25rem; padding: 0.75rem 0; font-size: 0.76rem;
+    color: var(--text-muted); border-top: 1px solid var(--border); margin-top: 0.5rem;
+}
+.node-legend-item { display: flex; align-items: center; gap: 0.35rem; }
+.node-legend-dot {
+    width: 10px; height: 10px; border-radius: 50%; flex-shrink: 0;
+}
 
 /* Responsive sidebar */
 @media (max-width: 768px) {
@@ -292,45 +405,63 @@ th { color: var(--text-muted); font-weight: 600; text-transform: uppercase; font
 
     <div>
         <h3>Build New Disease</h3>
-        <input type="text" class="agent-input" id="agentInput" placeholder="e.g. Parkinson's, PD, lupus..." />
-        <button class="run-btn" id="agentBtn" onclick="runAgentBuild()">Build Knowledge Graph</button>
+        <input type="text" class="agent-input" id="agentInput" placeholder="e.g. Parkinson's, PD, lupus..." data-tip="Enter any disease name to build a new knowledge subgraph using AI" />
+        <button class="run-btn" id="agentBtn" onclick="runAgentBuild()" data-tip="Use Claude AI to query DisGeNET and build a disease-specific subgraph">Build Knowledge Graph</button>
     </div>
 
-    <button class="run-btn" id="runBtn" onclick="runHealthCheck()">Run Health Check</button>
+    <button class="run-btn" id="runBtn" onclick="runHealthCheck()" data-tip="Check all 25 parsers, Neo4j connectivity, and data integrity">Run Health Check</button>
 
-    <button class="theme-toggle" onclick="toggleTheme()">Toggle Light / Dark</button>
+    <button class="theme-toggle" onclick="toggleTheme()" data-tip="Switch between dark and light themes">Toggle Light / Dark</button>
 </aside>
 
 <div class="main">
     <!-- Stats bar -->
     <div class="stats-grid" id="statsGrid">
-        <div class="stat-card"><div class="value" id="statNodes"><span class="spinner"></span></div><div class="label">Total Nodes</div></div>
-        <div class="stat-card"><div class="value" id="statRels"><span class="spinner"></span></div><div class="label">Total Relationships</div></div>
-        <div class="stat-card"><div class="value" id="statNodeTypes"><span class="spinner"></span></div><div class="label">Node Types</div></div>
-        <div class="stat-card"><div class="value" id="statRelTypes"><span class="spinner"></span></div><div class="label">Rel Types</div></div>
-        <div class="stat-card"><div class="value" id="statSources"><span class="spinner"></span></div><div class="label">Sources</div></div>
+        <div class="stat-card" data-tip="Total entities in the knowledge graph across all 25 data sources"><div class="value" id="statNodes"><span class="spinner"></span></div><div class="label">Total Nodes</div></div>
+        <div class="stat-card" data-tip="Total connections between entities (gene-disease, drug-target, etc.)"><div class="value" id="statRels"><span class="spinner"></span></div><div class="label">Total Relationships</div></div>
+        <div class="stat-card" data-tip="Distinct entity categories: Gene, Disease, Drug, Pathway, etc."><div class="value" id="statNodeTypes"><span class="spinner"></span></div><div class="label">Node Types</div></div>
+        <div class="stat-card" data-tip="Distinct relationship types: ASSOCIATES_WITH, TARGETS, TREATS, etc."><div class="value" id="statRelTypes"><span class="spinner"></span></div><div class="label">Rel Types</div></div>
+        <div class="stat-card" data-tip="Number of integrated databases contributing relationships"><div class="value" id="statSources"><span class="spinner"></span></div><div class="label">Sources</div></div>
     </div>
 
     <!-- Tabs -->
     <div class="tabs">
-        <button class="tab-btn active" data-tab="explore" onclick="switchTab('explore')">Explore</button>
-        <button class="tab-btn" data-tab="query" onclick="switchTab('query')">Query</button>
+        <button class="tab-btn active" data-tab="explore" data-tip="Visually browse disease subgraphs with core and discovery layers" onclick="switchTab('explore')">Explore</button>
+        <button class="tab-btn" data-tab="query" data-tip="Run custom Cypher queries against the Neo4j knowledge graph" onclick="switchTab('query')">Query</button>
     </div>
 
     <!-- Explore Tab -->
     <div class="tab-content active" id="tab-explore">
         <div class="explore-bar">
-            <input type="text" id="exploreSearch" placeholder="Search disease subgraph (uses selected disease filter)..." />
-            <input type="number" id="exploreLimit" value="200" min="10" max="1000" style="width:80px;flex:none" title="Max nodes" />
-            <button id="exploreBtn" onclick="loadExploreGraph()">Explore</button>
+            <input type="text" id="exploreSearch" data-tip="Search for a disease, gene, or drug to visualize its neighborhood" placeholder="Try: atrial fibrillation, hypertension, SCN5A" />
+            <input type="number" id="exploreLimit" value="200" min="10" max="1000" style="width:80px;flex:none" data-tip="Maximum number of nodes to display (higher = more detail, slower)" />
+            <button id="exploreBtn" onclick="loadExploreGraph()" data-tip="Load the subgraph for the selected disease filter">Explore</button>
+            <button class="info-btn" onclick="showMethodologyModal()" data-tip="How to read this graph">?</button>
+        </div>
+        <div style="font-size:.78rem;color:var(--text-muted);margin:-0.3rem 0 0.5rem 0.2rem;">Use specific disease or gene names for best results.</div>
+
+        <div style="display:flex;align-items:center;gap:1rem;margin-bottom:0.75rem;flex-wrap:wrap">
+            <div class="filter-chips" id="filterChips" style="margin-bottom:0"></div>
+            <label style="display:flex;align-items:center;gap:0.4rem;font-size:0.82rem;color:var(--text-muted);cursor:pointer;white-space:nowrap" data-tip="Toggle hypothesis-generating 2-hop connections on or off">
+                <input type="checkbox" id="discoveryToggle" checked onchange="toggleDiscoveryLayer()" style="accent-color:var(--accent)" />
+                Show discovery layer
+            </label>
         </div>
 
-        <div class="filter-chips" id="filterChips"></div>
+        <div style="display:flex;gap:1.5rem;margin-bottom:0.75rem;font-size:0.78rem;color:var(--text-muted);align-items:center">
+            <span style="display:flex;align-items:center;gap:0.35rem">
+                <span style="display:inline-block;width:12px;height:12px;border-radius:50%;background:var(--accent);border:2px solid var(--accent)"></span>
+                Core (known associations)
+            </span>
+            <span style="display:flex;align-items:center;gap:0.35rem">
+                <span style="display:inline-block;width:12px;height:12px;border-radius:50%;background:transparent;border:2px dashed var(--text-muted)"></span>
+                Discovery (hypothesis-generating)
+            </span>
+        </div>
 
         <div style="position:relative">
-            <div class="graph-container" id="exploreGraph">
-                <div class="graph-loading visible" id="exploreLoading"><span class="spinner"></span> Select a disease filter and click Explore</div>
-            </div>
+            <div class="graph-container" id="exploreGraph"></div>
+            <div class="graph-loading visible" id="exploreLoading"><span class="spinner"></span> Select a disease filter and click Explore</div>
             <div class="detail-panel" id="detailPanel">
                 <button class="close-btn" onclick="closeDetailPanel()">&times;</button>
                 <h3 id="detailTitle">Node</h3>
@@ -343,37 +474,44 @@ th { color: var(--text-muted); font-weight: 600; text-transform: uppercase; font
             </div>
         </div>
 
+        <div class="node-legend" id="nodeLegend"></div>
+
+        <div style="font-size:0.76rem;color:var(--text-muted);line-height:1.55;padding:0.6rem 0;border-top:1px solid var(--border);margin-top:0.25rem">
+            <strong style="color:var(--text)">How nodes are selected:</strong>
+            Nodes are ranked by disease-specificity score &mdash; calculated as 1 &divide; (number of diseases a node connects to).
+            Genes and other entities highly specific to your searched disease appear first, while broadly-connected nodes rank lower.
+            The top-scoring nodes per type are shown in the <em>core</em> layer; the <em>discovery</em> layer extends one hop further for hypothesis generation.
+            <span id="specificityTimestamp" style="display:block;margin-top:0.3rem;font-style:italic"></span>
+        </div>
+
         <div class="export-bar">
-            <button onclick="exportGraph('csv')">Export CSV</button>
-            <button onclick="exportGraph('json')">Export JSON</button>
+            <button onclick="exportGraph('csv')" data-tip="Download current subgraph as CSV for analysis in Excel, R, or Python">Export CSV</button>
+            <button onclick="exportGraph('json')" data-tip="Download current subgraph as JSON for programmatic use or Cytoscape import">Export JSON</button>
         </div>
     </div>
 
     <!-- Query Tab -->
     <div class="tab-content" id="tab-query">
+        <div style="background:var(--surface);border:1px solid var(--border);border-radius:8px;padding:1rem;margin-bottom:1rem;font-size:0.82rem;color:var(--text-muted);line-height:1.6">
+            Write Cypher queries to explore the knowledge graph. Queries are <strong style="color:var(--text)">read-only</strong> (no CREATE/DELETE/SET). Click a template below to auto-fill, or write your own. Results appear as a table and, when graph data is returned, as a network visualization.
+        </div>
+
         <div class="templates">
             <h3>Query Templates</h3>
             <div class="template-list" id="templateList"></div>
         </div>
 
         <div class="query-input-wrap">
-            <textarea id="cypherInput" placeholder="Enter a Cypher query... (read-only, no writes allowed)"></textarea>
+            <textarea id="cypherInput" placeholder="Enter a Cypher query... (read-only, no writes allowed)" onkeydown="if(event.ctrlKey&&event.key==='Enter'){runCypherQuery()}"></textarea>
         </div>
         <div class="query-actions">
             <button class="run-btn" id="queryBtn" onclick="runCypherQuery()" style="padding:0.5rem 1.5rem">Run Query</button>
-        </div>
-        <div class="query-error" id="queryError"></div>
-
-        <div class="results-table-wrap" id="queryTableWrap" style="display:none">
-            <table>
-                <thead><tr id="queryTableHead"></tr></thead>
-                <tbody id="queryTableBody"></tbody>
-            </table>
+            <span style="font-size:0.72rem;color:var(--text-muted);align-self:center">Ctrl+Enter to run</span>
+            <div style="flex:1"></div>
+            <button class="clear-all-btn" id="clearAllBtn" onclick="clearAllResults()" style="display:none">Clear All</button>
         </div>
 
-        <div class="graph-container graph-container-small" id="queryGraph" style="display:none">
-            <div class="graph-loading" id="queryLoading"><span class="spinner"></span> Running query...</div>
-        </div>
+        <div class="query-results-container" id="queryResultsContainer"></div>
     </div>
 
     <!-- Admin Section (collapsible) -->
@@ -417,12 +555,179 @@ th { color: var(--text-muted); font-weight: 600; text-transform: uppercase; font
     </div>
 </div>
 
+<!-- Welcome Tour Modal -->
+<div class="modal-overlay hidden" id="welcomeModal">
+    <div class="modal">
+        <div class="modal-step active" data-step="0">
+            <h2>Welcome to CardioKB</h2>
+            <p>CardioKB is a cardiovascular disease knowledge graph integrating <strong>25 biomedical databases</strong> into a single queryable network. It connects genes, diseases, drugs, pathways, clinical trials, phenotypes, and more.</p>
+            <ul>
+                <li>370K+ nodes across 17 entity types</li>
+                <li>23M+ relationships from sources like DisGeNET, DrugBank, GWAS Catalog, and PubTator</li>
+                <li>Built for CVD research, feature selection, and precision medicine</li>
+            </ul>
+        </div>
+        <div class="modal-step" data-step="1">
+            <h2>How to Explore</h2>
+            <p>The <strong>Explore tab</strong> lets you visually browse disease subgraphs:</p>
+            <ul>
+                <li><strong>Select a disease filter</strong> from the sidebar, then click <em>Explore</em></li>
+                <li><strong>Core nodes</strong> (large, solid) are direct known associations</li>
+                <li><strong>Discovery nodes</strong> (small, dashed) are 2-hop hypothesis-generating connections</li>
+                <li><strong>Click any node</strong> to see its properties and neighbors</li>
+                <li>Use <strong>filter chips</strong> to show/hide entity types and the <strong>discovery toggle</strong> to focus on confirmed knowledge</li>
+            </ul>
+        </div>
+        <div class="modal-step" data-step="2">
+            <h2>How to Query</h2>
+            <p>The <strong>Query tab</strong> gives you direct Cypher access to the full Neo4j graph:</p>
+            <ul>
+                <li>Click a <strong>template</strong> to auto-fill common queries</li>
+                <li>Edit the query and press <strong>Run</strong> (or Cmd+Enter)</li>
+                <li>Results render as a <strong>table</strong> and, when graph data is returned, as an interactive <strong>network</strong></li>
+                <li>All queries are read-only for safety</li>
+            </ul>
+        </div>
+        <div class="modal-dots">
+            <span class="dot active" data-dot="0"></span>
+            <span class="dot" data-dot="1"></span>
+            <span class="dot" data-dot="2"></span>
+        </div>
+        <div class="modal-actions">
+            <button class="btn-secondary" onclick="closeWelcome()">Skip</button>
+            <button class="btn-primary" id="welcomeNextBtn" onclick="nextWelcomeStep()">Next</button>
+        </div>
+    </div>
+</div>
+
+<!-- Methodology Modal -->
+<div class="modal-overlay hidden" id="methodologyModal" onclick="if(event.target===this)this.classList.add('hidden')">
+    <div class="modal">
+        <h2>How to Read the Graph</h2>
+        <p style="margin-bottom:0.75rem"><strong>Two-layer architecture</strong></p>
+        <ul>
+            <li><strong>Core layer</strong> &mdash; Direct (1-hop) neighbors of the searched disease. These are known, literature-backed associations from databases like DisGeNET, GWAS Catalog, and DrugBank. Shown as <strong>large nodes with solid borders</strong>.</li>
+            <li><strong>Discovery layer</strong> &mdash; 2-hop neighbors reached through core nodes. These are hypothesis-generating connections not directly linked to the disease. Shown as <strong>small nodes with dashed borders and faded edges</strong>.</li>
+        </ul>
+        <p style="margin:0.75rem 0"><strong>Node sizing &amp; shapes</strong></p>
+        <ul>
+            <li>Diseases are <strong>diamonds</strong>; all other types are <strong>circles</strong></li>
+            <li>Core nodes are larger; discovery nodes are smaller</li>
+            <li>Colors indicate entity type (see legend below graph)</li>
+        </ul>
+        <p style="margin:0.75rem 0"><strong>Reading edges</strong></p>
+        <ul>
+            <li>Solid edges = core (known) relationships</li>
+            <li>Dashed edges = discovery (inferred) connections</li>
+            <li>Edge labels show the relationship type (e.g., ASSOCIATES_WITH, TARGETS)</li>
+            <li>Each edge carries a <code>source</code> property identifying the originating database</li>
+        </ul>
+        <div class="modal-actions" style="justify-content:flex-end">
+            <button class="btn-primary" onclick="document.getElementById('methodologyModal').classList.add('hidden')">Got it</button>
+        </div>
+    </div>
+</div>
+
 <script>
+// ---- Tooltip Engine ----
+(function() {
+    const bubble = document.createElement('div');
+    bubble.className = 'tip-bubble';
+    document.body.appendChild(bubble);
+    let hideTimer = null;
+
+    document.addEventListener('mouseover', function(e) {
+        const el = e.target.closest('[data-tip]');
+        if (!el) return;
+        clearTimeout(hideTimer);
+        bubble.textContent = el.getAttribute('data-tip');
+        bubble.classList.add('visible');
+
+        const r = el.getBoundingClientRect();
+        bubble.style.left = '0'; bubble.style.top = '0';
+        const bw = bubble.offsetWidth, bh = bubble.offsetHeight;
+        const gap = 8;
+
+        // prefer below; if clipped, go above
+        let top = r.bottom + gap;
+        if (top + bh > window.innerHeight) top = r.top - bh - gap;
+        // center horizontally, clamp to viewport
+        let left = r.left + r.width / 2 - bw / 2;
+        left = Math.max(8, Math.min(left, window.innerWidth - bw - 8));
+
+        bubble.style.left = left + 'px';
+        bubble.style.top = top + 'px';
+    });
+
+    document.addEventListener('mouseout', function(e) {
+        const el = e.target.closest('[data-tip]');
+        if (!el) return;
+        hideTimer = setTimeout(function() { bubble.classList.remove('visible'); }, 80);
+    });
+})();
+
+// ---- Welcome Tour ----
+let welcomeStep = 0;
+let tourCompleted = false;
+
+function showWelcome() {
+    if (tourCompleted) return;
+    document.getElementById('welcomeModal').classList.remove('hidden');
+}
+function closeWelcome() {
+    document.getElementById('welcomeModal').classList.add('hidden');
+    tourCompleted = true;
+}
+function nextWelcomeStep() {
+    const steps = document.querySelectorAll('#welcomeModal .modal-step');
+    const dots = document.querySelectorAll('#welcomeModal .dot');
+    steps[welcomeStep].classList.remove('active');
+    dots[welcomeStep].classList.remove('active');
+    welcomeStep++;
+    if (welcomeStep >= steps.length) { closeWelcome(); return; }
+    steps[welcomeStep].classList.add('active');
+    dots[welcomeStep].classList.add('active');
+    document.getElementById('welcomeNextBtn').textContent = welcomeStep === steps.length - 1 ? 'Get Started' : 'Next';
+}
+
+function showMethodologyModal() {
+    document.getElementById('methodologyModal').classList.remove('hidden');
+}
+
+// ---- Node Type Legend ----
+const NODE_TYPE_DESCRIPTIONS = {
+    Gene: 'Human protein-coding genes from NCBI',
+    Disease: 'Disease entities from Disease Ontology (DOID)',
+    Drug: 'Approved and investigational compounds from DrugBank',
+    Pathway: 'Biological pathways from AOP-DB and Reactome',
+    Phenotype: 'Clinical phenotypes from Human Phenotype Ontology',
+    ClinicalTrial: 'Active and completed trials from ClinicalTrials.gov',
+    Anatomy: 'Anatomical structures from Uberon ontology',
+    SideEffect: 'Drug side effects from SIDER',
+    GeneOntology: 'Molecular functions and processes from GO',
+    Chemical: 'Environmental chemicals from AOP-DB / CTD',
+    Symptom: 'Disease symptoms from MeSH',
+};
+
+function renderNodeLegend() {
+    const container = document.getElementById('nodeLegend');
+    if (!container) return;
+    container.innerHTML = '';
+    Object.entries(NODE_COLORS).forEach(([type, color]) => {
+        const item = document.createElement('span');
+        item.className = 'node-legend-item';
+        const desc = NODE_TYPE_DESCRIPTIONS[type] || '';
+        item.innerHTML = '<span class="node-legend-dot" style="background:' + color + '"></span>' +
+            '<strong>' + type + '</strong>' + (desc ? ' \u2014 ' + desc : '');
+        container.appendChild(item);
+    });
+}
+
 // ---- State ----
 let selectedDisease = 'cvd';
 let nodeChart = null, relChart = null;
 let eventSource = null;
-let exploreNetwork = null, queryNetwork = null;
+let exploreNetwork = null;
 let currentGraphData = { nodes: [], edges: [] };
 let activeFilters = new Set();
 const NODE_COLORS = {
@@ -438,7 +743,7 @@ function chipClass(type) { return NODE_COLORS[type] ? 'chip-' + type : 'chip-Oth
 function switchTab(tab) {
     document.querySelectorAll('.tab-btn').forEach(b => b.classList.toggle('active', b.dataset.tab === tab));
     document.querySelectorAll('.tab-content').forEach(c => c.classList.toggle('active', c.id === 'tab-' + tab));
-    if (tab === 'query' && !queryNetwork) initQueryGraph();
+    // Query tab panels are created on-demand by runCypherQuery()
 }
 
 // ---- Theme ----
@@ -473,6 +778,7 @@ async function loadDiseases() {
 
 function selectDisease(key) {
     selectedDisease = key;
+    console.log('[CardioKB] Disease selected:', key);
     document.querySelectorAll('.disease-list li').forEach(li => {
         li.classList.toggle('active', li.dataset.key === key);
     });
@@ -498,20 +804,73 @@ function toggleAdmin() {
 }
 
 // ---- Explore Graph ----
+// Persistent DataSet instances — vis.js updates in-place via clear()/add()
+let exploreVisNodes = new vis.DataSet();
+let exploreVisEdges = new vis.DataSet();
+
+function ensureExploreNetwork() {
+    if (exploreNetwork) return;
+    const container = document.getElementById('exploreGraph');
+    exploreNetwork = new vis.Network(container,
+        { nodes: exploreVisNodes, edges: exploreVisEdges },
+        {
+            physics: {
+                enabled: true,
+                solver: 'forceAtlas2Based',
+                forceAtlas2Based: { gravitationalConstant: -40, centralGravity: 0.005, springLength: 100 },
+                stabilization: { enabled: false },
+            },
+            interaction: { hover: true, tooltipDelay: 100, dragNodes: true, dragView: true, zoomView: true },
+            edges: { smooth: { type: 'continuous' } },
+        }
+    );
+    exploreNetwork.on('click', function(params) {
+        console.log('[CardioKB] Click event:', params.nodes.length, 'nodes at', params.pointer.canvas);
+        if (params.nodes.length > 0) {
+            const nodeId = params.nodes[0];
+            const node = exploreVisNodes.get(nodeId);
+            if (node && node._data) showDetailPanel(node._data, exploreVisEdges, exploreVisNodes);
+        } else {
+            closeDetailPanel();
+        }
+    });
+}
+
 async function loadExploreGraph() {
     const btn = document.getElementById('exploreBtn');
     const loading = document.getElementById('exploreLoading');
+    const searchTerm = document.getElementById('exploreSearch').value.trim();
     btn.disabled = true;
+
+    // Clear previous data and state
+    currentGraphData = { nodes: [], edges: [] };
+    activeFilters.clear();
+    document.getElementById('filterChips').innerHTML = '';
+    closeDetailPanel();
+    exploreVisNodes.clear();
+    exploreVisEdges.clear();
+
+    const displayLabel = searchTerm || selectedDisease;
     loading.classList.add('visible');
-    loading.innerHTML = '<span class="spinner"></span> Loading graph...';
+    loading.textContent = '';
+    var sp = document.createElement('span');
+    sp.className = 'spinner';
+    loading.appendChild(sp);
+    loading.appendChild(document.createTextNode(' Loading graph for \u201c' + displayLabel + '\u201d\u2026'));
 
     const limit = document.getElementById('exploreLimit').value || 200;
+    const params = new URLSearchParams({ disease: selectedDisease, limit: limit });
+    if (searchTerm) params.set('search', searchTerm);
+    const url = '/api/graph?' + params.toString();
+    console.log('[CardioKB] Fetching graph:', url);
 
     try {
-        const res = await fetch('/api/graph?disease=' + selectedDisease + '&limit=' + limit);
+        const res = await fetch(url);
         if (!res.ok) throw new Error('API error ' + res.status);
         const data = await res.json();
         if (data.error) throw new Error(data.error);
+
+        console.log('[CardioKB] Graph loaded:', data.nodes.length, 'nodes,', data.edges.length, 'edges for', displayLabel);
 
         currentGraphData = data;
         buildFilterChips(data.nodes);
@@ -519,8 +878,9 @@ async function loadExploreGraph() {
         renderExploreGraph(data);
         loading.classList.remove('visible');
     } catch (e) {
-        loading.innerHTML = 'Error: ' + e.message;
+        loading.textContent = 'Error: ' + e.message;
         log('Explore error: ' + e.message, 'err');
+        console.error('[CardioKB] Explore error:', e);
     }
     btn.disabled = false;
 }
@@ -549,61 +909,105 @@ function toggleFilter(type, chip) {
     renderExploreGraph(currentGraphData);
 }
 
+let showDiscovery = true;
+
+function toggleDiscoveryLayer() {
+    showDiscovery = document.getElementById('discoveryToggle').checked;
+    if (currentGraphData.nodes.length) renderExploreGraph(currentGraphData);
+}
+
 function renderExploreGraph(data) {
-    const container = document.getElementById('exploreGraph');
     const hiddenTypes = activeFilters;
 
-    const filteredNodes = data.nodes.filter(n => !hiddenTypes.has(n.type));
+    const filteredNodes = data.nodes.filter(n => {
+        if (hiddenTypes.has(n.type)) return false;
+        if (!showDiscovery && n.layer === 'discovery') return false;
+        return true;
+    });
     const nodeIds = new Set(filteredNodes.map(n => n.id));
     const filteredEdges = data.edges.filter(e => nodeIds.has(e.from) && nodeIds.has(e.to));
 
-    const visNodes = new vis.DataSet(filteredNodes.map(n => ({
-        id: n.id, label: n.label, color: { background: nodeColor(n.type), border: nodeColor(n.type),
-            highlight: { background: '#fff', border: nodeColor(n.type) } },
-        font: { color: '#e2e8f0', size: 10 },
-        shape: n.type === 'Disease' ? 'diamond' : 'dot',
-        size: n.type === 'Disease' ? 18 : 10,
-        title: n.type + ': ' + n.label,
-        _data: n,
-    })));
-
-    const visEdges = new vis.DataSet(filteredEdges.map((e, i) => ({
-        id: 'e' + i, from: e.from, to: e.to, label: e.label,
-        font: { size: 7, color: '#64748b', strokeWidth: 0 },
-        color: { color: '#475569', highlight: '#38bdf8' }, arrows: 'to',
-        _data: e,
-    })));
-
-    if (exploreNetwork) exploreNetwork.destroy();
-
-    exploreNetwork = new vis.Network(container, { nodes: visNodes, edges: visEdges }, {
-        physics: { solver: 'forceAtlas2Based', forceAtlas2Based: { gravitationalConstant: -40, centralGravity: 0.005, springLength: 100 },
-            stabilization: { iterations: 150 } },
-        interaction: { hover: true, tooltipDelay: 100 },
-        edges: { smooth: { type: 'continuous' } },
+    const newNodes = filteredNodes.map(n => {
+        const isCore = n.layer !== 'discovery';
+        const baseSize = isCore ? 18 : 8;
+        const fontSize = isCore ? 12 : 8;
+        const bg = nodeColor(n.type);
+        return {
+            id: n.id, label: n.label,
+            color: { background: isCore ? bg : bg + '66', border: bg,
+                highlight: { background: '#fff', border: bg } },
+            borderWidth: isCore ? 2 : 1,
+            borderWidthSelected: 3,
+            shapeProperties: { borderDashes: isCore ? false : [4, 3] },
+            font: { color: '#e2e8f0', size: fontSize },
+            shape: n.type === 'Disease' ? 'diamond' : 'dot',
+            size: baseSize,
+            title: n.type + ': ' + n.label + ' [' + (isCore ? 'core' : 'discovery') + ']' +
+                (n.specificity != null ? ' | specificity: ' + n.specificity : ''),
+            _data: n,
+        };
     });
 
-    exploreNetwork.on('click', function(params) {
-        if (params.nodes.length > 0) {
-            const nodeId = params.nodes[0];
-            const node = visNodes.get(nodeId);
-            if (node && node._data) showDetailPanel(node._data, visEdges, visNodes);
-        } else {
-            closeDetailPanel();
-        }
+    const newEdges = filteredEdges.map((e, i) => {
+        const isCore = e.layer !== 'discovery';
+        return {
+            id: 'e' + i, from: e.from, to: e.to, label: e.label,
+            font: { size: 7, color: '#64748b', strokeWidth: 0 },
+            color: { color: isCore ? '#475569' : '#47556944', highlight: '#38bdf8' },
+            dashes: isCore ? false : [5, 5],
+            width: isCore ? 1 : 0.5,
+            arrows: 'to',
+            _data: e,
+        };
     });
+
+    // Swap data into persistent DataSets — no destroy/recreate
+    exploreVisNodes.clear();
+    exploreVisEdges.clear();
+    exploreVisNodes.add(newNodes);
+    exploreVisEdges.add(newEdges);
+
+    // Create network on first use, reuse thereafter
+    ensureExploreNetwork();
+
+    // Force vis.js to fully recalculate layout and spatial index
+    exploreNetwork.redraw();
+    exploreNetwork.fit();
 }
 
 function showDetailPanel(node, visEdges, visNodes) {
     const panel = document.getElementById('detailPanel');
     document.getElementById('detailTitle').textContent = node.label;
     const typeEl = document.getElementById('detailType');
-    typeEl.textContent = node.type;
+    const isCore = node.layer !== 'discovery';
+    const layerLabel = isCore ? 'Core' : 'Discovery';
+    typeEl.textContent = node.type + '  \u00B7  ' + layerLabel;
     typeEl.style.background = nodeColor(node.type) + '33';
     typeEl.style.color = nodeColor(node.type);
 
     const props = document.getElementById('detailProps');
     props.innerHTML = '';
+    // Show layer info first
+    const dtLayer = document.createElement('dt');
+    dtLayer.textContent = 'Layer';
+    const ddLayer = document.createElement('dd');
+    ddLayer.textContent = isCore ? 'Core (known association)' : 'Discovery (hypothesis-generating)';
+    ddLayer.style.color = isCore ? 'var(--accent)' : 'var(--yellow)';
+    props.appendChild(dtLayer);
+    props.appendChild(ddLayer);
+
+    if (node.specificity != null && node.type !== 'Disease') {
+        const dtSpec = document.createElement('dt');
+        dtSpec.textContent = 'Disease Specificity';
+        const ddSpec = document.createElement('dd');
+        const score = node.specificity;
+        const label = score >= 0.2 ? 'High' : score >= 0.02 ? 'Medium' : 'Low';
+        ddSpec.textContent = score + ' (' + label + ' \u2014 1 / diseases connected)';
+        ddSpec.style.color = score >= 0.2 ? 'var(--green)' : score >= 0.02 ? 'var(--yellow)' : 'var(--text-muted)';
+        props.appendChild(dtSpec);
+        props.appendChild(ddSpec);
+    }
+
     if (node.properties) {
         Object.entries(node.properties).forEach(([k, v]) => {
             if (!v) return;
@@ -685,12 +1089,14 @@ function exportGraph(format) {
 
 // ---- Query Tab ----
 const QUERY_TEMPLATES = [
-    { name: 'Disease Subgraph', query: "MATCH (d:Disease)-[r]-(n)\nWHERE toLower(d.commonName) CONTAINS 'heart failure'\nRETURN d, r, n LIMIT 100" },
-    { name: 'Gene Neighbors', query: "MATCH (g:Gene)-[r]-(n)\nWHERE g.symbol = 'APOE'\nRETURN g, r, n LIMIT 100" },
-    { name: 'Drug Targets for Disease', query: "MATCH (d:Disease)-[:ASSOCIATES_WITH]-(g:Gene)-[:TARGETS]-(dr:Drug)\nWHERE toLower(d.commonName) CONTAINS 'heart failure'\nRETURN d.commonName AS disease, g.symbol AS gene, dr.commonName AS drug LIMIT 50" },
-    { name: 'Clinical Trials', query: "MATCH (t:ClinicalTrial)-[r]-(n)\nWHERE toLower(t.title) CONTAINS 'cardiovascular'\nRETURN t.nctId AS trial, t.title AS title, type(r) AS rel, labels(n)[0] AS neighbor_type LIMIT 50" },
-    { name: 'Pathway Members', query: "MATCH (p:Pathway)-[:PARTICIPATES_IN]-(g:Gene)\nWHERE toLower(p.commonName) CONTAINS 'cardiac'\nRETURN p.commonName AS pathway, collect(g.symbol)[..20] AS genes LIMIT 20" },
-    { name: 'Top Connected Genes', query: "MATCH (g:Gene)-[r]-()\nRETURN g.symbol AS gene, count(r) AS connections\nORDER BY connections DESC LIMIT 25" },
+    { name: 'Disease Subgraph', desc: 'All entities directly connected to heart failure', query: "MATCH (d:Disease)-[r]-(n)\nWHERE toLower(d.commonName) CONTAINS 'heart failure'\nRETURN d, r, n LIMIT 100" },
+    { name: 'Gene Neighbors', desc: 'Every relationship for a specific gene (e.g. APOE)', query: "MATCH (g:Gene)-[r]-(n)\nWHERE g.symbol = 'APOE'\nRETURN g, r, n LIMIT 100" },
+    { name: 'Drug Targets', desc: 'Drugs targeting genes associated with heart failure', query: "MATCH (d:Disease)-[:ASSOCIATES_WITH]-(g:Gene)-[:TARGETS]-(dr:Drug)\nWHERE toLower(d.commonName) CONTAINS 'heart failure'\nRETURN d.commonName AS disease, g.symbol AS gene, dr.commonName AS drug LIMIT 50" },
+    { name: 'Clinical Trials', desc: 'Trials mentioning cardiovascular and their linked entities', query: "MATCH (t:ClinicalTrial)-[r]-(n)\nWHERE toLower(t.title) CONTAINS 'cardiovascular'\nRETURN t.nctId AS trial, t.title AS title, type(r) AS rel, labels(n)[0] AS neighbor_type LIMIT 50" },
+    { name: 'Pathway Genes', desc: 'Genes participating in cardiac-related pathways', query: "MATCH (p:Pathway)-[:PARTICIPATES_IN]-(g:Gene)\nWHERE toLower(p.commonName) CONTAINS 'cardiac'\nRETURN p.commonName AS pathway, collect(g.symbol)[..20] AS genes LIMIT 20" },
+    { name: 'Top Connected Genes', desc: 'Most connected genes in the entire graph', query: "MATCH (g:Gene)-[r]-()\nRETURN g.symbol AS gene, count(r) AS connections\nORDER BY connections DESC LIMIT 25" },
+    { name: 'Multi-Source Edges', desc: 'Gene-disease pairs confirmed by 3+ databases', query: "MATCH (g:Gene)-[r]-(d:Disease)\nWHERE toLower(d.commonName) CONTAINS 'atrial fibrillation'\nWITH g, d, collect(DISTINCT type(r)) AS rels, collect(DISTINCT r.source) AS sources\nWHERE size(sources) >= 3\nRETURN g.symbol AS gene, d.commonName AS disease, sources, rels LIMIT 30" },
+    { name: 'Drug-Side Effects', desc: 'Side effects reported for a specific drug', query: "MATCH (dr:Drug)-[:CAUSES]-(se:SideEffect)\nWHERE toLower(dr.commonName) CONTAINS 'metoprolol'\nRETURN dr.commonName AS drug, se.commonName AS side_effect LIMIT 50" },
 ];
 
 function initTemplates() {
@@ -699,13 +1105,209 @@ function initTemplates() {
         const btn = document.createElement('button');
         btn.className = 'template-btn';
         btn.textContent = t.name;
+        if (t.desc) btn.setAttribute('data-tip', t.desc);
         btn.onclick = () => { document.getElementById('cypherInput').value = t.query; };
         list.appendChild(btn);
     });
 }
 
-function initQueryGraph() {
-    // Just prepare the container; we'll create the network after a query runs
+let queryPanelCounter = 0;
+const queryPanelNetworks = {};  // panelId -> vis.Network instance
+
+function clearAllResults() {
+    const container = document.getElementById('queryResultsContainer');
+    // Destroy all vis networks
+    Object.values(queryPanelNetworks).forEach(net => { try { net.destroy(); } catch(e) {} });
+    Object.keys(queryPanelNetworks).forEach(k => delete queryPanelNetworks[k]);
+    container.innerHTML = '';
+    document.getElementById('clearAllBtn').style.display = 'none';
+}
+
+function removeQueryPanel(panelId) {
+    const panel = document.getElementById(panelId);
+    if (panel) panel.remove();
+    if (queryPanelNetworks[panelId]) {
+        try { queryPanelNetworks[panelId].destroy(); } catch(e) {}
+        delete queryPanelNetworks[panelId];
+    }
+    if (document.getElementById('queryResultsContainer').children.length === 0) {
+        document.getElementById('clearAllBtn').style.display = 'none';
+    }
+}
+
+function toggleQueryPanel(panelId) {
+    const body = document.getElementById(panelId + '-body');
+    const chevron = document.getElementById(panelId + '-chevron');
+    if (body.classList.toggle('collapsed')) {
+        chevron.classList.add('collapsed');
+    } else {
+        chevron.classList.remove('collapsed');
+        // Redraw graph if it exists (vis.js needs this after unhide)
+        if (queryPanelNetworks[panelId]) {
+            setTimeout(() => queryPanelNetworks[panelId].redraw(), 50);
+        }
+    }
+}
+
+function switchQrTab(panelId, tabName) {
+    const panel = document.getElementById(panelId);
+    panel.querySelectorAll('.qr-tab-btn').forEach(b => b.classList.toggle('active', b.dataset.qrtab === tabName));
+    panel.querySelectorAll('.qr-tab-content').forEach(c => c.classList.toggle('active', c.dataset.qrtab === tabName));
+    if (tabName === 'graph' && queryPanelNetworks[panelId]) {
+        setTimeout(() => { queryPanelNetworks[panelId].redraw(); queryPanelNetworks[panelId].fit(); }, 50);
+    }
+}
+
+function buildResultPanel(panelId, cypher, data, elapsed) {
+    const now = new Date();
+    const timeStr = now.toLocaleTimeString(undefined, { hour: '2-digit', minute: '2-digit', second: '2-digit' });
+    const hasTable = data.rows && data.rows.length > 0;
+    const hasGraph = data.nodes && data.nodes.length > 0;
+    const isError = !!data.error;
+
+    const panel = document.createElement('div');
+    panel.className = 'query-result-panel';
+    panel.id = panelId;
+
+    // Header
+    const header = document.createElement('div');
+    header.className = 'qr-header';
+    header.innerHTML =
+        '<span class="qr-chevron" id="' + panelId + '-chevron">&#9660;</span>' +
+        '<span class="qr-query" title="' + cypher.replace(/"/g, '&quot;') + '">' + escapeHtml(cypher) + '</span>' +
+        '<span class="qr-meta">' + timeStr + (elapsed ? ' &middot; ' + elapsed + 'ms' : '') + '</span>';
+    // Close button (added separately to avoid header click toggling)
+    const closeBtn = document.createElement('button');
+    closeBtn.className = 'qr-close';
+    closeBtn.innerHTML = '&times;';
+    closeBtn.title = 'Remove this result';
+    closeBtn.onclick = (e) => { e.stopPropagation(); removeQueryPanel(panelId); };
+    header.appendChild(closeBtn);
+    header.onclick = (e) => { if (e.target === closeBtn) return; toggleQueryPanel(panelId); };
+    panel.appendChild(header);
+
+    // Body
+    const body = document.createElement('div');
+    body.className = 'qr-body';
+    body.id = panelId + '-body';
+
+    if (isError) {
+        body.innerHTML = '<div class="qr-error">' + escapeHtml(data.error) + '</div>';
+    } else if (!hasTable && !hasGraph) {
+        body.innerHTML = '<div class="qr-empty">Query returned no results.</div>';
+    } else {
+        // Tab bar
+        const tabs = document.createElement('div');
+        tabs.className = 'qr-tabs';
+        if (hasTable) {
+            const tBtn = document.createElement('button');
+            tBtn.className = 'qr-tab-btn active';
+            tBtn.dataset.qrtab = 'table';
+            tBtn.textContent = 'Table (' + data.rows.length + ' rows)';
+            tBtn.onclick = () => switchQrTab(panelId, 'table');
+            tabs.appendChild(tBtn);
+        }
+        if (hasGraph) {
+            const gBtn = document.createElement('button');
+            gBtn.className = 'qr-tab-btn' + (hasTable ? '' : ' active');
+            gBtn.dataset.qrtab = 'graph';
+            gBtn.textContent = 'Graph (' + data.nodes.length + ' nodes, ' + (data.edges ? data.edges.length : 0) + ' edges)';
+            gBtn.onclick = () => switchQrTab(panelId, 'graph');
+            tabs.appendChild(gBtn);
+        }
+        body.appendChild(tabs);
+
+        // Table content
+        if (hasTable) {
+            const tableWrap = document.createElement('div');
+            tableWrap.className = 'results-table-wrap qr-tab-content active';
+            tableWrap.dataset.qrtab = 'table';
+            const table = document.createElement('table');
+            const thead = document.createElement('thead');
+            const headTr = document.createElement('tr');
+            data.columns.forEach(c => {
+                const th = document.createElement('th');
+                th.textContent = c;
+                headTr.appendChild(th);
+            });
+            thead.appendChild(headTr);
+            table.appendChild(thead);
+            const tbody = document.createElement('tbody');
+            data.rows.forEach(row => {
+                const tr = document.createElement('tr');
+                data.columns.forEach(c => {
+                    const td = document.createElement('td');
+                    const val = row[c];
+                    td.textContent = val === null ? '' : (typeof val === 'object' ? JSON.stringify(val) : val);
+                    tr.appendChild(td);
+                });
+                tbody.appendChild(tr);
+            });
+            table.appendChild(tbody);
+            tableWrap.appendChild(table);
+            body.appendChild(tableWrap);
+        }
+
+        // Graph content
+        if (hasGraph) {
+            const graphWrap = document.createElement('div');
+            graphWrap.className = 'qr-tab-content' + (hasTable ? '' : ' active');
+            graphWrap.dataset.qrtab = 'graph';
+            const graphDiv = document.createElement('div');
+            graphDiv.className = 'qr-graph';
+            graphDiv.id = panelId + '-graph';
+            graphWrap.appendChild(graphDiv);
+            body.appendChild(graphWrap);
+        }
+
+        // Stats footer
+        const stats = document.createElement('div');
+        stats.className = 'qr-stats';
+        const parts = [];
+        if (hasTable) parts.push(data.rows.length + ' rows');
+        if (hasGraph) parts.push(data.nodes.length + ' nodes, ' + (data.edges ? data.edges.length : 0) + ' edges');
+        if (elapsed) parts.push(elapsed + 'ms');
+        stats.textContent = parts.join(' \u00b7 ');
+        body.appendChild(stats);
+    }
+
+    panel.appendChild(body);
+    return panel;
+}
+
+function initQueryPanelGraph(panelId, data) {
+    const container = document.getElementById(panelId + '-graph');
+    if (!container || !data.nodes || data.nodes.length === 0) return;
+
+    const visNodes = new vis.DataSet(data.nodes.map(n => ({
+        id: n.id, label: n.label,
+        color: { background: nodeColor(n.type), border: nodeColor(n.type),
+            highlight: { background: '#fff', border: nodeColor(n.type) } },
+        font: { color: '#e2e8f0', size: 10 },
+        shape: n.type === 'Disease' ? 'diamond' : 'dot',
+        size: n.type === 'Disease' ? 18 : 10,
+        title: n.type + ': ' + n.label,
+    })));
+
+    const visEdges = new vis.DataSet((data.edges || []).map((e, i) => ({
+        id: panelId + 'e' + i, from: e.from, to: e.to, label: e.label,
+        font: { size: 7, color: '#64748b', strokeWidth: 0 },
+        color: { color: '#475569', highlight: '#38bdf8' }, arrows: 'to',
+    })));
+
+    const network = new vis.Network(container, { nodes: visNodes, edges: visEdges }, {
+        physics: { solver: 'forceAtlas2Based', forceAtlas2Based: { gravitationalConstant: -40, centralGravity: 0.005, springLength: 100 },
+            stabilization: { iterations: 150 } },
+        interaction: { hover: true, dragNodes: true, dragView: true, zoomView: true },
+        edges: { smooth: { type: 'continuous' } },
+    });
+    queryPanelNetworks[panelId] = network;
+}
+
+function escapeHtml(str) {
+    const div = document.createElement('div');
+    div.appendChild(document.createTextNode(str));
+    return div.innerHTML;
 }
 
 async function runCypherQuery() {
@@ -716,84 +1318,34 @@ async function runCypherQuery() {
 
     btn.disabled = true;
     btn.innerHTML = '<span class="spinner"></span> Running...';
-    document.getElementById('queryError').classList.remove('visible');
-    document.getElementById('queryTableWrap').style.display = 'none';
-    document.getElementById('queryGraph').style.display = 'none';
 
+    const t0 = performance.now();
+    let data;
     try {
         const res = await fetch('/api/query', {
             method: 'POST',
             headers: { 'Content-Type': 'application/json' },
             body: JSON.stringify({ query: cypher }),
         });
-        const data = await res.json();
-
-        if (data.error) {
-            document.getElementById('queryError').textContent = data.error;
-            document.getElementById('queryError').classList.add('visible');
-            btn.disabled = false;
-            btn.textContent = 'Run Query';
-            return;
-        }
-
-        // Render table
-        if (data.rows && data.rows.length > 0) {
-            const head = document.getElementById('queryTableHead');
-            const body = document.getElementById('queryTableBody');
-            head.innerHTML = '';
-            body.innerHTML = '';
-            data.columns.forEach(c => {
-                const th = document.createElement('th');
-                th.textContent = c;
-                head.appendChild(th);
-            });
-            data.rows.forEach(row => {
-                const tr = document.createElement('tr');
-                data.columns.forEach(c => {
-                    const td = document.createElement('td');
-                    const val = row[c];
-                    td.textContent = val === null ? '' : (typeof val === 'object' ? JSON.stringify(val) : val);
-                    tr.appendChild(td);
-                });
-                body.appendChild(tr);
-            });
-            document.getElementById('queryTableWrap').style.display = 'block';
-        }
-
-        // Render graph if nodes present
-        if (data.nodes && data.nodes.length > 0) {
-            const container = document.getElementById('queryGraph');
-            container.style.display = 'block';
-
-            const visNodes = new vis.DataSet(data.nodes.map(n => ({
-                id: n.id, label: n.label,
-                color: { background: nodeColor(n.type), border: nodeColor(n.type),
-                    highlight: { background: '#fff', border: nodeColor(n.type) } },
-                font: { color: '#e2e8f0', size: 10 },
-                shape: n.type === 'Disease' ? 'diamond' : 'dot',
-                size: n.type === 'Disease' ? 18 : 10,
-                title: n.type + ': ' + n.label,
-            })));
-
-            const visEdges = new vis.DataSet(data.edges.map((e, i) => ({
-                id: 'qe' + i, from: e.from, to: e.to, label: e.label,
-                font: { size: 7, color: '#64748b', strokeWidth: 0 },
-                color: { color: '#475569', highlight: '#38bdf8' }, arrows: 'to',
-            })));
-
-            if (queryNetwork) queryNetwork.destroy();
-            queryNetwork = new vis.Network(container, { nodes: visNodes, edges: visEdges }, {
-                physics: { solver: 'forceAtlas2Based', forceAtlas2Based: { gravitationalConstant: -40, centralGravity: 0.005, springLength: 100 },
-                    stabilization: { iterations: 150 } },
-                interaction: { hover: true },
-                edges: { smooth: { type: 'continuous' } },
-            });
-        }
+        data = await res.json();
     } catch (e) {
-        document.getElementById('queryError').textContent = 'Request failed: ' + e.message;
-        document.getElementById('queryError').classList.add('visible');
+        data = { error: 'Request failed: ' + e.message };
+    }
+    const elapsed = Math.round(performance.now() - t0);
+
+    queryPanelCounter++;
+    const panelId = 'qr-' + queryPanelCounter;
+    const panel = buildResultPanel(panelId, cypher, data, elapsed);
+
+    const container = document.getElementById('queryResultsContainer');
+    container.prepend(panel);  // newest at top
+
+    // Init graph visualization if applicable (after DOM insertion)
+    if (data.nodes && data.nodes.length > 0) {
+        initQueryPanelGraph(panelId, data);
     }
 
+    document.getElementById('clearAllBtn').style.display = 'inline-block';
     btn.disabled = false;
     btn.textContent = 'Run Query';
 }
@@ -1046,6 +1598,19 @@ async function loadGraphStats() {
 loadDiseases();
 loadGraphStats();
 initTemplates();
+renderNodeLegend();
+// Fetch specificity score timestamp
+fetch('/api/specificity-info').then(r => r.json()).then(data => {
+    const el = document.getElementById('specificityTimestamp');
+    if (el && data.timestamp) {
+        const d = new Date(data.timestamp);
+        const fmt = d.toLocaleDateString(undefined, { year: 'numeric', month: 'short', day: 'numeric' })
+            + ' at ' + d.toLocaleTimeString(undefined, { hour: '2-digit', minute: '2-digit' });
+        el.textContent = 'Scores are pre-computed each pipeline run and reflect the current state of the knowledge graph. Last computed: ' + fmt
+            + (data.totalNodes ? ' (' + data.totalNodes.toLocaleString() + ' nodes scored)' : '') + '.';
+    }
+}).catch(() => {});
+showWelcome();
 </script>
 </body>
 </html>

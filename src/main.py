@@ -164,9 +164,21 @@ class CardioKBPipeline:
                 logger.info("STEP 3: Neo4j Loading (SKIPPED)")
                 logger.info("=" * 80)
 
-            # Step 4: Generate stats and release notes
+            # Step 4: Compute specificity scores
+            if not skip_neo4j:
+                logger.info("=" * 80)
+                logger.info("STEP 4: Compute Disease-Specificity Scores")
+                logger.info("=" * 80)
+                from scripts.compute_specificity import compute_specificity
+                compute_specificity()
+            else:
+                logger.info("=" * 80)
+                logger.info("STEP 4: Specificity Scores (SKIPPED — no Neo4j)")
+                logger.info("=" * 80)
+
+            # Step 5: Generate stats and release notes
             logger.info("=" * 80)
-            logger.info("STEP 4: Release Notes Generation")
+            logger.info("STEP 5: Release Notes Generation")
             logger.info("=" * 80)
             self.generate_stats_and_notes()
 

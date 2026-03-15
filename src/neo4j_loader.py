@@ -386,9 +386,23 @@ class Neo4jLoader:
         # Handle NaN → None
         rows = rows.where(pd.notna(rows), None)
         # Coerce match columns to match Neo4j property types.
-        # float-that-are-ints → int, str-that-are-ints → int, keep other str as str.
-        for col in [subj_col, obj_col]:
-            if col in rows.columns:
+        # Sample existing nodes to detect whether the match property is stored as
+        # str or int, then coerce the DataFrame column to match.
+        for col, node_type, match_prop in [
+            (subj_col, subj_node_type, subj_match_prop),
+            (obj_col, obj_node_type, obj_match_prop),
+        ]:
+            if col not in rows.columns:
+                continue
+            neo4j_type = self._sample_property_type(node_type, match_prop)
+            if neo4j_type == 'str':
+                rows[col] = rows[col].apply(
+                    lambda x: str(int(x)) if isinstance(x, float) and x == int(x)
+                    else str(x) if x is not None
+                    else None
+                )
+            else:
+                # int or unknown — coerce numeric-looking values to int
                 rows[col] = rows[col].apply(
                     lambda x: (
                         int(x) if isinstance(x, float) and x == int(x)
@@ -437,6 +451,36 @@ class Neo4jLoader:
     # -------------------------------------------------------------------------
     # Helpers
     # -------------------------------------------------------------------------
+
+    def _sample_property_type(self, node_type: str, property_name: str) -> str:
+        """Sample one existing node to determine the Python type of a Neo4j property.
+
+        Returns 'str', 'int', or 'unknown'.
+        """
+        cache_key = (node_type, property_name)
+        if not hasattr(self, '_prop_type_cache'):
+            self._prop_type_cache = {}
+        if cache_key in self._prop_type_cache:
+            return self._prop_type_cache[cache_key]
+
+        result = 'unknown'
+        try:
+            with self.driver.session(database=self.database) as session:
+                rec = session.run(
+                    f"MATCH (n:{node_type}) WHERE n.{property_name} IS NOT NULL "
+                    f"RETURN n.{property_name} AS v LIMIT 1"
+                ).single()
+                if rec is not None:
+                    v = rec['v']
+                    if isinstance(v, str):
+                        result = 'str'
+                    elif isinstance(v, int):
+                        result = 'int'
+        except Exception:
+            pass
+
+        self._prop_type_cache[cache_key] = result
+        return result
 
     def _apply_filter(self, df: pd.DataFrame, parse_config: Dict) -> pd.DataFrame:
         """Apply filter_column/filter_value pre-filtering."""

@@ -50,13 +50,15 @@ def _build_parser_metadata() -> Dict:
                 'node_types': set(),
                 'source_filenames': [],
             }
-        source = cfg.get('source_label')
-        if source:
-            meta[parser]['source_labels'].add(source)
-        if cfg.get('data_type') == 'node':
-            nt = cfg.get('node_type')
-            if nt:
-                meta[parser]['node_types'].add(nt)
+        # Only count source_labels and node_types from non-skipped configs
+        if not cfg.get('skip'):
+            source = cfg.get('source_label')
+            if source:
+                meta[parser]['source_labels'].add(source)
+            if cfg.get('data_type') == 'node':
+                nt = cfg.get('node_type')
+                if nt:
+                    meta[parser]['node_types'].add(nt)
         sf = cfg.get('source_filename')
         if sf:
             meta[parser]['source_filenames'].append(sf)

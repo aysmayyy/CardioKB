@@ -508,7 +508,26 @@ def run_agent(disease_name: str, on_progress=None) -> dict:
             'partial': partial,
         })
 
-        # Step 6: Cache result with aliases
+        # Step 6: Cache result with aliases (only if we got actual data)
+        if gda_count == 0:
+            # Delete any stale cache entry so the user can retry later
+            from src.utils import delete_disease_cache
+            delete_disease_cache(canonical_key)
+            logger.warning(f"DisGeNET returned 0 results for '{canonical_name}' — not caching")
+            emit('status', {
+                'phase': 'error',
+                'message': f"DisGeNET returned 0 results for '{canonical_name}'. "
+                           f"No data was cached. Try a different disease name or check DisGeNET availability.",
+            })
+            return {
+                "disease_key": canonical_key,
+                "canonical_name": canonical_name,
+                "user_input": user_input,
+                "cached": False,
+                "error": f"DisGeNET returned 0 results for '{canonical_name}'",
+                "subgraph_stats": {},
+            }
+
         emit('status', {'phase': 'caching', 'message': 'Caching results...'})
         aliases = [user_input.lower()]
         if canonical_name.lower() != user_input.lower():

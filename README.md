@@ -1,6 +1,6 @@
 # CardioKB: Cardiovascular Disease Knowledge Base
 
-A biomedical knowledge graph pipeline that integrates 25 data sources (25 parsers) into a Neo4j graph for cardiovascular disease research, feature selection, and precision medicine. Adapted from the AlzKB (Alzheimer's Knowledge Base) architecture with additional custom parsers and Hetionet component integrations. Includes an AI-powered disease agent that can build knowledge subgraphs for any disease on demand via Claude API + DisGeNET.
+A biomedical knowledge graph pipeline that integrates 25 data sources (25 parsers) into a Neo4j graph for cardiovascular disease research, feature selection, and precision medicine. Adapted from the AlzKB (Alzheimer's Knowledge Base) architecture with additional custom parsers and Hetionet component integrations. Includes an AI-powered disease agent that can build knowledge subgraphs for any disease on demand via Claude API + DisGeNET. Features a web dashboard with interactive graph exploration (specificity-ranked subgraphs) and a Neo4j Browser-style multi-panel query interface.
 
 **Graph stats:** 363,104 nodes | 23,889,685 relationships | 17 node types | 33 relationship types
 
@@ -101,8 +101,9 @@ Cardio-KB/
 │           ├── bgee_parser.py
 │           └── hetionet_precomputed_parser.py
 ├── interface/
-│   └── index.html              # Web dashboard (served by src/api.py)
+│   └── index.html              # Web dashboard (Explore graph + Query multi-panel UI)
 ├── scripts/
+│   ├── compute_specificity.py  # Pre-compute disease-specificity scores (auto-runs in pipeline)
 │   ├── verify_graph.py         # Neo4j graph verification and validation
 │   ├── run_aopdb.py            # Standalone AOP-DB parser + Neo4j loader
 │   └── run_drugbank.py         # Standalone DrugBank parser + Neo4j loader
@@ -224,6 +225,25 @@ DisGeNETParser(data_dir="data/raw", disease_filter="ontology/diseases/cancer.txt
 ```
 
 When `disease_filter` is omitted, DisGeNET defaults to `ontology/disease_filter.txt` (→ CVD). OMIMParser reads the symlink to tag rows with `is_cvd` but loads all data regardless. All other 22 parsers are fully disease-agnostic.
+
+## Web Interface
+
+Launch with `bash run.sh` or `python src/api.py --port 5050`. Features:
+
+- **Explore tab** — Interactive vis.js graph visualization of disease subgraphs
+  - Nodes ranked by disease-specificity score (`1 / number of diseases connected`)
+  - Core layer (direct associations) + Discovery layer (2-hop hypothesis generation)
+  - Search by disease name, gene, or drug; filter by node type
+  - Click nodes for detail panel with properties, neighbors, and specificity score
+  - Export subgraph as CSV or JSON
+- **Query tab** — Neo4j Browser-style multi-panel Cypher interface
+  - Each query creates a new result panel (newest at top)
+  - Panels show results as both table and graph visualization with tab switching
+  - Collapse/expand, close individual panels, or Clear All
+  - Query templates for common patterns; Ctrl+Enter shortcut
+- **Dashboard** — Live graph stats (nodes, relationships, types, sources)
+- **Help system** — Welcome tour, tooltips on all UI elements, methodology info, node type legend
+- **Admin** — Parser status, pipeline health check with SSE streaming
 
 ## Architecture Notes
 

@@ -34,13 +34,14 @@
 - `data/raw/` — Downloaded source data
 - `data/processed/` — Exported TSV files for Neo4j loading
 - `data/output/` — Release notes and build artifacts
-- `interface/index.html` — Web dashboard (served by `src/api.py`)
+- `interface/index.html` — Web dashboard with Explore (graph viz) and Query (Neo4j Browser-style multi-panel) tabs
 - `src/agent.py` — AI-powered disease KB builder (Claude API + DisGeNET, with SSE progress callbacks)
 - `src/api.py` — Flask backend with SSE streaming for web interface and agent builds
 - `src/orchestrator.py` — Pipeline health check with dynamic Neo4j-based parser status detection
 - `run.sh` — Launches Flask + opens browser
 - `reports/` — Generated pipeline health reports
 - `docs/` — Documentation, research plan, specific aims
+- `scripts/compute_specificity.py` — Pre-computes `specificityScore` node property in Neo4j (auto-runs at end of pipeline)
 - `scripts/` — Data processing and verification scripts
 - `tests/` — pytest test files
 - `models/` — Future ML models
