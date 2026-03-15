@@ -67,7 +67,7 @@ Cardio-KB/
 │   ├── main.py                 # Pipeline orchestrator (--skip-neo4j, --skip-download)
 │   ├── neo4j_loader.py         # Cypher-based Neo4j batch loader
 │   ├── ontology_configs.py     # 56 ontology configs for Neo4j schema mapping
-│   ├── utils.py                # Disease filtering utilities (reads ontology/disease_filter.txt)
+│   ├── utils.py                # Disease filtering utilities (load_disease_terms, etc.)
 │   └── parsers/
 │       ├── base_parser.py      # Abstract base class for all parsers
 │       ├── clinicaltrials_parser.py
@@ -104,7 +104,13 @@ Cardio-KB/
 │   ├── processed/              # Exported TSV files per source (gitignored)
 │   └── output/                 # Release notes and build artifacts (gitignored)
 ├── ontology/
-│   └── disease_filter.txt         # Disease-scope config (edit to retarget KB)
+│   ├── disease_filter.txt         # Symlink → diseases/cvd.txt (active filter)
+│   └── diseases/                  # Disease term files (one per disease area)
+│       ├── cvd.txt                # Cardiovascular disease (90 terms, default)
+│       ├── alzheimers.txt         # Alzheimer's & dementias (35 terms)
+│       ├── cancer.txt             # Cancer / oncology (70 terms)
+│       ├── asthma.txt             # Asthma & respiratory (48 terms)
+│       └── diabetes.txt           # Diabetes & metabolic (52 terms)
 ├── docs/                       # Research plan, specific aims, data inventory xlsx
 ├── examples/                   # Example scripts for individual parsers
 ├── notebooks/                  # Jupyter notebooks for exploration
@@ -190,13 +196,34 @@ The script also reads from `NEO4J_URI`, `NEO4J_USERNAME`, and `NEO4J_PASSWORD` e
 
 ## Disease Scope & Filtering
 
-Disease-scoped queries are controlled by a single config file: **`ontology/disease_filter.txt`** (one term per line, `#` for comments). Currently configured with 90 cardiovascular disease terms covering arrhythmias, coronary artery disease, heart failure, cardiomyopathies, hypertension, stroke, valvular heart disease, peripheral artery disease, and lipid disorders.
+Disease term files live in **`ontology/diseases/`** (one term per line, `#` for comments):
 
-Only two parsers filter by this file:
+| File | Terms | Disease Area |
+|------|-------|-------------|
+| `cvd.txt` | 90 | Cardiovascular disease (default) |
+| `alzheimers.txt` | 35 | Alzheimer's & related dementias |
+| `cancer.txt` | 70 | Cancer / oncology |
+| `asthma.txt` | 48 | Asthma & respiratory diseases |
+| `diabetes.txt` | 52 | Diabetes & metabolic diseases |
+
+**`ontology/disease_filter.txt`** is a symlink to `diseases/cvd.txt`. Code that reads it directly (OMIM `is_cvd` tagging, Neo4j CVD node tagging) works without changes.
+
+Two parsers accept a `disease_filter` parameter to target any disease area:
 - **ClinicalTrialsParser** — builds API condition queries from the term list
 - **DisGeNETParser** — searches the API for diseases matching the term list
 
-OMIMParser also reads the file but only to tag rows with `is_cvd` — it loads all data regardless. All other 21 parsers are fully disease-agnostic and load their complete datasets. **To build a knowledge base for a different disease area**, edit `ontology/disease_filter.txt` with your terms and re-run those two parsers — no code changes required.
+```python
+# Target a different disease area per-parser:
+ClinicalTrialsParser(data_dir="data/raw", disease_filter="ontology/diseases/alzheimers.txt")
+DisGeNETParser(data_dir="data/raw", disease_filter="ontology/diseases/cancer.txt")
+```
+
+When `disease_filter` is omitted, both default to `ontology/disease_filter.txt` (→ CVD). OMIMParser reads the symlink to tag rows with `is_cvd` but loads all data regardless. All other 21 parsers are fully disease-agnostic. **To switch disease area globally**, re-point the symlink and re-run those two parsers — no code changes required:
+
+```bash
+ln -sf diseases/alzheimers.txt ontology/disease_filter.txt
+python src/main.py --skip-download
+```
 
 ## Architecture Notes
 

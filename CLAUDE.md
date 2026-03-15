@@ -28,8 +28,9 @@
 - `src/ontology_configs.py` — 56 ontology configs mapping source data to Neo4j schema
 - `src/neo4j_loader.py` — Cypher-based Neo4j batch loader (auto-sets `r.source` from config `source_label`)
 - `src/id_mapping.py` — Cross-database ID remapping (PubTator MeSH→DOID, GWAS→DOID)
-- `src/utils.py` — Shared utilities (disease filtering via `ontology/disease_filter.txt`)
-- `ontology/disease_filter.txt` — Single config file for disease-scope filtering (90 CVD terms by default)
+- `src/utils.py` — Shared utilities (`load_disease_terms()`, `get_disease_search_pattern()`)
+- `ontology/disease_filter.txt` — Symlink to `diseases/cvd.txt` (active disease filter)
+- `ontology/diseases/` — Disease term files: `cvd.txt` (90), `alzheimers.txt` (35), `cancer.txt` (70), `asthma.txt` (48), `diabetes.txt` (52)
 - `data/raw/` — Downloaded source data
 - `data/processed/` — Exported TSV files for Neo4j loading
 - `data/output/` — Release notes and build artifacts
@@ -78,11 +79,23 @@ python src/main.py --skip-download --skip-neo4j
 - Every relationship ontology config must include a `source_label` field
 
 ## Disease Scope & Filtering
-All disease-scoped queries are controlled by `ontology/disease_filter.txt` (one term per line, comments with `#`). Currently configured with 90 CVD terms covering arrhythmias, coronary artery disease, heart failure, cardiomyopathies, hypertension, stroke, valvular heart disease. Only two parsers filter by this file:
-- **ClinicalTrialsParser** — builds API condition queries from the term list
-- **DisGeNETParser** — searches the API for diseases matching the term list
+Disease term files live in `ontology/diseases/` (one term per line, `#` for comments). Available filters:
 
-OMIMParser also reads the file but only to tag rows with `is_cvd` — it loads all data regardless. All other parsers are fully disease-agnostic. To build a KB for a different disease area, edit `ontology/disease_filter.txt` and re-run those two parsers.
+| File | Terms | Disease Area |
+|------|-------|-------------|
+| `cvd.txt` | 90 | Cardiovascular disease (default) |
+| `alzheimers.txt` | 35 | Alzheimer's & related dementias |
+| `cancer.txt` | 70 | Cancer / oncology |
+| `asthma.txt` | 48 | Asthma & respiratory diseases |
+| `diabetes.txt` | 52 | Diabetes & metabolic diseases |
+
+`ontology/disease_filter.txt` is a symlink to `diseases/cvd.txt` — existing code that reads it directly (e.g., OMIM `is_cvd` tagging, `main.py` CVD node tagging) works without changes.
+
+Two parsers accept a `disease_filter` parameter to target any disease area:
+- **ClinicalTrialsParser(disease_filter="ontology/diseases/alzheimers.txt")** — builds API condition queries from the term list
+- **DisGeNETParser(disease_filter="ontology/diseases/alzheimers.txt")** — searches the API for diseases matching the term list
+
+When `disease_filter` is omitted (default), both parsers use `ontology/disease_filter.txt` (→ CVD). OMIMParser reads the symlink to tag rows with `is_cvd` but loads all data regardless. All other parsers are fully disease-agnostic. To switch disease area globally, re-point the symlink: `ln -sf diseases/alzheimers.txt ontology/disease_filter.txt`.
 
 ## Data Sources — 24 Sources (24 Parsers)
 
