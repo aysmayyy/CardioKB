@@ -11,7 +11,7 @@
 12-week rotation project (Jan–Apr 2026) building a cardiovascular disease knowledge base. The base KB structure is adapted from AlzKB (Alzheimer's Knowledge Base) files. BaseAgent (agentic AI tool) handles building the core knowledge graph from databases similar to AlzKB. On top of that, additional data sources are integrated via custom parsers. The final KB is stored in a Neo4j knowledge graph for CVD research, feature selection, and precision medicine.
 
 ## Current Graph Stats
-- **362,551 nodes** | **23,880,296 relationships** | **16 node types** | **31 relationship types**
+- **362,551 nodes** | **23,881,162 relationships** | **16 node types** | **33 relationship types**
 - All relationships carry a `source` property identifying the originating database (e.g., `source: "DisGeNET"`)
 
 ## Tech Stack
@@ -25,7 +25,7 @@
 - `src/main.py` — Pipeline orchestrator (supports `--skip-neo4j`, `--skip-download`)
 - `src/parsers/` — 24 data source parsers (inherit from `BaseParser` in `base_parser.py`)
   - `src/parsers/hetionet_components/` — 14 Hetionet-derived component parsers
-- `src/ontology_configs.py` — 56 ontology configs mapping source data to Neo4j schema
+- `src/ontology_configs.py` — 58 ontology configs mapping source data to Neo4j schema
 - `src/neo4j_loader.py` — Cypher-based Neo4j batch loader (auto-sets `r.source` from config `source_label`)
 - `src/id_mapping.py` — Cross-database ID remapping (PubTator MeSH→DOID, GWAS→DOID)
 - `src/utils.py` — Shared utilities (`load_disease_terms()`, `get_disease_search_pattern()`)
@@ -142,7 +142,7 @@ When `disease_filter` is omitted (default), both parsers use `ontology/disease_f
 | AOPDBParser | AOP-DB adverse outcome pathways | `MYSQL_USERNAME`, `MYSQL_PASSWORD` (or SQL dump) | Loaded via SQL dump |
 
 ## Ontology Configs
-56 entries in `src/ontology_configs.py` mapping parsed TSV files to Neo4j node/relationship types, properties, and loading strategies. Each relationship config includes a `source_label` field that the loader sets as `r.source` on every relationship.
+58 entries in `src/ontology_configs.py` mapping parsed TSV files to Neo4j node/relationship types, properties, and loading strategies. Each relationship config includes a `source_label` field that the loader sets as `r.source` on every relationship.
 
 ## Relationship Source Labels
 All relationships carry a `source` property. Current labels (18 with edges in graph):

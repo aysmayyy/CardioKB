@@ -29,6 +29,8 @@ from src.ontology_configs import (
     CT_TRIAL_TESTS_INTERVENTION,
     CLINPGX_CLINICAL_ANNOTATIONS,
     CLINPGX_CLINICAL_ANNOTATIONS_PHARMA_CLASS,
+    CLINPGX_DRUG_LABEL_ANNOTATES_GENE,
+    CLINPGX_DRUG_LABEL_DESCRIBES_DRUG,
 )
 from src.neo4j_loader import Neo4jLoader
 from src.parsers import (
@@ -287,6 +289,56 @@ class CardioKBPipeline:
                 cpgx[CLINPGX_CLINICAL_ANNOTATIONS] = drug_df
             if pharma_df is not None:
                 cpgx[CLINPGX_CLINICAL_ANNOTATIONS_PHARMA_CLASS] = pharma_df
+
+        # Post-processing: create DrugLabel edge DataFrames from drug_labels
+        if 'clinpgx' in parsed_data:
+            cpgx = parsed_data['clinpgx']
+            if 'drug_labels' in cpgx:
+                dl = cpgx['drug_labels']
+                if 'label_id' in dl.columns and 'gene' in dl.columns:
+                    # Explode semicolon-delimited genes
+                    gene_edges = dl[['label_id', 'gene']].copy()
+                    gene_edges['gene'] = gene_edges['gene'].astype(str)
+                    gene_edges = gene_edges.assign(
+                        gene=gene_edges['gene'].str.split('; ')
+                    ).explode('gene')
+                    gene_edges['gene'] = gene_edges['gene'].str.strip()
+                    gene_edges = gene_edges[
+                        gene_edges['gene'].notna()
+                        & (gene_edges['gene'] != '')
+                        & (gene_edges['gene'] != 'nan')
+                    ]
+                    gene_edges = gene_edges.drop_duplicates()
+                    cpgx[CLINPGX_DRUG_LABEL_ANNOTATES_GENE] = gene_edges
+                    logger.info(f"Created {len(gene_edges)} drug_label→gene edges")
+
+                if 'label_id' in dl.columns and 'drug' in dl.columns:
+                    # Explode semicolon-delimited drugs and case-match to DrugBank
+                    drug_edges = dl[['label_id', 'drug']].copy()
+                    drug_edges['drug'] = drug_edges['drug'].astype(str)
+                    drug_edges = drug_edges.assign(
+                        drug=drug_edges['drug'].str.split('; ')
+                    ).explode('drug')
+                    drug_edges['drug'] = drug_edges['drug'].str.strip()
+                    drug_edges = drug_edges[
+                        drug_edges['drug'].notna()
+                        & (drug_edges['drug'] != '')
+                        & (drug_edges['drug'] != 'nan')
+                    ]
+                    # Build case-insensitive DrugBank lookup for name matching
+                    db_lookup = {}
+                    if 'drugbank' in parsed_data and 'drugs' in parsed_data['drugbank']:
+                        db_drugs = parsed_data['drugbank']['drugs']
+                        if 'drug_name' in db_drugs.columns:
+                            for name in db_drugs['drug_name'].dropna():
+                                db_lookup[name.lower()] = name
+                    if db_lookup:
+                        drug_edges['drug'] = drug_edges['drug'].apply(
+                            lambda x: db_lookup.get(x.lower(), x)
+                        )
+                    drug_edges = drug_edges.drop_duplicates()
+                    cpgx[CLINPGX_DRUG_LABEL_DESCRIBES_DRUG] = drug_edges
+                    logger.info(f"Created {len(drug_edges)} drug_label→drug edges")
 
         # Post-processing: prepare OMIM gene-disease edges
         if 'omim' in parsed_data:

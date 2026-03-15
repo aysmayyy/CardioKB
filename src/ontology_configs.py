@@ -43,6 +43,8 @@ CLINPGX_DRUG_LABELS = 'drug_labels'
 CLINPGX_VARIANTS = 'variants'
 CLINPGX_VARIANT_IN_GENE = 'variant_in_gene'
 CLINPGX_CLINICAL_ANNOTATIONS_PHARMA_CLASS = 'clinical_annotations_pharma_class'
+CLINPGX_DRUG_LABEL_ANNOTATES_GENE = 'drug_label_annotates_gene'
+CLINPGX_DRUG_LABEL_DESCRIBES_DRUG = 'drug_label_describes_drug'
 
 # OMIM
 OMIM_GENE_PHENOTYPE_MAP = 'gene_phenotype_map'
@@ -527,6 +529,40 @@ ONTOLOGY_CONFIGS = {
             'subject_match_property': 'geneSymbol',
             'object_node_type': 'PharmacologicClass',
             'object_column_name': 'pharma_class',
+            'object_match_property': 'commonName',
+        },
+        'merge': False,
+        'skip': False,
+    },
+    f'clinpgx.{CLINPGX_DRUG_LABEL_ANNOTATES_GENE}': {
+        'data_type': 'relationship',
+        'relationship_type': 'drugLabelAnnotatesGene',
+        'source_label': 'ClinPGx',
+        'source_filename': f'{CLINPGX_DRUG_LABEL_ANNOTATES_GENE}.tsv',
+        'parse_config': {
+            'headers': True,
+            'subject_node_type': 'DrugLabel',
+            'subject_column_name': 'label_id',
+            'subject_match_property': 'labelId',
+            'object_node_type': 'Gene',
+            'object_column_name': 'gene',
+            'object_match_property': 'geneSymbol',
+        },
+        'merge': False,
+        'skip': False,
+    },
+    f'clinpgx.{CLINPGX_DRUG_LABEL_DESCRIBES_DRUG}': {
+        'data_type': 'relationship',
+        'relationship_type': 'drugLabelDescribesDrug',
+        'source_label': 'ClinPGx',
+        'source_filename': f'{CLINPGX_DRUG_LABEL_DESCRIBES_DRUG}.tsv',
+        'parse_config': {
+            'headers': True,
+            'subject_node_type': 'DrugLabel',
+            'subject_column_name': 'label_id',
+            'subject_match_property': 'labelId',
+            'object_node_type': 'Drug',
+            'object_column_name': 'drug',
             'object_match_property': 'commonName',
         },
         'merge': False,
