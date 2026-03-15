@@ -848,6 +848,9 @@ class CardioKBPipeline:
                     parsed_data, ONTOLOGY_CONFIGS, self.processed_dir
                 )
 
+                # Post-load: validate relationship ID match rates and fix gaps
+                self._validate_and_fix_mappings(parsed_data, loader)
+
                 # Verify
                 verification = loader.verify_graph()
                 logger.info("Neo4j Graph Verification:")
@@ -871,6 +874,163 @@ class CardioKBPipeline:
             logger.error(f"Neo4j loading failed: {e}")
             import traceback
             logger.error(traceback.format_exc())
+
+    def _validate_and_fix_mappings(self, parsed_data: Dict, loader):
+        """
+        Validate relationship ID match rates after initial Neo4j load.
+
+        For each relationship ontology config, checks what percentage of
+        subject/object IDs in the TSV actually matched existing nodes.
+        If match rate < 70%, attempts to create missing nodes (for the
+        object side) and re-loads those relationships.
+
+        Saves results to reports/id_mapping_report.json for the web UI.
+        """
+        import json as _json
+        from src.id_mapping import IDMapper
+
+        logger.info("=" * 60)
+        logger.info("ID Mapping Validation & Gap Repair")
+        logger.info("=" * 60)
+
+        mapper = IDMapper(driver=loader.driver)
+        fixes_applied = []
+        report_entries = []
+
+        for config_key, config in ONTOLOGY_CONFIGS.items():
+            if config.get('data_type') != 'relationship' or config.get('skip'):
+                continue
+
+            source_name = config_key.split('.', 1)[0]
+            pc = config['parse_config']
+
+            # Locate TSV file
+            tsv_path = self.processed_dir / source_name / config['source_filename']
+            if not tsv_path.exists():
+                continue
+
+            entry = {
+                'config': config_key,
+                'relationship_type': config.get('relationship_type', ''),
+                'source_label': config.get('source_label', ''),
+                'sides': [],
+            }
+
+            # Validate both subject and object sides
+            for side, col, node_type, match_prop in [
+                ('subject', pc['subject_column_name'], pc['subject_node_type'],
+                 pc['subject_match_property']),
+                ('object', pc['object_column_name'], pc['object_node_type'],
+                 pc['object_match_property']),
+            ]:
+                report = mapper.validate_mapping(
+                    str(tsv_path), col, node_type, match_prop,
+                    sample_size=5,
+                )
+                if 'error' in report:
+                    continue
+
+                rate = report['match_rate']
+                total = report['total_unique']
+                matched = report['matched']
+                unmatched = report['unmatched']
+
+                # Log report for every config
+                if rate >= 0.95:
+                    level = 'OK'
+                elif rate >= 0.70:
+                    level = 'WARN'
+                else:
+                    level = 'LOW'
+
+                logger.info(
+                    f"  [{level}] {config_key} {side}: "
+                    f"{matched}/{total} {node_type}.{match_prop} "
+                    f"({rate*100:.1f}% match)"
+                )
+
+                side_entry = {
+                    'side': side,
+                    'node_type': node_type,
+                    'property': match_prop,
+                    'column': col,
+                    'total': total,
+                    'matched': matched,
+                    'unmatched': unmatched,
+                    'match_rate': round(rate * 100, 1),
+                    'unmatched_edges': report['unmatched_edges_total'],
+                    'sample_unmatched': dict(
+                        list(report.get('sample_unmatched', {}).items())[:5]
+                    ),
+                    'nodes_created': 0,
+                    'edges_recovered': 0,
+                }
+
+                # Only attempt fixes for low match rates on the object side
+                if rate < 0.70 and side == 'object':
+                    logger.info(
+                        f"    -> Attempting suggest_mapping for {col} -> {node_type}"
+                    )
+                    suggestions = mapper.suggest_mapping(str(tsv_path), col, node_type)
+                    best = suggestions[0] if suggestions else None
+
+                    if best and best['match_rate'] > rate:
+                        logger.info(
+                            f"    -> Better mapping found: {best['property']} "
+                            f"({best['match_rate']*100:.1f}% vs {rate*100:.1f}%)"
+                        )
+
+                    # Create missing nodes for unmatched IDs with enough edges
+                    if unmatched > 0 and report['unmatched_edges_total'] > 0:
+                        result = mapper.create_missing_nodes(
+                            str(tsv_path), col, node_type, match_prop,
+                            min_edges=10,
+                        )
+                        if 'error' not in result and result.get('created', 0) > 0:
+                            logger.info(
+                                f"    -> Created {result['created']} new {node_type} nodes "
+                                f"(recovering {result['total_edges_recovered']} edges)"
+                            )
+                            side_entry['nodes_created'] = result['created']
+                            side_entry['edges_recovered'] = result['total_edges_recovered']
+                            fixes_applied.append({
+                                'config_key': config_key,
+                                'nodes_created': result['created'],
+                                'edges_recovered': result['total_edges_recovered'],
+                            })
+
+                entry['sides'].append(side_entry)
+
+            if entry['sides']:
+                report_entries.append(entry)
+
+        # Re-load relationship configs that got fixes
+        if fixes_applied:
+            logger.info(f"  Re-loading {len(fixes_applied)} relationship configs after gap repair...")
+            fixed_keys = {f['config_key'] for f in fixes_applied}
+            fixed_configs = {k: v for k, v in ONTOLOGY_CONFIGS.items() if k in fixed_keys}
+            loader.load_from_configs(parsed_data, fixed_configs, self.processed_dir)
+
+            total_nodes = sum(f['nodes_created'] for f in fixes_applied)
+            total_edges = sum(f['edges_recovered'] for f in fixes_applied)
+            logger.info(f"  Gap repair complete: {total_nodes} nodes created, ~{total_edges} edges recovered")
+        else:
+            logger.info("  No gap repairs needed.")
+
+        # Save report to JSON for web UI
+        report_dir = self.base_dir / 'reports'
+        report_dir.mkdir(exist_ok=True)
+        report_path = report_dir / 'id_mapping_report.json'
+        report_data = {
+            'generated_at': datetime.now().isoformat(),
+            'entries': report_entries,
+            'fixes_applied': fixes_applied,
+        }
+        with open(report_path, 'w') as f:
+            _json.dump(report_data, f, indent=2)
+        logger.info(f"  Saved ID mapping report to {report_path}")
+
+        logger.info("=" * 60)
 
     def _tag_cvd_diseases(self, loader):
         """

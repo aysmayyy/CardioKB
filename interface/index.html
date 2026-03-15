@@ -331,6 +331,7 @@ th { color: var(--text-muted); font-weight: 600; text-transform: uppercase; font
     position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.65);
     z-index: 1000; display: flex; align-items: center; justify-content: center;
 }
+.hidden { display: none !important; }
 .modal-overlay.hidden { display: none; }
 .modal {
     background: var(--surface); border: 1px solid var(--border); border-radius: 12px;
@@ -545,6 +546,25 @@ th { color: var(--text-muted); font-weight: 600; text-transform: uppercase; font
                     <div class="chart-container"><canvas id="relChart"></canvas></div>
                 </section>
             </div>
+            <section style="margin-top:1rem;margin-bottom:0" id="idMappingSection" class="hidden">
+                <h2>ID Mapping Report</h2>
+                <p style="font-size:0.8rem;color:var(--text-muted);margin-bottom:0.75rem">
+                    Validates that TSV relationship IDs match existing Neo4j nodes. Low match rates mean edges are being dropped.
+                </p>
+                <div id="idMappingPanel" style="max-height:420px;overflow-y:auto">
+                    <table>
+                        <thead><tr>
+                            <th>Source</th><th>Relationship</th>
+                            <th>Side</th><th>Node.Property</th>
+                            <th style="text-align:right">Matched</th>
+                            <th style="text-align:right">Total</th>
+                            <th style="text-align:right">Rate</th>
+                            <th style="text-align:right">Lost Edges</th>
+                        </tr></thead>
+                        <tbody id="idMappingBody"></tbody>
+                    </table>
+                </div>
+            </section>
             <section style="margin-top:1rem;margin-bottom:0">
                 <h2>Pipeline Log</h2>
                 <div class="log-panel" id="logPanel">
@@ -1090,13 +1110,13 @@ function exportGraph(format) {
 // ---- Query Tab ----
 const QUERY_TEMPLATES = [
     { name: 'Disease Subgraph', desc: 'All entities directly connected to heart failure', query: "MATCH (d:Disease)-[r]-(n)\nWHERE toLower(d.commonName) CONTAINS 'heart failure'\nRETURN d, r, n LIMIT 100" },
-    { name: 'Gene Neighbors', desc: 'Every relationship for a specific gene (e.g. APOE)', query: "MATCH (g:Gene)-[r]-(n)\nWHERE g.symbol = 'APOE'\nRETURN g, r, n LIMIT 100" },
-    { name: 'Drug Targets', desc: 'Drugs targeting genes associated with heart failure', query: "MATCH (d:Disease)-[:ASSOCIATES_WITH]-(g:Gene)-[:TARGETS]-(dr:Drug)\nWHERE toLower(d.commonName) CONTAINS 'heart failure'\nRETURN d.commonName AS disease, g.symbol AS gene, dr.commonName AS drug LIMIT 50" },
-    { name: 'Clinical Trials', desc: 'Trials mentioning cardiovascular and their linked entities', query: "MATCH (t:ClinicalTrial)-[r]-(n)\nWHERE toLower(t.title) CONTAINS 'cardiovascular'\nRETURN t.nctId AS trial, t.title AS title, type(r) AS rel, labels(n)[0] AS neighbor_type LIMIT 50" },
-    { name: 'Pathway Genes', desc: 'Genes participating in cardiac-related pathways', query: "MATCH (p:Pathway)-[:PARTICIPATES_IN]-(g:Gene)\nWHERE toLower(p.commonName) CONTAINS 'cardiac'\nRETURN p.commonName AS pathway, collect(g.symbol)[..20] AS genes LIMIT 20" },
-    { name: 'Top Connected Genes', desc: 'Most connected genes in the entire graph', query: "MATCH (g:Gene)-[r]-()\nRETURN g.symbol AS gene, count(r) AS connections\nORDER BY connections DESC LIMIT 25" },
-    { name: 'Multi-Source Edges', desc: 'Gene-disease pairs confirmed by 3+ databases', query: "MATCH (g:Gene)-[r]-(d:Disease)\nWHERE toLower(d.commonName) CONTAINS 'atrial fibrillation'\nWITH g, d, collect(DISTINCT type(r)) AS rels, collect(DISTINCT r.source) AS sources\nWHERE size(sources) >= 3\nRETURN g.symbol AS gene, d.commonName AS disease, sources, rels LIMIT 30" },
-    { name: 'Drug-Side Effects', desc: 'Side effects reported for a specific drug', query: "MATCH (dr:Drug)-[:CAUSES]-(se:SideEffect)\nWHERE toLower(dr.commonName) CONTAINS 'metoprolol'\nRETURN dr.commonName AS drug, se.commonName AS side_effect LIMIT 50" },
+    { name: 'Gene Neighbors', desc: 'Every relationship for a specific gene (e.g. APOE)', query: "MATCH (g:Gene)-[r]-(n)\nWHERE g.geneSymbol = 'APOE'\nRETURN g, r, n LIMIT 100" },
+    { name: 'Drug Targets', desc: 'Drugs binding genes associated with heart failure', query: "MATCH (d:Disease)<-[:geneAssociatesWithDisease]-(g:Gene)<-[:chemicalBindsGene]-(dr:Drug)\nWHERE toLower(d.commonName) CONTAINS 'heart failure'\nRETURN d.commonName AS disease, g.geneSymbol AS gene, dr.commonName AS drug LIMIT 50" },
+    { name: 'Clinical Trials', desc: 'Trials studying cardiovascular conditions', query: "MATCH (t:ClinicalTrial)-[:STUDIES_CONDITION]->(d:Disease)\nWHERE toLower(d.commonName) CONTAINS 'cardiovascular'\nOPTIONAL MATCH (t)-[:TESTS_INTERVENTION]->(dr:Drug)\nRETURN t.trialId AS trial, d.commonName AS condition, dr.commonName AS drug LIMIT 50" },
+    { name: 'Pathway Genes', desc: 'Genes participating in cardiac-related pathways', query: "MATCH (g:Gene)-[:geneInPathway]->(p:Pathway)\nWHERE toLower(p.pathwayName) CONTAINS 'cardiac'\nRETURN p.pathwayName AS pathway, collect(g.geneSymbol)[..20] AS genes LIMIT 20" },
+    { name: 'Top Connected Genes', desc: 'Most connected genes in the entire graph', query: "MATCH (g:Gene)-[r]-()\nRETURN g.geneSymbol AS gene, count(r) AS connections\nORDER BY connections DESC LIMIT 25" },
+    { name: 'Gene Expression', desc: 'Where are heart failure genes most expressed?', query: "MATCH (g:Gene)-[:geneAssociatesWithDisease]->(d:Disease)\nWHERE toLower(d.commonName) = 'congestive heart failure'\nWITH g, d LIMIT 20\nMATCH (g)-[r:geneExpressedInBodyPart]->(b:BodyPart)\nRETURN g.geneSymbol AS gene, b.commonName AS tissue, r.confidence AS confidence\nORDER BY r.confidence DESC LIMIT 50" },
+    { name: 'Drug-Side Effects', desc: 'Side effects reported for a specific drug', query: "MATCH (dr:Drug)-[:compoundCausesSideEffect]->(se:SideEffect)\nWHERE toLower(dr.commonName) CONTAINS 'metoprolol'\nRETURN dr.commonName AS drug, se.commonName AS side_effect LIMIT 50" },
 ];
 
 function initTemplates() {
@@ -1390,7 +1410,7 @@ function runHealthCheck() {
         log('Disease filter: ' + d.disease + ' (' + d.term_count + ' terms)', 'info');
     });
     eventSource.addEventListener('error', e => { if (e.data) log(JSON.parse(e.data).message, 'err'); });
-    eventSource.addEventListener('done', () => { log('Health check complete.', 'ok'); finish(); });
+    eventSource.addEventListener('done', () => { log('Health check complete.', 'ok'); loadIdMappingReport(); finish(); });
     eventSource.onerror = () => { finish(); };
 
     function finish() {
@@ -1510,6 +1530,83 @@ function renderHealth(checks) {
         div.textContent = c.message;
         panel.appendChild(div);
     });
+}
+
+// ---- ID Mapping Report ----
+async function loadIdMappingReport() {
+    const section = document.getElementById('idMappingSection');
+    const body = document.getElementById('idMappingBody');
+    body.innerHTML = '<tr><td colspan="8" style="text-align:center;color:var(--text-muted)"><span class="spinner"></span> Loading ID mapping report...</td></tr>';
+    section.classList.remove('hidden');
+
+    try {
+        const res = await fetch('/api/id-mapping-report');
+        const data = await res.json();
+        if (data.error) {
+            body.innerHTML = '<tr><td colspan="8" style="color:var(--text-muted)">' + data.error + '</td></tr>';
+            return;
+        }
+
+        const entries = data.entries || [];
+        const fixes = data.fixes_applied || [];
+        const genAt = data.generated_at ? new Date(data.generated_at).toLocaleString() : '';
+
+        body.innerHTML = '';
+        let okCount = 0, warnCount = 0, lowCount = 0;
+
+        entries.forEach(entry => {
+            entry.sides.forEach(s => {
+                const tr = document.createElement('tr');
+                let rateCls, rateLabel;
+                if (s.match_rate >= 95) {
+                    rateCls = 'badge-success'; rateLabel = 'OK'; okCount++;
+                } else if (s.match_rate >= 70) {
+                    rateCls = 'badge-skipped'; rateLabel = 'WARN'; warnCount++;
+                } else {
+                    rateCls = 'badge-failed'; rateLabel = 'LOW'; lowCount++;
+                }
+
+                let tooltip = '';
+                const samples = Object.entries(s.sample_unmatched || {});
+                if (samples.length > 0) {
+                    tooltip = ' data-tip="Top unmatched: ' +
+                        samples.map(([id, n]) => id + ' (' + n + ')').join(', ') + '"';
+                }
+
+                // Show nodes_created badge if gap repair created nodes
+                let fixBadge = '';
+                if (s.nodes_created > 0) {
+                    fixBadge = ' <span class="badge badge-success" style="font-size:0.7rem">+' +
+                        s.nodes_created + ' nodes</span>';
+                }
+
+                tr.innerHTML =
+                    '<td>' + entry.source_label + '</td>' +
+                    '<td style="font-size:0.78rem">' + entry.relationship_type + '</td>' +
+                    '<td>' + s.side + '</td>' +
+                    '<td style="font-size:0.78rem">' + s.node_type + '.' + s.property + '</td>' +
+                    '<td style="text-align:right">' + s.matched.toLocaleString() + '</td>' +
+                    '<td style="text-align:right">' + s.total.toLocaleString() + '</td>' +
+                    '<td style="text-align:right"' + tooltip + '><span class="badge ' + rateCls + '">' +
+                        s.match_rate.toFixed(1) + '% ' + rateLabel + '</span>' + fixBadge + '</td>' +
+                    '<td style="text-align:right;color:' +
+                        (s.unmatched_edges > 0 ? 'var(--red)' : 'var(--text-muted)') + '">' +
+                        (s.unmatched_edges > 0 ? s.unmatched_edges.toLocaleString() : '-') + '</td>';
+                body.appendChild(tr);
+            });
+        });
+
+        let summary = 'ID Mapping: ' + okCount + ' OK, ' + warnCount + ' WARN, ' + lowCount + ' LOW';
+        if (fixes.length > 0) {
+            const totalFixed = fixes.reduce((a, f) => a + f.nodes_created, 0);
+            summary += ' (' + totalFixed + ' nodes auto-created)';
+        }
+        if (genAt) summary += ' [report from ' + genAt + ']';
+        log(summary, lowCount > 0 ? 'err' : 'ok');
+    } catch (e) {
+        body.innerHTML = '<tr><td colspan="8" style="color:var(--red)">Failed: ' + e.message + '</td></tr>';
+        log('ID Mapping report failed: ' + e.message, 'err');
+    }
 }
 
 // ---- Charts ----

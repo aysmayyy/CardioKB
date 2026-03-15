@@ -102,6 +102,7 @@ HETIO_GENE_REGULATES = 'gene_regulates'
 JENSENLAB_GENE_DISEASE = 'gene_disease_associations'
 
 # Jensen Lab TISSUES
+JENSEN_TISSUES_TISSUE_NODES = 'tissue_nodes'
 JENSEN_TISSUES_GENE_TISSUE = 'gene_tissue_associations'
 
 # HPO (Human Phenotype Ontology)
@@ -1178,6 +1179,25 @@ ONTOLOGY_CONFIGS = {
             },
         },
         'merge': False,
+        'skip': False,
+    },
+
+    # =========================================================================
+    # Jensen Lab TISSUES — BTO Tissue Nodes (new BodyParts not in Uberon)
+    # =========================================================================
+    f'jensentissues.{JENSEN_TISSUES_TISSUE_NODES}': {
+        'data_type': 'node',
+        'node_type': 'BodyPart',
+        'source_filename': f'{JENSEN_TISSUES_TISSUE_NODES}.tsv',
+        'parse_config': {
+            'headers': True,
+            'iri_column_name': 'xrefUberon',
+            'data_property_map': {
+                'xrefUberon': 'xrefUberon',
+                'commonName': 'commonName',
+            },
+        },
+        'merge': True,
         'skip': False,
     },
 

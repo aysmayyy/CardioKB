@@ -23,6 +23,27 @@ Create `src/parsers/<name>_parser.py` (or `src/parsers/hetionet_components/` for
 Add entries in `src/ontology_configs.py` for every DataFrame your parser produces. Node configs need `data_type`, `node_type`, `source_filename`, `parse_config` (with `iri_column_name` and `data_property_map`), and `merge: True` if the node type already exists. Relationship configs additionally require:
 - `relationship_type`, `source_label` (sets `r.source` — mandatory), and `parse_config` with `subject_node_type`, `subject_column_name`, `subject_match_property`, `object_node_type`, `object_column_name`, `object_match_property`.
 
+**ID matching is validated automatically.** After Neo4j loads, the pipeline runs `_validate_and_fix_mappings()` which checks every relationship config's subject and object ID columns against existing Neo4j nodes. You just need to specify the correct `subject_match_property` / `object_match_property` in your ontology config — the pipeline handles the rest:
+
+- Match rate >= 95%: logged as `[OK]`
+- Match rate 70-95%: logged as `[WARN]` — review if IDs need remapping
+- Match rate < 70%: logged as `[LOW]` — the pipeline automatically calls `suggest_mapping()` to find better ID properties, then `create_missing_nodes()` for unmatched IDs with >= 10 edges, and re-loads those relationships
+
+To pre-check ID match rates before running the full pipeline:
+```bash
+# Validate a specific column against Neo4j
+python src/id_mapping.py --validate data/processed/<source>/<file>.tsv \
+  --id-col <column> --node <NodeLabel> --prop <nodeProperty>
+
+# Find best ID property for a column
+python src/id_mapping.py --suggest data/processed/<source>/<file>.tsv \
+  --id-col <column> --node <NodeLabel>
+
+# Preview what nodes would be created for unmatched IDs
+python src/id_mapping.py --create-missing data/processed/<source>/<file>.tsv \
+  --id-col <column> --node <NodeLabel> --id-prop <property> --min-edges 10 --dry-run
+```
+
 ## Step 4: Register in main.py
 
 Import and instantiate the parser in `_get_parsers()` in `src/main.py`. For credential-gated sources, read env vars and skip with a warning if missing.
@@ -37,4 +58,4 @@ Run the full pipeline (`python src/main.py`) and verify with Cypher:
 ```cypher
 MATCH ()-[r]->() WHERE r.source = 'SourceName' RETURN type(r), count(r);
 ```
-Then update `CLAUDE.md` and `README.md` with the new source and updated graph stats.
+Check the ID Mapping Validation report in the pipeline logs — any `[LOW]` entries need attention. Then update `CLAUDE.md` and `README.md` with the new source and updated graph stats.

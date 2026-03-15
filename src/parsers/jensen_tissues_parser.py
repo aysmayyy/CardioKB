@@ -112,6 +112,9 @@ class JensenTissuesParser(BaseParser):
             subset=['gene_symbol', 'tissue_id'], keep='first',
         )
 
+        # Lowercase tissue names to match BodyPart.commonName (Uberon convention)
+        combined['tissue_name'] = combined['tissue_name'].str.lower()
+
         combined['source_database'] = 'Jensen TISSUES'
 
         logger.info(
@@ -120,7 +123,36 @@ class JensenTissuesParser(BaseParser):
             f"{combined['tissue_id'].nunique()} tissues)"
         )
 
+        # Build tissue node table for BTO tissues not already in Uberon.
+        # Filter out tissues whose lowercased name already exists as a
+        # BodyPart.commonName from Uberon to avoid duplicate MATCH hits.
+        all_tissues = (
+            combined[['tissue_id', 'tissue_name']]
+            .drop_duplicates(subset=['tissue_id'])
+            .rename(columns={'tissue_id': 'xrefUberon',
+                             'tissue_name': 'commonName'})
+        )
+        uberon_path = self.source_dir.parent.parent / 'processed' / 'uberon' / 'anatomy_nodes.tsv'
+        if uberon_path.exists():
+            uberon_names = set(
+                pd.read_csv(uberon_path, sep='\t', usecols=['name'])['name']
+                .str.lower().dropna()
+            )
+            tissue_nodes = all_tissues[~all_tissues['commonName'].isin(uberon_names)]
+            logger.info(
+                f"Jensen TISSUES: {len(all_tissues)} total tissues, "
+                f"{len(all_tissues) - len(tissue_nodes)} already in Uberon, "
+                f"{len(tissue_nodes)} new BTO nodes to create"
+            )
+        else:
+            tissue_nodes = all_tissues
+            logger.warning(
+                f"Uberon TSV not found at {uberon_path}; "
+                f"creating all {len(tissue_nodes)} BTO tissue nodes"
+            )
+
         return {
+            'tissue_nodes': tissue_nodes,
             'gene_tissue_associations': combined,
         }
 

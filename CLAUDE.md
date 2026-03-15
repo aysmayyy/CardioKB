@@ -11,7 +11,7 @@
 12-week rotation project (Jan–Apr 2026) building a cardiovascular disease knowledge base. The base KB structure is adapted from AlzKB (Alzheimer's Knowledge Base) files. BaseAgent (agentic AI tool) handles building the core knowledge graph from databases similar to AlzKB. On top of that, additional data sources are integrated via custom parsers. The final KB is stored in a Neo4j knowledge graph for CVD research, feature selection, and precision medicine.
 
 ## Current Graph Stats
-- **363,104 nodes** | **23,889,685 relationships** | **17 node types** | **33 relationship types**
+- **371,934 nodes** | **24,877,691 relationships** | **18 node types** | **34 relationship types**
 - All relationships carry a `source` property identifying the originating database (e.g., `source: "DisGeNET"`)
 
 ## Tech Stack
@@ -25,9 +25,9 @@
 - `src/main.py` — Pipeline orchestrator (supports `--skip-neo4j`, `--skip-download`)
 - `src/parsers/` — 25 data source parsers (inherit from `BaseParser` in `base_parser.py`)
   - `src/parsers/hetionet_components/` — 14 Hetionet-derived component parsers
-- `src/ontology_configs.py` — 58 ontology configs mapping source data to Neo4j schema
+- `src/ontology_configs.py` — 59 ontology configs mapping source data to Neo4j schema
 - `src/neo4j_loader.py` — Cypher-based Neo4j batch loader (auto-sets `r.source` from config `source_label`)
-- `src/id_mapping.py` — Cross-database ID remapping (PubTator MeSH→DOID, GWAS→DOID)
+- `src/id_mapping.py` — Central ID mapping module: cross-database ID remapping (PubTator MeSH→DOID, GWAS→DOID), validate_mapping(), suggest_mapping(), create_missing_nodes(), CLI interface
 - `src/utils.py` — Shared utilities (`load_disease_terms()`, `get_disease_search_pattern()`)
 - `ontology/disease_filter.txt` — Symlink to `diseases/cvd.txt` (active disease filter)
 - `ontology/diseases/` — Disease term files: `cvd.txt` (90), `alzheimers.txt` (35), `cancer.txt` (70), `asthma.txt` (48), `diabetes.txt` (52)
@@ -39,7 +39,7 @@
 - `src/api.py` — Flask backend with SSE streaming for web interface and agent builds
 - `src/orchestrator.py` — Pipeline health check with dynamic Neo4j-based parser status detection
 - `run.sh` — Launches Flask + opens browser
-- `reports/` — Generated pipeline health reports
+- `reports/` — Generated pipeline health reports and cached ID mapping validation report (`id_mapping_report.json`)
 - `docs/` — Documentation, research plan, specific aims
 - `scripts/compute_specificity.py` — Pre-computes `specificityScore` node property in Neo4j (auto-runs at end of pipeline)
 - `scripts/` — Data processing and verification scripts
@@ -134,7 +134,7 @@ When `disease_filter` is omitted, DisGeNET defaults to `ontology/disease_filter.
 | 21 | Bgee (gene expression) | BgeeParser | Public FTP | Working (6,609,112 expression edges) |
 | 22 | Hetionet (precomputed edges) | HetionetPrecomputedParser | Public | Working (613,470 precomputed edges) |
 | 23 | Jensen Lab DISEASES | JensenLabParser | Public | Working (gene-disease associations) |
-| 24 | Jensen Lab TISSUES | JensenTissuesParser | Public | Working (gene-tissue expression) |
+| 24 | Jensen Lab TISSUES | JensenTissuesParser | Public | Working (988,006 gene-tissue edges, 262 BTO tissue nodes created) |
 | 25 | HPO (Human Phenotype Ontology) | HPOParser | Public | Working (19,389 phenotypes, 270,272 gene-phenotype edges) |
 
 ### Credential-Gated (requires env vars, currently loaded)
@@ -146,9 +146,9 @@ When `disease_filter` is omitted, DisGeNET defaults to `ontology/disease_filter.
 | AOPDBParser | AOP-DB adverse outcome pathways | `MYSQL_USERNAME`, `MYSQL_PASSWORD` (or SQL dump) | Loaded via SQL dump |
 
 ## Ontology Configs
-58 entries in `src/ontology_configs.py` mapping parsed TSV files to Neo4j node/relationship types, properties, and loading strategies. Each relationship config includes a `source_label` field that the loader sets as `r.source` on every relationship.
+59 entries in `src/ontology_configs.py` mapping parsed TSV files to Neo4j node/relationship types, properties, and loading strategies. Each relationship config includes a `source_label` field that the loader sets as `r.source` on every relationship.
 
 ## Relationship Source Labels
-All relationships carry a `source` property. Current labels (18 with edges in graph):
-`AOP-DB`, `Bgee`, `BindingDB`, `CTD`, `ClinPGx`, `ClinicalTrials.gov`, `DisGeNET`, `DoRothEA`, `DrugCentral`, `Gene Ontology`, `GWAS Catalog`, `Hetionet`, `HPO`, `Jensen DISEASES`, `LINCS L1000`, `MEDLINE`, `PubTator`, `SIDER`
-Note: OMIM and Disease Ontology contribute nodes only (no relationship `source` labels).
+All relationships carry a `source` property. Current labels (20 with edges in graph):
+`AOP-DB`, `Bgee`, `BindingDB`, `CTD`, `ClinPGx`, `ClinicalTrials.gov`, `DisGeNET`, `DoRothEA`, `DrugCentral`, `Gene Ontology`, `GWAS Catalog`, `Hetionet`, `HPO`, `Jensen DISEASES`, `Jensen TISSUES`, `LINCS L1000`, `MEDLINE`, `OMIM`, `PubTator`, `SIDER`
+Note: Disease Ontology contributes nodes only (no relationship `source` label).

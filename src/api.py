@@ -494,6 +494,27 @@ def specificity_info():
         driver.close()
 
 
+@app.route('/api/id-mapping-report')
+def id_mapping_report():
+    """Return cached ID mapping validation report.
+
+    The report is generated during pipeline runs and saved to
+    reports/id_mapping_report.json. This endpoint reads and returns it.
+    """
+    report_path = Path(_project_root) / 'reports' / 'id_mapping_report.json'
+    if not report_path.exists():
+        return jsonify({
+            'error': 'No report available. Run the pipeline first to generate the ID mapping report.',
+        }), 404
+
+    try:
+        with open(report_path) as f:
+            data = json.load(f)
+        return jsonify(data)
+    except Exception as e:
+        return jsonify({'error': str(e)}), 500
+
+
 @app.route('/api/query', methods=['POST'])
 def run_query():
     """Execute a Cypher query and return results as JSON.

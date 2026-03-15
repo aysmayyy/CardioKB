@@ -1,0 +1,1539 @@
+{
+  "generated_at": "2026-03-15T11:26:41.178312",
+  "entries": [
+    {
+      "config": "aopdb.gene_pathway_relationships",
+      "relationship_type": "geneInPathway",
+      "source_label": "AOP-DB",
+      "sides": [
+        {
+          "side": "subject",
+          "node_type": "Gene",
+          "property": "xrefNcbiGene",
+          "column": "entrez",
+          "total": 13065,
+          "matched": 12980,
+          "unmatched": 85,
+          "match_rate": 99.3,
+          "unmatched_edges": 366,
+          "sample_unmatched": {
+            "7006": 29,
+            "956531": 16,
+            "956535": 15,
+            "956536": 15,
+            "155030": 15
+          },
+          "nodes_created": 0,
+          "edges_recovered": 0
+        },
+        {
+          "side": "object",
+          "node_type": "Pathway",
+          "property": "pathwayName",
+          "column": "path_name",
+          "total": 4646,
+          "matched": 4646,
+          "unmatched": 0,
+          "match_rate": 100.0,
+          "unmatched_edges": 0,
+          "sample_unmatched": {},
+          "nodes_created": 0,
+          "edges_recovered": 0
+        }
+      ]
+    },
+    {
+      "config": "disgenet.gene_disease_associations",
+      "relationship_type": "geneAssociatesWithDisease",
+      "source_label": "DisGeNET",
+      "sides": [
+        {
+          "side": "subject",
+          "node_type": "Gene",
+          "property": "geneSymbol",
+          "column": "geneSymbol",
+          "total": 138,
+          "matched": 138,
+          "unmatched": 0,
+          "match_rate": 100.0,
+          "unmatched_edges": 0,
+          "sample_unmatched": {},
+          "nodes_created": 0,
+          "edges_recovered": 0
+        },
+        {
+          "side": "object",
+          "node_type": "Disease",
+          "property": "xrefUmlsCUI",
+          "column": "diseaseId",
+          "total": 24,
+          "matched": 10,
+          "unmatched": 14,
+          "match_rate": 41.7,
+          "unmatched_edges": 137,
+          "sample_unmatched": {
+            "C0002395": 100,
+            "C1863052": 15,
+            "C0276496": 4,
+            "C1847200": 3,
+            "C4282179": 3
+          },
+          "nodes_created": 0,
+          "edges_recovered": 0
+        }
+      ]
+    },
+    {
+      "config": "omim.gene_disease",
+      "relationship_type": "geneAssociatesWithDisease",
+      "source_label": "OMIM",
+      "sides": [
+        {
+          "side": "subject",
+          "node_type": "Gene",
+          "property": "geneSymbol",
+          "column": "primary_gene_symbol",
+          "total": 5081,
+          "matched": 5018,
+          "unmatched": 63,
+          "match_rate": 98.8,
+          "unmatched_edges": 83,
+          "sample_unmatched": {
+            "PLEC1": 5,
+            "CYP2C": 4,
+            "SHOXY": 3,
+            "LU": 3,
+            "SLC22A1L": 3
+          },
+          "nodes_created": 0,
+          "edges_recovered": 0
+        },
+        {
+          "side": "object",
+          "node_type": "Disease",
+          "property": "xrefOMIM",
+          "column": "phenotype_mim",
+          "total": 6908,
+          "matched": 6908,
+          "unmatched": 0,
+          "match_rate": 100.0,
+          "unmatched_edges": 0,
+          "sample_unmatched": {},
+          "nodes_created": 0,
+          "edges_recovered": 0
+        }
+      ]
+    },
+    {
+      "config": "dorothea.tf_gene_interactions",
+      "relationship_type": "transcriptionFactorInteractsWithGene",
+      "source_label": "DoRothEA",
+      "sides": [
+        {
+          "side": "subject",
+          "node_type": "TranscriptionFactor",
+          "property": "TF",
+          "column": "tf_symbol",
+          "total": 367,
+          "matched": 367,
+          "unmatched": 0,
+          "match_rate": 100.0,
+          "unmatched_edges": 0,
+          "sample_unmatched": {},
+          "nodes_created": 0,
+          "edges_recovered": 0
+        },
+        {
+          "side": "object",
+          "node_type": "Gene",
+          "property": "geneSymbol",
+          "column": "target_gene",
+          "total": 5151,
+          "matched": 5140,
+          "unmatched": 11,
+          "match_rate": 99.8,
+          "unmatched_edges": 25,
+          "sample_unmatched": {
+            "GTDC1": 12,
+            "TMEM241": 4,
+            "EFCAB2": 1,
+            "FAM210A": 1,
+            "FAM210B": 1
+          },
+          "nodes_created": 0,
+          "edges_recovered": 0
+        }
+      ]
+    },
+    {
+      "config": "clinicaltrials.trial_studies_condition",
+      "relationship_type": "STUDIES_CONDITION",
+      "source_label": "ClinicalTrials.gov",
+      "sides": [
+        {
+          "side": "subject",
+          "node_type": "ClinicalTrial",
+          "property": "trialId",
+          "column": "trial_id",
+          "total": 8323,
+          "matched": 8323,
+          "unmatched": 0,
+          "match_rate": 100.0,
+          "unmatched_edges": 0,
+          "sample_unmatched": {},
+          "nodes_created": 0,
+          "edges_recovered": 0
+        },
+        {
+          "side": "object",
+          "node_type": "Disease",
+          "property": "commonName",
+          "column": "condition",
+          "total": 5975,
+          "matched": 812,
+          "unmatched": 5163,
+          "match_rate": 13.6,
+          "unmatched_edges": 12368,
+          "sample_unmatched": {
+            "Heart Failure": 643,
+            "Cardiovascular Diseases": 246,
+            "Peripheral Arterial Disease": 141,
+            "Dyslipidemia": 132,
+            "Heart Diseases": 123
+          },
+          "nodes_created": 0,
+          "edges_recovered": 0
+        }
+      ]
+    },
+    {
+      "config": "clinicaltrials.trial_tests_intervention",
+      "relationship_type": "TESTS_INTERVENTION",
+      "source_label": "ClinicalTrials.gov",
+      "sides": [
+        {
+          "side": "subject",
+          "node_type": "ClinicalTrial",
+          "property": "trialId",
+          "column": "trial_id",
+          "total": 7095,
+          "matched": 7095,
+          "unmatched": 0,
+          "match_rate": 100.0,
+          "unmatched_edges": 0,
+          "sample_unmatched": {},
+          "nodes_created": 0,
+          "edges_recovered": 0
+        },
+        {
+          "side": "object",
+          "node_type": "Drug",
+          "property": "commonName",
+          "column": "intervention_name",
+          "total": 9276,
+          "matched": 534,
+          "unmatched": 8742,
+          "match_rate": 5.8,
+          "unmatched_edges": 10678,
+          "sample_unmatched": {
+            "Placebo": 548,
+            "placebo": 62,
+            "Aspirin": 27,
+            "Echocardiography": 23,
+            "Control": 23
+          },
+          "nodes_created": 0,
+          "edges_recovered": 0
+        }
+      ]
+    },
+    {
+      "config": "clinpgx.clinical_annotations",
+      "relationship_type": "AFFECTS_RESPONSE_TO",
+      "source_label": "ClinPGx",
+      "sides": [
+        {
+          "side": "subject",
+          "node_type": "Gene",
+          "property": "geneSymbol",
+          "column": "gene",
+          "total": 153,
+          "matched": 148,
+          "unmatched": 5,
+          "match_rate": 96.7,
+          "unmatched_edges": 8,
+          "sample_unmatched": {
+            "JMJD8; WDR24": 2,
+            "KRTAP10-4; TSPEAR": 2,
+            "NTRK1; PEAR1": 2,
+            "N6AMT1": 1,
+            "PRSS53; VKORC1": 1
+          },
+          "nodes_created": 0,
+          "edges_recovered": 0
+        },
+        {
+          "side": "object",
+          "node_type": "Drug",
+          "property": "commonName",
+          "column": "drug",
+          "total": 38,
+          "matched": 38,
+          "unmatched": 0,
+          "match_rate": 100.0,
+          "unmatched_edges": 0,
+          "sample_unmatched": {},
+          "nodes_created": 0,
+          "edges_recovered": 0
+        }
+      ]
+    },
+    {
+      "config": "clinpgx.variant_in_gene",
+      "relationship_type": "VARIANT_IN",
+      "source_label": "ClinPGx",
+      "sides": [
+        {
+          "side": "subject",
+          "node_type": "Variant",
+          "property": "variantId",
+          "column": "variant_id",
+          "total": 1060,
+          "matched": 1060,
+          "unmatched": 0,
+          "match_rate": 100.0,
+          "unmatched_edges": 0,
+          "sample_unmatched": {},
+          "nodes_created": 0,
+          "edges_recovered": 0
+        },
+        {
+          "side": "object",
+          "node_type": "Gene",
+          "property": "geneSymbol",
+          "column": "gene",
+          "total": 25,
+          "matched": 17,
+          "unmatched": 8,
+          "match_rate": 68.0,
+          "unmatched_edges": 41,
+          "sample_unmatched": {
+            "CYP3A5; ZSCAN25": 26,
+            "PRSS53; VKORC1": 8,
+            "CLCN6; MTHFR": 2,
+            "BCKDK; PRSS53; VKORC1": 1,
+            "BCKDK; VKORC1": 1
+          },
+          "nodes_created": 0,
+          "edges_recovered": 0
+        }
+      ]
+    },
+    {
+      "config": "clinpgx.clinical_annotations_pharma_class",
+      "relationship_type": "AFFECTS_RESPONSE_TO",
+      "source_label": "ClinPGx",
+      "sides": [
+        {
+          "side": "subject",
+          "node_type": "Gene",
+          "property": "geneSymbol",
+          "column": "gene",
+          "total": 10,
+          "matched": 10,
+          "unmatched": 0,
+          "match_rate": 100.0,
+          "unmatched_edges": 0,
+          "sample_unmatched": {},
+          "nodes_created": 0,
+          "edges_recovered": 0
+        },
+        {
+          "side": "object",
+          "node_type": "PharmacologicClass",
+          "property": "commonName",
+          "column": "pharma_class",
+          "total": 8,
+          "matched": 8,
+          "unmatched": 0,
+          "match_rate": 100.0,
+          "unmatched_edges": 0,
+          "sample_unmatched": {},
+          "nodes_created": 0,
+          "edges_recovered": 0
+        }
+      ]
+    },
+    {
+      "config": "clinpgx.drug_label_annotates_gene",
+      "relationship_type": "drugLabelAnnotatesGene",
+      "source_label": "ClinPGx",
+      "sides": [
+        {
+          "side": "subject",
+          "node_type": "DrugLabel",
+          "property": "labelId",
+          "column": "label_id",
+          "total": 378,
+          "matched": 378,
+          "unmatched": 0,
+          "match_rate": 100.0,
+          "unmatched_edges": 0,
+          "sample_unmatched": {},
+          "nodes_created": 0,
+          "edges_recovered": 0
+        },
+        {
+          "side": "object",
+          "node_type": "Gene",
+          "property": "geneSymbol",
+          "column": "gene",
+          "total": 31,
+          "matched": 31,
+          "unmatched": 0,
+          "match_rate": 100.0,
+          "unmatched_edges": 0,
+          "sample_unmatched": {},
+          "nodes_created": 0,
+          "edges_recovered": 0
+        }
+      ]
+    },
+    {
+      "config": "clinpgx.drug_label_describes_drug",
+      "relationship_type": "drugLabelDescribesDrug",
+      "source_label": "ClinPGx",
+      "sides": [
+        {
+          "side": "subject",
+          "node_type": "DrugLabel",
+          "property": "labelId",
+          "column": "label_id",
+          "total": 378,
+          "matched": 378,
+          "unmatched": 0,
+          "match_rate": 100.0,
+          "unmatched_edges": 0,
+          "sample_unmatched": {},
+          "nodes_created": 0,
+          "edges_recovered": 0
+        },
+        {
+          "side": "object",
+          "node_type": "Drug",
+          "property": "commonName",
+          "column": "drug",
+          "total": 178,
+          "matched": 163,
+          "unmatched": 15,
+          "match_rate": 91.6,
+          "unmatched_edges": 20,
+          "sample_unmatched": {
+            "ethinyl estradiol / norelgestromin": 3,
+            "dextromethorphan / quinidine": 2,
+            "drospirenone / ethinyl estradiol": 2,
+            "relugolix / estradiol / norethindrone acetate": 2,
+            "Opium derivatives and expectorants": 1
+          },
+          "nodes_created": 0,
+          "edges_recovered": 0
+        }
+      ]
+    },
+    {
+      "config": "gene_ontology.gene_bp_associations",
+      "relationship_type": "geneParticipatesInBiologicalProcess",
+      "source_label": "Gene Ontology",
+      "sides": [
+        {
+          "side": "subject",
+          "node_type": "Gene",
+          "property": "geneSymbol",
+          "column": "gene_symbol",
+          "total": 34418,
+          "matched": 17689,
+          "unmatched": 16729,
+          "match_rate": 51.4,
+          "unmatched_edges": 22956,
+          "sample_unmatched": {
+            "hsa-miR-21-5p": 90,
+            "abeta-42-oligomer_human": 73,
+            "URS0000338542_9606": 67,
+            "hsa-miR-146a-5p": 50,
+            "hsa-miR-29b-3p": 45
+          },
+          "nodes_created": 0,
+          "edges_recovered": 0
+        },
+        {
+          "side": "object",
+          "node_type": "BiologicalProcess",
+          "property": "geneOntologyId",
+          "column": "go_id",
+          "total": 11335,
+          "matched": 11335,
+          "unmatched": 0,
+          "match_rate": 100.0,
+          "unmatched_edges": 0,
+          "sample_unmatched": {},
+          "nodes_created": 0,
+          "edges_recovered": 0
+        }
+      ]
+    },
+    {
+      "config": "gene_ontology.gene_mf_associations",
+      "relationship_type": "geneHasMolecularFunction",
+      "source_label": "Gene Ontology",
+      "sides": [
+        {
+          "side": "subject",
+          "node_type": "Gene",
+          "property": "geneSymbol",
+          "column": "gene_symbol",
+          "total": 29137,
+          "matched": 18296,
+          "unmatched": 10841,
+          "match_rate": 62.8,
+          "unmatched_edges": 12893,
+          "sample_unmatched": {
+            "HERVK_113": 17,
+            "A0AAQ5BHU3": 13,
+            "abeta-42-oligomer_human": 12,
+            "mbd2/nurd_human": 11,
+            "O00370": 11
+          },
+          "nodes_created": 0,
+          "edges_recovered": 0
+        },
+        {
+          "side": "object",
+          "node_type": "MolecularFunction",
+          "property": "geneOntologyId",
+          "column": "go_id",
+          "total": 4817,
+          "matched": 4817,
+          "unmatched": 0,
+          "match_rate": 100.0,
+          "unmatched_edges": 0,
+          "sample_unmatched": {},
+          "nodes_created": 0,
+          "edges_recovered": 0
+        }
+      ]
+    },
+    {
+      "config": "gene_ontology.gene_cc_associations",
+      "relationship_type": "geneAssociatedWithCellularComponent",
+      "source_label": "Gene Ontology",
+      "sides": [
+        {
+          "side": "subject",
+          "node_type": "Gene",
+          "property": "geneSymbol",
+          "column": "gene_symbol",
+          "total": 35388,
+          "matched": 18893,
+          "unmatched": 16495,
+          "match_rate": 53.4,
+          "unmatched_edges": 18143,
+          "sample_unmatched": {
+            "abeta-42-oligomer_human": 28,
+            "TMEM30A": 12,
+            "MT-RNR2": 9,
+            "A0ABB0MV19": 8,
+            "L1RE1": 8
+          },
+          "nodes_created": 0,
+          "edges_recovered": 0
+        },
+        {
+          "side": "object",
+          "node_type": "CellularComponent",
+          "property": "geneOntologyId",
+          "column": "go_id",
+          "total": 1836,
+          "matched": 1836,
+          "unmatched": 0,
+          "match_rate": 100.0,
+          "unmatched_edges": 0,
+          "sample_unmatched": {},
+          "nodes_created": 0,
+          "edges_recovered": 0
+        }
+      ]
+    },
+    {
+      "config": "sider.compound_causes_side_effect",
+      "relationship_type": "compoundCausesSideEffect",
+      "source_label": "SIDER",
+      "sides": [
+        {
+          "side": "subject",
+          "node_type": "Drug",
+          "property": "xrefDrugbank",
+          "column": "drugbank_id",
+          "total": 1223,
+          "matched": 1190,
+          "unmatched": 33,
+          "match_rate": 97.3,
+          "unmatched_edges": 5145,
+          "sample_unmatched": {
+            "DB07475": 618,
+            "DB08567": 429,
+            "DB08298": 358,
+            "DB05665": 298,
+            "DB05302": 272
+          },
+          "nodes_created": 0,
+          "edges_recovered": 0
+        },
+        {
+          "side": "object",
+          "node_type": "SideEffect",
+          "property": "xrefUmlsCUI",
+          "column": "umls_cui",
+          "total": 5734,
+          "matched": 5734,
+          "unmatched": 0,
+          "match_rate": 100.0,
+          "unmatched_edges": 0,
+          "sample_unmatched": {},
+          "nodes_created": 0,
+          "edges_recovered": 0
+        }
+      ]
+    },
+    {
+      "config": "lincs.compound_upregulates_gene",
+      "relationship_type": "compoundUpregulatesGene",
+      "source_label": "LINCS L1000",
+      "sides": [
+        {
+          "side": "subject",
+          "node_type": "Drug",
+          "property": "xrefDrugbank",
+          "column": "drugbank_id",
+          "total": 1002,
+          "matched": 973,
+          "unmatched": 29,
+          "match_rate": 97.1,
+          "unmatched_edges": 1023,
+          "sample_unmatched": {
+            "DB08700": 250,
+            "DB07475": 250,
+            "DB03080": 241,
+            "DB08567": 42,
+            "DB05251": 42
+          },
+          "nodes_created": 0,
+          "edges_recovered": 0
+        },
+        {
+          "side": "object",
+          "node_type": "Gene",
+          "property": "xrefNcbiGene",
+          "column": "entrez_gene_id",
+          "total": 4060,
+          "matched": 4058,
+          "unmatched": 2,
+          "match_rate": 100.0,
+          "unmatched_edges": 3,
+          "sample_unmatched": {
+            "80761": 2,
+            "644450": 1
+          },
+          "nodes_created": 0,
+          "edges_recovered": 0
+        }
+      ]
+    },
+    {
+      "config": "lincs.compound_downregulates_gene",
+      "relationship_type": "compoundDownregulatesGene",
+      "source_label": "LINCS L1000",
+      "sides": [
+        {
+          "side": "subject",
+          "node_type": "Drug",
+          "property": "xrefDrugbank",
+          "column": "drugbank_id",
+          "total": 1021,
+          "matched": 992,
+          "unmatched": 29,
+          "match_rate": 97.2,
+          "unmatched_edges": 1044,
+          "sample_unmatched": {
+            "DB03080": 250,
+            "DB07475": 250,
+            "DB08700": 250,
+            "DB08866": 49,
+            "DB05347": 43
+          },
+          "nodes_created": 0,
+          "edges_recovered": 0
+        },
+        {
+          "side": "object",
+          "node_type": "Gene",
+          "property": "xrefNcbiGene",
+          "column": "entrez_gene_id",
+          "total": 3614,
+          "matched": 3612,
+          "unmatched": 2,
+          "match_rate": 99.9,
+          "unmatched_edges": 4,
+          "sample_unmatched": {
+            "79686": 3,
+            "57235": 1
+          },
+          "nodes_created": 0,
+          "edges_recovered": 0
+        }
+      ]
+    },
+    {
+      "config": "lincs.gene_regulates_gene",
+      "relationship_type": "geneRegulatesGene",
+      "source_label": "LINCS L1000",
+      "sides": [
+        {
+          "side": "subject",
+          "node_type": "Gene",
+          "property": "xrefNcbiGene",
+          "column": "source_gene",
+          "total": 4649,
+          "matched": 4649,
+          "unmatched": 0,
+          "match_rate": 100.0,
+          "unmatched_edges": 0,
+          "sample_unmatched": {},
+          "nodes_created": 0,
+          "edges_recovered": 0
+        },
+        {
+          "side": "object",
+          "node_type": "Gene",
+          "property": "xrefNcbiGene",
+          "column": "target_gene",
+          "total": 7109,
+          "matched": 7105,
+          "unmatched": 4,
+          "match_rate": 99.9,
+          "unmatched_edges": 21,
+          "sample_unmatched": {
+            "79686": 9,
+            "644450": 6,
+            "80761": 5,
+            "57235": 1
+          },
+          "nodes_created": 0,
+          "edges_recovered": 0
+        }
+      ]
+    },
+    {
+      "config": "medline.disease_symptom_cooccurrence",
+      "relationship_type": "diseasePresentsSymptom",
+      "source_label": "MEDLINE",
+      "sides": [
+        {
+          "side": "subject",
+          "node_type": "Disease",
+          "property": "xrefDiseaseOntology",
+          "column": "doid_code",
+          "total": 133,
+          "matched": 133,
+          "unmatched": 0,
+          "match_rate": 100.0,
+          "unmatched_edges": 0,
+          "sample_unmatched": {},
+          "nodes_created": 0,
+          "edges_recovered": 0
+        },
+        {
+          "side": "object",
+          "node_type": "Symptom",
+          "property": "xrefMeSH",
+          "column": "mesh_id",
+          "total": 415,
+          "matched": 342,
+          "unmatched": 73,
+          "match_rate": 82.4,
+          "unmatched_edges": 289,
+          "sample_unmatched": {
+            "D004314": 19,
+            "D003085": 18,
+            "D001260": 13,
+            "D007319": 13,
+            "D020181": 12
+          },
+          "nodes_created": 0,
+          "edges_recovered": 0
+        }
+      ]
+    },
+    {
+      "config": "medline.disease_anatomy_cooccurrence",
+      "relationship_type": "diseaseLocalizesToAnatomy",
+      "source_label": "MEDLINE",
+      "sides": [
+        {
+          "side": "subject",
+          "node_type": "Disease",
+          "property": "xrefDiseaseOntology",
+          "column": "doid_code",
+          "total": 133,
+          "matched": 133,
+          "unmatched": 0,
+          "match_rate": 100.0,
+          "unmatched_edges": 0,
+          "sample_unmatched": {},
+          "nodes_created": 0,
+          "edges_recovered": 0
+        },
+        {
+          "side": "object",
+          "node_type": "BodyPart",
+          "property": "xrefUberon",
+          "column": "uberon_id",
+          "total": 398,
+          "matched": 398,
+          "unmatched": 0,
+          "match_rate": 100.0,
+          "unmatched_edges": 0,
+          "sample_unmatched": {},
+          "nodes_created": 0,
+          "edges_recovered": 0
+        }
+      ]
+    },
+    {
+      "config": "medline.disease_disease_cooccurrence",
+      "relationship_type": "diseaseResemblesDisease",
+      "source_label": "MEDLINE",
+      "sides": [
+        {
+          "side": "subject",
+          "node_type": "Disease",
+          "property": "xrefDiseaseOntology",
+          "column": "doid_code_0",
+          "total": 112,
+          "matched": 112,
+          "unmatched": 0,
+          "match_rate": 100.0,
+          "unmatched_edges": 0,
+          "sample_unmatched": {},
+          "nodes_created": 0,
+          "edges_recovered": 0
+        },
+        {
+          "side": "object",
+          "node_type": "Disease",
+          "property": "xrefDiseaseOntology",
+          "column": "doid_code_1",
+          "total": 106,
+          "matched": 106,
+          "unmatched": 0,
+          "match_rate": 100.0,
+          "unmatched_edges": 0,
+          "sample_unmatched": {},
+          "nodes_created": 0,
+          "edges_recovered": 0
+        }
+      ]
+    },
+    {
+      "config": "drugcentral.pharmacologic_class_includes_compound",
+      "relationship_type": "pharmacologicClassIncludesCompound",
+      "source_label": "DrugCentral",
+      "sides": [
+        {
+          "side": "subject",
+          "node_type": "PharmacologicClass",
+          "property": "classId",
+          "column": "class_id",
+          "total": 1644,
+          "matched": 1644,
+          "unmatched": 0,
+          "match_rate": 100.0,
+          "unmatched_edges": 0,
+          "sample_unmatched": {},
+          "nodes_created": 0,
+          "edges_recovered": 0
+        },
+        {
+          "side": "object",
+          "node_type": "Drug",
+          "property": "xrefDrugbank",
+          "column": "drugbank_id",
+          "total": 2944,
+          "matched": 2944,
+          "unmatched": 0,
+          "match_rate": 100.0,
+          "unmatched_edges": 0,
+          "sample_unmatched": {},
+          "nodes_created": 0,
+          "edges_recovered": 0
+        }
+      ]
+    },
+    {
+      "config": "drugcentral.drug_treats_disease",
+      "relationship_type": "drugTreatsDisease",
+      "source_label": "DrugCentral",
+      "sides": [
+        {
+          "side": "subject",
+          "node_type": "Drug",
+          "property": "xrefDrugbank",
+          "column": "drugbank_id",
+          "total": 2525,
+          "matched": 2525,
+          "unmatched": 0,
+          "match_rate": 100.0,
+          "unmatched_edges": 0,
+          "sample_unmatched": {},
+          "nodes_created": 0,
+          "edges_recovered": 0
+        },
+        {
+          "side": "object",
+          "node_type": "Disease",
+          "property": "xrefUmlsCUI",
+          "column": "umls_cui",
+          "total": 1663,
+          "matched": 371,
+          "unmatched": 1292,
+          "match_rate": 22.3,
+          "unmatched_edges": 7063,
+          "sample_unmatched": {
+            "C2607914": 90,
+            "C0003873": 75,
+            "C0178299": 70,
+            "C0155862": 69,
+            "C1260880": 57
+          },
+          "nodes_created": 0,
+          "edges_recovered": 0
+        }
+      ]
+    },
+    {
+      "config": "drugcentral.drug_palliates_disease",
+      "relationship_type": "drugPalliatesDisease",
+      "source_label": "DrugCentral",
+      "sides": [
+        {
+          "side": "subject",
+          "node_type": "Drug",
+          "property": "xrefDrugbank",
+          "column": "drugbank_id",
+          "total": 633,
+          "matched": 633,
+          "unmatched": 0,
+          "match_rate": 100.0,
+          "unmatched_edges": 0,
+          "sample_unmatched": {},
+          "nodes_created": 0,
+          "edges_recovered": 0
+        },
+        {
+          "side": "object",
+          "node_type": "Disease",
+          "property": "xrefUmlsCUI",
+          "column": "umls_cui",
+          "total": 624,
+          "matched": 132,
+          "unmatched": 492,
+          "match_rate": 21.2,
+          "unmatched_edges": 1554,
+          "sample_unmatched": {
+            "C0015970": 32,
+            "C0206750": 22,
+            "C0004238": 21,
+            "C0027796": 20,
+            "C0032460": 19
+          },
+          "nodes_created": 0,
+          "edges_recovered": 0
+        }
+      ]
+    },
+    {
+      "config": "gwas.gene_disease_gwas",
+      "relationship_type": "geneAssociatesWithDisease",
+      "source_label": "GWAS Catalog",
+      "sides": [
+        {
+          "side": "subject",
+          "node_type": "Gene",
+          "property": "geneSymbol",
+          "column": "gene_symbol",
+          "total": 19764,
+          "matched": 19363,
+          "unmatched": 401,
+          "match_rate": 98.0,
+          "unmatched_edges": 1074,
+          "sample_unmatched": {
+            "Y_RNA": 310,
+            "U3": 76,
+            "Metazoa_SRP": 67,
+            "U8": 24,
+            "U6": 23
+          },
+          "nodes_created": 0,
+          "edges_recovered": 0
+        },
+        {
+          "side": "object",
+          "node_type": "Disease",
+          "property": "xrefDiseaseOntology",
+          "column": "disease_doid",
+          "total": 874,
+          "matched": 874,
+          "unmatched": 0,
+          "match_rate": 100.0,
+          "unmatched_edges": 0,
+          "sample_unmatched": {},
+          "nodes_created": 0,
+          "edges_recovered": 0
+        }
+      ]
+    },
+    {
+      "config": "pubtator.disease_disease_cooccurrence",
+      "relationship_type": "diseaseAssociatesWithDisease",
+      "source_label": "PubTator",
+      "sides": [
+        {
+          "side": "subject",
+          "node_type": "Disease",
+          "property": "xrefDiseaseOntology",
+          "column": "disease1_id",
+          "total": 3810,
+          "matched": 3484,
+          "unmatched": 326,
+          "match_rate": 91.4,
+          "unmatched_edges": 3119,
+          "sample_unmatched": {
+            "OMIM:102510": 213,
+            "OMIM:176500": 157,
+            "OMIM:252500": 128,
+            "OMIM:202370": 122,
+            "OMIM:217000": 118
+          },
+          "nodes_created": 0,
+          "edges_recovered": 0
+        },
+        {
+          "side": "object",
+          "node_type": "Disease",
+          "property": "xrefDiseaseOntology",
+          "column": "disease2_id",
+          "total": 4107,
+          "matched": 3343,
+          "unmatched": 764,
+          "match_rate": 81.4,
+          "unmatched_edges": 212920,
+          "sample_unmatched": {
+            "OMIM:102510": 2746,
+            "OMIM:617237": 2681,
+            "OMIM:252500": 2597,
+            "OMIM:176500": 2578,
+            "OMIM:612348": 2530
+          },
+          "nodes_created": 0,
+          "edges_recovered": 0
+        }
+      ]
+    },
+    {
+      "config": "pubtator.gene_disease_literature",
+      "relationship_type": "geneAssociatesWithDisease",
+      "source_label": "PubTator",
+      "sides": [
+        {
+          "side": "subject",
+          "node_type": "Gene",
+          "property": "xrefNcbiGene",
+          "column": "gene_id",
+          "total": 471492,
+          "matched": 32940,
+          "unmatched": 438552,
+          "match_rate": 7.0,
+          "unmatched_edges": 17248940,
+          "sample_unmatched": {
+            "17395": 19303,
+            "17390": 14128,
+            "17386": 13874,
+            "21898": 13584,
+            "26413": 13466
+          },
+          "nodes_created": 0,
+          "edges_recovered": 0
+        },
+        {
+          "side": "object",
+          "node_type": "Disease",
+          "property": "xrefDiseaseOntology",
+          "column": "disease_id",
+          "total": 4313,
+          "matched": 3508,
+          "unmatched": 805,
+          "match_rate": 81.3,
+          "unmatched_edges": 900708,
+          "sample_unmatched": {
+            "OMIM:102510": 31412,
+            "OMIM:143095": 29140,
+            "OMIM:217000": 24262,
+            "OMIM:252500": 23517,
+            "OMIM:612348": 23484
+          },
+          "nodes_created": 0,
+          "edges_recovered": 0
+        }
+      ]
+    },
+    {
+      "config": "bindingdb.drug_binds_gene",
+      "relationship_type": "chemicalBindsGene",
+      "source_label": "BindingDB",
+      "sides": [
+        {
+          "side": "subject",
+          "node_type": "Drug",
+          "property": "xrefDrugbank",
+          "column": "drugbank_id",
+          "total": 2301,
+          "matched": 2272,
+          "unmatched": 29,
+          "match_rate": 98.7,
+          "unmatched_edges": 1673,
+          "sample_unmatched": {
+            "DB08183": 384,
+            "DB08700": 380,
+            "DB08764": 376,
+            "DB08584": 374,
+            "DB08468": 67
+          },
+          "nodes_created": 0,
+          "edges_recovered": 0
+        },
+        {
+          "side": "object",
+          "node_type": "Gene",
+          "property": "xrefNcbiGene",
+          "column": "entrez_gene_id",
+          "total": 1567,
+          "matched": 1565,
+          "unmatched": 2,
+          "match_rate": 99.9,
+          "unmatched_edges": 30,
+          "sample_unmatched": {
+            "7006": 29,
+            "100171646": 1
+          },
+          "nodes_created": 0,
+          "edges_recovered": 0
+        }
+      ]
+    },
+    {
+      "config": "ctd.chemical_increases_expression",
+      "relationship_type": "chemicalIncreasesExpression",
+      "source_label": "CTD",
+      "sides": [
+        {
+          "side": "subject",
+          "node_type": "Drug",
+          "property": "xrefMeSH",
+          "column": "chemical_id",
+          "total": 5632,
+          "matched": 2309,
+          "unmatched": 3323,
+          "match_rate": 41.0,
+          "unmatched_edges": 125973,
+          "sample_unmatched": {
+            "MESH:D014028": 5292,
+            "MESH:D052638": 4175,
+            "MESH:C459179": 4051,
+            "MESH:D000393": 3613,
+            "MESH:C496492": 3559
+          },
+          "nodes_created": 0,
+          "edges_recovered": 0
+        },
+        {
+          "side": "object",
+          "node_type": "Gene",
+          "property": "geneSymbol",
+          "column": "gene_symbol",
+          "total": 24492,
+          "matched": 23653,
+          "unmatched": 839,
+          "match_rate": 96.6,
+          "unmatched_edges": 3098,
+          "sample_unmatched": {
+            "C11ORF96": 55,
+            "FAM83H": 31,
+            "C3ORF52": 31,
+            "C1ORF116": 27,
+            "C9ORF72": 26
+          },
+          "nodes_created": 0,
+          "edges_recovered": 0
+        }
+      ]
+    },
+    {
+      "config": "ctd.chemical_decreases_expression",
+      "relationship_type": "chemicalDecreasesExpression",
+      "source_label": "CTD",
+      "sides": [
+        {
+          "side": "subject",
+          "node_type": "Drug",
+          "property": "xrefMeSH",
+          "column": "chemical_id",
+          "total": 4178,
+          "matched": 1678,
+          "unmatched": 2500,
+          "match_rate": 40.2,
+          "unmatched_edges": 115338,
+          "sample_unmatched": {
+            "MESH:D012906": 6631,
+            "MESH:D052638": 5706,
+            "MESH:D014028": 5428,
+            "MESH:D000393": 5424,
+            "MESH:D000077185": 3754
+          },
+          "nodes_created": 0,
+          "edges_recovered": 0
+        },
+        {
+          "side": "object",
+          "node_type": "Gene",
+          "property": "geneSymbol",
+          "column": "gene_symbol",
+          "total": 24635,
+          "matched": 23846,
+          "unmatched": 789,
+          "match_rate": 96.8,
+          "unmatched_edges": 3064,
+          "sample_unmatched": {
+            "FAM83D": 60,
+            "C21ORF58": 35,
+            "C1ORF21": 28,
+            "C14ORF132": 27,
+            "C5ORF24": 27
+          },
+          "nodes_created": 0,
+          "edges_recovered": 0
+        }
+      ]
+    },
+    {
+      "config": "bgee.bodypart_overexpresses_gene",
+      "relationship_type": "bodyPartOverexpressesGene",
+      "source_label": "Bgee",
+      "sides": [
+        {
+          "side": "subject",
+          "node_type": "BodyPart",
+          "property": "xrefUberon",
+          "column": "anatomy_id",
+          "total": 276,
+          "matched": 276,
+          "unmatched": 0,
+          "match_rate": 100.0,
+          "unmatched_edges": 0,
+          "sample_unmatched": {},
+          "nodes_created": 0,
+          "edges_recovered": 0
+        },
+        {
+          "side": "object",
+          "node_type": "Gene",
+          "property": "xrefEnsembl",
+          "column": "gene_id",
+          "total": 335,
+          "matched": 316,
+          "unmatched": 19,
+          "match_rate": 94.3,
+          "unmatched_edges": 175,
+          "sample_unmatched": {
+            "ENSG00000210082": 76,
+            "ENSG00000211459": 33,
+            "ENSG00000283907": 30,
+            "ENSG00000280614": 5,
+            "ENSG00000280800": 5
+          },
+          "nodes_created": 0,
+          "edges_recovered": 0
+        }
+      ]
+    },
+    {
+      "config": "bgee.bodypart_underexpresses_gene",
+      "relationship_type": "bodyPartUnderexpressesGene",
+      "source_label": "Bgee",
+      "sides": [
+        {
+          "side": "subject",
+          "node_type": "BodyPart",
+          "property": "xrefUberon",
+          "column": "anatomy_id",
+          "total": 313,
+          "matched": 313,
+          "unmatched": 0,
+          "match_rate": 100.0,
+          "unmatched_edges": 0,
+          "sample_unmatched": {},
+          "nodes_created": 0,
+          "edges_recovered": 0
+        },
+        {
+          "side": "object",
+          "node_type": "Gene",
+          "property": "xrefEnsembl",
+          "column": "gene_id",
+          "total": 59388,
+          "matched": 35804,
+          "unmatched": 23584,
+          "match_rate": 60.3,
+          "unmatched_edges": 1859516,
+          "sample_unmatched": {
+            "ENSG00000153113": 283,
+            "ENSG00000257267": 274,
+            "ENSG00000078319": 273,
+            "ENSG00000235859": 273,
+            "ENSG00000112096": 272
+          },
+          "nodes_created": 0,
+          "edges_recovered": 0
+        }
+      ]
+    },
+    {
+      "config": "hetionet_precomputed.gene_interacts",
+      "relationship_type": "geneInteractsWithGene",
+      "source_label": "Hetionet",
+      "sides": [
+        {
+          "side": "subject",
+          "node_type": "Gene",
+          "property": "xrefNcbiGene",
+          "column": "gene1_symbol",
+          "total": 9526,
+          "matched": 9523,
+          "unmatched": 3,
+          "match_rate": 100.0,
+          "unmatched_edges": 20,
+          "sample_unmatched": {
+            "7006": 15,
+            "3045": 3,
+            "9220": 2
+          },
+          "nodes_created": 0,
+          "edges_recovered": 0
+        },
+        {
+          "side": "object",
+          "node_type": "Gene",
+          "property": "xrefNcbiGene",
+          "column": "gene2_symbol",
+          "total": 14084,
+          "matched": 14071,
+          "unmatched": 13,
+          "match_rate": 99.9,
+          "unmatched_edges": 56,
+          "sample_unmatched": {
+            "7006": 24,
+            "11217": 9,
+            "285464": 5,
+            "26148": 3,
+            "3045": 3
+          },
+          "nodes_created": 0,
+          "edges_recovered": 0
+        }
+      ]
+    },
+    {
+      "config": "hetionet_precomputed.gene_covaries",
+      "relationship_type": "geneCovariesWithGene",
+      "source_label": "Hetionet",
+      "sides": [
+        {
+          "side": "subject",
+          "node_type": "Gene",
+          "property": "xrefNcbiGene",
+          "column": "gene1_symbol",
+          "total": 9043,
+          "matched": 9035,
+          "unmatched": 8,
+          "match_rate": 99.9,
+          "unmatched_edges": 43,
+          "sample_unmatched": {
+            "100996634": 13,
+            "9142": 12,
+            "117153": 5,
+            "7006": 5,
+            "643314": 3
+          },
+          "nodes_created": 0,
+          "edges_recovered": 0
+        },
+        {
+          "side": "object",
+          "node_type": "Gene",
+          "property": "xrefNcbiGene",
+          "column": "gene2_symbol",
+          "total": 9532,
+          "matched": 9521,
+          "unmatched": 11,
+          "match_rate": 99.9,
+          "unmatched_edges": 41,
+          "sample_unmatched": {
+            "117153": 17,
+            "84953": 6,
+            "100996634": 4,
+            "26148": 3,
+            "221938": 2
+          },
+          "nodes_created": 0,
+          "edges_recovered": 0
+        }
+      ]
+    },
+    {
+      "config": "jensenlab.gene_disease_associations",
+      "relationship_type": "geneAssociatesWithDisease",
+      "source_label": "Jensen DISEASES",
+      "sides": [
+        {
+          "side": "subject",
+          "node_type": "Gene",
+          "property": "geneSymbol",
+          "column": "gene_symbol",
+          "total": 13058,
+          "matched": 12762,
+          "unmatched": 296,
+          "match_rate": 97.7,
+          "unmatched_edges": 845,
+          "sample_unmatched": {
+            "ZNRD1": 23,
+            "SKIV2L": 21,
+            "STK19": 21,
+            "C12orf65": 12,
+            "GBA": 11
+          },
+          "nodes_created": 0,
+          "edges_recovered": 0
+        },
+        {
+          "side": "object",
+          "node_type": "Disease",
+          "property": "xrefDiseaseOntology",
+          "column": "disease_id",
+          "total": 1312,
+          "matched": 1303,
+          "unmatched": 9,
+          "match_rate": 99.3,
+          "unmatched_edges": 66,
+          "sample_unmatched": {
+            "DOID:7061": 30,
+            "DOID:12252": 9,
+            "DOID:9357": 7,
+            "DOID:2939": 5,
+            "DOID:11575": 4
+          },
+          "nodes_created": 0,
+          "edges_recovered": 0
+        }
+      ]
+    },
+    {
+      "config": "jensentissues.gene_tissue_associations",
+      "relationship_type": "geneExpressedInBodyPart",
+      "source_label": "Jensen TISSUES",
+      "sides": [
+        {
+          "side": "subject",
+          "node_type": "Gene",
+          "property": "geneSymbol",
+          "column": "gene_symbol",
+          "total": 18645,
+          "matched": 18182,
+          "unmatched": 463,
+          "match_rate": 97.5,
+          "unmatched_edges": 20892,
+          "sample_unmatched": {
+            "MATR3-2": 110,
+            "SLC9A3R1": 104,
+            "PHB": 103,
+            "ATP5MPL": 101,
+            "CASC4": 97
+          },
+          "nodes_created": 0,
+          "edges_recovered": 0
+        },
+        {
+          "side": "object",
+          "node_type": "BodyPart",
+          "property": "commonName",
+          "column": "tissue_name",
+          "total": 427,
+          "matched": 427,
+          "unmatched": 0,
+          "match_rate": 100.0,
+          "unmatched_edges": 0,
+          "sample_unmatched": {},
+          "nodes_created": 0,
+          "edges_recovered": 0
+        }
+      ]
+    },
+    {
+      "config": "hpo.gene_phenotype_associations",
+      "relationship_type": "geneAssociatesWithPhenotype",
+      "source_label": "HPO",
+      "sides": [
+        {
+          "side": "subject",
+          "node_type": "Gene",
+          "property": "xrefNcbiGene",
+          "column": "gene_id",
+          "total": 5256,
+          "matched": 5253,
+          "unmatched": 3,
+          "match_rate": 99.9,
+          "unmatched_edges": 21,
+          "sample_unmatched": {
+            "4549": 11,
+            "136932118": 7,
+            "3045": 3
+          },
+          "nodes_created": 0,
+          "edges_recovered": 0
+        },
+        {
+          "side": "object",
+          "node_type": "Phenotype",
+          "property": "xrefHPO",
+          "column": "hpo_id",
+          "total": 10475,
+          "matched": 10475,
+          "unmatched": 0,
+          "match_rate": 100.0,
+          "unmatched_edges": 0,
+          "sample_unmatched": {},
+          "nodes_created": 0,
+          "edges_recovered": 0
+        }
+      ]
+    }
+  ],
+  "fixes_applied": []
+}
