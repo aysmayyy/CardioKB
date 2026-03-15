@@ -1,8 +1,8 @@
-# CardioKB: Cardiovascular Disease Knowledge Base
+# CardioKB: Biomedical Knowledge Graph
 
-A biomedical knowledge graph pipeline that integrates 32 data sources (32 parsers) into a Neo4j graph for cardiovascular disease research, feature selection, and precision medicine. Adapted from the AlzKB (Alzheimer's Knowledge Base) architecture with additional custom parsers and Hetionet component integrations. Includes an AI-powered database agent that can autonomously generate new parsers from a URL, and a disease agent that builds knowledge subgraphs for any disease on demand via Claude API + DisGeNET. Features a web dashboard with interactive graph exploration (specificity-ranked subgraphs) and a Neo4j Browser-style multi-panel query interface.
+A general-purpose biomedical knowledge graph pipeline that integrates 32 data sources (32 parsers) into a Neo4j graph for disease research, feature selection, and precision medicine. While initially focused on cardiovascular disease, the graph contains data spanning all human diseases — most data sources are disease-agnostic. Adapted from the AlzKB (Alzheimer's Knowledge Base) architecture with additional custom parsers and Hetionet component integrations. Features an AI-powered **DatabaseAgent** that autonomously generates new parsers from just a name and URL, a disease agent for on-demand knowledge subgraph construction via Claude API + DisGeNET, and a web dashboard with interactive graph exploration and Neo4j Browser-style querying.
 
-**Graph stats:** 375,803 nodes | 26,648,962 relationships | 19 node types | 37 relationship types
+**Graph stats:** 373,869 nodes | 26,581,028 relationships | 18 node types | 35 relationship types | 25 sources
 *Stats are current as of last pipeline run; see Neo4j or `GET /api/graph-stats` for live counts.*
 
 ## Pipeline Status
@@ -267,6 +267,46 @@ Launch with `bash run.sh` or `python src/api.py --port 5050`. Features:
 - **Dashboard** — Live graph stats (nodes, relationships, types, sources)
 - **Help system** — Welcome tour, tooltips on all UI elements, methodology info, node type legend
 - **Admin** — Parser status, pipeline health check with SSE streaming, ID mapping validation report
+
+## DatabaseAgent: Autonomous Parser Generation
+
+The **DatabaseAgent** (`src/database_agent.py`) uses Claude API to autonomously generate complete parsers for new biomedical data sources. Users provide only a database name and a download URL — the agent handles everything else.
+
+### How It Works
+
+1. **Sample download** — Downloads the first 64KB of the file to detect format (TSV, CSV, JSON, XML) and discover actual column names
+2. **Code generation** — Sends the file sample, BaseParser source, SKILL.md guide, and an example parser (Reactome) to Claude, which generates a complete parser class + ontology configs
+3. **Pipeline integration** — Saves the parser to `src/parsers/`, adds ontology configs to `ontology_configs.py`, and registers the parser in `main.py` and `__init__.py`
+4. **Execute & validate** — Runs the parser (download + parse + TSV export), validates ID mappings against Neo4j, loads data into the graph, and verifies edge counts
+
+### Usage
+
+```bash
+# CLI
+python src/database_agent.py "HGNC" "https://ftp.ebi.ac.uk/pub/databases/genenames/hgnc/tsv/hgnc_complete_set.txt"
+
+# Dry run (generate code without saving/running)
+python src/database_agent.py "MyDB" "https://example.com/data.tsv" --dry-run
+
+# Via web UI: Admin > Add New Database (name + URL, then click Build)
+```
+
+### Bugs Fixed During Development
+
+1. **Column name hallucination** — Claude invented column names not present in the source data. Fixed by downloading a sample first and injecting actual column names with strict constraints into the prompt.
+2. **Duplicate config entries on re-run** — Re-running the agent for the same source appended duplicate ontology configs. Fixed by detecting and removing existing entries for the source key before appending.
+3. **Gzip partial download failure** — Streaming only 64KB of a `.gz` file caused `EOFError` in the decompressor. Fixed with a streaming `GzipFile` that tolerates truncated data.
+4. **Comment-line header detection** — Files like ClinVar use `#AlleleID\tType\t...` as headers. The agent initially skipped these as comments. Fixed by treating `#`-prefixed lines containing delimiters as headers rather than comments.
+
+### Agent-Generated Parsers in Production
+
+The following parsers were built entirely by the DatabaseAgent and are now part of the pipeline:
+
+| Source | Nodes/Edges Added |
+|--------|-------------------|
+| HGNC | 44,361 Gene nodes enriched with xrefHGNC, geneName, locusGroup, locusType |
+| HGNC Gene Families | 1,934 GeneFamily nodes, 33,967 geneInFamily edges |
+| ClinVar | 4,486,982 Variant nodes, 5.7M disease-variant + 4.5M gene-variant edges |
 
 ## Architecture Notes
 

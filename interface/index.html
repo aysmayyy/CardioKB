@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>CardioKB Dashboard</title>
+<title>CardioKB - Biomedical Knowledge Graph</title>
 <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.7/dist/chart.umd.min.js"></script>
 <script src="https://unpkg.com/vis-network@9.1.2/standalone/umd/vis-network.min.js"></script>
 <link rel="stylesheet" href="https://unpkg.com/vis-network@9.1.2/styles/vis-network.min.css" />
@@ -389,13 +389,13 @@ th { color: var(--text-muted); font-weight: 600; text-transform: uppercase; font
 <body>
 
 <aside class="sidebar">
-    <h1>CardioKB <span>Knowledge Base Dashboard</span></h1>
+    <h1>CardioKB <span>Biomedical Knowledge Graph</span></h1>
 
     <div style="font-size:0.8rem;color:var(--text-muted);line-height:1.55;padding:0.75rem;background:var(--bg);border-radius:6px;border:1px solid var(--border)">
-        The graph contains data for all human diseases. Most sources are disease-agnostic &mdash; search any disease or gene in the Explore tab.
+        A general-purpose biomedical knowledge graph spanning all human diseases. Search any disease, gene, or drug in the <strong style="color:var(--text)">Explore</strong> tab, run Cypher queries in <strong style="color:var(--text)">Query</strong>, or add entirely new databases via <strong style="color:var(--text)">Admin</strong> &mdash; the AI agent writes the parser for you.
     </div>
 
-    <button class="run-btn" id="runBtn" onclick="runHealthCheck()" data-tip="Check all parsers, Neo4j connectivity, and data integrity">Run Health Check</button>
+    <button class="run-btn" id="runBtn" onclick="runHealthCheck()" data-tip="Check all 32 parsers (including agent-generated ones), Neo4j connectivity, and data integrity">Run Health Check</button>
 
     <div>
         <button class="admin-toggle" id="advancedToggle" onclick="toggleAdvanced()" style="background:var(--bg);font-size:0.82rem;padding:0.6rem 0.75rem">
@@ -408,10 +408,11 @@ th { color: var(--text-muted); font-weight: 600; text-transform: uppercase; font
                 <div id="adminError" style="color:var(--red);font-size:0.78rem;margin-top:0.3rem;display:none"></div>
             </div>
             <div id="advancedUnlocked" style="display:none">
-                <h3 style="margin-bottom:0.5rem">Add New Database</h3>
-                <input type="text" class="agent-input" id="addDbName" placeholder="Database name" />
-                <input type="text" class="agent-input" id="addDbUrl" placeholder="Database URL" />
-                <button class="run-btn" id="addDbBtn" onclick="addDatabase()" style="font-size:0.82rem;padding:0.5rem;margin-bottom:0.75rem">Build</button>
+                <h3 style="margin-bottom:0.3rem">Add New Database</h3>
+                <div style="font-size:0.75rem;color:var(--text-muted);margin-bottom:0.4rem;line-height:1.45">Provide a name and data URL. The DatabaseAgent (Claude AI) will download a sample, auto-generate a parser, integrate it into the pipeline, and load the data into Neo4j.</div>
+                <input type="text" class="agent-input" id="addDbName" placeholder="Database name (e.g. PhosphoSitePlus)" data-tip="Human-readable name for the new data source" />
+                <input type="text" class="agent-input" id="addDbUrl" placeholder="Data download URL (TSV, CSV, JSON, or gzipped)" data-tip="Direct download link to the source data file. The agent samples the first 64KB to detect format and columns." />
+                <button class="run-btn" id="addDbBtn" onclick="addDatabase()" style="font-size:0.82rem;padding:0.5rem;margin-bottom:0.75rem" data-tip="Launch the DatabaseAgent: sample file, generate parser via Claude AI, run parser, load into Neo4j">Build Parser</button>
 
                 <h3 style="margin-bottom:0.3rem">Fetch Additional DisGeNET Data</h3>
                 <div style="font-size:0.75rem;color:var(--text-muted);margin-bottom:0.4rem;line-height:1.45">Use this to fetch additional gene-disease associations from DisGeNET for diseases with limited coverage. Most diseases are already well-represented in the graph through other sources.</div>
@@ -419,7 +420,7 @@ th { color: var(--text-muted); font-weight: 600; text-transform: uppercase; font
                 <button class="run-btn" id="agentBtn" onclick="runAgentBuild()" style="font-size:0.82rem;padding:0.5rem;margin-bottom:0.75rem">Fetch</button>
 
                 <h3 style="margin-bottom:0.5rem">Run Pipeline</h3>
-                <button class="run-btn" id="pipelineBtn" onclick="runPipeline()" data-tip="Run the full data pipeline (download, parse, load)" style="font-size:0.82rem;padding:0.5rem">Run Pipeline</button>
+                <button class="run-btn" id="pipelineBtn" onclick="runPipeline()" data-tip="Run the full data pipeline for all 32 sources (download, parse, load into Neo4j)" style="font-size:0.82rem;padding:0.5rem">Run Pipeline</button>
             </div>
         </div>
     </div>
@@ -434,21 +435,21 @@ th { color: var(--text-muted); font-weight: 600; text-transform: uppercase; font
         <div class="stat-card" data-tip="Total connections between entities (gene-disease, drug-target, etc.)"><div class="value" id="statRels"><span class="spinner"></span></div><div class="label">Total Relationships</div></div>
         <div class="stat-card" data-tip="Distinct entity categories: Gene, Disease, Drug, Pathway, etc."><div class="value" id="statNodeTypes"><span class="spinner"></span></div><div class="label">Node Types</div></div>
         <div class="stat-card" data-tip="Distinct relationship types: ASSOCIATES_WITH, TARGETS, TREATS, etc."><div class="value" id="statRelTypes"><span class="spinner"></span></div><div class="label">Rel Types</div></div>
-        <div class="stat-card" data-tip="Number of integrated databases contributing relationships"><div class="value" id="statSources"><span class="spinner"></span></div><div class="label">Sources</div></div>
+        <div class="stat-card" data-tip="Number of integrated databases contributing relationships. Add more via Admin > Add New Database."><div class="value" id="statSources"><span class="spinner"></span></div><div class="label">Sources</div></div>
     </div>
 
     <!-- Tabs -->
     <div class="tabs">
-        <button class="tab-btn active" data-tab="explore" data-tip="Visually browse disease subgraphs with core and discovery layers" onclick="switchTab('explore')">Explore</button>
+        <button class="tab-btn active" data-tab="explore" data-tip="Visually browse subgraphs for any disease, gene, or drug with core and discovery layers" onclick="switchTab('explore')">Explore</button>
         <button class="tab-btn" data-tab="query" data-tip="Run custom Cypher queries against the Neo4j knowledge graph" onclick="switchTab('query')">Query</button>
     </div>
 
     <!-- Explore Tab -->
     <div class="tab-content active" id="tab-explore">
         <div class="explore-bar">
-            <input type="text" id="exploreSearch" data-tip="Search for a disease, gene, or drug to visualize its neighborhood" placeholder="Try: atrial fibrillation, hypertension, SCN5A" />
+            <input type="text" id="exploreSearch" data-tip="Search for any disease, gene, or drug across all 32 integrated sources to visualize its neighborhood" placeholder="Try: atrial fibrillation, Alzheimer's, BRCA1, metformin" />
             <input type="number" id="exploreLimit" value="200" min="10" max="1000" style="width:80px;flex:none" data-tip="Maximum number of nodes to display (higher = more detail, slower)" />
-            <button id="exploreBtn" onclick="loadExploreGraph()" data-tip="Load the subgraph for the selected disease filter">Explore</button>
+            <button id="exploreBtn" onclick="loadExploreGraph()" data-tip="Load the subgraph for the searched disease, gene, or drug">Explore</button>
             <button class="info-btn" onclick="showMethodologyModal()" data-tip="How to read this graph">?</button>
         </div>
         <div style="font-size:.78rem;color:var(--text-muted);margin:-0.3rem 0 0.5rem 0.2rem;">Use specific disease or gene names for best results.</div>
@@ -506,7 +507,7 @@ th { color: var(--text-muted); font-weight: 600; text-transform: uppercase; font
     <!-- Query Tab -->
     <div class="tab-content" id="tab-query">
         <div style="background:var(--surface);border:1px solid var(--border);border-radius:8px;padding:1rem;margin-bottom:1rem;font-size:0.82rem;color:var(--text-muted);line-height:1.6">
-            Write Cypher queries to explore the knowledge graph. Queries are <strong style="color:var(--text)">read-only</strong> (no CREATE/DELETE/SET). Click a template below to auto-fill, or write your own. Results appear as a table and, when graph data is returned, as a network visualization.
+            Write Cypher queries to explore the full knowledge graph (32 sources, all diseases). Queries are <strong style="color:var(--text)">read-only</strong> (no CREATE/DELETE/SET). Click a template below to auto-fill, or write your own. Results appear as a table and, when graph data is returned, as a network visualization.
         </div>
 
         <div class="templates">
@@ -592,32 +593,33 @@ th { color: var(--text-muted); font-weight: 600; text-transform: uppercase; font
     <div class="modal">
         <div class="modal-step active" data-step="0">
             <h2>Welcome to CardioKB</h2>
-            <p>CardioKB is a cardiovascular disease knowledge graph integrating <strong>29 biomedical databases</strong> into a single queryable network. It connects genes, diseases, drugs, pathways, clinical trials, phenotypes, and more.</p>
+            <p>CardioKB is a <strong>general-purpose biomedical knowledge graph</strong> integrating <strong>32 data sources</strong> into a single queryable network. It connects genes, diseases, drugs, pathways, clinical trials, phenotypes, variants, and more &mdash; spanning <strong>all human diseases</strong>, not just cardiovascular.</p>
             <ul>
-                <li>370K+ nodes across 17 entity types</li>
-                <li>23M+ relationships from sources like DisGeNET, DrugBank, GWAS Catalog, and PubTator</li>
-                <li>Built for CVD research, feature selection, and precision medicine</li>
+                <li>373K+ nodes across 18 entity types, 26M+ relationships from 25 sources</li>
+                <li>Search any disease (heart failure, Alzheimer's, cancer...) or any gene/drug</li>
+                <li>Add new databases instantly &mdash; the AI-powered DatabaseAgent writes the parser for you</li>
             </ul>
         </div>
         <div class="modal-step" data-step="1">
-            <h2>How to Explore</h2>
-            <p>The <strong>Explore tab</strong> lets you visually browse disease subgraphs:</p>
+            <h2>Explore &amp; Query</h2>
+            <p>The <strong>Explore tab</strong> visualizes disease/gene subgraphs:</p>
             <ul>
-                <li><strong>Select a disease filter</strong> from the sidebar, then click <em>Explore</em></li>
+                <li><strong>Search any disease or gene</strong> &mdash; type a name and click Explore</li>
                 <li><strong>Core nodes</strong> (large, solid) are direct known associations</li>
                 <li><strong>Discovery nodes</strong> (small, dashed) are 2-hop hypothesis-generating connections</li>
-                <li><strong>Click any node</strong> to see its properties and neighbors</li>
-                <li>Use <strong>filter chips</strong> to show/hide entity types and the <strong>discovery toggle</strong> to focus on confirmed knowledge</li>
+                <li><strong>Click any node</strong> to see its properties, neighbors, and specificity score</li>
+                <li>Use <strong>filter chips</strong> to show/hide entity types</li>
             </ul>
+            <p style="margin-top:0.5rem">The <strong>Query tab</strong> gives you direct Cypher access &mdash; click a template or write your own (read-only, Cmd+Enter to run).</p>
         </div>
         <div class="modal-step" data-step="2">
-            <h2>How to Query</h2>
-            <p>The <strong>Query tab</strong> gives you direct Cypher access to the full Neo4j graph:</p>
+            <h2>Admin: Add New Databases</h2>
+            <p>Under <strong>Advanced</strong> in the sidebar, the <strong>Add New Database</strong> panel lets you expand the graph with any public data source:</p>
             <ul>
-                <li>Click a <strong>template</strong> to auto-fill common queries</li>
-                <li>Edit the query and press <strong>Run</strong> (or Cmd+Enter)</li>
-                <li>Results render as a <strong>table</strong> and, when graph data is returned, as an interactive <strong>network</strong></li>
-                <li>All queries are read-only for safety</li>
+                <li>Enter a <strong>database name</strong> and a <strong>direct download URL</strong> (TSV, CSV, JSON, or gzipped)</li>
+                <li>Click <strong>Build Parser</strong> &mdash; the DatabaseAgent (Claude AI) samples the file, generates a complete parser, integrates it into the pipeline, and loads the data into Neo4j</li>
+                <li>The agent handles format detection, column mapping, ontology config, and ID validation automatically</li>
+                <li>Three parsers already in production (HGNC, HGNC Families, ClinVar) were built entirely this way</li>
             </ul>
         </div>
         <div class="modal-dots">
