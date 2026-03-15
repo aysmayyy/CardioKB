@@ -268,6 +268,13 @@ class CardioKBPipeline:
             edge_dfs = self._explode_clinical_trial_edges(ct_data)
             ct_data.update(edge_dfs)
 
+        # Post-processing: case-match ClinicalTrials conditions/interventions
+        # to Disease.commonName and Drug.commonName (graph uses lowercase Disease
+        # Ontology names and title-case DrugBank names)
+        if 'clinicaltrials' in parsed_data:
+            ct_data = parsed_data['clinicaltrials']
+            self._normalize_clinical_trial_edges(ct_data, parsed_data)
+
         # Post-processing: create variant_in_gene edges from ClinPGx variants
         if 'clinpgx' in parsed_data:
             cpgx = parsed_data['clinpgx']
@@ -601,6 +608,75 @@ class CardioKBPipeline:
                 logger.info(f"Created {len(rows)} trial-intervention edges")
 
         return result
+
+    def _normalize_clinical_trial_edges(
+        self, ct_data: Dict[str, pd.DataFrame], parsed_data: Dict
+    ):
+        """
+        Case-match ClinicalTrials condition and intervention names to
+        Disease.commonName and Drug.commonName so the Neo4j loader's exact
+        MATCH succeeds.
+        """
+        # Build Disease case-insensitive lookup from Disease Ontology + DisGeNET + OMIM
+        disease_lookup: Dict[str, str] = {}
+        for src in ('disease_ontology', 'disgenet', 'omim'):
+            if src not in parsed_data:
+                continue
+            for key, df in parsed_data[src].items():
+                name_col = None
+                for candidate in ('commonName', 'diseaseName', 'disease_name'):
+                    if candidate in df.columns:
+                        name_col = candidate
+                        break
+                if name_col:
+                    for name in df[name_col].dropna():
+                        disease_lookup[str(name).lower()] = str(name)
+
+        # Build Drug case-insensitive lookup from DrugBank + AOP-DB
+        drug_lookup: Dict[str, str] = {}
+        for src in ('drugbank', 'aopdb'):
+            if src not in parsed_data:
+                continue
+            for key, df in parsed_data[src].items():
+                name_col = None
+                for candidate in ('drug_name', 'chemical_name', 'commonName'):
+                    if candidate in df.columns:
+                        name_col = candidate
+                        break
+                if name_col:
+                    for name in df[name_col].dropna():
+                        drug_lookup[str(name).lower()] = str(name)
+
+        logger.info(
+            f"ClinicalTrials normalization: "
+            f"{len(disease_lookup)} disease names, {len(drug_lookup)} drug names"
+        )
+
+        # Normalize condition names
+        if CT_TRIAL_STUDIES_CONDITION in ct_data and disease_lookup:
+            df = ct_data[CT_TRIAL_STUDIES_CONDITION]
+            before = df['condition'].isin(disease_lookup.values()).sum()
+            df['condition'] = df['condition'].apply(
+                lambda x: disease_lookup.get(str(x).lower(), x)
+            )
+            after = df['condition'].isin(disease_lookup.values()).sum()
+            logger.info(
+                f"  Conditions: {before} exact -> {after} after case-match "
+                f"({after - before} new matches)"
+            )
+
+        # Normalize intervention names
+        if CT_TRIAL_TESTS_INTERVENTION in ct_data and drug_lookup:
+            df = ct_data[CT_TRIAL_TESTS_INTERVENTION]
+            before = df['intervention_name'].isin(drug_lookup.values()).sum()
+            df['intervention_name'] = df['intervention_name'].apply(
+                lambda x: drug_lookup.get(str(x).lower(), x)
+            )
+            after = df['intervention_name'].isin(drug_lookup.values()).sum()
+            logger.info(
+                f"  Interventions: {before} exact -> {after} after case-match "
+                f"({after - before} new matches)"
+            )
 
     # Manual synonym map: ClinPGx drug name -> (node_type, exact_name)
     CLINPGX_DRUG_SYNONYMS = {

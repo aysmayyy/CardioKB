@@ -2,7 +2,7 @@
 
 A biomedical knowledge graph pipeline that integrates 24 data sources (24 parsers) into a Neo4j graph for cardiovascular disease research, feature selection, and precision medicine. Adapted from the AlzKB (Alzheimer's Knowledge Base) architecture with additional custom parsers and Hetionet component integrations.
 
-**Graph stats:** 359,952 nodes | 23,881,159 relationships | 16 node types | 33 relationship types
+**Graph stats:** 359,952 nodes | 23,886,074 relationships | 16 node types | 33 relationship types
 
 ## Pipeline Status
 
@@ -21,7 +21,7 @@ A biomedical knowledge graph pipeline that integrates 24 data sources (24 parser
 
 | # | Source | Access | Status |
 |---|--------|--------|--------|
-| 1 | ClinicalTrials.gov | Public API v2 | Working (20,219 CVD trials) |
+| 1 | ClinicalTrials.gov | Public API v2 | Working (20,219 CVD trials, 6,327 condition + 1,655 intervention edges) |
 | 2 | ClinPGx (PharmGKB successor) | Public API | Working (454 annotations, 1,060 variants, 294 AFFECTS_RESPONSE_TO edges) |
 | 3 | NCBI Gene | Public FTP | Working (193,687 genes) |
 | 4 | DoRothEA (OmniPath) | Public API | Working (15,092 TF-gene interactions) |
