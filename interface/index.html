@@ -53,6 +53,14 @@ body {
 }
 .run-btn:hover { opacity: 0.85; }
 .run-btn:disabled { opacity: 0.4; cursor: not-allowed; }
+.agent-input {
+    width: 100%; padding: 0.55rem 0.75rem; border-radius: 6px; border: 1px solid var(--border);
+    background: var(--bg); color: var(--text); font-size: 0.88rem; margin-bottom: 0.4rem;
+    outline: none; transition: border-color 0.15s;
+}
+.agent-input:focus { border-color: var(--accent); }
+.agent-input::placeholder { color: var(--text-muted); }
+.agent-btn { margin-top: 0; }
 
 /* Main */
 .main { margin-left: var(--sidebar-w); flex: 1; padding: 1.5rem 2rem; }
@@ -134,6 +142,12 @@ th { color: var(--text-muted); font-weight: 600; text-transform: uppercase; font
     <div>
         <h3>Disease Filter</h3>
         <ul class="disease-list" id="diseaseList"></ul>
+    </div>
+
+    <div>
+        <h3>Build New Disease</h3>
+        <input type="text" class="agent-input" id="agentInput" placeholder="e.g. Parkinson's, PD, lupus..." />
+        <button class="run-btn agent-btn" id="agentBtn" onclick="runAgentBuild()">Build Knowledge Graph</button>
     </div>
 
     <button class="run-btn" id="runBtn" onclick="runHealthCheck()">Run Health Check</button>
@@ -340,26 +354,111 @@ function runHealthCheck() {
     }
 }
 
-// Render parser table
+// Run agent build via POST + SSE streaming
+async function runAgentBuild() {
+    const input = document.getElementById('agentInput');
+    const btn = document.getElementById('agentBtn');
+    const disease = input.value.trim();
+    if (!disease) { input.focus(); return; }
+
+    btn.disabled = true;
+    btn.innerHTML = '<span class="spinner"></span>Building...';
+    input.disabled = true;
+
+    document.getElementById('logPanel').innerHTML = '';
+    log('Agent: building knowledge graph for "' + disease + '"...', 'info');
+
+    try {
+        const res = await fetch('/api/agent/build', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ disease }),
+        });
+
+        if (!res.ok) {
+            const err = await res.json().catch(() => ({}));
+            log('Agent error: ' + (err.error || res.statusText), 'err');
+            agentFinish(); return;
+        }
+
+        const reader = res.body.getReader();
+        const decoder = new TextDecoder();
+        let buffer = '';
+
+        while (true) {
+            const { done, value } = await reader.read();
+            if (done) break;
+            buffer += decoder.decode(value, { stream: true });
+
+            // Parse SSE frames from buffer
+            let boundary;
+            while ((boundary = buffer.indexOf('\n\n')) !== -1) {
+                const frame = buffer.slice(0, boundary);
+                buffer = buffer.slice(boundary + 2);
+
+                let event = 'message', data = '';
+                for (const line of frame.split('\n')) {
+                    if (line.startsWith('event: ')) event = line.slice(7);
+                    else if (line.startsWith('data: ')) data = line.slice(6);
+                }
+                if (!data) continue;
+
+                const parsed = JSON.parse(data);
+                if (event === 'status') {
+                    log('Agent: ' + parsed.message, 'info');
+                } else if (event === 'result') {
+                    log('Agent: complete — ' + (parsed.cached ? 'loaded from cache' :
+                        parsed.disgenet_edges_loaded + ' gene-disease edges loaded'), 'ok');
+                    if (parsed.subgraph_stats) {
+                        const s = parsed.subgraph_stats;
+                        log('  Unique genes: ' + (s.unique_genes || 0).toLocaleString() +
+                            ' | Diseases: ' + (s.unique_diseases || 0).toLocaleString() +
+                            ' | DisGeNET edges: ' + (s.disgenet_edges || 0).toLocaleString(), 'ok');
+                    }
+                    // Refresh graph stats
+                    loadGraphStats();
+                } else if (event === 'error') {
+                    log('Agent error: ' + parsed.message, 'err');
+                }
+            }
+        }
+    } catch (e) {
+        log('Agent error: ' + e.message, 'err');
+    }
+
+    agentFinish();
+
+    function agentFinish() {
+        btn.disabled = false;
+        btn.textContent = 'Build Knowledge Graph';
+        input.disabled = false;
+    }
+}
+
+// Allow Enter key to trigger build
+document.addEventListener('DOMContentLoaded', () => {
+    document.getElementById('agentInput').addEventListener('keydown', e => {
+        if (e.key === 'Enter') runAgentBuild();
+    });
+});
+
+// Render parser table (dynamic — uses whatever parsers the backend sends)
 function renderParserTable(parsers) {
     const body = document.getElementById('parserBody');
     body.innerHTML = '';
-    const allParsers = [
-        'clinicaltrials','clinpgx','ncbigene','dorothea','disease_ontology',
-        'gene_ontology','uberon','mesh','sider','lincs','medline','drugcentral',
-        'gwas','pubtator','bindingdb','ctd','bgee','hetionet_precomputed',
-        'jensenlab','jensentissues','hpo','omim','disgenet','drugbank','aopdb'
-    ];
-    allParsers.forEach(name => {
+    const names = Object.keys(parsers).sort();
+    names.forEach(name => {
         const p = parsers[name];
-        const status = p ? p.status : 'skipped';
-        const dur = p && p.duration_sec ? p.duration_sec.toFixed(1) + 's' : '-';
+        const status = p.status || 'skipped';
+        const detail = p.detail || '';
+        const dur = p.duration_sec ? p.duration_sec.toFixed(1) + 's' : '-';
         const cls = status.includes('success') ? 'success' : (
-            ['failed','no data'].includes(status) ? 'failed' :
+            ['failed','no data','parsed but not loaded'].includes(status) ? 'failed' :
             status === 'running' ? 'running' : 'skipped'
         );
+        const label = detail ? `${status} (${detail})` : status;
         const tr = document.createElement('tr');
-        tr.innerHTML = `<td>${name}</td><td><span class="badge badge-${cls}">${status}</span></td><td>${dur}</td>`;
+        tr.innerHTML = `<td>${name}</td><td><span class="badge badge-${cls}">${label}</span></td><td>${dur}</td>`;
         body.appendChild(tr);
     });
 }

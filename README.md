@@ -1,15 +1,15 @@
 # CardioKB: Cardiovascular Disease Knowledge Base
 
-A biomedical knowledge graph pipeline that integrates 24 data sources (24 parsers) into a Neo4j graph for cardiovascular disease research, feature selection, and precision medicine. Adapted from the AlzKB (Alzheimer's Knowledge Base) architecture with additional custom parsers and Hetionet component integrations.
+A biomedical knowledge graph pipeline that integrates 25 data sources (25 parsers) into a Neo4j graph for cardiovascular disease research, feature selection, and precision medicine. Adapted from the AlzKB (Alzheimer's Knowledge Base) architecture with additional custom parsers and Hetionet component integrations. Includes an AI-powered disease agent that can build knowledge subgraphs for any disease on demand via Claude API + DisGeNET.
 
-**Graph stats:** 359,952 nodes | 23,886,074 relationships | 16 node types | 33 relationship types
+**Graph stats:** 363,104 nodes | 23,889,685 relationships | 17 node types | 33 relationship types
 
 ## Pipeline Status
 
 | Category | Count | Details |
 |----------|-------|---------|
-| Total databases | 24 | 24 parsers (1 per source) |
-| Active & loaded | 24 | Successfully parsed + loaded into Neo4j |
+| Total databases | 25 | 25 parsers (1 per source) |
+| Active & loaded | 22 | Successfully parsed + loaded into Neo4j (verified by r.source query) |
 | Credential-gated (loaded) | 4 | OMIM, DisGeNET, DrugBank (XML), AOP-DB (SQL dump) |
 | Stale/partial | 1 | MeSH (nodes only, no relationship data) |
 | Ontology configs | 58 | Neo4j node/relationship type mappings |
@@ -49,11 +49,12 @@ A biomedical knowledge graph pipeline that integrates 24 data sources (24 parser
 | 21 | Bgee (gene expression) | Public FTP | Working (6,609,112 expression edges) |
 | 22 | Hetionet (precomputed edges) | Public | Working (613,470 precomputed edges) |
 | 23 | Jensen Lab DISEASES | Public | Working (gene-disease associations) |
-| 24 | HPO (Human Phenotype Ontology) | Public | Working (19,389 phenotypes, 270,272 gene-phenotype edges) |
+| 24 | Jensen Lab TISSUES | Public | Working (gene-tissue expression) |
+| 25 | HPO (Human Phenotype Ontology) | Public | Working (19,389 phenotypes, 270,272 gene-phenotype edges) |
 
 ## Neo4j Graph Schema
 
-**Node types (16):** Gene (193,687), Disease (16,880), Drug (41,566), Pathway (4,646), TranscriptionFactor (367), ClinicalTrial (20,219), Variant (1,060), DrugLabel (378), SideEffect (5,734), PharmacologicClass (1,646), Symptom (966), BodyPart (14,675), BiologicalProcess (24,547), MolecularFunction (10,123), CellularComponent (4,069), Phenotype (19,389)
+**Node types (17):** Gene (193,687), Disease (20,029), Drug (41,566), Pathway (4,646), TranscriptionFactor (367), ClinicalTrial (20,219), Variant (1,060), DrugLabel (378), SideEffect (5,734), PharmacologicClass (1,646), Symptom (966), BodyPart (14,675), BiologicalProcess (24,547), MolecularFunction (10,123), CellularComponent (4,069), Phenotype (19,389), DiseaseCache (3)
 
 **Key relationship types (33):** geneAssociatesWithDisease, geneAssociatesWithPhenotype, geneParticipatesInBiologicalProcess, geneHasMolecularFunction, geneAssociatedWithCellularComponent, geneInteractsWithGene, geneCovariesWithGene, geneRegulatesGene, geneInPathway, bodyPartUnderexpressesGene, bodyPartOverexpressesGene, chemicalIncreasesExpression, chemicalDecreasesExpression, chemicalBindsGene, compoundCausesSideEffect, compoundUpregulatesGene, compoundDownregulatesGene, pharmacologicClassIncludesCompound, compoundInPharmacologicClass, pathwayContainsGene, drugTreatsDisease, drugPalliatesDisease, diseaseAssociatesWithDisease, diseaseLocalizesToAnatomy, diseasePresentsSymptom, diseaseResemblesDisease, transcriptionFactorInteractsWithGene, drugLabelAnnotatesGene, drugLabelDescribesDrug, AFFECTS_RESPONSE_TO, STUDIES_CONDITION, TESTS_INTERVENTION, VARIANT_IN
 
@@ -65,6 +66,9 @@ A biomedical knowledge graph pipeline that integrates 24 data sources (24 parser
 Cardio-KB/
 ├── src/
 │   ├── main.py                 # Pipeline orchestrator (--skip-neo4j, --skip-download)
+│   ├── agent.py                # AI disease KB builder (Claude API + DisGeNET)
+│   ├── api.py                  # Flask backend with SSE streaming + agent endpoint
+│   ├── orchestrator.py         # Health check with dynamic Neo4j parser detection
 │   ├── neo4j_loader.py         # Cypher-based Neo4j batch loader
 │   ├── ontology_configs.py     # 58 ontology configs for Neo4j schema mapping
 │   ├── utils.py                # Disease filtering utilities (load_disease_terms, etc.)
@@ -79,6 +83,7 @@ Cardio-KB/
 │       ├── drugbank_parser.py
 │       ├── aopdb_parser.py
 │       ├── jensenlab_parser.py
+│       ├── jensen_tissues_parser.py
 │       ├── hpo_parser.py
 │       └── hetionet_components/    # 14 Hetionet-derived component parsers
 │           ├── disease_ontology_parser.py

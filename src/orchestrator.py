@@ -30,15 +30,46 @@ if _project_root not in sys.path:
 
 logger = logging.getLogger(__name__)
 
-# All expected parsers in pipeline order
-EXPECTED_PARSERS = [
-    'clinicaltrials', 'clinpgx', 'ncbigene', 'dorothea',
-    'disease_ontology', 'gene_ontology', 'uberon', 'mesh',
-    'sider', 'lincs', 'medline', 'drugcentral', 'gwas',
-    'pubtator', 'bindingdb', 'ctd', 'bgee', 'hetionet_precomputed',
-    'jensenlab', 'jensentissues', 'hpo', 'omim', 'disgenet',
-    'drugbank', 'aopdb',
-]
+
+def _build_parser_metadata() -> Dict:
+    """Auto-derive parser metadata from ONTOLOGY_CONFIGS.
+
+    Returns dict keyed by parser name with:
+        source_labels: list of r.source values this parser writes
+        node_types: list of node labels this parser creates
+        source_filenames: list of TSV filenames from configs
+    """
+    from src.ontology_configs import ONTOLOGY_CONFIGS
+
+    meta: Dict = {}
+    for key, cfg in ONTOLOGY_CONFIGS.items():
+        parser = key.split('.')[0]
+        if parser not in meta:
+            meta[parser] = {
+                'source_labels': set(),
+                'node_types': set(),
+                'source_filenames': [],
+            }
+        source = cfg.get('source_label')
+        if source:
+            meta[parser]['source_labels'].add(source)
+        if cfg.get('data_type') == 'node':
+            nt = cfg.get('node_type')
+            if nt:
+                meta[parser]['node_types'].add(nt)
+        sf = cfg.get('source_filename')
+        if sf:
+            meta[parser]['source_filenames'].append(sf)
+
+    for p in meta:
+        meta[p]['source_labels'] = sorted(meta[p]['source_labels'])
+        meta[p]['node_types'] = sorted(meta[p]['node_types'])
+
+    return meta
+
+
+# Derive parser list automatically from ontology configs
+EXPECTED_PARSERS = sorted(_build_parser_metadata().keys())
 
 # Map short disease names to filter files
 DISEASE_FILTERS = {
@@ -197,9 +228,98 @@ def parse_build_log(log_path: str) -> Dict:
     return results
 
 
+def _query_parser_status(session, project_root: str) -> Dict:
+    """Query Neo4j for per-parser status, falling back to file system checks.
+
+    For each parser derived from ONTOLOGY_CONFIGS:
+      - If r.source count > 0 or unique node count > 0 → 'success' with counts
+      - Elif raw/processed data files exist → 'parsed but not loaded'
+      - Else → 'skipped'
+    """
+    meta = _build_parser_metadata()
+
+    # Batch query: relationship counts grouped by r.source
+    source_counts: Dict[str, int] = {}
+    for rec in session.run(
+        "MATCH ()-[r]->() WHERE r.source IS NOT NULL "
+        "RETURN r.source AS source, count(r) AS cnt"
+    ):
+        source_counts[rec['source']] = rec['cnt']
+
+    # Batch query: node counts by label
+    node_counts: Dict[str, int] = {}
+    labels = [r['label'] for r in session.run(
+        "CALL db.labels() YIELD label RETURN label"
+    )]
+    for label in labels:
+        cnt = session.run(
+            f"MATCH (n:`{label}`) RETURN count(n) AS cnt"
+        ).single()['cnt']
+        node_counts[label] = cnt
+
+    # File system checks
+    raw_dir = Path(project_root) / 'data' / 'raw'
+    proc_dir = Path(project_root) / 'data' / 'processed'
+
+    def _has_data_files(parser_name: str) -> bool:
+        for base in (proc_dir, raw_dir):
+            for candidate in (parser_name, parser_name.replace('_', '')):
+                d = base / candidate
+                if d.is_dir() and any(d.iterdir()):
+                    return True
+        return False
+
+    statuses: Dict = {}
+    for parser_name, pmeta in sorted(meta.items()):
+        rel_count = sum(source_counts.get(s, 0) for s in pmeta['source_labels'])
+        # For node-only parsers (no source_labels), count their node types
+        # For relationship parsers, include node counts as supplementary info
+        ncount = sum(node_counts.get(nt, 0) for nt in pmeta['node_types'])
+
+        if pmeta['source_labels'] and rel_count > 0:
+            parts = []
+            if ncount > 0:
+                parts.append(f"{ncount:,} nodes")
+            parts.append(f"{rel_count:,} relationships")
+            statuses[parser_name] = {
+                'status': 'success',
+                'count': rel_count + ncount,
+                'detail': ', '.join(parts),
+                'rel_count': rel_count,
+                'node_count': ncount,
+            }
+        elif not pmeta['source_labels'] and ncount > 0:
+            # Node-only parser (e.g., drugbank, mesh, ncbigene, uberon)
+            statuses[parser_name] = {
+                'status': 'success',
+                'count': ncount,
+                'detail': f"{ncount:,} nodes",
+                'rel_count': 0,
+                'node_count': ncount,
+            }
+        elif _has_data_files(parser_name):
+            statuses[parser_name] = {
+                'status': 'parsed but not loaded',
+                'count': 0,
+                'detail': 'Data files exist but 0 in Neo4j',
+                'rel_count': 0,
+                'node_count': 0,
+            }
+        else:
+            statuses[parser_name] = {
+                'status': 'skipped',
+                'count': 0,
+                'detail': 'No data files found',
+                'rel_count': 0,
+                'node_count': 0,
+            }
+
+    return statuses
+
+
 def query_neo4j_stats(uri: str, username: str, password: str,
                       database: str = 'neo4j') -> Dict:
-    """Query Neo4j for node counts, relationship counts, and health checks."""
+    """Query Neo4j for node counts, relationship counts, parser status, and health checks."""
     from neo4j import GraphDatabase
 
     stats = {
@@ -209,6 +329,7 @@ def query_neo4j_stats(uri: str, username: str, password: str,
         'total_relationships': 0,
         'orphan_nodes': {},
         'cvd_subgraph': {},
+        'parser_status': {},
     }
 
     driver = GraphDatabase.driver(uri, auth=(username, password))
@@ -219,7 +340,7 @@ def query_neo4j_stats(uri: str, username: str, password: str,
             )]
             for label in sorted(labels):
                 cnt = session.run(
-                    f"MATCH (n:{label}) RETURN count(n) AS cnt"
+                    f"MATCH (n:`{label}`) RETURN count(n) AS cnt"
                 ).single()['cnt']
                 stats['node_counts'][label] = cnt
                 stats['total_nodes'] += cnt
@@ -237,12 +358,13 @@ def query_neo4j_stats(uri: str, username: str, password: str,
 
             for label in sorted(labels):
                 cnt = session.run(
-                    f"MATCH (n:{label}) WHERE NOT (n)--() "
+                    f"MATCH (n:`{label}`) WHERE NOT (n)--() "
                     f"RETURN count(n) AS cnt"
                 ).single()['cnt']
                 if cnt > 0:
                     stats['orphan_nodes'][label] = cnt
 
+            stats['parser_status'] = _query_parser_status(session, _project_root)
             stats['cvd_subgraph'] = _query_cvd_subgraph(session)
 
     finally:
@@ -318,33 +440,49 @@ def run_health_check(disease: str = 'cvd',
     emit('status', {'message': f'Starting health check for {disease_label}...',
                     'disease': disease_label})
 
-    # Parse build log
+    # Parse build log (for timing info)
     emit('status', {'message': 'Parsing build log...'})
     log_data = parse_build_log(log_file)
-    emit('log_parsed', {
-        'sources_processed': log_data['sources_processed'],
-        'sources_failed': log_data['sources_failed'],
-        'pipeline_duration': log_data['pipeline_duration'],
-        'pipeline_start': log_data['pipeline_start'].isoformat() if log_data['pipeline_start'] else None,
-        'parsers': {
-            name: {
-                'status': p['status'],
-                'duration_sec': p['duration_sec'],
-            }
-            for name, p in log_data['parsers'].items()
-        },
-    })
 
-    # Query Neo4j
+    # Query Neo4j (source of truth for parser status)
     uri = os.getenv('NEO4J_URI', 'bolt://localhost:7687')
     username = os.getenv('NEO4J_USERNAME', 'neo4j')
     password = os.getenv('NEO4J_PASSWORD', '')
 
     neo4j_stats = None
     if password:
-        emit('status', {'message': 'Querying Neo4j for graph stats...'})
+        emit('status', {'message': 'Querying Neo4j for graph stats and parser status...'})
         try:
             neo4j_stats = query_neo4j_stats(uri, username, password)
+
+            # Merge log timing into Neo4j-derived parser status
+            combined_parsers = {}
+            for name, ps in neo4j_stats['parser_status'].items():
+                log_info = log_data['parsers'].get(name, {})
+                combined_parsers[name] = {
+                    'status': ps['status'],
+                    'detail': ps['detail'],
+                    'count': ps['count'],
+                    'rel_count': ps['rel_count'],
+                    'node_count': ps['node_count'],
+                    'duration_sec': log_info.get('duration_sec'),
+                }
+
+            emit('log_parsed', {
+                'sources_processed': sum(
+                    1 for p in combined_parsers.values()
+                    if p['status'] == 'success'
+                ),
+                'sources_failed': sum(
+                    1 for p in combined_parsers.values()
+                    if p['status'] in ('parsed but not loaded', 'skipped')
+                ),
+                'pipeline_duration': log_data['pipeline_duration'],
+                'pipeline_start': (log_data['pipeline_start'].isoformat()
+                                   if log_data['pipeline_start'] else None),
+                'parsers': combined_parsers,
+            })
+
             emit('neo4j_stats', {
                 'node_counts': neo4j_stats['node_counts'],
                 'rel_counts': neo4j_stats['rel_counts'],
@@ -421,14 +559,28 @@ def _build_health_checks(log_data: Dict, neo4j_stats: Optional[Dict]) -> Dict:
                 'message': 'No orphan nodes detected',
             })
 
-    failed = [n for n in EXPECTED_PARSERS
-              if log_data['parsers'].get(n, {}).get('status') in ('failed', 'no data')]
-    checks.append({
-        'name': 'Parser data',
-        'ok': len(failed) == 0,
-        'message': f'Parsers with no data: {", ".join(failed)}' if failed
-                   else 'All parsers produced data',
-    })
+    if neo4j_stats and neo4j_stats.get('parser_status'):
+        ps = neo4j_stats['parser_status']
+        not_loaded = [n for n, s in ps.items()
+                      if s['status'] != 'success']
+        loaded = [n for n, s in ps.items()
+                  if s['status'] == 'success']
+        checks.append({
+            'name': 'Parser data (Neo4j)',
+            'ok': len(not_loaded) == 0,
+            'message': (f'{len(loaded)}/{len(ps)} parsers have data in Neo4j'
+                        + (f' | Not loaded: {", ".join(sorted(not_loaded))}'
+                           if not_loaded else '')),
+        })
+    else:
+        failed = [n for n in EXPECTED_PARSERS
+                  if log_data['parsers'].get(n, {}).get('status') in ('failed', 'no data')]
+        checks.append({
+            'name': 'Parser data',
+            'ok': len(failed) == 0,
+            'message': f'Parsers with no data: {", ".join(failed)}' if failed
+                       else 'All parsers produced data',
+        })
 
     return {'checks': checks}
 
@@ -439,17 +591,22 @@ def generate_html_report(log_data: Dict, neo4j_stats: Dict,
     now = datetime.now().strftime('%Y-%m-%d %H:%M:%S')
 
     parser_rows = []
-    for name in EXPECTED_PARSERS:
-        if name in log_data['parsers']:
-            p = log_data['parsers'][name]
-            status = p['status']
-            dur = f"{p['duration_sec']:.1f}s" if p['duration_sec'] else '-'
+    parser_status = neo4j_stats.get('parser_status', {})
+    all_parsers = sorted(set(EXPECTED_PARSERS) | set(parser_status.keys()))
+    for name in all_parsers:
+        ps = parser_status.get(name)
+        log_p = log_data['parsers'].get(name, {})
+        if ps:
+            status = ps['status']
+            detail = ps.get('detail', '')
+            if detail:
+                status = f'{status} ({detail})'
         else:
-            status = 'skipped'
-            dur = '-'
+            status = log_p.get('status', 'skipped')
+        dur = f"{log_p['duration_sec']:.1f}s" if log_p.get('duration_sec') else '-'
 
         status_class = 'success' if 'success' in status else (
-            'failed' if status in ('failed', 'no data') else 'skipped'
+            'failed' if status in ('failed', 'no data', 'parsed but not loaded') else 'skipped'
         )
         parser_rows.append(
             f'<tr class="{status_class}">'

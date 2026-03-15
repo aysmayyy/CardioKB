@@ -399,7 +399,7 @@ def _query_subgraph_stats(disease_key: str) -> dict:
     return stats
 
 
-def run_agent(disease_name: str) -> dict:
+def run_agent(disease_name: str, on_progress=None) -> dict:
     """
     Main agent entry point.
 
@@ -408,15 +408,25 @@ def run_agent(disease_name: str) -> dict:
     3. If cached: add the user's input as a new alias, return stats
     4. If not cached: run DisGeNET, cache result with aliases
     5. Return subgraph stats
+
+    Args:
+        disease_name: Disease name to process.
+        on_progress: Optional callback(event: str, data: dict) for streaming progress.
     """
     from src.utils import (
         check_disease_cache, add_to_disease_cache, add_alias_to_disease_cache,
     )
 
+    def emit(event: str, data: dict):
+        if on_progress:
+            on_progress(event, data)
+
     user_input = disease_name.strip()
     logger.info(f"User input: '{user_input}'")
+    emit('status', {'phase': 'start', 'message': f"Processing '{user_input}'..."})
 
     # Step 1: Check cache with raw input first (fast path — no Claude call)
+    emit('status', {'phase': 'cache_check', 'message': 'Checking disease cache...'})
     cached = check_disease_cache(user_input)
     if cached:
         logger.info(
@@ -426,6 +436,7 @@ def run_agent(disease_name: str) -> dict:
         )
         add_alias_to_disease_cache(cached['disease_name'], user_input)
         stats = _query_subgraph_stats(cached['disease_name'])
+        emit('status', {'phase': 'cache_hit', 'message': f"Found in cache: {cached['disease_name']}"})
         return {
             "disease_key": cached['disease_name'],
             "canonical_name": cached.get('canonical_name', cached['disease_name']),
@@ -436,11 +447,21 @@ def run_agent(disease_name: str) -> dict:
         }
 
     # Step 2: Standardize via Claude (resolves abbreviations, synonyms, etc.)
+    emit('status', {'phase': 'standardize', 'message': 'Standardizing disease name via Claude...'})
     std = _standardize_disease(user_input)
     canonical_key = std["canonical_key"]
     canonical_name = std["canonical_name"]
     existing_filter = std["existing_filter"]
     search_terms = std["search_terms"]
+
+    emit('status', {
+        'phase': 'standardized',
+        'message': f"Resolved to: {canonical_name}",
+        'canonical_key': canonical_key,
+        'canonical_name': canonical_name,
+        'search_terms_count': len(search_terms),
+        'existing_filter': existing_filter,
+    })
 
     # Step 3: Check cache again with the canonical key
     cached = check_disease_cache(canonical_key)
@@ -451,6 +472,7 @@ def run_agent(disease_name: str) -> dict:
         )
         add_alias_to_disease_cache(canonical_key, user_input)
         stats = _query_subgraph_stats(canonical_key)
+        emit('status', {'phase': 'cache_hit', 'message': f"Found in cache: {canonical_key}"})
         return {
             "disease_key": canonical_key,
             "canonical_name": canonical_name,
@@ -461,6 +483,7 @@ def run_agent(disease_name: str) -> dict:
         }
 
     logger.info(f"Not in cache — loading DisGeNET for '{canonical_name}'...")
+    emit('status', {'phase': 'disgenet', 'message': f"Querying DisGeNET for '{canonical_name}'..."})
 
     # Step 4: Determine filter file
     if existing_filter:
@@ -477,13 +500,21 @@ def run_agent(disease_name: str) -> dict:
         gda_count = disgenet_result['gda_count']
         partial = disgenet_result['partial']
 
+        emit('status', {
+            'phase': 'disgenet_done',
+            'message': f"DisGeNET: {gda_count} gene-disease associations loaded"
+                       f"{' (partial)' if partial else ''}",
+            'gda_count': gda_count,
+            'partial': partial,
+        })
+
         # Step 6: Cache result with aliases
+        emit('status', {'phase': 'caching', 'message': 'Caching results...'})
         aliases = [user_input.lower()]
         if canonical_name.lower() != user_input.lower():
             aliases.append(canonical_name.lower())
         if canonical_key != user_input.lower():
             aliases.append(canonical_key)
-
         cache_entry = add_to_disease_cache(canonical_key, {
             'canonical_name': canonical_name,
             'filter_file': filter_path if not temp_filter else f'agent:{canonical_key}',
@@ -501,6 +532,7 @@ def run_agent(disease_name: str) -> dict:
                 pass
 
     # Step 7: Query and return stats
+    emit('status', {'phase': 'stats', 'message': 'Querying subgraph statistics...'})
     stats = _query_subgraph_stats(canonical_key)
 
     result = {

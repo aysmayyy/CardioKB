@@ -11,7 +11,7 @@
 12-week rotation project (Jan–Apr 2026) building a cardiovascular disease knowledge base. The base KB structure is adapted from AlzKB (Alzheimer's Knowledge Base) files. BaseAgent (agentic AI tool) handles building the core knowledge graph from databases similar to AlzKB. On top of that, additional data sources are integrated via custom parsers. The final KB is stored in a Neo4j knowledge graph for CVD research, feature selection, and precision medicine.
 
 ## Current Graph Stats
-- **359,952 nodes** | **23,886,074 relationships** | **16 node types** | **33 relationship types**
+- **363,104 nodes** | **23,889,685 relationships** | **17 node types** | **33 relationship types**
 - All relationships carry a `source` property identifying the originating database (e.g., `source: "DisGeNET"`)
 
 ## Tech Stack
@@ -23,7 +23,7 @@
 
 ## Project Structure
 - `src/main.py` — Pipeline orchestrator (supports `--skip-neo4j`, `--skip-download`)
-- `src/parsers/` — 24 data source parsers (inherit from `BaseParser` in `base_parser.py`)
+- `src/parsers/` — 25 data source parsers (inherit from `BaseParser` in `base_parser.py`)
   - `src/parsers/hetionet_components/` — 14 Hetionet-derived component parsers
 - `src/ontology_configs.py` — 58 ontology configs mapping source data to Neo4j schema
 - `src/neo4j_loader.py` — Cypher-based Neo4j batch loader (auto-sets `r.source` from config `source_label`)
@@ -35,8 +35,9 @@
 - `data/processed/` — Exported TSV files for Neo4j loading
 - `data/output/` — Release notes and build artifacts
 - `interface/index.html` — Web dashboard (served by `src/api.py`)
-- `src/api.py` — Flask backend with SSE streaming for web interface
-- `src/orchestrator.py` — Pipeline health check and HTML report generator
+- `src/agent.py` — AI-powered disease KB builder (Claude API + DisGeNET, with SSE progress callbacks)
+- `src/api.py` — Flask backend with SSE streaming for web interface and agent builds
+- `src/orchestrator.py` — Pipeline health check with dynamic Neo4j-based parser status detection
 - `run.sh` — Launches Flask + opens browser
 - `reports/` — Generated pipeline health reports
 - `docs/` — Documentation, research plan, specific aims
@@ -98,9 +99,9 @@ Disease term files live in `ontology/diseases/` (one term per line, `#` for comm
 **DisGeNETParser** is the only parser that accepts a `disease_filter` parameter:
 - **DisGeNETParser(disease_filter="ontology/diseases/alzheimers.txt")** — searches the API for diseases matching the term list
 
-When `disease_filter` is omitted, DisGeNET defaults to `ontology/disease_filter.txt` (→ CVD). OMIMParser reads the symlink to tag rows with `is_cvd` but loads all data regardless. All other 22 parsers are fully disease-agnostic.
+When `disease_filter` is omitted, DisGeNET defaults to `ontology/disease_filter.txt` (→ CVD). OMIMParser reads the symlink to tag rows with `is_cvd` but loads all data regardless. All other 23 parsers are fully disease-agnostic.
 
-## Data Sources — 24 Sources (24 Parsers)
+## Data Sources — 25 Sources (25 Parsers)
 
 ### Phase 1: Core Parsers
 | # | Source | Parser | Access | Status |
@@ -132,7 +133,8 @@ When `disease_filter` is omitted, DisGeNET defaults to `ontology/disease_filter.
 | 21 | Bgee (gene expression) | BgeeParser | Public FTP | Working (6,609,112 expression edges) |
 | 22 | Hetionet (precomputed edges) | HetionetPrecomputedParser | Public | Working (613,470 precomputed edges) |
 | 23 | Jensen Lab DISEASES | JensenLabParser | Public | Working (gene-disease associations) |
-| 24 | HPO (Human Phenotype Ontology) | HPOParser | Public | Working (19,389 phenotypes, 270,272 gene-phenotype edges) |
+| 24 | Jensen Lab TISSUES | JensenTissuesParser | Public | Working (gene-tissue expression) |
+| 25 | HPO (Human Phenotype Ontology) | HPOParser | Public | Working (19,389 phenotypes, 270,272 gene-phenotype edges) |
 
 ### Credential-Gated (requires env vars, currently loaded)
 | Parser | Source | Required Env Vars | Status |

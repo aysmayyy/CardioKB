@@ -205,6 +205,56 @@ def disease_stats():
         driver.close()
 
 
+@app.route('/api/agent/build', methods=['POST'])
+def agent_build_sse():
+    """
+    Run the disease agent and stream progress as Server-Sent Events.
+
+    Request body (JSON):
+        disease: Disease name to process (e.g., "parkinson's disease", "PD")
+
+    SSE events:
+        status  — progress updates with phase and message
+        result  — final result dict
+        error   — error message
+    """
+    body = request.get_json(silent=True) or {}
+    disease = (body.get('disease') or '').strip()
+    if not disease:
+        return jsonify({'error': 'Missing "disease" field'}), 400
+
+    q = queue.Queue()
+
+    def on_progress(event: str, data: dict):
+        q.put((event, data))
+
+    def run():
+        try:
+            from src.agent import run_agent
+            result = run_agent(disease, on_progress=on_progress)
+            q.put(('result', result))
+        except Exception as e:
+            q.put(('error', {'message': str(e)}))
+        finally:
+            q.put(None)  # sentinel
+
+    thread = threading.Thread(target=run, daemon=True)
+    thread.start()
+
+    def generate():
+        while True:
+            item = q.get()
+            if item is None:
+                break
+            event, data = item
+            payload = json.dumps(data, default=str)
+            yield f"event: {event}\ndata: {payload}\n\n"
+
+    return Response(generate(), mimetype='text/event-stream',
+                    headers={'Cache-Control': 'no-cache',
+                             'X-Accel-Buffering': 'no'})
+
+
 @app.route('/api/health-check')
 def health_check_sse():
     """
