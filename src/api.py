@@ -596,6 +596,128 @@ def run_query():
         driver.close()
 
 
+@app.route('/api/admin/verify', methods=['POST'])
+def admin_verify():
+    """Verify the admin password."""
+    body = request.get_json(silent=True) or {}
+    password = (body.get('password') or '').strip()
+    admin_pw = os.getenv('ADMIN_PASSWORD', '')
+    if not admin_pw:
+        return jsonify({'error': 'ADMIN_PASSWORD not configured on server'}), 503
+    if password == admin_pw:
+        return jsonify({'ok': True})
+    return jsonify({'ok': False, 'error': 'Invalid password'}), 403
+
+
+@app.route('/api/agent/add-database', methods=['POST'])
+def agent_add_database():
+    """Add a new database source via the agent.
+
+    Request body (JSON):
+        name: Database name
+        url: Database URL
+        password: Admin password
+    """
+    body = request.get_json(silent=True) or {}
+    admin_pw = os.getenv('ADMIN_PASSWORD', '')
+    if not admin_pw or (body.get('password') or '') != admin_pw:
+        return jsonify({'error': 'Unauthorized'}), 403
+
+    name = (body.get('name') or '').strip()
+    url = (body.get('url') or '').strip()
+    if not name or not url:
+        return jsonify({'error': 'Missing "name" and/or "url" fields'}), 400
+
+    q = queue.Queue()
+
+    def on_progress(event, data):
+        q.put((event, data))
+
+    def run():
+        try:
+            from src.agent import run_agent
+            result = run_agent(f"Add database: {name} from {url}",
+                               on_progress=on_progress)
+            q.put(('result', result))
+        except Exception as e:
+            q.put(('error', {'message': str(e)}))
+        finally:
+            q.put(None)
+
+    thread = threading.Thread(target=run, daemon=True)
+    thread.start()
+
+    def generate():
+        while True:
+            item = q.get()
+            if item is None:
+                break
+            event, data = item
+            payload = json.dumps(data, default=str)
+            yield f"event: {event}\ndata: {payload}\n\n"
+
+    return Response(generate(), mimetype='text/event-stream',
+                    headers={'Cache-Control': 'no-cache',
+                             'X-Accel-Buffering': 'no'})
+
+
+@app.route('/api/pipeline/run', methods=['POST'])
+def pipeline_run_sse():
+    """Run the full pipeline and stream progress as SSE.
+
+    Request body (JSON):
+        password: Admin password
+    """
+    body = request.get_json(silent=True) or {}
+    admin_pw = os.getenv('ADMIN_PASSWORD', '')
+    if not admin_pw or (body.get('password') or '') != admin_pw:
+        return jsonify({'error': 'Unauthorized'}), 403
+
+    q = queue.Queue()
+
+    def run():
+        import subprocess
+        try:
+            q.put(('status', {'message': 'Starting pipeline (python src/main.py)...'}))
+            proc = subprocess.Popen(
+                ['python', 'src/main.py'],
+                cwd=_project_root,
+                stdout=subprocess.PIPE,
+                stderr=subprocess.STDOUT,
+                text=True,
+                bufsize=1,
+            )
+            for line in proc.stdout:
+                line = line.rstrip('\n')
+                if line:
+                    q.put(('log', {'message': line}))
+            proc.wait()
+            if proc.returncode == 0:
+                q.put(('status', {'message': 'Pipeline completed successfully.'}))
+            else:
+                q.put(('error', {'message': f'Pipeline exited with code {proc.returncode}'}))
+        except Exception as e:
+            q.put(('error', {'message': str(e)}))
+        finally:
+            q.put(None)
+
+    thread = threading.Thread(target=run, daemon=True)
+    thread.start()
+
+    def generate():
+        while True:
+            item = q.get()
+            if item is None:
+                break
+            event, data = item
+            payload = json.dumps(data, default=str)
+            yield f"event: {event}\ndata: {payload}\n\n"
+
+    return Response(generate(), mimetype='text/event-stream',
+                    headers={'Cache-Control': 'no-cache',
+                             'X-Accel-Buffering': 'no'})
+
+
 @app.route('/api/health-check')
 def health_check_sse():
     """

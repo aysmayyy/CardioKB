@@ -34,14 +34,6 @@ body {
 .sidebar h1 { font-size: 1.2rem; color: var(--accent); }
 .sidebar h1 span { font-size: 0.7rem; color: var(--text-muted); display: block; font-weight: 400; }
 .sidebar h3 { font-size: 0.75rem; text-transform: uppercase; letter-spacing: 0.08em; color: var(--text-muted); margin-bottom: 0.5rem; }
-.disease-list { list-style: none; display: flex; flex-direction: column; gap: 0.25rem; }
-.disease-list li {
-    padding: 0.55rem 0.75rem; border-radius: 6px; cursor: pointer;
-    font-size: 0.88rem; transition: background 0.15s; display: flex; justify-content: space-between; align-items: center;
-}
-.disease-list li:hover { background: var(--surface2); }
-.disease-list li.active { background: var(--accent); color: #0f172a; font-weight: 600; }
-.disease-list li .count { font-size: 0.72rem; opacity: 0.7; }
 .theme-toggle {
     margin-top: auto; padding: 0.5rem 0.75rem; border-radius: 6px;
     background: var(--surface2); border: none; color: var(--text); cursor: pointer;
@@ -399,18 +391,38 @@ th { color: var(--text-muted); font-weight: 600; text-transform: uppercase; font
 <aside class="sidebar">
     <h1>CardioKB <span>Knowledge Base Dashboard</span></h1>
 
-    <div>
-        <h3>Disease Filter</h3>
-        <ul class="disease-list" id="diseaseList"></ul>
-    </div>
-
-    <div>
-        <h3>Build New Disease</h3>
-        <input type="text" class="agent-input" id="agentInput" placeholder="e.g. Parkinson's, PD, lupus..." data-tip="Enter any disease name to build a new knowledge subgraph using AI" />
-        <button class="run-btn" id="agentBtn" onclick="runAgentBuild()" data-tip="Use Claude AI to query DisGeNET and build a disease-specific subgraph">Build Knowledge Graph</button>
+    <div style="font-size:0.8rem;color:var(--text-muted);line-height:1.55;padding:0.75rem;background:var(--bg);border-radius:6px;border:1px solid var(--border)">
+        The graph contains data for all human diseases. Most sources are disease-agnostic &mdash; search any disease or gene in the Explore tab.
     </div>
 
     <button class="run-btn" id="runBtn" onclick="runHealthCheck()" data-tip="Check all 25 parsers, Neo4j connectivity, and data integrity">Run Health Check</button>
+
+    <div>
+        <button class="admin-toggle" id="advancedToggle" onclick="toggleAdvanced()" style="background:var(--bg);font-size:0.82rem;padding:0.6rem 0.75rem">
+            Advanced <span class="arrow">&#9660;</span>
+        </button>
+        <div class="admin-body" id="advancedBody">
+            <div id="advancedLocked" style="text-align:center;padding:0.5rem 0">
+                <input type="password" class="agent-input" id="adminPassword" placeholder="Admin password" style="margin-bottom:0.4rem" />
+                <button class="run-btn" id="adminUnlockBtn" onclick="unlockAdvanced()" style="font-size:0.82rem;padding:0.5rem">Unlock</button>
+                <div id="adminError" style="color:var(--red);font-size:0.78rem;margin-top:0.3rem;display:none"></div>
+            </div>
+            <div id="advancedUnlocked" style="display:none">
+                <h3 style="margin-bottom:0.5rem">Add New Database</h3>
+                <input type="text" class="agent-input" id="addDbName" placeholder="Database name" />
+                <input type="text" class="agent-input" id="addDbUrl" placeholder="Database URL" />
+                <button class="run-btn" id="addDbBtn" onclick="addDatabase()" style="font-size:0.82rem;padding:0.5rem;margin-bottom:0.75rem">Build</button>
+
+                <h3 style="margin-bottom:0.3rem">Fetch Additional DisGeNET Data</h3>
+                <div style="font-size:0.75rem;color:var(--text-muted);margin-bottom:0.4rem;line-height:1.45">Use this to fetch additional gene-disease associations from DisGeNET for diseases with limited coverage. Most diseases are already well-represented in the graph through other sources.</div>
+                <input type="text" class="agent-input" id="agentInput" placeholder="e.g. Parkinson's, PD, lupus..." />
+                <button class="run-btn" id="agentBtn" onclick="runAgentBuild()" style="font-size:0.82rem;padding:0.5rem;margin-bottom:0.75rem">Fetch</button>
+
+                <h3 style="margin-bottom:0.5rem">Run Pipeline</h3>
+                <button class="run-btn" id="pipelineBtn" onclick="runPipeline()" data-tip="Run the full data pipeline (download, parse, load)" style="font-size:0.82rem;padding:0.5rem">Run Pipeline</button>
+            </div>
+        </div>
+    </div>
 
     <button class="theme-toggle" onclick="toggleTheme()" data-tip="Switch between dark and light themes">Toggle Light / Dark</button>
 </aside>
@@ -774,34 +786,150 @@ function toggleTheme() {
     updateChartColors();
 }
 
-// ---- Diseases ----
-async function loadDiseases() {
-    try {
-        const res = await fetch('/api/diseases');
-        const diseases = await res.json();
-        const list = document.getElementById('diseaseList');
-        list.innerHTML = '';
-        diseases.forEach(d => {
-            const li = document.createElement('li');
-            li.textContent = d.label;
-            li.dataset.key = d.key;
-            const span = document.createElement('span');
-            span.className = 'count';
-            span.textContent = d.term_count + ' terms';
-            li.appendChild(span);
-            if (d.key === selectedDisease) li.classList.add('active');
-            li.onclick = () => selectDisease(d.key);
-            list.appendChild(li);
-        });
-    } catch (e) { log('Failed to load diseases: ' + e.message, 'err'); }
+// ---- Advanced Section ----
+let adminPassword = '';
+
+function toggleAdvanced() {
+    const toggle = document.getElementById('advancedToggle');
+    const body = document.getElementById('advancedBody');
+    toggle.classList.toggle('open');
+    body.classList.toggle('open');
 }
 
-function selectDisease(key) {
-    selectedDisease = key;
-    console.log('[CardioKB] Disease selected:', key);
-    document.querySelectorAll('.disease-list li').forEach(li => {
-        li.classList.toggle('active', li.dataset.key === key);
-    });
+async function unlockAdvanced() {
+    const pwInput = document.getElementById('adminPassword');
+    const errEl = document.getElementById('adminError');
+    const pw = pwInput.value.trim();
+    if (!pw) { pwInput.focus(); return; }
+
+    errEl.style.display = 'none';
+    try {
+        const res = await fetch('/api/admin/verify', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ password: pw }),
+        });
+        const data = await res.json();
+        if (data.ok) {
+            adminPassword = pw;
+            document.getElementById('advancedLocked').style.display = 'none';
+            document.getElementById('advancedUnlocked').style.display = 'block';
+        } else {
+            errEl.textContent = data.error || 'Invalid password';
+            errEl.style.display = 'block';
+        }
+    } catch (e) {
+        errEl.textContent = 'Connection failed: ' + e.message;
+        errEl.style.display = 'block';
+    }
+}
+
+async function addDatabase() {
+    const nameInput = document.getElementById('addDbName');
+    const urlInput = document.getElementById('addDbUrl');
+    const btn = document.getElementById('addDbBtn');
+    const name = nameInput.value.trim();
+    const url = urlInput.value.trim();
+    if (!name || !url) { (name ? urlInput : nameInput).focus(); return; }
+
+    // Auto-open admin section
+    const toggle = document.getElementById('adminToggle');
+    const body = document.getElementById('adminBody');
+    if (!body.classList.contains('open')) { toggle.classList.add('open'); body.classList.add('open'); }
+
+    btn.disabled = true;
+    btn.innerHTML = '<span class="spinner"></span>Building...';
+    document.getElementById('logPanel').innerHTML = '';
+    log('Adding database "' + name + '" from ' + url + '...', 'info');
+
+    try {
+        const res = await fetch('/api/agent/add-database', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ name, url, password: adminPassword }),
+        });
+        if (!res.ok) {
+            const err = await res.json().catch(() => ({}));
+            log('Add database error: ' + (err.error || res.statusText), 'err');
+            btn.disabled = false; btn.textContent = 'Build'; return;
+        }
+        const reader = res.body.getReader();
+        const decoder = new TextDecoder();
+        let buffer = '';
+        while (true) {
+            const { done, value } = await reader.read();
+            if (done) break;
+            buffer += decoder.decode(value, { stream: true });
+            let boundary;
+            while ((boundary = buffer.indexOf('\n\n')) !== -1) {
+                const frame = buffer.slice(0, boundary);
+                buffer = buffer.slice(boundary + 2);
+                let event = 'message', data = '';
+                for (const line of frame.split('\n')) {
+                    if (line.startsWith('event: ')) event = line.slice(7);
+                    else if (line.startsWith('data: ')) data = line.slice(6);
+                }
+                if (!data) continue;
+                const parsed = JSON.parse(data);
+                if (event === 'status') log('Agent: ' + parsed.message, 'info');
+                else if (event === 'result') { log('Agent: database added successfully', 'ok'); loadGraphStats(); }
+                else if (event === 'error') log('Agent error: ' + parsed.message, 'err');
+            }
+        }
+    } catch (e) { log('Add database error: ' + e.message, 'err'); }
+    btn.disabled = false; btn.textContent = 'Build';
+}
+
+async function runPipeline() {
+    const btn = document.getElementById('pipelineBtn');
+
+    // Auto-open admin section
+    const toggle = document.getElementById('adminToggle');
+    const body = document.getElementById('adminBody');
+    if (!body.classList.contains('open')) { toggle.classList.add('open'); body.classList.add('open'); }
+
+    btn.disabled = true;
+    btn.innerHTML = '<span class="spinner"></span>Running...';
+    document.getElementById('logPanel').innerHTML = '';
+    log('Starting full pipeline run...', 'info');
+
+    try {
+        const res = await fetch('/api/pipeline/run', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ password: adminPassword }),
+        });
+        if (!res.ok) {
+            const err = await res.json().catch(() => ({}));
+            log('Pipeline error: ' + (err.error || res.statusText), 'err');
+            btn.disabled = false; btn.textContent = 'Run Pipeline'; return;
+        }
+        const reader = res.body.getReader();
+        const decoder = new TextDecoder();
+        let buffer = '';
+        while (true) {
+            const { done, value } = await reader.read();
+            if (done) break;
+            buffer += decoder.decode(value, { stream: true });
+            let boundary;
+            while ((boundary = buffer.indexOf('\n\n')) !== -1) {
+                const frame = buffer.slice(0, boundary);
+                buffer = buffer.slice(boundary + 2);
+                let event = 'message', data = '';
+                for (const line of frame.split('\n')) {
+                    if (line.startsWith('event: ')) event = line.slice(7);
+                    else if (line.startsWith('data: ')) data = line.slice(6);
+                }
+                if (!data) continue;
+                const parsed = JSON.parse(data);
+                if (event === 'status') log('Pipeline: ' + parsed.message, 'info');
+                else if (event === 'log') log(parsed.message);
+                else if (event === 'error') log('Pipeline error: ' + parsed.message, 'err');
+            }
+        }
+    } catch (e) { log('Pipeline error: ' + e.message, 'err'); }
+    btn.disabled = false; btn.textContent = 'Run Pipeline';
+    loadGraphStats();
 }
 
 // ---- Logging ----
@@ -1496,6 +1624,7 @@ async function runAgentBuild() {
 
 document.addEventListener('DOMContentLoaded', () => {
     document.getElementById('agentInput').addEventListener('keydown', e => { if (e.key === 'Enter') runAgentBuild(); });
+    document.getElementById('adminPassword').addEventListener('keydown', e => { if (e.key === 'Enter') unlockAdvanced(); });
     document.getElementById('exploreSearch').addEventListener('keydown', e => { if (e.key === 'Enter') loadExploreGraph(); });
     document.getElementById('cypherInput').addEventListener('keydown', e => {
         if ((e.metaKey || e.ctrlKey) && e.key === 'Enter') runCypherQuery();
@@ -1692,7 +1821,6 @@ async function loadGraphStats() {
 }
 
 // ---- Init ----
-loadDiseases();
 loadGraphStats();
 initTemplates();
 renderNodeLegend();
