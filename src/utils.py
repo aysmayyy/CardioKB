@@ -1,7 +1,8 @@
 """
 Utility functions for CardioKB.
 
-Includes helpers for loading ontologies, filtering data, and common operations.
+Includes helpers for loading disease term ontologies, filtering data,
+and common operations.
 """
 
 import functools
@@ -9,71 +10,91 @@ import os
 from pathlib import Path
 from typing import FrozenSet, List, Set
 
+# Default disease filter: CVD
+_DEFAULT_DISEASE_FILTER = "ontology/disease_filter.txt"
 
-def load_cvd_terms(ontology_file: str = None) -> FrozenSet[str]:
+
+def _resolve_disease_filter(disease_filter: str = None) -> str:
+    """Resolve a disease filter path to an absolute path."""
+    if disease_filter is None:
+        disease_filter = _DEFAULT_DISEASE_FILTER
+    path = Path(disease_filter)
+    if not path.is_absolute():
+        project_root = Path(__file__).parent.parent
+        path = project_root / disease_filter
+    return str(path)
+
+
+def load_disease_terms(disease_filter: str = None) -> FrozenSet[str]:
     """
-    Load cardiovascular disease terms from the ontology file.
+    Load disease terms from a filter file.
 
-    Results are cached after the first call (when using the default ontology file).
+    Results are cached per unique file path.
 
     Args:
-        ontology_file: Path to the CVD terms file. If None, uses default location.
+        disease_filter: Path to the disease terms file (absolute or relative
+            to project root). Defaults to ontology/diseases/cvd.txt.
 
     Returns:
-        FrozenSet of lowercase CVD terms for case-insensitive matching.
+        FrozenSet of lowercase disease terms for case-insensitive matching.
     """
-    if ontology_file is None:
-        # Default location: ontology/disease_filter.txt
-        project_root = Path(__file__).parent.parent
-        ontology_file = project_root / "ontology" / "disease_filter.txt"
-
-    return _load_cvd_terms_cached(str(ontology_file))
+    resolved = _resolve_disease_filter(disease_filter)
+    return _load_terms_cached(resolved)
 
 
-@functools.lru_cache(maxsize=4)
-def _load_cvd_terms_cached(ontology_file: str) -> FrozenSet[str]:
-    """Cached implementation of CVD term loading."""
-    cvd_terms = set()
+@functools.lru_cache(maxsize=8)
+def _load_terms_cached(terms_file: str) -> FrozenSet[str]:
+    """Cached implementation of disease term loading."""
+    terms = set()
 
-    with open(ontology_file, 'r') as f:
+    with open(terms_file, 'r') as f:
         for line in f:
             line = line.strip()
-            # Skip empty lines and comments
             if line and not line.startswith('#'):
-                cvd_terms.add(line.lower())
+                terms.add(line.lower())
 
-    if not cvd_terms:
-        raise ValueError(f"No CVD terms found in {ontology_file}")
+    if not terms:
+        raise ValueError(f"No disease terms found in {terms_file}")
 
-    return frozenset(cvd_terms)
+    return frozenset(terms)
 
 
-def get_cvd_search_pattern() -> str:
+def get_disease_search_pattern(disease_filter: str = None) -> str:
     """
-    Get a regex search pattern for all CVD terms.
+    Get a regex search pattern for all terms in a disease filter file.
+
+    Args:
+        disease_filter: Path to the disease terms file. Defaults to CVD.
 
     Returns:
         String pattern suitable for pandas str.contains() or regex matching.
     """
-    cvd_terms = load_cvd_terms()
-    # Escape special regex characters and join with OR
-    escaped_terms = [term.replace(' ', r'\s+') for term in cvd_terms]
+    terms = load_disease_terms(disease_filter)
+    escaped_terms = [term.replace(' ', r'\s+') for term in terms]
     return '|'.join(escaped_terms)
 
 
-def is_cardiovascular_related(text: str, cvd_terms: Set[str] = None) -> bool:
+def is_disease_related(text: str, disease_filter: str = None,
+                       terms: Set[str] = None) -> bool:
     """
-    Check if text contains cardiovascular-related terms.
+    Check if text contains any term from a disease filter file.
 
     Args:
         text: Text to check
-        cvd_terms: Set of CVD terms (loaded automatically if None)
+        disease_filter: Path to disease terms file. Defaults to CVD.
+        terms: Pre-loaded set of terms (skips file loading if provided).
 
     Returns:
-        True if text contains any CVD term, False otherwise.
+        True if text contains any disease term, False otherwise.
     """
-    if cvd_terms is None:
-        cvd_terms = load_cvd_terms()
+    if terms is None:
+        terms = load_disease_terms(disease_filter)
 
     text_lower = text.lower()
-    return any(term in text_lower for term in cvd_terms)
+    return any(term in text_lower for term in terms)
+
+
+# Backward-compatible aliases — existing code can keep calling these
+load_cvd_terms = load_disease_terms
+get_cvd_search_pattern = get_disease_search_pattern
+is_cardiovascular_related = is_disease_related

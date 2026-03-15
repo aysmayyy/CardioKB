@@ -24,7 +24,7 @@ from ..ontology_configs import (
     DISGENET_DISEASE_MAPPINGS,
     DISGENET_GENE_DISEASE_ASSOCIATIONS,
 )
-from ..utils import load_cvd_terms
+from ..utils import load_disease_terms
 
 logger = logging.getLogger(__name__)
 
@@ -34,21 +34,26 @@ class DisGeNETParser(BaseParser):
     Parser for DisGeNET gene-disease association data with API support.
 
     Supports both API-based retrieval and manual file-based parsing.
-    CVD-scoped: searches for cardiovascular disease terms from the ontology.
+    Disease-scoped: searches for terms from the configured disease filter
+    (defaults to CVD).
     """
 
     API_BASE_URL = "https://api.disgenet.com/api/v1"
 
-    def __init__(self, data_dir: str, api_key: Optional[str] = None):
+    def __init__(self, data_dir: str, api_key: Optional[str] = None,
+                 disease_filter: Optional[str] = None):
         """
         Initialize DisGeNET parser.
 
         Args:
             data_dir: Directory for storing data files
             api_key: DisGeNET API key (optional, for API access)
+            disease_filter: Path to disease terms file for scoping queries.
+                Defaults to ontology/diseases/cvd.txt.
         """
         super().__init__(data_dir)
         self.api_key = api_key or os.getenv('DISGENET_API_KEY')
+        self.disease_filter = disease_filter
         self.session = requests.Session()
 
         if self.api_key:
@@ -186,11 +191,11 @@ class DisGeNETParser(BaseParser):
         all_mappings = []
         seen_disease_ids = set()
 
-        # Load search terms from ontology; filter to multi-word or longer
-        # terms that produce precise API results (short abbreviations are
-        # already covered by their full forms).
-        cvd_terms = load_cvd_terms()
-        search_terms = sorted(t for t in cvd_terms if len(t) > 3)
+        # Load search terms from disease filter; filter to multi-word or
+        # longer terms that produce precise API results (short abbreviations
+        # are already covered by their full forms).
+        disease_terms = load_disease_terms(self.disease_filter)
+        search_terms = sorted(t for t in disease_terms if len(t) > 3)
         logger.info(f"  Using {len(search_terms)} search terms from ontology")
 
         for search_term in search_terms:
@@ -467,13 +472,13 @@ class DisGeNETParser(BaseParser):
         Returns:
             Filtered DataFrame of CVD-related associations
         """
-        logger.info("Filtering for cardiovascular disease associations...")
+        logger.info("Filtering for disease associations...")
 
-        cvd_terms = load_cvd_terms()
+        disease_terms = load_disease_terms(self.disease_filter)
         text_lower = assoc_df['diseaseName'].str.lower()
 
         mask = text_lower.apply(
-            lambda x: any(term in x for term in cvd_terms) if pd.notna(x) else False
+            lambda x: any(term in x for term in disease_terms) if pd.notna(x) else False
         )
 
         cvd_assoc = assoc_df[mask].copy()

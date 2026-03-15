@@ -1,0 +1,64 @@
+# Asthma and Respiratory Diseases
+# Disease ontology terms for respiratory disease filtering and classification
+
+# General terms
+Asthma
+Respiratory disease
+Pulmonary disease
+Airway disease
+Lung disease
+
+# Asthma subtypes
+Allergic asthma
+Non-allergic asthma
+Exercise-induced asthma
+Occupational asthma
+Aspirin-sensitive asthma
+Severe asthma
+Brittle asthma
+Childhood asthma
+Adult-onset asthma
+Eosinophilic asthma
+Neutrophilic asthma
+Cough-variant asthma
+Nocturnal asthma
+Status asthmaticus
+
+# Chronic obstructive
+Chronic obstructive pulmonary disease
+COPD
+Chronic bronchitis
+Emphysema
+
+# Allergic and inflammatory
+Allergic rhinitis
+Rhinosinusitis
+Eosinophilic pneumonia
+Hypersensitivity pneumonitis
+Allergic bronchopulmonary aspergillosis
+
+# Interstitial lung disease
+Interstitial lung disease
+Pulmonary fibrosis
+Idiopathic pulmonary fibrosis
+Sarcoidosis
+
+# Airway conditions
+Bronchiectasis
+Bronchiolitis
+Bronchospasm
+Airway hyperresponsiveness
+Airway remodeling
+Airway inflammation
+Bronchoconstriction
+Wheezing
+
+# Other respiratory
+Pneumonia
+Acute respiratory distress syndrome
+ARDS
+Pulmonary embolism
+Respiratory failure
+Cystic fibrosis
+Sleep apnea
+Obstructive sleep apnea

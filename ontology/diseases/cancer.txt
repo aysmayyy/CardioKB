@@ -1,0 +1,88 @@
+# Cancer / Oncology
+# Disease ontology terms for cancer filtering and classification
+
+# General terms
+Cancer
+Neoplasm
+Malignant neoplasm
+Tumor
+Malignant tumor
+Carcinoma
+Sarcoma
+Oncology
+
+# Major cancer types
+Breast cancer
+Lung cancer
+Non-small cell lung cancer
+Small cell lung cancer
+Colorectal cancer
+Colon cancer
+Rectal cancer
+Prostate cancer
+Pancreatic cancer
+Ovarian cancer
+Cervical cancer
+Uterine cancer
+Endometrial cancer
+Bladder cancer
+Kidney cancer
+Renal cell carcinoma
+Liver cancer
+Hepatocellular carcinoma
+Gastric cancer
+Stomach cancer
+Esophageal cancer
+Thyroid cancer
+
+# Hematologic malignancies
+Leukemia
+Acute myeloid leukemia
+Acute lymphoblastic leukemia
+Chronic myeloid leukemia
+Chronic lymphocytic leukemia
+Lymphoma
+Hodgkin lymphoma
+Non-Hodgkin lymphoma
+Multiple myeloma
+Myelodysplastic syndrome
+
+# Brain and CNS cancers
+Brain cancer
+Glioblastoma
+Glioma
+Astrocytoma
+Meningioma
+Medulloblastoma
+Neuroblastoma
+
+# Skin cancers
+Melanoma
+Basal cell carcinoma
+Squamous cell carcinoma
+
+# Head and neck
+Head and neck cancer
+Oral cancer
+Laryngeal cancer
+Nasopharyngeal carcinoma
+
+# Other
+Testicular cancer
+Bone cancer
+Osteosarcoma
+Soft tissue sarcoma
+Mesothelioma
+Cholangiocarcinoma
+Adrenal cancer
+Wilms tumor
+Retinoblastoma
+
+# Cancer biology
+Metastasis
+Metastatic cancer
+Tumor suppressor
+Oncogene
+Carcinogenesis
+Angiogenesis
+Tumor microenvironment

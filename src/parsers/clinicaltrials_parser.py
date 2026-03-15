@@ -16,25 +16,12 @@ from typing import Dict, Optional, List
 import pandas as pd
 import requests
 from .base_parser import BaseParser
-from ..utils import get_cvd_search_pattern, load_cvd_terms
+from ..utils import get_disease_search_pattern, load_disease_terms
 
 logger = logging.getLogger(__name__)
 
 # Maximum terms per API query (ClinicalTrials.gov query length limit)
 _MAX_TERMS_PER_QUERY = 8
-
-
-def _build_category_queries() -> List[str]:
-    """Build OR-joined query batches from the CVD ontology file."""
-    terms = sorted(load_cvd_terms())
-    # Filter out short abbreviations (≤3 chars) that produce noisy API results;
-    # their full forms are already in the ontology.
-    terms = [t for t in terms if len(t) > 3]
-    queries = []
-    for i in range(0, len(terms), _MAX_TERMS_PER_QUERY):
-        batch = terms[i:i + _MAX_TERMS_PER_QUERY]
-        queries.append(" OR ".join(batch))
-    return queries
 
 
 class ClinicalTrialsParser(BaseParser):
@@ -54,7 +41,8 @@ class ClinicalTrialsParser(BaseParser):
                  query_mode: str = "cvd",
                  query_term: Optional[str] = None,
                  query_field: str = "query.cond",
-                 max_results: int = 1000):
+                 max_results: int = 1000,
+                 disease_filter: Optional[str] = None):
         """
         Initialize ClinicalTrials.gov parser.
 
@@ -64,12 +52,15 @@ class ClinicalTrialsParser(BaseParser):
             query_term: Search term (used for "custom" mode; ignored for "cvd").
             query_field: API query field for "custom" mode (default: "query.cond").
             max_results: Maximum number of results per query/category (default: 1000).
+            disease_filter: Path to disease terms file for condition queries.
+                Defaults to ontology/diseases/cvd.txt.
         """
         super().__init__(data_dir)
         self.query_mode = query_mode
         self.query_term = query_term
         self.query_field = query_field
         self.max_results = max_results
+        self.disease_filter = disease_filter
         self.session = requests.Session()
         self.session.headers.update({
             'User-Agent': 'CardioKB-Parser/0.1.0',
@@ -171,9 +162,21 @@ class ClinicalTrialsParser(BaseParser):
             logger.error(traceback.format_exc())
             return False
 
+    def _build_category_queries(self) -> List[str]:
+        """Build OR-joined query batches from the disease filter file."""
+        terms = sorted(load_disease_terms(self.disease_filter))
+        # Filter out short abbreviations (<=3 chars) that produce noisy API results;
+        # their full forms are already in the ontology.
+        terms = [t for t in terms if len(t) > 3]
+        queries = []
+        for i in range(0, len(terms), _MAX_TERMS_PER_QUERY):
+            batch = terms[i:i + _MAX_TERMS_PER_QUERY]
+            queries.append(" OR ".join(batch))
+        return queries
+
     def _download_cvd(self) -> bool:
-        """Query all CVD categories and deduplicate by NCT ID."""
-        category_queries = _build_category_queries()
+        """Query all disease categories and deduplicate by NCT ID."""
+        category_queries = self._build_category_queries()
         logger.info(f"Querying {len(category_queries)} CVD categories (from ontology)...")
 
         all_trials = []
@@ -313,20 +316,20 @@ class ClinicalTrialsParser(BaseParser):
 
     def filter_cardiovascular_trials(self, df: pd.DataFrame) -> pd.DataFrame:
         """
-        Filter trials for cardiovascular diseases.
+        Filter trials for diseases matching the configured disease filter.
 
-        Uses comprehensive CVD terminology from ontology/disease_filter.txt.
+        Uses terminology from the disease filter file (default: CVD).
         Most useful when query_mode is "rna" or "custom" to post-filter results.
 
         Args:
             df: DataFrame of all trials
 
         Returns:
-            Filtered DataFrame of cardiovascular-related trials
+            Filtered DataFrame of disease-related trials
         """
-        logger.info("Filtering for cardiovascular disease trials...")
+        logger.info("Filtering trials by disease terms...")
 
-        pattern = get_cvd_search_pattern()
+        pattern = get_disease_search_pattern(self.disease_filter)
 
         mask = (
             df['condition'].str.contains(pattern, case=False, na=False) |

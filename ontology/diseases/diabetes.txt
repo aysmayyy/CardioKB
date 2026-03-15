@@ -1,0 +1,74 @@
+# Diabetes and Metabolic Diseases
+# Disease ontology terms for diabetes filtering and classification
+
+# General terms
+Diabetes mellitus
+Diabetes
+Metabolic disease
+Metabolic syndrome
+
+# Type 1 diabetes
+Type 1 diabetes mellitus
+Type 1 diabetes
+Insulin-dependent diabetes mellitus
+IDDM
+Juvenile diabetes
+Autoimmune diabetes
+Latent autoimmune diabetes in adults
+LADA
+
+# Type 2 diabetes
+Type 2 diabetes mellitus
+Type 2 diabetes
+Non-insulin-dependent diabetes mellitus
+NIDDM
+Adult-onset diabetes
+Insulin resistance
+
+# Gestational
+Gestational diabetes mellitus
+Gestational diabetes
+
+# Prediabetes
+Prediabetes
+Impaired glucose tolerance
+Impaired fasting glucose
+Glucose intolerance
+
+# Complications - macrovascular
+Diabetic macrovascular disease
+Diabetic cardiomyopathy
+Diabetic cardiovascular disease
+
+# Complications - microvascular
+Diabetic retinopathy
+Diabetic nephropathy
+Diabetic neuropathy
+Diabetic peripheral neuropathy
+Diabetic autonomic neuropathy
+Diabetic microangiopathy
+Diabetic macular edema
+Diabetic kidney disease
+Diabetic foot
+
+# Acute complications
+Diabetic ketoacidosis
+Hyperosmolar hyperglycemic state
+Hypoglycemia
+Hyperglycemia
+
+# Related metabolic
+Obesity
+Hyperinsulinemia
+Dyslipidemia
+Nonalcoholic fatty liver disease
+NAFLD
+Nonalcoholic steatohepatitis
+NASH
+Polycystic ovary syndrome
+PCOS
+
+# Monogenic diabetes
+Maturity-onset diabetes of the young
+MODY
+Neonatal diabetes

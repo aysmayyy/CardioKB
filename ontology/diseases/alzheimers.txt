@@ -1,0 +1,49 @@
+# Alzheimer's Disease and Related Dementias
+# Disease ontology terms for AD filtering and classification
+
+# General terms
+Alzheimer disease
+Alzheimer's disease
+Dementia
+Neurodegenerative disease
+
+# Subtypes
+Early-onset Alzheimer disease
+Late-onset Alzheimer disease
+Familial Alzheimer disease
+Sporadic Alzheimer disease
+Presenile dementia
+Senile dementia
+
+# Related dementias
+Frontotemporal dementia
+Vascular dementia
+Lewy body dementia
+Dementia with Lewy bodies
+Mixed dementia
+
+# Pathology
+Amyloid plaque
+Neurofibrillary tangle
+Tau pathology
+Amyloid angiopathy
+Cerebral amyloid angiopathy
+
+# Cognitive impairment
+Mild cognitive impairment
+MCI
+Cognitive decline
+Cognitive impairment
+Memory loss
+Memory impairment
+
+# Associated conditions
+Neuroinflammation
+Neurodegeneration
+Brain atrophy
+Hippocampal atrophy
+Cerebral atrophy
+Aphasia
+Agnosia
+Apraxia
+Sundowning
