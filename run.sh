@@ -28,4 +28,4 @@ echo ""
 
 # Activate conda and run
 cd "$DIR"
-conda run --no-banner -n cardiokb python src/api.py --port "$PORT"
+conda run -n cardiokb python src/api.py --port "$PORT"
