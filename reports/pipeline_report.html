@@ -1,0 +1,341 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>CardioKB Pipeline Report</title>
+<script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.7/dist/chart.umd.min.js"></script>
+<style>
+    :root {
+        --bg: #0f172a;
+        --surface: #1e293b;
+        --surface2: #334155;
+        --border: #475569;
+        --text: #e2e8f0;
+        --text-muted: #94a3b8;
+        --accent: #38bdf8;
+        --green: #4ade80;
+        --red: #f87171;
+        --yellow: #fbbf24;
+    }
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+    body {
+        font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', system-ui, sans-serif;
+        background: var(--bg);
+        color: var(--text);
+        line-height: 1.6;
+        padding: 2rem;
+    }
+    .container { max-width: 1200px; margin: 0 auto; }
+    header {
+        text-align: center;
+        margin-bottom: 2rem;
+        padding-bottom: 1.5rem;
+        border-bottom: 1px solid var(--border);
+    }
+    header h1 { font-size: 1.8rem; color: var(--accent); margin-bottom: 0.5rem; }
+    header p { color: var(--text-muted); font-size: 0.9rem; }
+    .stats-grid {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+        gap: 1rem;
+        margin-bottom: 2rem;
+    }
+    .stat-card {
+        background: var(--surface);
+        border: 1px solid var(--border);
+        border-radius: 8px;
+        padding: 1.2rem;
+        text-align: center;
+    }
+    .stat-card .value {
+        font-size: 1.8rem;
+        font-weight: 700;
+        color: var(--accent);
+    }
+    .stat-card .label {
+        color: var(--text-muted);
+        font-size: 0.85rem;
+        margin-top: 0.25rem;
+    }
+    section {
+        background: var(--surface);
+        border: 1px solid var(--border);
+        border-radius: 8px;
+        padding: 1.5rem;
+        margin-bottom: 1.5rem;
+    }
+    section h2 {
+        font-size: 1.2rem;
+        color: var(--accent);
+        margin-bottom: 1rem;
+        padding-bottom: 0.5rem;
+        border-bottom: 1px solid var(--border);
+    }
+    section h4 { color: var(--text); margin-bottom: 0.5rem; }
+    table {
+        width: 100%;
+        border-collapse: collapse;
+        font-size: 0.88rem;
+    }
+    th, td {
+        padding: 0.5rem 0.75rem;
+        text-align: left;
+        border-bottom: 1px solid var(--surface2);
+    }
+    th {
+        color: var(--text-muted);
+        font-weight: 600;
+        text-transform: uppercase;
+        font-size: 0.75rem;
+        letter-spacing: 0.05em;
+    }
+    tr.success td:first-child { border-left: 3px solid var(--green); padding-left: calc(0.75rem - 3px); }
+    tr.failed td:first-child { border-left: 3px solid var(--red); padding-left: calc(0.75rem - 3px); }
+    tr.skipped td:first-child { border-left: 3px solid var(--yellow); padding-left: calc(0.75rem - 3px); }
+    .badge {
+        display: inline-block;
+        padding: 0.15rem 0.5rem;
+        border-radius: 4px;
+        font-size: 0.78rem;
+        font-weight: 600;
+    }
+    .badge-success { background: rgba(74,222,128,0.15); color: var(--green); }
+    .badge-failed { background: rgba(248,113,113,0.15); color: var(--red); }
+    .badge-skipped { background: rgba(251,191,36,0.15); color: var(--yellow); }
+    .chart-container {
+        position: relative;
+        height: 400px;
+        margin: 1rem 0;
+    }
+    .health-item {
+        padding: 0.6rem 1rem;
+        border-radius: 6px;
+        margin-bottom: 0.5rem;
+        font-size: 0.9rem;
+    }
+    .health-ok { background: rgba(74,222,128,0.1); border-left: 3px solid var(--green); }
+    .health-warn { background: rgba(248,113,113,0.1); border-left: 3px solid var(--red); }
+    .cvd-tables {
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        gap: 1.5rem;
+        margin-top: 1rem;
+    }
+    .data-table { font-size: 0.85rem; }
+    .data-table th { background: var(--surface2); }
+    @media (max-width: 768px) {
+        body { padding: 1rem; }
+        .cvd-tables { grid-template-columns: 1fr; }
+        .chart-container { height: 300px; }
+    }
+</style>
+</head>
+<body>
+<div class="container">
+    <header>
+        <h1>CardioKB Pipeline Report</h1>
+        <p>Generated 2026-03-14 17:47:43 | Last pipeline run: 2026-03-14 17:06:19</p>
+    </header>
+
+    <div class="stats-grid">
+        <div class="stat-card">
+            <div class="value">362,551</div>
+            <div class="label">Total Nodes</div>
+        </div>
+        <div class="stat-card">
+            <div class="value">23,880,296</div>
+            <div class="label">Total Relationships</div>
+        </div>
+        <div class="stat-card">
+            <div class="value">16</div>
+            <div class="label">Node Types</div>
+        </div>
+        <div class="stat-card">
+            <div class="value">31</div>
+            <div class="label">Relationship Types</div>
+        </div>
+        <div class="stat-card">
+            <div class="value">23</div>
+            <div class="label">Sources Processed</div>
+        </div>
+        <div class="stat-card">
+            <div class="value">0:28:10.370958</div>
+            <div class="label">Pipeline Duration</div>
+        </div>
+    </div>
+
+    <section>
+        <h2>Pipeline Run Summary</h2>
+        <table>
+            <thead><tr><th>Parser</th><th>Status</th><th>Duration</th></tr></thead>
+            <tbody>
+<tr class="success"><td>clinicaltrials</td><td><span class="badge badge-success">success (TSV fallback)</span></td><td>-</td></tr>
+<tr class="success"><td>clinpgx</td><td><span class="badge badge-success">success</span></td><td>0.2s</td></tr>
+<tr class="success"><td>ncbigene</td><td><span class="badge badge-success">success</span></td><td>13.0s</td></tr>
+<tr class="success"><td>dorothea</td><td><span class="badge badge-success">success</span></td><td>0.4s</td></tr>
+<tr class="success"><td>disease_ontology</td><td><span class="badge badge-success">success</span></td><td>0.7s</td></tr>
+<tr class="success"><td>gene_ontology</td><td><span class="badge badge-success">success</span></td><td>8.1s</td></tr>
+<tr class="success"><td>uberon</td><td><span class="badge badge-success">success</span></td><td>2.6s</td></tr>
+<tr class="success"><td>mesh</td><td><span class="badge badge-success">success</span></td><td>3.7s</td></tr>
+<tr class="success"><td>sider</td><td><span class="badge badge-success">success</span></td><td>0.1s</td></tr>
+<tr class="success"><td>lincs</td><td><span class="badge badge-success">success</span></td><td>23.3s</td></tr>
+<tr class="success"><td>medline</td><td><span class="badge badge-success">success</span></td><td>0.1s</td></tr>
+<tr class="success"><td>drugcentral</td><td><span class="badge badge-success">success</span></td><td>30.1s</td></tr>
+<tr class="success"><td>gwas</td><td><span class="badge badge-success">success</span></td><td>33.6s</td></tr>
+<tr class="success"><td>pubtator</td><td><span class="badge badge-success">success (cached TSV)</span></td><td>10.5s</td></tr>
+<tr class="success"><td>bindingdb</td><td><span class="badge badge-success">success</span></td><td>53.6s</td></tr>
+<tr class="success"><td>ctd</td><td><span class="badge badge-success">success</span></td><td>34.4s</td></tr>
+<tr class="success"><td>bgee</td><td><span class="badge badge-success">success (cached TSV)</span></td><td>3.2s</td></tr>
+<tr class="success"><td>hetionet_precomputed</td><td><span class="badge badge-success">success</span></td><td>11.4s</td></tr>
+<tr class="success"><td>jensenlab</td><td><span class="badge badge-success">success</span></td><td>0.1s</td></tr>
+<tr class="failed"><td>jensentissues</td><td><span class="badge badge-failed">no data</span></td><td>-</td></tr>
+<tr class="success"><td>hpo</td><td><span class="badge badge-success">success</span></td><td>1.5s</td></tr>
+<tr class="success"><td>omim</td><td><span class="badge badge-success">success</span></td><td>1.4s</td></tr>
+<tr class="success"><td>disgenet</td><td><span class="badge badge-success">success</span></td><td>0.0s</td></tr>
+<tr class="success"><td>drugbank</td><td><span class="badge badge-success">success</span></td><td>76.9s</td></tr>
+<tr class="success"><td>aopdb</td><td><span class="badge badge-success">success</span></td><td>118.0s</td></tr>
+            </tbody>
+        </table>
+    </section>
+
+    <section>
+        <h2>Node Counts by Type</h2>
+        <div class="chart-container">
+            <canvas id="nodeChart"></canvas>
+        </div>
+    </section>
+
+    <section>
+        <h2>Relationship Counts by Type</h2>
+        <div class="chart-container">
+            <canvas id="relChart"></canvas>
+        </div>
+    </section>
+
+    <section>
+        <h2>Graph Health Checks</h2>
+        <div class="health-item health-ok">All node types have non-zero counts</div>
+<div class="health-item health-ok">All relationship types have non-zero counts</div>
+<div class="health-item health-warn"><strong>Orphan nodes (no relationships):</strong> Gene: 147,620, Drug: 34,448, ClinicalTrial: 17,884, Disease: 15,166, BodyPart: 14,046, BiologicalProcess: 13,310, Phenotype: 8,914, MolecularFunction: 5,336, CellularComponent: 2,238, Symptom: 624, DrugLabel: 378, Variant: 41, Pathway: 12, SideEffect: 8, PharmacologicClass: 2</div>
+<div class="health-item health-warn"><strong>Parsers with no data:</strong> jensentissues</div>
+    </section>
+
+    <section>
+        <h2>CVD Subgraph: Atrial Fibrillation</h2>
+        
+        <p>Disease node: <strong>familial atrial fibrillation</strong>
+           | Total neighbors: <strong>21</strong></p>
+        <div class="cvd-tables">
+            <div>
+                <h4>Connected Node Types</h4>
+                <table class="data-table">
+                    <thead><tr><th>Node Type</th><th>Count</th></tr></thead>
+                    <tbody><tr><td>Gene</td><td>21</td></tr></tbody>
+                </table>
+            </div>
+            <div>
+                <h4>Relationship Types</h4>
+                <table class="data-table">
+                    <thead><tr><th>Relationship</th><th>Count</th></tr></thead>
+                    <tbody><tr><td>geneAssociatesWithDisease</td><td>21</td></tr></tbody>
+                </table>
+            </div>
+        </div>
+        
+    </section>
+</div>
+
+<script>
+const chartDefaults = {
+    color: '#94a3b8',
+    borderColor: '#475569',
+    font: { family: "-apple-system, BlinkMacSystemFont, 'Segoe UI', system-ui, sans-serif" }
+};
+Chart.defaults.color = chartDefaults.color;
+Chart.defaults.font.family = chartDefaults.font.family;
+
+// Node counts bar chart
+new Chart(document.getElementById('nodeChart'), {
+    type: 'bar',
+    data: {
+        labels: ["BiologicalProcess", "BodyPart", "CellularComponent", "ClinicalTrial", "Disease", "Drug", "DrugLabel", "Gene", "MolecularFunction", "Pathway", "PharmacologicClass", "Phenotype", "SideEffect", "Symptom", "TranscriptionFactor", "Variant"],
+        datasets: [{
+            label: 'Count',
+            data: [24547, 14675, 4069, 20219, 19479, 41566, 378, 193687, 10123, 4646, 1646, 19389, 5734, 966, 367, 1060],
+            backgroundColor: 'rgba(56, 189, 248, 0.6)',
+            borderColor: 'rgba(56, 189, 248, 1)',
+            borderWidth: 1,
+            borderRadius: 4,
+        }]
+    },
+    options: {
+        responsive: true,
+        maintainAspectRatio: false,
+        plugins: {
+            legend: { display: false },
+            tooltip: {
+                callbacks: {
+                    label: ctx => ctx.parsed.y.toLocaleString() + ' nodes'
+                }
+            }
+        },
+        scales: {
+            y: {
+                type: 'logarithmic',
+                grid: { color: '#334155' },
+                ticks: {
+                    callback: v => v.toLocaleString()
+                }
+            },
+            x: {
+                grid: { display: false },
+                ticks: { maxRotation: 45, minRotation: 45 }
+            }
+        }
+    }
+});
+
+// Relationship counts bar chart
+new Chart(document.getElementById('relChart'), {
+    type: 'bar',
+    data: {
+        labels: ["geneAssociatesWithDisease", "bodyPartUnderexpressesGene", "diseaseAssociatesWithDisease", "geneAssociatesWithPhenotype", "geneRegulatesGene", "chemicalIncreasesExpression", "chemicalDecreasesExpression", "geneInPathway", "pathwayContainsGene", "compoundCausesSideEffect", "geneInteractsWithGene", "geneParticipatesInBiologicalProcess", "geneAssociatedWithCellularComponent", "geneHasMolecularFunction", "geneCovariesWithGene", "compoundDownregulatesGene", "compoundUpregulatesGene", "chemicalBindsGene", "compoundInPharmacologicClass", "pharmacologicClassIncludesCompound", "transcriptionFactorInteractsWithGene", "diseaseLocalizesToAnatomy", "diseasePresentsSymptom", "bodyPartOverexpressesGene", "TESTS_INTERVENTION", "VARIANT_IN", "STUDIES_CONDITION", "diseaseResemblesDisease", "AFFECTS_RESPONSE_TO", "drugTreatsDisease", "drugPalliatesDisease"],
+        datasets: [{
+            label: 'Count',
+            data: [14786117, 4784297, 2138895, 270251, 267791, 218133, 213561, 184715, 184715, 148518, 147088, 135208, 93726, 93516, 61606, 35115, 31998, 22254, 16403, 16403, 15092, 3602, 3068, 3025, 2217, 1019, 850, 543, 294, 209, 67],
+            backgroundColor: 'rgba(74, 222, 128, 0.6)',
+            borderColor: 'rgba(74, 222, 128, 1)',
+            borderWidth: 1,
+            borderRadius: 4,
+        }]
+    },
+    options: {
+        responsive: true,
+        maintainAspectRatio: false,
+        plugins: {
+            legend: { display: false },
+            tooltip: {
+                callbacks: {
+                    label: ctx => ctx.parsed.y.toLocaleString() + ' relationships'
+                }
+            }
+        },
+        scales: {
+            y: {
+                type: 'logarithmic',
+                grid: { color: '#334155' },
+                ticks: {
+                    callback: v => v.toLocaleString()
+                }
+            },
+            x: {
+                grid: { display: false },
+                ticks: { maxRotation: 45, minRotation: 45 }
+            }
+        }
+    }
+});
+</script>
+</body>
+</html>
