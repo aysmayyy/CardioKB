@@ -371,26 +371,29 @@ class CardioKBPipeline:
             omim_data = parsed_data['omim']
             if 'gene_disease_relationships' in omim_data:
                 gdr = omim_data['gene_disease_relationships'].copy()
-                # Extract primary gene symbol (first before comma)
-                gdr['primary_gene_symbol'] = (
-                    gdr['gene_symbols'].str.split(',').str[0].str.strip()
-                )
-                # Keep rows with valid gene symbol and phenotype MIM
-                gdr = gdr.dropna(subset=['primary_gene_symbol', 'phenotype_mim'])
-                gdr = gdr[
-                    (gdr['primary_gene_symbol'] != '') &
-                    (gdr['phenotype_mim'] != '')
-                ].copy()
-                # Ensure phenotype_mim is string to match xrefOMIM in Neo4j
-                gdr['phenotype_mim'] = gdr['phenotype_mim'].astype(str)
-                omim_data['gene_disease'] = gdr
-                # Also store under node config key so both configs use
-                # in-memory data with consistent string types
-                omim_data['gene_disease_nodes'] = gdr
-                logger.info(
-                    f"Created {len(gdr)} OMIM gene-disease edges "
-                    f"({gdr['primary_gene_symbol'].nunique()} unique genes)"
-                )
+                if 'gene_symbols' not in gdr.columns or len(gdr) == 0:
+                    logger.warning("OMIM gene_disease_relationships missing 'gene_symbols' column or empty — skipping")
+                else:
+                    # Extract primary gene symbol (first before comma)
+                    gdr['primary_gene_symbol'] = (
+                        gdr['gene_symbols'].str.split(',').str[0].str.strip()
+                    )
+                    # Keep rows with valid gene symbol and phenotype MIM
+                    gdr = gdr.dropna(subset=['primary_gene_symbol', 'phenotype_mim'])
+                    gdr = gdr[
+                        (gdr['primary_gene_symbol'] != '') &
+                        (gdr['phenotype_mim'] != '')
+                    ].copy()
+                    # Ensure phenotype_mim is string to match xrefOMIM in Neo4j
+                    gdr['phenotype_mim'] = gdr['phenotype_mim'].astype(str)
+                    omim_data['gene_disease'] = gdr
+                    # Also store under node config key so both configs use
+                    # in-memory data with consistent string types
+                    omim_data['gene_disease_nodes'] = gdr
+                    logger.info(
+                        f"Created {len(gdr)} OMIM gene-disease edges "
+                        f"({gdr['primary_gene_symbol'].nunique()} unique genes)"
+                    )
 
         # Post-processing: prefix CTD chemical_id with 'MESH:' to match Drug.xrefMeSH
         if 'ctd' in parsed_data:

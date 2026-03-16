@@ -2,82 +2,61 @@
 
 ## Overview
 
-CardioKB uses a comprehensive cardiovascular disease (CVD) ontology for filtering and classifying clinical trials, research papers, and other data sources. This ensures consistent terminology across all parsers and analyses.
+CardioKB uses a disease term filtering system that supports multiple disease areas. Disease term files live in `ontology/diseases/` (one term per line, `#` for comments). The active filter is controlled by a symlink at `ontology/disease_filter.txt`.
 
-## Ontology File
+## Disease Filter Files
 
-**Location**: [`ontology/disease_filter.txt`](../ontology/disease_filter.txt)
+| File | Terms | Disease Area |
+|------|-------|-------------|
+| `ontology/diseases/cvd.txt` | 90 | Cardiovascular disease (default) |
+| `ontology/diseases/alzheimers.txt` | 35 | Alzheimer's & related dementias |
+| `ontology/diseases/cancer.txt` | 70 | Cancer / oncology |
+| `ontology/diseases/asthma.txt` | 48 | Asthma & respiratory diseases |
+| `ontology/diseases/diabetes.txt` | 52 | Diabetes & metabolic diseases |
 
-This file contains 35+ curated CVD terms organized hierarchically:
+`ontology/disease_filter.txt` is a symlink to `diseases/cvd.txt` by default.
 
-### Categories
+## CVD Term Categories (90 terms)
 
-1. **General cardiovascular terms**
-   - Cardiovascular disease
-   - Heart disease
-   - Cardiac disease
+The CVD filter (`ontology/diseases/cvd.txt`) covers:
 
-2. **Arrhythmias**
-   - Arrhythmia, Atrial fibrillation
-   - Ventricular tachycardia/fibrillation
-   - Long QT syndrome, Brugada syndrome
-   - Heart block
+1. **General** — Cardiovascular disease, Heart disease, Cardiac disease
+2. **Arrhythmias** — Atrial fibrillation/flutter, Ventricular tachycardia/fibrillation, Long QT syndrome, Brugada syndrome, CPVT, Sick sinus syndrome, Heart block
+3. **Coronary conditions** — CAD, Myocardial infarction, Angina, Ischemic heart disease, Atherosclerosis
+4. **Heart failure** — CHF, HFrEF, HFpEF, Acute/Chronic heart failure
+5. **Cardiomyopathy** — HCM, DCM, Restrictive, ARVC, Takotsubo
+6. **Hypertension** — Essential, Secondary, Pulmonary, Resistant
+7. **Stroke** — Ischemic, Hemorrhagic, Thrombotic, Embolic, TIA
+8. **Vascular diseases** — PAD, Thromboembolism, VTE, Aortic aneurysm/dissection
+9. **Lipid disorders** — Hypercholesterolemia, Dyslipidemia, Familial hypercholesterolemia
+10. **Valvular disease** — Aortic stenosis/regurgitation, Mitral stenosis/regurgitation/prolapse
+11. **Other** — Pericarditis, Myocarditis, Endocarditis, Cardiac/Heart transplant
 
-3. **Coronary conditions**
-   - Coronary artery disease
-   - Myocardial infarction (heart attack)
-   - Angina, Ischemic heart disease
-   - Atherosclerosis
+## Which Parsers Use Disease Filtering?
 
-4. **Heart failure**
-   - Heart failure
-   - Congestive heart failure
-   - Cardiac failure
+Most parsers (30 of 32) are **disease-agnostic** — they load all data regardless of disease area.
 
-5. **Cardiomyopathy**
-   - Hypertrophic cardiomyopathy
-   - Dilated cardiomyopathy
+- **DisGeNETParser** — accepts a `disease_filter` parameter; defaults to `ontology/disease_filter.txt` (CVD)
+- **OMIMParser** — reads the symlink to tag rows with `is_cvd` but loads all data regardless
 
-6. **Hypertension**
-   - Hypertension
-   - High blood pressure
-
-7. **Stroke**
-   - Ischemic stroke
-   - Hemorrhagic stroke
-   - Cerebrovascular disease
-
-8. **Miscellaneous**
-   - Valvular heart disease
-   - Pericarditis, Myocarditis, Endocarditis
+All other parsers load complete datasets without filtering.
 
 ## Usage in Code
 
-### Loading CVD Terms
+### Loading Disease Terms
 
 ```python
-from src.utils import load_cvd_terms
+from src.utils import load_disease_terms
 
-# Load all CVD terms
-cvd_terms = load_cvd_terms()
+# Load terms from the active filter (symlink)
+terms = load_disease_terms()
 # Returns: {'cardiovascular disease', 'heart attack', ...}
+
+# Load a specific disease file
+terms = load_disease_terms('ontology/diseases/alzheimers.txt')
 ```
 
-### Filtering DataFrames
-
-```python
-from src.parsers import ClinicalTrialsParser
-
-parser = ClinicalTrialsParser()
-parser.download_data()
-data = parser.parse_data()
-trials_df = data['rna_therapeutics_trials']
-
-# Filter using comprehensive CVD ontology
-cvd_trials = parser.filter_cardiovascular_trials(trials_df)
-```
-
-### Checking Individual Text
+### Checking Text Against Terms
 
 ```python
 from src.utils import is_cardiovascular_related
@@ -90,52 +69,33 @@ is_cvd = is_cardiovascular_related(text)
 ### Getting Search Pattern
 
 ```python
-from src.utils import get_cvd_search_pattern
+from src.utils import get_disease_search_pattern
 
-# Get regex pattern for all CVD terms
-pattern = get_cvd_search_pattern()
+# Get regex pattern for all terms in the active filter
+pattern = get_disease_search_pattern()
 # Use with pandas: df[df['condition'].str.contains(pattern, case=False)]
 ```
 
-## Updating the Ontology
+## Switching Disease Area
 
-To add new CVD terms:
+To switch the active disease filter:
 
-1. Edit [`ontology/disease_filter.txt`](../ontology/disease_filter.txt)
-2. Add terms one per line (comments start with `#`)
-3. All parsers will automatically use the updated terms
+```bash
+cd ontology
+rm disease_filter.txt
+ln -s diseases/alzheimers.txt disease_filter.txt
+```
 
-Example:
+Then re-run the pipeline. Only DisGeNET and OMIM CVD-tagging are affected; all other parsers produce the same output.
+
+## Updating Terms
+
+Edit the relevant file in `ontology/diseases/` — one term per line, `#` for comments:
+
 ```txt
 # New arrhythmia types
 Supraventricular tachycardia
 Wolff-Parkinson-White syndrome
 ```
 
-## Benefits
-
-✓ **Consistency**: All parsers use the same terminology
-✓ **Maintainability**: Single source of truth in one file
-✓ **Extensibility**: Easy to add new terms without code changes
-✓ **Comprehensiveness**: Covers 35+ CVD terms including synonyms
-✓ **Case-insensitive**: Automatic lowercase matching
-
-## Related Files
-
-- [`src/utils.py`](../src/utils.py) - Utility functions for loading and using CVD terms
-- [`src/parsers/clinicaltrials_parser.py`](../src/parsers/clinicaltrials_parser.py) - Parser using CVD filtering
-- [`examples/test_cvd_filtering.py`](../examples/test_cvd_filtering.py) - Test script for CVD filtering
-
-## Testing
-
-Run the test script to verify CVD filtering:
-
-```bash
-python examples/test_cvd_filtering.py
-```
-
-This will:
-1. Load all CVD terms from the ontology
-2. Generate the search pattern
-3. Test matching against sample texts
-4. Report pass/fail status
+All parsers that use the filter will automatically pick up changes on next run.

@@ -321,8 +321,10 @@ class OMIMParser(BaseParser):
                 logger.debug(f"Skipping morbidmap row: {e}")
                 continue
 
+        if not records:
+            return empty
         result = pd.DataFrame(records)
-        cvd_count = result['is_cvd'].sum() if len(result) > 0 else 0
+        cvd_count = result['is_cvd'].sum()
         logger.info(
             f"Parsed {len(result)} gene-disease relationships "
             f"({cvd_count} CVD-related)"
