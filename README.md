@@ -143,8 +143,7 @@ Cardio-KB/
 │       ├── asthma.txt             # Asthma & respiratory (48 terms)
 │       └── diabetes.txt           # Diabetes & metabolic (52 terms)
 ├── reports/                    # Pipeline health reports + ID mapping validation report
-├── docs/                       # Research plan, specific aims, data inventory xlsx
-├── tests/                      # pytest test files
+├── docs/                       # Research plan, specific aims, database docs, CVD ontology
 ├── .claude/
 │   └── skills/                 # Claude Code skill files (auto-loaded for AI-assisted development)
 │       └── database-parsing/   # Step-by-step guide for adding new data source parsers
@@ -212,7 +211,7 @@ python scripts/run_drugbank.py --skip-neo4j  # Parse + TSV only, no Neo4j
 
 ### TSV Export
 
-The pipeline exports all parsed data to `data/processed/<source>/` as tab-separated files. These serve as an archived, reproducible snapshot of each run. See `docs/cardiokb_data_inventory.xlsx` for the full file inventory with row counts and column schemas.
+The pipeline exports all parsed data to `data/processed/<source>/` as tab-separated files. These serve as an archived, reproducible snapshot of each run. See `docs/parser_review.xlsx` for the full source inventory with stats.
 
 ### Verify the Graph
 

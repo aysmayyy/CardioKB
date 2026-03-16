@@ -45,7 +45,6 @@
 - `docs/` — Documentation, research plan, specific aims
 - `scripts/compute_specificity.py` — Pre-computes `specificityScore` node property in Neo4j (auto-runs at end of pipeline)
 - `scripts/` — Data processing and verification scripts
-- `tests/` — pytest test files
 - `models/` — Future ML models
 - `.claude/skills/` — Claude Code custom skills (see below)
 
@@ -81,7 +80,7 @@ python src/main.py --skip-download --skip-neo4j
 - Raw data downloads go to `data/raw/<source_name>/`
 - Parsed TSV output goes to `data/processed/<source_name>/`
 - Environment variables for credentials go in `.env` (not committed)
-- Run tests with `pytest tests/`
+- Run tests with `pytest`
 - Every relationship ontology config must include a `source_label` field
 
 ## Disease Scope & Filtering
