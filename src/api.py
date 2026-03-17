@@ -751,7 +751,7 @@ def health_check_sse():
         try:
             run_health_check(
                 disease=disease,
-                log_file='cardiokb_build.log',
+                log_file='logs/cardiokb_build.log',
                 on_progress=on_progress,
             )
         except Exception as e:

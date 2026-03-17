@@ -24,7 +24,7 @@ logging.basicConfig(
     format='%(asctime)s | %(levelname)-7s | %(name)s | %(message)s',
     handlers=[
         logging.StreamHandler(),
-        logging.FileHandler('cardiokb_multi_disease.log', mode='w'),
+        logging.FileHandler('logs/cardiokb_multi_disease.log', mode='w'),
     ],
 )
 logger = logging.getLogger('multi_disease')

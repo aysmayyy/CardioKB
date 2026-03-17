@@ -91,11 +91,12 @@ def setup_logging(log_level: str = None):
 
     level = getattr(logging, log_level.upper(), logging.INFO)
 
+    os.makedirs('logs', exist_ok=True)
     logging.basicConfig(
         level=level,
         format='%(asctime)s - %(name)s - %(levelname)s - %(message)s',
         handlers=[
-            logging.FileHandler('cardiokb_build.log'),
+            logging.FileHandler('logs/cardiokb_build.log'),
             logging.StreamHandler()
         ],
         force=True

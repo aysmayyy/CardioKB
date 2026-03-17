@@ -215,9 +215,11 @@ __marimo__/
 data/raw/*
 data/processed/*
 data/output/*
+logs/*
 !data/raw/.gitkeep
 !data/processed/.gitkeep
 !data/output/.gitkeep
+!logs/.gitkeep
 
 # Neo4j database files
 neo4j/

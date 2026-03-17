@@ -8,7 +8,7 @@ Can also stream progress events for the web interface via a callback.
 
 Usage:
     python src/orchestrator.py
-    python src/orchestrator.py --log-file cardiokb_build.log
+    python src/orchestrator.py --log-file logs/cardiokb_build.log
     python src/orchestrator.py --output reports/pipeline_report.html
     python src/orchestrator.py --disease alzheimers
 """
@@ -423,7 +423,7 @@ def _query_cvd_subgraph(session) -> Dict:
 
 
 def run_health_check(disease: str = 'cvd',
-                     log_file: str = 'cardiokb_build.log',
+                     log_file: str = 'logs/cardiokb_build.log',
                      on_progress: Optional[Callable[[str, dict], None]] = None) -> Dict:
     """
     Run a full health check and return structured results.
@@ -744,7 +744,7 @@ def main():
     import argparse
 
     parser = argparse.ArgumentParser(description='CardioKB Pipeline Health Report')
-    parser.add_argument('--log-file', default='cardiokb_build.log',
+    parser.add_argument('--log-file', default='logs/cardiokb_build.log',
                         help='Path to the build log file')
     parser.add_argument('--output', default='reports/pipeline_report.html',
                         help='Output HTML report path')
