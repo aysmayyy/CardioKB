@@ -11,7 +11,7 @@
 12-week rotation project (Jan–Apr 2026) building a general-purpose biomedical knowledge graph. While initially focused on cardiovascular disease, the graph contains data spanning all human diseases — most data sources are disease-agnostic. The base KB structure is adapted from AlzKB (Alzheimer's Knowledge Base) files. The **DatabaseAgent** (`src/database_agent.py`) autonomously generates new parsers from just a name and URL using Claude API — it samples the file, generates parser code + ontology configs, integrates into the pipeline, and loads data into Neo4j. Additional data sources are integrated via custom parsers or the agent. The final KB is stored in a Neo4j knowledge graph for disease research, feature selection, and precision medicine.
 
 ## Current Graph Stats
-- **373,869 nodes** | **26,581,028 relationships** | **18 node types** | **35 relationship types** | **25 sources**
+- **5,464,107 nodes** | **40,765,325 relationships** | **21 node types** | **42 relationship types** | **36 sources**
 - All relationships carry a `source` property identifying the originating database (e.g., `source: "DisGeNET"`)
 - *Stats are current as of last pipeline run; see Neo4j or `GET /api/graph-stats` for live counts.*
 
@@ -36,9 +36,9 @@
 - `data/raw/` — Downloaded source data
 - `data/processed/` — Exported TSV files for Neo4j loading
 - `data/output/` — Release notes and build artifacts
-- `interface/index.html` — Web dashboard with Explore (graph viz) and Query (Neo4j Browser-style multi-panel) tabs
+- `interface/index.html` — Web dashboard with Explore (graph viz), Query (Neo4j Browser-style multi-panel), and sidebar Disease Subgraph builder (N-hop extraction + JSON/CSV export)
 - `src/agent.py` — AI-powered disease KB builder (Claude API + DisGeNET, with SSE progress callbacks)
-- `src/api.py` — Flask backend with SSE streaming for web interface and agent builds
+- `src/api.py` — Flask backend with SSE streaming, disease subgraph API, and agent builds
 - `src/orchestrator.py` — Pipeline health check with dynamic Neo4j-based parser status detection
 - `run.sh` — Launches Flask + opens browser
 - `reports/` — Generated pipeline health reports and cached ID mapping validation report (`id_mapping_report.json`)
@@ -165,6 +165,6 @@ When `disease_filter` is omitted, DisGeNET defaults to `ontology/disease_filter.
 85 entries in `src/ontology_configs.py` mapping parsed TSV files to Neo4j node/relationship types, properties, and loading strategies. Each relationship config includes a `source_label` field that the loader sets as `r.source` on every relationship.
 
 ## Relationship Source Labels
-All relationships carry a `source` property. Current labels (25 with edges in graph):
-`AOP-DB`, `Bgee`, `BindingDB`, `CTD`, `ClinPGx`, `ClinicalTrials.gov`, `DisGeNET`, `DoRothEA`, `DrugBank`, `DrugCentral`, `GWAS Catalog`, `Gene Ontology`, `HGNC`, `HPO`, `Hetionet`, `Jensen DISEASES`, `Jensen TISSUES`, `LINCS L1000`, `MEDLINE`, `OMIM`, `OpenTargets`, `PubTator`, `Reactome`, `SIDER`, `STRING`, `WikiPathways`
-Note: Disease Ontology contributes nodes only (no relationship `source` label). HGNC parser enriches Gene nodes only (no relationship source label); HGNC Families uses `HGNC` as source label.
+All relationships carry a `source` property. Current labels (28 with edges in graph):
+`AOP-DB`, `Bgee`, `BindingDB`, `CTD`, `ClinPGx`, `ClinVar`, `ClinicalTrials.gov`, `DisGeNET`, `DoRothEA`, `DrugAge`, `DrugBank`, `DrugCentral`, `GWAS Catalog`, `Gene Ontology`, `HGNC`, `HPO`, `Hetionet`, `Jensen DISEASES`, `Jensen TISSUES`, `LINCS L1000`, `MEDLINE`, `OMIM`, `OpenTargets`, `PubTator`, `Reactome`, `SIDER`, `STRING`, `WikiPathways`
+Note: 8 node-only parsers (Disease Ontology, Uberon, MeSH, NCBI Gene, HGNC base, CellAge, AnAge, GenAge) contribute nodes without relationship source labels. HGNC Families uses `HGNC` as its source label.

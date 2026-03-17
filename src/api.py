@@ -120,6 +120,15 @@ def graph_stats():
                 sources.append(r['source'])
                 source_counts[r['source']] = r['cnt']
 
+        # Total source count includes all loaded parsers (not just
+        # relationship-tagged ones — node-only parsers like Disease Ontology,
+        # NCBI Gene, Uberon, MeSH, CellAge, AnAge, GenAge are real sources too)
+        try:
+            from src.orchestrator import _get_expected_parsers
+            total_source_count = len(_get_expected_parsers())
+        except Exception:
+            total_source_count = len(sources)
+
         return jsonify({
             'node_counts': node_counts,
             'rel_counts': rel_counts,
@@ -127,7 +136,8 @@ def graph_stats():
             'total_relationships': total_rels,
             'node_types': len(node_counts),
             'rel_types': len(rel_counts),
-            'source_count': len(sources),
+            'source_count': total_source_count,
+            'rel_source_count': len(sources),
             'sources': sources,
             'source_edge_counts': source_counts,
         })

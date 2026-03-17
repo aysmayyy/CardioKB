@@ -2,7 +2,7 @@
 
 A general-purpose biomedical knowledge graph pipeline that integrates 36 data sources (36 parsers) into a Neo4j graph for disease research, feature selection, and precision medicine. While initially focused on cardiovascular disease, the graph contains data spanning all human diseases — most data sources are disease-agnostic. Adapted from the AlzKB (Alzheimer's Knowledge Base) architecture with additional custom parsers and Hetionet component integrations. Features an AI-powered **DatabaseAgent** that autonomously generates new parsers from just a name and URL, a disease agent for on-demand knowledge subgraph construction via Claude API + DisGeNET, and a web dashboard with interactive graph exploration and Neo4j Browser-style querying.
 
-**Graph stats:** 373,869 nodes | 26,581,028 relationships | 18 node types | 35 relationship types | 25 sources
+**Graph stats:** 5,464,107 nodes | 40,765,325 relationships | 21 node types | 42 relationship types | 36 sources
 *Stats are current as of last pipeline run; see Neo4j or `GET /api/graph-stats` for live counts.*
 
 ## Pipeline Status
@@ -15,7 +15,7 @@ A general-purpose biomedical knowledge graph pipeline that integrates 36 data so
 | Agent-generated | 7 | HGNC, HGNC Families, ClinVar, DrugAge, CellAge, AnAge, GenAge (built by DatabaseAgent) |
 | Stale/partial | 1 | MeSH (nodes only, no relationship data) |
 | Ontology configs | 85 | Neo4j node/relationship type mappings |
-| Source-labeled relationships | 26 | All relationships carry `r.source` property (26 unique source labels) |
+| Source-labeled relationships | 28 | All relationships carry `r.source` property (28 unique source labels) |
 
 ## Data Sources
 
@@ -76,7 +76,7 @@ A general-purpose biomedical knowledge graph pipeline that integrates 36 data so
 
 **Key relationship types (37):** geneAssociatesWithDisease, geneAssociatesWithPhenotype, geneParticipatesInBiologicalProcess, geneHasMolecularFunction, geneAssociatedWithCellularComponent, geneInteractsWithGene, geneCovariesWithGene, geneRegulatesGene, geneInPathway, geneInFamily, familyContainsGene, geneExpressedInBodyPart, bodyPartUnderexpressesGene, bodyPartOverexpressesGene, chemicalIncreasesExpression, chemicalDecreasesExpression, chemicalBindsGene, drugBindsGene, compoundCausesSideEffect, compoundUpregulatesGene, compoundDownregulatesGene, pharmacologicClassIncludesCompound, compoundInPharmacologicClass, pathwayContainsGene, drugTreatsDisease, drugPalliatesDisease, diseaseAssociatesWithDisease, diseaseLocalizesToAnatomy, diseasePresentsSymptom, diseaseResemblesDisease, transcriptionFactorInteractsWithGene, drugLabelAnnotatesGene, drugLabelDescribesDrug, AFFECTS_RESPONSE_TO, STUDIES_CONDITION, TESTS_INTERVENTION, VARIANT_IN
 
-**Relationship source labels:** All relationships carry a `source` property (e.g., `DisGeNET`, `GWAS Catalog`, `PubTator`, `Bgee`, `HGNC`, etc.) for provenance tracking across 26 source-labeled databases. Disease Ontology contributes nodes only (no relationship source label).
+**Relationship source labels:** All relationships carry a `source` property (e.g., `DisGeNET`, `GWAS Catalog`, `PubTator`, `Bgee`, `HGNC`, etc.) for provenance tracking across 28 source-labeled databases. Node-only sources (Disease Ontology, Uberon, MeSH, NCBI Gene, CellAge, AnAge, GenAge, HGNC base) contribute nodes without relationship source labels.
 
 ## Project Structure
 
@@ -271,8 +271,13 @@ Launch with `bash run.sh` or `python src/api.py --port 5050`. Features:
   - Panels show results as both table and graph visualization with tab switching
   - Collapse/expand, close individual panels, or Clear All
   - Query templates for common patterns; Ctrl+Enter shortcut
+- **Build Disease Subgraph** (sidebar) — Extract complete N-hop subgraphs for any disease
+  - Configurable hop slider (1–3): 1-hop = direct, 2-hop = shared pathways, 3-hop = broad hypothesis generation
+  - Shows stats: node/edge counts, node types, relationship types, contributing sources
+  - Export as JSON or CSV for downstream analysis in R/Python/Excel
+  - Uses incremental batched Neo4j queries to handle high-degree nodes without memory issues
 - **Dashboard** — Live graph stats (nodes, relationships, types, sources)
-- **Help system** — Welcome tour, tooltips on all UI elements, methodology info, node type legend
+- **Help system** — Welcome tour, tooltips on all UI elements, click-to-expand info popovers (`?` buttons) explaining hops, specificity scoring, core/discovery layers, and admin features
 - **Admin** — Parser status, pipeline health check with SSE streaming, ID mapping validation report
 
 ## DatabaseAgent: Autonomous Parser Generation
