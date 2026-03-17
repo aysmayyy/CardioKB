@@ -24,10 +24,10 @@
 
 ## Project Structure
 - `src/main.py` — Pipeline orchestrator (supports `--skip-neo4j`, `--skip-download`)
-- `src/parsers/` — 32 data source parsers (inherit from `BaseParser` in `base_parser.py`)
+- `src/parsers/` — 36 data source parsers (inherit from `BaseParser` in `base_parser.py`)
   - `src/parsers/hetionet_components/` — 14 Hetionet-derived component parsers
 - `src/database_agent.py` — Autonomous parser generator (Claude API + sample download + Neo4j load)
-- `src/ontology_configs.py` — 77 ontology configs mapping source data to Neo4j schema
+- `src/ontology_configs.py` — 85 ontology configs mapping source data to Neo4j schema
 - `src/neo4j_loader.py` — Cypher-based Neo4j batch loader (auto-sets `r.source` from config `source_label`)
 - `src/id_mapping.py` — Central ID mapping module: cross-database ID remapping (PubTator MeSH→DOID, GWAS→DOID), validate_mapping(), suggest_mapping(), create_missing_nodes(), CLI interface
 - `src/utils.py` — Shared utilities (`load_disease_terms()`, `get_disease_search_pattern()`)
@@ -101,9 +101,9 @@ Disease term files live in `ontology/diseases/` (one term per line, `#` for comm
 **DisGeNETParser** is the only parser that accepts a `disease_filter` parameter:
 - **DisGeNETParser(disease_filter="ontology/diseases/alzheimers.txt")** — searches the API for diseases matching the term list
 
-When `disease_filter` is omitted, DisGeNET defaults to `ontology/disease_filter.txt` (→ CVD). OMIMParser reads the symlink to tag rows with `is_cvd` but loads all data regardless. All other 30 parsers are fully disease-agnostic.
+When `disease_filter` is omitted, DisGeNET defaults to `ontology/disease_filter.txt` (→ CVD). OMIMParser reads the symlink to tag rows with `is_cvd` but loads all data regardless. All other parsers are fully disease-agnostic.
 
-## Data Sources — 32 Sources (32 Parsers)
+## Data Sources — 36 Sources (36 Parsers)
 
 ### Phase 1: Core Parsers
 | # | Source | Parser | Access | Status |
@@ -148,6 +148,10 @@ When `disease_filter` is omitted, DisGeNET defaults to `ontology/disease_filter.
 | 30 | HGNC | HGNCParser | Public | Working (44,361 Gene nodes enriched with xrefHGNC, geneName, locusGroup, locusType) |
 | 31 | HGNC Gene Families | HGNCFamiliesParser | Public | Working (1,934 GeneFamily nodes, 33,967 geneInFamily edges) |
 | 32 | ClinVar | ClinVarParser | Public FTP | Working (4,486,982 Variant nodes, 5.7M disease-variant edges, 4.5M gene-variant edges) |
+| 33 | DrugAge/CellAge | DrugAgeParser | Public | Working (gene-aging associations, AgeingProperty nodes) |
+| 34 | CellAge | CellAgeParser | Public | Working (senescence gene nodes) |
+| 35 | AnAge | AnAgeParser | Public | Working (Species longevity nodes) |
+| 36 | GenAge | GenAgeParser | Public | Working (aging-associated gene nodes) |
 
 ### Credential-Gated (requires env vars, currently loaded)
 | Parser | Source | Required Env Vars | Status |
@@ -158,7 +162,7 @@ When `disease_filter` is omitted, DisGeNET defaults to `ontology/disease_filter.
 | AOPDBParser | AOP-DB adverse outcome pathways | `MYSQL_USERNAME`, `MYSQL_PASSWORD` (or SQL dump) | Loaded via SQL dump |
 
 ## Ontology Configs
-77 entries in `src/ontology_configs.py` mapping parsed TSV files to Neo4j node/relationship types, properties, and loading strategies. Each relationship config includes a `source_label` field that the loader sets as `r.source` on every relationship.
+85 entries in `src/ontology_configs.py` mapping parsed TSV files to Neo4j node/relationship types, properties, and loading strategies. Each relationship config includes a `source_label` field that the loader sets as `r.source` on every relationship.
 
 ## Relationship Source Labels
 All relationships carry a `source` property. Current labels (25 with edges in graph):

@@ -12,6 +12,7 @@ Or via API:
     POST /api/agent/add-database (see src/api.py)
 """
 
+import ast
 import json
 import logging
 import os
@@ -20,6 +21,7 @@ import subprocess
 import sys
 import textwrap
 from pathlib import Path
+from typing import Optional
 
 from dotenv import load_dotenv
 
@@ -188,9 +190,10 @@ def _download_sample(db_url: str, source_key: str, emit=None) -> dict:
                 if tab_count >= 1:
                     result['format'] = 'tsv'
                     cols = header_line.split('\t')
-                    # Strip leading '#' from first column (e.g., "#AlleleID" -> "AlleleID")
-                    if cols and cols[0].startswith('#'):
-                        cols[0] = cols[0].lstrip('#')
+                    # Preserve original column names exactly as they appear,
+                    # including '#' prefixes (e.g., "#AlleleID" stays "#AlleleID").
+                    # pd.read_csv() will read them the same way, so Claude must
+                    # generate code using these exact names.
                     result['columns'] = cols
                 elif comma_count >= 1:
                     result['format'] = 'csv'
@@ -228,9 +231,14 @@ def _extract_code_block(text: str, label: str = '') -> str:
     pattern = r'```(?:python|py)?\s*\n(.*?)```'
     matches = re.findall(pattern, text, re.DOTALL)
     if matches:
-        return matches[0].strip()
-    # Fallback: return text as-is (it might be raw code)
-    return text.strip()
+        code = matches[0].strip()
+    else:
+        # Fallback: return text as-is (it might be raw code)
+        code = text.strip()
+    # Safety: strip any trailing fence markers that slipped through
+    while code.endswith('```'):
+        code = code[:-3].rstrip()
+    return code
 
 
 def _extract_json_block(text: str) -> str:
@@ -245,6 +253,58 @@ def _extract_json_block(text: str) -> str:
     if start >= 0 and end > start:
         return text[start:end + 1]
     return text.strip()
+
+
+def _validate_column_refs(parser_code: str, actual_columns: list) -> list:
+    """
+    Check that column references in generated parser code match actual file headers.
+
+    Scans for df['col'], df["col"], subset=['col'], rename(columns={'col': ...}),
+    and row.get('col') patterns. Returns a list of mismatched column names.
+    """
+    if not actual_columns:
+        return []
+
+    col_set = set(actual_columns)
+
+    # Patterns that reference source column names (before rename):
+    #   df['ColName'], df["ColName"], subset=['ColName'], row.get('ColName')
+    #   rename(columns={'ColName': ...}), .get('ColName'), ['ColName'] in list context
+    patterns = [
+        r"df\[(['\"])(.+?)\1\]",                           # df['col'] or df["col"]
+        r"subset\s*=\s*\[(['\"])(.+?)\1\]",                # subset=['col']
+        r"row\.get\((['\"])(.+?)\1",                        # row.get('col')
+        r"rename\s*\(\s*columns\s*=\s*\{(['\"])(.+?)\1",   # rename(columns={'col': ...})
+    ]
+    # For rename, extract all keys from the dict
+    rename_pattern = r"rename\s*\(\s*columns\s*=\s*\{([^}]+)\}"
+
+    referenced_cols = set()
+
+    for pattern in patterns:
+        for m in re.finditer(pattern, parser_code):
+            referenced_cols.add(m.group(2))
+
+    # Also extract all keys from rename(columns={...}) dicts
+    for m in re.finditer(rename_pattern, parser_code):
+        dict_body = m.group(1)
+        for key_match in re.finditer(r"(['\"])(.+?)\1\s*:", dict_body):
+            referenced_cols.add(key_match.group(2))
+
+    # Filter: only flag references that look like source columns (not output column names).
+    # Output columns (after rename) are camelCase — source columns are typically
+    # PascalCase, ALLCAPS, or #-prefixed. We flag any referenced column that isn't
+    # in the actual column set AND isn't a known output/derived name.
+    mismatches = []
+    for col in referenced_cols:
+        if col in col_set:
+            continue
+        # Skip clearly-derived output names (camelCase, snake_case patterns)
+        if col[0].islower() or '_' in col:
+            continue
+        mismatches.append(col)
+
+    return mismatches
 
 
 def generate_parser(db_name: str, db_url: str, emit=None) -> dict:
@@ -315,6 +375,18 @@ def generate_parser(db_name: str, db_url: str, emit=None) -> dict:
         - CRITICAL: Only use column names that actually exist in the source data.
           A sample of the file with actual column names is provided below.
           Do NOT invent or guess column names.
+        - COLUMN NAMES WITH '#': Some bioinformatics files have column names that
+          start with '#' (e.g., '#AlleleID'). pd.read_csv() preserves the '#' in
+          the column name. You MUST use the exact column name including the '#'
+          prefix when referencing it in code (e.g., df['#AlleleID']).
+          Store such columns as a class constant for clarity.
+        - ID COLUMNS AS STRINGS: All identifier columns used as node IRI or
+          relationship match keys MUST be explicitly cast to str in your parser
+          (e.g., df['id'] = df['id'].astype(str)). Neo4j MERGE requires exact type
+          matching — an int ID will not match a string ID. Always use string.
+        - PERFORMANCE: Use vectorized pandas operations (rename, assign, explode,
+          str.split, etc.) for data transformations. NEVER use df.iterrows() or
+          row-by-row iteration — these are too slow for files with millions of rows.
     """)
 
     user_prompt = textwrap.dedent(f"""\
@@ -440,6 +512,96 @@ def generate_parser(db_name: str, db_url: str, emit=None) -> dict:
 
     parser_file_name = f"{source_key}_parser.py"
 
+    # Validate column references in generated code against actual file headers
+    actual_cols = sample.get('columns') or []
+    if parser_code and actual_cols:
+        mismatches = _validate_column_refs(parser_code, actual_cols)
+        if mismatches:
+            emit('status', {
+                'phase': 'column_mismatch',
+                'message': (
+                    f'Column mismatch detected: {mismatches} not in actual '
+                    f'headers. Asking Claude to fix...'
+                ),
+            })
+            logger.warning(f"Column mismatch in generated code: {mismatches}")
+
+            # Ask Claude to fix the column references
+            fix_prompt = (
+                f"The parser code you generated references these column names "
+                f"that do NOT exist in the actual file headers:\n\n"
+                f"  Mismatched: {mismatches}\n"
+                f"  Actual columns: {actual_cols}\n\n"
+                f"Rewrite the COMPLETE parser code, using ONLY column names "
+                f"from the actual columns list. Do NOT rename or strip any "
+                f"characters from column names (e.g., keep '#AlleleID' as-is).\n\n"
+                f"Return ONLY the corrected parser code in a python code block."
+            )
+            try:
+                fix_response = client.messages.create(
+                    model=MODEL,
+                    max_tokens=8192,
+                    system=system_prompt,
+                    messages=[
+                        {"role": "user", "content": user_prompt},
+                        {"role": "assistant", "content": text},
+                        {"role": "user", "content": fix_prompt},
+                    ],
+                )
+                fix_text = next(
+                    (b.text for b in fix_response.content if b.type == "text"), ""
+                ).strip()
+                fixed_code = _extract_code_block(fix_text)
+                if fixed_code:
+                    # Validate again
+                    remaining = _validate_column_refs(fixed_code, actual_cols)
+                    if len(remaining) < len(mismatches):
+                        parser_code = fixed_code
+                        logger.info(
+                            f"Column fix applied. Remaining mismatches: {remaining}"
+                        )
+                    else:
+                        logger.warning(
+                            f"Fix attempt did not reduce mismatches: {remaining}"
+                        )
+            except Exception as e:
+                logger.warning(f"Column fix attempt failed: {e}")
+
+    # Check for iterrows() anti-pattern
+    if parser_code and 'iterrows()' in parser_code:
+        emit('status', {
+            'phase': 'perf_warning',
+            'message': 'Generated code uses iterrows() — requesting vectorized rewrite...',
+        })
+        logger.warning("Generated parser uses iterrows() — requesting fix")
+        perf_prompt = (
+            "The parser code uses df.iterrows() which is extremely slow for "
+            "large files (millions of rows). Rewrite the COMPLETE parser code "
+            "using vectorized pandas operations instead (rename, assign, explode, "
+            "str.split, dropna, etc.). Do NOT use iterrows() or any row-by-row "
+            "loop.\n\nReturn ONLY the corrected parser code in a python code block."
+        )
+        try:
+            perf_response = client.messages.create(
+                model=MODEL,
+                max_tokens=8192,
+                system=system_prompt,
+                messages=[
+                    {"role": "user", "content": user_prompt},
+                    {"role": "assistant", "content": text},
+                    {"role": "user", "content": perf_prompt},
+                ],
+            )
+            perf_text = next(
+                (b.text for b in perf_response.content if b.type == "text"), ""
+            ).strip()
+            perf_code = _extract_code_block(perf_text)
+            if perf_code and 'iterrows()' not in perf_code:
+                parser_code = perf_code
+                logger.info("Replaced iterrows() code with vectorized version")
+        except Exception as e:
+            logger.warning(f"Performance fix attempt failed: {e}")
+
     return {
         'parser_code': parser_code,
         'ontology_configs': ontology_configs,
@@ -450,12 +612,244 @@ def generate_parser(db_name: str, db_url: str, emit=None) -> dict:
     }
 
 
+def _validate_syntax(parser_code: str, parser_file_name: str, emit=None) -> str:
+    """
+    Check parser code for syntax errors by compiling it.
+
+    Returns the (possibly fixed) parser code. If a syntax error is found,
+    asks Claude to fix it up to 2 times before giving up.
+    """
+    emit = emit or (lambda e, d: None)
+    max_attempts = 2
+
+    for attempt in range(max_attempts + 1):
+        try:
+            compile(parser_code, parser_file_name, 'exec')
+            if attempt > 0:
+                emit('status', {
+                    'phase': 'syntax_fixed',
+                    'message': f'Syntax error fixed on attempt {attempt}',
+                })
+                logger.info(f"Syntax error fixed on attempt {attempt}")
+            return parser_code
+        except SyntaxError as e:
+            if attempt == max_attempts:
+                emit('status', {
+                    'phase': 'syntax_error',
+                    'message': f'Syntax error persists after {max_attempts} fix attempts: {e}',
+                })
+                logger.error(f"Unfixable syntax error: {e}")
+                return parser_code
+
+            emit('status', {
+                'phase': 'syntax_error',
+                'message': f'Syntax error at line {e.lineno}: {e.msg} — asking Claude to fix...',
+            })
+            logger.warning(f"Syntax error in generated code: line {e.lineno}: {e.msg}")
+
+            # Show context around the error
+            lines = parser_code.split('\n')
+            start = max(0, (e.lineno or 1) - 3)
+            end = min(len(lines), (e.lineno or 1) + 2)
+            context = '\n'.join(f"  {i+1}: {lines[i]}" for i in range(start, end))
+
+            try:
+                client = _get_client()
+                fix_response = client.messages.create(
+                    model=MODEL,
+                    max_tokens=8192,
+                    system=(
+                        "You are fixing a Python syntax error. Return ONLY the "
+                        "complete corrected Python code in a ```python code block. "
+                        "Do not explain."
+                    ),
+                    messages=[{"role": "user", "content": (
+                        f"This Python file has a syntax error:\n\n"
+                        f"Error: line {e.lineno}: {e.msg}\n\n"
+                        f"Context around error:\n{context}\n\n"
+                        f"Full code:\n```python\n{parser_code}\n```\n\n"
+                        f"Fix the syntax error and return the complete corrected code."
+                    )}],
+                )
+                fix_text = next(
+                    (b.text for b in fix_response.content if b.type == "text"), ""
+                ).strip()
+                fixed = _extract_code_block(fix_text)
+                if fixed:
+                    parser_code = fixed
+            except Exception as fix_err:
+                logger.warning(f"Syntax fix attempt failed: {fix_err}")
+                return parser_code
+
+    return parser_code
+
+
+def _validate_config_keys(source_key: str, new_configs: dict, emit=None) -> dict:
+    """
+    Check for duplicate config keys against existing ONTOLOGY_CONFIGS.
+
+    Removes duplicates from new_configs (the existing entry wins unless it
+    belongs to the same source). Returns the deduplicated configs.
+    """
+    emit = emit or (lambda e, d: None)
+
+    import importlib
+    import src.ontology_configs as _oc_mod
+    importlib.reload(_oc_mod)
+    existing = _oc_mod.ONTOLOGY_CONFIGS
+
+    dupes = []
+    for key in list(new_configs.keys()):
+        if key in existing:
+            # Same source re-run is OK (will be overwritten by add_ontology_configs)
+            if not key.startswith(f'{source_key}.'):
+                dupes.append(key)
+                del new_configs[key]
+
+    if dupes:
+        emit('status', {
+            'phase': 'config_dedup',
+            'message': f'Removed {len(dupes)} duplicate config key(s): {dupes}',
+        })
+        logger.warning(f"Removed duplicate config keys: {dupes}")
+
+    return new_configs
+
+
+def _validate_config_vs_output(source_key: str, ontology_configs: dict,
+                                parsed_data: dict, emit=None) -> dict:
+    """
+    Validate that ontology config column references match actual parser output.
+
+    For each config entry, checks:
+    - Node configs: iri_column_name and data_property_map keys exist in the DataFrame
+    - Relationship configs: subject_column_name and object_column_name exist
+
+    Auto-fixes mismatches by renaming config references to the closest matching
+    actual column (edit-distance based).
+    """
+    emit = emit or (lambda e, d: None)
+
+    issues = []
+    for config_key, config in ontology_configs.items():
+        if not config_key.startswith(f'{source_key}.'):
+            continue
+
+        _, data_name = config_key.split('.', 1)
+        df = parsed_data.get(data_name)
+        if df is None:
+            continue
+
+        actual_cols = set(df.columns)
+        pc = config.get('parse_config', {})
+
+        if config.get('data_type') == 'node':
+            # Check IRI column
+            iri_col = pc.get('iri_column_name', '')
+            if iri_col and iri_col not in actual_cols:
+                best = _closest_column(iri_col, actual_cols)
+                if best:
+                    issues.append(f'{config_key}: iri_column_name {iri_col!r} -> {best!r}')
+                    pc['iri_column_name'] = best
+
+            # Check data_property_map keys
+            prop_map = pc.get('data_property_map', {})
+            fixed_map = {}
+            for src_col, neo4j_prop in prop_map.items():
+                if src_col in actual_cols:
+                    fixed_map[src_col] = neo4j_prop
+                else:
+                    best = _closest_column(src_col, actual_cols)
+                    if best:
+                        issues.append(f'{config_key}: prop map {src_col!r} -> {best!r}')
+                        fixed_map[best] = neo4j_prop
+                    else:
+                        issues.append(f'{config_key}: dropped missing prop {src_col!r}')
+            pc['data_property_map'] = fixed_map
+
+        elif config.get('data_type') == 'relationship':
+            for prefix in ('subject', 'object'):
+                col_key = f'{prefix}_column_name'
+                col = pc.get(col_key, '')
+                if col and col not in actual_cols:
+                    best = _closest_column(col, actual_cols)
+                    if best:
+                        issues.append(f'{config_key}: {col_key} {col!r} -> {best!r}')
+                        pc[col_key] = best
+
+            # Check data_property_map keys
+            prop_map = pc.get('data_property_map', {})
+            fixed_map = {}
+            for src_col, neo4j_prop in prop_map.items():
+                if src_col in actual_cols:
+                    fixed_map[src_col] = neo4j_prop
+                else:
+                    best = _closest_column(src_col, actual_cols)
+                    if best:
+                        issues.append(f'{config_key}: prop map {src_col!r} -> {best!r}')
+                        fixed_map[best] = neo4j_prop
+                    else:
+                        issues.append(f'{config_key}: dropped missing prop {src_col!r}')
+            pc['data_property_map'] = fixed_map
+
+    if issues:
+        emit('status', {
+            'phase': 'config_column_fix',
+            'message': f'Fixed {len(issues)} config-vs-output column mismatch(es)',
+            'fixes': issues,
+        })
+        logger.warning(f"Config column fixes: {issues}")
+
+        # Re-write ontology_configs.py with the corrected configs
+        source_configs = {
+            k: v for k, v in ontology_configs.items()
+            if k.startswith(f'{source_key}.')
+        }
+        if source_configs:
+            add_ontology_configs(source_key, source_configs)
+            logger.info("Re-wrote ontology configs with column fixes")
+
+    return ontology_configs
+
+
+def _closest_column(target: str, candidates: set, threshold: float = 0.5) -> str:
+    """Find the closest matching column name using normalized edit distance."""
+    if not candidates:
+        return ''
+
+    target_lower = target.lower().replace('_', '').replace(' ', '')
+    best_col = ''
+    best_score = 0.0
+
+    for col in candidates:
+        col_lower = col.lower().replace('_', '').replace(' ', '')
+        # Simple character overlap ratio
+        common = sum(1 for c in target_lower if c in col_lower)
+        max_len = max(len(target_lower), len(col_lower), 1)
+        score = common / max_len
+        if score > best_score:
+            best_score = score
+            best_col = col
+
+    return best_col if best_score >= threshold else ''
+
+
 def save_parser(parser_code: str, parser_file_name: str) -> Path:
     """Save generated parser code to src/parsers/."""
     path = PROJECT_ROOT / 'src' / 'parsers' / parser_file_name
     path.write_text(parser_code)
     logger.info(f"Saved parser to {path}")
     return path
+
+
+def _syntax_check_ontology_configs() -> Optional[str]:
+    """Parse ontology_configs.py and return error string, or None if valid."""
+    config_path = PROJECT_ROOT / 'src' / 'ontology_configs.py'
+    try:
+        ast.parse(config_path.read_text())
+        return None
+    except SyntaxError as e:
+        return f"{e.msg} (line {e.lineno})"
 
 
 def add_ontology_configs(source_key: str, configs: dict) -> bool:
@@ -465,20 +859,27 @@ def add_ontology_configs(source_key: str, configs: dict) -> bool:
     to avoid duplicates from re-runs.
     """
     config_path = PROJECT_ROOT / 'src' / 'ontology_configs.py'
-    content = config_path.read_text()
+    # Keep a backup so we can restore on syntax error
+    backup = config_path.read_text()
+    content = backup
 
-    # Remove any existing auto-generated block for this source_key
-    # Pattern: from the comment header to the next section or closing brace
+    # Remove ALL existing auto-generated blocks for this source_key.
+    # Match from the header comment through all config entries until the next
+    # header block or the dict closing brace (stop before consuming `}`).
     block_pattern = (
         rf'\n    # =+\n'
         rf'    # {re.escape(source_key)} \(auto-generated by database agent\)\n'
         rf'    # =+\n'
-        rf'(    .+\n)*?'
+        rf'(?:(?!    # =+)(?!}}\s*$).+\n)*'  # stop before next header OR closing brace
     )
-    content = re.sub(block_pattern, '\n', content)
+    # Apply repeatedly in case there are multiple stale blocks
+    prev = None
+    while prev != content:
+        prev = content
+        content = re.sub(block_pattern, '\n', content, flags=re.MULTILINE)
 
     # Also remove any bare config entries for this source key (from previous runs)
-    # that might not have the header comment
+    # that might not have the header comment. Use DOTALL for multi-line values.
     entry_pattern = rf"    '{re.escape(source_key)}\.[^']+': \{{[^}}]*\}},\n"
     content = re.sub(entry_pattern, '', content)
 
@@ -513,15 +914,27 @@ def add_ontology_configs(source_key: str, configs: dict) -> bool:
             break
 
     if insert_idx is None:
-        logger.error("Could not find ONTOLOGY_CONFIGS closing brace")
-        return False
+        # Closing brace was lost (e.g., regex removal consumed it) — re-add it
+        logger.warning("ONTOLOGY_CONFIGS closing brace missing — re-adding")
+        lines.append('}')
+        insert_idx = len(lines) - 1
 
     # Insert before the closing brace
     for j, entry in enumerate(new_entries):
         lines.insert(insert_idx + j, entry)
 
-    config_path.write_text('\n'.join(lines) + '\n')
-    logger.info(f"Added {len(configs)} ontology config(s) to ontology_configs.py")
+    final_content = '\n'.join(lines) + '\n'
+    config_path.write_text(final_content)
+
+    # Syntax check — if invalid, restore backup and report failure
+    err = _syntax_check_ontology_configs()
+    if err:
+        logger.error(f"ontology_configs.py syntax error after write: {err}")
+        logger.info("Restoring backup of ontology_configs.py")
+        config_path.write_text(backup)
+        return False
+
+    logger.info(f"Added {len(configs)} ontology config(s) to ontology_configs.py (syntax OK)")
     return True
 
 
@@ -630,9 +1043,19 @@ def run_parser(source_key: str, class_name: str, parser_file_name: str, emit=Non
         'message': f'Running {class_name}: download + parse + TSV export',
     })
 
-    # Import the newly created parser module
+    # Reload the parsers package and the specific parser module so that
+    # back-to-back agent runs in the same Flask process pick up changes.
     try:
-        mod = importlib.import_module(f'src.parsers.{module_name}')
+        # Reload __init__.py first (register_in_main added new imports there)
+        parsers_pkg = 'src.parsers'
+        if parsers_pkg in sys.modules:
+            importlib.reload(sys.modules[parsers_pkg])
+
+        full_module = f'src.parsers.{module_name}'
+        if full_module in sys.modules:
+            mod = importlib.reload(sys.modules[full_module])
+        else:
+            mod = importlib.import_module(full_module)
         ParserClass = getattr(mod, class_name)
     except Exception as e:
         return {'success': False, 'error': f'Failed to import {class_name}: {e}'}
@@ -851,15 +1274,16 @@ def run_database_agent(db_name: str, db_url: str, on_progress=None) -> dict:
     Main entry point for the database agent.
 
     Steps:
-    1. Read SKILL.md and existing parser context
-    2. Call Claude to generate parser + ontology config
+    1. Call Claude to generate parser + ontology config
+    2. Validate parser syntax (auto-fix via Claude if errors found)
     3. Save parser to src/parsers/
-    4. Add ontology config to ontology_configs.py
+    4. Validate & deduplicate ontology config keys, add to ontology_configs.py
     5. Register parser in main.py and __init__.py
-    6. Run parser (parse + TSV export)
+    6. Run parser (download + parse + TSV export)
+    6b. Validate ontology config column refs vs actual parser output (auto-fix)
     7. Validate ID mappings
-    8. Verify Neo4j load
-    9. Stream progress via SSE
+    8. Load into Neo4j
+    9. Verify Neo4j load
     """
     def emit(event: str, data: dict):
         if on_progress:
@@ -898,7 +1322,11 @@ def run_database_agent(db_name: str, db_url: str, on_progress=None) -> dict:
         'config_count': len(ontology_configs),
     })
 
-    # Step 2: Save parser file
+    # Step 2: Validate syntax before saving
+    emit('status', {'phase': 'validating_syntax', 'message': 'Checking parser for syntax errors...'})
+    parser_code = _validate_syntax(parser_code, parser_file_name, emit)
+
+    # Step 3: Save parser file
     emit('status', {'phase': 'saving', 'message': f'Saving {parser_file_name}...'})
     try:
         parser_path = save_parser(parser_code, parser_file_name)
@@ -906,8 +1334,9 @@ def run_database_agent(db_name: str, db_url: str, on_progress=None) -> dict:
         emit('error', {'message': f'Failed to save parser: {e}'})
         return {'success': False, 'error': f'Save failed: {e}'}
 
-    # Step 3: Add ontology configs
+    # Step 4: Add ontology configs (after dedup check)
     if ontology_configs:
+        ontology_configs = _validate_config_keys(source_key, ontology_configs, emit)
         emit('status', {'phase': 'configs', 'message': 'Adding ontology configs...'})
         try:
             add_ontology_configs(source_key, ontology_configs)
@@ -915,7 +1344,7 @@ def run_database_agent(db_name: str, db_url: str, on_progress=None) -> dict:
             emit('error', {'message': f'Failed to add configs: {e}'})
             return {'success': False, 'error': f'Config failed: {e}'}
 
-    # Step 4: Register in main.py and __init__.py
+    # Step 5: Register in main.py and __init__.py
     emit('status', {'phase': 'registering', 'message': 'Registering parser in pipeline...'})
     try:
         register_in_main(source_key, class_name, parser_file_name)
@@ -923,7 +1352,7 @@ def run_database_agent(db_name: str, db_url: str, on_progress=None) -> dict:
         emit('error', {'message': f'Failed to register parser: {e}'})
         return {'success': False, 'error': f'Registration failed: {e}'}
 
-    # Step 5: Run parser (download + parse + TSV export)
+    # Step 6: Run parser (download + parse + TSV export)
     emit('status', {'phase': 'parsing', 'message': 'Running parser (download + parse + export)...'})
     try:
         parse_result = run_parser(source_key, class_name, parser_file_name, emit)
@@ -941,6 +1370,16 @@ def run_database_agent(db_name: str, db_url: str, on_progress=None) -> dict:
             'error': 'Parser run failed',
             'parse_output': parse_result,
         }
+
+    # Step 6b: Validate ontology config columns against actual parser output
+    if ontology_configs and parse_result.get('parsed_data'):
+        emit('status', {
+            'phase': 'validating_columns',
+            'message': 'Validating ontology config columns vs parser output...',
+        })
+        ontology_configs = _validate_config_vs_output(
+            source_key, ontology_configs, parse_result['parsed_data'], emit
+        )
 
     emit('status', {
         'phase': 'parsed',

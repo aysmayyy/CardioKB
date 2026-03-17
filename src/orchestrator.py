@@ -38,8 +38,14 @@ def _build_parser_metadata() -> Dict:
         source_labels: list of r.source values this parser writes
         node_types: list of node labels this parser creates
         source_filenames: list of TSV filenames from configs
+
+    Always reloads ontology_configs so back-to-back agent runs in the
+    same Flask process pick up newly added configs.
     """
-    from src.ontology_configs import ONTOLOGY_CONFIGS
+    import importlib
+    import src.ontology_configs as _oc_mod
+    importlib.reload(_oc_mod)
+    ONTOLOGY_CONFIGS = _oc_mod.ONTOLOGY_CONFIGS
 
     meta: Dict = {}
     for key, cfg in ONTOLOGY_CONFIGS.items():
@@ -70,8 +76,9 @@ def _build_parser_metadata() -> Dict:
     return meta
 
 
-# Derive parser list automatically from ontology configs
-EXPECTED_PARSERS = sorted(_build_parser_metadata().keys())
+def _get_expected_parsers():
+    """Return the current list of expected parsers (always fresh)."""
+    return sorted(_build_parser_metadata().keys())
 
 # Map short disease names to filter files
 DISEASE_FILTERS = {
@@ -575,7 +582,7 @@ def _build_health_checks(log_data: Dict, neo4j_stats: Optional[Dict]) -> Dict:
                            if not_loaded else '')),
         })
     else:
-        failed = [n for n in EXPECTED_PARSERS
+        failed = [n for n in _get_expected_parsers()
                   if log_data['parsers'].get(n, {}).get('status') in ('failed', 'no data')]
         checks.append({
             'name': 'Parser data',
@@ -594,7 +601,7 @@ def generate_html_report(log_data: Dict, neo4j_stats: Dict,
 
     parser_rows = []
     parser_status = neo4j_stats.get('parser_status', {})
-    all_parsers = sorted(set(EXPECTED_PARSERS) | set(parser_status.keys()))
+    all_parsers = sorted(set(_get_expected_parsers()) | set(parser_status.keys()))
     for name in all_parsers:
         ps = parser_status.get(name)
         log_p = log_data['parsers'].get(name, {})

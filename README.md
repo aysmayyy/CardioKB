@@ -1,6 +1,6 @@
 # CardioKB: Biomedical Knowledge Graph
 
-A general-purpose biomedical knowledge graph pipeline that integrates 32 data sources (32 parsers) into a Neo4j graph for disease research, feature selection, and precision medicine. While initially focused on cardiovascular disease, the graph contains data spanning all human diseases — most data sources are disease-agnostic. Adapted from the AlzKB (Alzheimer's Knowledge Base) architecture with additional custom parsers and Hetionet component integrations. Features an AI-powered **DatabaseAgent** that autonomously generates new parsers from just a name and URL, a disease agent for on-demand knowledge subgraph construction via Claude API + DisGeNET, and a web dashboard with interactive graph exploration and Neo4j Browser-style querying.
+A general-purpose biomedical knowledge graph pipeline that integrates 36 data sources (36 parsers) into a Neo4j graph for disease research, feature selection, and precision medicine. While initially focused on cardiovascular disease, the graph contains data spanning all human diseases — most data sources are disease-agnostic. Adapted from the AlzKB (Alzheimer's Knowledge Base) architecture with additional custom parsers and Hetionet component integrations. Features an AI-powered **DatabaseAgent** that autonomously generates new parsers from just a name and URL, a disease agent for on-demand knowledge subgraph construction via Claude API + DisGeNET, and a web dashboard with interactive graph exploration and Neo4j Browser-style querying.
 
 **Graph stats:** 373,869 nodes | 26,581,028 relationships | 18 node types | 35 relationship types | 25 sources
 *Stats are current as of last pipeline run; see Neo4j or `GET /api/graph-stats` for live counts.*
@@ -9,12 +9,12 @@ A general-purpose biomedical knowledge graph pipeline that integrates 32 data so
 
 | Category | Count | Details |
 |----------|-------|---------|
-| Total databases | 32 | 32 parsers (1 per source) |
-| Active & loaded | 31 | Successfully parsed + loaded into Neo4j (verified by r.source query) |
+| Total databases | 36 | 36 parsers (1 per source) |
+| Active & loaded | 35 | Successfully parsed + loaded into Neo4j (verified by r.source query) |
 | Credential-gated (loaded) | 4 | OMIM, DisGeNET, DrugBank (XML), AOP-DB (SQL dump) |
-| Agent-generated | 3 | HGNC, HGNC Families, ClinVar (built by DatabaseAgent) |
+| Agent-generated | 7 | HGNC, HGNC Families, ClinVar, DrugAge, CellAge, AnAge, GenAge (built by DatabaseAgent) |
 | Stale/partial | 1 | MeSH (nodes only, no relationship data) |
-| Ontology configs | 77 | Neo4j node/relationship type mappings |
+| Ontology configs | 85 | Neo4j node/relationship type mappings |
 | Source-labeled relationships | 26 | All relationships carry `r.source` property (26 unique source labels) |
 
 ## Data Sources
@@ -65,6 +65,10 @@ A general-purpose biomedical knowledge graph pipeline that integrates 32 data so
 | 30 | HGNC | Public | Working (44,361 Gene nodes enriched with xrefHGNC, geneName, locusGroup, locusType) |
 | 31 | HGNC Gene Families | Public | Working (1,934 GeneFamily nodes, 33,967 geneInFamily edges) |
 | 32 | ClinVar | Public FTP | Working (4,486,982 Variant nodes, 5,715,838 disease-variant edges, 4,486,982 gene-variant edges) |
+| 33 | DrugAge/CellAge | Public | Working (gene-aging associations, AgeingProperty nodes) |
+| 34 | CellAge | Public | Working (senescence gene nodes) |
+| 35 | AnAge | Public | Working (Species longevity nodes) |
+| 36 | GenAge | Public | Working (aging-associated gene nodes) |
 
 ## Neo4j Graph Schema
 
@@ -85,7 +89,7 @@ Cardio-KB/
 │   ├── api.py                  # Flask backend with SSE streaming + agent endpoints
 │   ├── orchestrator.py         # Health check with dynamic Neo4j parser detection
 │   ├── neo4j_loader.py         # Cypher-based Neo4j batch loader
-│   ├── ontology_configs.py     # 77 ontology configs for Neo4j schema mapping
+│   ├── ontology_configs.py     # 85 ontology configs for Neo4j schema mapping
 │   ├── id_mapping.py           # Central ID mapping: validate, suggest, create_missing_nodes, CLI
 │   ├── utils.py                # Disease filtering utilities (load_disease_terms, etc.)
 │   └── parsers/
@@ -108,6 +112,10 @@ Cardio-KB/
 │       ├── hgnc_parser.py          # Agent-generated
 │       ├── hgncfamilies_parser.py  # Agent-generated
 │       ├── clinvar_parser.py       # Agent-generated
+│       ├── drugage_parser.py       # Agent-generated
+│       ├── cellage_parser.py       # Agent-generated
+│       ├── anage_parser.py         # Agent-generated
+│       ├── genage_parser.py        # Agent-generated
 │       └── hetionet_components/    # 14 Hetionet-derived component parsers
 │           ├── disease_ontology_parser.py
 │           ├── gene_ontology_parser.py
@@ -246,7 +254,7 @@ Disease term files live in **`ontology/diseases/`** (one term per line, `#` for 
 DisGeNETParser(data_dir="data/raw", disease_filter="ontology/diseases/cancer.txt")
 ```
 
-When `disease_filter` is omitted, DisGeNET defaults to `ontology/disease_filter.txt` (→ CVD). OMIMParser reads the symlink to tag rows with `is_cvd` but loads all data regardless. All other 30 parsers are fully disease-agnostic.
+When `disease_filter` is omitted, DisGeNET defaults to `ontology/disease_filter.txt` (→ CVD). OMIMParser reads the symlink to tag rows with `is_cvd` but loads all data regardless. All other parsers are fully disease-agnostic.
 
 ## Web Interface
 
@@ -306,13 +314,17 @@ The following parsers were built entirely by the DatabaseAgent and are now part 
 | HGNC | 44,361 Gene nodes enriched with xrefHGNC, geneName, locusGroup, locusType |
 | HGNC Gene Families | 1,934 GeneFamily nodes, 33,967 geneInFamily edges |
 | ClinVar | 4,486,982 Variant nodes, 5.7M disease-variant + 4.5M gene-variant edges |
+| DrugAge/CellAge | Gene-aging associations, AgeingProperty nodes |
+| CellAge | Senescence gene nodes |
+| AnAge | Species longevity nodes |
+| GenAge | Aging-associated gene nodes |
 
 ## Architecture Notes
 
 - All parsers extend `BaseParser` from `src/parsers/base_parser.py`
 - Neo4j loading uses UNWIND-based Cypher batching (batch size: 1000) with MERGE to prevent duplicates
 - All relationships are tagged with `r.source` property from the config's `source_label` for provenance tracking
-- Graph schema is defined declaratively in `src/ontology_configs.py` (77 configs)
+- Graph schema is defined declaratively in `src/ontology_configs.py` (85 configs)
 - Post-load ID mapping validation automatically checks all relationship match rates and creates missing nodes for low-match configs
 - Parsers with missing credentials are automatically skipped at runtime
 - DrugBank and AOP-DB auto-detect local data files (XML / SQL dump) and work without credentials

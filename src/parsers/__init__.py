@@ -67,9 +67,13 @@ from .hetionet_components import (
     LINCS1000Parser,
     MEDLINECooccurrenceParser,
 )
-from .clinvar_parser import ClinVarParser
 from .hgncfamilies_parser import HGNCFamiliesParser
 from .hgnc_parser import HGNCParser
+from .clinvar_parser import ClinVarParser
+from .drugage_parser import DrugAgeParser
+from .cellage_parser import CellAgeParser
+from .anage_parser import AnAgeParser
+from .genage_parser import GenAgeParser
 
 __all__ = [
     'BaseParser',
@@ -105,7 +109,11 @@ __all__ = [
     'WikiPathwaysParser',
     'STRINGParser',
     'OpenTargetsParser',
-    'ClinVarParser',
     'HGNCFamiliesParser',
     'HGNCParser',
+    'ClinVarParser',
+    'DrugAgeParser',
+    'CellAgeParser',
+    'AnAgeParser',
+    'GenAgeParser',
 ]

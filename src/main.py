@@ -64,9 +64,15 @@ from src.parsers import (
     WikiPathwaysParser,
     STRINGParser,
     OpenTargetsParser,
-    ClinVarParser,
     HGNCFamiliesParser,
     HGNCParser,
+    ClinVarParser,
+    DrugAgeParser,
+    CellAgeParser,
+    AnAgeParser,
+    AnAgeParser,
+    AnAgeParser,
+    GenAgeParser,
 )
 
 logger = logging.getLogger(__name__)
@@ -534,13 +540,25 @@ class CardioKBPipeline:
             data_dir=str(self.raw_dir),
         )
 
-        parsers['clinvar'] = ClinVarParser(
-            data_dir=str(self.raw_dir),
-        )
         parsers['hgncfamilies'] = HGNCFamiliesParser(
             data_dir=str(self.raw_dir),
         )
         parsers['hgnc'] = HGNCParser(
+            data_dir=str(self.raw_dir),
+        )
+        parsers['clinvar'] = ClinVarParser(
+            data_dir=str(self.raw_dir),
+        )
+        parsers['drugage'] = DrugAgeParser(
+            data_dir=str(self.raw_dir),
+        )
+        parsers['cellage'] = CellAgeParser(
+            data_dir=str(self.raw_dir),
+        )
+        parsers['anage'] = AnAgeParser(
+            data_dir=str(self.raw_dir),
+        )
+        parsers['genage'] = GenAgeParser(
             data_dir=str(self.raw_dir),
         )
         # Parsers requiring credentials (only add if configured)

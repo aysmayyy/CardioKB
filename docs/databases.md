@@ -2,8 +2,9 @@
 # CardioKB Data Sources
 
 ## Summary
-- **32 databases** — 32 parsers, all working
+- **36 databases** — 36 parsers, all working
 - **373,869 nodes** | **26,581,028 relationships** | **18 node types** | **35 relationship types** | **25 sources**
+- *Node/relationship counts are from last pipeline run; new agent-generated parsers may not yet be reflected.*
 
 ## Phase 1: Core Parsers
 
@@ -51,6 +52,10 @@
 | 30 | HGNC | https://www.genenames.org/ | Public | Working | 44,361 Gene nodes enriched (xrefHGNC, geneName, locusGroup, locusType) |
 | 31 | HGNC Gene Families | https://www.genenames.org/ | Public | Working | 1,934 GeneFamily nodes, 33,967 geneInFamily edges |
 | 32 | ClinVar | https://ftp.ncbi.nlm.nih.gov/pub/clinvar/ | Public FTP | Working | 4,486,982 Variant nodes, 5.7M disease-variant + 4.5M gene-variant edges |
+| 33 | DrugAge/CellAge | https://genomics.senescence.info/cells/cellAge.zip | Public | Working | Gene-aging associations, AgeingProperty nodes |
+| 34 | CellAge | https://genomics.senescence.info/cells/cellAge.zip | Public | Working | Senescence gene nodes |
+| 35 | AnAge | https://genomics.senescence.info/species/dataset.zip | Public | Working | Species longevity nodes |
+| 36 | GenAge | https://genomics.senescence.info/genes/human_genes.zip | Public | Working | Aging-associated gene nodes |
 
 ## Credential-Gated Sources
 

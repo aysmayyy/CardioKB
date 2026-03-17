@@ -25,7 +25,7 @@ if _project_root not in sys.path:
 
 from src.orchestrator import (
     DISEASE_FILTERS,
-    EXPECTED_PARSERS,
+    _get_expected_parsers,
     run_health_check,
 )
 
@@ -72,7 +72,7 @@ def list_diseases():
 @app.route('/api/parsers')
 def list_parsers():
     """Return expected parser list."""
-    return jsonify(EXPECTED_PARSERS)
+    return jsonify(_get_expected_parsers())
 
 
 @app.route('/api/graph-stats')
@@ -883,12 +883,6 @@ def main():
     parser.add_argument('--host', default='127.0.0.1')
     parser.add_argument('--debug', action='store_true')
     args = parser.parse_args()
-
-    # Auto-reload parsers that have TSVs but 0 data in Neo4j
-    try:
-        _reload_unloaded_parsers()
-    except Exception as e:
-        print(f"  Warning: startup reload check failed: {e}")
 
     print(f"\n  CardioKB Web Interface")
     print(f"  http://{args.host}:{args.port}\n")

@@ -296,6 +296,14 @@ class Neo4jLoader:
         rows = df[list(set(col for col in df.columns if col in
                           [iri_col] + source_cols +
                           [pc.get('merge_column', {}).get('source_column_name', '')]))].copy()
+        # Coerce IRI column to string — Neo4j MERGE requires exact type matching,
+        # and IDs must be consistently typed across node creation and relationship
+        # matching. String is the universal safe type for identifiers.
+        if iri_col in rows.columns:
+            rows[iri_col] = rows[iri_col].apply(
+                lambda x: str(int(x)) if isinstance(x, float) and pd.notna(x) and x == int(x)
+                else str(x) if pd.notna(x) else None
+            )
         rows = rows.where(pd.notna(rows), None)
         row_dicts = rows.to_dict('records')
 
@@ -362,12 +370,31 @@ class Neo4jLoader:
 
         # Source label (set once per config, not per row)
         source_label = config.get('source_label')
+        if not source_label:
+            logger.warning(
+                f"  {config_key}: missing 'source_label' in config — "
+                f"relationships will not have r.source set"
+            )
+
+        # Type-aware matching: wrap row values with toInteger() when the
+        # target property is stored as an integer in Neo4j.  Config can set
+        # 'subject_match_type' / 'object_match_type' to 'integer'.
+        subj_match_type = pc.get('subject_match_type')
+        obj_match_type = pc.get('object_match_type')
+
+        def _match_expr(col, match_type):
+            if match_type == 'integer':
+                return f"toInteger(row.{col})"
+            return f"row.{col}"
+
+        subj_expr = _match_expr(subj_col, subj_match_type)
+        obj_expr = _match_expr(obj_col, obj_match_type)
 
         # Forward relationship query
         query = (
             f"UNWIND $rows AS row "
-            f"MATCH (s:{subj_node_type} {{{subj_match_prop}: row.{subj_col}}}) "
-            f"MATCH (o:{obj_node_type} {{{obj_match_prop}: row.{obj_col}}}) "
+            f"MATCH (s:{subj_node_type} {{{subj_match_prop}: {subj_expr}}}) "
+            f"MATCH (o:{obj_node_type} {{{obj_match_prop}: {obj_expr}}}) "
             f"MERGE (s)-[r:{rel_type}]->(o) "
         )
         # Build SET clause: source label + any data properties
@@ -385,49 +412,50 @@ class Neo4jLoader:
         rows = df[needed_cols].copy()
         # Handle NaN → None
         rows = rows.where(pd.notna(rows), None)
-        # Coerce match columns to match Neo4j property types.
-        # Sample existing nodes to detect whether the match property is stored as
-        # str or int, then coerce the DataFrame column to match.
-        for col, node_type, match_prop in [
-            (subj_col, subj_node_type, subj_match_prop),
-            (obj_col, obj_node_type, obj_match_prop),
-        ]:
+        # Coerce match columns to string — IRI/ID columns are stored as strings
+        # by the node loader (see _load_nodes), so relationship match columns must
+        # also be strings for Neo4j MERGE to find exact type matches.  The previous
+        # approach (sampling one existing node) broke when mixed sources stored the
+        # same property as different types (e.g., ClinPGx Variant variantId=str vs
+        # ClinVar variantId=int).
+        for col in (subj_col, obj_col):
             if col not in rows.columns:
                 continue
-            neo4j_type = self._sample_property_type(node_type, match_prop)
-            if neo4j_type == 'str':
-                rows[col] = rows[col].apply(
-                    lambda x: str(int(x)) if isinstance(x, float) and x == int(x)
-                    else str(x) if x is not None
-                    else None
-                )
-            else:
-                # int or unknown — coerce numeric-looking values to int
-                rows[col] = rows[col].apply(
-                    lambda x: (
-                        int(x) if isinstance(x, float) and x == int(x)
-                        else int(x) if isinstance(x, str) and x.isdigit()
-                        else x
-                    ) if x is not None else None
-                )
+            rows[col] = rows[col].apply(
+                lambda x: str(int(x)) if isinstance(x, float) and pd.notna(x) and x == int(x)
+                else str(x) if pd.notna(x) and x is not None
+                else None
+            )
         row_dicts = rows.to_dict('records')
 
         result = self._execute_batch(query, row_dicts, source_label=source_label)
         created = result['relationships_created']
+        props_set = result['properties_set']
         sent = result['rows_sent']
-        matched = sent - created if sent > created else sent
-        logger.info(
-            f"  {config_key}: {sent} rows -> {created} new + "
-            f"{matched} existing {rel_type} relationships"
-        )
-        self.stats['relationships_merged'] += sent
+        # Distinguish "existing" (MERGE matched) from "skipped" (MATCH found no
+        # endpoint nodes).  When MERGE hits an existing rel it still sets properties,
+        # so props_set > 0 indicates real merges.  When MATCH fails, no SET runs and
+        # both created and props_set are 0.
+        if created == 0 and props_set == 0 and sent > 0:
+            logger.warning(
+                f"  {config_key}: {sent} rows -> 0 relationships created "
+                f"(endpoint MATCH likely failed — check ID types/values for "
+                f"{subj_node_type}.{subj_match_prop} and {obj_node_type}.{obj_match_prop})"
+            )
+        else:
+            matched = sent - created if sent > created else 0
+            logger.info(
+                f"  {config_key}: {sent} rows -> {created} new + "
+                f"{matched} existing {rel_type} relationships"
+            )
+        self.stats['relationships_merged'] += created
 
         # Inverse relationship
         if inverse_rel_type:
             inv_query = (
                 f"UNWIND $rows AS row "
-                f"MATCH (s:{subj_node_type} {{{subj_match_prop}: row.{subj_col}}}) "
-                f"MATCH (o:{obj_node_type} {{{obj_match_prop}: row.{obj_col}}}) "
+                f"MATCH (s:{subj_node_type} {{{subj_match_prop}: {subj_expr}}}) "
+                f"MATCH (o:{obj_node_type} {{{obj_match_prop}: {obj_expr}}}) "
                 f"MERGE (o)-[r:{inverse_rel_type}]->(s) "
             )
             inv_set_parts = []
@@ -440,13 +468,20 @@ class Neo4jLoader:
 
             inv_result = self._execute_batch(inv_query, row_dicts, source_label=source_label)
             inv_created = inv_result['relationships_created']
+            inv_props = inv_result['properties_set']
             inv_sent = inv_result['rows_sent']
-            inv_matched = inv_sent - inv_created if inv_sent > inv_created else inv_sent
-            logger.info(
-                f"  {config_key}: {inv_sent} rows -> {inv_created} new + "
-                f"{inv_matched} existing {inverse_rel_type} (inverse) relationships"
-            )
-            self.stats['relationships_merged'] += inv_sent
+            if inv_created == 0 and inv_props == 0 and inv_sent > 0:
+                logger.warning(
+                    f"  {config_key}: {inv_sent} rows -> 0 inverse relationships created "
+                    f"(endpoint MATCH likely failed)"
+                )
+            else:
+                inv_matched = inv_sent - inv_created if inv_sent > inv_created else 0
+                logger.info(
+                    f"  {config_key}: {inv_sent} rows -> {inv_created} new + "
+                    f"{inv_matched} existing {inverse_rel_type} (inverse) relationships"
+                )
+            self.stats['relationships_merged'] += inv_created
 
     # -------------------------------------------------------------------------
     # Helpers

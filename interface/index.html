@@ -395,7 +395,7 @@ th { color: var(--text-muted); font-weight: 600; text-transform: uppercase; font
         A general-purpose biomedical knowledge graph spanning all human diseases. Search any disease, gene, or drug in the <strong style="color:var(--text)">Explore</strong> tab, run Cypher queries in <strong style="color:var(--text)">Query</strong>, or add entirely new databases via <strong style="color:var(--text)">Admin</strong> &mdash; the AI agent writes the parser for you.
     </div>
 
-    <button class="run-btn" id="runBtn" onclick="runHealthCheck()" data-tip="Check all 32 parsers (including agent-generated ones), Neo4j connectivity, and data integrity">Run Health Check</button>
+    <button class="run-btn" id="runBtn" onclick="runHealthCheck()" data-tip="Check all parsers (including agent-generated ones), Neo4j connectivity, and data integrity">Run Health Check</button>
 
     <div>
         <button class="admin-toggle" id="advancedToggle" onclick="toggleAdvanced()" style="background:var(--bg);font-size:0.82rem;padding:0.6rem 0.75rem">
@@ -420,7 +420,7 @@ th { color: var(--text-muted); font-weight: 600; text-transform: uppercase; font
                 <button class="run-btn" id="agentBtn" onclick="runAgentBuild()" style="font-size:0.82rem;padding:0.5rem;margin-bottom:0.75rem">Fetch</button>
 
                 <h3 style="margin-bottom:0.5rem">Run Pipeline</h3>
-                <button class="run-btn" id="pipelineBtn" onclick="runPipeline()" data-tip="Run the full data pipeline for all 32 sources (download, parse, load into Neo4j)" style="font-size:0.82rem;padding:0.5rem">Run Pipeline</button>
+                <button class="run-btn" id="pipelineBtn" onclick="runPipeline()" data-tip="Run the full data pipeline for all sources (download, parse, load into Neo4j)" style="font-size:0.82rem;padding:0.5rem">Run Pipeline</button>
             </div>
         </div>
     </div>
@@ -447,7 +447,7 @@ th { color: var(--text-muted); font-weight: 600; text-transform: uppercase; font
     <!-- Explore Tab -->
     <div class="tab-content active" id="tab-explore">
         <div class="explore-bar">
-            <input type="text" id="exploreSearch" data-tip="Search for any disease, gene, or drug across all 32 integrated sources to visualize its neighborhood" placeholder="Try: atrial fibrillation, Alzheimer's, BRCA1, metformin" />
+            <input type="text" id="exploreSearch" data-tip="Search for any disease, gene, or drug across all integrated sources to visualize its neighborhood" placeholder="Try: atrial fibrillation, Alzheimer's, BRCA1, metformin" />
             <input type="number" id="exploreLimit" value="200" min="10" max="1000" style="width:80px;flex:none" data-tip="Maximum number of nodes to display (higher = more detail, slower)" />
             <button id="exploreBtn" onclick="loadExploreGraph()" data-tip="Load the subgraph for the searched disease, gene, or drug">Explore</button>
             <button class="info-btn" onclick="showMethodologyModal()" data-tip="How to read this graph">?</button>
@@ -507,7 +507,7 @@ th { color: var(--text-muted); font-weight: 600; text-transform: uppercase; font
     <!-- Query Tab -->
     <div class="tab-content" id="tab-query">
         <div style="background:var(--surface);border:1px solid var(--border);border-radius:8px;padding:1rem;margin-bottom:1rem;font-size:0.82rem;color:var(--text-muted);line-height:1.6">
-            Write Cypher queries to explore the full knowledge graph (32 sources, all diseases). Queries are <strong style="color:var(--text)">read-only</strong> (no CREATE/DELETE/SET). Click a template below to auto-fill, or write your own. Results appear as a table and, when graph data is returned, as a network visualization.
+            Write Cypher queries to explore the full knowledge graph (<span id="querySourceCount">all</span> sources, all diseases). Queries are <strong style="color:var(--text)">read-only</strong> (no CREATE/DELETE/SET). Click a template below to auto-fill, or write your own. Results appear as a table and, when graph data is returned, as a network visualization.
         </div>
 
         <div class="templates">
@@ -593,7 +593,7 @@ th { color: var(--text-muted); font-weight: 600; text-transform: uppercase; font
     <div class="modal">
         <div class="modal-step active" data-step="0">
             <h2>Welcome to CardioKB</h2>
-            <p>CardioKB is a <strong>general-purpose biomedical knowledge graph</strong> integrating <strong>32 data sources</strong> into a single queryable network. It connects genes, diseases, drugs, pathways, clinical trials, phenotypes, variants, and more &mdash; spanning <strong>all human diseases</strong>, not just cardiovascular.</p>
+            <p>CardioKB is a <strong>general-purpose biomedical knowledge graph</strong> integrating <strong><span id="aboutSourceCount">many</span> data sources</strong> into a single queryable network. It connects genes, diseases, drugs, pathways, clinical trials, phenotypes, variants, and more &mdash; spanning <strong>all human diseases</strong>, not just cardiovascular.</p>
             <ul>
                 <li>373K+ nodes across 18 entity types, 26M+ relationships from 25 sources</li>
                 <li>Search any disease (heart failure, Alzheimer's, cancer...) or any gene/drug</li>
@@ -1637,6 +1637,16 @@ document.addEventListener('DOMContentLoaded', () => {
 function renderParserTable(parsers) {
     const body = document.getElementById('parserBody');
     body.innerHTML = '';
+    const parserCount = Object.keys(parsers).length;
+    // Update dynamic source counts across the UI
+    const runBtn = document.getElementById('runBtn');
+    if (runBtn) runBtn.setAttribute('data-tip', 'Check all ' + parserCount + ' parsers (including agent-generated ones), Neo4j connectivity, and data integrity');
+    const pipelineBtn = document.getElementById('pipelineBtn');
+    if (pipelineBtn) pipelineBtn.setAttribute('data-tip', 'Run the full data pipeline for all ' + parserCount + ' sources (download, parse, load into Neo4j)');
+    const qsc = document.getElementById('querySourceCount');
+    if (qsc) qsc.textContent = parserCount;
+    const asc = document.getElementById('aboutSourceCount');
+    if (asc) asc.textContent = parserCount;
     Object.keys(parsers).sort().forEach(name => {
         const p = parsers[name];
         const status = p.status || 'skipped';
