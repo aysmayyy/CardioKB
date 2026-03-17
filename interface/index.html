@@ -482,14 +482,6 @@ th { color: var(--text-muted); font-weight: 600; text-transform: uppercase; font
                 <input type="text" class="agent-input" id="addDbUrl" placeholder="Data download URL (TSV, CSV, JSON, or gzipped)" data-tip="Direct download link to the source data file. The agent samples the first 64KB to detect format and columns." />
                 <button class="run-btn" id="addDbBtn" onclick="addDatabase()" style="font-size:0.82rem;padding:0.5rem;margin-bottom:0.75rem" data-tip="Launch the DatabaseAgent: sample file, generate parser via Claude AI, run parser, load into Neo4j">Build Parser</button>
 
-                <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:0.3rem">
-                    <h3 style="margin-bottom:0">Fetch DisGeNET Data</h3>
-                    <button class="info-btn-sm" data-info="disgenet">?</button>
-                </div>
-                <div style="font-size:0.75rem;color:var(--text-muted);margin-bottom:0.4rem;line-height:1.45">Fetch gene-disease associations from DisGeNET for diseases with limited coverage.</div>
-                <input type="text" class="agent-input" id="agentInput" placeholder="e.g. Parkinson's, PD, lupus..." />
-                <button class="run-btn" id="agentBtn" onclick="runAgentBuild()" style="font-size:0.82rem;padding:0.5rem;margin-bottom:0.75rem">Fetch</button>
-
                 <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:0.5rem">
                     <h3 style="margin-bottom:0">Run Pipeline</h3>
                     <button class="info-btn-sm" data-info="pipeline">?</button>
@@ -707,7 +699,7 @@ th { color: var(--text-muted); font-weight: 600; text-transform: uppercase; font
                 <li>Click <strong>Build Parser</strong> &mdash; the DatabaseAgent (Claude AI) samples the file, generates a complete parser, integrates it into the pipeline, and loads the data into Neo4j</li>
                 <li>The agent handles format detection, column mapping, ontology config, and ID validation automatically</li>
             </ul>
-            <p style="margin-top:0.5rem">Also in Admin: <strong>Fetch DisGeNET Data</strong> (targeted gene-disease enrichment) and <strong>Run Pipeline</strong> (full rebuild of all 36 sources).</p>
+            <p style="margin-top:0.5rem">Also in Admin: <strong>Run Pipeline</strong> (full rebuild of all 36 sources).</p>
         </div>
         <div class="modal-dots">
             <span class="dot active" data-dot="0"></span>
@@ -835,12 +827,6 @@ th { color: var(--text-muted); font-weight: 600; text-transform: uppercase; font
             '<strong>4.</strong> Create ontology configs for Neo4j mapping<br>' +
             '<strong>5.</strong> Run the parser and load data into the graph</p>' +
             '<p>The entire process takes 1&ndash;3 minutes. The new source appears in Health Check immediately.</p>',
-
-        disgenet:
-            '<h4>DisGeNET Enrichment</h4>' +
-            '<p>DisGeNET is a curated database of gene-disease associations from GWAS, animal models, and literature mining.</p>' +
-            '<p>The graph already contains gene-disease data from 25+ sources. Use this to fetch <strong>additional</strong> associations for rare or under-represented diseases where existing coverage is thin.</p>' +
-            '<p>Enter disease keywords (e.g. &ldquo;lupus&rdquo;, &ldquo;Parkinson&rsquo;s&rdquo;). The system queries the DisGeNET API, parses results, and merges them into Neo4j.</p>',
 
         pipeline:
             '<h4>Full Pipeline Run</h4>' +
@@ -2001,81 +1987,8 @@ async function buildKnowledgeGraph() {
     }
 }
 
-async function runAgentBuild() {
-    const input = document.getElementById('agentInput');
-    const btn = document.getElementById('agentBtn');
-    const disease = input.value.trim();
-    if (!disease) { input.focus(); return; }
-
-    // Auto-open admin
-    const toggle = document.getElementById('adminToggle');
-    const body = document.getElementById('adminBody');
-    if (!body.classList.contains('open')) { toggle.classList.add('open'); body.classList.add('open'); }
-
-    btn.disabled = true;
-    btn.innerHTML = '<span class="spinner"></span>Building...';
-    input.disabled = true;
-    document.getElementById('logPanel').innerHTML = '';
-    log('Agent: building knowledge graph for "' + disease + '"...', 'info');
-
-    try {
-        const res = await fetch('/api/agent/build', {
-            method: 'POST',
-            headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify({ disease }),
-        });
-        if (!res.ok) {
-            const err = await res.json().catch(() => ({}));
-            log('Agent error: ' + (err.error || res.statusText), 'err');
-            agentFinish(); return;
-        }
-        const reader = res.body.getReader();
-        const decoder = new TextDecoder();
-        let buffer = '';
-        while (true) {
-            const { done, value } = await reader.read();
-            if (done) break;
-            buffer += decoder.decode(value, { stream: true });
-            let boundary;
-            while ((boundary = buffer.indexOf('\n\n')) !== -1) {
-                const frame = buffer.slice(0, boundary);
-                buffer = buffer.slice(boundary + 2);
-                let event = 'message', data = '';
-                for (const line of frame.split('\n')) {
-                    if (line.startsWith('event: ')) event = line.slice(7);
-                    else if (line.startsWith('data: ')) data = line.slice(6);
-                }
-                if (!data) continue;
-                const parsed = JSON.parse(data);
-                if (event === 'status') {
-                    log('Agent: ' + parsed.message, 'info');
-                } else if (event === 'result') {
-                    log('Agent: complete — ' + (parsed.cached ? 'loaded from cache' :
-                        parsed.disgenet_edges_loaded + ' gene-disease edges loaded'), 'ok');
-                    if (parsed.subgraph_stats) {
-                        const s = parsed.subgraph_stats;
-                        log('  Unique genes: ' + (s.unique_genes || 0).toLocaleString() +
-                            ' | Diseases: ' + (s.unique_diseases || 0).toLocaleString() +
-                            ' | DisGeNET edges: ' + (s.disgenet_edges || 0).toLocaleString(), 'ok');
-                    }
-                    loadGraphStats();
-                } else if (event === 'error') {
-                    log('Agent error: ' + parsed.message, 'err');
-                }
-            }
-        }
-    } catch (e) { log('Agent error: ' + e.message, 'err'); }
-
-    agentFinish();
-    function agentFinish() {
-        btn.disabled = false;
-        btn.textContent = 'Build Knowledge Graph';
-        input.disabled = false;
-    }
-}
-
 document.addEventListener('DOMContentLoaded', () => {
-    document.getElementById('agentInput').addEventListener('keydown', e => { if (e.key === 'Enter') runAgentBuild(); });
+    document.getElementById('buildKgInput').addEventListener('keydown', e => { if (e.key === 'Enter') buildKnowledgeGraph(); });
     document.getElementById('adminPassword').addEventListener('keydown', e => { if (e.key === 'Enter') unlockAdvanced(); });
     document.getElementById('exploreSearch').addEventListener('keydown', e => { if (e.key === 'Enter') loadExploreGraph(); });
     document.getElementById('cypherInput').addEventListener('keydown', e => {
