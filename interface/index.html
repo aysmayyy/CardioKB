@@ -367,6 +367,35 @@ th { color: var(--text-muted); font-weight: 600; text-transform: uppercase; font
     justify-content: center; flex-shrink: 0; transition: all 0.15s;
 }
 .info-btn:hover { border-color: var(--accent); color: var(--accent); }
+.info-btn-sm {
+    width: 18px; height: 18px; border-radius: 50%; border: 1.5px solid var(--border);
+    background: transparent; color: var(--text-muted); cursor: pointer;
+    font-size: 0.65rem; font-weight: 700; display: inline-flex; align-items: center;
+    justify-content: center; flex-shrink: 0; transition: all 0.15s;
+    vertical-align: middle; margin-left: 0.3rem; line-height: 1;
+}
+.info-btn-sm:hover { border-color: var(--accent); color: var(--accent); }
+
+/* Info popover (click-triggered rich tooltip) */
+.info-popover {
+    position: fixed; z-index: 10000; max-width: 320px; padding: 0.85rem 1rem;
+    background: var(--surface); border: 1px solid var(--border); border-radius: 10px;
+    box-shadow: 0 8px 32px rgba(0,0,0,0.35); font-size: 0.78rem; color: var(--text);
+    line-height: 1.6; opacity: 0; transform: translateY(4px);
+    transition: opacity 0.18s, transform 0.18s; pointer-events: none;
+}
+.info-popover.visible { opacity: 1; transform: translateY(0); pointer-events: auto; }
+.info-popover h4 { font-size: 0.82rem; color: var(--accent); margin: 0 0 0.35rem; font-weight: 700; }
+.info-popover p { margin: 0 0 0.4rem; }
+.info-popover p:last-child { margin-bottom: 0; }
+.info-popover strong { color: var(--text); }
+.info-popover code { background: var(--bg); padding: 0.1rem 0.35rem; border-radius: 3px; font-size: 0.73rem; }
+.info-popover .info-tier { display: flex; align-items: flex-start; gap: 0.45rem; margin-bottom: 0.35rem; }
+.info-popover .info-tier:last-child { margin-bottom: 0; }
+.info-popover .info-dot {
+    width: 8px; height: 8px; border-radius: 50%; flex-shrink: 0; margin-top: 0.35rem;
+}
+[data-theme="light"] .info-popover { box-shadow: 0 8px 32px rgba(0,0,0,0.15); }
 
 /* Node type legend panel */
 .node-legend {
@@ -395,7 +424,32 @@ th { color: var(--text-muted); font-weight: 600; text-transform: uppercase; font
         A general-purpose biomedical knowledge graph spanning all human diseases. Search any disease, gene, or drug in the <strong style="color:var(--text)">Explore</strong> tab, run Cypher queries in <strong style="color:var(--text)">Query</strong>, or add entirely new databases via <strong style="color:var(--text)">Admin</strong> &mdash; the AI agent writes the parser for you.
     </div>
 
-    <button class="run-btn" id="runBtn" onclick="runHealthCheck()" data-tip="Check all parsers (including agent-generated ones), Neo4j connectivity, and data integrity">Run Health Check</button>
+    <div style="display:flex;align-items:center;gap:0.4rem">
+        <button class="run-btn" id="runBtn" onclick="runHealthCheck()" data-tip="Check all parsers (including agent-generated ones), Neo4j connectivity, and data integrity" style="flex:1">Run Health Check</button>
+        <button class="info-btn-sm" data-info="healthcheck">?</button>
+    </div>
+
+    <div style="background:var(--bg);border-radius:8px;border:1px solid var(--border);padding:0.75rem">
+        <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:0.4rem">
+            <h3 style="margin-bottom:0">Build Disease Subgraph</h3>
+            <button class="info-btn-sm" data-info="subgraph">?</button>
+        </div>
+        <input type="text" class="agent-input" id="subgraphDisease" placeholder="e.g. heart failure, diabetes..." data-tip="Search for a Disease node by name (partial match)" />
+        <div style="display:flex;align-items:center;gap:0.5rem;margin:0.4rem 0">
+            <label style="font-size:0.75rem;color:var(--text-muted);white-space:nowrap">Hops:</label>
+            <input type="range" id="subgraphHops" min="1" max="3" value="1" style="flex:1;accent-color:var(--accent)" />
+            <span id="subgraphHopsVal" style="font-size:0.82rem;font-weight:600;min-width:1.2rem;text-align:center">1</span>
+            <button class="info-btn-sm" data-info="hops">?</button>
+        </div>
+        <button class="run-btn" id="subgraphBtn" onclick="buildDiseaseSubgraph()" style="font-size:0.82rem;padding:0.5rem;margin-bottom:0.4rem" data-tip="Query all nodes and relationships within N hops of the disease">Build Subgraph</button>
+        <div id="subgraphStats" style="display:none;font-size:0.75rem;color:var(--text-muted);line-height:1.6;margin-top:0.3rem">
+            <div id="subgraphStatsContent"></div>
+            <div style="display:flex;gap:0.4rem;margin-top:0.4rem">
+                <button class="run-btn" onclick="exportSubgraph('json')" style="font-size:0.72rem;padding:0.3rem 0.5rem;flex:1">Export JSON</button>
+                <button class="run-btn" onclick="exportSubgraph('csv')" style="font-size:0.72rem;padding:0.3rem 0.5rem;flex:1">Export CSV</button>
+            </div>
+        </div>
+    </div>
 
     <div>
         <button class="admin-toggle" id="advancedToggle" onclick="toggleAdvanced()" style="background:var(--bg);font-size:0.82rem;padding:0.6rem 0.75rem">
@@ -408,18 +462,27 @@ th { color: var(--text-muted); font-weight: 600; text-transform: uppercase; font
                 <div id="adminError" style="color:var(--red);font-size:0.78rem;margin-top:0.3rem;display:none"></div>
             </div>
             <div id="advancedUnlocked" style="display:none">
-                <h3 style="margin-bottom:0.3rem">Add New Database</h3>
-                <div style="font-size:0.75rem;color:var(--text-muted);margin-bottom:0.4rem;line-height:1.45">Provide a name and data URL. The DatabaseAgent (Claude AI) will download a sample, auto-generate a parser, integrate it into the pipeline, and load the data into Neo4j.</div>
+                <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:0.3rem">
+                    <h3 style="margin-bottom:0">Add New Database</h3>
+                    <button class="info-btn-sm" data-info="adddb">?</button>
+                </div>
+                <div style="font-size:0.75rem;color:var(--text-muted);margin-bottom:0.4rem;line-height:1.45">Provide a name and data URL. The AI agent auto-generates a parser and loads it into Neo4j.</div>
                 <input type="text" class="agent-input" id="addDbName" placeholder="Database name (e.g. PhosphoSitePlus)" data-tip="Human-readable name for the new data source" />
                 <input type="text" class="agent-input" id="addDbUrl" placeholder="Data download URL (TSV, CSV, JSON, or gzipped)" data-tip="Direct download link to the source data file. The agent samples the first 64KB to detect format and columns." />
                 <button class="run-btn" id="addDbBtn" onclick="addDatabase()" style="font-size:0.82rem;padding:0.5rem;margin-bottom:0.75rem" data-tip="Launch the DatabaseAgent: sample file, generate parser via Claude AI, run parser, load into Neo4j">Build Parser</button>
 
-                <h3 style="margin-bottom:0.3rem">Fetch Additional DisGeNET Data</h3>
-                <div style="font-size:0.75rem;color:var(--text-muted);margin-bottom:0.4rem;line-height:1.45">Use this to fetch additional gene-disease associations from DisGeNET for diseases with limited coverage. Most diseases are already well-represented in the graph through other sources.</div>
+                <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:0.3rem">
+                    <h3 style="margin-bottom:0">Fetch DisGeNET Data</h3>
+                    <button class="info-btn-sm" data-info="disgenet">?</button>
+                </div>
+                <div style="font-size:0.75rem;color:var(--text-muted);margin-bottom:0.4rem;line-height:1.45">Fetch gene-disease associations from DisGeNET for diseases with limited coverage.</div>
                 <input type="text" class="agent-input" id="agentInput" placeholder="e.g. Parkinson's, PD, lupus..." />
                 <button class="run-btn" id="agentBtn" onclick="runAgentBuild()" style="font-size:0.82rem;padding:0.5rem;margin-bottom:0.75rem">Fetch</button>
 
-                <h3 style="margin-bottom:0.5rem">Run Pipeline</h3>
+                <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:0.5rem">
+                    <h3 style="margin-bottom:0">Run Pipeline</h3>
+                    <button class="info-btn-sm" data-info="pipeline">?</button>
+                </div>
                 <button class="run-btn" id="pipelineBtn" onclick="runPipeline()" data-tip="Run the full data pipeline for all sources (download, parse, load into Neo4j)" style="font-size:0.82rem;padding:0.5rem">Run Pipeline</button>
             </div>
         </div>
@@ -460,6 +523,7 @@ th { color: var(--text-muted); font-weight: 600; text-transform: uppercase; font
                 <input type="checkbox" id="discoveryToggle" checked onchange="toggleDiscoveryLayer()" style="accent-color:var(--accent)" />
                 Show discovery layer
             </label>
+            <button class="info-btn-sm" data-info="discovery" data-tip="What are core vs discovery layers?">?</button>
         </div>
 
         <div style="display:flex;gap:1.5rem;margin-bottom:0.75rem;font-size:0.78rem;color:var(--text-muted);align-items:center">
@@ -640,8 +704,15 @@ th { color: var(--text-muted); font-weight: 600; text-transform: uppercase; font
         <h2>How to Read the Graph</h2>
         <p style="margin-bottom:0.75rem"><strong>Two-layer architecture</strong></p>
         <ul>
-            <li><strong>Core layer</strong> &mdash; Direct (1-hop) neighbors of the searched disease. These are known, literature-backed associations from databases like DisGeNET, GWAS Catalog, and DrugBank. Shown as <strong>large nodes with solid borders</strong>.</li>
-            <li><strong>Discovery layer</strong> &mdash; 2-hop neighbors reached through core nodes. These are hypothesis-generating connections not directly linked to the disease. Shown as <strong>small nodes with dashed borders and faded edges</strong>.</li>
+            <li><strong style="color:var(--accent)">Core layer</strong> &mdash; Direct (1-hop) neighbors of the searched entity. These are known, literature-backed associations from databases like DisGeNET, GWAS Catalog, and DrugBank. Shown as <strong>large nodes with solid borders</strong>.</li>
+            <li><strong style="color:var(--text-muted)">Discovery layer</strong> &mdash; 2-hop neighbors reached through core nodes. These are hypothesis-generating connections not directly linked to the disease &mdash; useful for finding shared pathways, off-target drugs, or comorbidity bridges. Shown as <strong>small nodes with dashed borders and faded edges</strong>. Toggle this layer on/off with the checkbox above the graph.</li>
+        </ul>
+        <p style="margin:0.75rem 0"><strong>Disease-specificity scoring</strong></p>
+        <ul>
+            <li>Every node has a pre-computed <strong>specificity score</strong> = <code>1 / (number of diseases it connects to)</code></li>
+            <li>A gene linked to only 1 disease scores <strong>1.0</strong> (highly specific); a gene linked to 500 diseases scores <strong>0.002</strong> (broadly connected, less informative for any single disease)</li>
+            <li>Disease nodes themselves score <strong>0.0</strong>; nodes with no disease connections score <strong>1.0</strong></li>
+            <li>Use specificity to prioritize &mdash; high-specificity genes and drugs are more likely to be biologically meaningful for your disease of interest</li>
         </ul>
         <p style="margin:0.75rem 0"><strong>Node sizing &amp; shapes</strong></p>
         <ul>
@@ -697,6 +768,117 @@ th { color: var(--text-muted); font-weight: 600; text-transform: uppercase; font
         const el = e.target.closest('[data-tip]');
         if (!el) return;
         hideTimer = setTimeout(function() { bubble.classList.remove('visible'); }, 80);
+    });
+})();
+
+// ---- Info Popover Engine ----
+(function() {
+    const pop = document.createElement('div');
+    pop.className = 'info-popover';
+    document.body.appendChild(pop);
+
+    const INFO_CONTENT = {
+        hops:
+            '<h4>What are hops?</h4>' +
+            '<div class="info-tier"><div class="info-dot" style="background:var(--green)"></div>' +
+            '<div><strong>1 hop</strong> &mdash; Direct connections only. Genes, drugs, and pathways directly linked to the disease in the literature. Best for focused, evidence-backed results.</div></div>' +
+            '<div class="info-tier"><div class="info-dot" style="background:var(--yellow)"></div>' +
+            '<div><strong>2 hops</strong> &mdash; Connections of connections. Finds shared pathways, comorbidity bridges, and drug repurposing candidates not directly tied to the disease.</div></div>' +
+            '<div class="info-tier"><div class="info-dot" style="background:var(--red)"></div>' +
+            '<div><strong>3 hops</strong> &mdash; Broader network for hypothesis generation. Larger result set; useful for discovering distant biological links. May be slow for highly connected diseases.</div></div>',
+
+        subgraph:
+            '<h4>Disease Subgraph Builder</h4>' +
+            '<p>Extract and export the complete neighborhood of any disease in the knowledge graph.</p>' +
+            '<p><strong>Specificity scoring:</strong> Nodes are ranked by <code>1 / (number of diseases they connect to)</code>. A gene unique to your disease scores <strong>1.0</strong>; one linked to hundreds of diseases scores near <strong>0</strong>. High-specificity nodes are more likely to be biologically meaningful.</p>' +
+            '<p><strong>Export formats:</strong> JSON (for programmatic use) or CSV (for Excel/R analysis). Both include node types, relationship types, and source database provenance.</p>',
+
+        healthcheck:
+            '<h4>Health Check</h4>' +
+            '<p>Verifies every data source parser in the pipeline: checks that raw data was downloaded, parsed into TSVs, and loaded into Neo4j with correct node/relationship counts.</p>' +
+            '<p>Also tests Neo4j connectivity, relationship <code>source</code> tagging, and ID mapping integrity. Green = data present; red = missing or mismatched.</p>',
+
+        adddb:
+            '<h4>DatabaseAgent (AI Parser Generator)</h4>' +
+            '<p>Provide any biomedical database name and a download URL. The agent (powered by Claude) will:</p>' +
+            '<p><strong>1.</strong> Download and sample the file (first 64KB)<br>' +
+            '<strong>2.</strong> Auto-detect format (TSV, CSV, JSON, XML)<br>' +
+            '<strong>3.</strong> Generate a complete Python parser<br>' +
+            '<strong>4.</strong> Create ontology configs for Neo4j mapping<br>' +
+            '<strong>5.</strong> Run the parser and load data into the graph</p>' +
+            '<p>The entire process takes 1&ndash;3 minutes. The new source appears in Health Check immediately.</p>',
+
+        disgenet:
+            '<h4>DisGeNET Enrichment</h4>' +
+            '<p>DisGeNET is a curated database of gene-disease associations from GWAS, animal models, and literature mining.</p>' +
+            '<p>The graph already contains gene-disease data from 25+ sources. Use this to fetch <strong>additional</strong> associations for rare or under-represented diseases where existing coverage is thin.</p>' +
+            '<p>Enter disease keywords (e.g. &ldquo;lupus&rdquo;, &ldquo;Parkinson&rsquo;s&rdquo;). The system queries the DisGeNET API, parses results, and merges them into Neo4j.</p>',
+
+        pipeline:
+            '<h4>Full Pipeline Run</h4>' +
+            '<p>Runs the complete data pipeline for all sources: <strong>download</strong> raw data &rarr; <strong>parse</strong> into TSVs &rarr; <strong>load</strong> into Neo4j.</p>' +
+            '<p>This is a long-running operation (30&ndash;60 min depending on network speed). It re-downloads all source data and rebuilds the graph from scratch. Use sparingly &mdash; typically only needed after adding new parsers or updating data sources.</p>',
+
+        discovery:
+            '<h4>Core vs Discovery Layers</h4>' +
+            '<div class="info-tier"><div class="info-dot" style="background:var(--accent)"></div>' +
+            '<div><strong>Core layer (1-hop)</strong> &mdash; Entities directly connected to your search term in the literature. These are established, evidence-backed associations. Shown as large nodes with solid borders and solid edges.</div></div>' +
+            '<div class="info-tier"><div class="info-dot" style="background:var(--text-muted)"></div>' +
+            '<div><strong>Discovery layer (2-hop)</strong> &mdash; Entities reached <em>through</em> core nodes. Not directly linked to your disease, but connected via shared genes, pathways, or drugs. Useful for finding drug repurposing candidates, comorbidity bridges, and novel therapeutic targets. Shown as small, faded nodes with dashed edges.</div></div>' +
+            '<p style="margin-top:0.5rem"><strong>Specificity scoring</strong> helps separate signal from noise: <code>score = 1 / (# diseases connected)</code>. Genes unique to your disease score 1.0; broadly connected &ldquo;housekeeping&rdquo; genes score near 0.</p>',
+    };
+
+    let activeBtn = null;
+
+    document.addEventListener('click', function(e) {
+        const btn = e.target.closest('[data-info]');
+        if (btn) {
+            e.stopPropagation();
+            if (activeBtn === btn && pop.classList.contains('visible')) {
+                pop.classList.remove('visible');
+                activeBtn = null;
+                return;
+            }
+            const key = btn.getAttribute('data-info');
+            const html = INFO_CONTENT[key];
+            if (!html) return;
+            pop.innerHTML = html;
+            pop.classList.add('visible');
+            activeBtn = btn;
+
+            // Position: prefer right of button, fall back to below
+            const r = btn.getBoundingClientRect();
+            pop.style.left = '0'; pop.style.top = '0';
+            const pw = pop.offsetWidth, ph = pop.offsetHeight;
+            const gap = 10;
+
+            let left = r.right + gap;
+            let top = r.top;
+
+            // If overflows right, try left side
+            if (left + pw > window.innerWidth - 12) {
+                left = r.left - pw - gap;
+            }
+            // If still overflows left, place below
+            if (left < 12) {
+                left = Math.max(12, r.left);
+                top = r.bottom + gap;
+            }
+            // Clamp vertically
+            if (top + ph > window.innerHeight - 12) {
+                top = window.innerHeight - ph - 12;
+            }
+            top = Math.max(12, top);
+
+            pop.style.left = left + 'px';
+            pop.style.top = top + 'px';
+            return;
+        }
+        // Click outside closes popover
+        if (!e.target.closest('.info-popover')) {
+            pop.classList.remove('visible');
+            activeBtn = null;
+        }
     });
 })();
 
@@ -778,6 +960,126 @@ function switchTab(tab) {
     document.querySelectorAll('.tab-btn').forEach(b => b.classList.toggle('active', b.dataset.tab === tab));
     document.querySelectorAll('.tab-content').forEach(c => c.classList.toggle('active', c.id === 'tab-' + tab));
     // Query tab panels are created on-demand by runCypherQuery()
+}
+
+// ---- Disease Subgraph ----
+let _subgraphData = null;
+
+document.getElementById('subgraphHops').addEventListener('input', function() {
+    document.getElementById('subgraphHopsVal').textContent = this.value;
+});
+document.getElementById('subgraphDisease').addEventListener('keydown', function(e) {
+    if (e.key === 'Enter') buildDiseaseSubgraph();
+});
+
+async function buildDiseaseSubgraph() {
+    const input = document.getElementById('subgraphDisease');
+    const disease = input.value.trim();
+    if (!disease) { input.focus(); return; }
+
+    const btn = document.getElementById('subgraphBtn');
+    const statsEl = document.getElementById('subgraphStats');
+    const contentEl = document.getElementById('subgraphStatsContent');
+    const hops = parseInt(document.getElementById('subgraphHops').value);
+
+    btn.disabled = true;
+    btn.innerHTML = '<span class="spinner"></span>Building...';
+    statsEl.style.display = 'none';
+    _subgraphData = null;
+
+    try {
+        const res = await fetch('/api/disease-subgraph', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ disease, hops }),
+        });
+        const data = await res.json();
+        if (!res.ok) {
+            contentEl.innerHTML = '<span style="color:var(--red)">' + (data.error || 'Error') + '</span>';
+            statsEl.style.display = 'block';
+            return;
+        }
+
+        _subgraphData = data;
+        const s = data.stats;
+        let html = '<strong style="color:var(--text)">' + data.disease + '</strong> (' + hops + '-hop)<br>';
+        html += '<span style="color:var(--green)">' + s.node_count.toLocaleString() + '</span> nodes, ';
+        html += '<span style="color:var(--accent)">' + s.edge_count.toLocaleString() + '</span> relationships<br>';
+
+        // Node types
+        const topTypes = Object.entries(s.node_types).slice(0, 6);
+        html += '<div style="margin-top:0.3rem"><strong style="color:var(--text);font-size:0.72rem">Node types:</strong><br>';
+        topTypes.forEach(([t, c]) => { html += t + ': ' + c.toLocaleString() + '<br>'; });
+        if (Object.keys(s.node_types).length > 6) html += '... +' + (Object.keys(s.node_types).length - 6) + ' more<br>';
+        html += '</div>';
+
+        // Sources
+        if (Object.keys(s.sources).length > 0) {
+            const topSrc = Object.entries(s.sources).slice(0, 6);
+            html += '<div style="margin-top:0.3rem"><strong style="color:var(--text);font-size:0.72rem">Sources:</strong><br>';
+            topSrc.forEach(([src, c]) => { html += src + ': ' + c.toLocaleString() + '<br>'; });
+            if (Object.keys(s.sources).length > 6) html += '... +' + (Object.keys(s.sources).length - 6) + ' more<br>';
+            html += '</div>';
+        }
+
+        contentEl.innerHTML = html;
+        statsEl.style.display = 'block';
+    } catch (e) {
+        contentEl.innerHTML = '<span style="color:var(--red)">Connection error: ' + e.message + '</span>';
+        statsEl.style.display = 'block';
+    } finally {
+        btn.disabled = false;
+        btn.textContent = 'Build Subgraph';
+    }
+}
+
+function exportSubgraph(format) {
+    if (!_subgraphData) return;
+    const d = _subgraphData;
+    let content, filename, mime;
+
+    if (format === 'json') {
+        content = JSON.stringify({
+            disease: d.disease,
+            hops: d.hops,
+            stats: d.stats,
+            nodes: d.nodes,
+            edges: d.edges,
+        }, null, 2);
+        filename = d.disease.replace(/\s+/g, '_').toLowerCase() + '_subgraph.json';
+        mime = 'application/json';
+    } else {
+        // CSV: nodes sheet then edges sheet
+        let lines = ['# Nodes'];
+        lines.push('id,label,type');
+        d.nodes.forEach(n => {
+            lines.push([n.id, '"' + (n.label || '').replace(/"/g, '""') + '"', n.type].join(','));
+        });
+        lines.push('');
+        lines.push('# Edges');
+        lines.push('from_id,from_label,from_type,relationship,to_id,to_label,to_type,source');
+        const nodeMap = {};
+        d.nodes.forEach(n => { nodeMap[n.id] = n; });
+        d.edges.forEach(e => {
+            const from = nodeMap[e.from] || {};
+            const to = nodeMap[e.to] || {};
+            lines.push([
+                e.from, '"' + (from.label || '').replace(/"/g, '""') + '"', from.type || '',
+                e.label,
+                e.to, '"' + (to.label || '').replace(/"/g, '""') + '"', to.type || '',
+                e.source || ''
+            ].join(','));
+        });
+        content = lines.join('\n');
+        filename = d.disease.replace(/\s+/g, '_').toLowerCase() + '_subgraph.csv';
+        mime = 'text/csv';
+    }
+
+    const blob = new Blob([content], { type: mime });
+    const a = document.createElement('a');
+    a.href = URL.createObjectURL(blob);
+    a.download = filename;
+    a.click();
 }
 
 // ---- Theme ----

@@ -602,6 +602,201 @@ def run_query():
         driver.close()
 
 
+@app.route('/api/disease-subgraph', methods=['POST'])
+def disease_subgraph():
+    """Query a variable-hop subgraph around a Disease node.
+
+    Uses incremental hop-by-hop queries with per-hop limits to avoid
+    blowing Neo4j's transaction memory pool on high-degree nodes.
+
+    Request body (JSON):
+        disease: Disease name (partial match, case-insensitive)
+        hops: Number of hops (1-3, default 1)
+
+    Returns nodes, edges, stats, and source breakdown.
+    """
+    body = request.get_json(silent=True) or {}
+    disease_name = (body.get('disease') or '').strip()
+    hops = min(max(int(body.get('hops', 1)), 1), 3)
+
+    if not disease_name:
+        return jsonify({'error': 'Missing "disease" field'}), 400
+
+    driver = _get_neo4j_driver()
+    if not driver:
+        return jsonify({'error': 'NEO4J_PASSWORD not set'}), 503
+
+    # Batch size for UNWIND queries — keeps each Neo4j transaction small
+    BATCH_SIZE = 500
+
+    try:
+        with driver.session(database='neo4j') as session:
+            # Find matching disease node(s)
+            match_result = session.run(
+                "MATCH (d:Disease) "
+                "WHERE toLower(d.commonName) CONTAINS toLower($name) "
+                "RETURN d.commonName AS name, elementId(d) AS eid "
+                "ORDER BY size(d.commonName) LIMIT 5",
+                name=disease_name,
+            )
+            matches = [{'name': r['name'], 'eid': r['eid']} for r in match_result]
+
+            if not matches:
+                return jsonify({'error': f'No Disease node matching "{disease_name}"',
+                                'matches': []}), 404
+
+            target_eid = matches[0]['eid']
+            target_name = matches[0]['name']
+
+            # Incremental hop-by-hop expansion with batched queries
+            nodes = {}   # eid -> node dict
+            edges = []
+            edge_ids = set()
+            type_counts = {}
+            rel_type_counts = {}
+            source_counts = {}
+
+            # Seed with the disease node itself
+            seed = session.run(
+                "MATCH (d:Disease) WHERE elementId(d) = $eid "
+                "RETURN d", eid=target_eid
+            ).single()
+            if seed:
+                n = seed['d']
+                nid = str(n.element_id)
+                props = dict(n)
+                display = props.get('commonName') or props.get('name') or nid
+                ntype = list(n.labels)[0] if n.labels else 'Unknown'
+                nodes[nid] = {
+                    'id': nid, 'label': str(display)[:80], 'type': ntype,
+                    'properties': {k: str(v)[:200] for k, v in props.items()
+                                   if v is not None},
+                }
+                type_counts[ntype] = type_counts.get(ntype, 0) + 1
+
+            frontier_eids = [target_eid]
+
+            for hop in range(hops):
+                if not frontier_eids:
+                    break
+
+                new_eids = set()
+
+                # Process frontier in batches to keep per-query memory low
+                for batch_start in range(0, len(frontier_eids), BATCH_SIZE):
+                    batch = frontier_eids[batch_start:batch_start + BATCH_SIZE]
+
+                    result = session.run(
+                        "UNWIND $eids AS eid "
+                        "MATCH (a) WHERE elementId(a) = eid "
+                        "MATCH (a)-[r]-(b) "
+                        "RETURN elementId(b) AS bid, "
+                        "       labels(b) AS blabels, "
+                        "       b.commonName AS bCommonName, b.name AS bName, "
+                        "       b.geneSymbol AS bSymbol, b.title AS bTitle, "
+                        "       b.pathwayName AS bPathway, "
+                        "       {props: properties(b)} AS bProps, "
+                        "       type(r) AS rtype, r.source AS rsource, "
+                        "       elementId(r) AS rid, "
+                        "       elementId(startNode(r)) AS rstart, "
+                        "       elementId(endNode(r)) AS rend",
+                        eids=batch,
+                    )
+
+                    for rec in result:
+                        rid = rec['rid']
+                        if rid in edge_ids:
+                            continue
+                        edge_ids.add(rid)
+
+                        bid = rec['bid']
+                        rtype = rec['rtype']
+                        rsource = rec['rsource'] or ''
+
+                        # Add neighbor node if new
+                        if bid not in nodes:
+                            blabels = rec['blabels']
+                            btype = blabels[0] if blabels else 'Unknown'
+                            display = (rec['bCommonName'] or rec['bName']
+                                       or rec['bSymbol'] or rec['bTitle']
+                                       or rec['bPathway'] or bid)
+                            raw_props = rec['bProps'].get('props', {}) if rec['bProps'] else {}
+                            nodes[bid] = {
+                                'id': bid,
+                                'label': str(display)[:80],
+                                'type': btype,
+                                'properties': {k: str(v)[:200] for k, v in raw_props.items()
+                                               if v is not None},
+                            }
+                            type_counts[btype] = type_counts.get(btype, 0) + 1
+                            new_eids.add(bid)
+
+                        # Add edge (both endpoints guaranteed to be in nodes)
+                        rstart = rec['rstart']
+                        rend = rec['rend']
+                        edges.append({
+                            'from': rstart, 'to': rend,
+                            'label': rtype, 'source': rsource,
+                        })
+                        rel_type_counts[rtype] = rel_type_counts.get(rtype, 0) + 1
+                        src_key = rsource if rsource else 'Untagged'
+                        source_counts[src_key] = source_counts.get(src_key, 0) + 1
+
+                # Next hop expands from newly discovered nodes only
+                frontier_eids = list(new_eids)
+
+            # Second pass: find edges between collected nodes that weren't
+            # discovered during hop expansion (inter-neighbor edges).
+            all_eids = list(nodes.keys())
+            for batch_start in range(0, len(all_eids), BATCH_SIZE):
+                batch = all_eids[batch_start:batch_start + BATCH_SIZE]
+                result = session.run(
+                    "UNWIND $eids AS eid "
+                    "MATCH (a) WHERE elementId(a) = eid "
+                    "MATCH (a)-[r]-(b) "
+                    "WHERE elementId(b) IN $all_nodes "
+                    "RETURN elementId(r) AS rid, "
+                    "       elementId(startNode(r)) AS rstart, "
+                    "       elementId(endNode(r)) AS rend, "
+                    "       type(r) AS rtype, r.source AS rsource",
+                    eids=batch,
+                    all_nodes=all_eids,
+                )
+                for rec in result:
+                    rid = rec['rid']
+                    if rid in edge_ids:
+                        continue
+                    edge_ids.add(rid)
+                    rtype = rec['rtype']
+                    rsource = rec['rsource'] or ''
+                    edges.append({
+                        'from': rec['rstart'], 'to': rec['rend'],
+                        'label': rtype, 'source': rsource,
+                    })
+                    rel_type_counts[rtype] = rel_type_counts.get(rtype, 0) + 1
+                    src_key = rsource if rsource else 'Untagged'
+                    source_counts[src_key] = source_counts.get(src_key, 0) + 1
+
+        return jsonify({
+            'disease': target_name,
+            'hops': hops,
+            'matches': matches,
+            'nodes': list(nodes.values()),
+            'edges': edges,
+            'stats': {
+                'node_count': len(nodes),
+                'edge_count': len(edges),
+                'node_types': dict(sorted(type_counts.items(), key=lambda x: -x[1])),
+                'rel_types': dict(sorted(rel_type_counts.items(), key=lambda x: -x[1])),
+                'sources': dict(sorted(source_counts.items(), key=lambda x: -x[1])),
+            },
+        })
+    except Exception as e:
+        return jsonify({'error': str(e)}), 500
+    finally:
+        driver.close()
+
+
 @app.route('/api/admin/verify', methods=['POST'])
 def admin_verify():
     """Verify the admin password."""
