@@ -1,6 +1,6 @@
 # CardioKB: Biomedical Knowledge Graph
 
-A general-purpose biomedical knowledge graph pipeline that integrates 36 data sources (36 parsers) into a Neo4j graph for disease research, feature selection, and precision medicine. While initially focused on cardiovascular disease, the graph contains data spanning all human diseases — most data sources are disease-agnostic. Adapted from the AlzKB (Alzheimer's Knowledge Base) architecture with additional custom parsers and Hetionet component integrations. Features an AI-powered **DatabaseAgent** that autonomously generates new parsers from just a name and URL, a disease agent for on-demand knowledge subgraph construction via Claude API + DisGeNET, and a web dashboard with interactive graph exploration and Neo4j Browser-style querying.
+A general-purpose biomedical knowledge graph pipeline that integrates 36 data sources (36 parsers) into a Neo4j graph for disease research, feature selection, and precision medicine. While initially focused on cardiovascular disease, the graph contains data spanning all human diseases — most data sources are disease-agnostic. Adapted from the AlzKB (Alzheimer's Knowledge Base) architecture with additional custom parsers and Hetionet component integrations. Features an AI-powered **DatabaseAgent** that autonomously generates new parsers from just a name and URL, a **DiseaseQueryAgent** that fetches gene-disease associations (DisGeNET) and clinical trials (ClinicalTrials.gov API v2) for any disease on demand, and a web dashboard with interactive graph exploration and Neo4j Browser-style querying.
 
 **Graph stats:** 5,464,107 nodes | 40,765,325 relationships | 21 node types | 42 relationship types | 36 sources
 *Stats are current as of last pipeline run; see Neo4j or `GET /api/graph-stats` for live counts.*
@@ -84,7 +84,8 @@ A general-purpose biomedical knowledge graph pipeline that integrates 36 data so
 Cardio-KB/
 ├── src/
 │   ├── main.py                 # Pipeline orchestrator (--skip-neo4j, --skip-download)
-│   ├── agent.py                # AI disease KB builder (Claude API + DisGeNET)
+│   ├── agent.py                # Base disease agent (Claude API + DisGeNET)
+│   ├── disease_agent.py        # DiseaseQueryAgent (DisGeNET + ClinicalTrials.gov API v2)
 │   ├── database_agent.py       # Autonomous parser generator (Claude API + sample download)
 │   ├── api.py                  # Flask backend with SSE streaming + agent endpoints
 │   ├── orchestrator.py         # Health check with dynamic Neo4j parser detection
@@ -271,14 +272,20 @@ Launch with `bash run.sh` or `python src/api.py --port 5050`. Features:
   - Panels show results as both table and graph visualization with tab switching
   - Collapse/expand, close individual panels, or Clear All
   - Query templates for common patterns; Ctrl+Enter shortcut
-- **Build Disease Subgraph** (sidebar) — Extract complete N-hop subgraphs for any disease
+- **Build Knowledge Graph** (sidebar) — AI-powered disease enrichment
+  - Enter any disease name (abbreviations, synonyms, informal names all work)
+  - AI standardizes the name via Claude, then fetches gene-disease associations from DisGeNET and clinical trials from ClinicalTrials.gov API v2
+  - Loads data into Neo4j, caches results (same disease returns instantly next time)
+  - Auto-opens Explore tab with the disease after building; shows result summary in sidebar
+  - Best for specific diseases; broad categories capped at 200 disease IDs (use full pipeline for comprehensive coverage)
+- **Extract Disease Subgraph** (sidebar) — Extract complete N-hop subgraphs from existing data
   - Configurable hop slider (1–3): 1-hop = direct, 2-hop = shared pathways, 3-hop = broad hypothesis generation
   - Shows stats: node/edge counts, node types, relationship types, contributing sources
   - Export as JSON or CSV for downstream analysis in R/Python/Excel
   - Uses incremental batched Neo4j queries to handle high-degree nodes without memory issues
 - **Dashboard** — Live graph stats (nodes, relationships, types, sources)
-- **Help system** — Welcome tour, tooltips on all UI elements, click-to-expand info popovers (`?` buttons) explaining hops, specificity scoring, core/discovery layers, and admin features
-- **Admin** — Parser status, pipeline health check with SSE streaming, ID mapping validation report
+- **Help system** — 4-step welcome tour, tooltips on all UI elements, click-to-expand info popovers (`?` buttons) explaining hops, specificity scoring, core/discovery layers, Build KG workflow, and admin features
+- **Admin** — Parser status, pipeline health check with SSE streaming, DisGeNET enrichment, full pipeline run, ID mapping validation report
 
 ## DatabaseAgent: Autonomous Parser Generation
 
@@ -323,6 +330,36 @@ The following parsers were built entirely by the DatabaseAgent and are now part 
 | CellAge | Senescence gene nodes |
 | AnAge | Species longevity nodes |
 | GenAge | Aging-associated gene nodes |
+
+## DiseaseQueryAgent: On-Demand Disease Enrichment
+
+The **DiseaseQueryAgent** (`src/disease_agent.py`) enriches the knowledge graph for any disease on demand. It fetches gene-disease associations from DisGeNET and clinical trials from ClinicalTrials.gov API v2, loads them into Neo4j, and auto-opens the Explore tab for immediate visualization.
+
+### How It Works
+
+1. **Cache check** — Checks if the disease was previously built (instant return if cached)
+2. **Standardize** — Uses Claude to resolve abbreviations, synonyms, and informal names to a canonical form (e.g., "PD" → "Parkinson's Disease")
+3. **Current coverage** — Queries Neo4j for existing genes, drugs, trials, and pathways connected to the disease
+4. **DisGeNET fetch** — Fetches gene-disease associations via the DisGeNET API (max 200 disease IDs, 2-minute timeout)
+5. **ClinicalTrials.gov fetch** — Queries ClinicalTrials.gov API v2 for relevant trials (max 500 trials across 5 pages, 1.2s rate limiting)
+6. **Neo4j load** — Loads trial nodes + STUDIES_CONDITION relationships using existing ontology configs with MERGE to avoid duplicates
+7. **Cache + stats** — Caches the result and returns subgraph statistics
+
+### Usage
+
+```bash
+# Via web UI: sidebar > "Build Knowledge Graph" > enter disease name > click "Build Graph"
+
+# Via API:
+curl -X POST http://localhost:5050/api/agent/build-disease-graph \
+  -H 'Content-Type: application/json' -d '{"disease":"lupus"}' --no-buffer
+```
+
+### Limitations
+
+- **Best for specific diseases** (lupus, scurvy, COPD, Parkinson's). Broad categories like "cancer" or "cardiovascular disease" are capped at 200 disease IDs to keep response times under 2 minutes — use the full pipeline for comprehensive coverage of those.
+- **Only fetches from 2 sources** — DisGeNET (gene-disease) and ClinicalTrials.gov (trials). All other data (drug targets, pathways, expression, etc.) comes from the base graph's 36 sources.
+- The Explore visualization after building shows the **complete** neighborhood from all sources, not just the newly fetched data.
 
 ## Architecture Notes
 

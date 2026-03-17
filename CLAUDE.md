@@ -8,7 +8,7 @@
 - After every successful pipeline run or significant code change, automatically update `README.md` with current graph stats (node/relationship counts, source counts) and commit and push without being asked.
 
 ## Project Overview
-12-week rotation project (Jan–Apr 2026) building a general-purpose biomedical knowledge graph. While initially focused on cardiovascular disease, the graph contains data spanning all human diseases — most data sources are disease-agnostic. The base KB structure is adapted from AlzKB (Alzheimer's Knowledge Base) files. The **DatabaseAgent** (`src/database_agent.py`) autonomously generates new parsers from just a name and URL using Claude API — it samples the file, generates parser code + ontology configs, integrates into the pipeline, and loads data into Neo4j. Additional data sources are integrated via custom parsers or the agent. The final KB is stored in a Neo4j knowledge graph for disease research, feature selection, and precision medicine.
+12-week rotation project (Jan–Apr 2026) building a general-purpose biomedical knowledge graph. While initially focused on cardiovascular disease, the graph contains data spanning all human diseases — most data sources are disease-agnostic. The base KB structure is adapted from AlzKB (Alzheimer's Knowledge Base) files. The **DatabaseAgent** (`src/database_agent.py`) autonomously generates new parsers from just a name and URL using Claude API — it samples the file, generates parser code + ontology configs, integrates into the pipeline, and loads data into Neo4j. The **DiseaseQueryAgent** (`src/disease_agent.py`) enriches the graph for any disease on demand — fetches gene-disease associations (DisGeNET) and clinical trials (ClinicalTrials.gov API v2), loads into Neo4j, caches results. Additional data sources are integrated via custom parsers or the agent. The final KB is stored in a Neo4j knowledge graph for disease research, feature selection, and precision medicine.
 
 ## Current Graph Stats
 - **5,464,107 nodes** | **40,765,325 relationships** | **21 node types** | **42 relationship types** | **36 sources**
@@ -36,9 +36,10 @@
 - `data/raw/` — Downloaded source data
 - `data/processed/` — Exported TSV files for Neo4j loading
 - `data/output/` — Release notes and build artifacts
-- `interface/index.html` — Web dashboard with Explore (graph viz), Query (Neo4j Browser-style multi-panel), and sidebar Disease Subgraph builder (N-hop extraction + JSON/CSV export)
-- `src/agent.py` — AI-powered disease KB builder (Claude API + DisGeNET, with SSE progress callbacks)
-- `src/api.py` — Flask backend with SSE streaming, disease subgraph API, and agent builds
+- `interface/index.html` — Web dashboard with Explore (graph viz), Query (Neo4j Browser-style multi-panel), sidebar Build Knowledge Graph (AI disease enrichment), and Extract Disease Subgraph (N-hop extraction + JSON/CSV export)
+- `src/agent.py` — Base disease agent (Claude API + DisGeNET standardization and fetching)
+- `src/disease_agent.py` — DiseaseQueryAgent class: DisGeNET + ClinicalTrials.gov API v2 fetching, Neo4j loading, caching, SSE progress
+- `src/api.py` — Flask backend with SSE streaming, disease subgraph API, and agent builds (`/api/agent/build`, `/api/agent/build-disease-graph`)
 - `src/orchestrator.py` — Pipeline health check with dynamic Neo4j-based parser status detection
 - `run.sh` — Launches Flask + opens browser
 - `reports/` — Generated pipeline health reports and cached ID mapping validation report (`id_mapping_report.json`)

@@ -421,7 +421,7 @@ th { color: var(--text-muted); font-weight: 600; text-transform: uppercase; font
     <h1>CardioKB <span>Biomedical Knowledge Graph</span></h1>
 
     <div style="font-size:0.8rem;color:var(--text-muted);line-height:1.55;padding:0.75rem;background:var(--bg);border-radius:6px;border:1px solid var(--border)">
-        A general-purpose biomedical knowledge graph spanning all human diseases. Search any disease, gene, or drug in the <strong style="color:var(--text)">Explore</strong> tab, run Cypher queries in <strong style="color:var(--text)">Query</strong>, or add entirely new databases via <strong style="color:var(--text)">Admin</strong> &mdash; the AI agent writes the parser for you.
+        A general-purpose biomedical knowledge graph spanning all human diseases. <strong style="color:var(--text)">Build Knowledge Graph</strong> fetches fresh data for any disease via AI. <strong style="color:var(--text)">Explore</strong> visualizes subgraphs. <strong style="color:var(--text)">Query</strong> runs Cypher. <strong style="color:var(--text)">Admin</strong> adds entirely new databases.
     </div>
 
     <div style="display:flex;align-items:center;gap:0.4rem">
@@ -429,9 +429,20 @@ th { color: var(--text-muted); font-weight: 600; text-transform: uppercase; font
         <button class="info-btn-sm" data-info="healthcheck">?</button>
     </div>
 
+    <div style="background:var(--bg);border-radius:8px;border:1px solid var(--border);padding:0.75rem;margin-bottom:0.5rem">
+        <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:0.4rem">
+            <h3 style="margin-bottom:0">Build Knowledge Graph <span style="font-size:0.65rem;font-weight:600;background:rgba(139,92,246,0.15);color:#a78bfa;padding:0.15rem 0.4rem;border-radius:4px;margin-left:0.3rem;vertical-align:middle">AI</span></h3>
+            <button class="info-btn-sm" data-info="buildkg">?</button>
+        </div>
+        <div style="font-size:0.75rem;color:var(--text-muted);margin-bottom:0.4rem;line-height:1.45">AI fetches fresh gene-disease associations (DisGeNET) and clinical trials (ClinicalTrials.gov) for any disease, then loads into Neo4j. Best for <strong style="color:var(--text)">specific diseases</strong> (e.g. lupus, scurvy). Broad categories (e.g. "cancer") are capped at 200 disease IDs &mdash; use the full pipeline for comprehensive coverage.</div>
+        <input type="text" class="agent-input" id="buildKgInput" placeholder="e.g. lupus, Parkinson's, COPD..." data-tip="Enter any disease name -- AI standardizes it and fetches data from multiple sources" />
+        <button class="run-btn" id="buildKgBtn" onclick="buildKnowledgeGraph()" style="font-size:0.82rem;padding:0.5rem" data-tip="Standardize disease name, fetch DisGeNET + ClinicalTrials.gov data, load into Neo4j">Build Graph</button>
+        <div id="buildKgResult" style="display:none;font-size:0.75rem;color:var(--text-muted);line-height:1.55;margin-top:0.4rem;padding:0.5rem;background:var(--surface);border-radius:6px;border:1px solid var(--border)"></div>
+    </div>
+
     <div style="background:var(--bg);border-radius:8px;border:1px solid var(--border);padding:0.75rem">
         <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:0.4rem">
-            <h3 style="margin-bottom:0">Build Disease Subgraph</h3>
+            <h3 style="margin-bottom:0">Extract Disease Subgraph <span style="font-size:0.65rem;font-weight:600;background:rgba(34,197,94,0.15);color:#4ade80;padding:0.15rem 0.4rem;border-radius:4px;margin-left:0.3rem;vertical-align:middle">Instant</span></h3>
             <button class="info-btn-sm" data-info="subgraph">?</button>
         </div>
         <input type="text" class="agent-input" id="subgraphDisease" placeholder="e.g. heart failure, diabetes..." data-tip="Search for a Disease node by name (partial match)" />
@@ -463,7 +474,7 @@ th { color: var(--text-muted); font-weight: 600; text-transform: uppercase; font
             </div>
             <div id="advancedUnlocked" style="display:none">
                 <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:0.3rem">
-                    <h3 style="margin-bottom:0">Add New Database</h3>
+                    <h3 style="margin-bottom:0">Add New Database <span style="font-size:0.65rem;font-weight:600;background:rgba(139,92,246,0.15);color:#a78bfa;padding:0.15rem 0.4rem;border-radius:4px;margin-left:0.3rem;vertical-align:middle">AI</span></h3>
                     <button class="info-btn-sm" data-info="adddb">?</button>
                 </div>
                 <div style="font-size:0.75rem;color:var(--text-muted);margin-bottom:0.4rem;line-height:1.45">Provide a name and data URL. The AI agent auto-generates a parser and loads it into Neo4j.</div>
@@ -657,14 +668,26 @@ th { color: var(--text-muted); font-weight: 600; text-transform: uppercase; font
     <div class="modal">
         <div class="modal-step active" data-step="0">
             <h2>Welcome to CardioKB</h2>
-            <p>CardioKB is a <strong>general-purpose biomedical knowledge graph</strong> integrating <strong><span id="aboutSourceCount">many</span> data sources</strong> into a single queryable network. It connects genes, diseases, drugs, pathways, clinical trials, phenotypes, variants, and more &mdash; spanning <strong>all human diseases</strong>, not just cardiovascular.</p>
+            <p>CardioKB is a <strong>general-purpose biomedical knowledge graph</strong> integrating <strong><span id="aboutSourceCount">36</span> data sources</strong> into a single queryable network. It connects genes, diseases, drugs, pathways, clinical trials, phenotypes, variants, and more &mdash; spanning <strong>all human diseases</strong>, not just cardiovascular.</p>
             <ul>
-                <li>373K+ nodes across 18 entity types, 26M+ relationships from 25 sources</li>
-                <li>Search any disease (heart failure, Alzheimer's, cancer...) or any gene/drug</li>
-                <li>Add new databases instantly &mdash; the AI-powered DatabaseAgent writes the parser for you</li>
+                <li>5.4M+ nodes across 21 entity types, 40M+ relationships from 36 sources</li>
+                <li>Search any disease (heart failure, Alzheimer's, lupus...) or any gene/drug</li>
+                <li><strong>Build Knowledge Graph</strong> &mdash; AI fetches fresh data for any disease you name</li>
+                <li>Add entirely new databases &mdash; the AI-powered DatabaseAgent writes the parser for you</li>
             </ul>
         </div>
         <div class="modal-step" data-step="1">
+            <h2>Build Knowledge Graph <span style="font-size:0.7rem;font-weight:600;background:rgba(139,92,246,0.15);color:#a78bfa;padding:0.15rem 0.4rem;border-radius:4px;vertical-align:middle">AI</span></h2>
+            <p>In the sidebar, <strong>Build Knowledge Graph</strong> uses AI to enrich the graph for any disease:</p>
+            <ul>
+                <li><strong>Type any disease name</strong> &mdash; abbreviations, synonyms, and informal names all work (e.g. "PD", "lupus", "COPD")</li>
+                <li>AI standardizes the name, then fetches <strong>gene-disease associations</strong> from DisGeNET and <strong>clinical trials</strong> from ClinicalTrials.gov</li>
+                <li>Data is loaded into Neo4j and <strong>cached</strong> &mdash; the same disease returns instantly next time</li>
+                <li>After building, the <strong>Explore tab</strong> auto-opens with your disease so you can visualize the results immediately</li>
+            </ul>
+            <p style="margin-top:0.5rem"><strong>Extract Disease Subgraph</strong> (below it) queries <em>existing</em> data only &mdash; use Build first if coverage is thin.</p>
+        </div>
+        <div class="modal-step" data-step="2">
             <h2>Explore &amp; Query</h2>
             <p>The <strong>Explore tab</strong> visualizes disease/gene subgraphs:</p>
             <ul>
@@ -676,20 +699,21 @@ th { color: var(--text-muted); font-weight: 600; text-transform: uppercase; font
             </ul>
             <p style="margin-top:0.5rem">The <strong>Query tab</strong> gives you direct Cypher access &mdash; click a template or write your own (read-only, Cmd+Enter to run).</p>
         </div>
-        <div class="modal-step" data-step="2">
-            <h2>Admin: Add New Databases</h2>
-            <p>Under <strong>Advanced</strong> in the sidebar, the <strong>Add New Database</strong> panel lets you expand the graph with any public data source:</p>
+        <div class="modal-step" data-step="3">
+            <h2>Admin: Add New Databases <span style="font-size:0.7rem;font-weight:600;background:rgba(139,92,246,0.15);color:#a78bfa;padding:0.15rem 0.4rem;border-radius:4px;vertical-align:middle">AI</span></h2>
+            <p>Under <strong>Advanced</strong> in the sidebar (password-protected), the <strong>Add New Database</strong> panel lets you expand the graph with any public data source:</p>
             <ul>
                 <li>Enter a <strong>database name</strong> and a <strong>direct download URL</strong> (TSV, CSV, JSON, or gzipped)</li>
                 <li>Click <strong>Build Parser</strong> &mdash; the DatabaseAgent (Claude AI) samples the file, generates a complete parser, integrates it into the pipeline, and loads the data into Neo4j</li>
                 <li>The agent handles format detection, column mapping, ontology config, and ID validation automatically</li>
-                <li>Three parsers already in production (HGNC, HGNC Families, ClinVar) were built entirely this way</li>
             </ul>
+            <p style="margin-top:0.5rem">Also in Admin: <strong>Fetch DisGeNET Data</strong> (targeted gene-disease enrichment) and <strong>Run Pipeline</strong> (full rebuild of all 36 sources).</p>
         </div>
         <div class="modal-dots">
             <span class="dot active" data-dot="0"></span>
             <span class="dot" data-dot="1"></span>
             <span class="dot" data-dot="2"></span>
+            <span class="dot" data-dot="3"></span>
         </div>
         <div class="modal-actions">
             <button class="btn-secondary" onclick="closeWelcome()">Skip</button>
@@ -726,6 +750,10 @@ th { color: var(--text-muted); font-weight: 600; text-transform: uppercase; font
             <li>Dashed edges = discovery (inferred) connections</li>
             <li>Edge labels show the relationship type (e.g., ASSOCIATES_WITH, TARGETS)</li>
             <li>Each edge carries a <code>source</code> property identifying the originating database</li>
+        </ul>
+        <p style="margin:0.75rem 0"><strong>Thin results?</strong></p>
+        <ul>
+            <li>If a disease shows few connections, use <strong>Build Knowledge Graph</strong> in the sidebar to fetch fresh gene-disease associations and clinical trials via AI, then re-explore.</li>
         </ul>
         <div class="modal-actions" style="justify-content:flex-end">
             <button class="btn-primary" onclick="document.getElementById('methodologyModal').classList.add('hidden')">Got it</button>
@@ -788,8 +816,8 @@ th { color: var(--text-muted); font-weight: 600; text-transform: uppercase; font
             '<div><strong>3 hops</strong> &mdash; Broader network for hypothesis generation. Larger result set; useful for discovering distant biological links. May be slow for highly connected diseases.</div></div>',
 
         subgraph:
-            '<h4>Disease Subgraph Builder</h4>' +
-            '<p>Extract and export the complete neighborhood of any disease in the knowledge graph.</p>' +
+            '<h4>Extract Disease Subgraph</h4>' +
+            '<p>Queries existing data only &mdash; no new data is fetched. Extracts and exports the complete neighborhood of any disease already in the knowledge graph.</p>' +
             '<p><strong>Specificity scoring:</strong> Nodes are ranked by <code>1 / (number of diseases they connect to)</code>. A gene unique to your disease scores <strong>1.0</strong>; one linked to hundreds of diseases scores near <strong>0</strong>. High-specificity nodes are more likely to be biologically meaningful.</p>' +
             '<p><strong>Export formats:</strong> JSON (for programmatic use) or CSV (for Excel/R analysis). Both include node types, relationship types, and source database provenance.</p>',
 
@@ -817,7 +845,15 @@ th { color: var(--text-muted); font-weight: 600; text-transform: uppercase; font
         pipeline:
             '<h4>Full Pipeline Run</h4>' +
             '<p>Runs the complete data pipeline for all sources: <strong>download</strong> raw data &rarr; <strong>parse</strong> into TSVs &rarr; <strong>load</strong> into Neo4j.</p>' +
-            '<p>This is a long-running operation (30&ndash;60 min depending on network speed). It re-downloads all source data and rebuilds the graph from scratch. Use sparingly &mdash; typically only needed after adding new parsers or updating data sources.</p>',
+            '<p>This is a long-running operation (30&ndash;60 min depending on network speed). It re-downloads all source data and rebuilds the graph from scratch. Use sparingly &mdash; typically only needed after adding new parsers or updating data sources.</p>' +
+            '<p><strong>Not agentic</strong> &mdash; executes a fixed pipeline of 36 parsers in sequence.</p>',
+
+        buildkg:
+            '<h4>Build Knowledge Graph</h4>' +
+            '<p><strong>Agentic</strong> &mdash; AI fetches fresh data from DisGeNET and ClinicalTrials.gov for this specific disease, then combines with the existing graph.</p>' +
+            '<p><strong>Steps:</strong> Standardize disease name &rarr; Check current coverage &rarr; Fetch gene-disease associations (DisGeNET API, max 200 disease IDs) &rarr; Fetch clinical trials (ClinicalTrials.gov API v2, max 500 trials) &rarr; Load into Neo4j &rarr; Auto-open Explore tab.</p>' +
+            '<p>Results are cached &mdash; subsequent requests for the same disease return instantly.</p>' +
+            '<p><strong>Best for specific diseases</strong> (lupus, scurvy, COPD). Broad categories like &ldquo;cancer&rdquo; or &ldquo;cardiovascular disease&rdquo; are capped to keep response times under 2 minutes &mdash; use the full pipeline (Admin &rarr; Run Pipeline) for comprehensive coverage of those.</p>',
 
         discovery:
             '<h4>Core vs Discovery Layers</h4>' +
@@ -1853,6 +1889,118 @@ function runHealthCheck() {
 }
 
 // ---- Agent Build (SSE) ----
+async function buildKnowledgeGraph() {
+    const input = document.getElementById('buildKgInput');
+    const btn = document.getElementById('buildKgBtn');
+    const disease = input.value.trim();
+    if (!disease) { input.focus(); return; }
+
+    // Auto-open Advanced to show log panel
+    const toggle = document.getElementById('advancedToggle');
+    const body = document.getElementById('advancedBody');
+    if (!body.classList.contains('open')) { toggle.classList.add('open'); body.classList.add('open'); }
+
+    btn.disabled = true;
+    btn.innerHTML = '<span class="spinner"></span>Building...';
+    input.disabled = true;
+    document.getElementById('logPanel').innerHTML = '';
+    log('Build KG: processing "' + disease + '"...', 'info');
+
+    try {
+        const res = await fetch('/api/agent/build-disease-graph', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ disease }),
+        });
+        if (!res.ok) {
+            const err = await res.json().catch(() => ({}));
+            log('Build KG error: ' + (err.error || res.statusText), 'err');
+            buildKgFinish(); return;
+        }
+        const reader = res.body.getReader();
+        const decoder = new TextDecoder();
+        let buffer = '';
+        let resultData = null;
+        while (true) {
+            const { done, value } = await reader.read();
+            if (done) break;
+            buffer += decoder.decode(value, { stream: true });
+            let boundary;
+            while ((boundary = buffer.indexOf('\n\n')) !== -1) {
+                const frame = buffer.slice(0, boundary);
+                buffer = buffer.slice(boundary + 2);
+                let event = 'message', data = '';
+                for (const line of frame.split('\n')) {
+                    if (line.startsWith('event: ')) event = line.slice(7);
+                    else if (line.startsWith('data: ')) data = line.slice(6);
+                }
+                if (!data) continue;
+                const parsed = JSON.parse(data);
+                if (event === 'status') {
+                    log('Build KG: ' + parsed.message, 'info');
+                } else if (event === 'result') {
+                    resultData = parsed;
+                    if (parsed.cached) {
+                        log('Build KG: loaded from cache', 'ok');
+                    } else {
+                        const parts = [];
+                        if (parsed.disgenet_edges_loaded) parts.push(parsed.disgenet_edges_loaded + ' gene-disease edges');
+                        if (parsed.trials_loaded) parts.push(parsed.trials_loaded + ' clinical trials');
+                        log('Build KG: complete -- ' + (parts.join(', ') || 'done'), 'ok');
+                    }
+                    if (parsed.subgraph_stats) {
+                        const s = parsed.subgraph_stats;
+                        log('  Genes: ' + (s.unique_genes || 0).toLocaleString() +
+                            ' | Diseases: ' + (s.unique_diseases || 0).toLocaleString() +
+                            ' | DisGeNET edges: ' + (s.disgenet_edges || 0).toLocaleString(), 'ok');
+                    }
+                    // Show result summary in sidebar
+                    const resEl = document.getElementById('buildKgResult');
+                    const name = parsed.canonical_name || disease;
+                    let html = '<strong style="color:var(--text)">' + name + '</strong>';
+                    if (parsed.cached) {
+                        html += ' <span style="color:var(--green)">(cached)</span>';
+                    }
+                    html += '<br>';
+                    const s = parsed.subgraph_stats || {};
+                    const gda = parsed.disgenet_edges_loaded || s.disgenet_edges || 0;
+                    const trials = parsed.trials_loaded || 0;
+                    if (gda > 0 || trials > 0) {
+                        const items = [];
+                        if (gda > 0) items.push(gda.toLocaleString() + ' gene-disease edges');
+                        if ((s.unique_genes || 0) > 0) items.push((s.unique_genes).toLocaleString() + ' genes');
+                        if (trials > 0) items.push(trials.toLocaleString() + ' clinical trials');
+                        html += items.join(' &middot; ');
+                        html += '<br><span style="color:var(--accent);cursor:pointer" onclick="switchTab(\'explore\');loadExploreGraph()">Explore in graph &rarr;</span>';
+                    } else if (parsed.error) {
+                        html += '<span style="color:var(--red)">' + parsed.error + '</span>';
+                    } else {
+                        html += 'No new data found. Try a more specific disease name.';
+                    }
+                    resEl.innerHTML = html;
+                    resEl.style.display = 'block';
+                    loadGraphStats();
+                } else if (event === 'error') {
+                    log('Build KG error: ' + parsed.message, 'err');
+                }
+            }
+        }
+        // Auto-populate Explore tab with canonical name
+        if (resultData && resultData.canonical_name) {
+            document.getElementById('exploreSearch').value = resultData.canonical_name;
+            switchTab('explore');
+            loadExploreGraph();
+        }
+    } catch (e) { log('Build KG error: ' + e.message, 'err'); }
+
+    buildKgFinish();
+    function buildKgFinish() {
+        btn.disabled = false;
+        btn.textContent = 'Build Graph';
+        input.disabled = false;
+    }
+}
+
 async function runAgentBuild() {
     const input = document.getElementById('agentInput');
     const btn = document.getElementById('agentBtn');

@@ -271,6 +271,60 @@ def agent_build_sse():
                              'X-Accel-Buffering': 'no'})
 
 
+@app.route('/api/agent/build-disease-graph', methods=['POST'])
+def agent_build_disease_graph():
+    """
+    Run the DiseaseQueryAgent and stream progress as Server-Sent Events.
+
+    Fetches DisGeNET gene-disease associations AND ClinicalTrials.gov trials,
+    loads both into Neo4j, and returns subgraph stats.
+
+    Request body (JSON):
+        disease: Disease name to process (e.g., "lupus", "Parkinson's")
+
+    SSE events:
+        status  - progress updates with phase and message
+        result  - final result dict
+        error   - error message
+    """
+    body = request.get_json(silent=True) or {}
+    disease = (body.get('disease') or '').strip()
+    if not disease:
+        return jsonify({'error': 'Missing "disease" field'}), 400
+
+    q = queue.Queue()
+
+    def on_progress(event: str, data: dict):
+        q.put((event, data))
+
+    def run():
+        try:
+            from src.disease_agent import DiseaseQueryAgent
+            agent = DiseaseQueryAgent(disease, on_progress=on_progress)
+            result = agent.run()
+            q.put(('result', result))
+        except Exception as e:
+            q.put(('error', {'message': str(e)}))
+        finally:
+            q.put(None)
+
+    thread = threading.Thread(target=run, daemon=True)
+    thread.start()
+
+    def generate():
+        while True:
+            item = q.get()
+            if item is None:
+                break
+            event, data = item
+            payload = json.dumps(data, default=str)
+            yield f"event: {event}\ndata: {payload}\n\n"
+
+    return Response(generate(), mimetype='text/event-stream',
+                    headers={'Cache-Control': 'no-cache',
+                             'X-Accel-Buffering': 'no'})
+
+
 @app.route('/api/graph')
 def graph_data():
     """Return a two-layer disease subgraph for vis.js visualization.
