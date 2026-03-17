@@ -10,7 +10,7 @@ A general-purpose biomedical knowledge graph pipeline that integrates 36 data so
 | Category | Count | Details |
 |----------|-------|---------|
 | Total databases | 36 | 36 parsers (1 per source) |
-| Active & loaded | 35 | Successfully parsed + loaded into Neo4j (verified by r.source query) |
+| Active & loaded | 36 | Successfully parsed + loaded into Neo4j (verified by r.source query) |
 | Credential-gated (loaded) | 4 | OMIM, DisGeNET, DrugBank (XML), AOP-DB (SQL dump) |
 | Agent-generated | 7 | HGNC, HGNC Families, ClinVar, DrugAge, CellAge, AnAge, GenAge (built by DatabaseAgent) |
 | Stale/partial | 1 | MeSH (nodes only, no relationship data) |
