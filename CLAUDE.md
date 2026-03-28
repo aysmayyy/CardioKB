@@ -97,19 +97,19 @@ Disease term files live in `ontology/diseases/` (one term per line, `#` for comm
 
 `ontology/disease_filter.txt` is a symlink to `diseases/cvd.txt` — existing code that reads it directly (e.g., OMIM `is_cvd` tagging, `main.py` CVD node tagging) works without changes.
 
-**ClinicalTrialsParser** downloads the full AACT bulk flat files (~2.4 GB, all 576K+ trials) and is **completely disease-agnostic** — no filtering is applied. Run it once to load all trials.
+**Three parsers accept a `disease_filter` parameter** — when omitted, all default to `ontology/disease_filter.txt` (→ CVD):
+- **ClinicalTrialsParser** — queries ClinicalTrials.gov API v2 per disease term, caches JSON responses
+- **DisGeNETParser** — searches DisGeNET API for diseases matching the term list (requires API key)
+- **MEDLINECooccurrenceParser** — downloads full cooccurrence files, filters edges by DOID matching via Disease Ontology
 
-**DisGeNETParser** is the only parser that accepts a `disease_filter` parameter:
-- **DisGeNETParser(disease_filter="ontology/diseases/alzheimers.txt")** — searches the API for diseases matching the term list
-
-When `disease_filter` is omitted, DisGeNET defaults to `ontology/disease_filter.txt` (→ CVD). OMIMParser reads the symlink to tag rows with `is_cvd` but loads all data regardless. All other parsers are fully disease-agnostic.
+OMIMParser reads the symlink to tag rows with `is_cvd` but loads all data regardless. All other parsers are fully disease-agnostic.
 
 ## Data Sources — 36 Sources (36 Parsers)
 
 ### Phase 1: Core Parsers
 | # | Source | Parser | Access | Status |
 |---|--------|--------|--------|--------|
-| 1 | ClinicalTrials.gov | ClinicalTrialsParser | AACT bulk download | Working (576,029 trials, all diseases) |
+| 1 | ClinicalTrials.gov | ClinicalTrialsParser | Public API v2 | Working (CVD-scoped via disease filter, cached JSON) |
 | 2 | ClinPGx (PharmGKB successor) | ClinPGxParser | Public API | Working (454 annotations, 1,060 variants, 294 AFFECTS_RESPONSE_TO edges) |
 | 3 | NCBI Gene | NCBIGeneParser | Public FTP | Working (193,687 genes) |
 | 4 | DoRothEA (OmniPath) | DoRothEAParser | Public API | Working (15,092 TF-gene interactions) |
@@ -127,7 +127,7 @@ When `disease_filter` is omitted, DisGeNET defaults to `ontology/disease_filter.
 | 12 | MeSH (symptoms) | MeSHParser | Public | Working (966 symptom nodes, no relationship data) |
 | 13 | SIDER (side effects) | SIDERParser | Public | Working (5,734 side effects, 153,663 edges) |
 | 14 | LINCS L1000 (gene expression) | LINCS1000Parser | Public | Working (336,999 edges) |
-| 15 | MEDLINE (literature cooccurrence) | MEDLINECooccurrenceParser | Public | Working (7,213 cooccurrence edges) |
+| 15 | MEDLINE (literature cooccurrence) | MEDLINECooccurrenceParser | Public | Working (CVD-filtered cooccurrence edges via DOID matching) |
 | 16 | DrugCentral (drug-disease) | DrugCentralParser | Public | Working (14,572 relationships) |
 | 17 | GWAS Catalog (associations) | GWASParser | Public | Working (90,578 gene-disease associations after 3-strategy DOID remap) |
 | 18 | BindingDB (drug-target) | BindingDBParser | Public | Working (23,954 drug-gene bindings via UniProt→Entrez mapping) |

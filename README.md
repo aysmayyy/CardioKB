@@ -23,7 +23,7 @@ A general-purpose biomedical knowledge graph pipeline that integrates 36 data so
 
 | # | Source | Access | Status |
 |---|--------|--------|--------|
-| 1 | ClinicalTrials.gov | AACT bulk download | Working (576,029 trials, all diseases — full database) |
+| 1 | ClinicalTrials.gov | Public API v2 | Working (CVD-scoped via disease filter, cached JSON responses) |
 | 2 | ClinPGx (PharmGKB successor) | Public API | Working (454 annotations, 1,060 variants, 294 AFFECTS_RESPONSE_TO edges) |
 | 3 | NCBI Gene | Public FTP | Working (193,687 genes) |
 | 4 | DoRothEA (OmniPath) | Public API | Working (15,092 TF-gene interactions) |
@@ -42,7 +42,7 @@ A general-purpose biomedical knowledge graph pipeline that integrates 36 data so
 | 12 | MeSH (symptoms) | Public | Working (966 symptom nodes) |
 | 13 | SIDER (side effects) | Public | Working (5,734 side effects, 153,663 edges) |
 | 14 | LINCS L1000 (gene expression) | Public | Working (336,999 edges) |
-| 15 | MEDLINE (literature cooccurrence) | Public | Working (7,213 cooccurrence edges) |
+| 15 | MEDLINE (literature cooccurrence) | Public | Working (CVD-filtered cooccurrence edges via DOID matching) |
 | 16 | DrugCentral (drug-disease) | Public | Working (14,572 relationships) |
 | 17 | GWAS Catalog (associations) | Public | Working (90,578 gene-disease associations after 3-strategy DOID remap) |
 | 18 | BindingDB (drug-target) | Public | Working (23,954 drug-gene bindings via UniProt→Entrez mapping) |
@@ -246,16 +246,22 @@ Disease term files live in **`ontology/diseases/`** (one term per line, `#` for 
 
 **`ontology/disease_filter.txt`** is a symlink to `diseases/cvd.txt`. Code that reads it directly (OMIM `is_cvd` tagging, Neo4j CVD node tagging) works without changes.
 
-**ClinicalTrialsParser** downloads the full AACT bulk flat files (~2.4 GB, all 576K+ trials) and is **completely disease-agnostic** — no filtering is applied. Run it once to load all trials.
+**Three parsers accept a `disease_filter` parameter** to scope their output to a specific disease area. When omitted, all three default to `ontology/disease_filter.txt` (→ CVD):
 
-**DisGeNETParser** is the only parser that accepts a `disease_filter` parameter to target any disease area:
+| Parser | Filter Mechanism | Default Behavior |
+|--------|-----------------|-----------------|
+| **ClinicalTrialsParser** | Queries ClinicalTrials.gov API v2 per disease term, caches JSON | CVD-scoped queries (90 terms) |
+| **DisGeNETParser** | Searches DisGeNET API for diseases matching term list | CVD-scoped (requires API key) |
+| **MEDLINECooccurrenceParser** | Downloads full cooccurrence files, filters by DOID matching via Disease Ontology | CVD-filtered (~7,500 → ~1,300 edges) |
 
 ```python
 # Target a specific disease area:
+ClinicalTrialsParser(data_dir="data/raw", disease_filter="ontology/diseases/cancer.txt")
 DisGeNETParser(data_dir="data/raw", disease_filter="ontology/diseases/cancer.txt")
+MEDLINECooccurrenceParser(data_dir="data/raw", disease_filter="ontology/diseases/cancer.txt")
 ```
 
-When `disease_filter` is omitted, DisGeNET defaults to `ontology/disease_filter.txt` (→ CVD). OMIMParser reads the symlink to tag rows with `is_cvd` but loads all data regardless. All other parsers are fully disease-agnostic.
+OMIMParser reads the symlink to tag rows with `is_cvd` but loads all data regardless. All other parsers are fully disease-agnostic.
 
 ## Web Interface
 
