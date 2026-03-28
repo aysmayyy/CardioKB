@@ -307,6 +307,11 @@ class CardioKBPipeline:
                 if 'variant_id' in variants_df.columns and 'gene' in variants_df.columns:
                     vig = variants_df[['variant_id', 'gene']].dropna().copy()
                     vig = vig[vig['gene'] != '']
+                    # Split multi-gene entries (e.g., "BCKDK; VKORC1")
+                    vig = vig.assign(gene=vig['gene'].str.split('; ')).explode('gene')
+                    vig['gene'] = vig['gene'].str.strip()
+                    vig = vig[vig['gene'].notna() & (vig['gene'] != '')]
+                    vig = vig.drop_duplicates()
                     cpgx['variant_in_gene'] = vig
                     logger.info(f"Created {len(vig)} variant_in_gene edges")
 
@@ -447,7 +452,115 @@ class CardioKBPipeline:
         if 'gwas' in parsed_data and 'disease_ontology' in parsed_data:
             remap_gwas_disease_to_doid(parsed_data)
 
+        # Final: validate and filter all edges to ensure ID consistency
+        self._validate_and_filter_edges(parsed_data)
+
         return parsed_data
+
+    def _validate_and_filter_edges(self, parsed_data: Dict):
+        """
+        Filter all edge DataFrames to only contain IDs matching known node IDs.
+
+        Builds a registry of all node IDs from parsed node data using the
+        ontology configs, then for each edge config removes rows where subject
+        or object IDs don't exist in the corresponding node registry.
+        """
+        from collections import defaultdict
+
+        logger.info("=" * 60)
+        logger.info("Edge ID Validation & Filtering")
+        logger.info("=" * 60)
+
+        # Build node ID registry: (node_type, neo4j_property) -> set of values
+        registry = defaultdict(set)
+
+        for config_key, config in ONTOLOGY_CONFIGS.items():
+            if config.get('data_type') != 'node' or config.get('skip'):
+                continue
+
+            source_name = config_key.split('.', 1)[0]
+            data_name = config_key.split('.', 1)[1]
+
+            if source_name not in parsed_data or data_name not in parsed_data[source_name]:
+                continue
+
+            df = parsed_data[source_name][data_name]
+            node_type = config['node_type']
+            pc = config['parse_config']
+
+            # Collect from data_property_map
+            for tsv_col, neo4j_prop in pc.get('data_property_map', {}).items():
+                if tsv_col in df.columns:
+                    vals = df[tsv_col].dropna().astype(str).str.strip()
+                    registry[(node_type, neo4j_prop)].update(vals[vals != ''])
+
+            # Collect from merge_column
+            mc = pc.get('merge_column')
+            if mc:
+                tsv_col = mc.get('source_column_name', '')
+                neo4j_prop = mc.get('data_property', '')
+                if tsv_col and neo4j_prop and tsv_col in df.columns:
+                    vals = df[tsv_col].dropna().astype(str).str.strip()
+                    registry[(node_type, neo4j_prop)].update(vals[vals != ''])
+
+        # Special: DisGeNET diseases provide xrefUmlsCUI via custom Cypher,
+        # not via standard ontology config (those are skip: True)
+        if 'disgenet' in parsed_data:
+            for key in ('diseases', 'gene_disease_associations'):
+                if key in parsed_data['disgenet']:
+                    df = parsed_data['disgenet'][key]
+                    if 'diseaseId' in df.columns:
+                        vals = df['diseaseId'].dropna().astype(str).str.strip()
+                        registry[('Disease', 'xrefUmlsCUI')].update(vals[vals != ''])
+
+        # Log registry stats
+        for (ntype, prop), vals in sorted(registry.items()):
+            logger.info(f"  {ntype}.{prop}: {len(vals):,} IDs")
+
+        # Filter all edge DataFrames
+        total_removed = 0
+
+        for config_key, config in ONTOLOGY_CONFIGS.items():
+            if config.get('data_type') != 'relationship' or config.get('skip'):
+                continue
+
+            source_name = config_key.split('.', 1)[0]
+            data_name = config_key.split('.', 1)[1]
+
+            if source_name not in parsed_data or data_name not in parsed_data[source_name]:
+                continue
+
+            df = parsed_data[source_name][data_name]
+            if len(df) == 0:
+                continue
+
+            pc = config['parse_config']
+            before = len(df)
+
+            # Filter subject IDs
+            subj_key = (pc['subject_node_type'], pc['subject_match_property'])
+            subj_col = pc['subject_column_name']
+            if subj_key in registry and subj_col in df.columns:
+                df = df[df[subj_col].astype(str).str.strip().isin(registry[subj_key])]
+
+            # Filter object IDs
+            obj_key = (pc['object_node_type'], pc['object_match_property'])
+            obj_col = pc['object_column_name']
+            if obj_key in registry and obj_col in df.columns:
+                df = df[df[obj_col].astype(str).str.strip().isin(registry[obj_key])]
+
+            removed = before - len(df)
+            if removed > 0:
+                pct = removed / before * 100
+                logger.info(
+                    f"  {config_key}: {before:,} -> {len(df):,} "
+                    f"(-{removed:,}, {pct:.1f}%)"
+                )
+                parsed_data[source_name][data_name] = df
+                total_removed += removed
+
+        logger.info(f"Edge validation complete: removed {total_removed:,} unmatched edges")
+        logger.info("=" * 60)
 
     def _get_parsers(self) -> Dict:
         """
@@ -774,6 +887,12 @@ class CardioKBPipeline:
         ann = cpgx[CLINPGX_CLINICAL_ANNOTATIONS].copy()
         if 'drug' not in ann.columns or 'gene' not in ann.columns:
             return None, None
+
+        # Step 0: Explode semicolon-delimited gene entries (e.g., "JMJD8; WDR24")
+        ann['gene'] = ann['gene'].astype(str)
+        ann = ann.assign(gene=ann['gene'].str.split('; ')).explode('gene')
+        ann['gene'] = ann['gene'].str.strip()
+        ann = ann[ann['gene'].notna() & (ann['gene'] != '') & (ann['gene'] != 'nan')]
 
         # Step 1: Explode semicolon-delimited drug entries
         ann['drug'] = ann['drug'].astype(str)

@@ -313,7 +313,7 @@ class OMIMParser(BaseParser):
                     'mapping_key': mapping_key,
                     'inheritance': inheritance,
                     'is_cvd': is_cardiovascular_related(
-                        phenotype_name, cvd_terms
+                        phenotype_name, terms=cvd_terms
                     ),
                     'source_database': 'OMIM'
                 })

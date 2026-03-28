@@ -163,7 +163,7 @@ class ClinVarParser(BaseParser):
             phenotype_work = phenotype_work[phenotype_work['phenotype_group'] != '']
 
             # Split IDs within each phenotype group by comma
-            phenotype_work['id_list'] = phenotype_work['phenotype_group'].str.split(',')
+            phenotype_work['id_list'] = phenotype_work['phenotype_group'].str.split(r'[,;|]')
             phenotype_work = phenotype_work.explode('id_list').reset_index(drop=True)
 
             phenotype_work['id_list'] = phenotype_work['id_list'].str.strip()
@@ -206,6 +206,8 @@ class ClinVarParser(BaseParser):
             dv_omim = disease_variant[disease_variant['source_ontology'] == 'OMIM'].copy()
             # Extract plain OMIM number (e.g., "OMIM:613647" → "613647")
             dv_omim['disease_id'] = dv_omim['disease_id'].str.replace('OMIM:', '', regex=False)
+            # Remove malformed entries (must be pure numeric OMIM number)
+            dv_omim = dv_omim[dv_omim['disease_id'].str.match(r'^\d+$', na=False)]
             logger.info(f"ClinVar: {len(dv_omim)} OMIM disease-variant relationships")
 
             dv_mondo = disease_variant[disease_variant['source_ontology'] == 'MONDO'].copy()

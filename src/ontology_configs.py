@@ -314,7 +314,7 @@ ONTOLOGY_CONFIGS = {
     f'omim.{OMIM_GENE_DISEASE}_nodes': {
         'data_type': 'node',
         'node_type': 'Disease',
-        'source_filename': f'{OMIM_GENE_DISEASE}.tsv',
+        'source_filename': f'{OMIM_GENE_DISEASE}_nodes.tsv',
         'parse_config': {
             'headers': True,
             'iri_column_name': 'phenotype_mim',
