@@ -54,6 +54,7 @@ OMIM_GENE_DISEASE = 'gene_disease'
 # Hetionet Components — Disease Ontology
 DO_DISEASE_NODES = 'disease_nodes'
 DO_DISEASE_ANATOMY = 'disease_anatomy'
+DO_DISEASE_XREFS = 'disease_xrefs'
 # Hetionet Components — Gene Ontology
 GO_BP_NODES = 'biological_process_nodes'
 GO_MF_NODES = 'molecular_function_nodes'
@@ -98,6 +99,7 @@ BGEE_UNDEREXPRESSES = 'bodypart_underexpresses_gene'
 HETIO_GENE_INTERACTS = 'gene_interacts'
 HETIO_GENE_COVARIES = 'gene_covaries'
 HETIO_GENE_REGULATES = 'gene_regulates'
+HETIO_DRUG_CAUSES_EFFECT = 'drug_causes_effect'
 
 # Jensen Lab DISEASES
 JENSENLAB_GENE_DISEASE = 'gene_disease_associations'
@@ -644,6 +646,21 @@ ONTOLOGY_CONFIGS = {
         },
         'merge': False,
         'skip': True,  # No TSV produced; MEDLINE covers diseaseLocalizesToAnatomy
+    },
+    f'disease_ontology.{DO_DISEASE_XREFS}': {
+        'data_type': 'node',
+        'node_type': 'Disease',
+        'source_filename': f'{DO_DISEASE_XREFS}.tsv',
+        'parse_config': {
+            'headers': True,
+            'iri_column_name': 'doid',
+            'data_property_map': {
+                'doid': 'xrefDiseaseOntology',
+                'xref': 'xref',
+            },
+        },
+        'merge': True,
+        'skip': True,  # One-to-many xrefs (MESH, ICD10, OMIM per disease); row-by-row loader would overwrite. Xref IDs already mapped via id_mapping.py.
     },
 
     # ---- Gene Ontology ----
@@ -1194,6 +1211,25 @@ ONTOLOGY_CONFIGS = {
         'skip': True,  # Subset of LINCS L1000 geneRegulatesGene; LINCS overwrites r.source
     },
 
+    # ---- Hetionet Precomputed: Drug Causes Side Effect ----
+    f'hetionet_precomputed.{HETIO_DRUG_CAUSES_EFFECT}': {
+        'data_type': 'relationship',
+        'relationship_type': 'drugCausesSideEffect',
+        'source_label': 'Hetionet',
+        'source_filename': f'{HETIO_DRUG_CAUSES_EFFECT}.tsv',
+        'parse_config': {
+            'headers': True,
+            'subject_node_type': 'Drug',
+            'subject_column_name': 'drug_id',
+            'subject_match_property': 'xrefDrugbank',
+            'object_node_type': 'SideEffect',
+            'object_column_name': 'effect_id',
+            'object_match_property': 'xrefUmlsCUI',
+        },
+        'merge': False,
+        'skip': False,
+    },
+
     # =========================================================================
     # Jensen Lab DISEASES — Gene-Disease Associations
     # =========================================================================
@@ -1480,41 +1516,18 @@ ONTOLOGY_CONFIGS = {
         'source_filename': 'gene_nodes.tsv',
         'parse_config': {
             'headers': True,
-            'iri_column_name': 'hgnc_id',
-            'data_property_map': {'hgnc_id': 'hgnc_id', 'geneSymbol': 'geneSymbol', 'geneName': 'geneName', 'sourceDatabase': 'sourceDatabase', 'xrefNcbiGene': 'xrefNcbiGene', 'xrefEnsembl': 'xrefEnsembl', 'xrefUcsc': 'xrefUcsc', 'xrefRefseq': 'xrefRefseq', 'chromosomeLocation': 'chromosomeLocation'},
+            'iri_column_name': 'geneSymbol',
+            'data_property_map': {
+                'geneSymbol': 'geneSymbol',
+                'hgnc_id': 'xrefHGNC',
+                'geneName': 'geneName',
+                'xrefEnsembl': 'xrefEnsembl',
+                'xrefUcsc': 'xrefUcsc',
+                'xrefRefseq': 'xrefRefseq',
+                'chromosomeLocation': 'chromosomeLocation',
+            },
         },
         'merge': True,
-        'skip': False,
-    },
-    'hgnc.gene_family_nodes': {
-        'data_type': 'node',
-        'node_type': 'GeneFamily',
-        'source_filename': 'gene_family_nodes.tsv',
-        'parse_config': {
-            'headers': True,
-            'iri_column_name': 'familyName',
-            'data_property_map': {'familyName': 'familyName', 'sourceDatabase': 'sourceDatabase'},
-        },
-        'merge': True,
-        'skip': False,
-    },
-    'hgnc.gene_family_edges': {
-        'data_type': 'relationship',
-        'relationship_type': 'geneInFamily',
-        'inverse_relationship_type': 'familyContainsGene',
-        'source_label': 'HGNC',
-        'source_filename': 'gene_family_edges.tsv',
-        'parse_config': {
-            'headers': True,
-            'subject_node_type': 'Gene',
-            'subject_column_name': 'hgnc_id',
-            'subject_match_property': 'hgnc_id',
-            'object_node_type': 'GeneFamily',
-            'object_column_name': 'family_name',
-            'object_match_property': 'familyName',
-            'data_property_map': {'source_database': 'source'},
-        },
-        'merge': False,
         'skip': False,
     },
 
@@ -1713,7 +1726,13 @@ ONTOLOGY_CONFIGS = {
         'parse_config': {
             'headers': True,
             'iri_column_name': 'speciesName',
-            'data_property_map': {'speciesName': 'maximumLifespan', 'sampleSize': 'sampleSize', 'sourceDatabase': 'sourceDatabase'},
+            'data_property_map': {
+                'speciesName': 'speciesName',
+                'commonName': 'commonName',
+                'maximumLifespan': 'maximumLifespan',
+                'sampleSize': 'sampleSize',
+                'sourceDatabase': 'sourceDatabase',
+            },
         },
         'merge': False,
         'skip': False,

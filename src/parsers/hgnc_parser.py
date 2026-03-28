@@ -56,8 +56,16 @@ class HGNCParser(BaseParser):
         gene_nodes['geneName'] = df['name'].fillna('').astype(str)
         gene_nodes['sourceDatabase'] = 'HGNC'
 
-        # Add cross-references
-        gene_nodes['xrefNcbiGene'] = df['entrez_id'].fillna('').astype(str).replace('', None)
+        # Add cross-references (clean float→int for numeric IDs)
+        def _clean_numeric_id(val):
+            if pd.isna(val) or str(val).strip() in ('', 'nan'):
+                return None
+            try:
+                return str(int(float(val)))
+            except (ValueError, OverflowError):
+                return str(val).strip() or None
+
+        gene_nodes['xrefNcbiGene'] = df['entrez_id'].apply(_clean_numeric_id)
         gene_nodes['xrefEnsembl'] = df['ensembl_gene_id'].fillna('').astype(str).replace('', None)
         gene_nodes['xrefUcsc'] = df['ucsc_id'].fillna('').astype(str).replace('', None)
         gene_nodes['xrefRefseq'] = df['refseq_accession'].fillna('').astype(str).replace('', None)

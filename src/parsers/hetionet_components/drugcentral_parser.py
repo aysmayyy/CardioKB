@@ -21,6 +21,7 @@ import re
 from pathlib import Path
 from typing import Dict, List, Optional
 import pandas as pd
+import requests
 
 from ..base_parser import BaseParser
 
@@ -35,8 +36,28 @@ class DrugCentralParser(BaseParser):
     information from DrugCentral for use in CardioKB.
     """
 
-    # DrugCentral SQL dump URL
-    DRUGCENTRAL_URL = "https://unmtid-dbs.net/download/drugcentral.dump.11012023.sql.gz"
+    # DrugCentral download page and fallback URL
+    DRUGCENTRAL_DOWNLOAD_PAGE = "https://unmtid-dbs.net/download/"
+    DRUGCENTRAL_FALLBACK_URL = "https://unmtid-dbs.net/download/drugcentral.dump.11012023.sql.gz"
+
+    @property
+    def drugcentral_url(self) -> str:
+        """Discover the latest DrugCentral dump URL from the download page."""
+        import re
+        try:
+            resp = requests.get(self.DRUGCENTRAL_DOWNLOAD_PAGE, timeout=30)
+            resp.raise_for_status()
+            # Find all SQL dump links, pick the latest by date
+            matches = re.findall(r'href="(drugcentral\.dump\.\d+\.sql\.gz)"', resp.text)
+            if matches:
+                latest = sorted(matches)[-1]
+                url = self.DRUGCENTRAL_DOWNLOAD_PAGE + latest
+                logger.info(f"DrugCentral: discovered latest dump: {latest}")
+                return url
+        except Exception as e:
+            logger.warning(f"Failed to discover latest DrugCentral dump: {e}")
+        logger.info("DrugCentral: using fallback URL")
+        return self.DRUGCENTRAL_FALLBACK_URL
 
     # Valid pharmacologic class types for hetionet
     # DrugCentral uses abbreviated codes: PE, MoA, Chemical/Ingredient, CS, PA, EPC, EXT
@@ -68,7 +89,7 @@ class DrugCentralParser(BaseParser):
         """
         logger.info("Downloading DrugCentral...")
 
-        result = self.download_file(self.DRUGCENTRAL_URL, "drugcentral.sql.gz")
+        result = self.download_file(self.drugcentral_url, "drugcentral.sql.gz")
 
         if result:
             logger.info(f"Successfully downloaded DrugCentral to {result}")

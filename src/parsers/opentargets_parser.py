@@ -20,8 +20,29 @@ from .base_parser import BaseParser
 
 logger = logging.getLogger(__name__)
 
-ASSOC_BASE_URL = "https://ftp.ebi.ac.uk/pub/databases/opentargets/platform/25.12/output/association_overall_direct/"
-DISEASE_URL = "https://ftp.ebi.ac.uk/pub/databases/opentargets/platform/25.12/output/disease/disease.parquet"
+OT_FTP_BASE = "https://ftp.ebi.ac.uk/pub/databases/opentargets/platform/"
+OT_FALLBACK_VERSION = "25.12"
+
+
+def _discover_latest_ot_version() -> str:
+    """Discover the latest Open Targets platform version from FTP listing."""
+    import re
+    try:
+        resp = requests.get(OT_FTP_BASE, timeout=30)
+        resp.raise_for_status()
+        versions = re.findall(r'href="(\d+\.\d+)/"', resp.text)
+        if versions:
+            latest = sorted(versions, key=lambda v: [int(x) for x in v.split('.')])[-1]
+            logger.info(f"OpenTargets: discovered latest version: {latest}")
+            return latest
+    except Exception as e:
+        logger.warning(f"Failed to discover latest OpenTargets version: {e}")
+    return OT_FALLBACK_VERSION
+
+
+_OT_VERSION = _discover_latest_ot_version()
+ASSOC_BASE_URL = f"{OT_FTP_BASE}{_OT_VERSION}/output/association_overall_direct/"
+DISEASE_URL = f"{OT_FTP_BASE}{_OT_VERSION}/output/disease/disease.parquet"
 
 
 class OpenTargetsParser(BaseParser):

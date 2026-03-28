@@ -31,8 +31,13 @@ class BindingDBParser(BaseParser):
     for use in CardioKB's chemicalBindsGene relationships.
     """
 
-    # BindingDB download URL (update version as needed)
-    BINDINGDB_URL = "https://www.bindingdb.org/rwd/bind/downloads/BindingDB_All_202603_tsv.zip"
+    # BindingDB download URL — date is set dynamically (YYYYMM format)
+    BINDINGDB_BASE_URL = "https://www.bindingdb.org/rwd/bind/downloads/BindingDB_All_{date}_tsv.zip"
+
+    @property
+    def bindingdb_url(self) -> str:
+        from datetime import datetime
+        return self.BINDINGDB_BASE_URL.format(date=datetime.now().strftime('%Y%m'))
 
     # Columns to read from the raw BindingDB TSV
     USECOLS = [
@@ -60,7 +65,7 @@ class BindingDBParser(BaseParser):
         """Download the BindingDB TSV file."""
         logger.info("Downloading BindingDB...")
 
-        result = self.download_file(self.BINDINGDB_URL, "BindingDB_All.tsv.zip")
+        result = self.download_file(self.bindingdb_url, "BindingDB_All.tsv.zip")
 
         if result:
             zip_path = self.source_dir / "BindingDB_All.tsv.zip"

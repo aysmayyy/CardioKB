@@ -40,8 +40,13 @@ class MeSHParser(BaseParser):
     Symptoms are primarily found in the "Signs and Symptoms" category (C23).
     """
 
-    # MeSH XML URL (update year as needed)
-    MESH_URL = "https://nlmpubs.nlm.nih.gov/projects/mesh/MESH_FILES/xmlmesh/desc2026.xml"
+    # MeSH XML URL — year is set dynamically
+    MESH_BASE_URL = "https://nlmpubs.nlm.nih.gov/projects/mesh/MESH_FILES/xmlmesh/desc{year}.xml"
+
+    @property
+    def mesh_url(self) -> str:
+        from datetime import datetime
+        return self.MESH_BASE_URL.format(year=datetime.now().year)
 
     # MeSH tree numbers for symptoms
     # C23 = Pathological Conditions, Signs and Symptoms
@@ -66,7 +71,7 @@ class MeSHParser(BaseParser):
         """
         logger.info("Downloading MeSH descriptors...")
 
-        result = self.download_file(self.MESH_URL, "desc2026.xml")
+        result = self.download_file(self.mesh_url, "desc.xml")
 
         if result:
             logger.info(f"Successfully downloaded MeSH to {result}")
@@ -83,7 +88,7 @@ class MeSHParser(BaseParser):
             Dictionary with:
               - 'symptom_nodes': DataFrame of symptom terms
         """
-        xml_path = self.source_dir / "desc2026.xml"
+        xml_path = self.source_dir / "desc.xml"
 
         if not xml_path.exists():
             logger.error(f"MeSH file not found: {xml_path}")
