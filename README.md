@@ -72,11 +72,91 @@ A general-purpose biomedical knowledge graph pipeline that integrates 36 data so
 
 ## Neo4j Graph Schema
 
-**Node types (19):** Gene (193,799), Disease (28,596), Drug (41,566), BiologicalProcess (24,547), ClinicalTrial (20,219), Phenotype (19,389), BodyPart (14,937), MolecularFunction (10,123), Pathway (6,469), SideEffect (5,734), CellularComponent (4,069), GeneFamily (1,934), PharmacologicClass (1,646), Variant (1,060), Symptom (966), DrugLabel (378), TranscriptionFactor (367), DiseaseCache (3), _Metadata (1)
+### Node Types (21)
 
-**Key relationship types (37):** geneAssociatesWithDisease, geneAssociatesWithPhenotype, geneParticipatesInBiologicalProcess, geneHasMolecularFunction, geneAssociatedWithCellularComponent, geneInteractsWithGene, geneCovariesWithGene, geneRegulatesGene, geneInPathway, geneInFamily, familyContainsGene, geneExpressedInBodyPart, bodyPartUnderexpressesGene, bodyPartOverexpressesGene, chemicalIncreasesExpression, chemicalDecreasesExpression, chemicalBindsGene, drugBindsGene, compoundCausesSideEffect, compoundUpregulatesGene, compoundDownregulatesGene, pharmacologicClassIncludesCompound, compoundInPharmacologicClass, pathwayContainsGene, drugTreatsDisease, drugPalliatesDisease, diseaseAssociatesWithDisease, diseaseLocalizesToAnatomy, diseasePresentsSymptom, diseaseResemblesDisease, transcriptionFactorInteractsWithGene, drugLabelAnnotatesGene, drugLabelDescribesDrug, AFFECTS_RESPONSE_TO, STUDIES_CONDITION, TESTS_INTERVENTION, VARIANT_IN
+| Node Type | Count |
+|-----------|------:|
+| Variant | 4,488,042 |
+| ClinicalTrial | 576,334 |
+| Gene | 216,315 |
+| Drug | 46,142 |
+| Disease | 43,972 |
+| BiologicalProcess | 24,547 |
+| Phenotype | 19,389 |
+| BodyPart | 14,937 |
+| MolecularFunction | 10,123 |
+| Species | 8,032 |
+| Pathway | 6,469 |
+| SideEffect | 5,734 |
+| CellularComponent | 4,069 |
+| GeneFamily | 1,934 |
+| PharmacologicClass | 1,646 |
+| Symptom | 966 |
+| DrugLabel | 378 |
+| TranscriptionFactor | 367 |
+| DiseaseCache | 7 |
+| AgeingProperty | 3 |
+| _Metadata | 1 |
 
-**Relationship source labels:** All relationships carry a `source` property (e.g., `DisGeNET`, `GWAS Catalog`, `PubTator`, `Bgee`, `HGNC`, etc.) for provenance tracking across 28 source-labeled databases. Node-only sources (Disease Ontology, Uberon, MeSH, NCBI Gene, CellAge, AnAge, GenAge, HGNC base) contribute nodes without relationship source labels.
+### Relationship Types (42)
+
+| Relationship Type | Source | Count |
+|-------------------|--------|------:|
+| geneAssociatesWithDisease | PubTator | 14,908,646 |
+| bodyPartUnderexpressesGene | Bgee | 7,211,055 |
+| hasVariant | ClinVar | 4,439,480 |
+| variantInGene | ClinVar | 4,439,480 |
+| geneAssociatesWithDisease | OpenTargets | 2,388,123 |
+| diseaseAssociatesWithDisease | PubTator | 2,138,895 |
+| associatedWithVariant | ClinVar | 1,862,448 |
+| variantAssociatedWithDisease | ClinVar | 1,862,448 |
+| geneExpressedInBodyPart | Jensen TISSUES | 982,116 |
+| STUDIES_CONDITION | ClinicalTrials.gov | 818,839 |
+| TESTS_INTERVENTION | ClinicalTrials.gov | 345,632 |
+| geneAssociatesWithPhenotype | HPO | 303,817 |
+| geneRegulatesGene | LINCS L1000 | 279,578 |
+| geneInteractsWithGene | STRING | 229,485 |
+| chemicalIncreasesExpression | CTD | 218,152 |
+| chemicalDecreasesExpression | CTD | 213,587 |
+| geneInPathway | AOP-DB | 198,079 |
+| pathwayContainsGene | AOP-DB | 198,079 |
+| compoundCausesSideEffect | SIDER | 148,518 |
+| drugCausesSideEffect | Hetionet | 138,540 |
+| geneInteractsWithGene | Hetionet | 136,283 |
+| geneParticipatesInBiologicalProcess | Gene Ontology | 135,351 |
+| geneInPathway | Reactome | 96,394 |
+| pathwayContainsGene | Reactome | 96,394 |
+| geneAssociatedWithCellularComponent | Gene Ontology | 93,792 |
+| geneHasMolecularFunction | Gene Ontology | 93,564 |
+| geneCovariesWithGene | Hetionet | 61,797 |
+| geneInPathway | WikiPathways | 46,271 |
+| pathwayContainsGene | WikiPathways | 46,271 |
+| geneAssociatesWithDisease | GWAS Catalog | 45,370 |
+| compoundDownregulatesGene | LINCS L1000 | 40,895 |
+| compoundUpregulatesGene | LINCS L1000 | 36,688 |
+| geneInFamily | HGNC | 34,006 |
+| familyContainsGene | HGNC | 34,006 |
+| chemicalBindsGene | BindingDB | 26,467 |
+| geneAssociatesWithDisease | DisGeNET | 23,704 |
+| geneAssociatesWithDisease | Jensen DISEASES | 20,563 |
+| drugBindsGene | DrugBank | 19,085 |
+| pharmacologicClassIncludesCompound | DrugCentral | 16,403 |
+| compoundInPharmacologicClass | DrugCentral | 16,403 |
+| transcriptionFactorInteractsWithGene | DoRothEA | 15,092 |
+| geneAssociatesWithDisease | OMIM | 7,354 |
+| drugTreatsDisease | DrugCentral | 6,242 |
+| bodyPartOverexpressesGene | Bgee | 4,480 |
+| diseaseLocalizesToAnatomy | MEDLINE | 3,602 |
+| diseasePresentsSymptom | MEDLINE | 3,068 |
+| VARIANT_IN | ClinPGx | 1,129 |
+| drugPalliatesDisease | DrugCentral | 1,012 |
+| associatedWithAging | DrugAge | 866 |
+| diseaseResemblesDisease | MEDLINE | 543 |
+| drugLabelAnnotatesGene | ClinPGx | 506 |
+| drugLabelDescribesDrug | ClinPGx | 360 |
+| AFFECTS_RESPONSE_TO | ClinPGx | 304 |
+
+**Relationship source labels:** All relationships carry a `source` property for provenance tracking across 28 source-labeled databases. Node-only sources (Disease Ontology, Uberon, MeSH, NCBI Gene, CellAge, AnAge, GenAge, HGNC base) contribute nodes without relationship source labels.
 
 ## Project Structure
 

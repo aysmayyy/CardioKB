@@ -109,49 +109,49 @@ OMIMParser reads the symlink to tag rows with `is_cvd` but loads all data regard
 ### Phase 1: Core Parsers
 | # | Source | Parser | Access | Status |
 |---|--------|--------|--------|--------|
-| 1 | ClinicalTrials.gov | ClinicalTrialsParser | Public API v2 | Working (CVD-scoped via disease filter, cached JSON) |
-| 2 | ClinPGx (PharmGKB successor) | ClinPGxParser | Public API | Working (454 annotations, 1,060 variants, 294 AFFECTS_RESPONSE_TO edges) |
-| 3 | NCBI Gene | NCBIGeneParser | Public FTP | Working (193,687 genes) |
+| 1 | ClinicalTrials.gov | ClinicalTrialsParser | Public API v2 | Working (576,334 trials, 818,839 STUDIES_CONDITION + 345,632 TESTS_INTERVENTION edges) |
+| 2 | ClinPGx (PharmGKB successor) | ClinPGxParser | Public API | Working (1,129 VARIANT_IN, 506 drugLabelAnnotatesGene, 360 drugLabelDescribesDrug, 304 AFFECTS_RESPONSE_TO edges) |
+| 3 | NCBI Gene | NCBIGeneParser | Public FTP | Working (216,315 genes) |
 | 4 | DoRothEA (OmniPath) | DoRothEAParser | Public API | Working (15,092 TF-gene interactions) |
-| 5 | OMIM | OMIMParser | API key required | Working (1,556 CVD diseases, 1,632 gene-disease edges) |
-| 6 | DisGeNET | DisGeNETParser | API key required | Working (341 DO-matched + 559 new diseases, 5,010 gene-disease edges) |
-| 7 | DrugBank | DrugBankParser | XML file or login | Working (19,842 drugs, 19,047 drug-target edges from full database XML) |
-| 8 | AOP-DB | AOPDBParser | SQL dump or MySQL | Working (173,500 chemicals, 4,646 pathways, 187,247 gene-pathway edges) |
+| 5 | OMIM | OMIMParser | API key required | Working (43,972 diseases, 7,354 gene-disease edges) |
+| 6 | DisGeNET | DisGeNETParser | API key required | Working (23,704 gene-disease edges) |
+| 7 | DrugBank | DrugBankParser | XML file or login | Working (46,142 drugs, 19,085 drugBindsGene edges) |
+| 8 | AOP-DB | AOPDBParser | SQL dump or MySQL | Working (198,079 geneInPathway + 198,079 pathwayContainsGene edges) |
 
 ### Phase 2: Hetionet Component Parsers
 | # | Source | Parser | Access | Status |
 |---|--------|--------|--------|--------|
-| 9 | Disease Ontology (DOID) | DiseaseOntologyParser | Public | Working (12,012 diseases) |
-| 10 | Gene Ontology (GO) | GeneOntologyParser | Public | Working (38,739 GO terms, 376,442 annotations) |
-| 11 | Uberon (anatomy) | UberonParser | Public | Working (14,675 anatomy nodes) |
+| 9 | Disease Ontology (DOID) | DiseaseOntologyParser | Public | Working (43,972 diseases) |
+| 10 | Gene Ontology (GO) | GeneOntologyParser | Public | Working (135,351 BP + 93,564 MF + 93,792 CC edges) |
+| 11 | Uberon (anatomy) | UberonParser | Public | Working (14,937 anatomy nodes) |
 | 12 | MeSH (symptoms) | MeSHParser | Public | Working (966 symptom nodes, no relationship data) |
-| 13 | SIDER (side effects) | SIDERParser | Public | Working (5,734 side effects, 153,663 edges) |
-| 14 | LINCS L1000 (gene expression) | LINCS1000Parser | Public | Working (336,999 edges) |
-| 15 | MEDLINE (literature cooccurrence) | MEDLINECooccurrenceParser | Public | Working (CVD-filtered cooccurrence edges via DOID matching) |
-| 16 | DrugCentral (drug-disease) | DrugCentralParser | Public | Working (14,572 relationships) |
-| 17 | GWAS Catalog (associations) | GWASParser | Public | Working (90,578 gene-disease associations after 3-strategy DOID remap) |
-| 18 | BindingDB (drug-target) | BindingDBParser | Public | Working (23,954 drug-gene bindings via UniProt→Entrez mapping) |
-| 19 | PubTator Central (literature mining) | PubTatorParser | Public FTP | Working (69M+ literature edges) |
-| 20 | CTD (chemical-gene) | CTDParser | Public | Working (677,015 expression edges) |
-| 21 | Bgee (gene expression) | BgeeParser | Public FTP | Working (6,609,112 expression edges) |
-| 22 | Hetionet (precomputed edges) | HetionetPrecomputedParser | Public | Working (613,470 precomputed edges) |
-| 23 | Jensen Lab DISEASES | JensenLabParser | Public | Working (gene-disease associations) |
-| 24 | Jensen Lab TISSUES | JensenTissuesParser | Public | Working (988,006 gene-tissue edges, 262 BTO tissue nodes created) |
-| 25 | HPO (Human Phenotype Ontology) | HPOParser | Public | Working (19,389 phenotypes, 270,272 gene-phenotype edges) |
-| 26 | Reactome | ReactomeParser | Public | Working (2,806 pathways, 147,005 geneInPathway edges) |
-| 27 | WikiPathways | WikiPathwaysParser | Public | Working (982 pathways, 40,039 geneInPathway edges) |
-| 28 | STRING | STRINGParser | Public | Working (228,193 geneInteractsWithGene edges, confidence > 700) |
-| 29 | OpenTargets | OpenTargetsParser | Public | Working (2,345,386 geneAssociatesWithDisease edges via EFO→DOID mapping) |
+| 13 | SIDER (side effects) | SIDERParser | Public | Working (5,734 side effects, 148,518 edges) |
+| 14 | LINCS L1000 (gene expression) | LINCS1000Parser | Public | Working (279,578 geneRegulates + 40,895 downreg + 36,688 upreg edges) |
+| 15 | MEDLINE (literature cooccurrence) | MEDLINECooccurrenceParser | Public | Working (3,602 anatomy + 3,068 symptom + 543 disease cooccurrence edges) |
+| 16 | DrugCentral (drug-disease) | DrugCentralParser | Public | Working (16,403 pharmacologic class + 6,242 treats + 1,012 palliates edges) |
+| 17 | GWAS Catalog (associations) | GWASParser | Public | Working (45,370 gene-disease edges after 3-strategy DOID remap) |
+| 18 | BindingDB (drug-target) | BindingDBParser | Public | Working (26,467 chemicalBindsGene edges) |
+| 19 | PubTator Central (literature mining) | PubTatorParser | Public FTP | Working (14,908,646 gene-disease + 2,138,895 disease-disease edges) |
+| 20 | CTD (chemical-gene) | CTDParser | Public | Working (218,152 increases + 213,587 decreases expression edges) |
+| 21 | Bgee (gene expression) | BgeeParser | Public FTP | Working (7,211,055 underexpresses + 4,480 overexpresses edges) |
+| 22 | Hetionet (precomputed edges) | HetionetPrecomputedParser | Public | Working (138,540 drugCausesSideEffect + 136,283 geneInteracts + 61,797 covaries edges) |
+| 23 | Jensen Lab DISEASES | JensenLabParser | Public | Working (20,563 gene-disease edges) |
+| 24 | Jensen Lab TISSUES | JensenTissuesParser | Public | Working (982,116 gene-tissue edges) |
+| 25 | HPO (Human Phenotype Ontology) | HPOParser | Public | Working (19,389 phenotypes, 303,817 gene-phenotype edges) |
+| 26 | Reactome | ReactomeParser | Public | Working (96,394 geneInPathway + 96,394 pathwayContainsGene edges) |
+| 27 | WikiPathways | WikiPathwaysParser | Public | Working (46,271 geneInPathway + 46,271 pathwayContainsGene edges) |
+| 28 | STRING | STRINGParser | Public | Working (229,485 geneInteractsWithGene edges, confidence > 700) |
+| 29 | OpenTargets | OpenTargetsParser | Public | Working (2,388,123 geneAssociatesWithDisease edges via EFO→DOID mapping) |
 
 ### Phase 3: Agent-Generated Parsers
 | # | Source | Parser | Access | Status |
 |---|--------|--------|--------|--------|
-| 30 | HGNC | HGNCParser | Public | Working (44,361 Gene nodes enriched with xrefHGNC, geneName, locusGroup, locusType) |
-| 31 | HGNC Gene Families | HGNCFamiliesParser | Public | Working (1,934 GeneFamily nodes, 33,967 geneInFamily edges) |
-| 32 | ClinVar | ClinVarParser | Public FTP | Working (4,486,982 Variant nodes, 5.7M disease-variant edges, 4.5M gene-variant edges) |
-| 33 | DrugAge/CellAge | DrugAgeParser | Public | Working (gene-aging associations, AgeingProperty nodes) |
+| 30 | HGNC | HGNCParser | Public | Working (216,315 Gene nodes enriched with xrefHGNC, geneName, locusGroup, locusType) |
+| 31 | HGNC Gene Families | HGNCFamiliesParser | Public | Working (1,934 GeneFamily nodes, 34,006 geneInFamily edges) |
+| 32 | ClinVar | ClinVarParser | Public FTP | Working (4,488,042 Variant nodes, 4,439,480 hasVariant + 4,439,480 variantInGene + 1,862,448 associatedWithVariant + 1,862,448 variantAssociatedWithDisease edges) |
+| 33 | DrugAge/CellAge | DrugAgeParser | Public | Working (866 associatedWithAging edges, 3 AgeingProperty nodes) |
 | 34 | CellAge | CellAgeParser | Public | Working (senescence gene nodes) |
-| 35 | AnAge | AnAgeParser | Public | Working (Species longevity nodes) |
+| 35 | AnAge | AnAgeParser | Public | Working (8,032 Species longevity nodes) |
 | 36 | GenAge | GenAgeParser | Public | Working (aging-associated gene nodes) |
 
 ### Credential-Gated (requires env vars, currently loaded)
