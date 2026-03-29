@@ -2,7 +2,7 @@
 
 A general-purpose biomedical knowledge graph pipeline that integrates 36 data sources (36 parsers) into a Neo4j graph for disease research, feature selection, and precision medicine. While initially focused on cardiovascular disease, the graph contains data spanning all human diseases — most data sources are disease-agnostic. Adapted from the AlzKB (Alzheimer's Knowledge Base) architecture with additional custom parsers and Hetionet component integrations. Features an AI-powered **DatabaseAgent** that autonomously generates new parsers from just a name and URL, a **DiseaseQueryAgent** that fetches gene-disease associations (DisGeNET) and clinical trials (ClinicalTrials.gov API v2) for any disease on demand, and a web dashboard with interactive graph exploration and Neo4j Browser-style querying.
 
-**Graph stats:** 5,464,107 nodes | 40,765,325 relationships | 21 node types | 42 relationship types | 36 sources
+**Graph stats:** 5,469,407 nodes | 44,489,262 relationships | 21 node types | 42 relationship types | 36 sources
 *Stats are current as of last pipeline run; see Neo4j or `GET /api/graph-stats` for live counts.*
 
 ## Pipeline Status

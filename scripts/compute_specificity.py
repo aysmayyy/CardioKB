@@ -64,22 +64,35 @@ def compute_specificity(uri=None, username=None, password=None):
                     total_updated += cnt
                     continue
 
-                # For all other labels: batch compute in chunks using APOC-free approach
-                # Count disease neighbors per node and set score
-                res = session.run(
-                    f"MATCH (n:`{label}`) "
-                    "OPTIONAL MATCH (n)--(d:Disease) "
-                    "WITH n, count(DISTINCT d) AS dc "
-                    "SET n.specificityScore = CASE WHEN dc > 0 THEN 1.0 / dc ELSE 1.0 END "
-                    "RETURN count(n) AS cnt, "
-                    "       avg(CASE WHEN dc > 0 THEN 1.0 / dc ELSE 1.0 END) AS avg_score",
-                )
-                row = res.single()
-                cnt = row['cnt']
-                avg = row['avg_score']
+                # Process in batches to stay within Neo4j transaction memory limits
+                batch_size = 50000
+                label_total = 0
+                score_sum = 0.0
+                offset = 0
+
+                while True:
+                    res = session.run(
+                        f"MATCH (n:`{label}`) "
+                        f"WITH n SKIP $offset LIMIT $batch "
+                        "OPTIONAL MATCH (n)--(d:Disease) "
+                        "WITH n, count(DISTINCT d) AS dc "
+                        "SET n.specificityScore = CASE WHEN dc > 0 THEN 1.0 / dc ELSE 1.0 END "
+                        "RETURN count(n) AS cnt, "
+                        "       sum(CASE WHEN dc > 0 THEN 1.0 / dc ELSE 1.0 END) AS score_sum",
+                        offset=offset, batch=batch_size,
+                    )
+                    row = res.single()
+                    cnt = row['cnt']
+                    if cnt == 0:
+                        break
+                    label_total += cnt
+                    score_sum += row['score_sum'] or 0.0
+                    offset += batch_size
+
+                avg = score_sum / label_total if label_total > 0 else None
                 avg_str = f"{avg:.6f}" if avg is not None else "N/A"
-                logger.info(f"  {label}: {cnt} nodes, avg specificity {avg_str}")
-                total_updated += cnt
+                logger.info(f"  {label}: {label_total} nodes, avg specificity {avg_str}")
+                total_updated += label_total
 
             logger.info(f"Specificity scores computed for {total_updated} total nodes")
 

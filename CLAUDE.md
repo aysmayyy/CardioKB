@@ -11,7 +11,7 @@
 12-week rotation project (Jan–Apr 2026) building a general-purpose biomedical knowledge graph. While initially focused on cardiovascular disease, the graph contains data spanning all human diseases — most data sources are disease-agnostic. The base KB structure is adapted from AlzKB (Alzheimer's Knowledge Base) files. The **DatabaseAgent** (`src/database_agent.py`) autonomously generates new parsers from just a name and URL using Claude API — it samples the file, generates parser code + ontology configs, integrates into the pipeline, and loads data into Neo4j. The **DiseaseQueryAgent** (`src/disease_agent.py`) enriches the graph for any disease on demand — fetches gene-disease associations (DisGeNET) and clinical trials (ClinicalTrials.gov API v2), loads into Neo4j, caches results. Additional data sources are integrated via custom parsers or the agent. The final KB is stored in a Neo4j knowledge graph for disease research, feature selection, and precision medicine.
 
 ## Current Graph Stats
-- **5,464,107 nodes** | **40,765,325 relationships** | **21 node types** | **42 relationship types** | **36 sources**
+- **5,469,407 nodes** | **44,489,262 relationships** | **21 node types** | **42 relationship types** | **36 sources**
 - All relationships carry a `source` property identifying the originating database (e.g., `source: "DisGeNET"`)
 - *Stats are current as of last pipeline run; see Neo4j or `GET /api/graph-stats` for live counts.*
 
