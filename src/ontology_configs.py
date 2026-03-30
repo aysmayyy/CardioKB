@@ -410,6 +410,10 @@ ONTOLOGY_CONFIGS = {
             'object_node_type': 'Gene',
             'object_column_name': 'target_gene',
             'object_match_property': 'geneSymbol',
+            'data_property_map': {
+                'mor_score': 'morScore',
+                'confidence': 'confidence',
+            },
         },
         'merge': False,
         'skip': False,
@@ -849,6 +853,9 @@ ONTOLOGY_CONFIGS = {
             'object_node_type': 'Gene',
             'object_column_name': 'entrez_gene_id',
             'object_match_property': 'xrefNcbiGene',
+            'data_property_map': {
+                'z_score': 'zScore',
+            },
         },
         'merge': False,
         'skip': False,
@@ -866,6 +873,9 @@ ONTOLOGY_CONFIGS = {
             'object_node_type': 'Gene',
             'object_column_name': 'entrez_gene_id',
             'object_match_property': 'xrefNcbiGene',
+            'data_property_map': {
+                'z_score': 'zScore',
+            },
         },
         'merge': False,
         'skip': False,
@@ -883,6 +893,9 @@ ONTOLOGY_CONFIGS = {
             'object_node_type': 'Gene',
             'object_column_name': 'target_gene',
             'object_match_property': 'xrefNcbiGene',
+            'data_property_map': {
+                'z_score': 'zScore',
+            },
         },
         'merge': False,
         'skip': False,
@@ -1136,6 +1149,9 @@ ONTOLOGY_CONFIGS = {
             'object_node_type': 'Gene',
             'object_column_name': 'gene_id',
             'object_match_property': 'xrefEnsembl',
+            'data_property_map': {
+                'expression_score': 'expressionScore',
+            },
         },
         'merge': False,
         'skip': False,
@@ -1153,6 +1169,9 @@ ONTOLOGY_CONFIGS = {
             'object_node_type': 'Gene',
             'object_column_name': 'gene_id',
             'object_match_property': 'xrefEnsembl',
+            'data_property_map': {
+                'expression_score': 'expressionScore',
+            },
         },
         'merge': False,
         'skip': False,
