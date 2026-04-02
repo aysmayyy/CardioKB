@@ -1,4 +1,8 @@
-"""Generate the CardioKB System Design Word document."""
+"""Generate the CardioKB System Design Word document.
+
+This is a high-level planning doc for collaborators to divvy up work,
+not a basic technical specification.
+"""
 
 from docx import Document
 from docx.shared import Inches, Pt, RGBColor
@@ -16,14 +20,12 @@ def add_table(doc, headers, rows):
     table = doc.add_table(rows=1 + len(rows), cols=len(headers))
     table.style = 'Light Grid Accent 1'
     table.alignment = WD_TABLE_ALIGNMENT.LEFT
-    # Header row
     for i, h in enumerate(headers):
         cell = table.rows[0].cells[i]
         cell.text = h
         for p in cell.paragraphs:
             for run in p.runs:
                 run.bold = True
-    # Data rows
     for r_idx, row in enumerate(rows):
         for c_idx, val in enumerate(row):
             table.rows[r_idx + 1].cells[c_idx].text = str(val)
@@ -31,60 +33,76 @@ def add_table(doc, headers, rows):
     return table
 
 
+def add_bullet(doc, text, bold_prefix=None):
+    p = doc.add_paragraph(style='List Bullet')
+    if bold_prefix:
+        p.add_run(f'{bold_prefix}: ').bold = True
+        p.add_run(text)
+    else:
+        p.add_run(text)
+    return p
+
+
+def add_numbered(doc, text, bold_prefix=None):
+    p = doc.add_paragraph(style='List Number')
+    if bold_prefix:
+        p.add_run(f'{bold_prefix}: ').bold = True
+        p.add_run(text)
+    else:
+        p.add_run(text)
+    return p
+
+
 def build_doc():
     doc = Document()
 
     # -- Title Page --
     doc.add_paragraph()
-    title = doc.add_heading('CardioKB: System Design Document', level=0)
+    title = doc.add_heading('CardioKB: System Design & Work Division', level=0)
     title.alignment = WD_ALIGN_PARAGRAPH.CENTER
-    subtitle = doc.add_paragraph('Biomedical Knowledge Graph for Disease Research and Precision Medicine')
+    subtitle = doc.add_paragraph(
+        'A planning document for collaborators building a biomedical knowledge graph '
+        'for hypothesis generation and precision medicine'
+    )
     subtitle.alignment = WD_ALIGN_PARAGRAPH.CENTER
     subtitle.runs[0].font.size = Pt(14)
     subtitle.runs[0].font.color.rgb = RGBColor(100, 100, 100)
 
     meta = doc.add_paragraph()
     meta.alignment = WD_ALIGN_PARAGRAPH.CENTER
-    meta.add_run('Version 1.0  |  March 2026\n').font.size = Pt(11)
-    meta.add_run('12-Week Rotation Project (January - April 2026)').font.size = Pt(11)
+    meta.add_run('Version 2.0  |  March 2026\n').font.size = Pt(11)
+    meta.add_run('12-Week Rotation Project (January \u2013 April 2026)').font.size = Pt(11)
 
     doc.add_page_break()
 
-    # -- Table of Contents placeholder --
+    # -- Table of Contents --
     add_heading(doc, 'Table of Contents', level=1)
     toc_items = [
-        '1. Executive Summary',
-        '2. System Overview',
-        '3. Architecture',
-        '   3.1. High-Level Architecture',
-        '   3.2. Component Diagram',
-        '   3.3. Data Flow',
-        '4. Data Layer',
-        '   4.1. Data Sources (36 Parsers)',
-        '   4.2. Parser Framework',
-        '   4.3. Ontology Configuration System',
-        '   4.4. ID Mapping & Cross-Reference Resolution',
-        '5. Storage Layer: Neo4j Knowledge Graph',
-        '   5.1. Graph Schema',
-        '   5.2. Node Types',
-        '   5.3. Relationship Types',
-        '   5.4. Loading Strategy',
-        '   5.5. Indexing & Performance',
-        '6. Application Layer',
-        '   6.1. Pipeline Orchestrator',
-        '   6.2. Flask Web API',
-        '   6.3. Web Dashboard',
-        '7. AI Agent Layer',
-        '   7.1. DatabaseAgent (Autonomous Parser Generation)',
-        '   7.2. DiseaseQueryAgent (On-Demand Enrichment)',
-        '8. Disease Scoping & Filtering',
-        '9. Post-Processing',
-        '   9.1. Disease-Specificity Scoring',
-        '   9.2. ID Mapping Validation & Gap Repair',
-        '10. Deployment & Operations',
-        '11. Security Considerations',
-        '12. Current Statistics',
-        '13. Limitations & Future Work',
+        '1. What This Document Is For',
+        '2. What Is Built and Working',
+        '   2.1. Data Pipeline (36 Sources)',
+        '   2.2. AI Agents',
+        '   2.3. Web Interface',
+        '   2.4. Post-Processing & Scoring',
+        '3. What Is Planned or Partially Implemented',
+        '4. What Is Explicitly Out of Scope',
+        '5. Proposed Work Division: Agent Layer vs. Data Layer',
+        '   5.1. Data/Parser Layer',
+        '   5.2. Agent/Orchestration Layer',
+        '   5.3. ML/Analysis Layer',
+        '   5.4. Interface Layer',
+        '   5.5. Dependency Map',
+        '6. Schema Decisions & Edge Merge Recommendations',
+        '   6.1. Current Schema Overview',
+        '   6.2. Edges That Should Be Merged',
+        '   6.3. Edges That Should Stay Separate',
+        '   6.4. Naming Convention Cleanup',
+        '7. Knowledge Graph to ML: Hypothesis Generation Pipeline',
+        '   7.1. Current State (Working)',
+        '   7.2. Planned: Embedding-Based Approaches',
+        '   7.3. Planned: Feature Engineering for Classifiers',
+        '   7.4. Integration Points',
+        '8. Current Stats (Snapshot)',
     ]
     for item in toc_items:
         p = doc.add_paragraph(item)
@@ -93,645 +111,642 @@ def build_doc():
 
     doc.add_page_break()
 
-    # =====================================================================
-    # 1. Executive Summary
-    # =====================================================================
-    add_heading(doc, '1. Executive Summary', level=1)
+    # =================================================================
+    # 1. What This Document Is For
+    # =================================================================
+    add_heading(doc, '1. What This Document Is For', level=1)
     doc.add_paragraph(
-        'CardioKB is a general-purpose biomedical knowledge graph that integrates 36 heterogeneous '
-        'data sources into a unified Neo4j graph database. While initially scoped to cardiovascular '
-        'disease, the system is disease-agnostic by design — most parsers ingest data spanning all '
-        'human diseases, genes, drugs, pathways, and phenotypes. The knowledge graph currently '
-        'contains 5.47 million nodes and 44.5 million relationships across 21 node types and '
-        '42 relationship types.'
+        'This is a planning document, not a technical specification. Its purpose is to help '
+        'collaborators understand what exists, what remains to be built, and how to divide '
+        'the work. Use it to decide who owns what and to identify dependencies between pieces.'
     )
     doc.add_paragraph(
-        'The system features two AI-powered agents: a DatabaseAgent that autonomously generates '
-        'new data source parsers from just a name and URL using the Claude API, and a '
-        'DiseaseQueryAgent that enriches the graph for any disease on demand by fetching '
-        'gene-disease associations and clinical trials. A web dashboard provides interactive '
-        'graph visualization, Cypher querying, and AI-driven disease exploration.'
-    )
-    doc.add_paragraph(
-        'The architecture is adapted from AlzKB (Alzheimer\'s Knowledge Base) but replaces the '
-        'original RDF/Memgraph pipeline with direct Cypher-based Neo4j loading, adds 28 additional '
-        'data sources, and introduces AI-assisted parser generation and disease enrichment capabilities.'
+        'CardioKB is a disease-agnostic biomedical knowledge graph currently scoped to cardiovascular '
+        'disease through a modular filter. It integrates 36 data sources into Neo4j with ~4.9M nodes '
+        'and ~26.3M relationships. Two Claude-powered AI agents handle on-demand data ingestion. '
+        'A link prediction notebook demonstrates that the graph is ML-ready. The system is adapted '
+        'from AlzKB (Alzheimer\'s Knowledge Base) but replaces the RDF pipeline with direct Cypher '
+        'loading, adds 28+ sources, and introduces AI-assisted parser generation.'
     )
 
-    # =====================================================================
-    # 2. System Overview
-    # =====================================================================
-    add_heading(doc, '2. System Overview', level=1)
+    doc.add_page_break()
 
-    add_heading(doc, 'Technology Stack', level=2)
+    # =================================================================
+    # 2. What Is Built and Working
+    # =================================================================
+    add_heading(doc, '2. What Is Built and Working', level=1)
+    doc.add_paragraph(
+        'Everything in this section is tested, runs end-to-end, and produces correct output. '
+        'These are not aspirational \u2014 they work today.'
+    )
+
+    # 2.1 Data Pipeline
+    add_heading(doc, '2.1. Data Pipeline (36 Sources)', level=2)
+    doc.add_paragraph(
+        'The full batch pipeline (python src/main.py) downloads, parses, exports TSVs, and loads '
+        'into Neo4j in a single run. All 36 parsers inherit from BaseParser and produce '
+        'Dict[str, DataFrame]. 85 ontology configs in src/ontology_configs.py declaratively '
+        'map those DataFrames to Neo4j nodes and relationships. The loader uses MERGE for '
+        'idempotent loading. Every relationship carries a source property for provenance.'
+    )
+
+    doc.add_paragraph('Phase 1 \u2014 Core Parsers (8):')
     add_table(doc,
-              ['Component', 'Technology'],
+              ['Source', 'What It Provides', 'Notable Details'],
               [
-                  ['Language', 'Python 3.11 (conda environment: cardiokb)'],
-                  ['Graph Database', 'Neo4j (Bolt protocol)'],
-                  ['Web Framework', 'Flask (port 5050)'],
-                  ['AI/LLM', 'Claude API (Anthropic) — Haiku 4.5 for agent tasks'],
-                  ['Frontend', 'HTML/CSS/JS with vis.js (graph visualization)'],
-                  ['Key Libraries', 'pandas, numpy, requests, neo4j, obonet, lxml, scipy'],
-                  ['Testing', 'pytest'],
-                  ['Version Control', 'Git (GitHub)'],
+                  ['ClinicalTrials.gov', '82K trials, 674 condition + 18K intervention edges',
+                   'API v2, JSON caching per disease term'],
+                  ['ClinPGx (PharmGKB successor)', '1.1K variant, 506 + 360 + 304 pgx edges',
+                   'Public REST API, drug labels + clinical annotations'],
+                  ['NCBI Gene', '194K gene nodes', 'Public FTP, gene metadata only (no edges)'],
+                  ['DoRothEA (OmniPath)', '15K TF-gene interactions',
+                   'morScore + confidence (A\u2013D) properties on edges'],
+                  ['OMIM', '7.3K gene-disease edges', 'Requires OMIM_API_KEY'],
+                  ['DisGeNET', '20K gene-disease edges', 'Requires DISGENET_API_KEY, CVD-filtered'],
+                  ['DrugBank', '41K drugs, 19K drug-target edges',
+                   'Streaming XML parser for 1.8GB file'],
+                  ['AOP-DB', '18.5K gene-pathway edges (bidirectional)',
+                   'SQL dump or MySQL, adverse outcome pathways'],
               ])
 
-    add_heading(doc, 'Design Principles', level=2)
-    principles = [
-        ('Declarative schema mapping', 'All data-to-graph mappings are defined in ontology_configs.py, not hardcoded in loader logic. Adding a new edge type is a config change, not a code change.'),
-        ('Provenance tracking', 'Every relationship carries a source property identifying the originating database (28 unique source labels), enabling multi-source evidence aggregation and conflict resolution.'),
-        ('Idempotent loading', 'All node and relationship creation uses MERGE (not CREATE), making the pipeline safe to re-run without creating duplicates.'),
-        ('Graceful degradation', 'Credential-gated parsers (OMIM, DisGeNET, DrugBank, AOP-DB) are automatically skipped when credentials are missing. The pipeline completes with whatever sources are available.'),
-        ('Disease-agnostic core', 'Only 3 of 36 parsers accept a disease filter parameter. The remaining 33 ingest complete datasets regardless of disease scope.'),
-    ]
-    for title, desc in principles:
-        p = doc.add_paragraph()
-        p.add_run(f'{title}: ').bold = True
-        p.add_run(desc)
-
-    # =====================================================================
-    # 3. Architecture
-    # =====================================================================
-    add_heading(doc, '3. Architecture', level=1)
-
-    add_heading(doc, '3.1. High-Level Architecture', level=2)
-    doc.add_paragraph(
-        'CardioKB follows a four-layer architecture: Data Layer (parsers + raw sources), '
-        'Storage Layer (Neo4j graph + TSV archive), Application Layer (pipeline orchestrator + '
-        'Flask API + web dashboard), and AI Agent Layer (DatabaseAgent + DiseaseQueryAgent).'
-    )
-
-    doc.add_paragraph(
-        'The system operates in two primary modes: (1) Batch pipeline mode, where the full '
-        'pipeline downloads, parses, and loads all 36 sources end-to-end, and (2) Interactive mode, '
-        'where users query and enrich the graph through the web interface.'
-    )
-
-    add_heading(doc, '3.2. Component Diagram', level=2)
-    components = [
-        'src/main.py — Pipeline orchestrator (CardioKBPipeline class)',
-        'src/parsers/ — 36 data source parsers (inherit BaseParser)',
-        'src/parsers/hetionet_components/ — 14 Hetionet-derived component parsers',
-        'src/ontology_configs.py — 85 declarative Neo4j schema mappings',
-        'src/neo4j_loader.py — Cypher-based batch loader (UNWIND + MERGE)',
-        'src/id_mapping.py — Cross-reference resolution and gap repair',
-        'src/api.py — Flask web API with SSE streaming',
-        'src/database_agent.py — AI-powered autonomous parser generator',
-        'src/disease_agent.py — AI-powered on-demand disease enrichment',
-        'src/agent.py — Base agent (Claude API + DisGeNET standardization)',
-        'src/orchestrator.py — Pipeline health check with Neo4j-based status detection',
-        'src/utils.py — Shared utilities (disease term loading, search patterns)',
-        'scripts/compute_specificity.py — Post-load disease-specificity scoring',
-        'interface/index.html — Web dashboard (Explore, Query, Build KG, Extract)',
-    ]
-    for c in components:
-        doc.add_paragraph(c, style='List Bullet')
-
-    add_heading(doc, '3.3. Data Flow', level=2)
-    doc.add_paragraph('The batch pipeline executes four sequential steps:')
-    steps = [
-        ('Step 1: Data Retrieval & Parsing', 'Each of the 36 parsers downloads its source data (or reads from cache if --skip-download is set), parses it into pandas DataFrames keyed by entity type (e.g., "genes", "gene_disease_associations"), and returns a Dict[str, DataFrame].'),
-        ('Step 2: TSV Export', 'All parsed DataFrames are exported to data/processed/<source>/ as tab-separated files, creating a reproducible snapshot of each pipeline run.'),
-        ('Step 3: Neo4j Loading', 'The Neo4jLoader iterates through 85 ontology configs in two passes — Pass 1 loads nodes (MERGE by primary key), Pass 2 loads relationships (MATCH subject + object, MERGE edge). Post-load ID mapping validation checks all relationship match rates and creates missing nodes for low-match configs (gap repair).'),
-        ('Step 4: Post-Processing', 'Computes disease-specificity scores (specificityScore property) for all 5.47M nodes in batches of 50K, tags CVD-relevant Disease nodes, and stores computation metadata.'),
-    ]
-    for title, desc in steps:
-        p = doc.add_paragraph()
-        p.add_run(f'{title}. ').bold = True
-        p.add_run(desc)
-
-    # =====================================================================
-    # 4. Data Layer
-    # =====================================================================
-    add_heading(doc, '4. Data Layer', level=1)
-
-    add_heading(doc, '4.1. Data Sources (36 Parsers)', level=2)
-    doc.add_paragraph(
-        'CardioKB integrates 36 biomedical data sources organized in three phases:'
-    )
-
-    add_heading(doc, 'Phase 1: Core Parsers (8 sources)', level=3)
+    doc.add_paragraph('Phase 2 \u2014 Hetionet Component Parsers (21):')
     add_table(doc,
-              ['#', 'Source', 'Access', 'Key Data'],
+              ['Source', 'Key Contribution', 'Edge Count'],
               [
-                  ['1', 'ClinicalTrials.gov', 'Public API v2', '576K trials, 1.16M edges'],
-                  ['2', 'ClinPGx (PharmGKB successor)', 'Public API', 'Pharmacogenomics: 2,299 edges'],
-                  ['3', 'NCBI Gene', 'Public FTP', '216K gene nodes'],
-                  ['4', 'DoRothEA (OmniPath)', 'Public API', '15K TF-gene interactions'],
-                  ['5', 'OMIM', 'API key', '7,354 gene-disease edges'],
-                  ['6', 'DisGeNET', 'API key', '23,704 gene-disease edges'],
-                  ['7', 'DrugBank', 'XML file', '46K drugs, 19K drug-target edges'],
-                  ['8', 'AOP-DB', 'SQL dump', '396K pathway edges'],
+                  ['Disease Ontology', '19K disease nodes + ontology structure', 'Nodes only'],
+                  ['Gene Ontology', 'BP + MF + CC annotations', '322K edges'],
+                  ['Uberon', '14.9K anatomy nodes', 'Nodes only'],
+                  ['MeSH', '966 symptom nodes', 'Nodes only'],
+                  ['SIDER', 'Drug side effects', '148K edges'],
+                  ['LINCS L1000', 'Compound regulation + gene regulation', '16.7K edges (w/ zScore)'],
+                  ['MEDLINE', 'Literature cooccurrence (disease-symptom, disease-anatomy)', '1.3K edges'],
+                  ['DrugCentral', 'Drug-disease treatment + palliation + pharmacologic classes', '18K edges'],
+                  ['GWAS Catalog', 'Genome-wide association gene-disease links', '45.5K edges'],
+                  ['BindingDB', 'Chemical-gene binding', '4.2K edges'],
+                  ['PubTator Central', 'Literature-mined gene-disease + disease-disease', '3.4M edges'],
+                  ['CTD', 'Chemical increases/decreases gene expression', '431K edges'],
+                  ['Bgee', 'Tissue over/underexpression', '5.3M edges (w/ expressionScore)'],
+                  ['Hetionet (precomputed)', 'Side effects, gene interactions, covariance', '143K edges'],
+                  ['Jensen DISEASES', 'Text-mined gene-disease', '20.5K edges'],
+                  ['Jensen TISSUES', 'Text-mined gene-tissue expression', '982K edges'],
+                  ['HPO', '19K phenotypes, gene-phenotype associations', '30.5K edges'],
+                  ['Reactome', 'Curated pathway membership', '32.6K edges (bidirectional)'],
+                  ['WikiPathways', 'Community-curated pathway membership', '17.1K edges (bidirectional)'],
+                  ['STRING', 'Protein-protein interactions (confidence > 700)', '229K edges'],
+                  ['OpenTargets', 'Evidence-scored gene-disease associations', '2.4M edges'],
               ])
 
-    add_heading(doc, 'Phase 2: Hetionet Component Parsers (21 sources)', level=3)
+    doc.add_paragraph('Phase 3 \u2014 Agent-Generated Parsers (7):')
+    doc.add_paragraph(
+        'These were generated entirely by the DatabaseAgent from just a name + URL: '
+        'HGNC (gene enrichment), HGNC Families (34K edges), ClinVar (4.5M variants, 12.6M edges), '
+        'DrugAge (866 aging edges), CellAge (senescence genes), AnAge (4.6K species), GenAge (aging genes).'
+    )
+
+    doc.add_paragraph('ID Mapping & Cross-Reference Resolution:')
+    doc.add_paragraph(
+        'src/id_mapping.py handles the fundamental challenge of data integration: different sources '
+        'use different identifiers. It registers 20 ID systems (NCBI Gene, Ensembl, gene symbols, '
+        'DOID, UMLS CUI, MeSH, DrugBank IDs, etc.) and provides validate_mapping(), '
+        'suggest_mapping(), and create_missing_nodes() for gap repair. Two critical post-processing '
+        'remaps run before Neo4j loading: PubTator MeSH\u2192DOID (via Disease Ontology xrefs) and '
+        'GWAS trait\u2192DOID (3-level strategy: name match, curated trait match, ontology URI extraction).'
+    )
+
+    # 2.2 AI Agents
+    add_heading(doc, '2.2. AI Agents', level=2)
+
+    doc.add_paragraph('DatabaseAgent (src/database_agent.py):')
+    doc.add_paragraph(
+        'Autonomously generates new parsers from just a name and URL. Downloads first 64KB to detect '
+        'format, sends sample + BaseParser source to Claude, generates parser + ontology configs, '
+        'validates column references, checks for performance anti-patterns, registers in the pipeline, '
+        'runs the parser, validates ID mappings, and loads into Neo4j. 7 production parsers were '
+        'created this way. Uses Claude Haiku 4.5 by default.'
+    )
+
+    doc.add_paragraph('DiseaseQueryAgent (src/disease_agent.py):')
+    doc.add_paragraph(
+        'On-demand disease enrichment via the web UI. Standardizes disease names via Claude (handles '
+        'abbreviations like "AF" \u2192 "Atrial Fibrillation"), checks Neo4j cache, fetches DisGeNET '
+        'gene-disease associations + ClinicalTrials.gov trials, loads into Neo4j, caches results. '
+        'Capped at 200 disease IDs and 500 trials per query for performance.'
+    )
+
+    # 2.3 Web Interface
+    add_heading(doc, '2.3. Web Interface', level=2)
+    doc.add_paragraph(
+        'Single-page app (interface/index.html) backed by Flask (src/api.py, port 5050) '
+        'with 15 REST + SSE endpoints:'
+    )
+    add_bullet(doc, 'Vis.js graph visualization with Core/Discovery layer toggle, '
+               'node-type filter chips, specificity ranking, CSV/JSON export',
+               'Explore tab')
+    add_bullet(doc, 'Neo4j Browser-style multi-panel Cypher interface with query templates, '
+               'read-only enforcement, table + graph result views',
+               'Query tab')
+    add_bullet(doc, 'AI-driven disease enrichment (DisGeNET + ClinicalTrials.gov) with SSE progress',
+               'Build Knowledge Graph (sidebar)')
+    add_bullet(doc, 'Variable-hop (1\u20133) subgraph extraction with stats and JSON/CSV export',
+               'Extract Disease Subgraph (sidebar)')
+    add_bullet(doc, 'Parser status, health check charts, ID mapping report, pipeline execution',
+               'Admin panel (password-protected)')
+    add_bullet(doc, 'Add New Database (DatabaseAgent UI, password-protected)',
+               'Advanced')
+
+    # 2.4 Post-Processing
+    add_heading(doc, '2.4. Post-Processing & Scoring', level=2)
+    add_bullet(doc, '1.0 / (distinct Disease neighbor count). Stored as node property. '
+               'Genes connected to 5 diseases score 0.2; genes connected to 20K score 0.00005. '
+               'Disease nodes get 0.0. Computed in batches of 50K to respect Neo4j memory limits.',
+               'specificityScore')
+    add_bullet(doc, 'All 26.3M edges now carry a normalized weight \u2208 [0, 1]. Seven sources '
+               'use real score normalization (STRING combinedScore/1000, OpenTargets score, '
+               'Jensen min-max, Bgee expressionScore min-max, LINCS abs(zScore) min-max, '
+               'DoRothEA confidence letter \u00d7 morScore). Binary edges get 0.9 (DrugBank) '
+               'or 0.8 (all others).',
+               'Edge weights')
+    add_bullet(doc, 'Pipeline health check (src/orchestrator.py) dynamically detects parser status '
+               'from Neo4j source labels. ID mapping validation report cached at '
+               'reports/id_mapping_report.json.',
+               'Monitoring')
+
+    doc.add_page_break()
+
+    # =================================================================
+    # 3. What Is Planned or Partially Implemented
+    # =================================================================
+    add_heading(doc, '3. What Is Planned or Partially Implemented', level=1)
+
+    add_heading(doc, 'Working but needs extension', level=2)
+    add_bullet(doc, 'Link prediction (Common Neighbors + Weighted Adamic-Adar) is demonstrated '
+               'in notebook_class/cardiokb_link_prediction.ipynb for SCN5A and atrial fibrillation. '
+               'The notebook normalizes all edge weights and produces ranked gene-disease predictions. '
+               'Not yet automated or integrated into the web UI.')
+    add_bullet(doc, 'Disease scoping exists for 5 disease areas (CVD, Alzheimer\'s, cancer, asthma, '
+               'diabetes) but only CVD has been used in production pipeline runs.')
+    add_bullet(doc, 'The DiseaseQueryAgent enriches for any disease interactively, but only sources '
+               'DisGeNET + ClinicalTrials.gov. It cannot trigger parser re-runs for the other 34 sources.')
+
+    add_heading(doc, 'Designed but not started', level=2)
+    add_bullet(doc, 'Graph embeddings (node2vec, TransE) for downstream ML \u2014 no code exists yet. '
+               'The edge weight infrastructure is in place.')
+    add_bullet(doc, 'Supervised link prediction classifiers using graph features + embeddings as input. '
+               'The notebook demonstrates topological features (CN, Adamic-Adar) but no classifier is trained.')
+    add_bullet(doc, 'Drug repurposing pipeline: use link prediction scores to rank novel drug-disease '
+               'associations and validate against known treatments. Schema supports this (drugTreatsDisease '
+               'from DrugCentral provides ground truth).')
+    add_bullet(doc, 'Automated pipeline scheduling with change detection.')
+    add_bullet(doc, 'Graph versioning and diff tracking between runs.')
+    add_bullet(doc, 'Multi-user web deployment with authentication (currently local-only).')
+
+    add_heading(doc, 'Known gaps in data coverage', level=2)
+    add_bullet(doc, 'UniProt protein data \u2014 would connect genes to protein structure and function.')
+    add_bullet(doc, 'IntAct \u2014 curated protein interactions, would complement STRING\'s computational scores.')
+    add_bullet(doc, 'ChEMBL \u2014 bioactivity data, would strengthen drug-target evidence.')
+    add_bullet(doc, 'FDA FAERS \u2014 adverse event reports, would complement SIDER\'s side effect data.')
+    add_bullet(doc, 'CTD chemical-to-drug matching is partial (~41% match rate due to MeSH ID coverage). '
+               'Improving this would recover ~250K additional drug-gene expression edges.')
+
+    doc.add_page_break()
+
+    # =================================================================
+    # 4. What Is Explicitly Out of Scope
+    # =================================================================
+    add_heading(doc, '4. What Is Explicitly Out of Scope', level=1)
+    doc.add_paragraph(
+        'These decisions are intentional and should not be revisited without a compelling reason:'
+    )
+    add_bullet(doc, 'The graph is stored in Neo4j, not RDF/SPARQL. The AlzKB predecessor used '
+               'RDF but was migrated to Cypher for performance and simpler tooling. No SPARQL endpoint '
+               'is planned.')
+    add_bullet(doc, 'The system builds a general-purpose biomedical graph, not a CVD-specific one. '
+               'Disease filtering is done at query time (specificity scores, subgraph extraction) '
+               'and by 3 disease-aware parsers. The remaining 33 parsers load everything.')
+    add_bullet(doc, 'Real-time streaming ingestion. This is a batch system; the pipeline runs to '
+               'completion and the graph is queried after. The DiseaseQueryAgent provides near-real-time '
+               'enrichment for individual diseases, but it\'s additive, not streaming.')
+    add_bullet(doc, 'Production multi-tenant deployment. The web dashboard is single-user, local. '
+               'Admin operations (pipeline runs, database agent) are password-gated but there\'s '
+               'no user management.')
+    add_bullet(doc, 'Natural language querying. The Query tab accepts Cypher directly. '
+               'A Claude-powered NL-to-Cypher translator could be built but is not planned for '
+               'the 12-week rotation.')
+    add_bullet(doc, 'Graph neural networks (GNNs). The ML strategy focuses on topological features '
+               'and shallow embeddings (node2vec), not deep learning on graphs. The graph is too large '
+               'for full-graph GNN training without sampling infrastructure.')
+
+    doc.add_page_break()
+
+    # =================================================================
+    # 5. Proposed Work Division
+    # =================================================================
+    add_heading(doc, '5. Proposed Work Division: Agent Layer vs. Data Layer', level=1)
+    doc.add_paragraph(
+        'The system naturally divides into four workstreams that can be developed semi-independently. '
+        'This section defines ownership boundaries, interfaces between layers, and what each person '
+        'needs to know.'
+    )
+
+    # 5.1 Data/Parser Layer
+    add_heading(doc, '5.1. Data/Parser Layer', level=2)
+    p = doc.add_paragraph()
+    p.add_run('Owns: ').bold = True
+    p.add_run('src/parsers/, src/ontology_configs.py, src/neo4j_loader.py, src/id_mapping.py, '
+              'src/main.py, data/, ontology/')
+
+    p = doc.add_paragraph()
+    p.add_run('Responsibilities:').bold = True
+
+    add_bullet(doc, 'Adding new data source parsers (extend BaseParser, add ontology config)')
+    add_bullet(doc, 'Fixing ID mapping gaps (improving match rates, adding remap strategies)')
+    add_bullet(doc, 'Maintaining the ontology config schema (column mappings, source labels)')
+    add_bullet(doc, 'Schema evolution (adding new node/relationship types)')
+    add_bullet(doc, 'Expanding disease filter files (new disease areas beyond the 5 existing)')
+    add_bullet(doc, 'Pipeline reliability (error handling, partial failure recovery)')
+
+    p = doc.add_paragraph()
+    p.add_run('Interface contract: ').bold = True
+    p.add_run('Parsers produce Dict[str, DataFrame]. Config keys must match parser output keys. '
+              'Every relationship config must include source_label. Node types and relationship types '
+              'are defined here and consumed by every other layer.')
+
+    p = doc.add_paragraph()
+    p.add_run('What you need to know: ').bold = True
+    p.add_run('pandas, Neo4j Cypher basics, the ontology config format (read src/ontology_configs.py '
+              'header comments), and the ID mapping system.')
+
+    # 5.2 Agent/Orchestration Layer
+    add_heading(doc, '5.2. Agent/Orchestration Layer', level=2)
+    p = doc.add_paragraph()
+    p.add_run('Owns: ').bold = True
+    p.add_run('src/database_agent.py, src/disease_agent.py, src/agent.py, src/orchestrator.py')
+
+    p = doc.add_paragraph()
+    p.add_run('Responsibilities:').bold = True
+
+    add_bullet(doc, 'DatabaseAgent improvements (better column detection, handling XML/JSON sources, '
+               'multi-file datasets)')
+    add_bullet(doc, 'DiseaseQueryAgent expansion (new data sources beyond DisGeNET + ClinicalTrials.gov)')
+    add_bullet(doc, 'Pipeline health monitoring and automated recovery')
+    add_bullet(doc, 'Prompt engineering for Claude calls (standardization, code generation)')
+    add_bullet(doc, 'Caching strategy (DiseaseCache nodes, file-level caching)')
+
+    p = doc.add_paragraph()
+    p.add_run('Interface contract: ').bold = True
+    p.add_run('Agents produce parsers that conform to the BaseParser interface. DiseaseQueryAgent '
+              'loads data using the same Neo4jLoader and MERGE semantics as the batch pipeline. '
+              'SSE events follow the format {type, message, data?} for the API layer.')
+
+    p = doc.add_paragraph()
+    p.add_run('What you need to know: ').bold = True
+    p.add_run('Claude API (tool use, structured outputs), the BaseParser interface, '
+              'Neo4j MERGE semantics, SSE streaming.')
+
+    # 5.3 ML/Analysis Layer
+    add_heading(doc, '5.3. ML/Analysis Layer', level=2)
+    p = doc.add_paragraph()
+    p.add_run('Owns: ').bold = True
+    p.add_run('notebook_class/, models/, scripts/compute_specificity.py')
+
+    p = doc.add_paragraph()
+    p.add_run('Responsibilities:').bold = True
+
+    add_bullet(doc, 'Graph embedding generation (node2vec, TransE, or similar)')
+    add_bullet(doc, 'Link prediction model development (beyond the current notebook proof-of-concept)')
+    add_bullet(doc, 'Drug repurposing scoring and validation')
+    add_bullet(doc, 'Feature engineering from graph topology + edge weights')
+    add_bullet(doc, 'Evaluation framework (hold-out edges, time-split validation)')
+
+    p = doc.add_paragraph()
+    p.add_run('Interface contract: ').bold = True
+    p.add_run('ML code reads from Neo4j via the Python driver. Edge weights are pre-normalized '
+              'to [0, 1] and stored as r.weight. Specificity scores are on nodes as n.specificityScore. '
+              'Predictions should produce ranked (gene, disease, score) triples that can be loaded '
+              'back into Neo4j as a new relationship type or exposed via the API.')
+
+    p = doc.add_paragraph()
+    p.add_run('What you need to know: ').bold = True
+    p.add_run('Neo4j Python driver, the edge weight normalization scheme (see notebook section 3), '
+              'which relationship types are curated vs. text-mined (important for training/validation splits).')
+
+    # 5.4 Interface Layer
+    add_heading(doc, '5.4. Interface Layer', level=2)
+    p = doc.add_paragraph()
+    p.add_run('Owns: ').bold = True
+    p.add_run('interface/index.html, src/api.py')
+
+    p = doc.add_paragraph()
+    p.add_run('Responsibilities:').bold = True
+
+    add_bullet(doc, 'New API endpoints for ML predictions (e.g., /api/predictions?gene=SCN5A)')
+    add_bullet(doc, 'Visualization of prediction results in the Explore tab')
+    add_bullet(doc, 'Query template expansion')
+    add_bullet(doc, 'Export improvements (subgraph formats for ML tools)')
+
+    p = doc.add_paragraph()
+    p.add_run('Interface contract: ').bold = True
+    p.add_run('Flask endpoints return JSON. SSE streams use EventSource. The frontend is a '
+              'single HTML file with inline JS/CSS. vis.js DataSets must use clear()/add(), '
+              'never destroy()/new Network() for refreshes.')
+
+    # 5.5 Dependency Map
+    add_heading(doc, '5.5. Dependency Map', level=2)
+    doc.add_paragraph('Who blocks whom:')
     add_table(doc,
-              ['#', 'Source', 'Key Data'],
+              ['Task', 'Depends On', 'Blocks'],
               [
-                  ['9', 'Disease Ontology', '44K disease nodes'],
-                  ['10', 'Gene Ontology', '323K annotation edges'],
-                  ['11', 'Uberon (anatomy)', '15K anatomy nodes'],
-                  ['12', 'MeSH (symptoms)', '966 symptom nodes'],
-                  ['13', 'SIDER (side effects)', '149K side effect edges'],
-                  ['14', 'LINCS L1000', '357K expression edges'],
-                  ['15', 'MEDLINE', '7.2K literature cooccurrence edges'],
-                  ['16', 'DrugCentral', '40K drug-disease/pharmacologic edges'],
-                  ['17', 'GWAS Catalog', '45K gene-disease associations'],
-                  ['18', 'BindingDB', '26K drug-gene binding edges'],
-                  ['19', 'PubTator Central', '17M literature-mined edges'],
-                  ['20', 'CTD', '432K chemical-gene expression edges'],
-                  ['21', 'Bgee', '7.2M tissue expression edges'],
-                  ['22', 'Hetionet (precomputed)', '337K gene interaction + side effect edges'],
-                  ['23', 'Jensen Lab DISEASES', '21K gene-disease edges'],
-                  ['24', 'Jensen Lab TISSUES', '982K gene-tissue edges'],
-                  ['25', 'HPO', '304K gene-phenotype edges'],
-                  ['26', 'Reactome', '193K pathway edges'],
-                  ['27', 'WikiPathways', '93K pathway edges'],
-                  ['28', 'STRING', '229K protein interaction edges'],
-                  ['29', 'OpenTargets', '2.4M gene-disease edges'],
+                  ['New parser (Data layer)', 'Nothing', 'ML layer (more edges = better predictions)'],
+                  ['Schema changes (Data layer)', 'Nothing',
+                   'All layers (node/rel types are the shared vocabulary)'],
+                  ['ID mapping improvements (Data layer)', 'Nothing',
+                   'ML layer (higher match rates = more training data)'],
+                  ['Graph embeddings (ML layer)', 'Stable schema + edge weights',
+                   'Prediction models, drug repurposing'],
+                  ['Link prediction model (ML layer)', 'Embeddings OR topological features',
+                   'API predictions endpoint, drug repurposing'],
+                  ['Drug repurposing (ML layer)', 'Link prediction model + drugTreatsDisease ground truth',
+                   'Nothing (end goal)'],
+                  ['DatabaseAgent improvements (Agent layer)', 'BaseParser interface (stable)',
+                   'Faster source onboarding'],
+                  ['DiseaseQueryAgent expansion (Agent layer)', 'New parsers for target sources',
+                   'Interactive enrichment for more data types'],
+                  ['Prediction API (Interface layer)', 'Link prediction model output',
+                   'Nothing (end-user feature)'],
               ])
 
-    add_heading(doc, 'Phase 3: Agent-Generated Parsers (7 sources)', level=3)
+    doc.add_page_break()
+
+    # =================================================================
+    # 6. Schema Decisions & Edge Merge Recommendations
+    # =================================================================
+    add_heading(doc, '6. Schema Decisions & Edge Merge Recommendations', level=1)
+    doc.add_paragraph(
+        'The graph has 20 node types and 43 relationship types. Some edge types overlap semantically '
+        'and should be evaluated for merging. Others look similar but carry different semantics that '
+        'matter for ML. This section flags each case with a recommendation.'
+    )
+
+    # 6.1 Current Schema Overview
+    add_heading(doc, '6.1. Current Schema Overview', level=2)
+    doc.add_paragraph('20 node types: Gene (194K), Variant (4.5M), Disease (19K), Drug (41K), '
+                      'ClinicalTrial (82K), BiologicalProcess (24K), Phenotype (19K), BodyPart (14K), '
+                      'MolecularFunction (10K), Pathway (6.5K), SideEffect (5.7K), Species (4.6K), '
+                      'CellularComponent (4K), GeneFamily (1.9K), PharmacologicClass (1.6K), '
+                      'Symptom (966), DrugLabel (378), TranscriptionFactor (367), AgeingProperty (3), '
+                      '_Metadata (1).')
+
+    doc.add_paragraph('43 relationship types across 28 source labels. The top 5 by edge count are: '
+                      'bodyPartUnderexpressesGene (5.3M, Bgee), variantInGene/hasVariant (4.4M each, ClinVar), '
+                      'geneAssociatesWithDisease (3.7M, 6 sources), diseaseAssociatesWithDisease (2.1M, PubTator).')
+
+    # 6.2 Edges to Merge
+    add_heading(doc, '6.2. Edges That Should Be Merged', level=2)
+
+    # drugCausesSideEffect vs compoundCausesSideEffect
+    p = doc.add_paragraph()
+    p.add_run('MERGE: drugCausesSideEffect + compoundCausesSideEffect \u2192 drugCausesSideEffect').bold = True
+    doc.add_paragraph(
+        'drugCausesSideEffect (138K edges, Hetionet) and compoundCausesSideEffect (148K edges, SIDER) '
+        'describe the exact same relationship: a drug/compound causes a side effect. The only reason '
+        'they have different names is that they were loaded from different sources at different times. '
+        'Recommendation: Rename compoundCausesSideEffect to drugCausesSideEffect in the SIDER config. '
+        'The r.source property already distinguishes Hetionet vs. SIDER provenance. This is the '
+        'clearest merge candidate in the schema.'
+    )
+
+    # chemicalBindsGene vs drugBindsGene
+    p = doc.add_paragraph()
+    p.add_run('MERGE: chemicalBindsGene + drugBindsGene \u2192 drugBindsGene').bold = True
+    doc.add_paragraph(
+        'chemicalBindsGene (4.2K edges, BindingDB) and drugBindsGene (19K edges, DrugBank) '
+        'both represent drug/chemical-to-gene binding events. Both connect Drug nodes to Gene nodes. '
+        'BindingDB uses "chemical" in its name because its identifiers include non-drug chemicals, '
+        'but in CardioKB these are all mapped to Drug nodes. Recommendation: Merge into drugBindsGene. '
+        'r.source distinguishes BindingDB vs. DrugBank.'
+    )
+
+    # chemicalIncreases/DecreasesExpression vs compoundUp/DownregulatesGene
+    p = doc.add_paragraph()
+    p.add_run('CONSIDER MERGING: chemical{Increases,Decreases}Expression + '
+              'compound{Up,Down}regulatesGene').bold = True
+    doc.add_paragraph(
+        'CTD contributes chemicalIncreasesExpression (218K) and chemicalDecreasesExpression (213K). '
+        'LINCS L1000 contributes compoundUpregulatesGene (4.7K) and compoundDownregulatesGene (5.8K). '
+        'These describe the same biology: a chemical/drug changes gene expression levels. The naming '
+        'differs because CTD uses "expression" language while LINCS uses "regulation" language. '
+        'Recommendation: Merge each pair (increases\u2192up, decreases\u2192down) into a single '
+        'relationship type: drugUpregulatesGene and drugDownregulatesGene. LINCS edges carry zScore '
+        'properties that CTD edges lack, which is fine \u2014 not all edges need the same properties. '
+        'This reduces 4 relationship types to 2.'
+    )
+
+    # 6.3 Edges to Keep Separate
+    add_heading(doc, '6.3. Edges That Should Stay Separate', level=2)
+
+    p = doc.add_paragraph()
+    p.add_run('KEEP SEPARATE: drugTreatsDisease vs. drugPalliatesDisease').bold = True
+    doc.add_paragraph(
+        'Both come from DrugCentral. drugTreatsDisease (1.3K edges) represents curated treatment '
+        'relationships. drugPalliatesDisease (292 edges) represents symptom alleviation without '
+        'treating the underlying disease. This distinction matters for drug repurposing: a palliative '
+        'drug is not a treatment candidate. Keep both; they serve different ML targets.'
+    )
+
+    p = doc.add_paragraph()
+    p.add_run('KEEP SEPARATE: geneInteractsWithGene vs. geneRegulatesGene vs. geneCovariesWithGene').bold = True
+    doc.add_paragraph(
+        'geneInteractsWithGene (234K, STRING + Hetionet) represents physical protein-protein interactions. '
+        'geneRegulatesGene (6.3K, LINCS L1000) represents directional regulatory relationships. '
+        'geneCovariesWithGene (127, Hetionet) represents coexpression patterns. These are biologically '
+        'distinct: interaction \u2260 regulation \u2260 coexpression. Keep all three.'
+    )
+
+    p = doc.add_paragraph()
+    p.add_run('KEEP SEPARATE: geneAssociatesWithDisease (6 sources)').bold = True
+    doc.add_paragraph(
+        'This single relationship type aggregates 3.7M edges from PubTator (literature-mined), '
+        'OpenTargets (evidence-scored), GWAS Catalog (statistical association), DisGeNET (curated + '
+        'text-mined), OMIM (Mendelian), and Jensen DISEASES (text-mined). These should NOT be split '
+        'into separate relationship types \u2014 they represent the same semantic relationship from '
+        'different evidence sources. The r.source property and per-source scores/weights provide '
+        'evidence stratification. For ML, use r.source as a feature or filter by evidence type.'
+    )
+
+    p = doc.add_paragraph()
+    p.add_run('KEEP SEPARATE: diseaseAssociatesWithDisease vs. diseaseResemblesDisease').bold = True
+    doc.add_paragraph(
+        'diseaseAssociatesWithDisease (2.1M, PubTator) is literature cooccurrence: "these diseases '
+        'appear in the same papers." diseaseResemblesDisease (109, MEDLINE) is semantic similarity. '
+        'Different signals, keep both.'
+    )
+
+    # 6.4 Naming Cleanup
+    add_heading(doc, '6.4. Naming Convention Cleanup', level=2)
+    doc.add_paragraph(
+        'The schema mixes naming conventions from different eras of development. Some relationships '
+        'use SCREAMING_SNAKE (STUDIES_CONDITION, TESTS_INTERVENTION, VARIANT_IN, AFFECTS_RESPONSE_TO) '
+        'while most use camelCase. This happened because the ClinicalTrials.gov and ClinPGx parsers '
+        'were added later with a different convention.'
+    )
+    doc.add_paragraph('Recommendation: Rename for consistency (requires config + data migration):')
     add_table(doc,
-              ['#', 'Source', 'Key Data'],
+              ['Current', 'Proposed', 'Source'],
               [
-                  ['30', 'HGNC', '216K gene nodes enriched with HGNC cross-references'],
-                  ['31', 'HGNC Gene Families', '1,934 families, 34K geneInFamily edges'],
-                  ['32', 'ClinVar', '4.49M variants, 12.6M edges'],
-                  ['33', 'DrugAge', '866 gene-aging association edges'],
-                  ['34', 'CellAge', 'Senescence gene nodes'],
-                  ['35', 'AnAge', '8,032 species longevity nodes'],
-                  ['36', 'GenAge', 'Aging-associated gene nodes'],
-              ])
-
-    add_heading(doc, 'Credential-Gated Sources', level=3)
-    add_table(doc,
-              ['Parser', 'Required Credentials', 'Fallback'],
-              [
-                  ['OMIM', 'OMIM_API_KEY', 'Skipped if missing'],
-                  ['DisGeNET', 'DISGENET_API_KEY', 'Skipped if missing'],
-                  ['DrugBank', 'DRUGBANK_USERNAME + PASSWORD', 'Auto-detects local XML file'],
-                  ['AOP-DB', 'MYSQL_USERNAME + PASSWORD', 'Auto-detects local SQL dump'],
-              ])
-
-    add_heading(doc, '4.2. Parser Framework', level=2)
-    doc.add_paragraph(
-        'All 36 parsers inherit from BaseParser (src/parsers/base_parser.py), which provides:'
-    )
-    features = [
-        'download_data() — Abstract method; each parser implements its own download logic (HTTP, FTP, API pagination, local file detection)',
-        'parse_data() -> Dict[str, DataFrame] — Abstract method; returns parsed data keyed by entity type',
-        'get_schema() -> Dict — Abstract method; returns column schema for validation',
-        'download_file(url, filename) — Shared HTTP download with caching (skips if file exists)',
-        'extract_gzip(path) — Shared gzip extraction with caching',
-        'read_tsv() / read_csv() — Shared file readers with logging',
-        'validate_data(df, required_columns) — Column presence validation',
-    ]
-    for f in features:
-        doc.add_paragraph(f, style='List Bullet')
-
-    doc.add_paragraph(
-        'The parser returns a dictionary of DataFrames. The keys must match the '
-        'source_filename values in ontology_configs.py so the loader can find the right '
-        'config for each DataFrame. For example, the DisGeNET parser returns '
-        '{"gene_disease_associations": df, "diseases": df, ...}.'
-    )
-
-    add_heading(doc, '4.3. Ontology Configuration System', level=2)
-    doc.add_paragraph(
-        'The ontology configuration system (src/ontology_configs.py) is the central schema '
-        'mapping layer. It contains 85 configuration entries that declaratively define how '
-        'parsed DataFrames map to Neo4j nodes and relationships. Each config specifies:'
-    )
-
-    add_table(doc,
-              ['Field', 'Description', 'Example'],
-              [
-                  ['type', 'node or relationship', 'relationship'],
-                  ['source_filename', 'Key matching parser output dict', 'gene_disease_associations'],
-                  ['node_label / rel_type', 'Neo4j label or relationship type', 'geneAssociatesWithDisease'],
-                  ['primary_key', 'Property used for MERGE dedup (nodes)', 'geneSymbol'],
-                  ['subject_node_type', 'Source node label (relationships)', 'Gene'],
-                  ['subject_key', 'Source node match property', 'geneSymbol'],
-                  ['object_node_type', 'Target node label (relationships)', 'Disease'],
-                  ['object_key', 'Target node match property', 'xrefUmlsCUI'],
-                  ['source_label', 'Provenance label set on r.source', 'DisGeNET'],
-                  ['column_map', 'DataFrame column -> Neo4j property mapping', '{"geneSymbol": "geneSymbol"}'],
-              ])
-
-    doc.add_paragraph(
-        'Config keys follow the convention {source_name}.{data_name} (e.g., '
-        '"disgenet.gene_disease_associations"). The Neo4jLoader iterates all configs in two '
-        'passes: nodes first, then relationships, ensuring all referenced nodes exist before '
-        'edges are created.'
-    )
-
-    add_heading(doc, '4.4. ID Mapping & Cross-Reference Resolution', level=2)
-    doc.add_paragraph(
-        'The ID mapping module (src/id_mapping.py) handles the challenge of integrating '
-        'data sources that use different identifier systems (NCBI Gene IDs, Ensembl IDs, '
-        'gene symbols, DOID, UMLS CUI, MeSH, DrugBank IDs, etc.).'
-    )
-    doc.add_paragraph('Key capabilities:')
-    capabilities = [
-        'ID_SYSTEMS registry — Maps 17 identifier systems to their (node_label, property_name) pairs in Neo4j',
-        'IDMapper class — Builds in-memory cross-reference lookups from Neo4j node properties',
-        'validate_mapping() — Checks what percentage of source IDs match existing graph nodes',
-        'suggest_mapping() — When match rate is low, suggests alternative ID properties that might work better',
-        'create_missing_nodes() — Creates new nodes for unmatched IDs (only if they have >= 10 edges, to avoid noise)',
-        'Post-processing remaps — PubTator MeSH-to-DOID and GWAS trait-to-DOID remapping during pipeline parsing',
-    ]
-    for c in capabilities:
-        doc.add_paragraph(c, style='List Bullet')
-
-    # =====================================================================
-    # 5. Storage Layer
-    # =====================================================================
-    add_heading(doc, '5. Storage Layer: Neo4j Knowledge Graph', level=1)
-
-    add_heading(doc, '5.1. Graph Schema', level=2)
-    doc.add_paragraph(
-        'The Neo4j graph uses a labeled property graph model. Nodes have one or more labels '
-        '(e.g., :Gene, :Disease) and properties (e.g., geneSymbol, commonName). Relationships '
-        'are typed (e.g., geneAssociatesWithDisease) and carry properties including the mandatory '
-        'source field for provenance.'
-    )
-
-    add_heading(doc, '5.2. Node Types (21)', level=2)
-    add_table(doc,
-              ['Node Type', 'Count', 'Primary Key', 'Description'],
-              [
-                  ['Variant', '4,488,042', 'variantId', 'Genetic variants (ClinVar)'],
-                  ['ClinicalTrial', '576,334', 'trialId', 'Clinical trials (ClinicalTrials.gov)'],
-                  ['Gene', '216,315', 'geneSymbol', 'Human genes (NCBI Gene, HGNC)'],
-                  ['Drug', '46,142', 'commonName / xrefDrugbank', 'Drugs and chemicals'],
-                  ['Disease', '43,972', 'commonName / xrefDiseaseOntology', 'Diseases (Disease Ontology, OMIM, DisGeNET)'],
-                  ['BiologicalProcess', '24,547', 'geneOntologyId', 'GO biological processes'],
-                  ['Phenotype', '19,389', 'xrefHPO', 'Human phenotypes (HPO)'],
-                  ['BodyPart', '14,937', 'xrefUberon', 'Anatomical structures (Uberon)'],
-                  ['MolecularFunction', '10,123', 'geneOntologyId', 'GO molecular functions'],
-                  ['Species', '8,032', 'speciesName', 'Species (AnAge longevity data)'],
-                  ['Pathway', '6,469', 'pathwayName', 'Biological pathways (Reactome, WikiPathways, AOP-DB)'],
-                  ['SideEffect', '5,734', 'xrefUmlsCUI', 'Drug side effects (SIDER)'],
-                  ['CellularComponent', '4,069', 'geneOntologyId', 'GO cellular components'],
-                  ['GeneFamily', '1,934', 'familyId', 'Gene families (HGNC)'],
-                  ['PharmacologicClass', '1,646', 'classId', 'Drug classes (DrugCentral)'],
-                  ['Symptom', '966', 'xrefMeSH', 'Disease symptoms (MeSH)'],
-                  ['DrugLabel', '378', 'labelId', 'FDA drug labels (ClinPGx)'],
-                  ['TranscriptionFactor', '367', 'TF', 'Transcription factors (DoRothEA)'],
-                  ['AgeingProperty', '3', 'propertyName', 'Aging properties (DrugAge)'],
-                  ['DiseaseCache', '7', 'diseaseKey', 'Agent build cache entries'],
-                  ['_Metadata', '1', 'key', 'System metadata (specificity timestamp)'],
-              ])
-
-    add_heading(doc, '5.3. Relationship Types (42)', level=2)
-    doc.add_paragraph(
-        'All relationships carry a source property identifying the originating database. '
-        'The same relationship type can come from multiple sources (e.g., geneAssociatesWithDisease '
-        'has edges from PubTator, OpenTargets, GWAS, DisGeNET, OMIM, and Jensen DISEASES). '
-        'There are 28 unique source labels across 42 relationship types totaling 44.5M edges.'
-    )
-
-    add_table(doc,
-              ['Relationship Type', 'Source(s)', 'Total Edges'],
-              [
-                  ['geneAssociatesWithDisease', 'PubTator, OpenTargets, GWAS, DisGeNET, Jensen, OMIM', '17,393,760'],
-                  ['bodyPartUnderexpressesGene', 'Bgee', '7,211,055'],
-                  ['hasVariant / variantInGene', 'ClinVar', '4,439,480 each'],
-                  ['associatedWithVariant / variantAssociatedWithDisease', 'ClinVar', '1,862,448 each'],
-                  ['geneExpressedInBodyPart', 'Jensen TISSUES', '982,116'],
-                  ['STUDIES_CONDITION', 'ClinicalTrials.gov', '818,839'],
-                  ['geneInteractsWithGene', 'STRING, Hetionet', '365,768'],
-                  ['TESTS_INTERVENTION', 'ClinicalTrials.gov', '345,632'],
-                  ['geneInPathway / pathwayContainsGene', 'AOP-DB, Reactome, WikiPathways', '340,744 each'],
-                  ['geneAssociatesWithPhenotype', 'HPO', '303,817'],
-                  ['geneRegulatesGene', 'LINCS L1000', '279,578'],
-                  ['chemicalIncreasesExpression', 'CTD', '218,152'],
-                  ['chemicalDecreasesExpression', 'CTD', '213,587'],
-                  ['diseaseAssociatesWithDisease', 'PubTator', '2,138,895'],
-                  ['compoundCausesSideEffect', 'SIDER', '148,518'],
-                  ['drugCausesSideEffect', 'Hetionet', '138,540'],
-                  ['geneParticipatesInBiologicalProcess', 'Gene Ontology', '135,351'],
-                  ['geneHasMolecularFunction', 'Gene Ontology', '93,564'],
-                  ['geneAssociatedWithCellularComponent', 'Gene Ontology', '93,792'],
-                  ['geneCovariesWithGene', 'Hetionet', '61,797'],
-                  ['compoundUpregulatesGene', 'LINCS L1000', '36,688'],
-                  ['compoundDownregulatesGene', 'LINCS L1000', '40,895'],
-                  ['geneInFamily / familyContainsGene', 'HGNC', '34,006 each'],
-                  ['chemicalBindsGene', 'BindingDB', '26,467'],
-                  ['drugBindsGene', 'DrugBank', '19,085'],
-                  ['pharmacologicClassIncludesCompound', 'DrugCentral', '16,403'],
-                  ['transcriptionFactorInteractsWithGene', 'DoRothEA', '15,092'],
-                  ['drugTreatsDisease', 'DrugCentral', '6,242'],
-                  ['drugPalliatesDisease', 'DrugCentral', '1,012'],
-                  ['diseaseLocalizesToAnatomy', 'MEDLINE', '3,602'],
-                  ['diseasePresentsSymptom', 'MEDLINE', '3,068'],
-                  ['associatedWithAging', 'DrugAge', '866'],
-                  ['diseaseResemblesDisease', 'MEDLINE', '543'],
-              ])
-
-    add_heading(doc, '5.4. Loading Strategy', level=2)
-    doc.add_paragraph(
-        'The Neo4jLoader (src/neo4j_loader.py) uses UNWIND-based Cypher batching with a '
-        'batch size of 1,000 rows. All operations use MERGE to ensure idempotency.'
-    )
-    doc.add_paragraph('Node loading pattern:')
-    doc.add_paragraph(
-        'UNWIND $batch AS row\n'
-        'MERGE (n:Gene {geneSymbol: row.geneSymbol})\n'
-        'SET n.xrefNcbiGene = row.xrefNcbiGene, n.xrefEnsembl = row.xrefEnsembl',
-        style='No Spacing'
-    )
-    doc.add_paragraph('Relationship loading pattern:')
-    doc.add_paragraph(
-        'UNWIND $batch AS row\n'
-        'MATCH (s:Gene {geneSymbol: row.geneSymbol})\n'
-        'MATCH (o:Disease {xrefDiseaseOntology: row.diseaseId})\n'
-        'MERGE (s)-[r:geneAssociatesWithDisease]->(o)\n'
-        'SET r.source = "DisGeNET", r.score = row.score',
-        style='No Spacing'
-    )
-    doc.add_paragraph(
-        'The loader processes configs in two passes: Pass 1 loads all node configs, Pass 2 loads '
-        'all relationship configs. This ensures referenced nodes exist before edges reference them. '
-        'Each relationship automatically gets its r.source property set from the config\'s source_label field.'
-    )
-
-    add_heading(doc, '5.5. Indexing & Performance', level=2)
-    doc.add_paragraph(
-        'Neo4j indexes are critical for MERGE and MATCH performance. The loader creates '
-        'indexes on primary key properties for each node label (e.g., Gene.geneSymbol, '
-        'Disease.xrefDiseaseOntology). An additional index exists on Gene.specificityScore '
-        'for ranked queries. The transaction memory limit is configured at 716.8 MiB, which '
-        'required batched processing for the specificity score computation across large labels '
-        '(ClinicalTrial: 576K nodes, Variant: 4.49M nodes).'
-    )
-
-    # =====================================================================
-    # 6. Application Layer
-    # =====================================================================
-    add_heading(doc, '6. Application Layer', level=1)
-
-    add_heading(doc, '6.1. Pipeline Orchestrator', level=2)
-    doc.add_paragraph(
-        'The CardioKBPipeline class (src/main.py) orchestrates the end-to-end build process. '
-        'It supports two flags: --skip-download (reuse cached data files) and --skip-neo4j '
-        '(parse and export TSV only, no graph loading). The pipeline:'
-    )
-    pipeline_steps = [
-        'Instantiates all 36 parsers with the raw data directory',
-        'Calls download_data() on each parser (unless --skip-download)',
-        'Calls parse_data() to get Dict[str, DataFrame] from each',
-        'Exports all DataFrames to data/processed/<source>/*.tsv',
-        'Initializes Neo4jLoader with credentials from .env',
-        'Loads nodes (Pass 1) then relationships (Pass 2) via ontology configs',
-        'Runs post-load ID mapping validation with gap repair',
-        'Computes disease-specificity scores for all nodes',
-        'Tags CVD-relevant Disease nodes (90 whole-word patterns)',
-    ]
-    for s in pipeline_steps:
-        doc.add_paragraph(s, style='List Number')
-
-    add_heading(doc, '6.2. Flask Web API', level=2)
-    doc.add_paragraph(
-        'The Flask backend (src/api.py, port 5050) provides REST endpoints and SSE streaming:'
-    )
-    add_table(doc,
-              ['Endpoint', 'Method', 'Description'],
-              [
-                  ['/api/graph-stats', 'GET', 'Node/relationship counts, source labels, totals'],
-                  ['/api/diseases', 'GET', 'Available disease filters'],
-                  ['/api/search', 'GET', 'Search nodes by name/type'],
-                  ['/api/query', 'POST', 'Execute Cypher query, return results'],
-                  ['/api/subgraph', 'GET', 'Extract N-hop disease subgraph'],
-                  ['/api/specificity-info', 'GET', 'Specificity score metadata'],
-                  ['/api/agent/build-disease-graph', 'POST', 'Trigger DiseaseQueryAgent (SSE)'],
-                  ['/api/agent/add-database', 'POST', 'Trigger DatabaseAgent'],
-                  ['/api/health-check', 'GET', 'Pipeline health check (SSE streaming)'],
-              ])
-
-    add_heading(doc, '6.3. Web Dashboard', level=2)
-    doc.add_paragraph(
-        'The single-page web interface (interface/index.html) provides four main features:'
-    )
-    tabs = [
-        ('Explore tab', 'Interactive vis.js graph visualization of disease subgraphs. Nodes are ranked by disease-specificity score. Supports Core layer (direct associations) and Discovery layer (2-hop hypothesis generation). Click nodes for detail panels with properties, neighbors, and specificity scores.'),
-        ('Query tab', 'Neo4j Browser-style multi-panel Cypher interface. Each query creates a new result panel (newest at top) with table and graph visualization tabs. Includes query templates and Ctrl+Enter shortcut.'),
-        ('Build Knowledge Graph (sidebar)', 'AI-powered disease enrichment. Enter any disease name (abbreviations, synonyms accepted). The DiseaseQueryAgent standardizes via Claude, fetches DisGeNET + ClinicalTrials.gov data, loads into Neo4j, and auto-opens Explore.'),
-        ('Extract Disease Subgraph (sidebar)', 'Configurable N-hop subgraph extraction (1-3 hops) with stats and JSON/CSV export for downstream analysis.'),
-    ]
-    for title, desc in tabs:
-        p = doc.add_paragraph()
-        p.add_run(f'{title}: ').bold = True
-        p.add_run(desc)
-
-    # =====================================================================
-    # 7. AI Agent Layer
-    # =====================================================================
-    add_heading(doc, '7. AI Agent Layer', level=1)
-
-    add_heading(doc, '7.1. DatabaseAgent (Autonomous Parser Generation)', level=2)
-    doc.add_paragraph(
-        'The DatabaseAgent (src/database_agent.py) uses the Claude API to autonomously generate '
-        'complete parsers for new biomedical data sources. The user provides only a database name '
-        'and a download URL.'
-    )
-    doc.add_paragraph('Workflow:')
-    agent_steps = [
-        'Sample download — Downloads the first 64KB to detect format (TSV, CSV, JSON, XML) and discover actual column names',
-        'Code generation — Sends file sample, BaseParser source, SKILL.md guide, and example parser to Claude, which generates a complete parser class + ontology configs',
-        'Pipeline integration — Saves parser to src/parsers/, adds ontology configs, registers in main.py and __init__.py',
-        'Execute & validate — Runs the parser, validates ID mappings against Neo4j, loads data, verifies edge counts',
-    ]
-    for s in agent_steps:
-        doc.add_paragraph(s, style='List Number')
-
-    doc.add_paragraph(
-        'The agent uses Claude Haiku 4.5 (configurable via DATABASE_AGENT_MODEL env var) for '
-        'cost-effective code generation. Seven parsers in production were generated entirely by '
-        'this agent: HGNC, HGNC Families, ClinVar, DrugAge, CellAge, AnAge, and GenAge.'
-    )
-
-    doc.add_paragraph('Key bugs discovered and fixed during development:')
-    bugs = [
-        'Column name hallucination — Claude invented column names not in the source. Fixed by injecting actual column names from the sample download.',
-        'Duplicate configs on re-run — Fixed by detecting and removing existing entries before appending.',
-        'Gzip partial download failure — Fixed with streaming GzipFile that tolerates truncated data.',
-        'Comment-line header detection — Files using #-prefixed headers (e.g., ClinVar) were initially skipped. Fixed by treating delimiter-containing # lines as headers.',
-    ]
-    for b in bugs:
-        doc.add_paragraph(b, style='List Bullet')
-
-    add_heading(doc, '7.2. DiseaseQueryAgent (On-Demand Enrichment)', level=2)
-    doc.add_paragraph(
-        'The DiseaseQueryAgent (src/disease_agent.py) enriches the knowledge graph for any '
-        'disease on demand through the web interface.'
-    )
-    doc.add_paragraph('Workflow:')
-    disease_steps = [
-        'Cache check — Returns instantly if disease was previously built (DiseaseCache node in Neo4j)',
-        'Standardize — Uses Claude to resolve abbreviations and synonyms to canonical form (e.g., "PD" -> "Parkinson\'s Disease")',
-        'Coverage query — Queries Neo4j for existing genes, drugs, trials, and pathways connected to the disease',
-        'DisGeNET fetch — Fetches gene-disease associations via API (max 200 disease IDs, 2-minute timeout)',
-        'ClinicalTrials.gov fetch — Queries API v2 for relevant trials (max 500 across 5 pages, 1.2s rate limiting)',
-        'Neo4j load — Loads trial nodes + STUDIES_CONDITION relationships using MERGE',
-        'Cache + stats — Creates DiseaseCache node and returns subgraph statistics',
-    ]
-    for s in disease_steps:
-        doc.add_paragraph(s, style='List Number')
-
-    # =====================================================================
-    # 8. Disease Scoping
-    # =====================================================================
-    add_heading(doc, '8. Disease Scoping & Filtering', level=1)
-    doc.add_paragraph(
-        'Disease term files live in ontology/diseases/ (one term per line, # for comments). '
-        'The active filter is ontology/disease_filter.txt, a symlink to diseases/cvd.txt.'
-    )
-    add_table(doc,
-              ['File', 'Terms', 'Disease Area'],
-              [
-                  ['cvd.txt', '90', 'Cardiovascular disease (default)'],
-                  ['alzheimers.txt', '35', "Alzheimer's & related dementias"],
-                  ['cancer.txt', '70', 'Cancer / oncology'],
-                  ['asthma.txt', '48', 'Asthma & respiratory diseases'],
-                  ['diabetes.txt', '52', 'Diabetes & metabolic diseases'],
+                  ['STUDIES_CONDITION', 'trialStudiesCondition', 'ClinicalTrials.gov'],
+                  ['TESTS_INTERVENTION', 'trialTestsIntervention', 'ClinicalTrials.gov'],
+                  ['VARIANT_IN', 'variantInGene', 'ClinPGx (note: ClinVar already uses variantInGene)'],
+                  ['AFFECTS_RESPONSE_TO', 'geneAffectsResponseTo', 'ClinPGx'],
               ])
     doc.add_paragraph(
-        'Only 3 of 36 parsers use the disease filter: ClinicalTrialsParser (API queries per term), '
-        'DisGeNETParser (API search per term), and MEDLINECooccurrenceParser (DOID filtering). '
-        'The remaining 33 parsers are fully disease-agnostic and load complete datasets.'
+        'Priority: Low. These work fine as-is and renaming requires a full pipeline re-run. '
+        'But if you\'re doing a schema migration for the merges above, batch these in.'
     )
 
-    # =====================================================================
-    # 9. Post-Processing
-    # =====================================================================
-    add_heading(doc, '9. Post-Processing', level=1)
+    doc.add_page_break()
 
-    add_heading(doc, '9.1. Disease-Specificity Scoring', level=2)
+    # =================================================================
+    # 7. Knowledge Graph to ML
+    # =================================================================
+    add_heading(doc, '7. Knowledge Graph \u2192 ML: Hypothesis Generation Pipeline', level=1)
     doc.add_paragraph(
-        'After loading, the pipeline computes a specificityScore property on every node in the graph. '
-        'The formula is: specificityScore = 1.0 / (number of distinct Disease neighbors). '
-        'A gene connecting to 5 diseases scores 0.2; one connecting to 20,000 scores 0.00005. '
-        'Disease nodes themselves get 0.0 (they ARE diseases). Nodes with no Disease connections get 1.0.'
-    )
-    doc.add_paragraph(
-        'The computation runs in batches of 50,000 nodes per label to stay within Neo4j\'s '
-        'transaction memory limit (716.8 MiB). Results are stored as a node property for '
-        'O(1) lookup during queries. The computation timestamp is stored in a _Metadata node.'
+        'The end goal of CardioKB is not the graph itself but what it enables: computational '
+        'hypothesis generation for drug repurposing, disease mechanism discovery, and biomarker '
+        'identification. This section describes the pipeline from graph to ML predictions.'
     )
 
-    add_heading(doc, '9.2. ID Mapping Validation & Gap Repair', level=2)
+    # 7.1 Current State
+    add_heading(doc, '7.1. Current State (Working)', level=2)
     doc.add_paragraph(
-        'After Neo4j loading, the pipeline validates all relationship configs by checking what '
-        'percentage of source and target IDs in each TSV file match existing graph nodes. '
-        'Configs with < 50% match rate trigger the suggest_mapping() function, which may '
-        'recommend alternative ID properties. The create_missing_nodes() function creates new '
-        'Disease (or other) nodes for unmatched IDs that have >= 10 edges, then re-loads '
-        'the affected relationship configs to recover orphaned edges.'
+        'The link prediction notebook (notebook_class/cardiokb_link_prediction.ipynb) demonstrates '
+        'the full workflow:'
     )
+    add_numbered(doc, 'All 26.3M edges normalized to weight \u2208 [0, 1] using source-specific rules',
+                 'Edge weight normalization')
+    add_numbered(doc, 'Count shared neighbors between query node and target. '
+                 'Applied to SCN5A \u2192 CVD diseases; top hit: cerebrovascular disease (22 shared neighbors)',
+                 'Common Neighbors')
+    add_numbered(doc, 'Weight shared neighbors inversely by degree and scale by edge weights. '
+                 'Applied to SCN5A \u2192 arrhythmia diseases; identifies arrhythmogenic cardiomyopathies',
+                 'Weighted Adamic-Adar')
+    add_numbered(doc, 'Flipped perspective: given atrial fibrillation, predict missing gene associations. '
+                 'Top predictions: FAU, PRKACG, PRKACB, calmodulin-like genes (CALML3/4/5/6)',
+                 'Disease-anchored gene prediction')
+    add_numbered(doc, 'Confirmed Long QT Syndrome \u2192 SCN5A is already directly linked (14 edges '
+                 'from OMIM + OpenTargets), validating the graph captures known biology',
+                 'Known-relationship validation')
+
+    # 7.2 Embeddings
+    add_heading(doc, '7.2. Planned: Embedding-Based Approaches', level=2)
     doc.add_paragraph(
-        'Example: DisGeNET gene-disease edges initially matched only 40.6% of disease IDs. '
-        'Gap repair created 286 new Disease nodes, recovering 11,907 edges.'
+        'The next step is generating node embeddings that capture graph structure in dense vectors. '
+        'These serve as features for any downstream ML task.'
     )
+    add_bullet(doc, 'Random walks on the weighted graph produce node sequences; '
+               'Word2Vec trains on sequences to produce d-dimensional node vectors. '
+               'Captures structural similarity (nodes with similar neighborhoods get similar vectors). '
+               'The edge weights are already normalized and ready for biased walks.',
+               'node2vec')
+    add_bullet(doc, 'Knowledge graph embedding that represents entities and relations as vectors. '
+               'Learns h + r \u2248 t for each (head, relation, tail) triple. '
+               'Better at capturing relation-specific patterns than node2vec. '
+               'The 43 relationship types provide rich relational signal.',
+               'TransE / RotatE')
+    add_bullet(doc, 'models/ directory (currently empty) should store trained embedding files, '
+               'model checkpoints, and evaluation metrics.',
+               'Storage')
 
-    # =====================================================================
-    # 10. Deployment
-    # =====================================================================
-    add_heading(doc, '10. Deployment & Operations', level=1)
-
-    add_heading(doc, 'Local Development', level=2)
+    # 7.3 Feature Engineering
+    add_heading(doc, '7.3. Planned: Feature Engineering for Classifiers', level=2)
     doc.add_paragraph(
-        'The system runs locally with conda for Python environment management and a local '
-        'Neo4j instance. The Flask server runs on port 5050. Environment variables are stored '
-        'in .env (not committed to version control).'
+        'For a supervised link prediction classifier (e.g., predict whether a gene-disease link exists), '
+        'combine topological features with embeddings:'
     )
-
-    add_heading(doc, 'Pipeline Execution', level=2)
     add_table(doc,
-              ['Command', 'Description'],
+              ['Feature Type', 'Features', 'Source'],
               [
-                  ['python src/main.py', 'Full pipeline: download + parse + TSV + Neo4j + specificity'],
-                  ['python src/main.py --skip-download', 'Reparse from cached data'],
-                  ['python src/main.py --skip-neo4j', 'Parse + TSV export only'],
-                  ['python src/main.py --skip-download --skip-neo4j', 'Reparse cached data, TSV only'],
-                  ['bash run.sh', 'Launch Flask + open browser'],
-                  ['python src/api.py --port 5050', 'Start Flask server only'],
+                  ['Topological', 'Common Neighbors, Adamic-Adar, Jaccard coefficient, '
+                   'preferential attachment, Katz index', 'Graph structure'],
+                  ['Node properties', 'specificityScore, node degree, degree by relationship type',
+                   'Neo4j node properties'],
+                  ['Edge properties', 'r.weight, r.source counts, max/mean weight by source',
+                   'Neo4j edge properties'],
+                  ['Embeddings', 'node2vec vectors, TransE entity vectors',
+                   'Trained embedding models'],
+                  ['Source diversity', 'Number of distinct r.source labels on existing edges, '
+                   'coverage across evidence types', 'r.source aggregation'],
+              ])
+    doc.add_paragraph(
+        'Training data: use existing geneAssociatesWithDisease edges as positives, '
+        'random (gene, disease) pairs with no edge as negatives. For drug repurposing: '
+        'drugTreatsDisease edges as positives. Use time-split validation if edge timestamps '
+        'are available (OpenTargets and GWAS provide date fields).'
+    )
+
+    # 7.4 Integration Points
+    add_heading(doc, '7.4. Integration Points', level=2)
+    doc.add_paragraph(
+        'Where the ML layer connects to the rest of the system:'
+    )
+    add_table(doc,
+              ['Integration Point', 'Direction', 'Details'],
+              [
+                  ['Neo4j \u2192 ML', 'Read', 'ML reads graph via Python driver. '
+                   'All edges have r.weight (float, 0\u20131) and r.source (string). '
+                   'All nodes have n.specificityScore (float, 0\u20131).'],
+                  ['ML \u2192 Neo4j', 'Write', 'Prediction scores can be loaded as new relationship '
+                   'properties or a new relationship type (e.g., predictedAssociation with score property).'],
+                  ['ML \u2192 API', 'Via Neo4j', 'Once predictions are in the graph, existing API endpoints '
+                   '(/api/graph, /api/query) can serve them. New endpoint /api/predictions could wrap '
+                   'a Cypher query that filters by prediction score.'],
+                  ['ML \u2192 Web UI', 'Via API', 'Predicted edges could appear in the Explore tab '
+                   'with a distinctive color/style. Discovery layer already supports 2-hop exploration.'],
+                  ['Edge weights \u2192 ML', 'Read', 'Normalization scheme is documented in notebook '
+                   'section 3. Seven sources have real scores; others get flat weights.'],
+                  ['Drug repurposing ground truth', 'Read', 'drugTreatsDisease (1.3K edges, DrugCentral) '
+                   'and drugPalliatesDisease (292 edges) provide labeled examples for evaluation.'],
               ])
 
-    add_heading(doc, 'Monitoring', level=2)
+    doc.add_page_break()
+
+    # =================================================================
+    # 8. Current Stats
+    # =================================================================
+    add_heading(doc, '8. Current Stats (Snapshot)', level=1)
     doc.add_paragraph(
-        'The orchestrator (src/orchestrator.py) provides a health check that dynamically detects '
-        'parser status from Neo4j by querying r.source values. The web dashboard Admin panel '
-        'shows parser status, pipeline health (SSE streaming), and ID mapping validation reports. '
-        'Pipeline logs are written to logs/cardiokb_build.log.'
+        'These numbers are from the most recent pipeline run. For live counts, query Neo4j directly '
+        'or use GET /api/graph-stats.'
     )
-
-    # =====================================================================
-    # 11. Security
-    # =====================================================================
-    add_heading(doc, '11. Security Considerations', level=1)
-    security = [
-        'Credentials (.env) are gitignored and never logged, displayed, or included in output',
-        'Neo4j authentication via Bolt protocol with username/password',
-        'API keys (OMIM, DisGeNET, Anthropic) stored as environment variables',
-        'No user authentication on the web dashboard (local development only)',
-        'Cypher injection is mitigated by parameterized queries in the Neo4j driver',
-        'The Flask server serves static files from the interface/ directory only',
-    ]
-    for s in security:
-        doc.add_paragraph(s, style='List Bullet')
-
-    # =====================================================================
-    # 12. Current Statistics
-    # =====================================================================
-    add_heading(doc, '12. Current Statistics', level=1)
     add_table(doc,
               ['Metric', 'Value'],
               [
-                  ['Total nodes', '5,469,407'],
-                  ['Total relationships', '44,489,262'],
-                  ['Node types', '21'],
-                  ['Relationship types', '42'],
-                  ['Data sources', '36 (36 parsers)'],
+                  ['Total nodes', '4,921,062'],
+                  ['Total relationships', '26,344,399'],
+                  ['Node types', '20'],
+                  ['Relationship types', '43'],
+                  ['Data sources (parsers)', '36'],
                   ['Relationship source labels', '28'],
                   ['Ontology configs', '85'],
-                  ['Node-only sources', '8 (Disease Ontology, Uberon, MeSH, NCBI Gene, CellAge, AnAge, GenAge, HGNC base)'],
                   ['Disease filter terms (CVD)', '90'],
-                  ['CVD-tagged Disease nodes', '1,374'],
                   ['Agent-generated parsers', '7'],
+                  ['Edge weight coverage', '100% (all edges have r.weight)'],
               ])
 
-    # =====================================================================
-    # 13. Limitations & Future Work
-    # =====================================================================
-    add_heading(doc, '13. Limitations & Future Work', level=1)
-
-    add_heading(doc, 'Current Limitations', level=2)
-    limitations = [
-        'Neo4j transaction memory (716.8 MiB) constrains query complexity on high-degree nodes; batched processing required for large operations',
-        'DiseaseQueryAgent is limited to DisGeNET + ClinicalTrials.gov; other sources require full pipeline re-run',
-        'Broad disease categories (e.g., "cancer") are capped at 200 disease IDs in the DiseaseQueryAgent to keep response times under 2 minutes',
-        'MeSH parser produces nodes only (no relationship data)',
-        'No automated scheduling — pipeline runs are manual',
-        'Web dashboard has no user authentication (local use only)',
-        'CTD chemical-to-drug matching is partial (~41% match rate due to MeSH ID coverage)',
-    ]
-    for l in limitations:
-        doc.add_paragraph(l, style='List Bullet')
-
-    add_heading(doc, 'Future Work', level=2)
-    future = [
-        'Machine learning models for link prediction and drug repurposing using the knowledge graph',
-        'Automated pipeline scheduling with change detection',
-        'Graph embedding generation (node2vec, TransE) for downstream ML tasks',
-        'Additional data sources (UniProt, IntAct, ChEMBL, FDA adverse events)',
-        'Multi-user web deployment with authentication',
-        'Graph versioning and diff tracking between pipeline runs',
-    ]
-    for f in future:
-        doc.add_paragraph(f, style='List Bullet')
+    doc.add_paragraph('Top 10 relationship types by count:')
+    add_table(doc,
+              ['Relationship Type', 'Count', 'Source(s)'],
+              [
+                  ['bodyPartUnderexpressesGene', '5,334,316', 'Bgee'],
+                  ['variantInGene', '4,439,480', 'ClinVar'],
+                  ['hasVariant', '4,439,480', 'ClinVar'],
+                  ['geneAssociatesWithDisease', '3,706,670', '6 sources'],
+                  ['diseaseAssociatesWithDisease', '2,138,895', 'PubTator'],
+                  ['variantAssociatedWithDisease', '1,862,448', 'ClinVar'],
+                  ['associatedWithVariant', '1,862,448', 'ClinVar'],
+                  ['geneExpressedInBodyPart', '982,039', 'Jensen TISSUES'],
+                  ['geneInteractsWithGene', '234,533', 'STRING, Hetionet'],
+                  ['chemicalIncreasesExpression', '218,140', 'CTD'],
+              ])
 
     # Save
     output_path = Path('/Users/nawaza/Desktop/Cardio-KB/docs/CardioKB_System_Design.docx')
