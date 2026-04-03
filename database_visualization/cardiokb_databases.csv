@@ -1,0 +1,27 @@
+Source Database,Update Frequency,"Biomedical Entities (Node types)","Biomedical Relationships (Edge types)",Latest Version,Active,Access Approach,Integration Path,Sub-source Of,Download Link,ID,Label
+Bgee,Irregular,,"bodyPartOverexpressesGene, bodyPartUnderexpressesGene",V15.1.1 (2023-11-14),Yes,web-based downloads,Hetionet,,https://www.bgee.org/download/data-dumps,db_Bgee,Bgee
+BindingDB,Monthly,,chemicalBindsGene,2024-05,Yes,web-based downloads,Hetionet,,https://www.bindingdb.org/rwd/bind/chemsearch/marvin/Download.jsp,db_BindingDB,BindingDB
+CTD (Comparative Toxicogenomics),Monthly,,"chemicalIncreasesExpression, chemicalDecreasesExpression",2026-02,Yes,web-based downloads,Hetionet,,https://ctdbase.org/downloads/,db_CTD,CTD
+Disease Ontology,Monthly,Disease,,2024-03,Yes,web-based downloads,Hetionet,,https://github.com/DiseaseOntology/HumanDiseaseOntology/releases,db_DO,Disease Ontology
+DoRothEA (OmniPath),Irregular,TranscriptionFactor,transcriptionFactorInteractsWithGene,2018,Yes,web-based downloads,Direct,,https://omnipathdb.org/interactions?datasets=dorothea,db_DoRothEA,DoRothEA
+DrugBank,Quarterly,Drug,drugBindsGene,V5.1.15 (2026-03-05),Yes,web-based downloads,Direct,,https://go.drugbank.com/releases/latest,db_DrugBank,DrugBank
+DrugCentral,Semi-Annual,PharmacologicClass,"drugTreatsDisease, drugPalliatesDisease, pharmacologicClassIncludesCompound, compoundInPharmacologicClass",2023-11-01,Yes,web-based downloads,Hetionet,,https://drugcentral.org/download,db_DrugCentral,DrugCentral
+Gene Ontology,Monthly,"BiologicalProcess, MolecularFunction, CellularComponent","geneParticipatesInBiologicalProcess, geneHasMolecularFunction, geneAssociatedWithCellularComponent",2024-04-24,Yes,web-based downloads,Hetionet,,https://geneontology.org/docs/download-ontology/,db_GO,Gene Ontology
+LINCS L1000,Irregular,,"compoundUpregulatesGene, compoundDownregulatesGene, geneRegulatesGene",2020,Yes,web-based downloads,Hetionet,,https://clue.io/releases/data-dashboard,db_LINCS,LINCS L1000
+MEDLINE,Daily,,"diseasePresentsSymptom, diseaseLocalizesToAnatomy, diseaseResemblesDisease",N/A,Yes,Public FTP,Hetionet,,https://ftp.ncbi.nlm.nih.gov/pubmed/baseline/,db_MEDLINE,MEDLINE
+NCBI Gene (Entrez Gene),Daily,Gene,,N/A,Yes,public FTP,Direct,,https://ftp.ncbi.nlm.nih.gov/gene/DATA/,db_NCBIGene,NCBI Gene
+NCBI MeSH,Annual,Symptom,,2026,Yes,web-based downloads,Hetionet,,https://www.nlm.nih.gov/databases/download/mesh.html,db_MeSH,NCBI MeSH
+PubTator Central,Irregular,,diseaseAssociatesWithDisease,N/A,Yes,web-based downloads,Hetionet,,https://ftp.ncbi.nlm.nih.gov/pub/lu/PubTatorCentral/,db_PubTator,PubTator Central
+Reactome,Quarterly,Pathway,"geneInPathway, pathwayContainsGene",2026,Yes,web-based downloads,Hetionet,,https://reactome.org/download-data,db_Reactome,Reactome
+SIDER,Irregular,SideEffect,compoundCausesSideEffect,V4.1 (2015-10-21),Yes,web-based downloads,Hetionet,,http://sideeffects.embl.de/download/,db_SIDER,SIDER
+Jensen TISSUES,Irregular,,geneExpressedInBodyPart,N/A,Yes,web-based downloads,Hetionet,,https://tissues.jensenlab.org/Downloads,db_TISSUES,Jensen TISSUES
+Uberon,Annual,BodyPart,,V2024-03-22,Yes,web-based downloads,Hetionet,,https://github.com/obophenotype/uberon/releases,db_Uberon,Uberon
+STRING,Monthly,,geneInteractsWithGene,V12.0,Yes,web-based downloads,Hetionet,,https://string-db.org/cgi/download,db_STRING,STRING
+OpenTargets,Quarterly,,geneAssociatesWithDisease,2024-09,Yes,web-based downloads,Hetionet,,https://platform.opentargets.org/downloads,db_OpenTargets,OpenTargets
+HPO,Monthly,Phenotype,geneAssociatesWithPhenotype,2024-04,Yes,web-based downloads,Hetionet,,https://hpo.jax.org/data/annotations,db_HPO,HPO
+ClinicalTrials.gov,Daily,ClinicalTrial,"STUDIES_CONDITION, TESTS_INTERVENTION",API v2,Yes,Restful API,Direct,,https://clinicaltrials.gov/data-api/api,db_ClinTrials,ClinicalTrials.gov
+ClinPGx (PharmGKB),Monthly,DrugLabel,"VARIANT_IN, AFFECTS_RESPONSE_TO, drugLabelAnnotatesGene, drugLabelDescribesDrug",2026-03,Yes,Restful API,Direct,,https://www.pharmgkb.org/downloads,db_ClinPGx,ClinPGx
+ClinVar,Monthly,Variant,"hasVariant, variantInGene, associatedWithVariant, variantAssociatedWithDisease",2026-03,Yes,public FTP,Agent,,https://ftp.ncbi.nlm.nih.gov/pub/clinvar/,db_ClinVar,ClinVar
+HGNC Gene Families,Monthly,GeneFamily,"geneInFamily, familyContainsGene",N/A,Yes,web-based downloads,Agent,,https://www.genenames.org/download/,db_HGNCFam,HGNC Families
+DrugAge,Irregular,AgeingProperty,associatedWithAging,V4,Yes,web-based downloads,Agent,,https://genomics.senescence.info/drugs/,db_DrugAge,DrugAge
+AnAge,Irregular,Species,,Build 15,Yes,web-based downloads,Agent,,https://genomics.senescence.info/species/,db_AnAge,AnAge

@@ -2,74 +2,77 @@
 # CardioKB Data Sources
 
 ## Summary
-- **36 databases** — 36 parsers, all working
-- **373,869 nodes** | **26,581,028 relationships** | **18 node types** | **35 relationship types** | **25 sources**
-- *Node/relationship counts are from last pipeline run; new agent-generated parsers may not yet be reflected.*
+- **26 databases** — 26 parsers, all working, deduplicated (one authoritative source per node/edge type)
+- **4,921,062 nodes** | **26,344,399 relationships** | **19 node types** | **41 relationship types** | **21 source labels**
+- **3 stale sources** flagged for replacement: SIDER (2015), LINCS L1000 (2020), MEDLINE (pinned GitHub commit)
 
-## Phase 1: Core Parsers
+## Direct Parsers (5)
 
-| # | Database | URL | Access Type | Parser Status | Notes |
-|---|----------|-----|-------------|---------------|-------|
-| 1 | ClinicalTrials.gov | AACT bulk download | Public | Working | 576,029 trials, all diseases |
-| 2 | ClinPGx (PharmGKB successor) | https://api.clinpgx.org/v1/data/ | Public API | Working | 454 annotations, 1,060 variants, 294 AFFECTS_RESPONSE_TO edges |
-| 3 | NCBI Gene | https://ftp.ncbi.nlm.nih.gov/gene/DATA/GENE_INFO/ | Public FTP | Working | 193,687 genes |
-| 4 | DoRothEA (OmniPath) | https://omnipathdb.org/interactions?datasets=dorothea | Public API | Working | 15,092 TF-gene interactions |
-| 5 | OMIM | https://api.omim.org/api | API key required | Working | 1,556 CVD diseases, 1,632 gene-disease edges |
-| 6 | DisGeNET | https://api.disgenet.com/api/v1 | API key required | Working | 341 DO-matched + 559 new diseases, 5,010 gene-disease edges |
-| 7 | DrugBank | https://go.drugbank.com/releases/ | XML file or login | Working | 19,842 drugs, 19,047 drug-target edges |
-| 8 | AOP-DB | https://gaftp.epa.gov/EPADataCommons/ORD/AOP-DB/ | SQL dump or MySQL | Working | 173,500 chemicals, 4,646 pathways, 187,247 gene-pathway edges |
+| # | Database | Access Type | Parser Status | Notes |
+|---|----------|-------------|---------------|-------|
+| 1 | ClinicalTrials.gov | Public API v2 | Working | 82,070 trials, 674 STUDIES_CONDITION + 18,145 TESTS_INTERVENTION edges |
+| 2 | ClinPGx (PharmGKB successor) | Public API | Working | 1,103 VARIANT_IN, 506 drugLabelAnnotatesGene, 360 drugLabelDescribesDrug, 304 AFFECTS_RESPONSE_TO edges |
+| 3 | NCBI Gene | Public FTP | Working | 194,726 genes (nodes only) |
+| 4 | DoRothEA (OmniPath) | Public API | Working | 15,092 TF-gene interactions with morScore + confidence |
+| 5 | DrugBank | XML file | Working | 41,566 drugs, 19,085 drugBindsGene edges |
 
-## Phase 2: Hetionet Component Parsers
+## Hetionet-Derived Component Parsers (17)
 
-| # | Database | URL | Access Type | Parser Status | Notes |
-|---|----------|-----|-------------|---------------|-------|
-| 9 | Disease Ontology (DOID) | https://raw.githubusercontent.com/DiseaseOntology/HumanDiseaseOntology/main/src/ontology/doid.obo | Public | Working | 12,012 diseases |
-| 10 | Gene Ontology (GO) | http://current.geneontology.org/ontology/go-basic.obo | Public | Working | 38,739 GO terms, 376,442 annotations |
-| 11 | Uberon (anatomy) | http://purl.obolibrary.org/obo/uberon.obo | Public | Working | 14,675 anatomy nodes |
-| 12 | MeSH (symptoms) | https://nlmpubs.nlm.nih.gov/projects/mesh/MESH_FILES/xmlmesh/ | Public | Working | 966 symptom nodes |
-| 13 | SIDER (side effects) | https://raw.githubusercontent.com/dhimmel/SIDER4/.../data/ | Public | Working | 5,734 side effects, 153,663 edges |
-| 14 | LINCS L1000 (gene expression) | https://raw.githubusercontent.com/dhimmel/lincs/.../data/ | Public | Working | 336,999 edges |
-| 15 | MEDLINE (literature cooccurrence) | https://raw.githubusercontent.com/dhimmel/medline/master/data/ | Public | Working | 7,213 cooccurrence edges |
-| 16 | DrugCentral (drug-disease) | https://unmtid-dbs.net/download/ | Public | Working | 14,572 relationships |
-| 17 | GWAS Catalog (associations) | https://www.ebi.ac.uk/gwas/api/search/downloads/full | Public | Working | 90,578 gene-disease associations (3-strategy DOID remap) |
-| 18 | BindingDB (drug-target) | https://www.bindingdb.org/bind/downloads/ | Public | Working | 23,954 drug-gene bindings via UniProt→Entrez mapping |
-| 19 | PubTator Central (literature mining) | https://ftp.ncbi.nlm.nih.gov/pub/lu/PubTatorCentral/ | Public FTP | Working | 69M+ literature edges |
-| 20 | CTD (chemical-gene) | http://ctdbase.org/reports/CTD_chem_gene_ixns.tsv.gz | Public | Working | 677,015 expression edges |
-| 21 | Bgee (gene expression) | https://www.bgee.org/ftp/current/download/calls/expr_calls/ | Public FTP | Working | 6,609,112 expression edges |
-| 22 | Hetionet (precomputed edges) | https://github.com/hetio/hetionet/raw/main/hetnet/tsv/ | Public | Working | 613,470 precomputed edges |
-| 23 | Jensen Lab DISEASES | https://diseases.jensenlab.org/ | Public | Working | Gene-disease associations |
-| 24 | Jensen Lab TISSUES | https://tissues.jensenlab.org/ | Public | Working | 988,006 gene-tissue edges, 262 BTO tissue nodes |
-| 25 | HPO (Human Phenotype Ontology) | https://hpo.jax.org/ | Public | Working | 19,389 phenotypes, 270,272 gene-phenotype edges |
-| 26 | Reactome | https://reactome.org/ | Public | Working | 2,806 pathways, 147,005 geneInPathway edges |
-| 27 | WikiPathways | https://www.wikipathways.org/ | Public | Working | 982 pathways, 40,039 geneInPathway edges |
-| 28 | STRING | https://string-db.org/ | Public | Working | 228,193 geneInteractsWithGene edges (confidence > 700) |
-| 29 | OpenTargets | https://platform.opentargets.org/ | Public | Working | 2,345,386 geneAssociatesWithDisease edges (EFO→DOID mapping) |
+| # | Database | Access Type | Parser Status | Notes |
+|---|----------|-------------|---------------|-------|
+| 6 | Disease Ontology (DOID) | Public | Working | 19,450 diseases (nodes only) |
+| 7 | Gene Ontology (GO) | Public | Working | 135,351 BP + 93,564 MF + 93,792 CC edges |
+| 8 | Uberon (anatomy) | Public | Working | 14,937 anatomy nodes (nodes only) |
+| 9 | NCBI MeSH (symptoms) | Public | Working | 966 symptom nodes (nodes only) |
+| 10 | SIDER (side effects) | Public | Working | 5,734 side effects, 148,518 compoundCausesSideEffect edges. **STALE: pinned to 2015 GitHub commit. Replacement: DrugBank adverse reactions extension** |
+| 11 | LINCS L1000 (gene expression) | Public | Working | 6,262 geneRegulates + 5,765 downreg + 4,686 upreg edges with zScore. **STALE: pinned to 2020 GitHub commit. Replacement: clue.io REST API** |
+| 12 | MEDLINE (literature cooccurrence) | Public | Working | 615 anatomy + 544 symptom + 109 disease cooccurrence edges. **STALE: pinned GitHub commit. Replacement: PubTator Central cooccurrence** |
+| 13 | DrugCentral (drug-disease) | Public | Working | 16,403 pharmacologic class + 1,326 treats + 292 palliates edges |
+| 14 | BindingDB (drug-target) | Public | Working | 4,205 chemicalBindsGene edges |
+| 15 | PubTator Central (literature mining) | Public FTP | Working | 2,138,895 diseaseAssociatesWithDisease edges (gene-disease edges removed during dedup) |
+| 16 | CTD (chemical-gene) | Public | Working | 218,140 increases + 213,581 decreases expression edges |
+| 17 | Bgee (gene expression) | Public FTP | Working | 5,334,316 underexpresses + 4,466 overexpresses edges with expressionScore |
+| 18 | Jensen TISSUES (gene-tissue) | Public | Working | 982,039 geneExpressedInBodyPart edges |
+| 19 | HPO (Human Phenotype Ontology) | Public | Working | 19,389 phenotypes, 30,488 gene-phenotype edges |
+| 20 | Reactome | Public | Working | 16,317 geneInPathway + 16,317 pathwayContainsGene edges |
+| 21 | STRING | Public | Working | 229,433 geneInteractsWithGene edges (confidence > 700) |
+| 22 | OpenTargets | Public | Working | 2,364,224 geneAssociatesWithDisease edges via EFO-to-DOID mapping |
 
-## Phase 3: Agent-Generated Parsers
+## Agent-Generated Parsers (4)
 
-| # | Database | URL | Access Type | Parser Status | Notes |
-|---|----------|-----|-------------|---------------|-------|
-| 30 | HGNC | https://www.genenames.org/ | Public | Working | 44,361 Gene nodes enriched (xrefHGNC, geneName, locusGroup, locusType) |
-| 31 | HGNC Gene Families | https://www.genenames.org/ | Public | Working | 1,934 GeneFamily nodes, 33,967 geneInFamily edges |
-| 32 | ClinVar | https://ftp.ncbi.nlm.nih.gov/pub/clinvar/ | Public FTP | Working | 4,486,982 Variant nodes, 5.7M disease-variant + 4.5M gene-variant edges |
-| 33 | DrugAge/CellAge | https://genomics.senescence.info/cells/cellAge.zip | Public | Working | Gene-aging associations, AgeingProperty nodes |
-| 34 | CellAge | https://genomics.senescence.info/cells/cellAge.zip | Public | Working | Senescence gene nodes |
-| 35 | AnAge | https://genomics.senescence.info/species/dataset.zip | Public | Working | Species longevity nodes |
-| 36 | GenAge | https://genomics.senescence.info/genes/human_genes.zip | Public | Working | Aging-associated gene nodes |
+| # | Database | Access Type | Parser Status | Notes |
+|---|----------|-------------|---------------|-------|
+| 23 | HGNC Gene Families | Public | Working | 1,934 GeneFamily nodes, 34,006 geneInFamily + familyContainsGene edges |
+| 24 | ClinVar | Public FTP | Working | 4,488,042 Variant nodes, 4.4M hasVariant + 4.4M variantInGene + 1.9M associatedWithVariant + 1.9M variantAssociatedWithDisease edges |
+| 25 | DrugAge | Public | Working | 866 associatedWithAging edges, 3 AgeingProperty nodes |
+| 26 | AnAge | Public | Working | 4,645 Species longevity nodes (nodes only) |
 
-## Credential-Gated Sources
+## Sources Removed During Deduplication (10)
 
-| Parser | Required Env Vars | Status |
-|--------|-------------------|--------|
-| OMIMParser | `OMIM_API_KEY` | Loaded |
-| DisGeNETParser | `DISGENET_API_KEY` | Loaded |
-| DrugBankParser | `DRUGBANK_USERNAME`, `DRUGBANK_PASSWORD` (or XML file) | Loaded via XML |
-| AOPDBParser | `MYSQL_USERNAME`, `MYSQL_PASSWORD` (or SQL dump) | Loaded via SQL dump |
+| Removed Source | Was Providing | Replaced By | Rationale |
+|---------------|---------------|-------------|-----------|
+| DisGeNET | 20K gene-disease edges | OpenTargets | OpenTargets has 2.4M edges with evidence scores |
+| GWAS Catalog | 45K gene-disease edges | OpenTargets | OpenTargets already ingests GWAS Catalog |
+| Jensen DISEASES | 20K gene-disease edges | OpenTargets | Covered by OpenTargets text-mining with better scoring |
+| OMIM | 7.3K gene-disease edges | OpenTargets | OpenTargets includes genetic evidence; OMIM gene data retained in CVD gene ontology |
+| WikiPathways | 8.6K pathway edges | Reactome | Reactome is gold-standard curated; many WikiPathways imported from Reactome |
+| AOP-DB | 18.5K pathway edges | Reactome | AOP-DB focuses on toxicology, less relevant for CVD |
+| HGNC (base) | Gene node enrichment | NCBI Gene | NCBI Gene is primary gene reference with daily updates |
+| CellAge | Senescence gene nodes | NCBI Gene | Node-only source, genes already in NCBI Gene |
+| GenAge | Aging gene nodes | NCBI Gene | Node-only source, genes already in NCBI Gene |
+| Hetionet (precomputed) | 138K side effects + 5K PPI + 127 covariance | SIDER + STRING | Side effects covered by SIDER, PPI by STRING; covariance dropped (127 edges) |
 
-## Relationship Source Labels (25)
+## Sources Modified During Deduplication (2)
+
+| Source | Change | Reason |
+|--------|--------|--------|
+| PubTator Central | Removed geneAssociatesWithDisease (1.2M edges). Kept diseaseAssociatesWithDisease (2.1M edges, unique). | OpenTargets covers gene-disease; PubTator uniquely provides disease-disease cooccurrence |
+| ClinPGx | Removed Variant from node contribution. Kept DrugLabel nodes and all 4 unique edge types. | ClinVar is primary Variant source (4.5M vs 1.1K) |
+
+## Relationship Source Labels (21)
 
 All relationships carry a `source` property identifying the originating database:
 
-`AOP-DB`, `Bgee`, `BindingDB`, `CTD`, `ClinPGx`, `ClinicalTrials.gov`, `DisGeNET`, `DoRothEA`, `DrugBank`, `DrugCentral`, `GWAS Catalog`, `Gene Ontology`, `HGNC`, `HPO`, `Hetionet`, `Jensen DISEASES`, `Jensen TISSUES`, `LINCS L1000`, `MEDLINE`, `OMIM`, `OpenTargets`, `PubTator`, `Reactome`, `SIDER`, `STRING`, `WikiPathways`
+`Bgee`, `BindingDB`, `CTD`, `ClinPGx`, `ClinVar`, `ClinicalTrials.gov`, `DoRothEA`, `DrugAge`, `DrugBank`, `DrugCentral`, `Gene Ontology`, `HGNC`, `HPO`, `Jensen TISSUES`, `LINCS L1000`, `MEDLINE`, `OpenTargets`, `PubTator`, `Reactome`, `SIDER`, `STRING`
 
-Note: Disease Ontology contributes nodes only (no relationship source label). HGNC enriches Gene nodes (no relationship source); HGNC Families uses `HGNC` as source label.
+Node-only sources (5): Disease Ontology, Uberon, NCBI MeSH, NCBI Gene, AnAge. HGNC Families uses `HGNC` as its source label.

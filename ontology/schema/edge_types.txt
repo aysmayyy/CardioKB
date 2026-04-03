@@ -1,0 +1,86 @@
+# CardioKB Edge Types
+# 41 unique relationship types in the CVD knowledge graph (after redundancy removal)
+# Format: EdgeType | Source -> Target | Source Database | Edge Count
+
+# Gene-Disease associations
+geneAssociatesWithDisease | Gene -> Disease | OpenTargets | 2,364,224
+
+# Gene-Gene interactions
+geneInteractsWithGene | Gene -> Gene | STRING | 229,433
+geneRegulatesGene | Gene -> Gene | LINCS L1000 | 6,262
+# geneCovariesWithGene | Gene -> Gene | Hetionet | 127 (REMOVED - Hetionet precomputed dump dropped)
+
+# Gene ontology associations
+geneParticipatesInBiologicalProcess | Gene -> BiologicalProcess | Gene Ontology | 135,351
+geneHasMolecularFunction | Gene -> MolecularFunction | Gene Ontology | 93,564
+geneAssociatedWithCellularComponent | Gene -> CellularComponent | Gene Ontology | 93,792
+
+# Gene-Pathway membership
+geneInPathway | Gene -> Pathway | Reactome | 16,317
+pathwayContainsGene | Pathway -> Gene | Reactome | 16,317
+
+# Gene-Phenotype
+geneAssociatesWithPhenotype | Gene -> Phenotype | HPO | 30,488
+
+# Gene-BodyPart expression
+geneExpressedInBodyPart | Gene -> BodyPart | Jensen TISSUES | 982,039
+bodyPartOverexpressesGene | BodyPart -> Gene | Bgee | 4,466
+bodyPartUnderexpressesGene | BodyPart -> Gene | Bgee | 5,334,316
+
+# Gene-Family
+geneInFamily | Gene -> GeneFamily | HGNC Families | 34,006
+familyContainsGene | GeneFamily -> Gene | HGNC Families | 34,006
+
+# Gene-Variant
+hasVariant | Gene -> Variant | ClinVar | 4,439,480
+variantInGene | Variant -> Gene | ClinVar | 4,439,480
+
+# Variant-Disease
+associatedWithVariant | Disease -> Variant | ClinVar | 1,862,448
+variantAssociatedWithDisease | Variant -> Disease | ClinVar | 1,862,448
+
+# TF-Gene regulation
+transcriptionFactorInteractsWithGene | TranscriptionFactor -> Gene | DoRothEA | 15,092
+
+# Drug-Gene binding
+drugBindsGene | Drug -> Gene | DrugBank | 19,085
+chemicalBindsGene | Drug -> Gene | BindingDB | 4,205
+
+# Drug-Gene expression
+chemicalIncreasesExpression | Drug -> Gene | CTD | 218,140
+chemicalDecreasesExpression | Drug -> Gene | CTD | 213,581
+compoundUpregulatesGene | Drug -> Gene | LINCS L1000 | 4,686
+compoundDownregulatesGene | Drug -> Gene | LINCS L1000 | 5,765
+
+# Drug-Disease
+drugTreatsDisease | Drug -> Disease | DrugCentral | 1,326
+drugPalliatesDisease | Drug -> Disease | DrugCentral | 292
+
+# Drug-SideEffect
+# drugCausesSideEffect | Drug -> SideEffect | Hetionet | 138,540 (REMOVED - redundant with SIDER compoundCausesSideEffect)
+compoundCausesSideEffect | Drug -> SideEffect | SIDER | 148,518
+
+# Drug-PharmacologicClass
+pharmacologicClassIncludesCompound | PharmacologicClass -> Drug | DrugCentral | 16,403
+compoundInPharmacologicClass | Drug -> PharmacologicClass | DrugCentral | 16,403
+
+# Disease-Disease
+diseaseAssociatesWithDisease | Disease -> Disease | PubTator | 2,138,895
+diseaseResemblesDisease | Disease -> Disease | MEDLINE | 109
+
+# Disease-Symptom/Anatomy
+diseasePresentsSymptom | Disease -> Symptom | MEDLINE | 544
+diseaseLocalizesToAnatomy | Disease -> BodyPart | MEDLINE | 615
+
+# Clinical Trials
+STUDIES_CONDITION | ClinicalTrial -> Disease | ClinicalTrials.gov | 674
+TESTS_INTERVENTION | ClinicalTrial -> Drug | ClinicalTrials.gov | 18,145
+
+# Pharmacogenomics (ClinPGx)
+VARIANT_IN | Variant -> Gene | ClinPGx | 1,103
+AFFECTS_RESPONSE_TO | Gene -> Drug | ClinPGx | 304
+drugLabelAnnotatesGene | DrugLabel -> Gene | ClinPGx | 506
+drugLabelDescribesDrug | DrugLabel -> Drug | ClinPGx | 360
+
+# Aging
+associatedWithAging | Gene -> AgeingProperty | DrugAge | 866

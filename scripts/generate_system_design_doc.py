@@ -80,7 +80,7 @@ def build_doc():
     toc_items = [
         '1. What This Document Is For',
         '2. What Is Built and Working',
-        '   2.1. Data Pipeline (36 Sources)',
+        '   2.1. Data Pipeline (26 Sources)',
         '   2.2. AI Agents',
         '   2.3. Web Interface',
         '   2.4. Post-Processing & Scoring',
@@ -121,12 +121,12 @@ def build_doc():
         'the work. Use it to decide who owns what and to identify dependencies between pieces.'
     )
     doc.add_paragraph(
-        'CardioKB is a disease-agnostic biomedical knowledge graph currently scoped to cardiovascular '
-        'disease through a modular filter. It integrates 36 data sources into Neo4j with ~4.9M nodes '
-        'and ~26.3M relationships. Two Claude-powered AI agents handle on-demand data ingestion. '
-        'A link prediction notebook demonstrates that the graph is ML-ready. The system is adapted '
-        'from AlzKB (Alzheimer\'s Knowledge Base) but replaces the RDF pipeline with direct Cypher '
-        'loading, adds 28+ sources, and introduces AI-assisted parser generation.'
+        'CardioKB is a CVD-focused biomedical knowledge graph that integrates 26 deduplicated data '
+        'sources into Neo4j with ~4.9M nodes and ~26.3M relationships. Each node type and edge type '
+        'is served by exactly one authoritative database. Two Claude-powered AI agents handle '
+        'on-demand data ingestion. A link prediction notebook demonstrates that the graph is ML-ready. '
+        'The system is adapted from AlzKB (Alzheimer\'s Knowledge Base) but replaces the RDF pipeline '
+        'with direct Cypher loading and introduces AI-assisted parser generation.'
     )
 
     doc.add_page_break()
@@ -141,16 +141,17 @@ def build_doc():
     )
 
     # 2.1 Data Pipeline
-    add_heading(doc, '2.1. Data Pipeline (36 Sources)', level=2)
+    add_heading(doc, '2.1. Data Pipeline (26 Sources)', level=2)
     doc.add_paragraph(
         'The full batch pipeline (python src/main.py) downloads, parses, exports TSVs, and loads '
-        'into Neo4j in a single run. All 36 parsers inherit from BaseParser and produce '
+        'into Neo4j in a single run. All 26 parsers inherit from BaseParser and produce '
         'Dict[str, DataFrame]. 85 ontology configs in src/ontology_configs.py declaratively '
         'map those DataFrames to Neo4j nodes and relationships. The loader uses MERGE for '
-        'idempotent loading. Every relationship carries a source property for provenance.'
+        'idempotent loading. Every relationship carries a source property for provenance. '
+        'Each node type and edge type is served by exactly one authoritative database (no redundancy).'
     )
 
-    doc.add_paragraph('Phase 1 \u2014 Core Parsers (8):')
+    doc.add_paragraph('Direct Parsers (5):')
     add_table(doc,
               ['Source', 'What It Provides', 'Notable Details'],
               [
@@ -161,15 +162,11 @@ def build_doc():
                   ['NCBI Gene', '194K gene nodes', 'Public FTP, gene metadata only (no edges)'],
                   ['DoRothEA (OmniPath)', '15K TF-gene interactions',
                    'morScore + confidence (A\u2013D) properties on edges'],
-                  ['OMIM', '7.3K gene-disease edges', 'Requires OMIM_API_KEY'],
-                  ['DisGeNET', '20K gene-disease edges', 'Requires DISGENET_API_KEY, CVD-filtered'],
                   ['DrugBank', '41K drugs, 19K drug-target edges',
                    'Streaming XML parser for 1.8GB file'],
-                  ['AOP-DB', '18.5K gene-pathway edges (bidirectional)',
-                   'SQL dump or MySQL, adverse outcome pathways'],
               ])
 
-    doc.add_paragraph('Phase 2 \u2014 Hetionet Component Parsers (21):')
+    doc.add_paragraph('Hetionet-Derived Component Parsers (17):')
     add_table(doc,
               ['Source', 'Key Contribution', 'Edge Count'],
               [
@@ -177,30 +174,26 @@ def build_doc():
                   ['Gene Ontology', 'BP + MF + CC annotations', '322K edges'],
                   ['Uberon', '14.9K anatomy nodes', 'Nodes only'],
                   ['MeSH', '966 symptom nodes', 'Nodes only'],
-                  ['SIDER', 'Drug side effects', '148K edges'],
-                  ['LINCS L1000', 'Compound regulation + gene regulation', '16.7K edges (w/ zScore)'],
-                  ['MEDLINE', 'Literature cooccurrence (disease-symptom, disease-anatomy)', '1.3K edges'],
+                  ['SIDER', 'Drug side effects (stale: replacement planned)', '148K edges'],
+                  ['LINCS L1000', 'Compound + gene regulation (stale: replacement planned)', '16.7K edges (w/ zScore)'],
+                  ['MEDLINE', 'Literature cooccurrence (stale: replacement planned)', '1.3K edges'],
                   ['DrugCentral', 'Drug-disease treatment + palliation + pharmacologic classes', '18K edges'],
-                  ['GWAS Catalog', 'Genome-wide association gene-disease links', '45.5K edges'],
                   ['BindingDB', 'Chemical-gene binding', '4.2K edges'],
-                  ['PubTator Central', 'Literature-mined gene-disease + disease-disease', '3.4M edges'],
+                  ['PubTator Central', 'Literature-mined disease-disease cooccurrence', '2.1M edges'],
                   ['CTD', 'Chemical increases/decreases gene expression', '431K edges'],
                   ['Bgee', 'Tissue over/underexpression', '5.3M edges (w/ expressionScore)'],
-                  ['Hetionet (precomputed)', 'Side effects, gene interactions, covariance', '143K edges'],
-                  ['Jensen DISEASES', 'Text-mined gene-disease', '20.5K edges'],
                   ['Jensen TISSUES', 'Text-mined gene-tissue expression', '982K edges'],
                   ['HPO', '19K phenotypes, gene-phenotype associations', '30.5K edges'],
                   ['Reactome', 'Curated pathway membership', '32.6K edges (bidirectional)'],
-                  ['WikiPathways', 'Community-curated pathway membership', '17.1K edges (bidirectional)'],
                   ['STRING', 'Protein-protein interactions (confidence > 700)', '229K edges'],
                   ['OpenTargets', 'Evidence-scored gene-disease associations', '2.4M edges'],
               ])
 
-    doc.add_paragraph('Phase 3 \u2014 Agent-Generated Parsers (7):')
+    doc.add_paragraph('Agent-Generated Parsers (4):')
     doc.add_paragraph(
         'These were generated entirely by the DatabaseAgent from just a name + URL: '
-        'HGNC (gene enrichment), HGNC Families (34K edges), ClinVar (4.5M variants, 12.6M edges), '
-        'DrugAge (866 aging edges), CellAge (senescence genes), AnAge (4.6K species), GenAge (aging genes).'
+        'HGNC Families (34K edges), ClinVar (4.5M variants, 12.6M edges), '
+        'DrugAge (866 aging edges), AnAge (4.6K species).'
     )
 
     doc.add_paragraph('ID Mapping & Cross-Reference Resolution:')
@@ -245,7 +238,7 @@ def build_doc():
     add_bullet(doc, 'Neo4j Browser-style multi-panel Cypher interface with query templates, '
                'read-only enforcement, table + graph result views',
                'Query tab')
-    add_bullet(doc, 'AI-driven disease enrichment (DisGeNET + ClinicalTrials.gov) with SSE progress',
+    add_bullet(doc, 'AI-driven disease enrichment (ClinicalTrials.gov) with SSE progress',
                'Build Knowledge Graph (sidebar)')
     add_bullet(doc, 'Variable-hop (1\u20133) subgraph extraction with stats and JSON/CSV export',
                'Extract Disease Subgraph (sidebar)')
@@ -286,7 +279,7 @@ def build_doc():
     add_bullet(doc, 'Disease scoping exists for 5 disease areas (CVD, Alzheimer\'s, cancer, asthma, '
                'diabetes) but only CVD has been used in production pipeline runs.')
     add_bullet(doc, 'The DiseaseQueryAgent enriches for any disease interactively, but only sources '
-               'DisGeNET + ClinicalTrials.gov. It cannot trigger parser re-runs for the other 34 sources.')
+               'ClinicalTrials.gov. It cannot trigger parser re-runs for the other 25 sources.')
 
     add_heading(doc, 'Designed but not started', level=2)
     add_bullet(doc, 'Graph embeddings (node2vec, TransE) for downstream ML \u2014 no code exists yet. '
@@ -320,9 +313,9 @@ def build_doc():
     add_bullet(doc, 'The graph is stored in Neo4j, not RDF/SPARQL. The AlzKB predecessor used '
                'RDF but was migrated to Cypher for performance and simpler tooling. No SPARQL endpoint '
                'is planned.')
-    add_bullet(doc, 'The system builds a general-purpose biomedical graph, not a CVD-specific one. '
+    add_bullet(doc, 'The system is CVD-focused but contains disease-agnostic base data. '
                'Disease filtering is done at query time (specificity scores, subgraph extraction) '
-               'and by 3 disease-aware parsers. The remaining 33 parsers load everything.')
+               'and by the ClinicalTrials parser. The remaining 25 parsers load everything.')
     add_bullet(doc, 'Real-time streaming ingestion. This is a batch system; the pipeline runs to '
                'completion and the graph is queried after. The DiseaseQueryAgent provides near-real-time '
                'enrichment for individual diseases, but it\'s additive, not streaming.')
@@ -387,7 +380,7 @@ def build_doc():
 
     add_bullet(doc, 'DatabaseAgent improvements (better column detection, handling XML/JSON sources, '
                'multi-file datasets)')
-    add_bullet(doc, 'DiseaseQueryAgent expansion (new data sources beyond DisGeNET + ClinicalTrials.gov)')
+    add_bullet(doc, 'DiseaseQueryAgent expansion (new data sources beyond ClinicalTrials.gov)')
     add_bullet(doc, 'Pipeline health monitoring and automated recovery')
     add_bullet(doc, 'Prompt engineering for Claude calls (standardization, code generation)')
     add_bullet(doc, 'Caching strategy (DiseaseCache nodes, file-level caching)')
@@ -482,38 +475,28 @@ def build_doc():
     # =================================================================
     add_heading(doc, '6. Schema Decisions & Edge Merge Recommendations', level=1)
     doc.add_paragraph(
-        'The graph has 20 node types and 43 relationship types. Some edge types overlap semantically '
+        'The graph has 19 node types and 41 relationship types. Some edge types overlap semantically '
         'and should be evaluated for merging. Others look similar but carry different semantics that '
         'matter for ML. This section flags each case with a recommendation.'
     )
 
     # 6.1 Current Schema Overview
     add_heading(doc, '6.1. Current Schema Overview', level=2)
-    doc.add_paragraph('20 node types: Gene (194K), Variant (4.5M), Disease (19K), Drug (41K), '
+    doc.add_paragraph('19 node types: Gene (194K), Variant (4.5M), Disease (19K), Drug (41K), '
                       'ClinicalTrial (82K), BiologicalProcess (24K), Phenotype (19K), BodyPart (14K), '
                       'MolecularFunction (10K), Pathway (6.5K), SideEffect (5.7K), Species (4.6K), '
                       'CellularComponent (4K), GeneFamily (1.9K), PharmacologicClass (1.6K), '
-                      'Symptom (966), DrugLabel (378), TranscriptionFactor (367), AgeingProperty (3), '
-                      '_Metadata (1).')
+                      'Symptom (966), DrugLabel (378), TranscriptionFactor (367), AgeingProperty (3).')
 
-    doc.add_paragraph('43 relationship types across 28 source labels. The top 5 by edge count are: '
+    doc.add_paragraph('41 relationship types across 21 source labels. The top 5 by edge count are: '
                       'bodyPartUnderexpressesGene (5.3M, Bgee), variantInGene/hasVariant (4.4M each, ClinVar), '
-                      'geneAssociatesWithDisease (3.7M, 6 sources), diseaseAssociatesWithDisease (2.1M, PubTator).')
+                      'geneAssociatesWithDisease (2.4M, OpenTargets), diseaseAssociatesWithDisease (2.1M, PubTator).')
 
     # 6.2 Edges to Merge
     add_heading(doc, '6.2. Edges That Should Be Merged', level=2)
 
-    # drugCausesSideEffect vs compoundCausesSideEffect
-    p = doc.add_paragraph()
-    p.add_run('MERGE: drugCausesSideEffect + compoundCausesSideEffect \u2192 drugCausesSideEffect').bold = True
-    doc.add_paragraph(
-        'drugCausesSideEffect (138K edges, Hetionet) and compoundCausesSideEffect (148K edges, SIDER) '
-        'describe the exact same relationship: a drug/compound causes a side effect. The only reason '
-        'they have different names is that they were loaded from different sources at different times. '
-        'Recommendation: Rename compoundCausesSideEffect to drugCausesSideEffect in the SIDER config. '
-        'The r.source property already distinguishes Hetionet vs. SIDER provenance. This is the '
-        'clearest merge candidate in the schema.'
-    )
+    # Note: drugCausesSideEffect (Hetionet) was removed during deduplication.
+    # compoundCausesSideEffect (SIDER, 148K edges) is now the sole side-effect edge type.
 
     # chemicalBindsGene vs drugBindsGene
     p = doc.add_paragraph()
@@ -554,23 +537,20 @@ def build_doc():
     )
 
     p = doc.add_paragraph()
-    p.add_run('KEEP SEPARATE: geneInteractsWithGene vs. geneRegulatesGene vs. geneCovariesWithGene').bold = True
+    p.add_run('KEEP SEPARATE: geneInteractsWithGene vs. geneRegulatesGene').bold = True
     doc.add_paragraph(
-        'geneInteractsWithGene (234K, STRING + Hetionet) represents physical protein-protein interactions. '
+        'geneInteractsWithGene (229K, STRING) represents physical protein-protein interactions. '
         'geneRegulatesGene (6.3K, LINCS L1000) represents directional regulatory relationships. '
-        'geneCovariesWithGene (127, Hetionet) represents coexpression patterns. These are biologically '
-        'distinct: interaction \u2260 regulation \u2260 coexpression. Keep all three.'
+        'These are biologically distinct: interaction \u2260 regulation. Keep both.'
     )
 
     p = doc.add_paragraph()
-    p.add_run('KEEP SEPARATE: geneAssociatesWithDisease (6 sources)').bold = True
+    p.add_run('NOTE: geneAssociatesWithDisease (now single source)').bold = True
     doc.add_paragraph(
-        'This single relationship type aggregates 3.7M edges from PubTator (literature-mined), '
-        'OpenTargets (evidence-scored), GWAS Catalog (statistical association), DisGeNET (curated + '
-        'text-mined), OMIM (Mendelian), and Jensen DISEASES (text-mined). These should NOT be split '
-        'into separate relationship types \u2014 they represent the same semantic relationship from '
-        'different evidence sources. The r.source property and per-source scores/weights provide '
-        'evidence stratification. For ML, use r.source as a feature or filter by evidence type.'
+        'After deduplication, this relationship type is served by OpenTargets only (2.4M edges). '
+        'Previously aggregated from 6 sources (PubTator, OpenTargets, GWAS Catalog, DisGeNET, OMIM, '
+        'Jensen DISEASES). OpenTargets was chosen as the single authority because it provides '
+        'evidence-scored associations and already ingests GWAS Catalog and other primary sources.'
     )
 
     p = doc.add_paragraph()
@@ -650,7 +630,7 @@ def build_doc():
     add_bullet(doc, 'Knowledge graph embedding that represents entities and relations as vectors. '
                'Learns h + r \u2248 t for each (head, relation, tail) triple. '
                'Better at capturing relation-specific patterns than node2vec. '
-               'The 43 relationship types provide rich relational signal.',
+               'The 41 relationship types provide rich relational signal.',
                'TransE / RotatE')
     add_bullet(doc, 'models/ directory (currently empty) should store trained embedding files, '
                'model checkpoints, and evaluation metrics.',
@@ -722,13 +702,13 @@ def build_doc():
               [
                   ['Total nodes', '4,921,062'],
                   ['Total relationships', '26,344,399'],
-                  ['Node types', '20'],
-                  ['Relationship types', '43'],
-                  ['Data sources (parsers)', '36'],
-                  ['Relationship source labels', '28'],
+                  ['Node types', '19'],
+                  ['Relationship types', '41'],
+                  ['Data sources (parsers)', '26'],
+                  ['Relationship source labels', '21'],
                   ['Ontology configs', '85'],
                   ['Disease filter terms (CVD)', '90'],
-                  ['Agent-generated parsers', '7'],
+                  ['Agent-generated parsers', '4'],
                   ['Edge weight coverage', '100% (all edges have r.weight)'],
               ])
 
@@ -739,12 +719,12 @@ def build_doc():
                   ['bodyPartUnderexpressesGene', '5,334,316', 'Bgee'],
                   ['variantInGene', '4,439,480', 'ClinVar'],
                   ['hasVariant', '4,439,480', 'ClinVar'],
-                  ['geneAssociatesWithDisease', '3,706,670', '6 sources'],
+                  ['geneAssociatesWithDisease', '2,364,224', 'OpenTargets'],
                   ['diseaseAssociatesWithDisease', '2,138,895', 'PubTator'],
                   ['variantAssociatedWithDisease', '1,862,448', 'ClinVar'],
                   ['associatedWithVariant', '1,862,448', 'ClinVar'],
                   ['geneExpressedInBodyPart', '982,039', 'Jensen TISSUES'],
-                  ['geneInteractsWithGene', '234,533', 'STRING, Hetionet'],
+                  ['geneInteractsWithGene', '229,433', 'STRING'],
                   ['chemicalIncreasesExpression', '218,140', 'CTD'],
               ])
 

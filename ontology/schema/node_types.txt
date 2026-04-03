@@ -1,0 +1,23 @@
+# CardioKB Node Types
+# 19 node types in the CVD knowledge graph
+# Format: NodeType | Primary Key | Source Database | Description
+
+Gene | geneSymbol | NCBI Gene | Human genes (194,726 nodes)
+Disease | xrefDiseaseOntology | Disease Ontology | Diseases from Disease Ontology (19,450 nodes)
+Drug | commonName | DrugBank | Drugs and chemicals (41,566 nodes)
+Variant | variantId | ClinVar | Genetic variants (4,488,042 nodes)
+ClinicalTrial | trialId | ClinicalTrials.gov | Clinical trials (82,070 nodes)
+Pathway | pathwayName | Reactome | Biological pathways (6,469 nodes)
+BiologicalProcess | geneOntologyId | Gene Ontology | GO biological processes (24,547 nodes)
+MolecularFunction | geneOntologyId | Gene Ontology | GO molecular functions (10,123 nodes)
+CellularComponent | geneOntologyId | Gene Ontology | GO cellular components (4,069 nodes)
+BodyPart | xrefUberon | Uberon | Anatomical structures (14,937 nodes)
+Phenotype | xrefHPO | HPO | Human phenotypes (19,389 nodes)
+Symptom | xrefMeSH | NCBI MeSH | Disease symptoms (966 nodes)
+SideEffect | xrefUmlsCUI | SIDER | Drug side effects (5,734 nodes)
+TranscriptionFactor | TF | DoRothEA | Transcription factors (367 nodes)
+PharmacologicClass | classId | DrugCentral | Drug pharmacologic classes (1,646 nodes)
+GeneFamily | familyId | HGNC Families | Gene families (1,934 nodes)
+DrugLabel | labelId | ClinPGx | FDA drug labels (378 nodes)
+AgeingProperty | propertyName | DrugAge | Aging properties (3 nodes)
+Species | speciesName | AnAge | Species longevity data (4,645 nodes)

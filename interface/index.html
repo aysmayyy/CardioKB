@@ -660,9 +660,9 @@ th { color: var(--text-muted); font-weight: 600; text-transform: uppercase; font
     <div class="modal">
         <div class="modal-step active" data-step="0">
             <h2>Welcome to CardioKB</h2>
-            <p>CardioKB is a <strong>general-purpose biomedical knowledge graph</strong> integrating <strong><span id="aboutSourceCount">36</span> data sources</strong> into a single queryable network. It connects genes, diseases, drugs, pathways, clinical trials, phenotypes, variants, and more &mdash; spanning <strong>all human diseases</strong>, not just cardiovascular.</p>
+            <p>CardioKB is a <strong>general-purpose biomedical knowledge graph</strong> integrating <strong><span id="aboutSourceCount">26</span> deduplicated data sources</strong> into a single queryable network. It connects genes, diseases, drugs, pathways, clinical trials, phenotypes, variants, and more &mdash; focused on <strong>cardiovascular disease</strong> with disease-agnostic base data.</p>
             <ul>
-                <li>5.4M+ nodes across 21 entity types, 40M+ relationships from 36 sources</li>
+                <li>4.9M+ nodes across 19 entity types, 26M+ relationships from 26 sources</li>
                 <li>Search any disease (heart failure, Alzheimer's, lupus...) or any gene/drug</li>
                 <li><strong>Build Knowledge Graph</strong> &mdash; AI fetches fresh data for any disease you name</li>
                 <li>Add entirely new databases &mdash; the AI-powered DatabaseAgent writes the parser for you</li>
@@ -699,7 +699,7 @@ th { color: var(--text-muted); font-weight: 600; text-transform: uppercase; font
                 <li>Click <strong>Build Parser</strong> &mdash; the DatabaseAgent (Claude AI) samples the file, generates a complete parser, integrates it into the pipeline, and loads the data into Neo4j</li>
                 <li>The agent handles format detection, column mapping, ontology config, and ID validation automatically</li>
             </ul>
-            <p style="margin-top:0.5rem">Also in Admin: <strong>Run Pipeline</strong> (full rebuild of all 36 sources).</p>
+            <p style="margin-top:0.5rem">Also in Admin: <strong>Run Pipeline</strong> (full rebuild of all 26 sources).</p>
         </div>
         <div class="modal-dots">
             <span class="dot active" data-dot="0"></span>
@@ -720,7 +720,7 @@ th { color: var(--text-muted); font-weight: 600; text-transform: uppercase; font
         <h2>How to Read the Graph</h2>
         <p style="margin-bottom:0.75rem"><strong>Two-layer architecture</strong></p>
         <ul>
-            <li><strong style="color:var(--accent)">Core layer</strong> &mdash; Direct (1-hop) neighbors of the searched entity. These are known, literature-backed associations from databases like DisGeNET, GWAS Catalog, and DrugBank. Shown as <strong>large nodes with solid borders</strong>.</li>
+            <li><strong style="color:var(--accent)">Core layer</strong> &mdash; Direct (1-hop) neighbors of the searched entity. These are known, literature-backed associations from databases like OpenTargets, ClinVar, and DrugBank. Shown as <strong>large nodes with solid borders</strong>.</li>
             <li><strong style="color:var(--text-muted)">Discovery layer</strong> &mdash; 2-hop neighbors reached through core nodes. These are hypothesis-generating connections not directly linked to the disease &mdash; useful for finding shared pathways, off-target drugs, or comorbidity bridges. Shown as <strong>small nodes with dashed borders and faded edges</strong>. Toggle this layer on/off with the checkbox above the graph.</li>
         </ul>
         <p style="margin:0.75rem 0"><strong>Disease-specificity scoring</strong></p>
@@ -832,7 +832,7 @@ th { color: var(--text-muted); font-weight: 600; text-transform: uppercase; font
             '<h4>Full Pipeline Run</h4>' +
             '<p>Runs the complete data pipeline for all sources: <strong>download</strong> raw data &rarr; <strong>parse</strong> into TSVs &rarr; <strong>load</strong> into Neo4j.</p>' +
             '<p>This is a long-running operation (30&ndash;60 min depending on network speed). It re-downloads all source data and rebuilds the graph from scratch. Use sparingly &mdash; typically only needed after adding new parsers or updating data sources.</p>' +
-            '<p><strong>Not agentic</strong> &mdash; executes a fixed pipeline of 36 parsers in sequence.</p>',
+            '<p><strong>Not agentic</strong> &mdash; executes a fixed pipeline of 26 parsers in sequence.</p>',
 
         buildkg:
             '<h4>Build Knowledge Graph</h4>' +
@@ -937,13 +937,13 @@ const NODE_TYPE_DESCRIPTIONS = {
     Gene: 'Human protein-coding genes from NCBI',
     Disease: 'Disease entities from Disease Ontology (DOID)',
     Drug: 'Approved and investigational compounds from DrugBank',
-    Pathway: 'Biological pathways from AOP-DB and Reactome',
+    Pathway: 'Biological pathways from Reactome',
     Phenotype: 'Clinical phenotypes from Human Phenotype Ontology',
     ClinicalTrial: 'Active and completed trials from ClinicalTrials.gov',
     Anatomy: 'Anatomical structures from Uberon ontology',
     SideEffect: 'Drug side effects from SIDER',
     GeneOntology: 'Molecular functions and processes from GO',
-    Chemical: 'Environmental chemicals from AOP-DB / CTD',
+    Chemical: 'Environmental chemicals from CTD',
     Symptom: 'Disease symptoms from MeSH',
 };
 
