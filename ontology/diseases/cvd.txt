@@ -22,6 +22,16 @@ CPVT
 Sick sinus syndrome
 Heart block
 Atrioventricular block
+Wolff-Parkinson-White syndrome
+WPW
+Supraventricular tachycardia
+SVT
+Premature ventricular contraction
+Premature atrial contraction
+Torsades de pointes
+Bundle branch block
+Sinus bradycardia
+Sinus tachycardia
 
 # Coronary conditions
 Coronary artery disease
@@ -37,6 +47,9 @@ Unstable angina
 Ischemic heart disease
 Atherosclerosis
 Coronary atherosclerosis
+Acute coronary syndrome
+Coronary artery spasm
+Prinzmetal angina
 
 # Heart failure
 Heart failure
@@ -49,6 +62,9 @@ HFrEF
 HFpEF
 Acute heart failure
 Chronic heart failure
+Right heart failure
+Left heart failure
+Cardiogenic shock
 
 # Cardiomyopathy
 Cardiomyopathy
@@ -60,6 +76,13 @@ Restrictive cardiomyopathy
 Arrhythmogenic right ventricular cardiomyopathy
 ARVC
 Takotsubo cardiomyopathy
+Left ventricular noncompaction
+LVNC
+Peripartum cardiomyopathy
+Ischemic cardiomyopathy
+Cardiac amyloidosis
+Cardiac sarcoidosis
+Noncompaction cardiomyopathy
 
 # Hypertension
 Hypertension
@@ -68,6 +91,10 @@ Essential hypertension
 Secondary hypertension
 Pulmonary hypertension
 Resistant hypertension
+Hypertensive heart disease
+Hypertensive crisis
+Malignant hypertension
+Portal hypertension
 
 # Stroke
 Stroke
@@ -80,6 +107,8 @@ Intracerebral hemorrhage
 Subarachnoid hemorrhage
 Transient ischemic attack
 TIA
+Cerebrovascular accident
+Cerebral infarction
 
 # Vascular diseases
 Peripheral arterial disease
@@ -91,11 +120,38 @@ Venous thromboembolism
 PAD
 Aortic aneurysm
 Aortic dissection
+Abdominal aortic aneurysm
+Thoracic aortic aneurysm
+Carotid artery disease
+Carotid artery stenosis
+Vasculitis
+Kawasaki disease
+Thrombosis
+Arterial thrombosis
+Venous thrombosis
+Arteriosclerosis
+Fibromuscular dysplasia
+Raynaud phenomenon
+Giant cell arteritis
+Takayasu arteritis
+Polyarteritis nodosa
+Mesenteric ischemia
+
+# Pulmonary vascular diseases
+Pulmonary embolism
+PE
+Deep vein thrombosis
+DVT
+Pulmonary arterial hypertension
+Chronic thromboembolic pulmonary hypertension
+Pulmonary vascular disease
 
 # Lipid disorders (atherosclerosis-related)
 Hypercholesterolemia
 Dyslipidemia
 Familial hypercholesterolemia
+Hypertriglyceridemia
+Hyperlipidemia
 
 # Valvular heart disease
 Valvular heart disease
@@ -105,10 +161,54 @@ Aortic regurgitation
 Mitral stenosis
 Mitral regurgitation
 Mitral valve prolapse
+Tricuspid regurgitation
+Tricuspid stenosis
+Pulmonary valve stenosis
+Infective endocarditis
+Rheumatic heart disease
+Rheumatic fever
+Bicuspid aortic valve
 
-# Other
+# Congenital heart disease
+Congenital heart disease
+Congenital heart defect
+Tetralogy of Fallot
+Atrial septal defect
+ASD
+Ventricular septal defect
+VSD
+Patent ductus arteriosus
+PDA
+Coarctation of the aorta
+Transposition of the great arteries
+Ebstein anomaly
+Truncus arteriosus
+Patent foramen ovale
+Hypoplastic left heart syndrome
+Atrioventricular septal defect
+Double outlet right ventricle
+Total anomalous pulmonary venous return
+Tricuspid atresia
+Pulmonary atresia
+Interrupted aortic arch
+
+# Sudden cardiac events
+Cardiac arrest
+Sudden cardiac death
+Sudden cardiac arrest
+
+# Other cardiac conditions
 Pericarditis
 Myocarditis
 Endocarditis
 Cardiac transplant
 Heart transplant
+Cardiac tamponade
+Cor pulmonale
+Cardiac fibrosis
+Left ventricular hypertrophy
+Right ventricular hypertrophy
+Pericardial effusion
+Constrictive pericarditis
+Cardiac tumor
+Cardiac myxoma
