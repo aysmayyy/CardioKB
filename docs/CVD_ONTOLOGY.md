@@ -8,7 +8,7 @@ CardioKB uses a disease term filtering system that supports multiple disease are
 
 | File | Terms | Disease Area |
 |------|-------|-------------|
-| `ontology/diseases/cvd.txt` | 90 | Cardiovascular disease (default) |
+| `ontology/diseases/cvd.txt` | 184 | Cardiovascular disease (default) |
 | `ontology/diseases/alzheimers.txt` | 35 | Alzheimer's & related dementias |
 | `ontology/diseases/cancer.txt` | 70 | Cancer / oncology |
 | `ontology/diseases/asthma.txt` | 48 | Asthma & respiratory diseases |
@@ -16,30 +16,32 @@ CardioKB uses a disease term filtering system that supports multiple disease are
 
 `ontology/disease_filter.txt` is a symlink to `diseases/cvd.txt` by default.
 
-## CVD Term Categories (90 terms)
+## CVD Term Categories (184 terms)
 
 The CVD filter (`ontology/diseases/cvd.txt`) covers:
 
 1. **General** — Cardiovascular disease, Heart disease, Cardiac disease
-2. **Arrhythmias** — Atrial fibrillation/flutter, Ventricular tachycardia/fibrillation, Long QT syndrome, Brugada syndrome, CPVT, Sick sinus syndrome, Heart block
-3. **Coronary conditions** — CAD, Myocardial infarction, Angina, Ischemic heart disease, Atherosclerosis
-4. **Heart failure** — CHF, HFrEF, HFpEF, Acute/Chronic heart failure
-5. **Cardiomyopathy** — HCM, DCM, Restrictive, ARVC, Takotsubo
-6. **Hypertension** — Essential, Secondary, Pulmonary, Resistant
-7. **Stroke** — Ischemic, Hemorrhagic, Thrombotic, Embolic, TIA
-8. **Vascular diseases** — PAD, Thromboembolism, VTE, Aortic aneurysm/dissection
-9. **Lipid disorders** — Hypercholesterolemia, Dyslipidemia, Familial hypercholesterolemia
-10. **Valvular disease** — Aortic stenosis/regurgitation, Mitral stenosis/regurgitation/prolapse
-11. **Other** — Pericarditis, Myocarditis, Endocarditis, Cardiac/Heart transplant
+2. **Arrhythmias** — Atrial fibrillation/flutter, Ventricular tachycardia/fibrillation, Long QT syndrome, Brugada syndrome, CPVT, Sick sinus syndrome, Heart block, WPW, SVT, Torsades de pointes, Bundle branch block
+3. **Coronary conditions** — CAD, Myocardial infarction, Angina, Ischemic heart disease, Atherosclerosis, Acute coronary syndrome, Prinzmetal angina
+4. **Heart failure** — CHF, HFrEF, HFpEF, Acute/Chronic heart failure, Cardiogenic shock
+5. **Cardiomyopathy** — HCM, DCM, Restrictive, ARVC, Takotsubo, LVNC, Peripartum, Ischemic, Cardiac amyloidosis/sarcoidosis
+6. **Hypertension** — Essential, Secondary, Pulmonary, Resistant, Malignant, Portal, Hypertensive crisis
+7. **Stroke** — Ischemic, Hemorrhagic, Thrombotic, Embolic, TIA, Cerebral infarction
+8. **Vascular diseases** — PAD, Thromboembolism, VTE, Aortic aneurysm/dissection, Carotid artery disease, Vasculitis, Kawasaki disease, Takayasu/Giant cell arteritis, Fibromuscular dysplasia
+9. **Pulmonary vascular** — Pulmonary embolism, DVT, Pulmonary arterial hypertension, Chronic thromboembolic pulmonary hypertension
+10. **Lipid disorders** — Hypercholesterolemia, Dyslipidemia, Familial hypercholesterolemia, Hypertriglyceridemia
+11. **Valvular disease** — Aortic stenosis/regurgitation, Mitral stenosis/regurgitation/prolapse, Tricuspid, Pulmonary valve, Bicuspid aortic valve, Rheumatic heart disease
+12. **Congenital heart disease** — Tetralogy of Fallot, ASD, VSD, PDA, Coarctation of the aorta, Transposition of great arteries, Ebstein anomaly, Hypoplastic left heart syndrome, and more
+13. **Sudden cardiac events** — Cardiac arrest, Sudden cardiac death
+14. **Other** — Pericarditis, Myocarditis, Endocarditis, Cardiac/Heart transplant, Cardiac tamponade, Cor pulmonale, Cardiac fibrosis
 
 ## Which Parsers Use Disease Filtering?
 
-Most parsers (30 of 32) are **disease-agnostic** — they load all data regardless of disease area.
+Only one parser uses disease filtering directly:
 
-- **DisGeNETParser** — accepts a `disease_filter` parameter; defaults to `ontology/disease_filter.txt` (CVD)
-- **OMIMParser** — reads the symlink to tag rows with `is_cvd` but loads all data regardless
+- **ClinicalTrialsParser** — accepts a `disease_filter` parameter; defaults to `ontology/disease_filter.txt` (CVD). Queries ClinicalTrials.gov API v2 per disease term.
 
-All other parsers load complete datasets without filtering.
+All other 25 parsers are **disease-agnostic** — they load all data regardless of disease area. The pipeline applies CVD gene filtering as a post-processing step (`_filter_cvd_edges()`) to scope relationship edges to CVD-relevant genes from `ontology/genes/cvd.txt` (3,984 genes).
 
 ## Usage in Code
 

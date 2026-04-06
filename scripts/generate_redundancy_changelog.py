@@ -70,8 +70,8 @@ def build_doc():
                'Source count reduced from 36 to 26.',
                'Redundancy removal')
     add_bullet(doc, 'Officially scoped the knowledge graph to cardiovascular disease. '
-               'Created CVD-specific ontology files for genes (4,411 symbols from OMIM + DisGeNET), '
-               'node types (19), edge types (41), and diseases (90 terms, existing).',
+               'Created CVD-specific ontology files for genes (3,984 symbols from OMIM + DisGeNET, cleaned), '
+               'node types (19), edge types (41), and diseases (184 terms, expanded).',
                'CVD pivot')
     add_bullet(doc, 'Identified 3 stale sources (SIDER, LINCS L1000, MEDLINE) pinned to archived '
                'GitHub commits. Proposed live replacements: DrugBank adverse reactions, clue.io API, '
@@ -245,11 +245,11 @@ def build_doc():
                    'All 41 edge types with source/target node types, source databases, edge counts',
                    '41 types'],
                   ['ontology/genes/cvd.txt',
-                   'CVD-associated gene symbols merged from OMIM (1,652) + DisGeNET (3,488), deduplicated',
-                   '4,411 genes'],
+                   'CVD-associated gene symbols merged from OMIM + DisGeNET, cleaned of LOC* and OMIM phenotype symbols',
+                   '3,984 genes'],
                   ['ontology/diseases/cvd.txt',
-                   'CVD disease terms for filtering (existing file, unchanged)',
-                   '90 terms'],
+                   'CVD disease terms for filtering (expanded with congenital, pulmonary vascular, and more)',
+                   '184 terms'],
               ])
 
     # ─── 8. Visualization ───

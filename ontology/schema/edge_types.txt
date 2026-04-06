@@ -1,63 +1,57 @@
 # CardioKB Edge Types
-# 43 unique relationship types in the CVD knowledge graph (after redundancy removal)
+# 41 unique relationship types in the CVD knowledge graph (after redundancy removal + CVD filtering)
 # Format: EdgeType | Source -> Target | Source Database | Edge Count
 
 # Gene-Disease associations
-geneAssociatesWithDisease | Gene -> Disease | OpenTargets | 2,364,224
+geneAssociatesWithDisease | Gene -> Disease | OpenTargets | 2,100,856
 
 # Gene-Gene interactions
-geneInteractsWithGene | Gene -> Gene | STRING | 229,433
-geneRegulatesGene | Gene -> Gene | LINCS L1000 | 6,262
-# geneCovariesWithGene | Gene -> Gene | Hetionet | 127 (REMOVED - Hetionet precomputed dump dropped)
+geneInteractsWithGene | Gene -> Gene | STRING | 121,170
+geneRegulatesGene | Gene -> Gene | LINCS L1000 | 5,026
 
 # Gene ontology associations
-geneParticipatesInBiologicalProcess | Gene -> BiologicalProcess | Gene Ontology | 135,351
-geneHasMolecularFunction | Gene -> MolecularFunction | Gene Ontology | 93,564
-geneAssociatedWithCellularComponent | Gene -> CellularComponent | Gene Ontology | 93,792
+geneParticipatesInBiologicalProcess | Gene -> BiologicalProcess | Gene Ontology | 50,350
+geneHasMolecularFunction | Gene -> MolecularFunction | Gene Ontology | 26,935
+geneAssociatedWithCellularComponent | Gene -> CellularComponent | Gene Ontology | 25,794
 
 # Gene-Pathway membership
-geneInPathway | Gene -> Pathway | Reactome | 16,317
-pathwayContainsGene | Pathway -> Gene | Reactome | 16,317
+geneInPathway | Gene -> Pathway | Reactome | 9,404
+pathwayContainsGene | Pathway -> Gene | Reactome | 9,404
 
 # Gene-Phenotype
-geneAssociatesWithPhenotype | Gene -> Phenotype | HPO | 30,488
+geneAssociatesWithPhenotype | Gene -> Phenotype | HPO | 23,766
 
 # Gene-BodyPart expression
-geneExpressedInBodyPart | Gene -> BodyPart | Jensen TISSUES | 982,039
-bodyPartOverexpressesGene | BodyPart -> Gene | Bgee | 4,466
-bodyPartUnderexpressesGene | BodyPart -> Gene | Bgee | 5,334,316
+geneExpressedInBodyPart | Gene -> BodyPart | Jensen TISSUES | 271,657
+bodyPartOverexpressesGene | BodyPart -> Gene | Bgee | 1,872
+bodyPartUnderexpressesGene | BodyPart -> Gene | Bgee | 784,026
 
 # Gene-Family
-geneInFamily | Gene -> GeneFamily | HGNC Families | 34,006
-familyContainsGene | GeneFamily -> Gene | HGNC Families | 34,006
+geneInFamily | Gene -> GeneFamily | HGNC Families | 5,123
+familyContainsGene | GeneFamily -> Gene | HGNC Families | 5,123
 
 # Gene-Variant
-hasVariant | Gene -> Variant | ClinVar | 4,439,480
-variantInGene | Variant -> Gene | ClinVar | 4,439,480
-
-# Variant-Disease
-associatedWithVariant | Disease -> Variant | ClinVar | 1,862,448
-variantAssociatedWithDisease | Variant -> Disease | ClinVar | 1,862,448
+hasVariant | Gene -> Variant | ClinVar | 2,267,095
+variantInGene | Variant -> Gene | ClinVar | 2,267,095
 
 # TF-Gene regulation
-transcriptionFactorInteractsWithGene | TranscriptionFactor -> Gene | DoRothEA | 15,092
+transcriptionFactorInteractsWithGene | TranscriptionFactor -> Gene | DoRothEA | 12,985
 
 # Drug-Gene binding
-drugBindsGene | Drug -> Gene | DrugBank | 19,085
-chemicalBindsGene | Drug -> Gene | BindingDB | 4,205
+drugBindsGene | Drug -> Gene | DrugBank | 12,089
+chemicalBindsGene | Drug -> Gene | BindingDB | 2,632
 
 # Drug-Gene expression
-chemicalIncreasesExpression | Drug -> Gene | CTD | 218,140
-chemicalDecreasesExpression | Drug -> Gene | CTD | 213,581
-compoundUpregulatesGene | Drug -> Gene | LINCS L1000 | 4,686
-compoundDownregulatesGene | Drug -> Gene | LINCS L1000 | 5,765
+chemicalIncreasesExpression | Drug -> Gene | CTD | 116,451
+chemicalDecreasesExpression | Drug -> Gene | CTD | 97,951
+compoundUpregulatesGene | Drug -> Gene | LINCS L1000 | 2,486
+compoundDownregulatesGene | Drug -> Gene | LINCS L1000 | 2,815
 
 # Drug-Disease
-drugTreatsDisease | Drug -> Disease | DrugCentral | 1,326
-drugPalliatesDisease | Drug -> Disease | DrugCentral | 292
+drugTreatsDisease | Drug -> Disease | DrugCentral | 5,316
+drugPalliatesDisease | Drug -> Disease | DrugCentral | 772
 
 # Drug-SideEffect
-# drugCausesSideEffect | Drug -> SideEffect | Hetionet | 138,540 (REMOVED - redundant with SIDER compoundCausesSideEffect)
 compoundCausesSideEffect | Drug -> SideEffect | SIDER | 148,518
 
 # Drug-PharmacologicClass
@@ -65,26 +59,26 @@ pharmacologicClassIncludesCompound | PharmacologicClass -> Drug | DrugCentral | 
 compoundInPharmacologicClass | Drug -> PharmacologicClass | DrugCentral | 16,403
 
 # Disease-Disease
-diseaseIsSubtypeOf | Disease -> Disease | Disease Ontology | ~16,900
-diseaseAssociatesWithDisease | Disease -> Disease | PubTator | 2,138,895
-diseaseResemblesDisease | Disease -> Disease | MEDLINE | 109
+diseaseIsSubtypeOf | Disease -> Disease | Disease Ontology | 6,447
+diseaseAssociatesWithDisease | Disease -> Disease | PubTator | 806,900
+diseaseResemblesDisease | Disease -> Disease | MEDLINE | 148
 
 # Disease-Symptom/Anatomy
-diseasePresentsSymptom | Disease -> Symptom | MEDLINE | 544
-diseaseLocalizesToAnatomy | Disease -> BodyPart | MEDLINE | 615
+diseasePresentsSymptom | Disease -> Symptom | MEDLINE | 524
+diseaseLocalizesToAnatomy | Disease -> BodyPart | MEDLINE | 726
 
 # Clinical Trials
-STUDIES_CONDITION | ClinicalTrial -> Disease | ClinicalTrials.gov | 674
-TESTS_INTERVENTION | ClinicalTrial -> Drug | ClinicalTrials.gov | 18,145
+STUDIES_CONDITION | ClinicalTrial -> Disease | ClinicalTrials.gov | 33,219
+TESTS_INTERVENTION | ClinicalTrial -> Drug | ClinicalTrials.gov | 6,090
 
 # Pharmacogenomics (ClinPGx)
-VARIANT_IN | Variant -> Gene | ClinPGx | 1,103
-AFFECTS_RESPONSE_TO | Gene -> Drug | ClinPGx | 304
-drugLabelAnnotatesGene | DrugLabel -> Gene | ClinPGx | 506
-drugLabelDescribesDrug | DrugLabel -> Drug | ClinPGx | 360
+VARIANT_IN | Variant -> Gene | ClinPGx | 1,091
+AFFECTS_RESPONSE_TO | Gene -> Drug | ClinPGx | 243
+drugLabelAnnotatesGene | DrugLabel -> Gene | ClinPGx | 503
+drugLabelDescribesDrug | DrugLabel -> Drug | ClinPGx | 51
 
 # Species
-geneInSpecies | Gene -> Species | NCBI Gene | 47,513
+geneInSpecies | Gene -> Species | NCBI Gene | 21,599
 
 # Aging
-associatedWithAging | Gene -> AgeingProperty | DrugAge | 866
+associatedWithAging | Gene -> AgeingProperty | DrugAge | 386

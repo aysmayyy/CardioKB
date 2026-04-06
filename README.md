@@ -2,7 +2,7 @@
 
 A cardiovascular disease (CVD) focused biomedical knowledge graph pipeline that integrates 26 deduplicated data sources into a Neo4j graph for disease research, feature selection, and precision medicine. Each node type and edge type is served by exactly one authoritative database — no redundancy. Adapted from the AlzKB (Alzheimer's Knowledge Base) architecture with custom parsers and AI-powered parser generation. Features a **DatabaseAgent** that autonomously generates new parsers from just a name and URL, a **DiseaseQueryAgent** for on-demand disease enrichment, and a web dashboard with interactive graph exploration and Neo4j Browser-style querying.
 
-**Graph stats:** 4,898,238 nodes | 9,266,035 relationships | 19 node types | 42 relationship types | 26 sources
+**Graph stats:** 4,898,238 nodes | 9,266,035 relationships | 19 node types | 41 relationship types | 26 sources
 *Stats are current as of last pipeline run; see Neo4j or `GET /api/graph-stats` for live counts.*
 
 ## Pipeline Status
@@ -104,22 +104,26 @@ See `docs/CardioKB_Redundancy_Changelog.docx` for full rationale and impact asse
 | TranscriptionFactor | 367 | DoRothEA |
 | AgeingProperty | 3 | DrugAge |
 
-### Relationship Types (42)
+### Relationship Types (41)
 
 | Relationship Type | Source | Count |
 |-------------------|--------|------:|
 | hasVariant | ClinVar | 2,267,095 |
 | variantInGene | ClinVar | 2,267,095 |
-| geneAssociatesWithDisease | OpenTargets + PubTator | 2,100,856 |
+| geneAssociatesWithDisease | OpenTargets | 2,100,856 |
 | diseaseAssociatesWithDisease | PubTator | 806,900 |
 | bodyPartUnderexpressesGene | Bgee | 784,026 |
 | geneExpressedInBodyPart | Jensen TISSUES | 271,657 |
 | compoundCausesSideEffect | SIDER | 148,518 |
 | geneInteractsWithGene | STRING | 121,170 |
+| chemicalIncreasesExpression | CTD | 116,451 |
+| chemicalDecreasesExpression | CTD | 97,951 |
 | geneParticipatesInBiologicalProcess | Gene Ontology | 50,350 |
+| STUDIES_CONDITION | ClinicalTrials.gov | 33,219 |
 | geneHasMolecularFunction | Gene Ontology | 26,935 |
 | geneAssociatedWithCellularComponent | Gene Ontology | 25,794 |
 | geneAssociatesWithPhenotype | HPO | 23,766 |
+| geneInSpecies | NCBI Gene | 21,599 |
 | pharmacologicClassIncludesCompound | DrugCentral | 16,403 |
 | compoundInPharmacologicClass | DrugCentral | 16,403 |
 | transcriptionFactorInteractsWithGene | DoRothEA | 12,985 |
@@ -127,11 +131,11 @@ See `docs/CardioKB_Redundancy_Changelog.docx` for full rationale and impact asse
 | geneInPathway | Reactome | 9,404 |
 | pathwayContainsGene | Reactome | 9,404 |
 | diseaseIsSubtypeOf | Disease Ontology | 6,447 |
+| TESTS_INTERVENTION | ClinicalTrials.gov | 6,090 |
 | drugTreatsDisease | DrugCentral | 5,316 |
 | geneInFamily | HGNC Families | 5,123 |
 | familyContainsGene | HGNC Families | 5,123 |
 | geneRegulatesGene | LINCS L1000 | 5,026 |
-| TESTS_INTERVENTION | ClinicalTrials.gov | 6,090 |
 | compoundDownregulatesGene | LINCS L1000 | 2,815 |
 | chemicalBindsGene | BindingDB | 2,632 |
 | compoundUpregulatesGene | LINCS L1000 | 2,486 |
@@ -142,12 +146,9 @@ See `docs/CardioKB_Redundancy_Changelog.docx` for full rationale and impact asse
 | diseasePresentsSymptom | MEDLINE | 524 |
 | drugLabelAnnotatesGene | ClinPGx | 503 |
 | associatedWithAging | DrugAge | 386 |
-| diseaseResemblesDisease | MEDLINE | 148 |
 | AFFECTS_RESPONSE_TO | ClinPGx | 243 |
+| diseaseResemblesDisease | MEDLINE | 148 |
 | drugLabelDescribesDrug | ClinPGx | 51 |
-| STUDIES_CONDITION | ClinicalTrials.gov | 33,219 |
-| chemicalIncreasesExpression | CTD | 116,451 |
-| chemicalDecreasesExpression | CTD | 97,951 |
 
 **Relationship source labels (21):** Bgee, BindingDB, CTD, ClinPGx, ClinVar, ClinicalTrials.gov, DoRothEA, DrugAge, DrugBank, DrugCentral, Gene Ontology, HGNC, HPO, Jensen TISSUES, LINCS L1000, MEDLINE, OpenTargets, PubTator, Reactome, SIDER, STRING
 

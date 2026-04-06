@@ -145,7 +145,7 @@ def build_doc():
     doc.add_paragraph(
         'The full batch pipeline (python src/main.py) downloads, parses, exports TSVs, and loads '
         'into Neo4j in a single run. All 26 parsers inherit from BaseParser and produce '
-        'Dict[str, DataFrame]. 85 ontology configs in src/ontology_configs.py declaratively '
+        'Dict[str, DataFrame]. 86 ontology configs in src/ontology_configs.py declaratively '
         'map those DataFrames to Neo4j nodes and relationships. The loader uses MERGE for '
         'idempotent loading. Every relationship carries a source property for provenance. '
         'Each node type and edge type is served by exactly one authoritative database (no redundancy).'
@@ -700,14 +700,14 @@ def build_doc():
     add_table(doc,
               ['Metric', 'Value'],
               [
-                  ['Total nodes', '4,921,062'],
-                  ['Total relationships', '26,344,399'],
+                  ['Total nodes', '4,898,238'],
+                  ['Total relationships', '9,266,035'],
                   ['Node types', '19'],
                   ['Relationship types', '41'],
                   ['Data sources (parsers)', '26'],
                   ['Relationship source labels', '21'],
-                  ['Ontology configs', '85'],
-                  ['Disease filter terms (CVD)', '90'],
+                  ['Ontology configs', '86'],
+                  ['Disease filter terms (CVD)', '184'],
                   ['Agent-generated parsers', '4'],
                   ['Edge weight coverage', '100% (all edges have r.weight)'],
               ])

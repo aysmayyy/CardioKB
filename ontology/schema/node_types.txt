@@ -2,12 +2,12 @@
 # 19 node types in the CVD knowledge graph
 # Format: NodeType | Primary Key | Source Database | Description
 
-Gene | geneSymbol | NCBI Gene | Human genes (194,726 nodes)
-Disease | xrefDiseaseOntology | Disease Ontology | Diseases from Disease Ontology (19,450 nodes)
-Drug | commonName | DrugBank | Drugs and chemicals (41,566 nodes)
+Gene | geneSymbol | NCBI Gene | Human genes (194,553 nodes)
+Disease | xrefDiseaseOntology | Disease Ontology | Diseases from Disease Ontology (12,295 nodes)
+Drug | commonName | DrugBank + CTD | Drugs and chemicals (26,127 nodes: 19,842 DrugBank + 6,285 CTD)
 Variant | variantId | ClinVar | Genetic variants (4,488,042 nodes)
-ClinicalTrial | trialId | ClinicalTrials.gov | Clinical trials (82,070 nodes)
-Pathway | pathwayName | Reactome | Biological pathways (6,469 nodes)
+ClinicalTrial | trialId | ClinicalTrials.gov | Clinical trials (85,677 nodes)
+Pathway | pathwayName | Reactome | Biological pathways (2,806 nodes)
 BiologicalProcess | geneOntologyId | Gene Ontology | GO biological processes (24,547 nodes)
 MolecularFunction | geneOntologyId | Gene Ontology | GO molecular functions (10,123 nodes)
 CellularComponent | geneOntologyId | Gene Ontology | GO cellular components (4,069 nodes)

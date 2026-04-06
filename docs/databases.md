@@ -3,48 +3,48 @@
 
 ## Summary
 - **26 databases** — 26 parsers, all working, deduplicated (one authoritative source per node/edge type)
-- **4,921,062 nodes** | **26,344,399 relationships** | **19 node types** | **41 relationship types** | **21 source labels**
+- **4,898,238 nodes** | **9,266,035 relationships** | **19 node types** | **41 relationship types** | **21 source labels**
 - **3 stale sources** flagged for replacement: SIDER (2015), LINCS L1000 (2020), MEDLINE (pinned GitHub commit)
 
 ## Direct Parsers (5)
 
 | # | Database | Access Type | Parser Status | Notes |
 |---|----------|-------------|---------------|-------|
-| 1 | ClinicalTrials.gov | Public API v2 | Working | 82,070 trials, 674 STUDIES_CONDITION + 18,145 TESTS_INTERVENTION edges |
-| 2 | ClinPGx (PharmGKB successor) | Public API | Working | 1,103 VARIANT_IN, 506 drugLabelAnnotatesGene, 360 drugLabelDescribesDrug, 304 AFFECTS_RESPONSE_TO edges |
-| 3 | NCBI Gene | Public FTP | Working | 194,726 genes (nodes only) |
-| 4 | DoRothEA (OmniPath) | Public API | Working | 15,092 TF-gene interactions with morScore + confidence |
-| 5 | DrugBank | XML file | Working | 41,566 drugs, 19,085 drugBindsGene edges |
+| 1 | ClinicalTrials.gov | Public API v2 | Working | 85,677 trials, 33,219 STUDIES_CONDITION + 6,090 TESTS_INTERVENTION edges |
+| 2 | ClinPGx (PharmGKB successor) | Public API | Working | 1,091 VARIANT_IN, 503 drugLabelAnnotatesGene, 51 drugLabelDescribesDrug, 243 AFFECTS_RESPONSE_TO edges |
+| 3 | NCBI Gene | Public FTP | Working | 193,790 genes (nodes only) |
+| 4 | DoRothEA (OmniPath) | Public API | Working | 12,985 TF-gene interactions with morScore + confidence |
+| 5 | DrugBank | XML file | Working | 19,842 drugs + 6,285 CTD Drug nodes, 12,089 drugBindsGene edges |
 
 ## Hetionet-Derived Component Parsers (17)
 
 | # | Database | Access Type | Parser Status | Notes |
 |---|----------|-------------|---------------|-------|
-| 6 | Disease Ontology (DOID) | Public | Working | 19,450 diseases (nodes only) |
-| 7 | Gene Ontology (GO) | Public | Working | 135,351 BP + 93,564 MF + 93,792 CC edges |
+| 6 | Disease Ontology (DOID) | Public | Working | 12,295 diseases (nodes only) |
+| 7 | Gene Ontology (GO) | Public | Working | 50,350 BP + 26,935 MF + 25,794 CC edges |
 | 8 | Uberon (anatomy) | Public | Working | 14,937 anatomy nodes (nodes only) |
 | 9 | NCBI MeSH (symptoms) | Public | Working | 966 symptom nodes (nodes only) |
 | 10 | SIDER (side effects) | Public | Working | 5,734 side effects, 148,518 compoundCausesSideEffect edges. **STALE: pinned to 2015 GitHub commit. Replacement: DrugBank adverse reactions extension** |
-| 11 | LINCS L1000 (gene expression) | Public | Working | 6,262 geneRegulates + 5,765 downreg + 4,686 upreg edges with zScore. **STALE: pinned to 2020 GitHub commit. Replacement: clue.io REST API** |
-| 12 | MEDLINE (literature cooccurrence) | Public | Working | 615 anatomy + 544 symptom + 109 disease cooccurrence edges. **STALE: pinned GitHub commit. Replacement: PubTator Central cooccurrence** |
-| 13 | DrugCentral (drug-disease) | Public | Working | 16,403 pharmacologic class + 1,326 treats + 292 palliates edges |
-| 14 | BindingDB (drug-target) | Public | Working | 4,205 chemicalBindsGene edges |
-| 15 | PubTator Central (literature mining) | Public FTP | Working | 2,138,895 diseaseAssociatesWithDisease edges (gene-disease edges removed during dedup) |
-| 16 | CTD (chemical-gene) | Public | Working | 218,140 increases + 213,581 decreases expression edges |
-| 17 | Bgee (gene expression) | Public FTP | Working | 5,334,316 underexpresses + 4,466 overexpresses edges with expressionScore |
-| 18 | Jensen TISSUES (gene-tissue) | Public | Working | 982,039 geneExpressedInBodyPart edges |
-| 19 | HPO (Human Phenotype Ontology) | Public | Working | 19,389 phenotypes, 30,488 gene-phenotype edges |
-| 20 | Reactome | Public | Working | 16,317 geneInPathway + 16,317 pathwayContainsGene edges |
-| 21 | STRING | Public | Working | 229,433 geneInteractsWithGene edges (confidence > 700) |
-| 22 | OpenTargets | Public | Working | 2,364,224 geneAssociatesWithDisease edges via EFO-to-DOID mapping |
+| 11 | LINCS L1000 (gene expression) | Public | Working | 5,026 geneRegulates + 2,815 downreg + 2,486 upreg edges with zScore. **STALE: pinned to 2020 GitHub commit. Replacement: clue.io REST API** |
+| 12 | MEDLINE (literature cooccurrence) | Public | Working | 726 anatomy + 524 symptom + 148 disease cooccurrence edges. **STALE: pinned GitHub commit. Replacement: PubTator Central cooccurrence** |
+| 13 | DrugCentral (drug-disease) | Public | Working | 16,403 pharmacologic class + 5,316 treats + 772 palliates edges |
+| 14 | BindingDB (drug-target) | Public | Working | 2,632 chemicalBindsGene edges |
+| 15 | PubTator Central (literature mining) | Public FTP | Working | 806,900 diseaseAssociatesWithDisease edges (gene-disease edges removed during dedup) |
+| 16 | CTD (chemical-gene) | Public | Working | 6,285 Drug nodes, 116,451 chemicalIncreasesExpression + 97,951 chemicalDecreasesExpression edges |
+| 17 | Bgee (gene expression) | Public FTP | Working | 784,026 underexpresses + 1,872 overexpresses edges with expressionScore |
+| 18 | Jensen TISSUES (gene-tissue) | Public | Working | 271,657 geneExpressedInBodyPart edges |
+| 19 | HPO (Human Phenotype Ontology) | Public | Working | 19,389 phenotypes, 23,766 gene-phenotype edges |
+| 20 | Reactome | Public | Working | 9,404 geneInPathway + 9,404 pathwayContainsGene edges |
+| 21 | STRING | Public | Working | 121,170 geneInteractsWithGene edges (confidence > 700) |
+| 22 | OpenTargets | Public | Working | 2,100,856 geneAssociatesWithDisease edges via EFO-to-DOID mapping |
 
 ## Agent-Generated Parsers (4)
 
 | # | Database | Access Type | Parser Status | Notes |
 |---|----------|-------------|---------------|-------|
-| 23 | HGNC Gene Families | Public | Working | 1,934 GeneFamily nodes, 34,006 geneInFamily + familyContainsGene edges |
-| 24 | ClinVar | Public FTP | Working | 4,488,042 Variant nodes, 4.4M hasVariant + 4.4M variantInGene + 1.9M associatedWithVariant + 1.9M variantAssociatedWithDisease edges |
-| 25 | DrugAge | Public | Working | 866 associatedWithAging edges, 3 AgeingProperty nodes |
+| 23 | HGNC Gene Families | Public | Working | 1,934 GeneFamily nodes, 5,123 geneInFamily + 5,123 familyContainsGene edges |
+| 24 | ClinVar | Public FTP | Working | 4,488,042 Variant nodes, 2,267,095 hasVariant + 2,267,095 variantInGene edges |
+| 25 | DrugAge | Public | Working | 386 associatedWithAging edges, 3 AgeingProperty nodes |
 | 26 | AnAge | Public | Working | 4,645 Species longevity nodes (nodes only) |
 
 ## Sources Removed During Deduplication (10)
@@ -66,7 +66,7 @@
 
 | Source | Change | Reason |
 |--------|--------|--------|
-| PubTator Central | Removed geneAssociatesWithDisease (1.2M edges). Kept diseaseAssociatesWithDisease (2.1M edges, unique). | OpenTargets covers gene-disease; PubTator uniquely provides disease-disease cooccurrence |
+| PubTator Central | Removed geneAssociatesWithDisease edges. Kept diseaseAssociatesWithDisease (807K edges, unique). | OpenTargets covers gene-disease; PubTator uniquely provides disease-disease cooccurrence |
 | ClinPGx | Removed Variant from node contribution. Kept DrugLabel nodes and all 4 unique edge types. | ClinVar is primary Variant source (4.5M vs 1.1K) |
 
 ## Relationship Source Labels (21)

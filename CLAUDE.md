@@ -11,7 +11,7 @@
 12-week rotation project (Jan-Apr 2026) building a CVD-focused biomedical knowledge graph. The graph integrates 26 deduplicated data sources (each node type and edge type served by exactly one authoritative database) into Neo4j for disease research, feature selection, and precision medicine. Adapted from AlzKB (Alzheimer's Knowledge Base) with custom parsers and AI-powered parser generation. The **DatabaseAgent** (`src/database_agent.py`) autonomously generates new parsers from just a name and URL using Claude API. The **DiseaseQueryAgent** (`src/disease_agent.py`) enriches the graph for any disease on demand via ClinicalTrials.gov API v2. Three stale sources (SIDER, LINCS L1000, MEDLINE) are flagged for replacement with live alternatives.
 
 ## Current Graph Stats
-- **4,898,238 nodes** | **9,266,035 relationships** | **19 node types** | **42 relationship types** | **26 sources**
+- **4,898,238 nodes** | **9,266,035 relationships** | **19 node types** | **41 relationship types** | **26 sources**
 - All relationships carry a `source` property identifying the originating database (e.g., `source: "OpenTargets"`)
 - *Stats are current as of last pipeline run; see Neo4j or `GET /api/graph-stats` for live counts.*
 
