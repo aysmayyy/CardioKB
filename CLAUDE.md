@@ -11,7 +11,7 @@
 12-week rotation project (Jan-Apr 2026) building a CVD-focused biomedical knowledge graph. The graph integrates 26 deduplicated data sources (each node type and edge type served by exactly one authoritative database) into Neo4j for disease research, feature selection, and precision medicine. Adapted from AlzKB (Alzheimer's Knowledge Base) with custom parsers and AI-powered parser generation. The **DatabaseAgent** (`src/database_agent.py`) autonomously generates new parsers from just a name and URL using Claude API. The **DiseaseQueryAgent** (`src/disease_agent.py`) enriches the graph for any disease on demand via ClinicalTrials.gov API v2. Three stale sources (SIDER, LINCS L1000, MEDLINE) are flagged for replacement with live alternatives.
 
 ## Current Graph Stats
-- **4,891,953 nodes** | **9,015,709 relationships** | **19 node types** | **42 relationship types** | **26 sources**
+- **4,898,238 nodes** | **9,266,035 relationships** | **19 node types** | **42 relationship types** | **26 sources**
 - All relationships carry a `source` property identifying the originating database (e.g., `source: "OpenTargets"`)
 - *Stats are current as of last pipeline run; see Neo4j or `GET /api/graph-stats` for live counts.*
 
@@ -27,7 +27,7 @@
 - `src/parsers/` — 26 data source parsers (inherit from `BaseParser` in `base_parser.py`)
   - `src/parsers/hetionet_components/` — 12 Hetionet-derived component parsers
 - `src/database_agent.py` — Autonomous parser generator (Claude API + sample download + Neo4j load)
-- `src/ontology_configs.py` — 85 ontology configs mapping source data to Neo4j schema
+- `src/ontology_configs.py` — 86 ontology configs mapping source data to Neo4j schema
 - `src/neo4j_loader.py` — Cypher-based Neo4j batch loader (auto-sets `r.source` from config `source_label`)
 - `src/id_mapping.py` — Central ID mapping module: cross-database ID remapping (PubTator MeSH-to-DOID), validate_mapping(), suggest_mapping(), create_missing_nodes(), CLI interface
 - `src/utils.py` — Shared utilities (`load_disease_terms()`, `get_disease_search_pattern()`)
@@ -104,11 +104,11 @@ CVD ontology files: `ontology/genes/cvd.txt` (3,984 gene symbols from OMIM + Dis
 ### Direct Parsers (5)
 | # | Source | Parser | Access | Status |
 |---|--------|--------|--------|--------|
-| 1 | ClinicalTrials.gov | ClinicalTrialsParser | Public API v2 | Working (85,677 trials, 12 STUDIES_CONDITION + 3,563 TESTS_INTERVENTION edges) |
+| 1 | ClinicalTrials.gov | ClinicalTrialsParser | Public API v2 | Working (85,677 trials, 33,219 STUDIES_CONDITION + 6,090 TESTS_INTERVENTION edges) |
 | 2 | ClinPGx (PharmGKB successor) | ClinPGxParser | Public API | Working (1,091 VARIANT_IN, 503 drugLabelAnnotatesGene, 51 drugLabelDescribesDrug, 243 AFFECTS_RESPONSE_TO edges) |
 | 3 | NCBI Gene | NCBIGeneParser | Public FTP | Working (193,790 genes) |
 | 4 | DoRothEA (OmniPath) | DoRothEAParser | Public API | Working (12,985 TF-gene interactions, with morScore + confidence properties) |
-| 5 | DrugBank | DrugBankParser | XML file | Working (19,842 drugs, 12,089 drugBindsGene edges) |
+| 5 | DrugBank | DrugBankParser | XML file | Working (19,842 drugs + 6,285 CTD Drug nodes, 12,089 drugBindsGene edges) |
 
 ### Hetionet-Derived Component Parsers (17)
 | # | Source | Parser | Access | Status |
@@ -123,7 +123,7 @@ CVD ontology files: `ontology/genes/cvd.txt` (3,984 gene symbols from OMIM + Dis
 | 13 | DrugCentral (drug-disease) | DrugCentralParser | Public | Working (16,403 pharmacologic class + 5,316 treats + 772 palliates edges) |
 | 14 | BindingDB (drug-target) | BindingDBParser | Public | Working (2,632 chemicalBindsGene edges) |
 | 15 | PubTator Central (literature mining) | PubTatorParser | Public FTP | Working (806,900 disease-disease edges) |
-| 16 | CTD (chemical-gene) | CTDParser | Public | **⚠ 0 edges loaded** (Drug.xrefMeSH match failure — needs ID mapping fix) |
+| 16 | CTD (chemical-gene) | CTDParser | Public | Working (6,285 Drug nodes, 116,451 chemicalIncreasesExpression + 97,951 chemicalDecreasesExpression edges) |
 | 17 | Bgee (gene expression) | BgeeParser | Public FTP | Working (784,026 underexpresses + 1,872 overexpresses edges, with expressionScore property) |
 | 18 | Jensen TISSUES (gene-tissue) | JensenTissuesParser | Public | Working (271,657 gene-tissue edges) |
 | 19 | HPO (Human Phenotype Ontology) | HPOParser | Public | Working (19,389 phenotypes, 23,766 gene-phenotype edges) |
@@ -143,7 +143,7 @@ CVD ontology files: `ontology/genes/cvd.txt` (3,984 gene symbols from OMIM + Dis
 DisGeNET, GWAS Catalog, Jensen DISEASES, OMIM, WikiPathways, AOP-DB, HGNC (base), CellAge, GenAge, Hetionet (precomputed)
 
 ## Ontology Configs
-85 entries in `src/ontology_configs.py` mapping parsed TSV files to Neo4j node/relationship types, properties, and loading strategies. Each relationship config includes a `source_label` field that the loader sets as `r.source` on every relationship.
+86 entries in `src/ontology_configs.py` mapping parsed TSV files to Neo4j node/relationship types, properties, and loading strategies. Each relationship config includes a `source_label` field that the loader sets as `r.source` on every relationship.
 
 ## Relationship Source Labels
 All relationships carry a `source` property. Current labels (21 with edges in graph):

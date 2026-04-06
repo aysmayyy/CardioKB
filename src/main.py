@@ -36,9 +36,6 @@ from src.neo4j_loader import Neo4jLoader
 from src.parsers import (
     ClinicalTrialsParser,
     ClinPGxParser,
-    OMIMParser,
-    AOPDBParser,
-    DisGeNETParser,
     DrugBankParser,
     NCBIGeneParser,
     DoRothEAParser,
@@ -47,30 +44,23 @@ from src.parsers import (
     GeneOntologyParser,
     UberonParser,
     MeSHParser,
-    GWASParser,
     DrugCentralParser,
     BindingDBParser,
     BgeeParser,
     CTDParser,
-    HetionetPrecomputedParser,
     PubTatorParser,
     SIDERParser,
     LINCS1000Parser,
     MEDLINECooccurrenceParser,
-    JensenLabParser,
     JensenTissuesParser,
     HPOParser,
     ReactomeParser,
-    WikiPathwaysParser,
     STRINGParser,
     OpenTargetsParser,
     HGNCFamiliesParser,
-    HGNCParser,
     ClinVarParser,
     DrugAgeParser,
-    CellAgeParser,
     AnAgeParser,
-    GenAgeParser,
 )
 
 logger = logging.getLogger(__name__)
@@ -158,6 +148,12 @@ class CardioKBPipeline:
             logger.info("STEP 1: Data Retrieval and Parsing")
             logger.info("=" * 80)
             parsed_data = self.retrieve_and_parse_data(skip_download)
+
+            # Step 1.5: Filter relationship DataFrames to CVD-relevant edges
+            logger.info("=" * 80)
+            logger.info("STEP 1.5: CVD Edge Filtering")
+            logger.info("=" * 80)
+            parsed_data = self._filter_cvd_edges(parsed_data)
 
             # Step 2: Export to TSV
             logger.info("=" * 80)
@@ -405,17 +401,6 @@ class CardioKBPipeline:
                         f"({gdr['primary_gene_symbol'].nunique()} unique genes)"
                     )
 
-        # Post-processing: prefix CTD chemical_id with 'MESH:' to match Drug.xrefMeSH
-        if 'ctd' in parsed_data:
-            for key in ('chemical_increases_expression', 'chemical_decreases_expression'):
-                if key in parsed_data['ctd']:
-                    df = parsed_data['ctd'][key]
-                    if 'chemical_id' in df.columns:
-                        df['chemical_id'] = df['chemical_id'].apply(
-                            lambda x: f'MESH:{x}' if pd.notna(x) and not str(x).startswith('MESH:') else x
-                        )
-                        logger.info(f"Prefixed CTD {key} chemical_id with MESH:")
-
         # Post-processing: remap PubTator MESH IDs to DOID, GWAS trait to DOID
         from src.id_mapping import remap_pubtator_mesh_to_doid, remap_gwas_disease_to_doid
 
@@ -541,13 +526,25 @@ class CardioKBPipeline:
             subj_key = (pc['subject_node_type'], pc['subject_match_property'])
             subj_col = pc['subject_column_name']
             if subj_key in registry and subj_col in df.columns:
-                df = df[df[subj_col].astype(str).str.strip().isin(registry[subj_key])]
+                vals = df[subj_col].astype(str).str.strip()
+                # Try exact match first; fall back to case-insensitive for name properties
+                mask = vals.isin(registry[subj_key])
+                if mask.sum() == 0 and 'name' in pc['subject_match_property'].lower():
+                    lower_reg = {v.lower() for v in registry[subj_key]}
+                    mask = vals.str.lower().isin(lower_reg)
+                df = df[mask]
 
             # Filter object IDs
             obj_key = (pc['object_node_type'], pc['object_match_property'])
             obj_col = pc['object_column_name']
             if obj_key in registry and obj_col in df.columns:
-                df = df[df[obj_col].astype(str).str.strip().isin(registry[obj_key])]
+                vals = df[obj_col].astype(str).str.strip()
+                # Try exact match first; fall back to case-insensitive for name properties
+                mask = vals.isin(registry[obj_key])
+                if mask.sum() == 0 and 'name' in pc['object_match_property'].lower():
+                    lower_reg = {v.lower() for v in registry[obj_key]}
+                    mask = vals.str.lower().isin(lower_reg)
+                df = df[mask]
 
             removed = before - len(df)
             if removed > 0:
@@ -612,9 +609,7 @@ class CardioKBPipeline:
         parsers['drugcentral'] = DrugCentralParser(
             data_dir=str(self.raw_dir),
         )
-        parsers['gwas'] = GWASParser(
-            data_dir=str(self.raw_dir),
-        )
+        # GWAS Catalog — removed (redundant with OpenTargets)
         parsers['pubtator'] = PubTatorParser(
             data_dir=str(self.raw_dir),
         )
@@ -627,12 +622,8 @@ class CardioKBPipeline:
         parsers['bgee'] = BgeeParser(
             data_dir=str(self.raw_dir),
         )
-        parsers['hetionet_precomputed'] = HetionetPrecomputedParser(
-            data_dir=str(self.raw_dir),
-        )
-        parsers['jensenlab'] = JensenLabParser(
-            data_dir=str(self.raw_dir),
-        )
+        # Hetionet precomputed — removed (redundant with STRING, LINCS, SIDER)
+        # Jensen DISEASES — removed (redundant with OpenTargets)
         parsers['jensentissues'] = JensenTissuesParser(
             data_dir=str(self.raw_dir),
         )
@@ -642,9 +633,7 @@ class CardioKBPipeline:
         parsers['reactome'] = ReactomeParser(
             data_dir=str(self.raw_dir),
         )
-        parsers['wikipathways'] = WikiPathwaysParser(
-            data_dir=str(self.raw_dir),
-        )
+        # WikiPathways — removed (redundant with Reactome)
         parsers['string'] = STRINGParser(
             data_dir=str(self.raw_dir),
         )
@@ -655,40 +644,21 @@ class CardioKBPipeline:
         parsers['hgncfamilies'] = HGNCFamiliesParser(
             data_dir=str(self.raw_dir),
         )
-        parsers['hgnc'] = HGNCParser(
-            data_dir=str(self.raw_dir),
-        )
+        # HGNC base — removed (redundant with NCBI Gene + HGNC Families)
         parsers['clinvar'] = ClinVarParser(
             data_dir=str(self.raw_dir),
         )
         parsers['drugage'] = DrugAgeParser(
             data_dir=str(self.raw_dir),
         )
-        parsers['cellage'] = CellAgeParser(
-            data_dir=str(self.raw_dir),
-        )
+        # CellAge — removed
         parsers['anage'] = AnAgeParser(
             data_dir=str(self.raw_dir),
         )
-        parsers['genage'] = GenAgeParser(
-            data_dir=str(self.raw_dir),
-        )
+        # GenAge — removed
         # Parsers requiring credentials (only add if configured)
-        if os.getenv('OMIM_API_KEY'):
-            parsers['omim'] = OMIMParser(
-                data_dir=str(self.raw_dir),
-                api_key=os.getenv('OMIM_API_KEY'),
-            )
-        else:
-            logger.warning("OMIM_API_KEY not set - OMIM parser disabled")
-
-        if os.getenv('DISGENET_API_KEY'):
-            parsers['disgenet'] = DisGeNETParser(
-                data_dir=str(self.raw_dir),
-                api_key=os.getenv('DISGENET_API_KEY'),
-            )
-        else:
-            logger.warning("DISGENET_API_KEY not set - DisGeNET parser disabled")
+        # OMIM — removed (redundant with OpenTargets + HPO)
+        # DisGeNET — removed (redundant with OpenTargets + PubTator)
 
         if os.getenv('DRUGBANK_USERNAME') and os.getenv('DRUGBANK_PASSWORD'):
             parsers['drugbank'] = DrugBankParser(
@@ -706,27 +676,7 @@ class CardioKBPipeline:
             else:
                 logger.warning("DRUGBANK credentials not set and no XML found - DrugBank parser disabled")
 
-        mysql_user = os.getenv('MYSQL_USERNAME')
-        mysql_pass = os.getenv('MYSQL_PASSWORD')
-        if mysql_user and mysql_pass:
-            parsers['aopdb'] = AOPDBParser(
-                data_dir=str(self.raw_dir),
-                mysql_config={
-                    'host': 'localhost',
-                    'user': mysql_user,
-                    'password': mysql_pass,
-                    'database': os.getenv('MYSQL_DB_NAME', 'aopdb'),
-                }
-            )
-        else:
-            # Check for SQL dump file (no MySQL required)
-            aopdb_dir = self.raw_dir / 'aopdb'
-            sql_dumps = list(aopdb_dir.glob('*.sql')) if aopdb_dir.exists() else []
-            if sql_dumps:
-                logger.info("MySQL credentials not set, but SQL dump found - enabling AOP-DB parser")
-                parsers['aopdb'] = AOPDBParser(data_dir=str(self.raw_dir))
-            else:
-                logger.warning("MySQL credentials not set and no SQL dump found - AOP-DB parser disabled")
+        # AOP-DB — removed (redundant with Reactome pathways)
 
         return parsers
 
@@ -796,7 +746,7 @@ class CardioKBPipeline:
                 continue
             for key, df in parsed_data[src].items():
                 name_col = None
-                for candidate in ('commonName', 'diseaseName', 'disease_name'):
+                for candidate in ('commonName', 'diseaseName', 'disease_name', 'name'):
                     if candidate in df.columns:
                         name_col = candidate
                         break
@@ -1005,7 +955,35 @@ class CardioKBPipeline:
             return
 
         try:
+            # Clear existing graph for a clean CVD-filtered reload.
+            # Use CREATE OR REPLACE DATABASE (instant) via bolt:// to
+            # the system db — avoids slow batch-delete on millions of nodes.
+            logger.info("Clearing existing Neo4j graph for clean reload...")
+            bolt_uri = uri.replace('neo4j://', 'bolt://')
+            from neo4j import GraphDatabase as _GD
+            _sys_driver = _GD.driver(bolt_uri, auth=(username, password))
+            try:
+                with _sys_driver.session(database='system') as sys_session:
+                    sys_session.run("CREATE OR REPLACE DATABASE neo4j WAIT")
+                logger.info("  Database replaced (CREATE OR REPLACE).")
+            except Exception as e:
+                logger.warning(f"  CREATE OR REPLACE failed ({e}), falling back to batch delete...")
+                with _sys_driver.session(database='neo4j') as session:
+                    deleted = 1
+                    while deleted > 0:
+                        result = session.run(
+                            "MATCH (n) WITH n LIMIT 50000 "
+                            "DETACH DELETE n RETURN count(n) AS cnt"
+                        )
+                        deleted = result.single()['cnt']
+                        if deleted > 0:
+                            logger.info(f"  Deleted {deleted} nodes...")
+                logger.info("  Graph cleared via batch delete.")
+            finally:
+                _sys_driver.close()
+
             with Neo4jLoader(uri, username, password) as loader:
+
                 # Setup schema
                 loader.setup_constraints(ONTOLOGY_CONFIGS)
                 loader.setup_indexes(ONTOLOGY_CONFIGS)
@@ -1036,6 +1014,24 @@ class CardioKBPipeline:
 
                 # Post-load: tag CVD-relevant Disease nodes
                 self._tag_cvd_diseases(loader)
+
+                # Post-load: link all connected Gene nodes to Homo sapiens Species node
+                # (AnAge provides Species nodes; NCBI Gene provides human genes)
+                logger.info("Post-load: creating geneInSpecies edges (Gene → Homo sapiens)...")
+                try:
+                    with loader.driver.session(database=loader.database) as session:
+                        result = session.run(
+                            'MATCH (sp:Species {speciesName: "Homo sapiens"}) '
+                            'MATCH (g:Gene)--() '
+                            'WITH DISTINCT g, sp '
+                            'MERGE (g)-[r:geneInSpecies]->(sp) '
+                            'ON CREATE SET r.source = "NCBI Gene" '
+                            'RETURN count(r) AS cnt'
+                        )
+                        cnt = result.single()['cnt']
+                        logger.info(f"  Created {cnt} geneInSpecies edges")
+                except Exception as e:
+                    logger.warning(f"  geneInSpecies post-load failed: {e}")
 
         except Exception as e:
             logger.error(f"Neo4j loading failed: {e}")
@@ -1198,6 +1194,200 @@ class CardioKBPipeline:
         logger.info(f"  Saved ID mapping report to {report_path}")
 
         logger.info("=" * 60)
+
+    def _filter_cvd_edges(self, parsed_data: Dict[str, Dict]) -> Dict[str, Dict]:
+        """
+        Filter relationship DataFrames to CVD-relevant edges only.
+
+        Node DataFrames are left untouched (full ontologies ensure edge targets
+        exist). Relationship DataFrames are filtered so at least one endpoint
+        is CVD-relevant:
+          - Gene endpoint: gene symbol must be in ontology/genes/cvd.txt
+          - Disease endpoint: disease name must contain a CVD term from
+            ontology/diseases/cvd.txt
+
+        This produces a CVD-scoped ground truth graph while keeping all
+        potential node targets available for edge resolution.
+        """
+        import re
+
+        # ── Load CVD gene symbols ──────────────────────────────────────
+        gene_path = self.base_dir / "ontology" / "genes" / "cvd.txt"
+        cvd_genes: set = set()
+        if gene_path.exists():
+            with open(gene_path) as f:
+                for line in f:
+                    line = line.strip()
+                    if line and not line.startswith('#'):
+                        cvd_genes.add(line)
+        logger.info(f"CVD edge filter: {len(cvd_genes)} CVD gene symbols loaded")
+
+        # ── Load CVD disease terms ─────────────────────────────────────
+        disease_path = self.base_dir / "ontology" / "diseases" / "cvd.txt"
+        cvd_disease_terms: list = []
+        if disease_path.exists():
+            with open(disease_path) as f:
+                for line in f:
+                    line = line.strip()
+                    if line and not line.startswith('#'):
+                        cvd_disease_terms.append(line.lower())
+        logger.info(f"CVD edge filter: {len(cvd_disease_terms)} CVD disease terms loaded")
+
+        # ── Build gene ID cross-reference sets ─────────────────────────
+        # Some parsers use NCBI Gene IDs or Ensembl IDs instead of symbols.
+        # Build lookup from the NCBI Gene TSV.
+        cvd_ncbi_ids: set = set()
+        cvd_ensembl_ids: set = set()
+        ncbi_tsv = self.processed_dir / "ncbigene" / "genes.tsv"
+        if ncbi_tsv.exists():
+            try:
+                gene_df = pd.read_csv(ncbi_tsv, sep='\t', dtype=str,
+                                      usecols=['Symbol', 'GeneID', 'xref_Ensembl'])
+                mask = gene_df['Symbol'].isin(cvd_genes)
+                cvd_ncbi_ids = set(gene_df.loc[mask, 'GeneID'].dropna())
+                cvd_ensembl_ids = set(gene_df.loc[mask, 'xref_Ensembl'].dropna())
+                logger.info(f"  Mapped to {len(cvd_ncbi_ids)} NCBI Gene IDs, "
+                            f"{len(cvd_ensembl_ids)} Ensembl IDs")
+            except Exception as e:
+                logger.warning(f"  Could not build gene ID cross-refs: {e}")
+
+        # ── Load CVD DOID set (Disease Ontology IDs for CVD diseases) ──
+        # Match disease terms against Disease Ontology nodes to get DOIDs
+        cvd_doids: set = set()
+        do_tsv = self.processed_dir / "disease_ontology" / "disease_nodes.tsv"
+        if do_tsv.exists():
+            try:
+                do_df = pd.read_csv(do_tsv, sep='\t', dtype=str,
+                                    usecols=['doid', 'name'])
+                for _, row in do_df.iterrows():
+                    name = str(row.get('name', '')).lower()
+                    if any(term in name for term in cvd_disease_terms):
+                        cvd_doids.add(row['doid'])
+                logger.info(f"  Matched {len(cvd_doids)} CVD DOIDs from Disease Ontology")
+            except Exception as e:
+                logger.warning(f"  Could not build CVD DOID set: {e}")
+
+        # ── Load CVD OMIM IDs ──────────────────────────────────────────
+        cvd_omim_ids: set = set()
+        omim_tsv = self.processed_dir / "omim" / "gene_disease.tsv"
+        if omim_tsv.exists():
+            try:
+                omim_df = pd.read_csv(omim_tsv, sep='\t', dtype=str)
+                gene_col = 'primary_gene_symbol'
+                dis_col = 'phenotype_mim'
+                if gene_col in omim_df.columns and dis_col in omim_df.columns:
+                    mask = omim_df[gene_col].isin(cvd_genes)
+                    cvd_omim_ids = set(omim_df.loc[mask, dis_col].dropna())
+                    logger.info(f"  Matched {len(cvd_omim_ids)} CVD OMIM disease IDs")
+            except Exception as e:
+                logger.warning(f"  Could not build CVD OMIM set: {e}")
+
+        # ── Define column-level filter rules per match property ────────
+        # For each Neo4j match property used in relationship configs,
+        # define which CVD ID set to check against.
+        gene_match_properties = {
+            'geneSymbol': cvd_genes,
+            'xrefNcbiGene': cvd_ncbi_ids,
+            'xrefEnsembl': cvd_ensembl_ids,
+            'TF': cvd_genes,  # DoRothEA TF symbols
+        }
+        disease_match_properties = {
+            'xrefDiseaseOntology': cvd_doids,
+            'xrefOMIM': cvd_omim_ids,
+            'commonName': None,  # special: substring match
+            'xrefUmlsCUI': None,  # can't filter easily; skip
+        }
+
+        def _disease_name_matches(val: str) -> bool:
+            """Check if a disease name/condition contains a CVD term."""
+            v = str(val).lower()
+            return any(t in v for t in cvd_disease_terms)
+
+        # ── Apply filtering to each relationship DataFrame ─────────────
+        total_before = 0
+        total_after = 0
+
+        for source_name, data in parsed_data.items():
+            for data_name in list(data.keys()):
+                config_key = f"{source_name}.{data_name}"
+                config = ONTOLOGY_CONFIGS.get(config_key, {})
+
+                # Only filter relationships, not nodes
+                if config.get('data_type') != 'relationship':
+                    continue
+                if config.get('skip', False):
+                    continue
+
+                pc = config.get('parse_config', {})
+                subj_match = pc.get('subject_match_property', '')
+                obj_match = pc.get('object_match_property', '')
+                subj_col = pc.get('subject_column_name', '')
+                obj_col = pc.get('object_column_name', '')
+
+                df = data[data_name]
+                if df is None or len(df) == 0:
+                    continue
+
+                before = len(df)
+                total_before += before
+
+                # Determine filter strategy for each endpoint
+                subj_filter = None
+                obj_filter = None
+
+                if subj_match in gene_match_properties:
+                    id_set = gene_match_properties[subj_match]
+                    if id_set and subj_col in df.columns:
+                        subj_filter = df[subj_col].astype(str).isin(id_set)
+
+                if obj_match in gene_match_properties:
+                    id_set = gene_match_properties[obj_match]
+                    if id_set and obj_col in df.columns:
+                        obj_filter = df[obj_col].astype(str).isin(id_set)
+
+                if subj_match in disease_match_properties:
+                    id_set = disease_match_properties[subj_match]
+                    if id_set is not None and subj_col in df.columns:
+                        subj_filter = df[subj_col].astype(str).isin(id_set)
+                    elif subj_match == 'commonName' and subj_col in df.columns:
+                        subj_filter = df[subj_col].apply(_disease_name_matches)
+
+                if obj_match in disease_match_properties:
+                    id_set = disease_match_properties[obj_match]
+                    if id_set is not None and obj_col in df.columns:
+                        obj_filter = df[obj_col].astype(str).isin(id_set)
+                    elif obj_match == 'commonName' and obj_col in df.columns:
+                        obj_filter = df[obj_col].apply(_disease_name_matches)
+
+                # Apply: keep edge if AT LEAST ONE endpoint is CVD-relevant
+                if subj_filter is not None and obj_filter is not None:
+                    mask = subj_filter | obj_filter
+                elif subj_filter is not None:
+                    mask = subj_filter
+                elif obj_filter is not None:
+                    mask = obj_filter
+                else:
+                    # Neither endpoint is Gene or Disease — keep all
+                    # (e.g., Drug→SideEffect, DrugLabel→Drug)
+                    total_after += before
+                    continue
+
+                data[data_name] = df[mask].reset_index(drop=True)
+                after = len(data[data_name])
+                total_after += after
+
+                pct = round(100 * after / before, 1) if before > 0 else 0
+                if before != after:
+                    logger.info(
+                        f"  {config_key}: {before:>10,} → {after:>10,} edges "
+                        f"({pct}% retained)"
+                    )
+
+        logger.info(f"CVD edge filter complete: {total_before:,} → {total_after:,} "
+                    f"total relationship rows "
+                    f"({round(100 * total_after / total_before, 1) if total_before else 0}% retained)")
+
+        return parsed_data
 
     def _tag_cvd_diseases(self, loader):
         """

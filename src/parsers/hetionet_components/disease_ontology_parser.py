@@ -8,6 +8,7 @@ Data Source: https://github.com/DiseaseOntology/HumanDiseaseOntology
 Output:
   - disease_nodes.tsv: DOID, name, definition, xrefs
   - disease_anatomy.tsv: disease_id, anatomy_id (diseaseLocalizesToAnatomy)
+  - disease_hierarchy.tsv: child_id, parent_id (diseaseIsSubtypeOf via IS_A)
 """
 
 import logging
@@ -106,6 +107,10 @@ class DiseaseOntologyParser(BaseParser):
             diseases = []
             disease_anatomy = []
             disease_xrefs = []
+            disease_hierarchy = []
+
+            # obonet stores IS_A edges as graph edges (not node attributes)
+            valid_doids = {n for n in graph.nodes if n.startswith("DOID:")}
 
             for node_id, node_data in graph.nodes(data=True):
                 if not node_id.startswith("DOID:"):
@@ -146,8 +151,19 @@ class DiseaseOntologyParser(BaseParser):
                                             "relationship": "diseaseLocalizesToAnatomy"
                                         })
 
+            # Extract IS_A hierarchy from graph edges
+            # obonet represents is_a: as directed edges child -> parent
+            for child, parent in graph.edges():
+                if child.startswith("DOID:") and parent.startswith("DOID:"):
+                    if child in valid_doids and parent in valid_doids:
+                        disease_hierarchy.append({
+                            "child_id": child,
+                            "parent_id": parent,
+                        })
+
             logger.info(f"Parsed {len(diseases)} disease terms")
             logger.info(f"Found {len(disease_anatomy)} disease-anatomy relationships")
+            logger.info(f"Found {len(disease_hierarchy)} disease IS_A hierarchy relationships")
 
             result = {
                 "disease_nodes": pd.DataFrame(diseases),
@@ -158,6 +174,9 @@ class DiseaseOntologyParser(BaseParser):
 
             if disease_xrefs:
                 result["disease_xrefs"] = pd.DataFrame(disease_xrefs)
+
+            if disease_hierarchy:
+                result["disease_hierarchy"] = pd.DataFrame(disease_hierarchy)
 
             return result
 
@@ -175,6 +194,7 @@ class DiseaseOntologyParser(BaseParser):
             diseases = []
             disease_anatomy = []
             disease_xrefs = []
+            disease_hierarchy = []
 
             for term in ontology.terms():
                 if not term.id.startswith("DOID:"):
@@ -198,6 +218,14 @@ class DiseaseOntologyParser(BaseParser):
                         "xref": str(xref)
                     })
 
+                # Extract IS_A hierarchy (superclasses = parents)
+                for parent in term.superclasses(distance=1, with_self=False):
+                    if parent.id.startswith("DOID:") and not parent.obsolete:
+                        disease_hierarchy.append({
+                            "child_id": term.id,
+                            "parent_id": parent.id,
+                        })
+
                 # Extract relationships to anatomy
                 for rel in term.relationships:
                     for target in term.relationships[rel]:
@@ -210,6 +238,7 @@ class DiseaseOntologyParser(BaseParser):
 
             logger.info(f"Parsed {len(diseases)} disease terms")
             logger.info(f"Found {len(disease_anatomy)} disease-anatomy relationships")
+            logger.info(f"Found {len(disease_hierarchy)} disease IS_A hierarchy relationships")
 
             result = {
                 "disease_nodes": pd.DataFrame(diseases),
@@ -220,6 +249,9 @@ class DiseaseOntologyParser(BaseParser):
 
             if disease_xrefs:
                 result["disease_xrefs"] = pd.DataFrame(disease_xrefs)
+
+            if disease_hierarchy:
+                result["disease_hierarchy"] = pd.DataFrame(disease_hierarchy)
 
             return result
 
@@ -267,5 +299,9 @@ class DiseaseOntologyParser(BaseParser):
             "disease_xrefs": {
                 "doid": "Disease Ontology ID",
                 "xref": "Cross-reference to external database"
+            },
+            "disease_hierarchy": {
+                "child_id": "Child Disease Ontology ID (subtype)",
+                "parent_id": "Parent Disease Ontology ID (supertype)",
             }
         }

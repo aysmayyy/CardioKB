@@ -397,6 +397,132 @@ def graph_data():
                     },
                 }
 
+            # --- Disease hierarchy: connect seeds to a central hub ---
+            # Many seed diseases are OMIM-sourced (no DOID, no hierarchy
+            # edges).  Find the best-matching DOID "hub" node for the
+            # search terms and link every seed disease to it so the graph
+            # renders as a connected star instead of disjoint clusters.
+            hier_seen = set()
+
+            # 1. Find DOID hub nodes that match the search terms and
+            #    participate in the IS_A hierarchy.
+            hub_result = session.run(
+                "MATCH (hub:Disease) "
+                "WHERE hub.xrefDiseaseOntology IS NOT NULL "
+                "  AND any(term IN $terms WHERE toLower(hub.commonName) CONTAINS term) "
+                "RETURN elementId(hub) AS hid, hub.commonName AS hname, "
+                "       hub.xrefDiseaseOntology AS hdoid "
+                "LIMIT 5",
+                terms=term_list,
+            )
+            hub_ids = []
+            for rec in hub_result:
+                hid = rec['hid']
+                hub_ids.append(hid)
+                if hid not in nodes:
+                    nodes[hid] = {
+                        'id': hid,
+                        'label': rec['hname'] or hid,
+                        'type': 'Disease',
+                        'layer': 'core',
+                        'isParent': True,
+                        'properties': {
+                            'commonName': rec['hname'],
+                            'xrefDiseaseOntology': rec['hdoid'],
+                        },
+                    }
+
+            # 2. Connect every seed disease to each hub with a visual
+            #    "diseaseIsSubtypeOf" edge (skip self-links).
+            for sid in seed_ids:
+                for hid in hub_ids:
+                    if sid == hid:
+                        continue
+                    edge_key = (sid, hid)
+                    if edge_key not in hier_seen:
+                        hier_seen.add(edge_key)
+                        edges.append({
+                            'from': sid,
+                            'to': hid,
+                            'label': 'diseaseIsSubtypeOf',
+                            'source': 'Disease Ontology',
+                            'layer': 'core',
+                        })
+
+            # 3. Fetch the real IS_A parents of hub nodes (one level up).
+            if hub_ids:
+                parent_result = session.run(
+                    "MATCH (child:Disease)-[r:diseaseIsSubtypeOf]->(parent:Disease) "
+                    "WHERE elementId(child) IN $hids "
+                    "RETURN elementId(child) AS cid, "
+                    "       elementId(parent) AS pid, parent.commonName AS pname, "
+                    "       parent.xrefDiseaseOntology AS pdoid, "
+                    "       r.source AS source",
+                    hids=hub_ids,
+                )
+                for rec in parent_result:
+                    pid = rec['pid']
+                    if pid not in nodes:
+                        nodes[pid] = {
+                            'id': pid,
+                            'label': rec['pname'] or pid,
+                            'type': 'Disease',
+                            'layer': 'core',
+                            'isParent': True,
+                            'properties': {
+                                'commonName': rec['pname'],
+                                'xrefDiseaseOntology': rec['pdoid'],
+                            },
+                        }
+                    edge_key = (rec['cid'], pid)
+                    if edge_key not in hier_seen:
+                        hier_seen.add(edge_key)
+                        edges.append({
+                            'from': rec['cid'],
+                            'to': pid,
+                            'label': 'diseaseIsSubtypeOf',
+                            'source': rec['source'] or 'Disease Ontology',
+                            'layer': 'core',
+                        })
+
+                # 4. Fetch children (subtypes) of hub nodes.
+                child_result = session.run(
+                    "MATCH (child:Disease)-[r:diseaseIsSubtypeOf]->(parent:Disease) "
+                    "WHERE elementId(parent) IN $hids "
+                    "  AND NOT elementId(child) IN $exclude "
+                    "RETURN elementId(child) AS cid, child.commonName AS cname, "
+                    "       child.xrefDiseaseOntology AS cdoid, "
+                    "       elementId(parent) AS pid, "
+                    "       r.source AS source "
+                    "LIMIT 30",
+                    hids=hub_ids,
+                    exclude=seed_ids + hub_ids,
+                )
+                for rec in child_result:
+                    cid = rec['cid']
+                    if cid not in nodes:
+                        nodes[cid] = {
+                            'id': cid,
+                            'label': rec['cname'] or cid,
+                            'type': 'Disease',
+                            'layer': 'core',
+                            'isChild': True,
+                            'properties': {
+                                'commonName': rec['cname'],
+                                'xrefDiseaseOntology': rec['cdoid'],
+                            },
+                        }
+                    edge_key = (cid, rec['pid'])
+                    if edge_key not in hier_seen:
+                        hier_seen.add(edge_key)
+                        edges.append({
+                            'from': cid,
+                            'to': rec['pid'],
+                            'label': 'diseaseIsSubtypeOf',
+                            'source': rec['source'] or 'Disease Ontology',
+                            'layer': 'core',
+                        })
+
             # --- Core layer: per-seed neighbors ranked by specificityScore ---
             # Process each seed disease individually to avoid OOM on broad
             # terms like "asthma" that match many high-degree disease nodes.

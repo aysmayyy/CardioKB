@@ -55,6 +55,7 @@ OMIM_GENE_DISEASE = 'gene_disease'
 DO_DISEASE_NODES = 'disease_nodes'
 DO_DISEASE_ANATOMY = 'disease_anatomy'
 DO_DISEASE_XREFS = 'disease_xrefs'
+DO_DISEASE_HIERARCHY = 'disease_hierarchy'
 # Hetionet Components — Gene Ontology
 GO_BP_NODES = 'biological_process_nodes'
 GO_MF_NODES = 'molecular_function_nodes'
@@ -90,6 +91,7 @@ PUBTATOR_GD_LITERATURE = 'gene_disease_literature'
 # Hetionet Components — BindingDB
 BINDINGDB_DRUG_BINDS_GENE = 'drug_binds_gene'
 # Hetionet Components — CTD
+CTD_CHEMICAL_NODES = 'chemical_nodes'
 CTD_CHEM_INCREASES_EXPR = 'chemical_increases_expression'
 CTD_CHEM_DECREASES_EXPR = 'chemical_decreases_expression'
 # Hetionet Components — Bgee
@@ -137,7 +139,7 @@ AOPDB_TABLE_MAPPING = {
 
 ONTOLOGY_CONFIGS = {
     # =========================================================================
-    # AOP-DB - Adverse Outcome Pathway Database
+    # AOP-DB - REMOVED (redundant with Reactome pathways)
     # =========================================================================
     f'aopdb.{AOPDB_DRUGS}': {
         'data_type': 'node',
@@ -156,7 +158,7 @@ ONTOLOGY_CONFIGS = {
             },
         },
         'merge': True,
-        'skip': False,
+        'skip': True,
     },
     f'aopdb.{AOPDB_PATHWAYS}': {
         'data_type': 'node',
@@ -173,7 +175,7 @@ ONTOLOGY_CONFIGS = {
             },
         },
         'merge': False,
-        'skip': False,
+        'skip': True,
     },
     f'aopdb.{AOPDB_GENE_PATHWAY_RELATIONSHIPS}': {
         'data_type': 'relationship',
@@ -191,17 +193,12 @@ ONTOLOGY_CONFIGS = {
             'object_match_property': 'pathwayName',
         },
         'merge': False,
-        'skip': False,
+        'skip': True,
     },
 
     # =========================================================================
-    # DisGeNET - Gene-Disease Associations (CVD-scoped via parser)
+    # DisGeNET - REMOVED (redundant with OpenTargets + PubTator)
     # =========================================================================
-    # NOTE: disease_classifications and disease_mappings are superseded by the
-    # merged 'diseases' DataFrame. Disease loading uses custom Cypher in
-    # main.py post-processing to match existing Disease Ontology nodes by DOID
-    # and enrich them with xrefUmlsCUI, creating new nodes only when no DOID
-    # match exists. These legacy configs are kept but skipped.
     f'disgenet.{DISGENET_DISEASE_CLASSIFICATIONS}': {
         'data_type': 'node',
         'node_type': 'Disease',
@@ -256,7 +253,7 @@ ONTOLOGY_CONFIGS = {
             'filter_value': 'disease',
         },
         'merge': False,
-        'skip': False,
+        'skip': True,
     },
 
     # =========================================================================
@@ -307,10 +304,8 @@ ONTOLOGY_CONFIGS = {
     },
 
     # =========================================================================
-    # OMIM - Online Mendelian Inheritance in Man
+    # OMIM - REMOVED (redundant with OpenTargets + HPO)
     # =========================================================================
-    # Disease nodes from OMIM gene-disease relationships.
-    # Creates/merges Disease nodes keyed by MIM number (xrefOMIM).
     f'omim.{OMIM_GENE_DISEASE}_nodes': {
         'data_type': 'node',
         'node_type': 'Disease',
@@ -325,9 +320,8 @@ ONTOLOGY_CONFIGS = {
             },
         },
         'merge': True,
-        'skip': False,
+        'skip': True,
     },
-    # Gene-disease relationships from OMIM (all diseases, pre-processed in main.py).
     f'omim.{OMIM_GENE_DISEASE}': {
         'data_type': 'relationship',
         'relationship_type': 'geneAssociatesWithDisease',
@@ -347,7 +341,7 @@ ONTOLOGY_CONFIGS = {
             },
         },
         'merge': False,
-        'skip': False,
+        'skip': True,
     },
 
     # =========================================================================
@@ -665,6 +659,23 @@ ONTOLOGY_CONFIGS = {
         },
         'merge': True,
         'skip': True,  # One-to-many xrefs (MESH, ICD10, OMIM per disease); row-by-row loader would overwrite. Xref IDs already mapped via id_mapping.py.
+    },
+    f'disease_ontology.{DO_DISEASE_HIERARCHY}': {
+        'data_type': 'relationship',
+        'relationship_type': 'diseaseIsSubtypeOf',
+        'source_label': 'Disease Ontology',
+        'source_filename': f'{DO_DISEASE_HIERARCHY}.tsv',
+        'parse_config': {
+            'headers': True,
+            'subject_node_type': 'Disease',
+            'subject_column_name': 'child_id',
+            'subject_match_property': 'xrefDiseaseOntology',
+            'object_node_type': 'Disease',
+            'object_column_name': 'parent_id',
+            'object_match_property': 'xrefDiseaseOntology',
+        },
+        'merge': True,
+        'skip': False,
     },
 
     # ---- Gene Ontology ----
@@ -1025,7 +1036,7 @@ ONTOLOGY_CONFIGS = {
         'skip': False,
     },
 
-    # ---- GWAS Catalog ----
+    # ---- GWAS Catalog — REMOVED (redundant with OpenTargets) ----
     f'gwas.{GWAS_GENE_DISEASE}': {
         'data_type': 'relationship',
         'relationship_type': 'geneAssociatesWithDisease',
@@ -1041,7 +1052,7 @@ ONTOLOGY_CONFIGS = {
             'object_match_property': 'xrefDiseaseOntology',
         },
         'merge': False,
-        'skip': False,
+        'skip': True,
     },
 
     # ---- PubTator ----
@@ -1100,6 +1111,22 @@ ONTOLOGY_CONFIGS = {
     },
 
     # ---- CTD ----
+    f'ctd.{CTD_CHEMICAL_NODES}': {
+        'data_type': 'node',
+        'node_type': 'Drug',
+        'source_filename': f'{CTD_CHEMICAL_NODES}.tsv',
+        'parse_config': {
+            'headers': True,
+            'iri_column_name': 'mesh_id',
+            'data_property_map': {
+                'mesh_id': 'xrefMeSH',
+                'drug_name': 'commonName',
+                'source_database': 'sourceDatabase',
+            },
+        },
+        'merge': True,
+        'skip': False,
+    },
     f'ctd.{CTD_CHEM_INCREASES_EXPR}': {
         'data_type': 'relationship',
         'relationship_type': 'chemicalIncreasesExpression',
@@ -1177,7 +1204,7 @@ ONTOLOGY_CONFIGS = {
         'skip': False,
     },
 
-    # ---- Hetionet Precomputed ----
+    # ---- Hetionet Precomputed — REMOVED (redundant with STRING, LINCS, SIDER) ----
     f'hetionet_precomputed.{HETIO_GENE_INTERACTS}': {
         'data_type': 'relationship',
         'relationship_type': 'geneInteractsWithGene',
@@ -1193,7 +1220,7 @@ ONTOLOGY_CONFIGS = {
             'object_match_property': 'xrefNcbiGene',
         },
         'merge': False,
-        'skip': False,
+        'skip': True,
     },
     f'hetionet_precomputed.{HETIO_GENE_COVARIES}': {
         'data_type': 'relationship',
@@ -1210,7 +1237,7 @@ ONTOLOGY_CONFIGS = {
             'object_match_property': 'xrefNcbiGene',
         },
         'merge': False,
-        'skip': False,
+        'skip': True,
     },
     f'hetionet_precomputed.{HETIO_GENE_REGULATES}': {
         'data_type': 'relationship',
@@ -1230,7 +1257,6 @@ ONTOLOGY_CONFIGS = {
         'skip': True,  # Subset of LINCS L1000 geneRegulatesGene; LINCS overwrites r.source
     },
 
-    # ---- Hetionet Precomputed: Drug Causes Side Effect ----
     f'hetionet_precomputed.{HETIO_DRUG_CAUSES_EFFECT}': {
         'data_type': 'relationship',
         'relationship_type': 'drugCausesSideEffect',
@@ -1246,11 +1272,11 @@ ONTOLOGY_CONFIGS = {
             'object_match_property': 'xrefUmlsCUI',
         },
         'merge': False,
-        'skip': False,
+        'skip': True,
     },
 
     # =========================================================================
-    # Jensen Lab DISEASES — Gene-Disease Associations
+    # Jensen Lab DISEASES — REMOVED (redundant with OpenTargets)
     # =========================================================================
     f'jensenlab.{JENSENLAB_GENE_DISEASE}': {
         'data_type': 'relationship',
@@ -1271,7 +1297,7 @@ ONTOLOGY_CONFIGS = {
             },
         },
         'merge': False,
-        'skip': False,
+        'skip': True,
     },
 
     # =========================================================================
@@ -1401,7 +1427,7 @@ ONTOLOGY_CONFIGS = {
     },
 
     # =========================================================================
-    # WikiPathways — Pathway Nodes
+    # WikiPathways — REMOVED (redundant with Reactome)
     # =========================================================================
     f'wikipathways.{WIKIPATHWAYS_PATHWAY_NODES}': {
         'data_type': 'node',
@@ -1416,10 +1442,8 @@ ONTOLOGY_CONFIGS = {
             },
         },
         'merge': True,
-        'skip': False,
+        'skip': True,
     },
-
-    # ---- WikiPathways Gene-Pathway Edges ----
     f'wikipathways.{WIKIPATHWAYS_GENE_PATHWAY}': {
         'data_type': 'relationship',
         'relationship_type': 'geneInPathway',
@@ -1436,7 +1460,7 @@ ONTOLOGY_CONFIGS = {
             'object_match_property': 'pathwayName',
         },
         'merge': False,
-        'skip': False,
+        'skip': True,
     },
 
     # =========================================================================
@@ -1527,7 +1551,7 @@ ONTOLOGY_CONFIGS = {
     },
 
     # =========================================================================
-    # hgnc (auto-generated by database agent)
+    # hgnc base — REMOVED (redundant with NCBI Gene + HGNC Families)
     # =========================================================================
     'hgnc.gene_nodes': {
         'data_type': 'node',
@@ -1547,7 +1571,7 @@ ONTOLOGY_CONFIGS = {
             },
         },
         'merge': True,
-        'skip': False,
+        'skip': True,
     },
 
     # =========================================================================
@@ -1706,7 +1730,7 @@ ONTOLOGY_CONFIGS = {
 
 
     # =========================================================================
-    # cellage (auto-generated by database agent)
+    # cellage — REMOVED
     # =========================================================================
     'cellage.gene_nodes': {
         'data_type': 'node',
@@ -1718,7 +1742,7 @@ ONTOLOGY_CONFIGS = {
             'data_property_map': {'geneSymbol': 'geneSymbol', 'sourceDatabase': 'sourceDatabase'},
         },
         'merge': True,
-        'skip': False,
+        'skip': True,
     },
     'cellage.gene_properties': {
         'data_type': 'node',
@@ -1730,7 +1754,7 @@ ONTOLOGY_CONFIGS = {
             'data_property_map': {'geneSymbol': 'geneSymbol', 'sourceDatabase': 'sourceDatabase'},
         },
         'merge': True,
-        'skip': False,
+        'skip': True,
     },
 
 
@@ -1758,7 +1782,7 @@ ONTOLOGY_CONFIGS = {
     },
 
     # =========================================================================
-    # genage (auto-generated by database agent)
+    # genage — REMOVED
     # =========================================================================
     'genage.gene_nodes': {
         'data_type': 'node',
@@ -1770,6 +1794,6 @@ ONTOLOGY_CONFIGS = {
             'data_property_map': {'geneSymbol': 'geneSymbol', 'xrefNcbiGene': 'xrefNcbiGene', 'sourceDatabase': 'sourceDatabase'},
         },
         'merge': True,
-        'skip': False,
+        'skip': True,
     },
 }

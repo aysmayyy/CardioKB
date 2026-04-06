@@ -1291,13 +1291,37 @@ function ensureExploreNetwork() {
             physics: {
                 enabled: true,
                 solver: 'forceAtlas2Based',
-                forceAtlas2Based: { gravitationalConstant: -40, centralGravity: 0.005, springLength: 100 },
-                stabilization: { enabled: false },
+                forceAtlas2Based: {
+                    gravitationalConstant: -60,
+                    centralGravity: 0.008,
+                    springLength: 140,
+                    springConstant: 0.02,
+                    damping: 0.4,
+                },
+                stabilization: { enabled: true, iterations: 150, fit: true },
+                maxVelocity: 30,
             },
             interaction: { hover: true, tooltipDelay: 100, dragNodes: true, dragView: true, zoomView: true },
             edges: { smooth: { type: 'continuous' } },
         }
     );
+    // Pin nodes in place when user drags them
+    exploreNetwork.on('dragEnd', function(params) {
+        if (params.nodes.length > 0) {
+            params.nodes.forEach(function(nodeId) {
+                var pos = exploreNetwork.getPositions([nodeId])[nodeId];
+                exploreVisNodes.update({ id: nodeId, fixed: { x: true, y: true }, x: pos.x, y: pos.y });
+            });
+        }
+    });
+    // Unpin on double-click so user can release a node back to physics
+    exploreNetwork.on('doubleClick', function(params) {
+        if (params.nodes.length > 0) {
+            params.nodes.forEach(function(nodeId) {
+                exploreVisNodes.update({ id: nodeId, fixed: false });
+            });
+        }
+    });
     exploreNetwork.on('click', function(params) {
         console.log('[CardioKB] Click event:', params.nodes.length, 'nodes at', params.pointer.canvas);
         if (params.nodes.length > 0) {
@@ -1307,6 +1331,10 @@ function ensureExploreNetwork() {
         } else {
             closeDetailPanel();
         }
+    });
+    // After initial stabilization, turn off physics so layout stays still
+    exploreNetwork.on('stabilizationIterationsDone', function() {
+        exploreNetwork.setOptions({ physics: { enabled: false } });
     });
 }
 
@@ -1403,34 +1431,46 @@ function renderExploreGraph(data) {
 
     const newNodes = filteredNodes.map(n => {
         const isCore = n.layer !== 'discovery';
-        const baseSize = isCore ? 18 : 8;
-        const fontSize = isCore ? 12 : 8;
+        const isParent = n.isParent === true;
+        const isChild = n.isChild === true;
+        const isDiseaseHub = isParent;
+        const baseSize = isDiseaseHub ? 30 : isChild ? 14 : (n.type === 'Disease' ? 20 : (isCore ? 14 : 6));
+        const fontSize = isDiseaseHub ? 14 : (n.type === 'Disease' ? 11 : (isCore ? 9 : 0));
         const bg = nodeColor(n.type);
+        const borderColor = isDiseaseHub ? '#f59e0b' : isChild ? '#14b8a6' : bg;
         return {
-            id: n.id, label: n.label,
-            color: { background: isCore ? bg : bg + '66', border: bg,
-                highlight: { background: '#fff', border: bg } },
-            borderWidth: isCore ? 2 : 1,
+            id: n.id,
+            label: isDiseaseHub || n.type === 'Disease' ? n.label : (isCore ? n.label : ''),
+            color: { background: isCore ? bg : bg + '44', border: borderColor,
+                highlight: { background: '#fff', border: borderColor } },
+            borderWidth: isDiseaseHub ? 3 : (isCore ? 1.5 : 0.5),
             borderWidthSelected: 3,
             shapeProperties: { borderDashes: isCore ? false : [4, 3] },
-            font: { color: '#e2e8f0', size: fontSize },
+            font: { color: isDiseaseHub ? '#fbbf24' : '#e2e8f0', size: fontSize,
+                    bold: isDiseaseHub, strokeWidth: isDiseaseHub ? 3 : 0, strokeColor: '#0f172a' },
             shape: n.type === 'Disease' ? 'diamond' : 'dot',
             size: baseSize,
-            title: n.type + ': ' + n.label + ' [' + (isCore ? 'core' : 'discovery') + ']' +
-                (n.specificity != null ? ' | specificity: ' + n.specificity : ''),
+            title: n.type + ': ' + n.label +
+                (isParent ? ' [parent category]' : isChild ? ' [subtype]' : '') +
+                ' [' + (isCore ? 'core' : 'discovery') + ']' +
+                (n.specificity != null ? '\nSpecificity: ' + n.specificity : ''),
             _data: n,
         };
     });
 
     const newEdges = filteredEdges.map((e, i) => {
         const isCore = e.layer !== 'discovery';
+        const isHierarchy = e.label === 'diseaseIsSubtypeOf';
         return {
-            id: 'e' + i, from: e.from, to: e.to, label: e.label,
-            font: { size: 7, color: '#64748b', strokeWidth: 0 },
-            color: { color: isCore ? '#475569' : '#47556944', highlight: '#38bdf8' },
-            dashes: isCore ? false : [5, 5],
-            width: isCore ? 1 : 0.5,
-            arrows: 'to',
+            id: 'e' + i, from: e.from, to: e.to,
+            // Only show labels on hierarchy edges; others show on hover
+            label: isHierarchy ? 'subtype of' : undefined,
+            title: e.label + (e.source ? ' (' + e.source + ')' : ''),
+            font: { size: 9, color: '#f59e0b', strokeWidth: 0 },
+            color: { color: isHierarchy ? '#f59e0b' : (isCore ? '#33415566' : '#33415522'), highlight: '#38bdf8' },
+            dashes: isHierarchy ? false : (isCore ? false : [5, 5]),
+            width: isHierarchy ? 2.5 : (isCore ? 0.6 : 0.3),
+            arrows: { to: { scaleFactor: isHierarchy ? 0.8 : 0.4 } },
             _data: e,
         };
     });
@@ -1444,9 +1484,9 @@ function renderExploreGraph(data) {
     // Create network on first use, reuse thereafter
     ensureExploreNetwork();
 
-    // Force vis.js to fully recalculate layout and spatial index
-    exploreNetwork.redraw();
-    exploreNetwork.fit();
+    // Re-enable physics for layout, it auto-disables after stabilization
+    exploreNetwork.setOptions({ physics: { enabled: true, stabilization: { enabled: true, iterations: 150, fit: true } } });
+    exploreNetwork.stabilize(150);
 }
 
 function showDetailPanel(node, visEdges, visNodes) {
@@ -1492,6 +1532,45 @@ function showDetailPanel(node, visEdges, visNodes) {
             props.appendChild(dt);
             props.appendChild(dd);
         });
+    }
+
+    // Show hierarchy info for disease nodes
+    if (node.type === 'Disease') {
+        const parents = [];
+        const children = [];
+        if (visEdges) {
+            visEdges.forEach(e => {
+                if (e._data?.label === 'diseaseIsSubtypeOf' || e.label === 'subtype of') {
+                    if (e.from === node.id) {
+                        const p = visNodes.get(e.to);
+                        if (p) parents.push(p.label || e.to);
+                    } else if (e.to === node.id) {
+                        const c = visNodes.get(e.from);
+                        if (c) children.push(c.label || e.from);
+                    }
+                }
+            });
+        }
+        if (parents.length) {
+            const dtP = document.createElement('dt');
+            dtP.textContent = 'Parent Category';
+            dtP.style.color = '#f59e0b';
+            const ddP = document.createElement('dd');
+            ddP.textContent = parents.join(', ');
+            ddP.style.color = '#f59e0b';
+            props.appendChild(dtP);
+            props.appendChild(ddP);
+        }
+        if (children.length) {
+            const dtC = document.createElement('dt');
+            dtC.textContent = 'Subtypes (' + children.length + ')';
+            dtC.style.color = '#14b8a6';
+            const ddC = document.createElement('dd');
+            ddC.textContent = children.join(', ');
+            ddC.style.color = '#14b8a6';
+            props.appendChild(dtC);
+            props.appendChild(ddC);
+        }
     }
 
     // Find neighbors

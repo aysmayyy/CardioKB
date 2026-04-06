@@ -1,5 +1,5 @@
 # CardioKB Edge Types
-# 41 unique relationship types in the CVD knowledge graph (after redundancy removal)
+# 43 unique relationship types in the CVD knowledge graph (after redundancy removal)
 # Format: EdgeType | Source -> Target | Source Database | Edge Count
 
 # Gene-Disease associations
@@ -65,6 +65,7 @@ pharmacologicClassIncludesCompound | PharmacologicClass -> Drug | DrugCentral | 
 compoundInPharmacologicClass | Drug -> PharmacologicClass | DrugCentral | 16,403
 
 # Disease-Disease
+diseaseIsSubtypeOf | Disease -> Disease | Disease Ontology | ~16,900
 diseaseAssociatesWithDisease | Disease -> Disease | PubTator | 2,138,895
 diseaseResemblesDisease | Disease -> Disease | MEDLINE | 109
 
@@ -81,6 +82,9 @@ VARIANT_IN | Variant -> Gene | ClinPGx | 1,103
 AFFECTS_RESPONSE_TO | Gene -> Drug | ClinPGx | 304
 drugLabelAnnotatesGene | DrugLabel -> Gene | ClinPGx | 506
 drugLabelDescribesDrug | DrugLabel -> Drug | ClinPGx | 360
+
+# Species
+geneInSpecies | Gene -> Species | NCBI Gene | 47,513
 
 # Aging
 associatedWithAging | Gene -> AgeingProperty | DrugAge | 866

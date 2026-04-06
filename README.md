@@ -2,7 +2,7 @@
 
 A cardiovascular disease (CVD) focused biomedical knowledge graph pipeline that integrates 26 deduplicated data sources into a Neo4j graph for disease research, feature selection, and precision medicine. Each node type and edge type is served by exactly one authoritative database — no redundancy. Adapted from the AlzKB (Alzheimer's Knowledge Base) architecture with custom parsers and AI-powered parser generation. Features a **DatabaseAgent** that autonomously generates new parsers from just a name and URL, a **DiseaseQueryAgent** for on-demand disease enrichment, and a web dashboard with interactive graph exploration and Neo4j Browser-style querying.
 
-**Graph stats:** 4,891,953 nodes | 9,015,709 relationships | 19 node types | 42 relationship types | 26 sources
+**Graph stats:** 4,898,238 nodes | 9,266,035 relationships | 19 node types | 42 relationship types | 26 sources
 *Stats are current as of last pipeline run; see Neo4j or `GET /api/graph-stats` for live counts.*
 
 ## Pipeline Status
@@ -13,7 +13,7 @@ A cardiovascular disease (CVD) focused biomedical knowledge graph pipeline that 
 | Active & loaded | 26 | Successfully parsed + loaded into Neo4j |
 | Integration paths | 3 | Direct (5), Hetionet-derived (17), Agent-generated (4) |
 | Stale (replacement planned) | 3 | SIDER (2015), LINCS L1000 (2020), MEDLINE cooccurrence (pinned) |
-| Ontology configs | 85 | Neo4j node/relationship type mappings |
+| Ontology configs | 86 | Neo4j node/relationship type mappings |
 | Source-labeled relationships | 21 | All relationships carry `r.source` property |
 
 ## Data Sources (26)
@@ -22,11 +22,11 @@ A cardiovascular disease (CVD) focused biomedical knowledge graph pipeline that 
 
 | # | Source | Access | Status |
 |---|--------|--------|--------|
-| 1 | ClinicalTrials.gov | Public API v2 | Working (85,677 trials, 12 STUDIES_CONDITION + 3,563 TESTS_INTERVENTION edges) |
+| 1 | ClinicalTrials.gov | Public API v2 | Working (85,677 trials, 33,219 STUDIES_CONDITION + 6,090 TESTS_INTERVENTION edges) |
 | 2 | ClinPGx (PharmGKB successor) | Public API | Working (1,091 VARIANT_IN, 503 drugLabelAnnotatesGene, 51 drugLabelDescribesDrug, 243 AFFECTS_RESPONSE_TO edges) |
 | 3 | NCBI Gene | Public FTP | Working (193,790 genes) |
 | 4 | DoRothEA (OmniPath) | Public API | Working (12,985 TF-gene interactions, with morScore + confidence properties) |
-| 5 | DrugBank | XML file | Working (19,842 drugs, 12,089 drugBindsGene edges) |
+| 5 | DrugBank | XML file | Working (19,842 drugs + 6,285 CTD Drug nodes, 12,089 drugBindsGene edges) |
 
 ### Hetionet-Derived Component Parsers (17)
 
@@ -42,7 +42,7 @@ A cardiovascular disease (CVD) focused biomedical knowledge graph pipeline that 
 | 13 | DrugCentral (drug-disease) | Public | Working (16,403 pharmacologic class + 5,316 treats + 772 palliates edges) |
 | 14 | BindingDB (drug-target) | Public | Working (2,632 chemicalBindsGene edges) |
 | 15 | PubTator Central (literature mining) | Public FTP | Working (806,900 disease-disease edges) |
-| 16 | CTD (chemical-gene) | Public | **0 edges loaded** (Drug.xrefMeSH match failure — needs ID mapping fix) |
+| 16 | CTD (chemical-gene) | Public | Working (6,285 Drug nodes, 116,451 chemicalIncreasesExpression + 97,951 chemicalDecreasesExpression edges) |
 | 17 | Bgee (gene expression) | Public FTP | Working (784,026 underexpresses + 1,872 overexpresses edges, with expressionScore property) |
 | 18 | Jensen TISSUES (gene-tissue) | Public | Working (271,657 gene-tissue edges) |
 | 19 | HPO (Human Phenotype Ontology) | Public | Working (19,389 phenotypes, 23,766 gene-phenotype edges) |
@@ -88,7 +88,7 @@ See `docs/CardioKB_Redundancy_Changelog.docx` for full rationale and impact asse
 | Gene | 194,553 | NCBI Gene |
 | ClinicalTrial | 85,677 | ClinicalTrials.gov |
 | BiologicalProcess | 24,547 | Gene Ontology |
-| Drug | 19,842 | DrugBank |
+| Drug | 26,127 | DrugBank + CTD |
 | Phenotype | 19,389 | HPO |
 | BodyPart | 14,937 | Uberon |
 | Disease | 12,295 | Disease Ontology |
@@ -131,7 +131,7 @@ See `docs/CardioKB_Redundancy_Changelog.docx` for full rationale and impact asse
 | geneInFamily | HGNC Families | 5,123 |
 | familyContainsGene | HGNC Families | 5,123 |
 | geneRegulatesGene | LINCS L1000 | 5,026 |
-| TESTS_INTERVENTION | ClinicalTrials.gov | 3,563 |
+| TESTS_INTERVENTION | ClinicalTrials.gov | 6,090 |
 | compoundDownregulatesGene | LINCS L1000 | 2,815 |
 | chemicalBindsGene | BindingDB | 2,632 |
 | compoundUpregulatesGene | LINCS L1000 | 2,486 |
@@ -145,9 +145,9 @@ See `docs/CardioKB_Redundancy_Changelog.docx` for full rationale and impact asse
 | diseaseResemblesDisease | MEDLINE | 148 |
 | AFFECTS_RESPONSE_TO | ClinPGx | 243 |
 | drugLabelDescribesDrug | ClinPGx | 51 |
-| STUDIES_CONDITION | ClinicalTrials.gov | 12 |
-| chemicalIncreasesExpression | CTD | 0 |
-| chemicalDecreasesExpression | CTD | 0 |
+| STUDIES_CONDITION | ClinicalTrials.gov | 33,219 |
+| chemicalIncreasesExpression | CTD | 116,451 |
+| chemicalDecreasesExpression | CTD | 97,951 |
 
 **Relationship source labels (21):** Bgee, BindingDB, CTD, ClinPGx, ClinVar, ClinicalTrials.gov, DoRothEA, DrugAge, DrugBank, DrugCentral, Gene Ontology, HGNC, HPO, Jensen TISSUES, LINCS L1000, MEDLINE, OpenTargets, PubTator, Reactome, SIDER, STRING
 
@@ -165,7 +165,7 @@ Cardio-KB/
 │   ├── api.py                  # Flask backend with SSE streaming + agent endpoints
 │   ├── orchestrator.py         # Health check with dynamic Neo4j parser detection
 │   ├── neo4j_loader.py         # Cypher-based Neo4j batch loader
-│   ├── ontology_configs.py     # 85 ontology configs for Neo4j schema mapping
+│   ├── ontology_configs.py     # 86 ontology configs for Neo4j schema mapping
 │   ├── id_mapping.py           # Central ID mapping: validate, suggest, create_missing_nodes, CLI
 │   ├── utils.py                # Disease filtering utilities (load_disease_terms, etc.)
 │   └── parsers/
@@ -304,8 +304,8 @@ CardioKB is scoped to cardiovascular disease. CVD-specific ontology files define
 
 | File | Contents | Count |
 |------|----------|-------|
-| `ontology/genes/cvd.txt` | CVD gene symbols (OMIM + DisGeNET merged) | 4,411 genes |
-| `ontology/diseases/cvd.txt` | CVD disease terms | 90 terms |
+| `ontology/genes/cvd.txt` | CVD gene symbols (OMIM + DisGeNET, cleaned) | 3,984 genes |
+| `ontology/diseases/cvd.txt` | CVD disease terms | 184 terms |
 | `ontology/schema/node_types.txt` | Node type definitions | 19 types |
 | `ontology/schema/edge_types.txt` | Edge type definitions | 41 types |
 

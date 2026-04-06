@@ -158,6 +158,15 @@ class CTDParser(BaseParser):
             if decreases:
                 result["chemical_decreases_expression"] = pd.DataFrame(decreases)
 
+            # Build unique chemical nodes for Drug node creation
+            all_records = increases + decreases
+            if all_records:
+                chem_df = pd.DataFrame(all_records)[['chemical_name', 'chemical_id']].drop_duplicates(subset='chemical_id')
+                chem_df = chem_df.rename(columns={'chemical_name': 'drug_name', 'chemical_id': 'mesh_id'})
+                chem_df['source_database'] = 'CTD'
+                result['chemical_nodes'] = chem_df
+                logger.info(f"Extracted {len(chem_df)} unique CTD chemical nodes")
+
             return result
 
         except Exception as e:
