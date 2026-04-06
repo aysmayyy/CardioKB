@@ -700,8 +700,8 @@ def build_doc():
     add_table(doc,
               ['Metric', 'Value'],
               [
-                  ['Total nodes', '4,898,238'],
-                  ['Total relationships', '9,266,035'],
+                  ['Total nodes', '4,897,955'],
+                  ['Total relationships', '9,260,915'],
                   ['Node types', '19'],
                   ['Relationship types', '41'],
                   ['Data sources (parsers)', '26'],
@@ -712,20 +712,20 @@ def build_doc():
                   ['Edge weight coverage', '100% (all edges have r.weight)'],
               ])
 
-    doc.add_paragraph('Top 10 relationship types by count:')
+    doc.add_paragraph('Top 10 relationship types by count (after CVD filtering):')
     add_table(doc,
               ['Relationship Type', 'Count', 'Source(s)'],
               [
-                  ['bodyPartUnderexpressesGene', '5,334,316', 'Bgee'],
-                  ['variantInGene', '4,439,480', 'ClinVar'],
-                  ['hasVariant', '4,439,480', 'ClinVar'],
-                  ['geneAssociatesWithDisease', '2,364,224', 'OpenTargets'],
-                  ['diseaseAssociatesWithDisease', '2,138,895', 'PubTator'],
-                  ['variantAssociatedWithDisease', '1,862,448', 'ClinVar'],
-                  ['associatedWithVariant', '1,862,448', 'ClinVar'],
-                  ['geneExpressedInBodyPart', '982,039', 'Jensen TISSUES'],
-                  ['geneInteractsWithGene', '229,433', 'STRING'],
-                  ['chemicalIncreasesExpression', '218,140', 'CTD'],
+                  ['hasVariant', '2,267,095', 'ClinVar'],
+                  ['variantInGene', '2,267,095', 'ClinVar'],
+                  ['geneAssociatesWithDisease', '2,100,856', 'OpenTargets'],
+                  ['diseaseAssociatesWithDisease', '806,900', 'PubTator'],
+                  ['bodyPartUnderexpressesGene', '784,026', 'Bgee'],
+                  ['geneExpressedInBodyPart', '271,657', 'Jensen TISSUES'],
+                  ['compoundCausesSideEffect', '148,518', 'SIDER'],
+                  ['geneInteractsWithGene', '121,170', 'STRING'],
+                  ['chemicalIncreasesExpression', '116,451', 'CTD'],
+                  ['chemicalDecreasesExpression', '97,951', 'CTD'],
               ])
 
     # Save

@@ -432,6 +432,44 @@ def remap_pubtator_mesh_to_doid(parsed_data: Dict[str, Dict[str, pd.DataFrame]])
         logger.info(f"PubTator {gd_key}: {before} -> {len(df)} rows after MESH->DOID remap")
 
 
+def remap_drugcentral_cui_to_doid(parsed_data: Dict[str, Dict[str, pd.DataFrame]]) -> None:
+    """
+    Remap DrugCentral UMLS CUI disease IDs to DOID using Disease Ontology cross-references.
+
+    Modifies parsed_data['drugcentral'] DataFrames in place:
+    - drug_treats_disease: adds 'doid' column mapped from 'umls_cui'
+    - drug_palliates_disease: adds 'doid' column mapped from 'umls_cui'
+
+    Drops rows without a valid CUI->DOID mapping.
+    """
+    do_data = parsed_data.get('disease_ontology', {})
+    dc_data = parsed_data.get('drugcentral', {})
+
+    xrefs_df = do_data.get('disease_xrefs')
+    if xrefs_df is None or xrefs_df.empty:
+        logger.warning("No disease_xrefs available for CUI->DOID mapping; skipping DrugCentral remap")
+        return
+
+    # Build UMLS_CUI:Cxxxx -> DOID:xxxx lookup
+    cui_rows = xrefs_df[xrefs_df['xref'].str.startswith('UMLS_CUI:', na=False)].copy()
+    # Strip prefix: "UMLS_CUI:C0020538" -> "C0020538"
+    cui_to_doid = dict(zip(
+        cui_rows['xref'].str.replace('UMLS_CUI:', '', regex=False),
+        cui_rows['doid']
+    ))
+    logger.info(f"Built CUI->DOID lookup with {len(cui_to_doid)} entries")
+
+    for key in ('drug_treats_disease', 'drug_palliates_disease'):
+        if key not in dc_data:
+            continue
+        df = dc_data[key]
+        before = len(df)
+        df['doid'] = df['umls_cui'].map(cui_to_doid)
+        df = df.dropna(subset=['doid'])
+        dc_data[key] = df
+        logger.info(f"DrugCentral {key}: {before} -> {len(df)} rows after CUI->DOID remap")
+
+
 def remap_gwas_disease_to_doid(parsed_data: Dict[str, Dict[str, pd.DataFrame]]) -> None:
     """
     Remap GWAS disease traits to DOID using three strategies:

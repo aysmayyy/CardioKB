@@ -48,8 +48,8 @@ compoundUpregulatesGene | Drug -> Gene | LINCS L1000 | 2,486
 compoundDownregulatesGene | Drug -> Gene | LINCS L1000 | 2,815
 
 # Drug-Disease
-drugTreatsDisease | Drug -> Disease | DrugCentral | 5,316
-drugPalliatesDisease | Drug -> Disease | DrugCentral | 772
+drugTreatsDisease | Drug -> Disease | DrugCentral | 779
+drugPalliatesDisease | Drug -> Disease | DrugCentral | 189
 
 # Drug-SideEffect
 compoundCausesSideEffect | Drug -> SideEffect | SIDER | 148,518

@@ -3,7 +3,7 @@
 
 ## Summary
 - **26 databases** — 26 parsers, all working, deduplicated (one authoritative source per node/edge type)
-- **4,898,238 nodes** | **9,266,035 relationships** | **19 node types** | **41 relationship types** | **21 source labels**
+- **4,897,955 nodes** | **9,260,915 relationships** | **19 node types** | **41 relationship types** | **21 source labels**
 - **3 stale sources** flagged for replacement: SIDER (2015), LINCS L1000 (2020), MEDLINE (pinned GitHub commit)
 
 ## Direct Parsers (5)
@@ -20,14 +20,14 @@
 
 | # | Database | Access Type | Parser Status | Notes |
 |---|----------|-------------|---------------|-------|
-| 6 | Disease Ontology (DOID) | Public | Working | 12,295 diseases (nodes only) |
+| 6 | Disease Ontology (DOID) | Public | Working | 12,012 diseases (nodes only) |
 | 7 | Gene Ontology (GO) | Public | Working | 50,350 BP + 26,935 MF + 25,794 CC edges |
 | 8 | Uberon (anatomy) | Public | Working | 14,937 anatomy nodes (nodes only) |
 | 9 | NCBI MeSH (symptoms) | Public | Working | 966 symptom nodes (nodes only) |
 | 10 | SIDER (side effects) | Public | Working | 5,734 side effects, 148,518 compoundCausesSideEffect edges. **STALE: pinned to 2015 GitHub commit. Replacement: DrugBank adverse reactions extension** |
 | 11 | LINCS L1000 (gene expression) | Public | Working | 5,026 geneRegulates + 2,815 downreg + 2,486 upreg edges with zScore. **STALE: pinned to 2020 GitHub commit. Replacement: clue.io REST API** |
 | 12 | MEDLINE (literature cooccurrence) | Public | Working | 726 anatomy + 524 symptom + 148 disease cooccurrence edges. **STALE: pinned GitHub commit. Replacement: PubTator Central cooccurrence** |
-| 13 | DrugCentral (drug-disease) | Public | Working | 16,403 pharmacologic class + 5,316 treats + 772 palliates edges |
+| 13 | DrugCentral (drug-disease) | Public | Working | 16,403 pharmacologic class + 779 treats + 189 palliates edges (CUI-to-DOID mapped) |
 | 14 | BindingDB (drug-target) | Public | Working | 2,632 chemicalBindsGene edges |
 | 15 | PubTator Central (literature mining) | Public FTP | Working | 806,900 diseaseAssociatesWithDisease edges (gene-disease edges removed during dedup) |
 | 16 | CTD (chemical-gene) | Public | Working | 6,285 Drug nodes, 116,451 chemicalIncreasesExpression + 97,951 chemicalDecreasesExpression edges |

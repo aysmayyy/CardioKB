@@ -140,12 +140,12 @@ def build_doc():
     add_table(doc,
               ['Node Type', 'Authoritative Source', 'Count'],
               [
-                  ['Gene', 'NCBI Gene', '194,726'],
-                  ['Disease', 'Disease Ontology', '19,450'],
-                  ['Drug', 'DrugBank', '41,566'],
+                  ['Gene', 'NCBI Gene', '194,553'],
+                  ['Disease', 'Disease Ontology', '12,012'],
+                  ['Drug', 'DrugBank + CTD', '26,127'],
                   ['Variant', 'ClinVar', '4,488,042'],
-                  ['ClinicalTrial', 'ClinicalTrials.gov', '82,070'],
-                  ['Pathway', 'Reactome', '6,469'],
+                  ['ClinicalTrial', 'ClinicalTrials.gov', '85,677'],
+                  ['Pathway', 'Reactome', '2,806'],
                   ['BiologicalProcess', 'Gene Ontology', '24,547'],
                   ['MolecularFunction', 'Gene Ontology', '10,123'],
                   ['CellularComponent', 'Gene Ontology', '4,069'],
@@ -202,9 +202,12 @@ def build_doc():
 
     add_heading(doc, '5.2. Node Count Changes', level=2)
     doc.add_paragraph(
-        'Pathway nodes will decrease from 6,469 to ~2,300 (Reactome only, losing WikiPathways and '
-        'AOP-DB pathway definitions). Gene and Disease node counts are unchanged since NCBI Gene and '
-        'Disease Ontology were already the primary sources. Variant count unchanged (ClinVar dominant).'
+        'Pathway nodes decreased from 6,469 to 2,806 (Reactome only, losing WikiPathways and '
+        'AOP-DB pathway definitions). Disease nodes: 12,012 (Disease Ontology only, no more '
+        'DrugCentral CUI orphan nodes). Drug nodes: 26,127 (19,842 DrugBank + 6,285 CTD). '
+        'Variant count unchanged at 4,488,042 (ClinVar). '
+        'Note: edge counts above are pre-CVD-filtering; final loaded counts are lower after '
+        'CVD gene filtering (see edge_types.txt for current counts).'
     )
 
     # ─── 6. Stale Source Analysis ───

@@ -2,7 +2,7 @@
 
 A cardiovascular disease (CVD) focused biomedical knowledge graph pipeline that integrates 26 deduplicated data sources into a Neo4j graph for disease research, feature selection, and precision medicine. Each node type and edge type is served by exactly one authoritative database — no redundancy. Adapted from the AlzKB (Alzheimer's Knowledge Base) architecture with custom parsers and AI-powered parser generation. Features a **DatabaseAgent** that autonomously generates new parsers from just a name and URL, a **DiseaseQueryAgent** for on-demand disease enrichment, and a web dashboard with interactive graph exploration and Neo4j Browser-style querying.
 
-**Graph stats:** 4,898,238 nodes | 9,266,035 relationships | 19 node types | 41 relationship types | 26 sources
+**Graph stats:** 4,897,955 nodes | 9,260,915 relationships | 19 node types | 41 relationship types | 26 sources
 *Stats are current as of last pipeline run; see Neo4j or `GET /api/graph-stats` for live counts.*
 
 ## Pipeline Status
@@ -32,14 +32,14 @@ A cardiovascular disease (CVD) focused biomedical knowledge graph pipeline that 
 
 | # | Source | Access | Status |
 |---|--------|--------|--------|
-| 6 | Disease Ontology (DOID) | Public | Working (12,295 diseases) |
+| 6 | Disease Ontology (DOID) | Public | Working (12,012 diseases) |
 | 7 | Gene Ontology (GO) | Public | Working (50,350 BP + 26,935 MF + 25,794 CC edges) |
 | 8 | Uberon (anatomy) | Public | Working (14,937 anatomy nodes) |
 | 9 | MeSH (symptoms) | Public | Working (966 symptom nodes) |
 | 10 | SIDER (side effects) | Public | Working (5,734 side effects, 148,518 edges) -- **Stale: pinned to 2015 GitHub commit; replacement via DrugBank adverse reactions planned** |
 | 11 | LINCS L1000 (gene expression) | Public | Working (5,026 geneRegulates + 2,815 downreg + 2,486 upreg edges, with zScore property) -- **Stale: pinned to 2020 GitHub commit; replacement via clue.io API planned** |
 | 12 | MEDLINE (literature cooccurrence) | Public | Working (726 anatomy + 524 symptom + 148 disease cooccurrence edges) -- **Stale: pinned GitHub commit; replacement via PubTator cooccurrence planned** |
-| 13 | DrugCentral (drug-disease) | Public | Working (16,403 pharmacologic class + 5,316 treats + 772 palliates edges) |
+| 13 | DrugCentral (drug-disease) | Public | Working (16,403 pharmacologic class + 779 treats + 189 palliates edges, CUI-to-DOID mapped) |
 | 14 | BindingDB (drug-target) | Public | Working (2,632 chemicalBindsGene edges) |
 | 15 | PubTator Central (literature mining) | Public FTP | Working (806,900 disease-disease edges) |
 | 16 | CTD (chemical-gene) | Public | Working (6,285 Drug nodes, 116,451 chemicalIncreasesExpression + 97,951 chemicalDecreasesExpression edges) |
@@ -91,7 +91,7 @@ See `docs/CardioKB_Redundancy_Changelog.docx` for full rationale and impact asse
 | Drug | 26,127 | DrugBank + CTD |
 | Phenotype | 19,389 | HPO |
 | BodyPart | 14,937 | Uberon |
-| Disease | 12,295 | Disease Ontology |
+| Disease | 12,012 | Disease Ontology |
 | MolecularFunction | 10,123 | Gene Ontology |
 | SideEffect | 5,734 | SIDER |
 | Species | 4,645 | AnAge |
@@ -132,7 +132,7 @@ See `docs/CardioKB_Redundancy_Changelog.docx` for full rationale and impact asse
 | pathwayContainsGene | Reactome | 9,404 |
 | diseaseIsSubtypeOf | Disease Ontology | 6,447 |
 | TESTS_INTERVENTION | ClinicalTrials.gov | 6,090 |
-| drugTreatsDisease | DrugCentral | 5,316 |
+| drugTreatsDisease | DrugCentral | 779 |
 | geneInFamily | HGNC Families | 5,123 |
 | familyContainsGene | HGNC Families | 5,123 |
 | geneRegulatesGene | LINCS L1000 | 5,026 |
@@ -141,7 +141,7 @@ See `docs/CardioKB_Redundancy_Changelog.docx` for full rationale and impact asse
 | compoundUpregulatesGene | LINCS L1000 | 2,486 |
 | bodyPartOverexpressesGene | Bgee | 1,872 |
 | VARIANT_IN | ClinPGx | 1,091 |
-| drugPalliatesDisease | DrugCentral | 772 |
+| drugPalliatesDisease | DrugCentral | 189 |
 | diseaseLocalizesToAnatomy | MEDLINE | 726 |
 | diseasePresentsSymptom | MEDLINE | 524 |
 | drugLabelAnnotatesGene | ClinPGx | 503 |
@@ -354,9 +354,9 @@ The **DatabaseAgent** (`src/database_agent.py`) uses Claude API to autonomously 
 
 | Source | Nodes/Edges Added |
 |--------|-------------------|
-| HGNC Gene Families | 1,934 GeneFamily nodes, 34,006 geneInFamily edges |
-| ClinVar | 4,488,042 Variant nodes, 12.6M gene-variant + disease-variant edges |
-| DrugAge | 866 associatedWithAging edges, 3 AgeingProperty nodes |
+| HGNC Gene Families | 1,934 GeneFamily nodes, 5,123 geneInFamily + 5,123 familyContainsGene edges |
+| ClinVar | 4,488,042 Variant nodes, 2,267,095 hasVariant + 2,267,095 variantInGene edges |
+| DrugAge | 386 associatedWithAging edges, 3 AgeingProperty nodes |
 | AnAge | 4,645 Species longevity nodes |
 
 ## Architecture Notes

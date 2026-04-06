@@ -401,8 +401,9 @@ class CardioKBPipeline:
                         f"({gdr['primary_gene_symbol'].nunique()} unique genes)"
                     )
 
-        # Post-processing: remap PubTator MESH IDs to DOID, GWAS trait to DOID
-        from src.id_mapping import remap_pubtator_mesh_to_doid, remap_gwas_disease_to_doid
+        # Post-processing: remap disease IDs to DOID
+        from src.id_mapping import remap_pubtator_mesh_to_doid, remap_gwas_disease_to_doid, remap_drugcentral_cui_to_doid
+        remap_drugcentral_cui_to_doid(parsed_data)
 
         # TSV fallback: for sources that failed parsing or returned all-empty
         # DataFrames, load from existing processed TSVs
