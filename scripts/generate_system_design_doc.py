@@ -475,7 +475,7 @@ def build_doc():
     # =================================================================
     add_heading(doc, '6. Schema Decisions & Edge Merge Recommendations', level=1)
     doc.add_paragraph(
-        'The graph has 19 node types and 41 relationship types. Some edge types overlap semantically '
+        'The graph has 19 node types and 43 relationship types. Some edge types overlap semantically '
         'and should be evaluated for merging. Others look similar but carry different semantics that '
         'matter for ML. This section flags each case with a recommendation.'
     )
@@ -488,7 +488,7 @@ def build_doc():
                       'CellularComponent (4K), GeneFamily (1.9K), PharmacologicClass (1.6K), '
                       'Symptom (966), DrugLabel (378), TranscriptionFactor (367), AgeingProperty (3).')
 
-    doc.add_paragraph('41 relationship types across 21 source labels. The top 5 by edge count are: '
+    doc.add_paragraph('43 relationship types across 21 source labels. The top 5 by edge count are: '
                       'bodyPartUnderexpressesGene (5.3M, Bgee), variantInGene/hasVariant (4.4M each, ClinVar), '
                       'geneAssociatesWithDisease (2.4M, OpenTargets), diseaseAssociatesWithDisease (2.1M, PubTator).')
 
@@ -630,7 +630,7 @@ def build_doc():
     add_bullet(doc, 'Knowledge graph embedding that represents entities and relations as vectors. '
                'Learns h + r \u2248 t for each (head, relation, tail) triple. '
                'Better at capturing relation-specific patterns than node2vec. '
-               'The 41 relationship types provide rich relational signal.',
+               'The 43 relationship types provide rich relational signal.',
                'TransE / RotatE')
     add_bullet(doc, 'models/ directory (currently empty) should store trained embedding files, '
                'model checkpoints, and evaluation metrics.',
@@ -700,10 +700,10 @@ def build_doc():
     add_table(doc,
               ['Metric', 'Value'],
               [
-                  ['Total nodes', '4,897,955'],
-                  ['Total relationships', '9,260,915'],
+                  ['Total nodes', '4,896,242'],
+                  ['Total relationships', '16,319,504'],
                   ['Node types', '19'],
-                  ['Relationship types', '41'],
+                  ['Relationship types', '43'],
                   ['Data sources (parsers)', '26'],
                   ['Relationship source labels', '21'],
                   ['Ontology configs', '86'],

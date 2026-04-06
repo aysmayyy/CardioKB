@@ -11,7 +11,7 @@
 12-week rotation project (Jan-Apr 2026) building a CVD-focused biomedical knowledge graph. The graph integrates 26 deduplicated data sources (each node type and edge type served by exactly one authoritative database) into Neo4j for disease research, feature selection, and precision medicine. Adapted from AlzKB (Alzheimer's Knowledge Base) with custom parsers and AI-powered parser generation. The **DatabaseAgent** (`src/database_agent.py`) autonomously generates new parsers from just a name and URL using Claude API. The **DiseaseQueryAgent** (`src/disease_agent.py`) enriches the graph for any disease on demand via ClinicalTrials.gov API v2. Three stale sources (SIDER, LINCS L1000, MEDLINE) are flagged for replacement with live alternatives.
 
 ## Current Graph Stats
-- **4,897,955 nodes** | **9,260,915 relationships** | **19 node types** | **41 relationship types** | **26 sources**
+- **4,896,242 nodes** | **16,319,504 relationships** | **19 node types** | **43 relationship types** | **26 sources**
 - All relationships carry a `source` property identifying the originating database (e.g., `source: "OpenTargets"`)
 - *Stats are current as of last pipeline run; see Neo4j or `GET /api/graph-stats` for live counts.*
 
@@ -97,7 +97,7 @@ Disease term files live in `ontology/diseases/` (one term per line, `#` for comm
 
 **ClinicalTrialsParser** accepts a `disease_filter` parameter — when omitted, defaults to `ontology/disease_filter.txt` (CVD). Queries ClinicalTrials.gov API v2 per disease term, caches JSON responses. All other parsers are fully disease-agnostic.
 
-CVD ontology files: `ontology/genes/cvd.txt` (3,984 gene symbols from OMIM + DisGeNET, cleaned of LOC* loci and OMIM phenotype symbols), `ontology/schema/node_types.txt` (19 types), `ontology/schema/edge_types.txt` (41 types).
+CVD ontology files: `ontology/genes/cvd.txt` (3,984 gene symbols from OMIM + DisGeNET, cleaned of LOC* loci and OMIM phenotype symbols), `ontology/schema/node_types.txt` (19 types), `ontology/schema/edge_types.txt` (43 types).
 
 ## Data Sources — 26 Sources (26 Parsers)
 
@@ -108,7 +108,7 @@ CVD ontology files: `ontology/genes/cvd.txt` (3,984 gene symbols from OMIM + Dis
 | 2 | ClinPGx (PharmGKB successor) | ClinPGxParser | Public API | Working (1,091 VARIANT_IN, 503 drugLabelAnnotatesGene, 51 drugLabelDescribesDrug, 243 AFFECTS_RESPONSE_TO edges) |
 | 3 | NCBI Gene | NCBIGeneParser | Public FTP | Working (193,790 genes) |
 | 4 | DoRothEA (OmniPath) | DoRothEAParser | Public API | Working (12,985 TF-gene interactions, with morScore + confidence properties) |
-| 5 | DrugBank | DrugBankParser | XML file | Working (19,842 drugs + 6,285 CTD Drug nodes, 12,089 drugBindsGene edges) |
+| 5 | DrugBank | DrugBankParser | XML file | Working (19,842 drugs + 4,572 CTD unique Drug nodes, 12,089 drugBindsGene edges) |
 
 ### Hetionet-Derived Component Parsers (17)
 | # | Source | Parser | Access | Status |
@@ -118,24 +118,24 @@ CVD ontology files: `ontology/genes/cvd.txt` (3,984 gene symbols from OMIM + Dis
 | 8 | Uberon (anatomy) | UberonParser | Public | Working (14,937 anatomy nodes) |
 | 9 | MeSH (symptoms) | MeSHParser | Public | Working (966 symptom nodes, no relationship data) |
 | 10 | SIDER (side effects) | SIDERParser | Public | Working (148,518 edges) **Stale: replacement planned (DrugBank adverse reactions)** |
-| 11 | LINCS L1000 (gene expression) | LINCS1000Parser | Public | Working (5,026 geneRegulates + 2,815 downreg + 2,486 upreg edges, with zScore) **Stale: replacement planned (clue.io API)** |
+| 11 | LINCS L1000 (gene expression) | LINCS1000Parser | Public | Working (150,540 geneRegulates + 10,218 downreg + 10,278 upreg edges, with zScore) **Stale: replacement planned (clue.io API)** |
 | 12 | MEDLINE (literature cooccurrence) | MEDLINECooccurrenceParser | Public | Working (1,398 edges) **Stale: replacement planned (PubTator cooccurrence)** |
 | 13 | DrugCentral (drug-disease) | DrugCentralParser | Public | Working (16,403 pharmacologic class + 779 treats + 189 palliates edges, CUI-to-DOID mapped) |
-| 14 | BindingDB (drug-target) | BindingDBParser | Public | Working (2,632 chemicalBindsGene edges) |
+| 14 | BindingDB (drug-target) | BindingDBParser | Public | Working (12,250 chemicalBindsGene edges) |
 | 15 | PubTator Central (literature mining) | PubTatorParser | Public FTP | Working (806,900 disease-disease edges) |
-| 16 | CTD (chemical-gene) | CTDParser | Public | Working (6,285 Drug nodes, 116,451 chemicalIncreasesExpression + 97,951 chemicalDecreasesExpression edges) |
+| 16 | CTD (chemical-gene) | CTDParser | Public | Working (4,572 unique Drug nodes, 116,451 chemicalIncreasesExpression + 97,951 chemicalDecreasesExpression edges) |
 | 17 | Bgee (gene expression) | BgeeParser | Public FTP | Working (784,026 underexpresses + 1,872 overexpresses edges, with expressionScore property) |
 | 18 | Jensen TISSUES (gene-tissue) | JensenTissuesParser | Public | Working (271,657 gene-tissue edges) |
-| 19 | HPO (Human Phenotype Ontology) | HPOParser | Public | Working (19,389 phenotypes, 23,766 gene-phenotype edges) |
-| 20 | Reactome | ReactomeParser | Public | Working (9,404 geneInPathway + 9,404 pathwayContainsGene edges) |
+| 19 | HPO (Human Phenotype Ontology) | HPOParser | Public | Working (19,389 phenotypes, 162,994 gene-phenotype edges) |
+| 20 | Reactome | ReactomeParser | Public | Working (44,979 geneInPathway + 44,979 pathwayContainsGene edges) |
 | 21 | STRING | STRINGParser | Public | Working (121,170 geneInteractsWithGene edges, confidence > 700) |
-| 22 | OpenTargets | OpenTargetsParser | Public | Working (2,100,856 geneAssociatesWithDisease edges via EFO-to-DOID mapping) |
+| 22 | OpenTargets | OpenTargetsParser | Public | Working (7,564,685 geneAssociatesWithDisease edges via EFO-to-DOID mapping) |
 
 ### Agent-Generated Parsers (4)
 | # | Source | Parser | Access | Status |
 |---|--------|--------|--------|--------|
 | 23 | HGNC Gene Families | HGNCFamiliesParser | Public | Working (1,934 GeneFamily nodes, 5,123 geneInFamily + 5,123 familyContainsGene edges) |
-| 24 | ClinVar | ClinVarParser | Public FTP | Working (4,488,042 Variant nodes, 2,267,095 hasVariant + 2,267,095 variantInGene edges) |
+| 24 | ClinVar | ClinVarParser | Public FTP | Working (4,488,042 Variant nodes, 2,267,095 hasVariant + 2,267,095 variantInGene + 594,101 associatedWithVariant + 594,101 variantAssociatedWithDisease edges) |
 | 25 | DrugAge | DrugAgeParser | Public | Working (386 associatedWithAging edges, 3 AgeingProperty nodes) |
 | 26 | AnAge | AnAgeParser | Public | Working (4,645 Species longevity nodes) |
 

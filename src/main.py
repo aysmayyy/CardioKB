@@ -402,8 +402,10 @@ class CardioKBPipeline:
                     )
 
         # Post-processing: remap disease IDs to DOID
-        from src.id_mapping import remap_pubtator_mesh_to_doid, remap_gwas_disease_to_doid, remap_drugcentral_cui_to_doid
+        from src.id_mapping import remap_pubtator_mesh_to_doid, remap_gwas_disease_to_doid, remap_drugcentral_cui_to_doid, remap_clinvar_omim_to_doid, enrich_drugbank_with_mesh
+        enrich_drugbank_with_mesh(parsed_data)
         remap_drugcentral_cui_to_doid(parsed_data)
+        remap_clinvar_omim_to_doid(parsed_data)
 
         # TSV fallback: for sources that failed parsing or returned all-empty
         # DataFrames, load from existing processed TSVs

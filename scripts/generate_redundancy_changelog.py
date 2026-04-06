@@ -142,7 +142,7 @@ def build_doc():
               [
                   ['Gene', 'NCBI Gene', '194,553'],
                   ['Disease', 'Disease Ontology', '12,012'],
-                  ['Drug', 'DrugBank + CTD', '26,127'],
+                  ['Drug', 'DrugBank + CTD', '24,414'],
                   ['Variant', 'ClinVar', '4,488,042'],
                   ['ClinicalTrial', 'ClinicalTrials.gov', '85,677'],
                   ['Pathway', 'Reactome', '2,806'],
@@ -204,7 +204,7 @@ def build_doc():
     doc.add_paragraph(
         'Pathway nodes decreased from 6,469 to 2,806 (Reactome only, losing WikiPathways and '
         'AOP-DB pathway definitions). Disease nodes: 12,012 (Disease Ontology only, no more '
-        'DrugCentral CUI orphan nodes). Drug nodes: 26,127 (19,842 DrugBank + 6,285 CTD). '
+        'DrugCentral CUI orphan nodes). Drug nodes: 24,414 (19,842 DrugBank + 4,572 CTD unique). '
         'Variant count unchanged at 4,488,042 (ClinVar). '
         'Note: edge counts above are pre-CVD-filtering; final loaded counts are lower after '
         'CVD gene filtering (see edge_types.txt for current counts).'
@@ -245,8 +245,8 @@ def build_doc():
                   ['ontology/schema/node_types.txt',
                    'All 19 node types with primary keys, source databases, descriptions', '19 types'],
                   ['ontology/schema/edge_types.txt',
-                   'All 41 edge types with source/target node types, source databases, edge counts',
-                   '41 types'],
+                   'All 43 edge types with source/target node types, source databases, edge counts',
+                   '43 types'],
                   ['ontology/genes/cvd.txt',
                    'CVD-associated gene symbols merged from OMIM + DisGeNET, cleaned of LOC* and OMIM phenotype symbols',
                    '3,984 genes'],
@@ -263,7 +263,7 @@ def build_doc():
     add_bullet(doc, 'alzkb_databases.csv replaced with cardiokb_databases.csv (26 sources)',
                'CSV')
     add_bullet(doc, 'alzkb_source_schema_template.html replaced with cardiokb_source_schema_template.html '
-               '(19 node types, 41 edge types, 3 integration categories: Direct/Hetionet/Agent)',
+               '(19 node types, 43 edge types, 3 integration categories: Direct/Hetionet/Agent)',
                'Template')
     add_bullet(doc, 'build_latest_schema.py updated with CardioKB file paths and all 41 edge + 19 node mappings',
                'Build script')

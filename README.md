@@ -2,7 +2,7 @@
 
 A cardiovascular disease (CVD) focused biomedical knowledge graph pipeline that integrates 26 deduplicated data sources into a Neo4j graph for disease research, feature selection, and precision medicine. Each node type and edge type is served by exactly one authoritative database — no redundancy. Adapted from the AlzKB (Alzheimer's Knowledge Base) architecture with custom parsers and AI-powered parser generation. Features a **DatabaseAgent** that autonomously generates new parsers from just a name and URL, a **DiseaseQueryAgent** for on-demand disease enrichment, and a web dashboard with interactive graph exploration and Neo4j Browser-style querying.
 
-**Graph stats:** 4,897,955 nodes | 9,260,915 relationships | 19 node types | 41 relationship types | 26 sources
+**Graph stats:** 4,896,242 nodes | 16,319,504 relationships | 19 node types | 43 relationship types | 26 sources
 *Stats are current as of last pipeline run; see Neo4j or `GET /api/graph-stats` for live counts.*
 
 ## Pipeline Status
@@ -88,7 +88,7 @@ See `docs/CardioKB_Redundancy_Changelog.docx` for full rationale and impact asse
 | Gene | 194,553 | NCBI Gene |
 | ClinicalTrial | 85,677 | ClinicalTrials.gov |
 | BiologicalProcess | 24,547 | Gene Ontology |
-| Drug | 26,127 | DrugBank + CTD |
+| Drug | 24,414 | DrugBank + CTD |
 | Phenotype | 19,389 | HPO |
 | BodyPart | 14,937 | Uberon |
 | Disease | 12,012 | Disease Ontology |
@@ -212,7 +212,7 @@ Cardio-KB/
 │   ├── disease_filter.txt         # Symlink -> diseases/cvd.txt (active filter)
 │   ├── schema/
 │   │   ├── node_types.txt         # 19 node types with sources
-│   │   └── edge_types.txt         # 41 edge types with sources and counts
+│   │   └── edge_types.txt         # 43 edge types with sources and counts
 │   ├── genes/
 │   │   └── cvd.txt                # 3,984 CVD gene symbols (OMIM + DisGeNET, cleaned)
 │   └── diseases/                  # Disease term files (one per disease area)
@@ -223,7 +223,7 @@ Cardio-KB/
 │       └── diabetes.txt           # Diabetes & metabolic (52 terms)
 ├── database_visualization/
 │   ├── cardiokb_databases.csv               # 26 source database inventory
-│   ├── cardiokb_source_schema_template.html # D3 force graph template (19 nodes, 41 edges)
+│   ├── cardiokb_source_schema_template.html # D3 force graph template (19 nodes, 43 edges)
 │   ├── cardiokb_source_schema_latest.html   # Generated interactive visualization
 │   └── build_latest_schema.py               # Build script (injects CSV data into template)
 ├── reports/                    # Pipeline health reports + ID mapping validation report

@@ -1,5 +1,5 @@
 {
-  "generated_at": "2026-04-06T12:23:19.501041",
+  "generated_at": "2026-04-06T14:54:42.558455",
   "entries": [
     {
       "config": "drugbank.drug_binds_gene",
@@ -131,11 +131,17 @@
           "property": "commonName",
           "column": "intervention_name",
           "total": 286,
-          "matched": 286,
-          "unmatched": 0,
-          "match_rate": 100.0,
-          "unmatched_edges": 0,
-          "sample_unmatched": {},
+          "matched": 260,
+          "unmatched": 26,
+          "match_rate": 90.9,
+          "unmatched_edges": 477,
+          "sample_unmatched": {
+            "Pomalidomide": 178,
+            "Carfilzomib": 158,
+            "Ixazomib": 49,
+            "Tranexamic acid": 39,
+            "Romidepsin": 8
+          },
           "nodes_created": 0,
           "edges_recovered": 0
         }
@@ -306,11 +312,13 @@
           "property": "commonName",
           "column": "drug",
           "total": 25,
-          "matched": 25,
-          "unmatched": 0,
-          "match_rate": 100.0,
-          "unmatched_edges": 0,
-          "sample_unmatched": {},
+          "matched": 24,
+          "unmatched": 1,
+          "match_rate": 96.0,
+          "unmatched_edges": 1,
+          "sample_unmatched": {
+            "Iloperidone": 1
+          },
           "nodes_created": 0,
           "edges_recovered": 0
         }
@@ -1335,20 +1343,14 @@
         {
           "side": "subject",
           "node_type": "Disease",
-          "property": "xrefOMIM",
+          "property": "xrefDiseaseOntology",
           "column": "disease_id",
-          "total": 4034,
-          "matched": 0,
-          "unmatched": 4034,
-          "match_rate": 0.0,
-          "unmatched_edges": 1371375,
-          "sample_unmatched": {
-            "114480": 43443,
-            "604145": 26192,
-            "608807": 25671,
-            "144700": 24275,
-            "603956": 16561
-          },
+          "total": 1974,
+          "matched": 1974,
+          "unmatched": 0,
+          "match_rate": 100.0,
+          "unmatched_edges": 0,
+          "sample_unmatched": {},
           "nodes_created": 0,
           "edges_recovered": 0
         },
@@ -1357,8 +1359,8 @@
           "node_type": "Variant",
           "property": "variantId",
           "column": "variant_id",
-          "total": 1038141,
-          "matched": 1038141,
+          "total": 509865,
+          "matched": 509865,
           "unmatched": 0,
           "match_rate": 100.0,
           "unmatched_edges": 0,

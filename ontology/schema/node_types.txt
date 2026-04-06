@@ -4,7 +4,7 @@
 
 Gene | geneSymbol | NCBI Gene | Human genes (194,553 nodes)
 Disease | xrefDiseaseOntology | Disease Ontology | Diseases from Disease Ontology (12,012 nodes)
-Drug | commonName | DrugBank + CTD | Drugs and chemicals (26,127 nodes: 19,842 DrugBank + 6,285 CTD)
+Drug | commonName | DrugBank + CTD | Drugs and chemicals (24,414 nodes: 19,842 DrugBank + 4,572 CTD unique)
 Variant | variantId | ClinVar | Genetic variants (4,488,042 nodes)
 ClinicalTrial | trialId | ClinicalTrials.gov | Clinical trials (85,677 nodes)
 Pathway | pathwayName | Reactome | Biological pathways (2,806 nodes)

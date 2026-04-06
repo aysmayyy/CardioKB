@@ -470,6 +470,78 @@ def remap_drugcentral_cui_to_doid(parsed_data: Dict[str, Dict[str, pd.DataFrame]
         logger.info(f"DrugCentral {key}: {before} -> {len(df)} rows after CUI->DOID remap")
 
 
+def enrich_drugbank_with_mesh(parsed_data: Dict[str, Dict[str, pd.DataFrame]]) -> None:
+    """
+    Add xrefMeSH (CTD MeSH IDs) to DrugBank Drug nodes via case-insensitive name matching.
+
+    This allows CTD's MERGE on xrefMeSH to find existing DrugBank Drug nodes
+    instead of creating duplicates.
+    """
+    db_data = parsed_data.get('drugbank', {})
+    ctd_data = parsed_data.get('ctd', {})
+
+    db_drugs = db_data.get('drugs')
+    ctd_nodes = ctd_data.get('chemical_nodes')
+
+    if db_drugs is None or db_drugs.empty:
+        logger.warning("No DrugBank drugs available; skipping MeSH enrichment")
+        return
+    if ctd_nodes is None or ctd_nodes.empty:
+        logger.warning("No CTD chemical nodes available; skipping MeSH enrichment")
+        return
+
+    # Build case-insensitive CTD name -> MeSH ID lookup
+    ctd_name_to_mesh = dict(zip(
+        ctd_nodes['drug_name'].str.lower().str.strip(),
+        ctd_nodes['mesh_id']
+    ))
+    logger.info(f"CTD name->MeSH lookup: {len(ctd_name_to_mesh)} entries")
+
+    # Match DrugBank drugs to CTD MeSH IDs by name
+    db_drugs['mesh_id'] = db_drugs['drug_name'].str.lower().str.strip().map(ctd_name_to_mesh)
+    matched = db_drugs['mesh_id'].notna().sum()
+    logger.info(f"DrugBank MeSH enrichment: {matched}/{len(db_drugs)} drugs matched to CTD MeSH IDs")
+
+
+def remap_clinvar_omim_to_doid(parsed_data: Dict[str, Dict[str, pd.DataFrame]]) -> None:
+    """
+    Remap ClinVar OMIM disease IDs to DOID using Disease Ontology cross-references.
+
+    Modifies parsed_data['clinvar'] DataFrames in place:
+    - disease_variant_omim: remaps disease_id from OMIM number to DOID
+
+    Drops rows without a valid OMIM->DOID mapping.
+    """
+    do_data = parsed_data.get('disease_ontology', {})
+    cv_data = parsed_data.get('clinvar', {})
+
+    xrefs_df = do_data.get('disease_xrefs')
+    if xrefs_df is None or xrefs_df.empty:
+        logger.warning("No disease_xrefs available for OMIM->DOID mapping; skipping ClinVar remap")
+        return
+
+    # Build MIM number -> DOID lookup (MIM:251300 -> strip to '251300')
+    mim_rows = xrefs_df[xrefs_df['xref'].str.startswith('MIM:', na=False)].copy()
+    mim_to_doid = dict(zip(
+        mim_rows['xref'].str.replace('MIM:', '', regex=False),
+        mim_rows['doid']
+    ))
+    logger.info(f"Built OMIM->DOID lookup with {len(mim_to_doid)} entries")
+
+    key = 'disease_variant_omim'
+    if key not in cv_data:
+        logger.warning(f"No {key} in ClinVar data; skipping OMIM remap")
+        return
+
+    df = cv_data[key]
+    before = len(df)
+    # ClinVar disease_id is plain OMIM number (e.g., 251300) — convert to string for mapping
+    df['disease_id'] = df['disease_id'].astype(str).map(mim_to_doid)
+    df = df.dropna(subset=['disease_id'])
+    cv_data[key] = df
+    logger.info(f"ClinVar {key}: {before} -> {len(df)} rows after OMIM->DOID remap")
+
+
 def remap_gwas_disease_to_doid(parsed_data: Dict[str, Dict[str, pd.DataFrame]]) -> None:
     """
     Remap GWAS disease traits to DOID using three strategies:
