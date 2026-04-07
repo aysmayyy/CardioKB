@@ -1,19 +1,19 @@
 # CardioKB: CVD Biomedical Knowledge Graph
 
-A cardiovascular disease (CVD) focused biomedical knowledge graph pipeline that integrates 26 deduplicated data sources into a Neo4j graph for disease research, feature selection, and precision medicine. Each node type and edge type is served by exactly one authoritative database — no redundancy. Adapted from the AlzKB (Alzheimer's Knowledge Base) architecture with custom parsers and AI-powered parser generation. Features a **DatabaseAgent** that autonomously generates new parsers from just a name and URL, a **DiseaseQueryAgent** for on-demand disease enrichment, and a web dashboard with interactive graph exploration and Neo4j Browser-style querying.
+A cardiovascular disease (CVD) focused biomedical knowledge graph pipeline that integrates 26 deduplicated data sources into a Memgraph graph for disease research, feature selection, and precision medicine. Each node type and edge type is served by exactly one authoritative database — no redundancy. Adapted from the AlzKB (Alzheimer's Knowledge Base) architecture with custom parsers and AI-powered parser generation. Features a **DatabaseAgent** that autonomously generates new parsers from just a name and URL, a **DiseaseQueryAgent** for on-demand disease enrichment, and a web dashboard with interactive graph exploration and Browser-style querying.
 
 **Graph stats:** 4,896,242 nodes | 16,319,504 relationships | 19 node types | 43 relationship types | 26 sources
-*Stats are current as of last pipeline run; see Neo4j or `GET /api/graph-stats` for live counts.*
+*Stats are current as of last pipeline run; see Memgraph or `GET /api/graph-stats` for live counts.*
 
 ## Pipeline Status
 
 | Category | Count | Details |
 |----------|-------|---------|
 | Total databases | 26 | 26 parsers (1 per source), deduplicated |
-| Active & loaded | 26 | Successfully parsed + loaded into Neo4j |
+| Active & loaded | 26 | Successfully parsed + loaded into Memgraph |
 | Integration paths | 3 | Direct (5), Hetionet-derived (17), Agent-generated (4) |
 | Stale (replacement planned) | 3 | SIDER (2015), LINCS L1000 (2020), MEDLINE cooccurrence (pinned) |
-| Ontology configs | 86 | Neo4j node/relationship type mappings |
+| Ontology configs | 86 | Graph node/relationship type mappings |
 | Source-labeled relationships | 21 | All relationships carry `r.source` property |
 
 ## Data Sources (26)
@@ -78,7 +78,7 @@ The following sources were removed because their data is fully covered by remain
 
 See `docs/CardioKB_Redundancy_Changelog.docx` for full rationale and impact assessment.
 
-## Neo4j Graph Schema
+## Graph Schema
 
 ### Node Types (19)
 
@@ -164,9 +164,9 @@ Cardio-KB/
 │   ├── disease_agent.py        # DiseaseQueryAgent (ClinicalTrials.gov API v2)
 │   ├── database_agent.py       # Autonomous parser generator (Claude API + sample download)
 │   ├── api.py                  # Flask backend with SSE streaming + agent endpoints
-│   ├── orchestrator.py         # Health check with dynamic Neo4j parser detection
-│   ├── neo4j_loader.py         # Cypher-based Neo4j batch loader
-│   ├── ontology_configs.py     # 86 ontology configs for Neo4j schema mapping
+│   ├── orchestrator.py         # Health check with dynamic Graph-based parser detection
+│   ├── neo4j_loader.py         # Cypher-based Memgraph batch loader
+│   ├── ontology_configs.py     # 86 ontology configs for Graph schema mapping
 │   ├── id_mapping.py           # Central ID mapping: validate, suggest, create_missing_nodes, CLI
 │   ├── utils.py                # Disease filtering utilities (load_disease_terms, etc.)
 │   └── parsers/
@@ -202,8 +202,8 @@ Cardio-KB/
 │   └── index.html              # Web dashboard (Explore graph + Query multi-panel UI)
 ├── scripts/
 │   ├── compute_specificity.py  # Pre-compute disease-specificity scores (auto-runs in pipeline)
-│   ├── verify_graph.py         # Neo4j graph verification and validation
-│   └── run_drugbank.py         # Standalone DrugBank parser + Neo4j loader
+│   ├── verify_graph.py         # Graph verification and validation
+│   └── run_drugbank.py         # Standalone DrugBank parser + Graph loader
 ├── data/
 │   ├── raw/                    # Downloaded source data (gitignored)
 │   ├── processed/              # Exported TSV files per source (gitignored)
@@ -240,7 +240,7 @@ Cardio-KB/
 ### Prerequisites
 
 - Python 3.11 (conda env: `cardiokb`)
-- Neo4j instance running locally or remotely (only needed without `--skip-neo4j`)
+- Memgraph instance running locally or remotely (only needed without `--skip-neo4j`)
 
 ### Installation
 
@@ -254,7 +254,7 @@ pip install -r requirements.txt
 Create a `.env` file in the project root:
 
 ```bash
-# Required for Neo4j loading
+# Required for Memgraph loading
 NEO4J_URI=bolt://localhost:7687
 NEO4J_USERNAME=neo4j
 NEO4J_PASSWORD=<your-password>
@@ -270,7 +270,7 @@ CARDIOKB_LOG_LEVEL=INFO
 ### Run
 
 ```bash
-# Full pipeline: download -> parse -> TSV export -> Neo4j load
+# Full pipeline: download -> parse -> TSV export -> Memgraph load
 python src/main.py
 
 # Parse and export only (no Neo4j)
@@ -284,7 +284,7 @@ python src/main.py --skip-download --skip-neo4j
 
 # Run individual source parsers standalone
 python scripts/run_drugbank.py              # DrugBank only (parses XML)
-python scripts/run_drugbank.py --skip-neo4j  # Parse + TSV only, no Neo4j
+python scripts/run_drugbank.py --skip-neo4j  # Parse + TSV only, no graph load
 ```
 
 ### TSV Export
@@ -293,7 +293,7 @@ The pipeline exports all parsed data to `data/processed/<source>/` as tab-separa
 
 ### Verify the Graph
 
-After loading into Neo4j, run the verification script:
+After loading into Memgraph, run the verification script:
 
 ```bash
 python scripts/verify_graph.py --uri bolt://localhost:7687 --username neo4j --password <password>
@@ -324,14 +324,14 @@ Launch with `bash run.sh` or `python src/api.py --port 5050`. Features:
   - Search by disease name, gene, or drug; filter by node type
   - Click nodes for detail panel with properties, neighbors, and specificity score
   - Export subgraph as CSV or JSON
-- **Query tab** — Neo4j Browser-style multi-panel Cypher interface
+- **Query tab** — Browser-style multi-panel Cypher interface
   - Each query creates a new result panel (newest at top)
   - Panels show results as both table and graph visualization with tab switching
   - Collapse/expand, close individual panels, or Clear All
   - Query templates for common patterns; Ctrl+Enter shortcut
 - **Build Knowledge Graph** (sidebar) — AI-powered disease enrichment
   - Enter any disease name; AI standardizes via Claude, fetches clinical trials from ClinicalTrials.gov API v2
-  - Loads data into Neo4j, caches results (same disease returns instantly next time)
+  - Loads data into Memgraph, caches results (same disease returns instantly next time)
   - Auto-opens Explore tab with the disease after building
 - **Extract Disease Subgraph** (sidebar) — Extract complete N-hop subgraphs from existing data
   - Configurable hop slider (1-3): 1-hop = direct, 2-hop = shared pathways, 3-hop = broad hypothesis generation
@@ -348,7 +348,7 @@ The **DatabaseAgent** (`src/database_agent.py`) uses Claude API to autonomously 
 1. **Sample download** — Downloads the first 64KB to detect format (TSV, CSV, JSON, XML)
 2. **Code generation** — Sends file sample + BaseParser source to Claude, generates parser + ontology configs
 3. **Pipeline integration** — Saves parser, adds configs, registers in pipeline
-4. **Execute & validate** — Runs parser, validates IDs, loads into Neo4j, verifies counts
+4. **Execute & validate** — Runs parser, validates IDs, loads into Memgraph, verifies counts
 
 ### Agent-Generated Parsers in Production
 
@@ -362,7 +362,7 @@ The **DatabaseAgent** (`src/database_agent.py`) uses Claude API to autonomously 
 ## Architecture Notes
 
 - All parsers extend `BaseParser` from `src/parsers/base_parser.py`
-- Neo4j loading uses UNWIND-based Cypher batching (batch size: 1000) with MERGE to prevent duplicates
+- Graph loading uses UNWIND-based Cypher batching (batch size: 1000) with MERGE to prevent duplicates
 - All relationships tagged with `r.source` property from config's `source_label`
 - Graph schema defined declaratively in `src/ontology_configs.py` (85 configs)
 - Each node type and edge type has exactly one authoritative source (no redundancy)

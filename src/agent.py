@@ -360,7 +360,7 @@ def _query_subgraph_stats(disease_key: str) -> dict:
 
     stats = {}
     try:
-        with driver.session(database='neo4j') as s:
+        with driver.session() as s:
             rec = s.run(
                 "MATCH ()-[r:geneAssociatesWithDisease]->() "
                 "WHERE r.source = 'DisGeNET' "
@@ -579,7 +579,7 @@ def list_cached():
         return
 
     try:
-        with driver.session(database='neo4j') as s:
+        with driver.session() as s:
             results = s.run(
                 "MATCH (c:DiseaseCache) "
                 "RETURN c.disease_name AS name, "

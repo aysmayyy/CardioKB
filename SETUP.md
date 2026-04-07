@@ -3,7 +3,7 @@
 ## Prerequisites
 
 - Python 3.11 (conda recommended)
-- Neo4j 5.x (knowledge graph database)
+- Memgraph (knowledge graph database, via Docker)
 - pip or conda package manager
 
 ## Installation
@@ -31,7 +31,7 @@ pip install -r requirements.txt
 ```
 
 Key dependencies:
-- **neo4j**: Knowledge graph database driver
+- **neo4j**: Bolt protocol graph database driver (works with Memgraph)
 - **pandas & numpy**: Data processing
 - **requests**: API calls (DisGeNET, ClinPGx, DoRothEA, etc.)
 - **flask**: Web dashboard backend
@@ -48,10 +48,10 @@ Key dependencies:
 Create a `.env` file in the project root:
 
 ```bash
-# Neo4j (required)
+# Memgraph (required)
 NEO4J_URI=bolt://localhost:7687
-NEO4J_USERNAME=neo4j
-NEO4J_PASSWORD=your_password
+NEO4J_USERNAME=
+NEO4J_PASSWORD=
 
 # OMIM API key (required for OMIM parser)
 OMIM_API_KEY=your_key
@@ -68,25 +68,30 @@ MYSQL_USERNAME=root
 MYSQL_PASSWORD=your_password
 ```
 
-### Neo4j Setup
+### Memgraph Setup
 
-1. Install and start Neo4j (Desktop or Community edition)
-2. Set the password and update `.env` accordingly
-3. Ensure `bolt://localhost:7687` is reachable
+1. Install Docker and start Memgraph with persistence:
+   ```bash
+   docker run -d --name memgraph -p 7687:7687 -p 7444:7444 \
+     -v memgraph-data:/var/lib/memgraph memgraph/memgraph:latest \
+     --storage-snapshot-interval-sec=300 --storage-wal-enabled=true \
+     --storage-snapshot-on-exit=true
+   ```
+2. Ensure `bolt://localhost:7687` is reachable
 
 ## Running the Pipeline
 
 ```bash
-# Full pipeline: download -> parse -> TSV export -> Neo4j load
+# Full pipeline: download -> parse -> TSV export -> Memgraph load
 python src/main.py
 
-# Parse and export only (no Neo4j loading)
+# Parse and export only (no graph loading)
 python src/main.py --skip-neo4j
 
 # Use cached downloads (no re-downloading)
 python src/main.py --skip-download
 
-# Both flags (parse from cache, no Neo4j)
+# Both flags (parse from cache, no graph load)
 python src/main.py --skip-download --skip-neo4j
 ```
 
@@ -117,8 +122,8 @@ Cardio-KB/
 │   ├── api.py                   # Flask web backend
 │   ├── agent.py                 # AI-powered disease KB builder
 │   ├── orchestrator.py          # Pipeline health check
-│   ├── neo4j_loader.py          # Cypher-based Neo4j batch loader
-│   ├── ontology_configs.py      # 58 ontology configs (source -> Neo4j schema)
+│   ├── neo4j_loader.py          # Cypher-based Memgraph batch loader
+│   ├── ontology_configs.py      # 58 ontology configs (source -> graph schema)
 │   ├── id_mapping.py            # Cross-database ID remapping
 │   ├── utils.py                 # Shared utilities
 │   └── parsers/                 # 25 data source parsers
@@ -131,7 +136,7 @@ Cardio-KB/
 │   └── diseases/                # Disease term files (cvd, alzheimers, cancer, etc.)
 ├── data/
 │   ├── raw/                     # Downloaded source data
-│   └── processed/               # Exported TSV files for Neo4j
+│   └── processed/               # Exported TSV files for Memgraph
 ├── tests/                       # pytest test files
 ├── scripts/                     # Data processing and verification scripts
 ├── reports/                     # Generated pipeline health reports
@@ -181,9 +186,9 @@ pytest tests/
 2. Install dependencies: `pip install -r requirements.txt`
 3. Run from project root (parsers use relative imports)
 
-### Neo4j Connection Issues
-- Verify Neo4j is running: `neo4j status`
-- Check credentials in `.env`
+### Memgraph Connection Issues
+- Verify Memgraph is running: `docker ps --filter name=memgraph`
+- Restart if needed: `docker restart memgraph`
 - Ensure bolt port 7687 is not blocked
 
 ### Large Downloads
@@ -196,7 +201,8 @@ Use `--skip-download` to reuse cached data after the first run.
 
 ## Resources
 
-- [Neo4j Python Driver](https://neo4j.com/docs/python-manual/current/)
+- [Memgraph Documentation](https://memgraph.com/docs)
+- [Neo4j Python Driver (Bolt compatible)](https://neo4j.com/docs/python-manual/current/)
 - [ClinicalTrials.gov API](https://clinicaltrials.gov/data-api/api)
 - [DisGeNET API](https://www.disgenet.org/api/)
 - [Disease Ontology](https://disease-ontology.org/)

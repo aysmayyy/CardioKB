@@ -32,15 +32,15 @@ def verify_graph(uri: str, username: str, password: str, database: str = "neo4j"
         print(f"Failed to connect: {e}")
         sys.exit(1)
 
-    with driver.session(database=database) as session:
+    with driver.session() as session:
         print("\n" + "=" * 70)
         print("NODE COUNTS BY LABEL")
         print("=" * 70)
 
-        labels_result = session.run("CALL db.labels() YIELD label RETURN label ORDER BY label")
+        labels_result = session.run("MATCH (n) RETURN DISTINCT labels(n) AS l")
+        all_labels = sorted([r['l'][0] for r in labels_result if r['l']])
         total_nodes = 0
-        for record in labels_result:
-            label = record['label']
+        for label in all_labels:
             count = session.run(f"MATCH (n:{label}) RETURN count(n) as cnt").single()['cnt']
             total_nodes += count
             print(f"  {label:<30} {count:>10,}")
@@ -51,12 +51,11 @@ def verify_graph(uri: str, username: str, password: str, database: str = "neo4j"
         print("=" * 70)
 
         rel_result = session.run(
-            "CALL db.relationshipTypes() YIELD relationshipType "
-            "RETURN relationshipType ORDER BY relationshipType"
+            "MATCH ()-[r]->() RETURN DISTINCT type(r) AS rt"
         )
+        all_rel_types = sorted([r['rt'] for r in rel_result])
         total_rels = 0
-        for record in rel_result:
-            rel_type = record['relationshipType']
+        for rel_type in all_rel_types:
             count = session.run(
                 f"MATCH ()-[r:{rel_type}]->() RETURN count(r) as cnt"
             ).single()['cnt']

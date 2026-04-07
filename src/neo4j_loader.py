@@ -30,15 +30,15 @@ class Neo4jLoader:
     """
 
     def __init__(self, uri: str, username: str, password: str,
-                 database: str = "neo4j"):
+                 database: str = ""):
         """
         Initialize Neo4j connection.
 
         Args:
-            uri: Neo4j bolt URI (e.g., bolt://localhost:7687)
-            username: Neo4j username
-            password: Neo4j password
-            database: Neo4j database name
+            uri: Bolt URI (e.g., bolt://localhost:7687)
+            username: Database username
+            password: Database password
+            database: Database name (unused for Memgraph, kept for API compat)
         """
         if GraphDatabase is None:
             raise ImportError(
@@ -90,7 +90,7 @@ class Neo4jLoader:
         Args:
             ontology_configs: The ONTOLOGY_CONFIGS dictionary.
         """
-        logger.info("Setting up Neo4j constraints...")
+        logger.info("Setting up uniqueness constraints...")
         seen = set()
 
         for config_key, config in ontology_configs.items():
@@ -101,24 +101,23 @@ class Neo4jLoader:
             iri_col = config['parse_config'].get('iri_column_name', '')
             prop_map = config['parse_config'].get('data_property_map', {})
 
-            # Map the IRI column to its Neo4j property name
-            neo4j_prop = prop_map.get(iri_col, iri_col)
-            key = (node_type, neo4j_prop)
+            # Map the IRI column to its database property name
+            db_prop = prop_map.get(iri_col, iri_col)
+            key = (node_type, db_prop)
             if key in seen:
                 continue
             seen.add(key)
 
-            constraint_name = f"uniq_{node_type}_{neo4j_prop}"
             query = (
-                f"CREATE CONSTRAINT {constraint_name} IF NOT EXISTS "
-                f"FOR (n:{node_type}) REQUIRE n.{neo4j_prop} IS UNIQUE"
+                f"CREATE CONSTRAINT ON (n:{node_type}) "
+                f"ASSERT n.{db_prop} IS UNIQUE"
             )
             try:
-                with self.driver.session(database=self.database) as session:
+                with self.driver.session() as session:
                     session.run(query)
-                logger.info(f"  Constraint: {node_type}.{neo4j_prop}")
+                logger.info(f"  Constraint: {node_type}.{db_prop}")
             except Exception as e:
-                logger.warning(f"  Failed constraint {constraint_name}: {e}")
+                logger.warning(f"  Failed constraint {node_type}.{db_prop}: {e}")
 
     def setup_indexes(self, ontology_configs: Dict[str, Dict]):
         """
@@ -127,7 +126,7 @@ class Neo4jLoader:
         Args:
             ontology_configs: The ONTOLOGY_CONFIGS dictionary.
         """
-        logger.info("Setting up Neo4j indexes...")
+        logger.info("Setting up indexes...")
         seen = set()
 
         for config_key, config in ontology_configs.items():
@@ -143,17 +142,13 @@ class Neo4jLoader:
                     continue
                 seen.add(key)
 
-                index_name = f"idx_{node_type}_{match_prop}"
-                query = (
-                    f"CREATE INDEX {index_name} IF NOT EXISTS "
-                    f"FOR (n:{node_type}) ON (n.{match_prop})"
-                )
+                query = f"CREATE INDEX ON :{node_type}({match_prop})"
                 try:
-                    with self.driver.session(database=self.database) as session:
+                    with self.driver.session() as session:
                         session.run(query)
                     logger.info(f"  Index: {node_type}.{match_prop}")
                 except Exception as e:
-                    logger.warning(f"  Failed index {index_name}: {e}")
+                    logger.warning(f"  Failed index {node_type}.{match_prop}: {e}")
 
     # -------------------------------------------------------------------------
     # Main loading entry point
@@ -500,7 +495,7 @@ class Neo4jLoader:
 
         result = 'unknown'
         try:
-            with self.driver.session(database=self.database) as session:
+            with self.driver.session() as session:
                 rec = session.run(
                     f"MATCH (n:{node_type}) WHERE n.{property_name} IS NOT NULL "
                     f"RETURN n.{property_name} AS v LIMIT 1"
@@ -556,7 +551,7 @@ class Neo4jLoader:
         if source_label:
             params['source_label'] = source_label
 
-        with self.driver.session(database=self.database) as session:
+        with self.driver.session() as session:
             for i in range(0, len(rows), BATCH_SIZE):
                 batch = rows[i:i + BATCH_SIZE]
                 try:
@@ -655,19 +650,15 @@ class Neo4jLoader:
         """
         results = {'node_counts': {}, 'relationship_counts': {}, 'total_nodes': 0, 'total_relationships': 0}
 
-        with self.driver.session(database=self.database) as session:
+        with self.driver.session() as session:
             # Node counts by label
-            records = session.run(
-                "CALL db.labels() YIELD label "
-                "CALL { WITH label "
-                "  CALL db.stats.retrieve('GRAPH COUNTS') YIELD data "
-                "  RETURN data } "
-                "RETURN label"
+            labels_result = session.run(
+                "MATCH (n) RETURN DISTINCT labels(n) AS l"
             )
-            # Simpler approach: count per label
-            labels_result = session.run("CALL db.labels() YIELD label RETURN label")
             for record in labels_result:
-                label = record['label']
+                label = record['l'][0] if record['l'] else None
+                if not label:
+                    continue
                 count_result = session.run(f"MATCH (n:{label}) RETURN count(n) as cnt")
                 cnt = count_result.single()['cnt']
                 results['node_counts'][label] = cnt
@@ -675,10 +666,10 @@ class Neo4jLoader:
 
             # Relationship counts by type
             rel_types_result = session.run(
-                "CALL db.relationshipTypes() YIELD relationshipType RETURN relationshipType"
+                "MATCH ()-[r]->() RETURN DISTINCT type(r) AS rt"
             )
             for record in rel_types_result:
-                rel_type = record['relationshipType']
+                rel_type = record['rt']
                 count_result = session.run(
                     f"MATCH ()-[r:{rel_type}]->() RETURN count(r) as cnt"
                 )

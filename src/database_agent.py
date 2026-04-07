@@ -1198,7 +1198,7 @@ def verify_neo4j_load(source_key: str, source_label: str, emit=None) -> dict:
         return {'error': 'NEO4J_PASSWORD not set'}
 
     try:
-        with driver.session(database='neo4j') as session:
+        with driver.session() as session:
             result = session.run(
                 "MATCH ()-[r]->() WHERE r.source = $source "
                 "RETURN type(r) AS rel_type, count(r) AS count",

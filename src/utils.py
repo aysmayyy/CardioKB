@@ -133,7 +133,7 @@ def check_disease_cache(disease_name: str) -> Optional[Dict]:
         return None
 
     try:
-        with driver.session(database='neo4j') as session:
+        with driver.session() as session:
             # Try exact match on disease_name first
             rec = session.run(
                 "MATCH (c:DiseaseCache {disease_name: $name}) "
@@ -191,12 +191,15 @@ def add_to_disease_cache(disease_name: str, stats: Dict) -> Dict:
         raise RuntimeError("NEO4J_PASSWORD not set — cannot write cache")
 
     try:
-        with driver.session(database='neo4j') as session:
-            # Ensure uniqueness constraint exists
-            session.run(
-                "CREATE CONSTRAINT IF NOT EXISTS "
-                "FOR (c:DiseaseCache) REQUIRE c.disease_name IS UNIQUE"
-            )
+        with driver.session() as session:
+            # Ensure uniqueness constraint exists (idempotent in Memgraph)
+            try:
+                session.run(
+                    "CREATE CONSTRAINT ON (c:DiseaseCache) "
+                    "ASSERT c.disease_name IS UNIQUE"
+                )
+            except Exception:
+                pass  # Constraint already exists
 
             rec = session.run(
                 "MERGE (c:DiseaseCache {disease_name: $name}) "
@@ -261,7 +264,7 @@ def delete_disease_cache(disease_name: str) -> bool:
         return False
 
     try:
-        with driver.session(database='neo4j') as session:
+        with driver.session() as session:
             result = session.run(
                 "MATCH (c:DiseaseCache {disease_name: $name}) "
                 "DELETE c RETURN count(*) AS deleted",
@@ -284,7 +287,7 @@ def add_alias_to_disease_cache(disease_name: str, alias: str) -> None:
         return
 
     try:
-        with driver.session(database='neo4j') as session:
+        with driver.session() as session:
             session.run(
                 "MATCH (c:DiseaseCache {disease_name: $name}) "
                 "WHERE NOT toLower($alias) IN "

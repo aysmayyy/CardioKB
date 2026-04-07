@@ -237,7 +237,7 @@ class DiseaseQueryAgent:
 
         search = self.canonical_name or self.disease_name
         try:
-            with driver.session(database='neo4j') as s:
+            with driver.session() as s:
                 rec = s.run(
                     "MATCH (d:Disease) "
                     "WHERE toLower(d.commonName) CONTAINS toLower($name) "

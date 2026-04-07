@@ -83,12 +83,12 @@ def graph_stats():
         return jsonify({'error': 'NEO4J_PASSWORD not set'}), 503
 
     try:
-        with driver.session(database='neo4j') as session:
+        with driver.session() as session:
             # Node counts by label
             node_counts = {}
             total_nodes = 0
-            labels = [r['label'] for r in session.run(
-                "CALL db.labels() YIELD label RETURN label")]
+            labels = [r['l'][0] for r in session.run(
+                "MATCH (n) RETURN DISTINCT labels(n) AS l") if r['l']]
             for label in sorted(labels):
                 cnt = session.run(
                     f"MATCH (n:{label}) RETURN count(n) AS cnt"
@@ -99,9 +99,8 @@ def graph_stats():
             # Relationship counts by type
             rel_counts = {}
             total_rels = 0
-            rel_types = [r['relationshipType'] for r in session.run(
-                "CALL db.relationshipTypes() YIELD relationshipType "
-                "RETURN relationshipType")]
+            rel_types = [r['rt'] for r in session.run(
+                "MATCH ()-[r]->() RETURN DISTINCT type(r) AS rt")]
             for rt in sorted(rel_types):
                 cnt = session.run(
                     f"MATCH ()-[r:`{rt}`]->() RETURN count(r) AS cnt"
@@ -171,7 +170,7 @@ def disease_stats():
         return jsonify({'error': 'NEO4J_PASSWORD not set'}), 503
 
     try:
-        with driver.session(database='neo4j') as session:
+        with driver.session() as session:
             # Find Disease nodes matching the filter terms
             term_list = list(terms)
             disease_nodes = session.run(
@@ -368,7 +367,7 @@ def graph_data():
         return jsonify({'error': 'NEO4J_PASSWORD not set'}), 503
 
     try:
-        with driver.session(database='neo4j') as session:
+        with driver.session() as session:
 
             nodes = {}
             edges = []
@@ -378,7 +377,7 @@ def graph_data():
             seed_result = session.run(
                 "MATCH (d:Disease)--() "
                 "WHERE any(term IN $terms WHERE toLower(d.commonName) CONTAINS term) "
-                "RETURN DISTINCT elementId(d) AS did, d.commonName AS name, "
+                "RETURN DISTINCT id(d) AS did, d.commonName AS name, "
                 "       d.xrefDiseaseOntology AS doid "
                 "LIMIT 10",
                 terms=term_list,
@@ -410,7 +409,7 @@ def graph_data():
                 "MATCH (hub:Disease) "
                 "WHERE hub.xrefDiseaseOntology IS NOT NULL "
                 "  AND any(term IN $terms WHERE toLower(hub.commonName) CONTAINS term) "
-                "RETURN elementId(hub) AS hid, hub.commonName AS hname, "
+                "RETURN id(hub) AS hid, hub.commonName AS hname, "
                 "       hub.xrefDiseaseOntology AS hdoid "
                 "LIMIT 5",
                 terms=term_list,
@@ -453,9 +452,9 @@ def graph_data():
             if hub_ids:
                 parent_result = session.run(
                     "MATCH (child:Disease)-[r:diseaseIsSubtypeOf]->(parent:Disease) "
-                    "WHERE elementId(child) IN $hids "
-                    "RETURN elementId(child) AS cid, "
-                    "       elementId(parent) AS pid, parent.commonName AS pname, "
+                    "WHERE id(child) IN $hids "
+                    "RETURN id(child) AS cid, "
+                    "       id(parent) AS pid, parent.commonName AS pname, "
                     "       parent.xrefDiseaseOntology AS pdoid, "
                     "       r.source AS source",
                     hids=hub_ids,
@@ -488,11 +487,11 @@ def graph_data():
                 # 4. Fetch children (subtypes) of hub nodes.
                 child_result = session.run(
                     "MATCH (child:Disease)-[r:diseaseIsSubtypeOf]->(parent:Disease) "
-                    "WHERE elementId(parent) IN $hids "
-                    "  AND NOT elementId(child) IN $exclude "
-                    "RETURN elementId(child) AS cid, child.commonName AS cname, "
+                    "WHERE id(parent) IN $hids "
+                    "  AND NOT id(child) IN $exclude "
+                    "RETURN id(child) AS cid, child.commonName AS cname, "
                     "       child.xrefDiseaseOntology AS cdoid, "
-                    "       elementId(parent) AS pid, "
+                    "       id(parent) AS pid, "
                     "       r.source AS source "
                     "LIMIT 30",
                     hids=hub_ids,
@@ -533,7 +532,7 @@ def graph_data():
             for sid in seed_ids:
                 core_result = session.run(
                     "MATCH (d)-[r]-(n) "
-                    "WHERE elementId(d) = $did "
+                    "WHERE id(d) = $did "
                     "WITH d, r, n LIMIT $fetch "
                     "WITH d, r, n, labels(n)[0] AS ntype, "
                     "     coalesce(n.specificityScore, 0.0) AS spec "
@@ -546,7 +545,7 @@ def graph_data():
                     "       type(r) AS rel_type, r.source AS source, "
                     "       labels(n)[0] AS n_label, "
                     "       properties(n) AS n_props, "
-                    "       elementId(d) AS did, elementId(n) AS nid, "
+                    "       id(d) AS did, id(n) AS nid, "
                     "       spec",
                     did=sid,
                     fetch=fetch_cap,
@@ -608,8 +607,8 @@ def graph_data():
                     batch = core_list[i:i + batch_size]
                     disc_result = session.run(
                         "MATCH (n1)-[r]-(n2) "
-                        "WHERE elementId(n1) IN $nids "
-                        "AND NOT elementId(n2) IN $exclude "
+                        "WHERE id(n1) IN $nids "
+                        "AND NOT id(n2) IN $exclude "
                         "WITH n1, r, n2 LIMIT $fetch "
                         "WITH n1, r, n2, labels(n2)[0] AS n2type, "
                         "     coalesce(n2.specificityScore, 0.0) AS spec "
@@ -618,11 +617,11 @@ def graph_data():
                         "     spec: spec})[..$cap] AS bucket "
                         "UNWIND bucket AS b "
                         "WITH b.n1 AS n1, b.r AS r, b.n2 AS n2, b.spec AS spec "
-                        "RETURN elementId(n1) AS from_id, "
+                        "RETURN id(n1) AS from_id, "
                         "       type(r) AS rel_type, r.source AS source, "
                         "       labels(n2)[0] AS n_label, "
                         "       properties(n2) AS n_props, "
-                        "       elementId(n2) AS nid, "
+                        "       id(n2) AS nid, "
                         "       spec",
                         nids=batch,
                         exclude=exclude_ids,
@@ -677,7 +676,7 @@ def specificity_info():
     pwd = os.getenv('NEO4J_PASSWORD', '')
     driver = GraphDatabase.driver(uri, auth=(user, pwd))
     try:
-        with driver.session(database='neo4j') as session:
+        with driver.session() as session:
             result = session.run(
                 "MATCH (m:_Metadata {key: 'specificityScoreComputed'}) "
                 "RETURN m.timestamp AS ts, m.totalNodes AS total"
@@ -739,7 +738,7 @@ def run_query():
         return jsonify({'error': 'NEO4J_PASSWORD not set'}), 503
 
     try:
-        with driver.session(database='neo4j') as session:
+        with driver.session() as session:
             result = session.run(cypher)
             keys = result.keys()
             rows = []
@@ -820,12 +819,12 @@ def disease_subgraph():
     BATCH_SIZE = 500
 
     try:
-        with driver.session(database='neo4j') as session:
+        with driver.session() as session:
             # Find matching disease node(s)
             match_result = session.run(
                 "MATCH (d:Disease) "
                 "WHERE toLower(d.commonName) CONTAINS toLower($name) "
-                "RETURN d.commonName AS name, elementId(d) AS eid "
+                "RETURN d.commonName AS name, id(d) AS eid "
                 "ORDER BY size(d.commonName) LIMIT 5",
                 name=disease_name,
             )
@@ -848,7 +847,7 @@ def disease_subgraph():
 
             # Seed with the disease node itself
             seed = session.run(
-                "MATCH (d:Disease) WHERE elementId(d) = $eid "
+                "MATCH (d:Disease) WHERE id(d) = $eid "
                 "RETURN d", eid=target_eid
             ).single()
             if seed:
@@ -878,18 +877,18 @@ def disease_subgraph():
 
                     result = session.run(
                         "UNWIND $eids AS eid "
-                        "MATCH (a) WHERE elementId(a) = eid "
+                        "MATCH (a) WHERE id(a) = eid "
                         "MATCH (a)-[r]-(b) "
-                        "RETURN elementId(b) AS bid, "
+                        "RETURN id(b) AS bid, "
                         "       labels(b) AS blabels, "
                         "       b.commonName AS bCommonName, b.name AS bName, "
                         "       b.geneSymbol AS bSymbol, b.title AS bTitle, "
                         "       b.pathwayName AS bPathway, "
                         "       {props: properties(b)} AS bProps, "
                         "       type(r) AS rtype, r.source AS rsource, "
-                        "       elementId(r) AS rid, "
-                        "       elementId(startNode(r)) AS rstart, "
-                        "       elementId(endNode(r)) AS rend",
+                        "       id(r) AS rid, "
+                        "       id(startNode(r)) AS rstart, "
+                        "       id(endNode(r)) AS rend",
                         eids=batch,
                     )
 
@@ -942,12 +941,12 @@ def disease_subgraph():
                 batch = all_eids[batch_start:batch_start + BATCH_SIZE]
                 result = session.run(
                     "UNWIND $eids AS eid "
-                    "MATCH (a) WHERE elementId(a) = eid "
+                    "MATCH (a) WHERE id(a) = eid "
                     "MATCH (a)-[r]-(b) "
-                    "WHERE elementId(b) IN $all_nodes "
-                    "RETURN elementId(r) AS rid, "
-                    "       elementId(startNode(r)) AS rstart, "
-                    "       elementId(endNode(r)) AS rend, "
+                    "WHERE id(b) IN $all_nodes "
+                    "RETURN id(r) AS rid, "
+                    "       id(startNode(r)) AS rstart, "
+                    "       id(endNode(r)) AS rend, "
                     "       type(r) AS rtype, r.source AS rsource",
                     eids=batch,
                     all_nodes=all_eids,
@@ -1189,7 +1188,7 @@ def _reload_unloaded_parsers():
     # Query Neo4j for current per-parser counts
     driver = GraphDatabase.driver(uri, auth=(username, password))
     try:
-        with driver.session(database='neo4j') as session:
+        with driver.session() as session:
             # Relationship counts by source
             source_counts = {}
             for rec in session.run(
@@ -1200,8 +1199,10 @@ def _reload_unloaded_parsers():
 
             # Node counts by label
             node_counts = {}
-            for rec in session.run("CALL db.labels() YIELD label RETURN label"):
-                label = rec['label']
+            for rec in session.run("MATCH (n) RETURN DISTINCT labels(n) AS l"):
+                label = rec['l'][0] if rec['l'] else None
+                if not label:
+                    continue
                 cnt = session.run(
                     f"MATCH (n:`{label}`) RETURN count(n) AS cnt"
                 ).single()['cnt']

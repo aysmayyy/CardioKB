@@ -43,10 +43,10 @@ def compute_specificity(uri=None, username=None, password=None):
     driver = GraphDatabase.driver(uri, auth=(username, password))
 
     try:
-        with driver.session(database='neo4j') as session:
+        with driver.session() as session:
             # Get all node labels
-            result = session.run("CALL db.labels() YIELD label RETURN label")
-            labels = [r['label'] for r in result]
+            result = session.run("MATCH (n) RETURN DISTINCT labels(n) AS l")
+            labels = [r['l'][0] for r in result if r['l']]
             logger.info(f"Computing specificityScore for {len(labels)} node labels")
 
             total_updated = 0
@@ -99,8 +99,7 @@ def compute_specificity(uri=None, username=None, password=None):
             # Create index for fast lookups
             try:
                 session.run(
-                    "CREATE INDEX node_specificity IF NOT EXISTS "
-                    "FOR (n:Gene) ON (n.specificityScore)"
+                    "CREATE INDEX ON :Gene(specificityScore)"
                 )
             except Exception:
                 pass  # Index may already exist or label may not support it

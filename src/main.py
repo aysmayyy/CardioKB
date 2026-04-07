@@ -958,20 +958,12 @@ class CardioKBPipeline:
             return
 
         try:
-            # Clear existing graph for a clean CVD-filtered reload.
-            # Use CREATE OR REPLACE DATABASE (instant) via bolt:// to
-            # the system db — avoids slow batch-delete on millions of nodes.
-            logger.info("Clearing existing Neo4j graph for clean reload...")
-            bolt_uri = uri.replace('neo4j://', 'bolt://')
+            # Clear existing graph for a clean reload via batch delete.
+            logger.info("Clearing existing graph for clean reload...")
             from neo4j import GraphDatabase as _GD
-            _sys_driver = _GD.driver(bolt_uri, auth=(username, password))
+            _sys_driver = _GD.driver(uri, auth=(username, password))
             try:
-                with _sys_driver.session(database='system') as sys_session:
-                    sys_session.run("CREATE OR REPLACE DATABASE neo4j WAIT")
-                logger.info("  Database replaced (CREATE OR REPLACE).")
-            except Exception as e:
-                logger.warning(f"  CREATE OR REPLACE failed ({e}), falling back to batch delete...")
-                with _sys_driver.session(database='neo4j') as session:
+                with _sys_driver.session() as session:
                     deleted = 1
                     while deleted > 0:
                         result = session.run(
@@ -1022,7 +1014,7 @@ class CardioKBPipeline:
                 # (AnAge provides Species nodes; NCBI Gene provides human genes)
                 logger.info("Post-load: creating geneInSpecies edges (Gene → Homo sapiens)...")
                 try:
-                    with loader.driver.session(database=loader.database) as session:
+                    with loader.driver.session() as session:
                         result = session.run(
                             'MATCH (sp:Species {speciesName: "Homo sapiens"}) '
                             'MATCH (g:Gene)--() '
@@ -1436,7 +1428,7 @@ class CardioKBPipeline:
             "RETURN count(DISTINCT d) AS tagged"
         )
 
-        with loader.driver.session(database=loader.database) as session:
+        with loader.driver.session() as session:
             result = session.run(query, patterns=patterns)
             tagged = result.single()['tagged']
             logger.info(f"  Tagged {tagged} Disease nodes with cvdRelevant=true")

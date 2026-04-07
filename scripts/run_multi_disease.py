@@ -147,7 +147,7 @@ def _tag_edges(loader, disease_key, gda_df):
     )
 
     batch_size = 1000
-    with loader.driver.session(database=loader.database) as session:
+    with loader.driver.session() as session:
         for i in range(0, len(rows), batch_size):
             session.run(query, rows=rows[i:i + batch_size], scope=disease_key)
 
@@ -166,19 +166,19 @@ def report_stats():
 
     driver = GraphDatabase.driver(uri, auth=(username, password))
     try:
-        with driver.session(database='neo4j') as s:
+        with driver.session() as s:
             total_nodes = s.run("MATCH (n) RETURN count(n) AS c").single()['c']
             total_rels = s.run("MATCH ()-[r]->() RETURN count(r) AS c").single()['c']
 
             node_counts = {}
-            for label in [r['l'] for r in s.run("CALL db.labels() YIELD label AS l RETURN l")]:
+            for label in [r['l'][0] for r in s.run("MATCH (n) RETURN DISTINCT labels(n) AS l") if r['l']]:
                 cnt = s.run(f"MATCH (n:{label}) RETURN count(n) AS c").single()['c']
                 if cnt > 0:
                     node_counts[label] = cnt
 
             rel_counts = {}
-            for rt in [r['t'] for r in s.run(
-                "CALL db.relationshipTypes() YIELD relationshipType AS t RETURN t"
+            for rt in [r['rt'] for r in s.run(
+                "MATCH ()-[r]->() RETURN DISTINCT type(r) AS rt"
             )]:
                 cnt = s.run(f"MATCH ()-[r:`{rt}`]->() RETURN count(r) AS c").single()['c']
                 if cnt > 0:

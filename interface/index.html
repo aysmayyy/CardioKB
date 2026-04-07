@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>CardioKB - Biomedical Knowledge Graph</title>
+<title>CardioKB - Cardiovascular Disease Knowledge Graph</title>
 <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.7/dist/chart.umd.min.js"></script>
 <script src="https://unpkg.com/vis-network@9.1.2/standalone/umd/vis-network.min.js"></script>
 <link rel="stylesheet" href="https://unpkg.com/vis-network@9.1.2/styles/vis-network.min.css" />
@@ -418,14 +418,14 @@ th { color: var(--text-muted); font-weight: 600; text-transform: uppercase; font
 <body>
 
 <aside class="sidebar">
-    <h1>CardioKB <span>Biomedical Knowledge Graph</span></h1>
+    <h1>CardioKB <span>Cardiovascular Knowledge Graph</span></h1>
 
     <div style="font-size:0.8rem;color:var(--text-muted);line-height:1.55;padding:0.75rem;background:var(--bg);border-radius:6px;border:1px solid var(--border)">
-        A general-purpose biomedical knowledge graph spanning all human diseases. <strong style="color:var(--text)">Build Knowledge Graph</strong> fetches fresh data for any disease via AI. <strong style="color:var(--text)">Explore</strong> visualizes subgraphs. <strong style="color:var(--text)">Query</strong> runs Cypher. <strong style="color:var(--text)">Admin</strong> adds entirely new databases.
+        A cardiovascular disease knowledge graph integrating <strong style="color:var(--text)"><span id="sidebarSourceCount">--</span> data sources</strong>. <strong style="color:var(--text)">Build Knowledge Graph</strong> fetches fresh CVD data via AI. <strong style="color:var(--text)">Explore</strong> visualizes subgraphs. <strong style="color:var(--text)">Query</strong> runs Cypher. <strong style="color:var(--text)">Admin</strong> adds entirely new databases.
     </div>
 
     <div style="display:flex;align-items:center;gap:0.4rem">
-        <button class="run-btn" id="runBtn" onclick="runHealthCheck()" data-tip="Check all parsers (including agent-generated ones), Neo4j connectivity, and data integrity" style="flex:1">Run Health Check</button>
+        <button class="run-btn" id="runBtn" onclick="runHealthCheck()" data-tip="Check all parsers (including agent-generated ones), database connectivity, and data integrity" style="flex:1">Run Health Check</button>
         <button class="info-btn-sm" data-info="healthcheck">?</button>
     </div>
 
@@ -434,9 +434,9 @@ th { color: var(--text-muted); font-weight: 600; text-transform: uppercase; font
             <h3 style="margin-bottom:0">Build Knowledge Graph <span style="font-size:0.65rem;font-weight:600;background:rgba(139,92,246,0.15);color:#a78bfa;padding:0.15rem 0.4rem;border-radius:4px;margin-left:0.3rem;vertical-align:middle">AI</span></h3>
             <button class="info-btn-sm" data-info="buildkg">?</button>
         </div>
-        <div style="font-size:0.75rem;color:var(--text-muted);margin-bottom:0.4rem;line-height:1.45">AI fetches fresh gene-disease associations (DisGeNET) and clinical trials (ClinicalTrials.gov) for any disease, then loads into Neo4j. Best for <strong style="color:var(--text)">specific diseases</strong> (e.g. lupus, scurvy). Broad categories (e.g. "cancer") are capped at 200 disease IDs &mdash; use the full pipeline for comprehensive coverage.</div>
-        <input type="text" class="agent-input" id="buildKgInput" placeholder="e.g. lupus, Parkinson's, COPD..." data-tip="Enter any disease name -- AI standardizes it and fetches data from multiple sources" />
-        <button class="run-btn" id="buildKgBtn" onclick="buildKnowledgeGraph()" style="font-size:0.82rem;padding:0.5rem" data-tip="Standardize disease name, fetch DisGeNET + ClinicalTrials.gov data, load into Neo4j">Build Graph</button>
+        <div style="font-size:0.75rem;color:var(--text-muted);margin-bottom:0.4rem;line-height:1.45">AI fetches fresh gene-disease associations and clinical trials for cardiovascular diseases, then loads into the graph. Best for <strong style="color:var(--text)">specific CVD subtypes</strong> (e.g. heart failure, cardiomyopathy). Broad categories are capped at 200 disease IDs &mdash; use the full pipeline for comprehensive coverage.</div>
+        <input type="text" class="agent-input" id="buildKgInput" placeholder="e.g. heart failure, cardiomyopathy, aortic stenosis..." data-tip="Enter a cardiovascular disease name -- AI standardizes it and fetches data from multiple sources" />
+        <button class="run-btn" id="buildKgBtn" onclick="buildKnowledgeGraph()" style="font-size:0.82rem;padding:0.5rem" data-tip="Standardize disease name, fetch gene-disease associations + clinical trials, load into graph">Build Graph</button>
         <div id="buildKgResult" style="display:none;font-size:0.75rem;color:var(--text-muted);line-height:1.55;margin-top:0.4rem;padding:0.5rem;background:var(--surface);border-radius:6px;border:1px solid var(--border)"></div>
     </div>
 
@@ -445,7 +445,7 @@ th { color: var(--text-muted); font-weight: 600; text-transform: uppercase; font
             <h3 style="margin-bottom:0">Extract Disease Subgraph <span style="font-size:0.65rem;font-weight:600;background:rgba(34,197,94,0.15);color:#4ade80;padding:0.15rem 0.4rem;border-radius:4px;margin-left:0.3rem;vertical-align:middle">Instant</span></h3>
             <button class="info-btn-sm" data-info="subgraph">?</button>
         </div>
-        <input type="text" class="agent-input" id="subgraphDisease" placeholder="e.g. heart failure, diabetes..." data-tip="Search for a Disease node by name (partial match)" />
+        <input type="text" class="agent-input" id="subgraphDisease" placeholder="e.g. heart failure, atrial fibrillation, coronary artery disease..." data-tip="Search for a cardiovascular disease subtype (partial match)" />
         <div style="display:flex;align-items:center;gap:0.5rem;margin:0.4rem 0">
             <label style="font-size:0.75rem;color:var(--text-muted);white-space:nowrap">Hops:</label>
             <input type="range" id="subgraphHops" min="1" max="3" value="1" style="flex:1;accent-color:var(--accent)" />
@@ -477,16 +477,16 @@ th { color: var(--text-muted); font-weight: 600; text-transform: uppercase; font
                     <h3 style="margin-bottom:0">Add New Database <span style="font-size:0.65rem;font-weight:600;background:rgba(139,92,246,0.15);color:#a78bfa;padding:0.15rem 0.4rem;border-radius:4px;margin-left:0.3rem;vertical-align:middle">AI</span></h3>
                     <button class="info-btn-sm" data-info="adddb">?</button>
                 </div>
-                <div style="font-size:0.75rem;color:var(--text-muted);margin-bottom:0.4rem;line-height:1.45">Provide a name and data URL. The AI agent auto-generates a parser and loads it into Neo4j.</div>
+                <div style="font-size:0.75rem;color:var(--text-muted);margin-bottom:0.4rem;line-height:1.45">Provide a name and data URL. The AI agent auto-generates a parser and loads it into the graph.</div>
                 <input type="text" class="agent-input" id="addDbName" placeholder="Database name (e.g. PhosphoSitePlus)" data-tip="Human-readable name for the new data source" />
                 <input type="text" class="agent-input" id="addDbUrl" placeholder="Data download URL (TSV, CSV, JSON, or gzipped)" data-tip="Direct download link to the source data file. The agent samples the first 64KB to detect format and columns." />
-                <button class="run-btn" id="addDbBtn" onclick="addDatabase()" style="font-size:0.82rem;padding:0.5rem;margin-bottom:0.75rem" data-tip="Launch the DatabaseAgent: sample file, generate parser via Claude AI, run parser, load into Neo4j">Build Parser</button>
+                <button class="run-btn" id="addDbBtn" onclick="addDatabase()" style="font-size:0.82rem;padding:0.5rem;margin-bottom:0.75rem" data-tip="Launch the DatabaseAgent: sample file, generate parser via Claude AI, run parser, load into graph">Build Parser</button>
 
                 <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:0.5rem">
                     <h3 style="margin-bottom:0">Run Pipeline</h3>
                     <button class="info-btn-sm" data-info="pipeline">?</button>
                 </div>
-                <button class="run-btn" id="pipelineBtn" onclick="runPipeline()" data-tip="Run the full data pipeline for all sources (download, parse, load into Neo4j)" style="font-size:0.82rem;padding:0.5rem">Run Pipeline</button>
+                <button class="run-btn" id="pipelineBtn" onclick="runPipeline()" data-tip="Run the full data pipeline for all sources (download, parse, load into graph)" style="font-size:0.82rem;padding:0.5rem">Run Pipeline</button>
             </div>
         </div>
     </div>
@@ -506,14 +506,14 @@ th { color: var(--text-muted); font-weight: 600; text-transform: uppercase; font
 
     <!-- Tabs -->
     <div class="tabs">
-        <button class="tab-btn active" data-tab="explore" data-tip="Visually browse subgraphs for any disease, gene, or drug with core and discovery layers" onclick="switchTab('explore')">Explore</button>
-        <button class="tab-btn" data-tab="query" data-tip="Run custom Cypher queries against the Neo4j knowledge graph" onclick="switchTab('query')">Query</button>
+        <button class="tab-btn active" data-tab="explore" data-tip="Visually browse cardiovascular disease subgraphs with core and discovery layers" onclick="switchTab('explore')">Explore</button>
+        <button class="tab-btn" data-tab="query" data-tip="Run custom Cypher queries against the knowledge graph" onclick="switchTab('query')">Query</button>
     </div>
 
     <!-- Explore Tab -->
     <div class="tab-content active" id="tab-explore">
         <div class="explore-bar">
-            <input type="text" id="exploreSearch" data-tip="Search for any disease, gene, or drug across all integrated sources to visualize its neighborhood" placeholder="Try: atrial fibrillation, Alzheimer's, BRCA1, metformin" />
+            <input type="text" id="exploreSearch" data-tip="Search for a cardiovascular disease, gene, or drug to visualize its neighborhood" placeholder="Try: atrial fibrillation, heart failure, coronary artery disease, hypertension" />
             <input type="number" id="exploreLimit" value="200" min="10" max="1000" style="width:80px;flex:none" data-tip="Maximum number of nodes to display (higher = more detail, slower)" />
             <button id="exploreBtn" onclick="loadExploreGraph()" data-tip="Load the subgraph for the searched disease, gene, or drug">Explore</button>
             <button class="info-btn" onclick="showMethodologyModal()" data-tip="How to read this graph">?</button>
@@ -542,7 +542,7 @@ th { color: var(--text-muted); font-weight: 600; text-transform: uppercase; font
 
         <div style="position:relative">
             <div class="graph-container" id="exploreGraph"></div>
-            <div class="graph-loading visible" id="exploreLoading"><span class="spinner"></span> Select a disease filter and click Explore</div>
+            <div class="graph-loading visible" id="exploreLoading"><span class="spinner"></span> Search a cardiovascular disease or gene and click Explore</div>
             <div class="detail-panel" id="detailPanel">
                 <button class="close-btn" onclick="closeDetailPanel()">&times;</button>
                 <h3 id="detailTitle">Node</h3>
@@ -574,7 +574,7 @@ th { color: var(--text-muted); font-weight: 600; text-transform: uppercase; font
     <!-- Query Tab -->
     <div class="tab-content" id="tab-query">
         <div style="background:var(--surface);border:1px solid var(--border);border-radius:8px;padding:1rem;margin-bottom:1rem;font-size:0.82rem;color:var(--text-muted);line-height:1.6">
-            Write Cypher queries to explore the full knowledge graph (<span id="querySourceCount">all</span> sources, all diseases). Queries are <strong style="color:var(--text)">read-only</strong> (no CREATE/DELETE/SET). Click a template below to auto-fill, or write your own. Results appear as a table and, when graph data is returned, as a network visualization.
+            Write Cypher queries to explore the CVD knowledge graph (<span id="querySourceCount">--</span> sources). Queries are <strong style="color:var(--text)">read-only</strong> (no CREATE/DELETE/SET). Click a template below to auto-fill, or write your own. Results appear as a table and, when graph data is returned, as a network visualization.
         </div>
 
         <div class="templates">
@@ -629,7 +629,7 @@ th { color: var(--text-muted); font-weight: 600; text-transform: uppercase; font
             <section style="margin-top:1rem;margin-bottom:0" id="idMappingSection" class="hidden">
                 <h2>ID Mapping Report</h2>
                 <p style="font-size:0.8rem;color:var(--text-muted);margin-bottom:0.75rem">
-                    Validates that TSV relationship IDs match existing Neo4j nodes. Low match rates mean edges are being dropped.
+                    Validates that TSV relationship IDs match existing graph nodes. Low match rates mean edges are being dropped.
                 </p>
                 <div id="idMappingPanel" style="max-height:420px;overflow-y:auto">
                     <table>
@@ -648,7 +648,7 @@ th { color: var(--text-muted); font-weight: 600; text-transform: uppercase; font
             <section style="margin-top:1rem;margin-bottom:0">
                 <h2>Pipeline Log</h2>
                 <div class="log-panel" id="logPanel">
-                    <div class="log-line log-info">Ready. Select a disease filter and click "Run Health Check".</div>
+                    <div class="log-line log-info">Ready. Click "Run Health Check" to verify all data sources.</div>
                 </div>
             </section>
         </div>
@@ -660,46 +660,46 @@ th { color: var(--text-muted); font-weight: 600; text-transform: uppercase; font
     <div class="modal">
         <div class="modal-step active" data-step="0">
             <h2>Welcome to CardioKB</h2>
-            <p>CardioKB is a <strong>general-purpose biomedical knowledge graph</strong> integrating <strong><span id="aboutSourceCount">26</span> deduplicated data sources</strong> into a single queryable network. It connects genes, diseases, drugs, pathways, clinical trials, phenotypes, variants, and more &mdash; focused on <strong>cardiovascular disease</strong> with disease-agnostic base data.</p>
+            <p>CardioKB is a <strong>cardiovascular disease knowledge graph</strong> integrating <strong><span id="aboutSourceCount">--</span> deduplicated data sources</strong> into a single queryable network. It connects genes, diseases, drugs, pathways, clinical trials, phenotypes, variants, and more &mdash; all focused on <strong>cardiovascular disease</strong> and its subtypes.</p>
             <ul>
-                <li>4.9M+ nodes across 19 entity types, 9.3M+ relationships from 26 sources</li>
-                <li>Search any disease (heart failure, Alzheimer's, lupus...) or any gene/drug</li>
-                <li><strong>Build Knowledge Graph</strong> &mdash; AI fetches fresh data for any disease you name</li>
+                <li><span id="aboutNodeCount">--</span> nodes across <span id="aboutNodeTypeCount">--</span> entity types, <span id="aboutRelCount">--</span> relationships from <span id="aboutRelSourceCount">--</span> sources</li>
+                <li>Search CVD subtypes (heart failure, atrial fibrillation, coronary artery disease...) or related genes/drugs</li>
+                <li><strong>Build Knowledge Graph</strong> &mdash; AI fetches fresh data for CVD subtypes you name</li>
                 <li>Add entirely new databases &mdash; the AI-powered DatabaseAgent writes the parser for you</li>
             </ul>
         </div>
         <div class="modal-step" data-step="1">
             <h2>Build Knowledge Graph <span style="font-size:0.7rem;font-weight:600;background:rgba(139,92,246,0.15);color:#a78bfa;padding:0.15rem 0.4rem;border-radius:4px;vertical-align:middle">AI</span></h2>
-            <p>In the sidebar, <strong>Build Knowledge Graph</strong> uses AI to enrich the graph for any disease:</p>
+            <p>In the sidebar, <strong>Build Knowledge Graph</strong> uses AI to enrich the graph for cardiovascular disease subtypes:</p>
             <ul>
-                <li><strong>Type any disease name</strong> &mdash; abbreviations, synonyms, and informal names all work (e.g. "PD", "lupus", "COPD")</li>
-                <li>AI standardizes the name, then fetches <strong>gene-disease associations</strong> from DisGeNET and <strong>clinical trials</strong> from ClinicalTrials.gov</li>
-                <li>Data is loaded into Neo4j and <strong>cached</strong> &mdash; the same disease returns instantly next time</li>
+                <li><strong>Type a CVD subtype</strong> &mdash; abbreviations, synonyms, and informal names all work (e.g. "AFib", "HF", "CHD")</li>
+                <li>AI standardizes the name, then fetches <strong>gene-disease associations</strong> and <strong>clinical trials</strong> from multiple sources</li>
+                <li>Data is loaded into the graph and <strong>cached</strong> &mdash; the same disease returns instantly next time</li>
                 <li>After building, the <strong>Explore tab</strong> auto-opens with your disease so you can visualize the results immediately</li>
             </ul>
-            <p style="margin-top:0.5rem"><strong>Extract Disease Subgraph</strong> (below it) queries <em>existing</em> data only &mdash; use Build first if coverage is thin.</p>
+            <p style="margin-top:0.5rem"><strong>Extract Disease Subgraph</strong> (below it) queries <em>existing</em> CVD data only &mdash; use Build first if coverage is thin.</p>
         </div>
         <div class="modal-step" data-step="2">
             <h2>Explore &amp; Query</h2>
-            <p>The <strong>Explore tab</strong> visualizes disease/gene subgraphs:</p>
+            <p>The <strong>Explore tab</strong> visualizes cardiovascular disease subgraphs:</p>
             <ul>
-                <li><strong>Search any disease or gene</strong> &mdash; type a name and click Explore</li>
+                <li><strong>Search a CVD subtype or gene</strong> &mdash; type a name and click Explore</li>
                 <li><strong>Core nodes</strong> (large, solid) are direct known associations</li>
                 <li><strong>Discovery nodes</strong> (small, dashed) are 2-hop hypothesis-generating connections</li>
                 <li><strong>Click any node</strong> to see its properties, neighbors, and specificity score</li>
                 <li>Use <strong>filter chips</strong> to show/hide entity types</li>
             </ul>
-            <p style="margin-top:0.5rem">The <strong>Query tab</strong> gives you direct Cypher access &mdash; click a template or write your own (read-only, Cmd+Enter to run).</p>
+            <p style="margin-top:0.5rem">The <strong>Query tab</strong> gives you direct Cypher access to the CVD graph &mdash; click a template or write your own (read-only, Cmd+Enter to run).</p>
         </div>
         <div class="modal-step" data-step="3">
             <h2>Admin: Add New Databases <span style="font-size:0.7rem;font-weight:600;background:rgba(139,92,246,0.15);color:#a78bfa;padding:0.15rem 0.4rem;border-radius:4px;vertical-align:middle">AI</span></h2>
             <p>Under <strong>Advanced</strong> in the sidebar (password-protected), the <strong>Add New Database</strong> panel lets you expand the graph with any public data source:</p>
             <ul>
                 <li>Enter a <strong>database name</strong> and a <strong>direct download URL</strong> (TSV, CSV, JSON, or gzipped)</li>
-                <li>Click <strong>Build Parser</strong> &mdash; the DatabaseAgent (Claude AI) samples the file, generates a complete parser, integrates it into the pipeline, and loads the data into Neo4j</li>
+                <li>Click <strong>Build Parser</strong> &mdash; the DatabaseAgent (Claude AI) samples the file, generates a complete parser, integrates it into the pipeline, and loads the data into the graph</li>
                 <li>The agent handles format detection, column mapping, ontology config, and ID validation automatically</li>
             </ul>
-            <p style="margin-top:0.5rem">Also in Admin: <strong>Run Pipeline</strong> (full rebuild of all 26 sources).</p>
+            <p style="margin-top:0.5rem">Also in Admin: <strong>Run Pipeline</strong> (full rebuild of all <span class="live-source-count">--</span> sources).</p>
         </div>
         <div class="modal-dots">
             <span class="dot active" data-dot="0"></span>
@@ -809,14 +809,14 @@ th { color: var(--text-muted); font-weight: 600; text-transform: uppercase; font
 
         subgraph:
             '<h4>Extract Disease Subgraph</h4>' +
-            '<p>Queries existing data only &mdash; no new data is fetched. Extracts and exports the complete neighborhood of any disease already in the knowledge graph.</p>' +
+            '<p>Queries existing data only &mdash; no new data is fetched. Extracts and exports the complete neighborhood of any cardiovascular disease subtype already in the knowledge graph.</p>' +
             '<p><strong>Specificity scoring:</strong> Nodes are ranked by <code>1 / (number of diseases they connect to)</code>. A gene unique to your disease scores <strong>1.0</strong>; one linked to hundreds of diseases scores near <strong>0</strong>. High-specificity nodes are more likely to be biologically meaningful.</p>' +
             '<p><strong>Export formats:</strong> JSON (for programmatic use) or CSV (for Excel/R analysis). Both include node types, relationship types, and source database provenance.</p>',
 
         healthcheck:
             '<h4>Health Check</h4>' +
-            '<p>Verifies every data source parser in the pipeline: checks that raw data was downloaded, parsed into TSVs, and loaded into Neo4j with correct node/relationship counts.</p>' +
-            '<p>Also tests Neo4j connectivity, relationship <code>source</code> tagging, and ID mapping integrity. Green = data present; red = missing or mismatched.</p>',
+            '<p>Verifies every data source parser in the pipeline: checks that raw data was downloaded, parsed into TSVs, and loaded into the graph with correct node/relationship counts.</p>' +
+            '<p>Also tests database connectivity, relationship <code>source</code> tagging, and ID mapping integrity. Green = data present; red = missing or mismatched.</p>',
 
         adddb:
             '<h4>DatabaseAgent (AI Parser Generator)</h4>' +
@@ -824,22 +824,22 @@ th { color: var(--text-muted); font-weight: 600; text-transform: uppercase; font
             '<p><strong>1.</strong> Download and sample the file (first 64KB)<br>' +
             '<strong>2.</strong> Auto-detect format (TSV, CSV, JSON, XML)<br>' +
             '<strong>3.</strong> Generate a complete Python parser<br>' +
-            '<strong>4.</strong> Create ontology configs for Neo4j mapping<br>' +
+            '<strong>4.</strong> Create ontology configs for graph mapping<br>' +
             '<strong>5.</strong> Run the parser and load data into the graph</p>' +
             '<p>The entire process takes 1&ndash;3 minutes. The new source appears in Health Check immediately.</p>',
 
         pipeline:
             '<h4>Full Pipeline Run</h4>' +
-            '<p>Runs the complete data pipeline for all sources: <strong>download</strong> raw data &rarr; <strong>parse</strong> into TSVs &rarr; <strong>load</strong> into Neo4j.</p>' +
+            '<p>Runs the complete data pipeline for all sources: <strong>download</strong> raw data &rarr; <strong>parse</strong> into TSVs &rarr; <strong>load</strong> into the graph.</p>' +
             '<p>This is a long-running operation (30&ndash;60 min depending on network speed). It re-downloads all source data and rebuilds the graph from scratch. Use sparingly &mdash; typically only needed after adding new parsers or updating data sources.</p>' +
-            '<p><strong>Not agentic</strong> &mdash; executes a fixed pipeline of 26 parsers in sequence.</p>',
+            '<p><strong>Not agentic</strong> &mdash; executes a fixed pipeline of <span class="live-source-count">--</span> parsers in sequence.</p>',
 
         buildkg:
             '<h4>Build Knowledge Graph</h4>' +
-            '<p><strong>Agentic</strong> &mdash; AI fetches fresh data from DisGeNET and ClinicalTrials.gov for this specific disease, then combines with the existing graph.</p>' +
-            '<p><strong>Steps:</strong> Standardize disease name &rarr; Check current coverage &rarr; Fetch gene-disease associations (DisGeNET API, max 200 disease IDs) &rarr; Fetch clinical trials (ClinicalTrials.gov API v2, max 500 trials) &rarr; Load into Neo4j &rarr; Auto-open Explore tab.</p>' +
+            '<p><strong>Agentic</strong> &mdash; AI fetches fresh data from DisGeNET and ClinicalTrials.gov for this specific CVD subtype, then combines with the existing graph.</p>' +
+            '<p><strong>Steps:</strong> Standardize disease name &rarr; Check current coverage &rarr; Fetch gene-disease associations (DisGeNET API, max 200 disease IDs) &rarr; Fetch clinical trials (ClinicalTrials.gov API v2, max 500 trials) &rarr; Load into graph &rarr; Auto-open Explore tab.</p>' +
             '<p>Results are cached &mdash; subsequent requests for the same disease return instantly.</p>' +
-            '<p><strong>Best for specific diseases</strong> (lupus, scurvy, COPD). Broad categories like &ldquo;cancer&rdquo; or &ldquo;cardiovascular disease&rdquo; are capped to keep response times under 2 minutes &mdash; use the full pipeline (Admin &rarr; Run Pipeline) for comprehensive coverage of those.</p>',
+            '<p><strong>Best for specific CVD subtypes</strong> (heart failure, cardiomyopathy, aortic stenosis). The broad term &ldquo;cardiovascular disease&rdquo; is capped to keep response times under 2 minutes &mdash; use the full pipeline (Admin &rarr; Run Pipeline) for comprehensive coverage.</p>',
 
         discovery:
             '<h4>Core vs Discovery Layers</h4>' +
@@ -1930,11 +1930,20 @@ function runHealthCheck() {
     });
     eventSource.addEventListener('neo4j_stats', e => {
         const d = JSON.parse(e.data);
-        log('Neo4j: ' + d.total_nodes.toLocaleString() + ' nodes, ' + d.total_relationships.toLocaleString() + ' rels', 'ok');
+        log('Graph: ' + d.total_nodes.toLocaleString() + ' nodes, ' + d.total_relationships.toLocaleString() + ' rels', 'ok');
         document.getElementById('statNodes').textContent = d.total_nodes.toLocaleString();
         document.getElementById('statRels').textContent = d.total_relationships.toLocaleString();
-        document.getElementById('statNodeTypes').textContent = Object.keys(d.node_counts).length;
-        document.getElementById('statRelTypes').textContent = Object.keys(d.rel_counts).length;
+        const ntCount = Object.keys(d.node_counts).length;
+        const rtCount = Object.keys(d.rel_counts).length;
+        document.getElementById('statNodeTypes').textContent = ntCount;
+        document.getElementById('statRelTypes').textContent = rtCount;
+        // Update live stats in welcome modal
+        const anc = document.getElementById('aboutNodeCount');
+        if (anc) anc.textContent = d.total_nodes.toLocaleString();
+        const arc = document.getElementById('aboutRelCount');
+        if (arc) arc.textContent = d.total_relationships.toLocaleString();
+        const antc = document.getElementById('aboutNodeTypeCount');
+        if (antc) antc.textContent = ntCount;
         renderCharts(d.node_counts, d.rel_counts);
     });
     eventSource.addEventListener('health', e => { renderHealth(JSON.parse(e.data).checks); });
@@ -2082,13 +2091,16 @@ function renderParserTable(parsers) {
     const parserCount = Object.keys(parsers).length;
     // Update dynamic source counts across the UI
     const runBtn = document.getElementById('runBtn');
-    if (runBtn) runBtn.setAttribute('data-tip', 'Check all ' + parserCount + ' parsers (including agent-generated ones), Neo4j connectivity, and data integrity');
+    if (runBtn) runBtn.setAttribute('data-tip', 'Check all ' + parserCount + ' parsers (including agent-generated ones), database connectivity, and data integrity');
     const pipelineBtn = document.getElementById('pipelineBtn');
-    if (pipelineBtn) pipelineBtn.setAttribute('data-tip', 'Run the full data pipeline for all ' + parserCount + ' sources (download, parse, load into Neo4j)');
+    if (pipelineBtn) pipelineBtn.setAttribute('data-tip', 'Run the full data pipeline for all ' + parserCount + ' sources (download, parse, load into graph)');
     const qsc = document.getElementById('querySourceCount');
     if (qsc) qsc.textContent = parserCount;
     const asc = document.getElementById('aboutSourceCount');
     if (asc) asc.textContent = parserCount;
+    const ssc = document.getElementById('sidebarSourceCount');
+    if (ssc) ssc.textContent = parserCount;
+    document.querySelectorAll('.live-source-count').forEach(el => { el.textContent = parserCount; });
     Object.keys(parsers).sort().forEach(name => {
         const p = parsers[name];
         const status = p.status || 'skipped';
@@ -2258,7 +2270,7 @@ function updateChartColors() {
 async function loadGraphStats() {
     try {
         const res = await fetch('/api/graph-stats');
-        if (!res.ok) throw new Error('Neo4j unavailable');
+        if (!res.ok) throw new Error('Database unavailable');
         const d = await res.json();
         if (d.error) { log(d.error, 'err'); return; }
         document.getElementById('statNodes').textContent = d.total_nodes.toLocaleString();
@@ -2266,6 +2278,22 @@ async function loadGraphStats() {
         document.getElementById('statNodeTypes').textContent = d.node_types;
         document.getElementById('statRelTypes').textContent = d.rel_types;
         document.getElementById('statSources').textContent = d.source_count;
+        // Populate all live stat spans across the UI
+        const sc = document.getElementById('sidebarSourceCount');
+        if (sc) sc.textContent = d.source_count;
+        const asc = document.getElementById('aboutSourceCount');
+        if (asc) asc.textContent = d.source_count;
+        const anc = document.getElementById('aboutNodeCount');
+        if (anc) anc.textContent = d.total_nodes.toLocaleString();
+        const arc = document.getElementById('aboutRelCount');
+        if (arc) arc.textContent = d.total_relationships.toLocaleString();
+        const antc = document.getElementById('aboutNodeTypeCount');
+        if (antc) antc.textContent = d.node_types;
+        const arsc = document.getElementById('aboutRelSourceCount');
+        if (arsc) arsc.textContent = d.source_count;
+        const qsc = document.getElementById('querySourceCount');
+        if (qsc) qsc.textContent = d.source_count;
+        document.querySelectorAll('.live-source-count').forEach(el => { el.textContent = d.source_count; });
         renderCharts(d.node_counts, d.rel_counts);
     } catch (e) {
         ['statNodes','statRels','statNodeTypes','statRelTypes','statSources'].forEach(id => {

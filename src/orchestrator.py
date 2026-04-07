@@ -1,7 +1,7 @@
 """
 CardioKB Pipeline Orchestrator
 
-Runs pipeline health checks against the Neo4j graph and the latest build log,
+Runs pipeline health checks against the Memgraph database and the latest build log,
 then generates a self-contained HTML report at reports/pipeline_report.html.
 
 Can also stream progress events for the web interface via a callback.
@@ -48,6 +48,7 @@ def _build_parser_metadata() -> Dict:
     ONTOLOGY_CONFIGS = _oc_mod.ONTOLOGY_CONFIGS
 
     meta: Dict = {}
+    active_parsers: set = set()  # parsers with at least one non-skipped config
     for key, cfg in ONTOLOGY_CONFIGS.items():
         parser = key.split('.')[0]
         if parser not in meta:
@@ -58,6 +59,7 @@ def _build_parser_metadata() -> Dict:
             }
         # Only count source_labels and node_types from non-skipped configs
         if not cfg.get('skip'):
+            active_parsers.add(parser)
             source = cfg.get('source_label')
             if source:
                 meta[parser]['source_labels'].add(source)
@@ -68,6 +70,9 @@ def _build_parser_metadata() -> Dict:
         sf = cfg.get('source_filename')
         if sf:
             meta[parser]['source_filenames'].append(sf)
+
+    # Remove parsers where ALL configs are skip: True (removed sources)
+    meta = {p: v for p, v in meta.items() if p in active_parsers}
 
     for p in meta:
         meta[p]['source_labels'] = sorted(meta[p]['source_labels'])
@@ -238,7 +243,7 @@ def parse_build_log(log_path: str) -> Dict:
 
 
 def _query_parser_status(session, project_root: str) -> Dict:
-    """Query Neo4j for per-parser status, falling back to file system checks.
+    """Query graph database for per-parser status, falling back to file system checks.
 
     For each parser derived from ONTOLOGY_CONFIGS:
       - If r.source count > 0 or unique node count > 0 → 'success' with counts
@@ -257,9 +262,9 @@ def _query_parser_status(session, project_root: str) -> Dict:
 
     # Batch query: node counts by label
     node_counts: Dict[str, int] = {}
-    labels = [r['label'] for r in session.run(
-        "CALL db.labels() YIELD label RETURN label"
-    )]
+    labels = [r['l'][0] for r in session.run(
+        "MATCH (n) RETURN DISTINCT labels(n) AS l"
+    ) if r['l']]
     for label in labels:
         cnt = session.run(
             f"MATCH (n:`{label}`) RETURN count(n) AS cnt"
@@ -310,7 +315,7 @@ def _query_parser_status(session, project_root: str) -> Dict:
             statuses[parser_name] = {
                 'status': 'parsed but not loaded',
                 'count': 0,
-                'detail': 'Data files exist but 0 in Neo4j',
+                'detail': 'Data files exist but 0 in graph',
                 'rel_count': 0,
                 'node_count': 0,
             }
@@ -328,7 +333,7 @@ def _query_parser_status(session, project_root: str) -> Dict:
 
 def query_neo4j_stats(uri: str, username: str, password: str,
                       database: str = 'neo4j') -> Dict:
-    """Query Neo4j for node counts, relationship counts, parser status, and health checks."""
+    """Query graph database for node counts, relationship counts, parser status, and health checks."""
     from neo4j import GraphDatabase
 
     stats = {
@@ -343,10 +348,10 @@ def query_neo4j_stats(uri: str, username: str, password: str,
 
     driver = GraphDatabase.driver(uri, auth=(username, password))
     try:
-        with driver.session(database=database) as session:
-            labels = [r['label'] for r in session.run(
-                "CALL db.labels() YIELD label RETURN label"
-            )]
+        with driver.session() as session:
+            labels = [r['l'][0] for r in session.run(
+                "MATCH (n) RETURN DISTINCT labels(n) AS l"
+            ) if r['l']]
             for label in sorted(labels):
                 cnt = session.run(
                     f"MATCH (n:`{label}`) RETURN count(n) AS cnt"
@@ -354,9 +359,8 @@ def query_neo4j_stats(uri: str, username: str, password: str,
                 stats['node_counts'][label] = cnt
                 stats['total_nodes'] += cnt
 
-            rel_types = [r['relationshipType'] for r in session.run(
-                "CALL db.relationshipTypes() YIELD relationshipType "
-                "RETURN relationshipType"
+            rel_types = [r['rt'] for r in session.run(
+                "MATCH ()-[r]->() RETURN DISTINCT type(r) AS rt"
             )]
             for rt in sorted(rel_types):
                 cnt = session.run(
@@ -453,18 +457,18 @@ def run_health_check(disease: str = 'cvd',
     emit('status', {'message': 'Parsing build log...'})
     log_data = parse_build_log(log_file)
 
-    # Query Neo4j (source of truth for parser status)
+    # Query graph database (source of truth for parser status)
     uri = os.getenv('NEO4J_URI', 'bolt://localhost:7687')
     username = os.getenv('NEO4J_USERNAME', 'neo4j')
     password = os.getenv('NEO4J_PASSWORD', '')
 
     neo4j_stats = None
     if password:
-        emit('status', {'message': 'Querying Neo4j for graph stats and parser status...'})
+        emit('status', {'message': 'Querying graph database for stats and parser status...'})
         try:
             neo4j_stats = query_neo4j_stats(uri, username, password)
 
-            # Merge log timing into Neo4j-derived parser status
+            # Merge log timing into graph-derived parser status
             combined_parsers = {}
             for name, ps in neo4j_stats['parser_status'].items():
                 log_info = log_data['parsers'].get(name, {})
@@ -500,7 +504,7 @@ def run_health_check(disease: str = 'cvd',
                 'orphan_nodes': neo4j_stats['orphan_nodes'],
             })
         except Exception as e:
-            emit('error', {'message': f'Neo4j query failed: {e}'})
+            emit('error', {'message': f'Graph query failed: {e}'})
     else:
         emit('error', {'message': 'NEO4J_PASSWORD not set — skipping graph stats'})
 
@@ -575,9 +579,9 @@ def _build_health_checks(log_data: Dict, neo4j_stats: Optional[Dict]) -> Dict:
         loaded = [n for n, s in ps.items()
                   if s['status'] == 'success']
         checks.append({
-            'name': 'Parser data (Neo4j)',
+            'name': 'Parser data (graph)',
             'ok': len(not_loaded) == 0,
-            'message': (f'{len(loaded)}/{len(ps)} parsers have data in Neo4j'
+            'message': (f'{len(loaded)}/{len(ps)} parsers have data in graph'
                         + (f' | Not loaded: {", ".join(sorted(not_loaded))}'
                            if not_loaded else '')),
         })

@@ -76,10 +76,10 @@ print('\n' + '=' * 60)
 print('CHECK 2: Edge types with 0 relationships')
 print('=' * 60)
 
-edge_types = q('CALL db.relationshipTypes() YIELD relationshipType RETURN relationshipType')
+edge_types = q('MATCH ()-[r]->() RETURN DISTINCT type(r) AS rt')
 zero_edges = []
 for row in edge_types:
-    rt = row['relationshipType']
+    rt = row['rt']
     cnt = q('MATCH ()-[r]->() WHERE type(r) = $rt RETURN count(r) AS cnt', rt=rt)[0]['cnt']
     status = 'OK' if cnt > 0 else 'ZERO'
     if cnt == 0:
@@ -201,10 +201,12 @@ print('\n' + '=' * 60)
 print('CHECK 5: Orphaned node types (no relationships)')
 print('=' * 60)
 
-node_labels = q('CALL db.labels() YIELD label RETURN label')
+node_labels = q('MATCH (n) RETURN DISTINCT labels(n) AS l')
 orphaned = []
 for row in node_labels:
-    label = row['label']
+    label = row['l'][0] if row['l'] else None
+    if not label:
+        continue
     if label.startswith('_'):
         continue
     total_n = q(f'MATCH (n:{label}) RETURN count(n) AS total')[0]['total']
