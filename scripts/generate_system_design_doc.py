@@ -345,7 +345,7 @@ def build_doc():
     add_heading(doc, '5.1. Data/Parser Layer', level=2)
     p = doc.add_paragraph()
     p.add_run('Owns: ').bold = True
-    p.add_run('src/parsers/, src/ontology_configs.py, src/neo4j_loader.py, src/id_mapping.py, '
+    p.add_run('src/parsers/, src/ontology_configs.py, src/memgraph_loader.py, src/id_mapping.py, '
               'src/main.py, data/, ontology/')
 
     p = doc.add_paragraph()
@@ -700,8 +700,8 @@ def build_doc():
     add_table(doc,
               ['Metric', 'Value'],
               [
-                  ['Total nodes', '4,896,242'],
-                  ['Total relationships', '16,319,504'],
+                  ['Total nodes', '4,896,243'],
+                  ['Total relationships', '7,656,733'],
                   ['Node types', '19'],
                   ['Relationship types', '43'],
                   ['Data sources (parsers)', '26'],

@@ -11,7 +11,7 @@
 12-week rotation project (Jan-Apr 2026) building a CVD-focused biomedical knowledge graph. The graph integrates 26 deduplicated data sources (each node type and edge type served by exactly one authoritative database) into Memgraph for disease research, feature selection, and precision medicine. Adapted from AlzKB (Alzheimer's Knowledge Base) with custom parsers and AI-powered parser generation. The **DatabaseAgent** (`src/database_agent.py`) autonomously generates new parsers from just a name and URL using Claude API. The **DiseaseQueryAgent** (`src/disease_agent.py`) enriches the graph for any disease on demand via ClinicalTrials.gov API v2. Three stale sources (SIDER, LINCS L1000, MEDLINE) are flagged for replacement with live alternatives.
 
 ## Current Graph Stats
-- **4,896,242 nodes** | **16,319,504 relationships** | **19 node types** | **43 relationship types** | **26 sources**
+- **4,896,243 nodes** | **7,656,733 relationships** | **19 node types** | **43 relationship types** | **26 sources**
 - All relationships carry a `source` property identifying the originating database (e.g., `source: "OpenTargets"`)
 - *Stats are current as of last pipeline run; see Memgraph or `GET /api/graph-stats` for live counts.*
 
@@ -28,7 +28,7 @@
   - `src/parsers/hetionet_components/` — 12 Hetionet-derived component parsers
 - `src/database_agent.py` — Autonomous parser generator (Claude API + sample download + graph load)
 - `src/ontology_configs.py` — 86 ontology configs mapping source data to graph schema
-- `src/neo4j_loader.py` — Cypher-based Memgraph batch loader (auto-sets `r.source` from config `source_label`)
+- `src/memgraph_loader.py` — Cypher-based Memgraph batch loader (auto-sets `r.source` from config `source_label`)
 - `src/id_mapping.py` — Central ID mapping module: cross-database ID remapping (PubTator MeSH-to-DOID), validate_mapping(), suggest_mapping(), create_missing_nodes(), CLI interface
 - `src/utils.py` — Shared utilities (`load_disease_terms()`, `get_disease_search_pattern()`)
 - `ontology/disease_filter.txt` — Symlink to `diseases/cvd.txt` (active disease filter)

@@ -41,7 +41,7 @@ DISEASE_FILTERS = {
 def run_disgenet_for_disease(disease_key: str, disease_filter_path: str):
     """Run DisGeNET for one disease filter -> parse -> load into Neo4j -> tag."""
     from src.parsers.disgenet_parser import DisGeNETParser
-    from src.neo4j_loader import Neo4jLoader
+    from src.memgraph_loader import Neo4jLoader
     from src.ontology_configs import ONTOLOGY_CONFIGS
 
     api_key = os.getenv('DISGENET_API_KEY')

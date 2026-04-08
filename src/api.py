@@ -1170,7 +1170,7 @@ def _reload_unloaded_parsers():
     import pandas as pd
     from neo4j import GraphDatabase
     from src.ontology_configs import ONTOLOGY_CONFIGS
-    from src.neo4j_loader import Neo4jLoader
+    from src.memgraph_loader import Neo4jLoader
     from src.orchestrator import _build_parser_metadata
 
     log = _logging.getLogger('cardiokb.startup')

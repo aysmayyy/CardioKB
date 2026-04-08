@@ -23,7 +23,7 @@ if _project_root not in sys.path:
 
 from src.parsers.aopdb_parser import AOPDBParser
 from src.ontology_configs import ONTOLOGY_CONFIGS
-from src.neo4j_loader import Neo4jLoader
+from src.memgraph_loader import Neo4jLoader
 
 logging.basicConfig(
     level=logging.INFO,

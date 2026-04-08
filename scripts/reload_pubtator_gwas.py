@@ -32,7 +32,7 @@ logging.basicConfig(
 logger = logging.getLogger(__name__)
 
 from src.ontology_configs import ONTOLOGY_CONFIGS
-from src.neo4j_loader import Neo4jLoader
+from src.memgraph_loader import Neo4jLoader
 from src.id_mapping import remap_pubtator_mesh_to_doid, remap_gwas_disease_to_doid
 
 PROCESSED_DIR = project_root / 'data' / 'processed'

@@ -32,7 +32,7 @@ from src.ontology_configs import (
     CLINPGX_DRUG_LABEL_ANNOTATES_GENE,
     CLINPGX_DRUG_LABEL_DESCRIBES_DRUG,
 )
-from src.neo4j_loader import Neo4jLoader
+from src.memgraph_loader import Neo4jLoader
 from src.parsers import (
     ClinicalTrialsParser,
     ClinPGxParser,
@@ -1195,14 +1195,15 @@ class CardioKBPipeline:
         Filter relationship DataFrames to CVD-relevant edges only.
 
         Node DataFrames are left untouched (full ontologies ensure edge targets
-        exist). Relationship DataFrames are filtered so at least one endpoint
-        is CVD-relevant:
-          - Gene endpoint: gene symbol must be in ontology/genes/cvd.txt
-          - Disease endpoint: disease name must contain a CVD term from
-            ontology/diseases/cvd.txt
+        exist). Relationship DataFrames are filtered with strict disease
+        scoping — every disease endpoint MUST be CVD-relevant:
+          - Gene↔Disease: disease side must match CVD terms/DOIDs
+          - Disease↔Disease: BOTH sides must match CVD
+          - Gene↔Gene / non-disease edges: at least one gene in CVD gene list
+          - Non-filterable edges (Drug→SideEffect etc.): kept as-is
 
-        This produces a CVD-scoped ground truth graph while keeping all
-        potential node targets available for edge resolution.
+        This prevents non-CVD diseases (e.g. breast cancer) from leaking
+        into the graph via shared CVD genes.
         """
         import re
 
@@ -1227,6 +1228,13 @@ class CardioKBPipeline:
                     if line and not line.startswith('#'):
                         cvd_disease_terms.append(line.lower())
         logger.info(f"CVD edge filter: {len(cvd_disease_terms)} CVD disease terms loaded")
+
+        # Build word-boundary regex patterns to avoid substring false positives
+        # (e.g. "mi" matching "luminal", "pe" matching "peripheral")
+        _cvd_term_patterns = [
+            re.compile(r'(?:^|[\s,;/(\-])' + re.escape(t) + r'(?:$|[\s,;/)\-])')
+            for t in cvd_disease_terms
+        ]
 
         # ── Build gene ID cross-reference sets ─────────────────────────
         # Some parsers use NCBI Gene IDs or Ensembl IDs instead of symbols.
@@ -1256,7 +1264,7 @@ class CardioKBPipeline:
                                     usecols=['doid', 'name'])
                 for _, row in do_df.iterrows():
                     name = str(row.get('name', '')).lower()
-                    if any(term in name for term in cvd_disease_terms):
+                    if any(p.search(name) for p in _cvd_term_patterns):
                         cvd_doids.add(row['doid'])
                 logger.info(f"  Matched {len(cvd_doids)} CVD DOIDs from Disease Ontology")
             except Exception as e:
@@ -1294,9 +1302,9 @@ class CardioKBPipeline:
         }
 
         def _disease_name_matches(val: str) -> bool:
-            """Check if a disease name/condition contains a CVD term."""
+            """Check if a disease name/condition matches a CVD term (word boundary)."""
             v = str(val).lower()
-            return any(t in v for t in cvd_disease_terms)
+            return any(p.search(v) for p in _cvd_term_patterns)
 
         # ── Apply filtering to each relationship DataFrame ─────────────
         total_before = 0
@@ -1318,6 +1326,8 @@ class CardioKBPipeline:
                 obj_match = pc.get('object_match_property', '')
                 subj_col = pc.get('subject_column_name', '')
                 obj_col = pc.get('object_column_name', '')
+                subj_node_type = pc.get('subject_node_type', '')
+                obj_node_type = pc.get('object_node_type', '')
 
                 df = data[data_name]
                 if df is None or len(df) == 0:
@@ -1326,9 +1336,15 @@ class CardioKBPipeline:
                 before = len(df)
                 total_before += before
 
-                # Determine filter strategy for each endpoint
+                # Determine filter strategy for each endpoint.
+                # Track whether each filter targets a disease endpoint so we
+                # can enforce strict CVD scoping on disease sides.
+                # Only classify as disease if the node type is actually Disease
+                # (commonName is also used by BodyPart, ClinicalTrial, etc.)
                 subj_filter = None
                 obj_filter = None
+                subj_is_disease = False
+                obj_is_disease = False
 
                 if subj_match in gene_match_properties:
                     id_set = gene_match_properties[subj_match]
@@ -1340,22 +1356,54 @@ class CardioKBPipeline:
                     if id_set and obj_col in df.columns:
                         obj_filter = df[obj_col].astype(str).isin(id_set)
 
-                if subj_match in disease_match_properties:
+                if subj_match in disease_match_properties and subj_node_type == 'Disease':
+                    subj_is_disease = True
                     id_set = disease_match_properties[subj_match]
                     if id_set is not None and subj_col in df.columns:
                         subj_filter = df[subj_col].astype(str).isin(id_set)
                     elif subj_match == 'commonName' and subj_col in df.columns:
                         subj_filter = df[subj_col].apply(_disease_name_matches)
 
-                if obj_match in disease_match_properties:
+                if obj_match in disease_match_properties and obj_node_type == 'Disease':
+                    obj_is_disease = True
                     id_set = disease_match_properties[obj_match]
                     if id_set is not None and obj_col in df.columns:
                         obj_filter = df[obj_col].astype(str).isin(id_set)
                     elif obj_match == 'commonName' and obj_col in df.columns:
                         obj_filter = df[obj_col].apply(_disease_name_matches)
 
-                # Apply: keep edge if AT LEAST ONE endpoint is CVD-relevant
-                if subj_filter is not None and obj_filter is not None:
+                # Apply CVD filter with strict disease scoping:
+                # - Disease endpoints MUST be CVD-relevant (mandatory)
+                # - Gene/other endpoints use CVD gene list (optional boost)
+                # This prevents non-CVD diseases (e.g. breast cancer) from
+                # leaking in via shared CVD genes.
+                if subj_is_disease and obj_is_disease:
+                    # Disease↔Disease: BOTH must be CVD
+                    if subj_filter is not None and obj_filter is not None:
+                        mask = subj_filter & obj_filter
+                    elif subj_filter is not None:
+                        mask = subj_filter
+                    elif obj_filter is not None:
+                        mask = obj_filter
+                    else:
+                        total_after += before
+                        continue
+                elif subj_is_disease:
+                    # Disease↔Other (e.g. Gene, Variant): disease MUST be CVD
+                    if subj_filter is not None:
+                        mask = subj_filter
+                    else:
+                        total_after += before
+                        continue
+                elif obj_is_disease:
+                    # Other↔Disease (e.g. Gene→Disease): disease MUST be CVD
+                    if obj_filter is not None:
+                        mask = obj_filter
+                    else:
+                        total_after += before
+                        continue
+                elif subj_filter is not None and obj_filter is not None:
+                    # No disease endpoint (e.g. Gene↔Gene): OR on gene filters
                     mask = subj_filter | obj_filter
                 elif subj_filter is not None:
                     mask = subj_filter
@@ -1387,11 +1435,10 @@ class CardioKBPipeline:
     def _tag_cvd_diseases(self, loader):
         """
         Set cvdRelevant=true on Disease nodes whose commonName
-        case-insensitively matches any term from the CVD ontology file
-        as a whole word (not a substring of another word).
+        case-insensitively matches any term from the CVD ontology file.
+        Uses toLower() + CONTAINS for Memgraph compatibility (no \b or
+        (?i) support in Memgraph's POSIX regex engine).
         """
-        import re
-
         ontology_path = self.base_dir / "ontology" / "disease_filter.txt"
         if not ontology_path.exists():
             logger.warning(f"CVD ontology file not found: {ontology_path}")
@@ -1402,34 +1449,27 @@ class CardioKBPipeline:
             for line in f:
                 line = line.strip()
                 if line and not line.startswith('#'):
-                    terms.append(line)
+                    terms.append(line.lower())
 
         if not terms:
             logger.warning("No CVD terms loaded from ontology file")
             return
 
-        # Build word-boundary regex patterns for Neo4j (Java regex).
-        # Escape regex metacharacters, then wrap with (?i) and \b.
-        patterns = []
-        for term in terms:
-            escaped = re.escape(term)
-            patterns.append(f"(?i).*\\b{escaped}\\b.*")
-
         logger.info(
             f"Tagging CVD-relevant Disease nodes using "
-            f"{len(patterns)} whole-word patterns..."
+            f"{len(terms)} terms (case-insensitive CONTAINS)..."
         )
 
         query = (
-            "UNWIND $patterns AS pattern "
+            "UNWIND $terms AS term "
             "MATCH (d:Disease) "
-            "WHERE d.commonName =~ pattern "
+            "WHERE toLower(d.commonName) CONTAINS term "
             "SET d.cvdRelevant = true "
             "RETURN count(DISTINCT d) AS tagged"
         )
 
         with loader.driver.session() as session:
-            result = session.run(query, patterns=patterns)
+            result = session.run(query, terms=terms)
             tagged = result.single()['tagged']
             logger.info(f"  Tagged {tagged} Disease nodes with cvdRelevant=true")
 

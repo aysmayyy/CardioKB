@@ -2,7 +2,7 @@
 
 A cardiovascular disease (CVD) focused biomedical knowledge graph pipeline that integrates 26 deduplicated data sources into a Memgraph graph for disease research, feature selection, and precision medicine. Each node type and edge type is served by exactly one authoritative database — no redundancy. Adapted from the AlzKB (Alzheimer's Knowledge Base) architecture with custom parsers and AI-powered parser generation. Features a **DatabaseAgent** that autonomously generates new parsers from just a name and URL, a **DiseaseQueryAgent** for on-demand disease enrichment, and a web dashboard with interactive graph exploration and Browser-style querying.
 
-**Graph stats:** 4,896,242 nodes | 16,319,504 relationships | 19 node types | 43 relationship types | 26 sources
+**Graph stats:** 4,896,243 nodes | 7,656,733 relationships | 19 node types | 43 relationship types | 26 sources
 *Stats are current as of last pipeline run; see Memgraph or `GET /api/graph-stats` for live counts.*
 
 ## Pipeline Status
@@ -165,7 +165,7 @@ Cardio-KB/
 │   ├── database_agent.py       # Autonomous parser generator (Claude API + sample download)
 │   ├── api.py                  # Flask backend with SSE streaming + agent endpoints
 │   ├── orchestrator.py         # Health check with dynamic Graph-based parser detection
-│   ├── neo4j_loader.py         # Cypher-based Memgraph batch loader
+│   ├── memgraph_loader.py      # Cypher-based Memgraph batch loader
 │   ├── ontology_configs.py     # 86 ontology configs for Graph schema mapping
 │   ├── id_mapping.py           # Central ID mapping: validate, suggest, create_missing_nodes, CLI
 │   ├── utils.py                # Disease filtering utilities (load_disease_terms, etc.)

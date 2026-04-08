@@ -1233,7 +1233,7 @@ def _load_single_source(source_key: str, parsed_data: dict, emit=None) -> bool:
         return False
 
     import importlib
-    from src.neo4j_loader import Neo4jLoader
+    from src.memgraph_loader import Neo4jLoader
     import src.ontology_configs as _oc_mod
     importlib.reload(_oc_mod)
     ONTOLOGY_CONFIGS = _oc_mod.ONTOLOGY_CONFIGS

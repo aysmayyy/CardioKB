@@ -359,7 +359,7 @@ class DiseaseQueryAgent:
 
     def _load_trials_to_neo4j(self, trials_df: pd.DataFrame) -> int:
         """Save trial TSVs and load into Neo4j via ontology configs."""
-        from src.neo4j_loader import Neo4jLoader
+        from src.memgraph_loader import Neo4jLoader
         from src.ontology_configs import ONTOLOGY_CONFIGS
 
         out_dir = PROJECT_ROOT / 'data' / 'processed' / 'clinicaltrials_agent'

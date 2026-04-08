@@ -231,7 +231,7 @@ def _run_disgenet(disease_key: str, filter_path: str) -> dict:
     """
     import time as _time
     from src.parsers.disgenet_parser import DisGeNETParser
-    from src.neo4j_loader import Neo4jLoader
+    from src.memgraph_loader import Neo4jLoader
     from src.ontology_configs import ONTOLOGY_CONFIGS
 
     api_key = os.getenv('DISGENET_API_KEY')

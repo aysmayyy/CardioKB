@@ -122,7 +122,7 @@ Cardio-KB/
 │   ├── api.py                   # Flask web backend
 │   ├── agent.py                 # AI-powered disease KB builder
 │   ├── orchestrator.py          # Pipeline health check
-│   ├── neo4j_loader.py          # Cypher-based Memgraph batch loader
+│   ├── memgraph_loader.py       # Cypher-based Memgraph batch loader
 │   ├── ontology_configs.py      # 58 ontology configs (source -> graph schema)
 │   ├── id_mapping.py            # Cross-database ID remapping
 │   ├── utils.py                 # Shared utilities

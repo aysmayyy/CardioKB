@@ -33,7 +33,7 @@ logging.basicConfig(
 logger = logging.getLogger(__name__)
 
 from src.ontology_configs import ONTOLOGY_CONFIGS
-from src.neo4j_loader import Neo4jLoader
+from src.memgraph_loader import Neo4jLoader
 
 RAW_DIR = project_root / 'data' / 'raw'
 PROCESSED_DIR = project_root / 'data' / 'processed'
