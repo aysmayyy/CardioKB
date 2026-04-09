@@ -4,7 +4,7 @@
 ## Summary
 - **26 databases** — 26 parsers, all working, deduplicated (one authoritative source per node/edge type)
 - **4,896,243 nodes** | **7,656,733 relationships** | **19 node types** | **43 relationship types** | **21 source labels**
-- **3 stale sources** flagged for replacement: SIDER (2015), LINCS L1000 (2020), MEDLINE (pinned GitHub commit)
+- **3 legacy sources** retained as-is: SIDER (2015), LINCS L1000 (2020), MEDLINE (pinned GitHub commit) — no live API alternatives available
 
 ## Direct Parsers (5)
 
@@ -24,9 +24,9 @@
 | 7 | Gene Ontology (GO) | Public | Working | 50,350 BP + 26,935 MF + 25,794 CC edges |
 | 8 | Uberon (anatomy) | Public | Working | 14,937 anatomy nodes (nodes only) |
 | 9 | NCBI MeSH (symptoms) | Public | Working | 966 symptom nodes (nodes only) |
-| 10 | SIDER (side effects) | Public | Working | 5,734 side effects, 148,518 compoundCausesSideEffect edges. **STALE: pinned to 2015 GitHub commit. Replacement: DrugBank adverse reactions extension** |
-| 11 | LINCS L1000 (gene expression) | Public | Working | 150,540 geneRegulates + 10,218 downreg + 10,278 upreg edges with zScore. **STALE: pinned to 2020 GitHub commit. Replacement: clue.io REST API** |
-| 12 | MEDLINE (literature cooccurrence) | Public | Working | 726 anatomy + 524 symptom + 148 disease cooccurrence edges. **STALE: pinned GitHub commit. Replacement: PubTator Central cooccurrence** |
+| 10 | SIDER (side effects) | Public | Working | 5,734 side effects, 148,518 compoundCausesSideEffect edges. **Legacy: pinned to 2015 GitHub commit; retained — no live API alternative** |
+| 11 | LINCS L1000 (gene expression) | Public | Working | 150,540 geneRegulates + 10,218 downreg + 10,278 upreg edges with zScore. **Legacy: pinned to 2020 GitHub commit; retained — clue.io API requires institutional access** |
+| 12 | MEDLINE (literature cooccurrence) | Public | Working | 726 anatomy + 524 symptom + 148 disease cooccurrence edges. **Legacy: pinned GitHub commit; retained — unique anatomy/symptom cooccurrence not covered by PubTator** |
 | 13 | DrugCentral (drug-disease) | Public | Working | 16,403 pharmacologic class + 779 treats + 189 palliates edges (CUI-to-DOID mapped) |
 | 14 | BindingDB (drug-target) | Public | Working | 12,250 chemicalBindsGene edges |
 | 15 | PubTator Central (literature mining) | Public FTP | Working | 806,900 diseaseAssociatesWithDisease edges (gene-disease edges removed during dedup) |

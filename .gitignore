@@ -253,6 +253,9 @@ requirements-conda-export.txt
 *.db
 *.sqlite
 
+# Temporary agent-generated disease filters
+ontology/diseases/agent_filter_*.txt
+
 # OS files
 .DS_Store
 Thumbs.db

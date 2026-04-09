@@ -8,7 +8,7 @@
 - After every successful pipeline run or significant code change, automatically update `README.md` with current graph stats (node/relationship counts, source counts) and commit and push without being asked.
 
 ## Project Overview
-12-week rotation project (Jan-Apr 2026) building a CVD-focused biomedical knowledge graph. The graph integrates 26 deduplicated data sources (each node type and edge type served by exactly one authoritative database) into Memgraph for disease research, feature selection, and precision medicine. Adapted from AlzKB (Alzheimer's Knowledge Base) with custom parsers and AI-powered parser generation. The **DatabaseAgent** (`src/database_agent.py`) autonomously generates new parsers from just a name and URL using Claude API. The **DiseaseQueryAgent** (`src/disease_agent.py`) enriches the graph for any disease on demand via ClinicalTrials.gov API v2. Three stale sources (SIDER, LINCS L1000, MEDLINE) are flagged for replacement with live alternatives.
+12-week rotation project (Jan-Apr 2026) building a CVD-focused biomedical knowledge graph. The graph integrates 26 deduplicated data sources (each node type and edge type served by exactly one authoritative database) into Memgraph for disease research, feature selection, and precision medicine. Adapted from AlzKB (Alzheimer's Knowledge Base) with custom parsers and AI-powered parser generation. The **DatabaseAgent** (`src/database_agent.py`) autonomously generates new parsers from just a name and URL using Claude API. The **DiseaseQueryAgent** (`src/disease_agent.py`) enriches the graph for any disease on demand via ClinicalTrials.gov API v2. Three legacy sources (SIDER, LINCS L1000, MEDLINE) are retained as-is — no live API alternatives available.
 
 ## Current Graph Stats
 - **4,896,243 nodes** | **7,656,733 relationships** | **19 node types** | **43 relationship types** | **26 sources**
@@ -117,9 +117,9 @@ CVD ontology files: `ontology/genes/cvd.txt` (3,984 gene symbols from OMIM + Dis
 | 7 | Gene Ontology (GO) | GeneOntologyParser | Public | Working (50,350 BP + 26,935 MF + 25,794 CC edges) |
 | 8 | Uberon (anatomy) | UberonParser | Public | Working (14,937 anatomy nodes) |
 | 9 | MeSH (symptoms) | MeSHParser | Public | Working (966 symptom nodes, no relationship data) |
-| 10 | SIDER (side effects) | SIDERParser | Public | Working (148,518 edges) **Stale: replacement planned (DrugBank adverse reactions)** |
-| 11 | LINCS L1000 (gene expression) | LINCS1000Parser | Public | Working (150,540 geneRegulates + 10,218 downreg + 10,278 upreg edges, with zScore) **Stale: replacement planned (clue.io API)** |
-| 12 | MEDLINE (literature cooccurrence) | MEDLINECooccurrenceParser | Public | Working (1,398 edges) **Stale: replacement planned (PubTator cooccurrence)** |
+| 10 | SIDER (side effects) | SIDERParser | Public | Working (148,518 edges) **Legacy: retained — no live API alternative** |
+| 11 | LINCS L1000 (gene expression) | LINCS1000Parser | Public | Working (150,540 geneRegulates + 10,218 downreg + 10,278 upreg edges, with zScore) **Legacy: retained — clue.io requires institutional access** |
+| 12 | MEDLINE (literature cooccurrence) | MEDLINECooccurrenceParser | Public | Working (1,398 edges) **Legacy: retained — unique anatomy/symptom cooccurrence** |
 | 13 | DrugCentral (drug-disease) | DrugCentralParser | Public | Working (16,403 pharmacologic class + 779 treats + 189 palliates edges, CUI-to-DOID mapped) |
 | 14 | BindingDB (drug-target) | BindingDBParser | Public | Working (12,250 chemicalBindsGene edges) |
 | 15 | PubTator Central (literature mining) | PubTatorParser | Public FTP | Working (806,900 disease-disease edges) |
