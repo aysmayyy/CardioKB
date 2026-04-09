@@ -2,7 +2,7 @@
 
 A cardiovascular disease (CVD) focused biomedical knowledge graph pipeline that integrates 26 deduplicated data sources into a Memgraph graph for disease research, feature selection, and precision medicine. Each node type and edge type is served by exactly one authoritative database — no redundancy. Adapted from the AlzKB (Alzheimer's Knowledge Base) architecture with custom parsers and AI-powered parser generation. Features a **DatabaseAgent** that autonomously generates new parsers from just a name and URL, a **DiseaseQueryAgent** for on-demand disease enrichment, and a web dashboard with interactive graph exploration and Browser-style querying.
 
-**Graph stats:** 4,896,243 nodes | 7,656,733 relationships | 19 node types | 43 relationship types | 26 sources
+**Graph stats:** 4,896,243 nodes | 7,683,150 relationships | 19 node types | 43 relationship types | 26 sources
 *Stats are current as of last pipeline run; see Memgraph or `GET /api/graph-stats` for live counts.*
 
 ## Pipeline Status
@@ -12,7 +12,7 @@ A cardiovascular disease (CVD) focused biomedical knowledge graph pipeline that 
 | Total databases | 26 | 26 parsers (1 per source), deduplicated |
 | Active & loaded | 26 | Successfully parsed + loaded into Memgraph |
 | Integration paths | 3 | Direct (5), Hetionet-derived (17), Agent-generated (4) |
-| Stale (replacement planned) | 3 | SIDER (2015), LINCS L1000 (2020), MEDLINE cooccurrence (pinned) |
+| Legacy (retained as-is) | 3 | SIDER (2015), LINCS L1000 (2020), MEDLINE cooccurrence (pinned) |
 | Ontology configs | 86 | Graph node/relationship type mappings |
 | Source-labeled relationships | 21 | All relationships carry `r.source` property |
 

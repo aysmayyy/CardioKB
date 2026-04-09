@@ -3,7 +3,7 @@
 
 ## Summary
 - **26 databases** — 26 parsers, all working, deduplicated (one authoritative source per node/edge type)
-- **4,896,243 nodes** | **7,656,733 relationships** | **19 node types** | **43 relationship types** | **21 source labels**
+- **4,896,243 nodes** | **7,683,150 relationships** | **19 node types** | **43 relationship types** | **23 source labels**
 - **3 legacy sources** retained as-is: SIDER (2015), LINCS L1000 (2020), MEDLINE (pinned GitHub commit) — no live API alternatives available
 
 ## Direct Parsers (5)

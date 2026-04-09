@@ -11,7 +11,7 @@
 12-week rotation project (Jan-Apr 2026) building a CVD-focused biomedical knowledge graph. The graph integrates 26 deduplicated data sources (each node type and edge type served by exactly one authoritative database) into Memgraph for disease research, feature selection, and precision medicine. Adapted from AlzKB (Alzheimer's Knowledge Base) with custom parsers and AI-powered parser generation. The **DatabaseAgent** (`src/database_agent.py`) autonomously generates new parsers from just a name and URL using Claude API. The **DiseaseQueryAgent** (`src/disease_agent.py`) enriches the graph for any disease on demand via ClinicalTrials.gov API v2. Three legacy sources (SIDER, LINCS L1000, MEDLINE) are retained as-is — no live API alternatives available.
 
 ## Current Graph Stats
-- **4,896,243 nodes** | **7,656,733 relationships** | **19 node types** | **43 relationship types** | **26 sources**
+- **4,896,243 nodes** | **7,683,150 relationships** | **19 node types** | **43 relationship types** | **26 sources**
 - All relationships carry a `source` property identifying the originating database (e.g., `source: "OpenTargets"`)
 - *Stats are current as of last pipeline run; see Memgraph or `GET /api/graph-stats` for live counts.*
 
@@ -122,14 +122,14 @@ CVD ontology files: `ontology/genes/cvd.txt` (3,984 gene symbols from OMIM + Dis
 | 12 | MEDLINE (literature cooccurrence) | MEDLINECooccurrenceParser | Public | Working (1,398 edges) **Legacy: retained — unique anatomy/symptom cooccurrence** |
 | 13 | DrugCentral (drug-disease) | DrugCentralParser | Public | Working (16,403 pharmacologic class + 779 treats + 189 palliates edges, CUI-to-DOID mapped) |
 | 14 | BindingDB (drug-target) | BindingDBParser | Public | Working (12,250 chemicalBindsGene edges) |
-| 15 | PubTator Central (literature mining) | PubTatorParser | Public FTP | Working (806,900 disease-disease edges) |
+| 15 | PubTator Central (literature mining) | PubTatorParser | Public FTP | Working (677,694 disease-disease edges after CVD AND-filter) |
 | 16 | CTD (chemical-gene) | CTDParser | Public | Working (4,572 unique Drug nodes, 116,451 chemicalIncreasesExpression + 97,951 chemicalDecreasesExpression edges) |
 | 17 | Bgee (gene expression) | BgeeParser | Public FTP | Working (784,026 underexpresses + 1,872 overexpresses edges, with expressionScore property) |
 | 18 | Jensen TISSUES (gene-tissue) | JensenTissuesParser | Public | Working (271,657 gene-tissue edges) |
 | 19 | HPO (Human Phenotype Ontology) | HPOParser | Public | Working (19,389 phenotypes, 162,994 gene-phenotype edges) |
 | 20 | Reactome | ReactomeParser | Public | Working (44,979 geneInPathway + 44,979 pathwayContainsGene edges) |
 | 21 | STRING | STRINGParser | Public | Working (121,170 geneInteractsWithGene edges, confidence > 700) |
-| 22 | OpenTargets | OpenTargetsParser | Public | Working (7,564,685 geneAssociatesWithDisease edges via EFO-to-DOID mapping) |
+| 22 | OpenTargets | OpenTargetsParser | Public | Working (103,879 geneAssociatesWithDisease edges after CVD AND-filter, via EFO-to-DOID mapping) |
 
 ### Agent-Generated Parsers (4)
 | # | Source | Parser | Access | Status |

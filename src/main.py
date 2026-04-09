@@ -965,14 +965,16 @@ class CardioKBPipeline:
             try:
                 with _sys_driver.session() as session:
                     deleted = 1
+                    total_deleted = 0
                     while deleted > 0:
                         result = session.run(
-                            "MATCH (n) WITH n LIMIT 50000 "
+                            "MATCH (n) WITH n LIMIT 5000 "
                             "DETACH DELETE n RETURN count(n) AS cnt"
                         )
                         deleted = result.single()['cnt']
-                        if deleted > 0:
-                            logger.info(f"  Deleted {deleted} nodes...")
+                        total_deleted += deleted
+                        if total_deleted % 100000 < 5000 and deleted > 0:
+                            logger.info(f"  Deleted {total_deleted} nodes so far...")
                 logger.info("  Graph cleared via batch delete.")
             finally:
                 _sys_driver.close()
