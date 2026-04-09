@@ -1,25 +1,63 @@
 # Database Integration Decisions for CardioKB
 
-## Databases to ADD to BaseAgent
+## Final State: 26 Active Sources
 
-### High Priority (Essential):
-1. **PharmGKB** - Pharmacogenomics (gene-drug-disease)
-2. **ClinicalTrials.gov** - Ongoing/completed clinical trials
-3. **OMIM** - Genetic diseases (gold standard)
+All integration decisions have been implemented. The graph currently contains 26 deduplicated data sources, each serving as the single authoritative provider for its node and/or edge types.
 
-### Medium Priority (Grant-specified):
-4. **FooDB** - Food compounds (grant requirement)
-5. **HMDB** - Human metabolites (grant requirement)
+## Databases Added (vs. Original AlzKB Baseline)
 
-### Lower Priority (Optional):
-6. **HPO** - Human Phenotype Ontology (if phenotypes needed beyond MeSH)
+### High Priority — Implemented
+| Database | Decision | Rationale | Current Status |
+|----------|----------|-----------|----------------|
+| ClinicalTrials.gov | Added (API v2) | Investigational/emerging therapeutics beyond approved drugs in DrugBank | 85,691 trials, 45,358 edges |
+| ClinPGx (PharmGKB successor) | Added (API) | Pharmacogenomics gene-drug-disease relationships not covered elsewhere | 1,091 VARIANT_IN + 503 + 345 + 243 edges |
+| HPO | Added (from Hetionet components) | Gene-phenotype associations (162,994 edges) — fills phenotype gap beyond MeSH symptoms | 19,389 phenotypes |
+| ClinVar | Added (agent-generated parser) | Clinical variant-disease associations — 4.5M variants, authoritative for variant data | 4,488,042 Variant nodes |
+| HGNC Gene Families | Added (agent-generated parser) | Gene family groupings for pathway-level analysis | 1,934 GeneFamily nodes |
+| DrugAge | Added (agent-generated parser) | Drug-aging associations for longevity research crossover | 386 edges |
+| AnAge | Added (agent-generated parser) | Species longevity data for comparative biology | 4,645 Species nodes |
 
-## Rationale
+### Medium Priority — Not Implemented (Deferred)
+| Database | Decision | Rationale |
+|----------|----------|-----------|
+| FooDB | Deferred | Grant-specified food compound data; requires custom parser for complex schema. Deprioritized in favor of completing core CVD sources |
+| HMDB | Deferred | Grant-specified metabolomics data; large dataset requiring significant parsing effort. May revisit if metabolite analysis becomes priority |
 
-**PharmGKB:** Fills gap in pharmacogenomics - how genes affect drug response. Not covered by existing sources.
+### Lower Priority — Superseded
+| Database | Decision | Rationale |
+|----------|----------|-----------|
+| OMIM (as standalone parser) | Removed during dedup | OpenTargets includes OMIM genetic evidence; OMIM gene symbols retained in `ontology/genes/cvd.txt` |
 
-**ClinicalTrials.gov:** Shows investigational/emerging therapeutics. DrugBank only has approved drugs.
+## Databases Removed During Deduplication (10)
 
-**OMIM:** Authoritative source for genetic diseases. Some overlap with DisGeNET but adds inheritance patterns, rare diseases, detailed clinical info. Critical for genetic arrhythmias (Long QT, Brugada, etc.).
+After all sources were integrated, a systematic deduplication audit identified 10 sources whose data was fully covered by remaining authoritative sources. See `docs/CardioKB_Redundancy_Changelog.docx` for the complete impact assessment.
 
-**FooDB/HMDB:** Grant specifically requires metabolite and dietary data for CVD research.
+| Removed | Replaced By | Key Rationale |
+|---------|-------------|---------------|
+| DisGeNET | OpenTargets | 20K edges → 103K curated edges with evidence scores |
+| GWAS Catalog | OpenTargets | OpenTargets ingests GWAS Catalog directly |
+| Jensen DISEASES | OpenTargets | Text-mining covered with better scoring by OpenTargets |
+| OMIM | OpenTargets | Genetic evidence included in OpenTargets |
+| WikiPathways | Reactome | Gold-standard curated; many WikiPathways imported from Reactome |
+| AOP-DB | Reactome | Toxicology focus, less CVD-relevant |
+| HGNC (base) | NCBI Gene | NCBI Gene is primary gene reference |
+| CellAge | NCBI Gene | Node-only; genes already in NCBI Gene |
+| GenAge | NCBI Gene | Node-only; genes already in NCBI Gene |
+| Hetionet (precomputed) | SIDER + STRING | Side effects → SIDER, PPI → STRING; 127 covariance edges dropped |
+
+## Legacy Sources Retained (3)
+
+These sources use pinned/archived data with no live API alternative:
+
+| Source | Data Age | Why Retained |
+|--------|----------|-------------|
+| SIDER | 2015 GitHub commit | Only source for drug side effects (148,518 edges); no public API replacement |
+| LINCS L1000 | 2020 GitHub commit | Gene regulation + drug expression effects (171,036 edges); clue.io requires institutional access |
+| MEDLINE | Pinned GitHub commit | Unique anatomy/symptom/disease cooccurrence (365 edges); not covered by PubTator |
+
+## Key Design Principles
+
+1. **One authoritative source per edge type** — No two databases contribute the same relationship type (except geneAssociatesWithDisease: OpenTargets curated + PubTator literature-mined, complementary evidence types)
+2. **CVD AND-filter** — Disease-adjacent sources (OpenTargets, PubTator, ClinVar) are filtered to CVD-relevant entries using strict disease scoping with word-boundary matching
+3. **Agent-generated parsers** — 4 of 26 parsers were autonomously generated by the DatabaseAgent, reducing integration time from days to minutes
+4. **ID harmonization** — Cross-database ID mapping (MeSH→DOID, EFO→DOID, CUI→DOID) ensures graph connectivity across sources

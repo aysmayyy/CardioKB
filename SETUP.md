@@ -33,7 +33,7 @@ pip install -r requirements.txt
 Key dependencies:
 - **neo4j**: Bolt protocol graph database driver (works with Memgraph)
 - **pandas & numpy**: Data processing
-- **requests**: API calls (DisGeNET, ClinPGx, DoRothEA, etc.)
+- **requests**: API calls (ClinPGx, DoRothEA, ClinicalTrials.gov, etc.)
 - **flask**: Web dashboard backend
 - **obonet**: OBO ontology parsing (Disease Ontology, Gene Ontology, Uberon)
 - **lxml**: XML parsing (DrugBank)
@@ -53,19 +53,9 @@ NEO4J_URI=bolt://localhost:7687
 NEO4J_USERNAME=
 NEO4J_PASSWORD=
 
-# OMIM API key (required for OMIM parser)
-OMIM_API_KEY=your_key
-
-# DisGeNET API key (required for DisGeNET parser)
-DISGENET_API_KEY=your_key
-
 # DrugBank credentials (or place full-database XML at data/raw/drugbank/)
 DRUGBANK_USERNAME=your_email
 DRUGBANK_PASSWORD=your_password
-
-# MySQL for AOP-DB (or use SQL dump at data/raw/aopdb/)
-MYSQL_USERNAME=root
-MYSQL_PASSWORD=your_password
 ```
 
 ### Memgraph Setup
@@ -110,7 +100,8 @@ python src/api.py --port 5050
 **Dashboard features:**
 - **Explore tab**: Interactive vis.js force-directed graph of disease subgraphs, click nodes to inspect properties and neighbors, filter by node type, export as CSV/JSON
 - **Query tab**: Run Cypher queries with results displayed as both table and graph visualization, pre-built query templates for common patterns
-- **Sidebar**: Disease filter selector, agent-powered KB builder, health check runner
+- **Build Knowledge Graph** (sidebar): AI-powered disease enrichment via ClinicalTrials.gov API v2
+- **Extract Disease Subgraph** (sidebar): N-hop subgraph extraction with JSON/CSV export
 - **Admin section**: Parser status, health checks, node/relationship charts, pipeline log
 
 ## Project Structure
@@ -120,15 +111,17 @@ Cardio-KB/
 ├── src/
 │   ├── main.py                  # Pipeline orchestrator
 │   ├── api.py                   # Flask web backend
-│   ├── agent.py                 # AI-powered disease KB builder
+│   ├── agent.py                 # Base disease agent (Claude API)
+│   ├── disease_agent.py         # DiseaseQueryAgent (ClinicalTrials.gov API v2)
+│   ├── database_agent.py        # Autonomous parser generator (Claude API)
 │   ├── orchestrator.py          # Pipeline health check
 │   ├── memgraph_loader.py       # Cypher-based Memgraph batch loader
-│   ├── ontology_configs.py      # 58 ontology configs (source -> graph schema)
+│   ├── ontology_configs.py      # 86 ontology configs (source -> graph schema)
 │   ├── id_mapping.py            # Cross-database ID remapping
 │   ├── utils.py                 # Shared utilities
-│   └── parsers/                 # 25 data source parsers
+│   └── parsers/                 # 26 data source parsers
 │       ├── base_parser.py       # BaseParser abstract class
-│       └── hetionet_components/ # 14 Hetionet-derived component parsers
+│       └── hetionet_components/ # 12 Hetionet-derived component parsers
 ├── interface/
 │   └── index.html               # Web dashboard (Explore + Query tabs)
 ├── ontology/
@@ -137,7 +130,6 @@ Cardio-KB/
 ├── data/
 │   ├── raw/                     # Downloaded source data
 │   └── processed/               # Exported TSV files for Memgraph
-├── tests/                       # pytest test files
 ├── scripts/                     # Data processing and verification scripts
 ├── reports/                     # Generated pipeline health reports
 ├── docs/                        # Documentation, research plan
@@ -146,18 +138,15 @@ Cardio-KB/
 └── requirements.txt             # Python dependencies
 ```
 
-## Data Sources (25 Parsers)
+## Data Sources (26 Parsers)
 
 All parsers extend `BaseParser` from `src/parsers/base_parser.py`.
 
 **Credential-gated (require env vars):**
-- OMIM (`OMIM_API_KEY`)
-- DisGeNET (`DISGENET_API_KEY`)
-- DrugBank (`DRUGBANK_USERNAME`/`DRUGBANK_PASSWORD` or XML file)
-- AOP-DB (`MYSQL_USERNAME`/`MYSQL_PASSWORD` or SQL dump)
+- DrugBank (`DRUGBANK_USERNAME`/`DRUGBANK_PASSWORD` or place XML file at `data/raw/drugbank/`)
 
 **Public sources (no credentials needed):**
-ClinicalTrials.gov, ClinPGx, NCBI Gene, DoRothEA, Disease Ontology, Gene Ontology, Uberon, MeSH, SIDER, LINCS L1000, MEDLINE, DrugCentral, GWAS Catalog, BindingDB, PubTator Central, CTD, Bgee, Hetionet, Jensen Lab DISEASES, Jensen Lab TISSUES, HPO
+ClinicalTrials.gov, ClinPGx, NCBI Gene, DoRothEA, Disease Ontology, Gene Ontology, Uberon, MeSH, SIDER, LINCS L1000, MEDLINE, DrugCentral, BindingDB, PubTator Central, CTD, Bgee, Jensen TISSUES, HPO, Reactome, STRING, OpenTargets, HGNC Gene Families, ClinVar, DrugAge, AnAge
 
 ## Disease Scope
 
@@ -165,13 +154,13 @@ Disease term files in `ontology/diseases/` control which diseases are filtered:
 
 | File | Terms | Area |
 |------|-------|------|
-| `cvd.txt` | 90 | Cardiovascular disease (default) |
+| `cvd.txt` | 184 | Cardiovascular disease (default) |
 | `alzheimers.txt` | 35 | Alzheimer's & related dementias |
 | `cancer.txt` | 70 | Cancer / oncology |
 | `asthma.txt` | 48 | Asthma & respiratory diseases |
 | `diabetes.txt` | 52 | Diabetes & metabolic diseases |
 
-The active filter is `ontology/disease_filter.txt` (symlink to `diseases/cvd.txt`). Most parsers are disease-agnostic; only DisGeNET accepts a `disease_filter` parameter.
+The active filter is `ontology/disease_filter.txt` (symlink to `diseases/cvd.txt`). The **ClinicalTrialsParser** queries ClinicalTrials.gov API v2 per disease term from this filter. All other parsers are disease-agnostic.
 
 ## Running Tests
 
@@ -193,9 +182,9 @@ pytest tests/
 
 ### Large Downloads
 Some sources download large files:
-- **ClinicalTrials.gov (AACT)**: ~2.4 GB bulk flat files
 - **PubTator Central**: ~4 GB FTP files
 - **Bgee**: ~1.5 GB expression data
+- **ClinVar**: ~1.5 GB variant summary
 
 Use `--skip-download` to reuse cached data after the first run.
 
@@ -204,5 +193,4 @@ Use `--skip-download` to reuse cached data after the first run.
 - [Memgraph Documentation](https://memgraph.com/docs)
 - [Neo4j Python Driver (Bolt compatible)](https://neo4j.com/docs/python-manual/current/)
 - [ClinicalTrials.gov API](https://clinicaltrials.gov/data-api/api)
-- [DisGeNET API](https://www.disgenet.org/api/)
 - [Disease Ontology](https://disease-ontology.org/)

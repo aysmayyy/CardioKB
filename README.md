@@ -2,7 +2,7 @@
 
 A cardiovascular disease (CVD) focused biomedical knowledge graph pipeline that integrates 26 deduplicated data sources into a Memgraph graph for disease research, feature selection, and precision medicine. Each node type and edge type is served by exactly one authoritative database — no redundancy. Adapted from the AlzKB (Alzheimer's Knowledge Base) architecture with custom parsers and AI-powered parser generation. Features a **DatabaseAgent** that autonomously generates new parsers from just a name and URL, a **DiseaseQueryAgent** for on-demand disease enrichment, and a web dashboard with interactive graph exploration and Browser-style querying.
 
-**Graph stats:** 4,896,243 nodes | 7,683,150 relationships | 19 node types | 43 relationship types | 26 sources
+**Graph stats:** 4,896,258 nodes | 7,683,150 relationships | 19 node types | 43 relationship types | 26 sources | 23 source labels
 *Stats are current as of last pipeline run; see Memgraph or `GET /api/graph-stats` for live counts.*
 
 ## Pipeline Status
@@ -14,7 +14,7 @@ A cardiovascular disease (CVD) focused biomedical knowledge graph pipeline that 
 | Integration paths | 3 | Direct (5), Hetionet-derived (17), Agent-generated (4) |
 | Legacy (retained as-is) | 3 | SIDER (2015), LINCS L1000 (2020), MEDLINE cooccurrence (pinned) |
 | Ontology configs | 86 | Graph node/relationship type mappings |
-| Source-labeled relationships | 21 | All relationships carry `r.source` property |
+| Source-labeled relationships | 23 | All relationships carry `r.source` property |
 
 ## Data Sources (26)
 
@@ -22,40 +22,40 @@ A cardiovascular disease (CVD) focused biomedical knowledge graph pipeline that 
 
 | # | Source | Access | Status |
 |---|--------|--------|--------|
-| 1 | ClinicalTrials.gov | Public API v2 | Working (85,677 trials, 33,219 STUDIES_CONDITION + 6,090 TESTS_INTERVENTION edges) |
-| 2 | ClinPGx (PharmGKB successor) | Public API | Working (1,091 VARIANT_IN, 503 drugLabelAnnotatesGene, 51 drugLabelDescribesDrug, 243 AFFECTS_RESPONSE_TO edges) |
-| 3 | NCBI Gene | Public FTP | Working (193,790 genes) |
+| 1 | ClinicalTrials.gov | Public API v2 | Working (85,691 trials, 27,866 STUDIES_CONDITION + 17,492 TESTS_INTERVENTION edges) |
+| 2 | ClinPGx (PharmGKB successor) | Public API | Working (1,091 VARIANT_IN, 503 drugLabelAnnotatesGene, 345 drugLabelDescribesDrug, 243 AFFECTS_RESPONSE_TO edges) |
+| 3 | NCBI Gene | Public FTP | Working (194,553 genes, 26,417 geneInSpecies edges) |
 | 4 | DoRothEA (OmniPath) | Public API | Working (12,985 TF-gene interactions, with morScore + confidence properties) |
-| 5 | DrugBank | XML file | Working (19,842 drugs + 6,285 CTD Drug nodes, 12,089 drugBindsGene edges) |
+| 5 | DrugBank | XML file | Working (19,842 drugs + 4,572 CTD unique Drug nodes, 12,089 drugBindsGene edges) |
 
 ### Hetionet-Derived Component Parsers (17)
 
 | # | Source | Access | Status |
 |---|--------|--------|--------|
-| 6 | Disease Ontology (DOID) | Public | Working (12,012 diseases) |
+| 6 | Disease Ontology (DOID) | Public | Working (12,012 diseases, 258 diseaseIsSubtypeOf edges) |
 | 7 | Gene Ontology (GO) | Public | Working (50,350 BP + 26,935 MF + 25,794 CC edges) |
 | 8 | Uberon (anatomy) | Public | Working (14,937 anatomy nodes) |
 | 9 | MeSH (symptoms) | Public | Working (966 symptom nodes) |
-| 10 | SIDER (side effects) | Public | Working (5,734 side effects, 148,518 edges) -- **Stale: pinned to 2015 GitHub commit; replacement via DrugBank adverse reactions planned** |
-| 11 | LINCS L1000 (gene expression) | Public | Working (5,026 geneRegulates + 2,815 downreg + 2,486 upreg edges, with zScore property) -- **Stale: pinned to 2020 GitHub commit; replacement via clue.io API planned** |
-| 12 | MEDLINE (literature cooccurrence) | Public | Working (726 anatomy + 524 symptom + 148 disease cooccurrence edges) -- **Stale: pinned GitHub commit; replacement via PubTator cooccurrence planned** |
-| 13 | DrugCentral (drug-disease) | Public | Working (16,403 pharmacologic class + 779 treats + 189 palliates edges, CUI-to-DOID mapped) |
-| 14 | BindingDB (drug-target) | Public | Working (2,632 chemicalBindsGene edges) |
-| 15 | PubTator Central (literature mining) | Public FTP | Working (806,900 disease-disease edges) |
-| 16 | CTD (chemical-gene) | Public | Working (6,285 Drug nodes, 116,451 chemicalIncreasesExpression + 97,951 chemicalDecreasesExpression edges) |
-| 17 | Bgee (gene expression) | Public FTP | Working (784,026 underexpresses + 1,872 overexpresses edges, with expressionScore property) |
-| 18 | Jensen TISSUES (gene-tissue) | Public | Working (271,657 gene-tissue edges) |
-| 19 | HPO (Human Phenotype Ontology) | Public | Working (19,389 phenotypes, 23,766 gene-phenotype edges) |
-| 20 | Reactome | Public | Working (9,404 geneInPathway + 9,404 pathwayContainsGene edges) |
+| 10 | SIDER (side effects) | Public | Working (5,734 side effects, 148,518 compoundCausesSideEffect edges) -- **Legacy: pinned to 2015 GitHub commit; retained — no live API alternative** |
+| 11 | LINCS L1000 (gene expression) | Public | Working (150,540 geneRegulates + 10,218 downreg + 10,278 upreg edges, with zScore) -- **Legacy: pinned to 2020 GitHub commit; retained — clue.io requires institutional access** |
+| 12 | MEDLINE (literature cooccurrence) | Public | Working (244 anatomy + 117 symptom + 4 disease cooccurrence edges) -- **Legacy: pinned GitHub commit; retained — unique anatomy/symptom cooccurrence** |
+| 13 | DrugCentral (drug-disease) | Public | Working (16,403 pharmacologic class + 245 treats + 96 palliates edges, CUI-to-DOID mapped) |
+| 14 | BindingDB (drug-target) | Public | Working (12,250 chemicalBindsGene edges) |
+| 15 | PubTator Central (literature mining) | Public FTP | Working (673,374 geneAssociatesWithDisease + 4,320 diseaseAssociatesWithDisease edges after CVD AND-filter) |
+| 16 | CTD (chemical-gene) | Public | Working (4,572 unique Drug nodes, 116,451 chemicalIncreasesExpression + 97,951 chemicalDecreasesExpression edges) |
+| 17 | Bgee (gene expression) | Public FTP | Working (784,026 underexpresses + 1,872 overexpresses edges, with expressionScore) |
+| 18 | Jensen TISSUES (gene-tissue) | Public | Working (215,235 geneExpressedInBodyPart edges) |
+| 19 | HPO (Human Phenotype Ontology) | Public | Working (19,389 phenotypes, 162,994 gene-phenotype edges) |
+| 20 | Reactome | Public | Working (44,979 geneInPathway + 44,979 pathwayContainsGene edges) |
 | 21 | STRING | Public | Working (121,170 geneInteractsWithGene edges, confidence > 700) |
-| 22 | OpenTargets | Public | Working (2,100,856 geneAssociatesWithDisease edges via EFO-to-DOID mapping) |
+| 22 | OpenTargets | Public | Working (103,879 geneAssociatesWithDisease edges after CVD AND-filter, via EFO-to-DOID mapping) |
 
 ### Agent-Generated Parsers (4)
 
 | # | Source | Access | Status |
 |---|--------|--------|--------|
 | 23 | HGNC Gene Families | Public | Working (1,934 GeneFamily nodes, 5,123 geneInFamily + 5,123 familyContainsGene edges) |
-| 24 | ClinVar | Public FTP | Working (4,488,042 Variant nodes, 2,267,095 hasVariant + 2,267,095 variantInGene edges) |
+| 24 | ClinVar | Public FTP | Working (4,488,042 Variant nodes, 2,267,095 hasVariant + 2,267,095 variantInGene + 99,707 associatedWithVariant + 99,707 variantAssociatedWithDisease edges) |
 | 25 | DrugAge | Public | Working (386 associatedWithAging edges, 3 AgeingProperty nodes) |
 | 26 | AnAge | Public | Working (4,645 Species longevity nodes) |
 
@@ -65,7 +65,7 @@ The following sources were removed because their data is fully covered by remain
 
 | Removed Source | Was Providing | Replaced By |
 |---------------|---------------|-------------|
-| DisGeNET | 20K gene-disease edges | OpenTargets (2.4M edges with evidence scores) |
+| DisGeNET | 20K gene-disease edges | OpenTargets (curated evidence scores) |
 | GWAS Catalog | 45K gene-disease edges | OpenTargets (ingests GWAS directly) |
 | Jensen DISEASES | 20K gene-disease edges | OpenTargets (covers text-mining with better scoring) |
 | OMIM | 7.3K gene-disease edges | OpenTargets (includes genetic evidence) |
@@ -86,7 +86,7 @@ See `docs/CardioKB_Redundancy_Changelog.docx` for full rationale and impact asse
 |-----------|------:|--------|
 | Variant | 4,488,042 | ClinVar |
 | Gene | 194,553 | NCBI Gene |
-| ClinicalTrial | 85,677 | ClinicalTrials.gov |
+| ClinicalTrial | 85,691 | ClinicalTrials.gov |
 | BiologicalProcess | 24,547 | Gene Ontology |
 | Drug | 24,414 | DrugBank + CTD |
 | Phenotype | 19,389 | HPO |
@@ -104,55 +104,55 @@ See `docs/CardioKB_Redundancy_Changelog.docx` for full rationale and impact asse
 | TranscriptionFactor | 367 | DoRothEA |
 | AgeingProperty | 3 | DrugAge |
 
-### Relationship Types (41)
+### Relationship Types (43)
 
 | Relationship Type | Source | Count |
 |-------------------|--------|------:|
 | hasVariant | ClinVar | 2,267,095 |
 | variantInGene | ClinVar | 2,267,095 |
-| geneAssociatesWithDisease | OpenTargets | 2,100,856 |
-| diseaseAssociatesWithDisease | PubTator | 806,900 |
 | bodyPartUnderexpressesGene | Bgee | 784,026 |
-| geneExpressedInBodyPart | Jensen TISSUES | 271,657 |
+| geneAssociatesWithDisease | OpenTargets + PubTator | 777,253 |
+| geneExpressedInBodyPart | Jensen TISSUES | 215,235 |
+| geneAssociatesWithPhenotype | HPO | 162,994 |
+| geneRegulatesGene | LINCS L1000 | 150,540 |
 | compoundCausesSideEffect | SIDER | 148,518 |
 | geneInteractsWithGene | STRING | 121,170 |
 | chemicalIncreasesExpression | CTD | 116,451 |
+| variantAssociatedWithDisease | ClinVar | 99,707 |
+| associatedWithVariant | ClinVar | 99,707 |
 | chemicalDecreasesExpression | CTD | 97,951 |
 | geneParticipatesInBiologicalProcess | Gene Ontology | 50,350 |
-| STUDIES_CONDITION | ClinicalTrials.gov | 33,219 |
+| geneInPathway | Reactome | 44,979 |
+| pathwayContainsGene | Reactome | 44,979 |
+| STUDIES_CONDITION | ClinicalTrials.gov | 27,866 |
 | geneHasMolecularFunction | Gene Ontology | 26,935 |
+| geneInSpecies | NCBI Gene | 26,417 |
 | geneAssociatedWithCellularComponent | Gene Ontology | 25,794 |
-| geneAssociatesWithPhenotype | HPO | 23,766 |
-| geneInSpecies | NCBI Gene | 21,599 |
-| pharmacologicClassIncludesCompound | DrugCentral | 16,403 |
+| TESTS_INTERVENTION | ClinicalTrials.gov | 17,492 |
 | compoundInPharmacologicClass | DrugCentral | 16,403 |
+| pharmacologicClassIncludesCompound | DrugCentral | 16,403 |
 | transcriptionFactorInteractsWithGene | DoRothEA | 12,985 |
+| chemicalBindsGene | BindingDB | 12,250 |
 | drugBindsGene | DrugBank | 12,089 |
-| geneInPathway | Reactome | 9,404 |
-| pathwayContainsGene | Reactome | 9,404 |
-| diseaseIsSubtypeOf | Disease Ontology | 6,447 |
-| TESTS_INTERVENTION | ClinicalTrials.gov | 6,090 |
-| drugTreatsDisease | DrugCentral | 779 |
+| compoundUpregulatesGene | LINCS L1000 | 10,278 |
+| compoundDownregulatesGene | LINCS L1000 | 10,218 |
 | geneInFamily | HGNC Families | 5,123 |
 | familyContainsGene | HGNC Families | 5,123 |
-| geneRegulatesGene | LINCS L1000 | 5,026 |
-| compoundDownregulatesGene | LINCS L1000 | 2,815 |
-| chemicalBindsGene | BindingDB | 2,632 |
-| compoundUpregulatesGene | LINCS L1000 | 2,486 |
+| diseaseAssociatesWithDisease | PubTator | 4,320 |
 | bodyPartOverexpressesGene | Bgee | 1,872 |
 | VARIANT_IN | ClinPGx | 1,091 |
-| drugPalliatesDisease | DrugCentral | 189 |
-| diseaseLocalizesToAnatomy | MEDLINE | 726 |
-| diseasePresentsSymptom | MEDLINE | 524 |
 | drugLabelAnnotatesGene | ClinPGx | 503 |
 | associatedWithAging | DrugAge | 386 |
+| drugLabelDescribesDrug | ClinPGx | 345 |
+| diseaseIsSubtypeOf | Disease Ontology | 258 |
+| drugTreatsDisease | DrugCentral | 245 |
+| diseaseLocalizesToAnatomy | MEDLINE | 244 |
 | AFFECTS_RESPONSE_TO | ClinPGx | 243 |
-| diseaseResemblesDisease | MEDLINE | 148 |
-| drugLabelDescribesDrug | ClinPGx | 51 |
+| diseasePresentsSymptom | MEDLINE | 117 |
+| drugPalliatesDisease | DrugCentral | 96 |
+| diseaseResemblesDisease | MEDLINE | 4 |
 
-**Relationship source labels (21):** Bgee, BindingDB, CTD, ClinPGx, ClinVar, ClinicalTrials.gov, DoRothEA, DrugAge, DrugBank, DrugCentral, Gene Ontology, HGNC, HPO, Jensen TISSUES, LINCS L1000, MEDLINE, OpenTargets, PubTator, Reactome, SIDER, STRING
-
-**Node-only sources (5):** Disease Ontology, Uberon, NCBI MeSH, NCBI Gene, AnAge
+**Relationship source labels (23):** Bgee, BindingDB, CTD, ClinPGx, ClinVar, ClinicalTrials.gov, Disease Ontology, DoRothEA, DrugAge, DrugBank, DrugCentral, Gene Ontology, HGNC, HPO, Jensen TISSUES, LINCS L1000, MEDLINE, NCBI Gene, OpenTargets, PubTator, Reactome, SIDER, STRING
 
 ## Project Structure
 
@@ -164,9 +164,9 @@ Cardio-KB/
 │   ├── disease_agent.py        # DiseaseQueryAgent (ClinicalTrials.gov API v2)
 │   ├── database_agent.py       # Autonomous parser generator (Claude API + sample download)
 │   ├── api.py                  # Flask backend with SSE streaming + agent endpoints
-│   ├── orchestrator.py         # Health check with dynamic Graph-based parser detection
+│   ├── orchestrator.py         # Health check with dynamic graph-based parser detection
 │   ├── memgraph_loader.py      # Cypher-based Memgraph batch loader
-│   ├── ontology_configs.py     # 86 ontology configs for Graph schema mapping
+│   ├── ontology_configs.py     # 86 ontology configs for graph schema mapping
 │   ├── id_mapping.py           # Central ID mapping: validate, suggest, create_missing_nodes, CLI
 │   ├── utils.py                # Disease filtering utilities (load_disease_terms, etc.)
 │   └── parsers/
@@ -203,7 +203,7 @@ Cardio-KB/
 ├── scripts/
 │   ├── compute_specificity.py  # Pre-compute disease-specificity scores (auto-runs in pipeline)
 │   ├── verify_graph.py         # Graph verification and validation
-│   └── run_drugbank.py         # Standalone DrugBank parser + Graph loader
+│   └── run_drugbank.py         # Standalone DrugBank parser + graph loader
 ├── data/
 │   ├── raw/                    # Downloaded source data (gitignored)
 │   ├── processed/              # Exported TSV files per source (gitignored)
@@ -256,8 +256,8 @@ Create a `.env` file in the project root:
 ```bash
 # Required for Memgraph loading
 NEO4J_URI=bolt://localhost:7687
-NEO4J_USERNAME=neo4j
-NEO4J_PASSWORD=<your-password>
+NEO4J_USERNAME=
+NEO4J_PASSWORD=
 
 # Optional — DrugBank XML auto-detected if present in data/raw/drugbank/
 DRUGBANK_USERNAME=<username>
@@ -273,7 +273,7 @@ CARDIOKB_LOG_LEVEL=INFO
 # Full pipeline: download -> parse -> TSV export -> Memgraph load
 python src/main.py
 
-# Parse and export only (no Neo4j)
+# Parse and export only (no graph load)
 python src/main.py --skip-neo4j
 
 # Re-parse from cached data (no downloads)
@@ -296,7 +296,7 @@ The pipeline exports all parsed data to `data/processed/<source>/` as tab-separa
 After loading into Memgraph, run the verification script:
 
 ```bash
-python scripts/verify_graph.py --uri bolt://localhost:7687 --username neo4j --password <password>
+python scripts/verify_graph.py --uri bolt://localhost:7687
 ```
 
 ## Disease Scope & Filtering
@@ -308,7 +308,7 @@ CardioKB is scoped to cardiovascular disease. CVD-specific ontology files define
 | `ontology/genes/cvd.txt` | CVD gene symbols (OMIM + DisGeNET, cleaned) | 3,984 genes |
 | `ontology/diseases/cvd.txt` | CVD disease terms | 184 terms |
 | `ontology/schema/node_types.txt` | Node type definitions | 19 types |
-| `ontology/schema/edge_types.txt` | Edge type definitions | 41 types |
+| `ontology/schema/edge_types.txt` | Edge type definitions | 43 types |
 
 **`ontology/disease_filter.txt`** is a symlink to `diseases/cvd.txt`. The **ClinicalTrialsParser** queries ClinicalTrials.gov API v2 per disease term from this filter. All other parsers are disease-agnostic.
 
@@ -355,7 +355,7 @@ The **DatabaseAgent** (`src/database_agent.py`) uses Claude API to autonomously 
 | Source | Nodes/Edges Added |
 |--------|-------------------|
 | HGNC Gene Families | 1,934 GeneFamily nodes, 5,123 geneInFamily + 5,123 familyContainsGene edges |
-| ClinVar | 4,488,042 Variant nodes, 2,267,095 hasVariant + 2,267,095 variantInGene edges |
+| ClinVar | 4,488,042 Variant nodes, 2,267,095 hasVariant + 2,267,095 variantInGene + 99,707 associatedWithVariant + 99,707 variantAssociatedWithDisease edges |
 | DrugAge | 386 associatedWithAging edges, 3 AgeingProperty nodes |
 | AnAge | 4,645 Species longevity nodes |
 
@@ -364,7 +364,7 @@ The **DatabaseAgent** (`src/database_agent.py`) uses Claude API to autonomously 
 - All parsers extend `BaseParser` from `src/parsers/base_parser.py`
 - Graph loading uses UNWIND-based Cypher batching (batch size: 1000) with MERGE to prevent duplicates
 - All relationships tagged with `r.source` property from config's `source_label`
-- Graph schema defined declaratively in `src/ontology_configs.py` (85 configs)
+- Graph schema defined declaratively in `src/ontology_configs.py` (86 configs)
 - Each node type and edge type has exactly one authoritative source (no redundancy)
 - DrugBank auto-detects local XML file and works without credentials
-- 3 stale sources (SIDER, LINCS L1000, MEDLINE) are flagged for replacement with live alternatives
+- 3 legacy sources (SIDER, LINCS L1000, MEDLINE) are flagged for replacement with live alternatives
