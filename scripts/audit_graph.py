@@ -3,9 +3,10 @@ from dotenv import load_dotenv
 import os
 
 load_dotenv()
-uri = os.getenv('NEO4J_URI', 'bolt://localhost:7687')
-pw = os.getenv('NEO4J_PASSWORD', '')
-driver = GraphDatabase.driver(uri, auth=('neo4j', pw))
+uri = os.getenv('MEMGRAPH_URI', 'bolt://localhost:7687')
+pw = os.getenv('MEMGRAPH_PASSWORD', '')
+user = os.getenv('MEMGRAPH_USERNAME', '')
+driver = GraphDatabase.driver(uri, auth=(user, pw))
 
 with driver.session() as s:
     # 1. All relationship types with source breakdown

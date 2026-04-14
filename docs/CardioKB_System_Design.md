@@ -4,41 +4,69 @@
 
 CardioKB is a CVD-focused biomedical knowledge graph integrating 26 deduplicated data sources into Memgraph. The system consists of four main components:
 
-1. **ETL Pipeline** — Downloads, parses, and loads biomedical data into the graph
+1. **ETL Pipeline** — Downloads, parses, and loads biomedical data into the graph (runs locally)
 2. **Graph Database** — Memgraph instance storing 4.9M nodes and 7.7M relationships
 3. **Web Interface** — Flask backend + vis.js frontend for exploration and querying
 4. **AI Agents** — DatabaseAgent (parser generation) and DiseaseQueryAgent (on-demand enrichment)
 
+The web app and Memgraph are fully Dockerized via `docker-compose.yml`. The ETL pipeline runs separately on a development machine.
+
 ```
 ┌──────────────────────────────────────────────────────────────────────┐
-│                         CardioKB Architecture                        │
+│                     CardioKB Architecture                            │
 │                                                                      │
-│  ┌─────────────┐    ┌──────────────┐    ┌─────────────────────────┐  │
-│  │ 26 Data     │───>│ ETL Pipeline │───>│ Memgraph (Bolt:7687)    │  │
-│  │ Sources     │    │ (main.py)    │    │ 4,896,258 nodes         │  │
-│  │ (APIs, FTP, │    │              │    │ 7,683,150 relationships │  │
-│  │  XML, TSV)  │    │ Parsers ──>  │    │ 19 node types           │  │
-│  └─────────────┘    │ TSV ──>      │    │ 43 relationship types   │  │
-│                     │ Loader       │    └────────┬────────────────┘  │
-│  ┌─────────────┐    └──────────────┘             │                   │
-│  │ DatabaseAgent│                                │                   │
-│  │ (Claude API) │    ┌──────────────┐    ┌───────┴───────┐          │
-│  │ Auto-generates│──>│ New Parser   │───>│ Flask API     │          │
-│  │ parsers       │   └──────────────┘    │ (:5050)       │          │
-│  └─────────────┘                         │               │          │
-│  ┌──────────────┐                        │ /api/query    │          │
-│  │ DiseaseQuery │───────────────────────>│ /api/explore  │          │
-│  │ Agent        │  ClinicalTrials.gov    │ /api/agent/*  │          │
-│  │ (Claude API) │  API v2                │ /api/subgraph │          │
-│  └──────────────┘                        └───────┬───────┘          │
-│                                                  │                   │
-│                                          ┌───────┴───────┐          │
-│                                          │ Web Dashboard │          │
-│                                          │ (index.html)  │          │
-│                                          │ vis.js graphs │          │
-│                                          └───────────────┘          │
+│  ┌─────────────┐    ┌──────────────┐                                 │
+│  │ 26 Data     │───>│ ETL Pipeline │──┐  (runs locally, not in       │
+│  │ Sources     │    │ (main.py)    │  │   Docker — pipeline only)    │
+│  │ (APIs, FTP, │    └──────────────┘  │                              │
+│  │  XML, TSV)  │                      │                              │
+│  └─────────────┘                      ▼                              │
+│                              ┌─────────────────────────────────┐     │
+│  Docker Compose Stack        │                                 │     │
+│  ┌───────────────────────────┼─────────────────────────────┐   │     │
+│  │                           │                             │   │     │
+│  │  ┌──────────────────┐  ┌─┴───────────────────────────┐  │   │     │
+│  │  │ Flask App (:5050)│  │ Memgraph (bolt://memgraph:  │  │   │     │
+│  │  │                  │──│          7687)               │  │   │     │
+│  │  │ /api/query       │  │ 4,896,258 nodes             │  │   │     │
+│  │  │ /api/graph-stats │  │ 7,683,150 relationships     │  │   │     │
+│  │  │ /api/agent/*     │  │ 19 node types               │  │   │     │
+│  │  │ /api/subgraph    │  │ 43 relationship types       │  │   │     │
+│  │  └────────┬─────────┘  └─────────────────────────────┘  │   │     │
+│  │           │             Volume: memgraph-data            │   │     │
+│  └───────────┼──────────────────────────────────────────────┘   │     │
+│              │                                                  │     │
+│      ┌───────┴───────┐                                          │     │
+│      │ Web Dashboard │   ┌──────────────┐   ┌──────────────┐   │     │
+│      │ (index.html)  │   │ DatabaseAgent│   │ DiseaseQuery │   │     │
+│      │ vis.js graphs │   │ (Claude API) │   │ Agent        │   │     │
+│      └───────────────┘   └──────────────┘   └──────────────┘   │     │
+│                                                                      │
 └──────────────────────────────────────────────────────────────────────┘
 ```
+
+### Deployment
+
+```bash
+# 1. Configure environment
+cp .env.example .env   # Set MEMGRAPH_PASSWORD, ANTHROPIC_API_KEY, ADMIN_PASSWORD
+
+# 2. Import graph data
+./scripts/import_graph.sh data/export/memgraph-data.tar.gz
+
+# 3. Start
+docker compose up -d   # App at http://localhost:5050
+```
+
+### Environment Variables
+
+| Variable | Required | Purpose |
+|----------|----------|---------|
+| `MEMGRAPH_PASSWORD` | Yes | Memgraph auth (503 without it) |
+| `ANTHROPIC_API_KEY` | For AI features | Build Knowledge Graph sidebar |
+| `ADMIN_PASSWORD` | For admin features | Pipeline run / add database from UI |
+
+See `.env.example` for the full list with descriptions.
 
 ## 2. Graph Statistics
 
@@ -275,7 +303,7 @@ The CVD AND-filter applies strict disease scoping with word-boundary matching to
 
 ## 6. Web Interface
 
-### 6.1 Backend (Flask, port 5050)
+### 6.1 Backend (Flask, port 5050, Dockerized)
 
 | Endpoint | Method | Purpose |
 |----------|--------|---------|
@@ -344,3 +372,53 @@ Three sources use archived/pinned data with no live API replacement:
 1. **One authoritative source per edge type** — no two databases contribute the same relationship type, with the exception of `geneAssociatesWithDisease` (OpenTargets curated + PubTator literature-mined = complementary evidence)
 2. **10 sources removed** during systematic dedup audit (DisGeNET, GWAS Catalog, Jensen DISEASES, OMIM, WikiPathways, AOP-DB, HGNC base, CellAge, GenAge, Hetionet precomputed)
 3. **Full rationale** documented in `docs/CardioKB_Redundancy_Changelog.docx`
+
+## 10. Docker Deployment
+
+### 10.1 Container Architecture
+
+The production deployment uses Docker Compose with two services:
+
+| Service | Image | Port | Purpose |
+|---------|-------|------|---------|
+| `memgraph` | `memgraph/memgraph:latest` | 7687, 7444 | Graph database with persistent volume |
+| `app` | Custom (`Dockerfile`) | 5050 | Flask web app (Python 3.11-slim) |
+
+The Flask app connects to Memgraph via `bolt://memgraph:7687` (Docker internal networking). Memgraph data is persisted in a Docker volume (`memgraph-data`) that survives container restarts and redeployments.
+
+### 10.2 Files
+
+| File | Purpose |
+|------|---------|
+| `Dockerfile` | Builds Flask app image: Python 3.11-slim, installs requirements.txt, copies src/, interface/, ontology/, reports/, scripts/ |
+| `docker-compose.yml` | Defines memgraph + app services, networking, volumes, env var passthrough |
+| `.dockerignore` | Excludes data/ (48GB pipeline data), .git, .env, notebooks, docs from build context |
+| `.env.example` | Documented template for all environment variables |
+| `scripts/export_graph.sh` | Exports Memgraph data volume as tar.gz (~1.2 GB compressed) |
+| `scripts/import_graph.sh` | Imports Memgraph data volume on target host |
+
+### 10.3 Graph Data Transfer
+
+The graph (4.9M nodes, 7.7M rels) is transferred between machines via Memgraph volume backups:
+
+```
+Source machine                    Target machine
+──────────────                    ──────────────
+export_graph.sh                   import_graph.sh
+  │ stops Memgraph                  │ creates Docker volume
+  │ tars /var/lib/memgraph          │ extracts archive into volume
+  │ restarts Memgraph               │ starts Memgraph
+  ▼                                 ▼
+data/export/memgraph-data.tar.gz  Docker volume: memgraph-data
+(~1.2 GB)                         (14 GB uncompressed)
+```
+
+### 10.4 Environment Variables
+
+All database connection variables use the `MEMGRAPH_` prefix. See `.env.example` for the full documented list. Key variables:
+
+| Variable | Required | Purpose |
+|----------|----------|---------|
+| `MEMGRAPH_PASSWORD` | **Yes** | Memgraph auth — web app returns 503 without it |
+| `ANTHROPIC_API_KEY` | For AI features | Powers "Build Knowledge Graph" (Claude API) |
+| `ADMIN_PASSWORD` | For admin features | Pipeline run, database agent from UI |

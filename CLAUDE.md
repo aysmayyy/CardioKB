@@ -16,8 +16,9 @@
 - *Stats are current as of last pipeline run; see Memgraph or `GET /api/graph-stats` for live counts.*
 
 ## Tech Stack
-- **Language**: Python 3.11 (conda env: `cardiokb`)
+- **Language**: Python 3.11 (conda env: `cardiokb` for local dev)
 - **Database**: Memgraph (knowledge graph, bolt protocol, Neo4j driver compatible)
+- **Deployment**: Docker Compose (Flask app + Memgraph, see `docker-compose.yml`)
 - **Key libraries**: pandas, numpy, requests, neo4j, flask, scipy, obonet, lxml
 - **Testing**: pytest
 - **Notebooks**: Jupyter
@@ -41,11 +42,17 @@
 - `src/disease_agent.py` — DiseaseQueryAgent class: ClinicalTrials.gov API v2 fetching, graph loading, caching, SSE progress
 - `src/api.py` — Flask backend with SSE streaming, disease subgraph API, and agent builds (`/api/agent/build`, `/api/agent/build-disease-graph`)
 - `src/orchestrator.py` — Pipeline health check with dynamic graph-based parser status detection
-- `run.sh` — Launches Flask + opens browser
-- `reports/` — Generated pipeline health reports and cached ID mapping validation report (`id_mapping_report.json`)
-- `docs/` — Documentation, research plan, specific aims
+- `run.sh` — Launches Flask + opens browser (local dev)
+- `Dockerfile` — Flask web app container (Python 3.11-slim)
+- `docker-compose.yml` — Full stack: Memgraph + Flask app
+- `.dockerignore` — Excludes data/ (48GB), .git, .env from Docker build
+- `.env.example` — Environment variable template with documentation
+- `scripts/export_graph.sh` — Export Memgraph data volume as tar.gz for deployment
+- `scripts/import_graph.sh` — Import Memgraph data volume on target host
 - `scripts/compute_specificity.py` — Pre-computes `specificityScore` node property in graph (auto-runs at end of pipeline)
 - `scripts/` — Data processing and verification scripts
+- `reports/` — Generated pipeline health reports and cached ID mapping validation report (`id_mapping_report.json`)
+- `docs/` — Documentation, research plan, specific aims
 - `models/` — Future ML models
 - `.claude/skills/` — Claude Code custom skills (see below)
 
@@ -59,7 +66,18 @@ Reusable skill files in `.claude/skills/` that Claude Code auto-loads when relev
 | `clinpgx-parser` | `.claude/skills/clinpgx-parser/SKILL.md` | ClinPGx REST API parsing reference |
 | `clinpgx-database` | `.claude/skills/clinpgx-database/SKILL.md` | ClinPGx pharmacogenomics data access reference |
 
-## Running the Pipeline
+## Deployment (Docker)
+```bash
+# Deploy the web app + Memgraph (production)
+cp .env.example .env           # Fill in MEMGRAPH_PASSWORD, ANTHROPIC_API_KEY, ADMIN_PASSWORD
+./scripts/import_graph.sh data/export/memgraph-data.tar.gz
+docker compose up -d           # App live at http://localhost:5050
+
+# Export graph data for transfer to another host
+./scripts/export_graph.sh      # Produces data/export/memgraph-data.tar.gz (~1.2 GB)
+```
+
+## Running the Pipeline (Local Dev)
 ```bash
 # Full pipeline: download → parse → TSV export → Memgraph load
 python src/main.py
@@ -74,11 +92,18 @@ python src/main.py --skip-download
 python src/main.py --skip-download --skip-neo4j
 ```
 
+## Environment Variables
+All env vars use `MEMGRAPH_` prefix (not `NEO4J_`). See `.env.example` for the full list:
+- `MEMGRAPH_URI`, `MEMGRAPH_USERNAME`, `MEMGRAPH_PASSWORD` — Graph database connection
+- `ANTHROPIC_API_KEY` — AI agent features (Build Knowledge Graph)
+- `ADMIN_PASSWORD` — Admin UI features (pipeline run, add database)
+- `DRUGBANK_USERNAME`, `DRUGBANK_PASSWORD` — Pipeline only (optional)
+
 ## Conventions
 - New parsers should extend `BaseParser` from `src/parsers/base_parser.py`
 - Raw data downloads go to `data/raw/<source_name>/`
 - Parsed TSV output goes to `data/processed/<source_name>/`
-- Environment variables for credentials go in `.env` (not committed)
+- Environment variables for credentials go in `.env` (not committed); template in `.env.example`
 - Run tests with `pytest`
 - Every relationship ontology config must include a `source_label` field
 

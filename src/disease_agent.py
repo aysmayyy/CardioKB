@@ -383,11 +383,11 @@ class DiseaseQueryAgent:
         rel_df = pd.DataFrame(rel_rows).drop_duplicates() if rel_rows else pd.DataFrame()
         rel_df.to_csv(out_dir / 'trial_studies_condition.tsv', sep='\t', index=False)
 
-        uri = os.getenv('NEO4J_URI', 'bolt://localhost:7687')
-        username = os.getenv('NEO4J_USERNAME', 'neo4j')
-        password = os.getenv('NEO4J_PASSWORD', '')
+        uri = os.getenv('MEMGRAPH_URI', 'bolt://localhost:7687')
+        username = os.getenv('MEMGRAPH_USERNAME', '')
+        password = os.getenv('MEMGRAPH_PASSWORD', '')
         if not password:
-            logger.error("NEO4J_PASSWORD not set, skipping trial load")
+            logger.error("MEMGRAPH_PASSWORD not set, skipping trial load")
             return 0
 
         node_config = ONTOLOGY_CONFIGS.get('clinicaltrials.clinical_trials')

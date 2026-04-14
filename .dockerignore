@@ -1,0 +1,40 @@
+# Raw and processed data (48GB) - pipeline only, not needed for web app
+data/
+
+# Git
+.git/
+.gitignore
+
+# Python
+__pycache__/
+*.pyc
+*.pyo
+.pytest_cache/
+
+# Environment / secrets
+.env
+.env.*
+
+# IDE
+.vscode/
+.idea/
+
+# Notebooks and models
+*.ipynb
+models/
+
+# Docs
+docs/
+*.md
+!interface/*.md
+
+# Claude Code
+.claude/
+
+# OS files
+.DS_Store
+Thumbs.db
+
+# Logs
+logs/
+*.log

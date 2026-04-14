@@ -1195,7 +1195,7 @@ def verify_neo4j_load(source_key: str, source_label: str, emit=None) -> dict:
     from src.utils import _get_neo4j_driver
     driver = _get_neo4j_driver()
     if not driver:
-        return {'error': 'NEO4J_PASSWORD not set'}
+        return {'error': 'MEMGRAPH_PASSWORD not set'}
 
     try:
         with driver.session() as session:
@@ -1225,11 +1225,11 @@ def _load_single_source(source_key: str, parsed_data: dict, emit=None) -> bool:
     """Load a single parser's data into Neo4j via the existing loader."""
     emit = emit or (lambda e, d: None)
 
-    uri = os.getenv('NEO4J_URI', 'bolt://localhost:7687')
-    username = os.getenv('NEO4J_USERNAME', 'neo4j')
-    password = os.getenv('NEO4J_PASSWORD', '')
+    uri = os.getenv('MEMGRAPH_URI', 'bolt://localhost:7687')
+    username = os.getenv('MEMGRAPH_USERNAME', '')
+    password = os.getenv('MEMGRAPH_PASSWORD', '')
     if not password:
-        emit('status', {'phase': 'neo4j_skip', 'message': 'NEO4J_PASSWORD not set — skipping Neo4j load'})
+        emit('status', {'phase': 'neo4j_skip', 'message': 'MEMGRAPH_PASSWORD not set — skipping load'})
         return False
 
     import importlib

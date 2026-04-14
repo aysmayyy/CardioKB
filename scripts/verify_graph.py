@@ -145,15 +145,15 @@ def verify_graph(uri: str, username: str, password: str, database: str = "neo4j"
 
 def main():
     parser = argparse.ArgumentParser(description='Verify CardioKB Neo4j Graph')
-    parser.add_argument('--uri', default=os.getenv('NEO4J_URI', 'bolt://localhost:7687'))
-    parser.add_argument('--username', default=os.getenv('NEO4J_USERNAME', 'neo4j'))
-    parser.add_argument('--password', default=os.getenv('NEO4J_PASSWORD', ''))
+    parser.add_argument('--uri', default=os.getenv('MEMGRAPH_URI', 'bolt://localhost:7687'))
+    parser.add_argument('--username', default=os.getenv('MEMGRAPH_USERNAME', ''))
+    parser.add_argument('--password', default=os.getenv('MEMGRAPH_PASSWORD', ''))
     parser.add_argument('--database', default='neo4j')
 
     args = parser.parse_args()
 
     if not args.password:
-        print("ERROR: Neo4j password required. Set NEO4J_PASSWORD env var or use --password")
+        print("ERROR: Neo4j password required. Set MEMGRAPH_PASSWORD env var or use --password")
         sys.exit(1)
 
     verify_graph(args.uri, args.username, args.password, args.database)

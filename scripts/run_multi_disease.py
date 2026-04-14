@@ -92,11 +92,11 @@ def run_disgenet_for_disease(disease_key: str, disease_filter_path: str):
         df.to_csv(out_dir / f'{name}.tsv', sep='\t', index=False)
 
     # Load into Neo4j
-    uri = os.getenv('NEO4J_URI', 'bolt://localhost:7687')
-    username = os.getenv('NEO4J_USERNAME', 'neo4j')
-    password = os.getenv('NEO4J_PASSWORD', '')
+    uri = os.getenv('MEMGRAPH_URI', 'bolt://localhost:7687')
+    username = os.getenv('MEMGRAPH_USERNAME', '')
+    password = os.getenv('MEMGRAPH_PASSWORD', '')
     if not password:
-        logger.error("NEO4J_PASSWORD not set")
+        logger.error("MEMGRAPH_PASSWORD not set")
         return 0
 
     with Neo4jLoader(uri, username, password) as loader:
@@ -158,9 +158,9 @@ def report_stats():
     """Print final Neo4j graph stats."""
     from neo4j import GraphDatabase
 
-    uri = os.getenv('NEO4J_URI', 'bolt://localhost:7687')
-    username = os.getenv('NEO4J_USERNAME', 'neo4j')
-    password = os.getenv('NEO4J_PASSWORD', '')
+    uri = os.getenv('MEMGRAPH_URI', 'bolt://localhost:7687')
+    username = os.getenv('MEMGRAPH_USERNAME', '')
+    password = os.getenv('MEMGRAPH_PASSWORD', '')
     if not password:
         return
 

@@ -39,9 +39,9 @@ app = Flask(__name__,
 def _get_neo4j_driver():
     """Create a Neo4j driver from environment variables."""
     from neo4j import GraphDatabase
-    uri = os.getenv('NEO4J_URI', 'bolt://localhost:7687')
-    username = os.getenv('NEO4J_USERNAME', 'neo4j')
-    password = os.getenv('NEO4J_PASSWORD', '')
+    uri = os.getenv('MEMGRAPH_URI', 'bolt://localhost:7687')
+    username = os.getenv('MEMGRAPH_USERNAME', '')
+    password = os.getenv('MEMGRAPH_PASSWORD', '')
     if not password:
         return None
     return GraphDatabase.driver(uri, auth=(username, password))
@@ -80,7 +80,7 @@ def graph_stats():
     """Query Neo4j for current graph statistics."""
     driver = _get_neo4j_driver()
     if not driver:
-        return jsonify({'error': 'NEO4J_PASSWORD not set'}), 503
+        return jsonify({'error': 'MEMGRAPH_PASSWORD not set'}), 503
 
     try:
         with driver.session() as session:
@@ -167,7 +167,7 @@ def disease_stats():
 
     driver = _get_neo4j_driver()
     if not driver:
-        return jsonify({'error': 'NEO4J_PASSWORD not set'}), 503
+        return jsonify({'error': 'MEMGRAPH_PASSWORD not set'}), 503
 
     try:
         with driver.session() as session:
@@ -364,7 +364,7 @@ def graph_data():
 
     driver = _get_neo4j_driver()
     if not driver:
-        return jsonify({'error': 'NEO4J_PASSWORD not set'}), 503
+        return jsonify({'error': 'MEMGRAPH_PASSWORD not set'}), 503
 
     try:
         with driver.session() as session:
@@ -671,9 +671,9 @@ def specificity_info():
     """Return metadata about when specificity scores were last computed."""
     from neo4j import GraphDatabase
 
-    uri = os.getenv('NEO4J_URI', 'bolt://localhost:7687')
-    user = os.getenv('NEO4J_USERNAME', 'neo4j')
-    pwd = os.getenv('NEO4J_PASSWORD', '')
+    uri = os.getenv('MEMGRAPH_URI', 'bolt://localhost:7687')
+    user = os.getenv('MEMGRAPH_USERNAME', '')
+    pwd = os.getenv('MEMGRAPH_PASSWORD', '')
     driver = GraphDatabase.driver(uri, auth=(user, pwd))
     try:
         with driver.session() as session:
@@ -735,7 +735,7 @@ def run_query():
 
     driver = _get_neo4j_driver()
     if not driver:
-        return jsonify({'error': 'NEO4J_PASSWORD not set'}), 503
+        return jsonify({'error': 'MEMGRAPH_PASSWORD not set'}), 503
 
     try:
         with driver.session() as session:
@@ -813,7 +813,7 @@ def disease_subgraph():
 
     driver = _get_neo4j_driver()
     if not driver:
-        return jsonify({'error': 'NEO4J_PASSWORD not set'}), 503
+        return jsonify({'error': 'MEMGRAPH_PASSWORD not set'}), 503
 
     # Batch size for UNWIND queries — keeps each Neo4j transaction small
     BATCH_SIZE = 500
@@ -1175,12 +1175,12 @@ def _reload_unloaded_parsers():
 
     log = _logging.getLogger('cardiokb.startup')
 
-    password = os.getenv('NEO4J_PASSWORD', '')
+    password = os.getenv('MEMGRAPH_PASSWORD', '')
     if not password:
         return
 
-    uri = os.getenv('NEO4J_URI', 'bolt://localhost:7687')
-    username = os.getenv('NEO4J_USERNAME', 'neo4j')
+    uri = os.getenv('MEMGRAPH_URI', 'bolt://localhost:7687')
+    username = os.getenv('MEMGRAPH_USERNAME', '')
 
     proc_dir = Path(_project_root) / 'data' / 'processed'
     meta = _build_parser_metadata()

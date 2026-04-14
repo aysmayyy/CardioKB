@@ -12,8 +12,8 @@ for line in Path('.env').read_text().splitlines():
 from neo4j import GraphDatabase
 
 driver = GraphDatabase.driver(
-    os.environ['NEO4J_URI'],
-    auth=(os.environ['NEO4J_USERNAME'], os.environ['NEO4J_PASSWORD'])
+    os.environ['MEMGRAPH_URI'],
+    auth=(os.environ['MEMGRAPH_USERNAME'], os.environ['MEMGRAPH_PASSWORD'])
 )
 
 def q(cypher, **params):

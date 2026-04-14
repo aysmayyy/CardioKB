@@ -63,9 +63,9 @@ class IDMapper:
             from dotenv import load_dotenv
             from neo4j import GraphDatabase
             load_dotenv()
-            uri = os.getenv('NEO4J_URI', 'bolt://localhost:7687')
-            user = os.getenv('NEO4J_USERNAME', 'neo4j')
-            pw = os.getenv('NEO4J_PASSWORD', '')
+            uri = os.getenv('MEMGRAPH_URI', 'bolt://localhost:7687')
+            user = os.getenv('MEMGRAPH_USERNAME', '')
+            pw = os.getenv('MEMGRAPH_PASSWORD', '')
             driver = GraphDatabase.driver(uri, auth=(user, pw))
         self.driver = driver
         # Lookup tables: id_system -> {value -> internal_id}

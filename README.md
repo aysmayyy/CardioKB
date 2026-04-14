@@ -169,102 +169,114 @@ Cardio-KB/
 │   ├── ontology_configs.py     # 86 ontology configs for graph schema mapping
 │   ├── id_mapping.py           # Central ID mapping: validate, suggest, create_missing_nodes, CLI
 │   ├── utils.py                # Disease filtering utilities (load_disease_terms, etc.)
-│   └── parsers/
+│   └── parsers/                # 26 data source parsers
 │       ├── base_parser.py      # Abstract base class for all parsers
-│       ├── clinicaltrials_parser.py
-│       ├── clinpgx_parser.py
-│       ├── ncbigene_parser.py
-│       ├── dorothea_parser.py
-│       ├── drugbank_parser.py
-│       ├── jensen_tissues_parser.py
-│       ├── hpo_parser.py
-│       ├── reactome_parser.py
-│       ├── string_parser.py
-│       ├── opentargets_parser.py
-│       ├── hgncfamilies_parser.py  # Agent-generated
-│       ├── clinvar_parser.py       # Agent-generated
-│       ├── drugage_parser.py       # Agent-generated
-│       ├── anage_parser.py         # Agent-generated
-│       └── hetionet_components/    # Hetionet-derived component parsers
-│           ├── disease_ontology_parser.py
-│           ├── gene_ontology_parser.py
-│           ├── uberon_parser.py
-│           ├── mesh_parser.py
-│           ├── sider_parser.py
-│           ├── lincs_parser.py
-│           ├── medline_cooccurrence_parser.py
-│           ├── drugcentral_parser.py
-│           ├── bindingdb_parser.py
-│           ├── pubtator_parser.py
-│           ├── ctd_parser.py
-│           └── bgee_parser.py
+│       └── hetionet_components/# Hetionet-derived component parsers
 ├── interface/
 │   └── index.html              # Web dashboard (Explore graph + Query multi-panel UI)
 ├── scripts/
 │   ├── compute_specificity.py  # Pre-compute disease-specificity scores (auto-runs in pipeline)
+│   ├── export_graph.sh         # Export Memgraph data for deployment
+│   ├── import_graph.sh         # Import Memgraph data on target host
 │   ├── verify_graph.py         # Graph verification and validation
 │   └── run_drugbank.py         # Standalone DrugBank parser + graph loader
 ├── data/
 │   ├── raw/                    # Downloaded source data (gitignored)
 │   ├── processed/              # Exported TSV files per source (gitignored)
+│   ├── export/                 # Graph export archives for deployment (gitignored)
 │   └── output/                 # Release notes and build artifacts (gitignored)
-├── ontology/
-│   ├── disease_filter.txt         # Symlink -> diseases/cvd.txt (active filter)
-│   ├── schema/
-│   │   ├── node_types.txt         # 19 node types with sources
-│   │   └── edge_types.txt         # 43 edge types with sources and counts
-│   ├── genes/
-│   │   └── cvd.txt                # 3,984 CVD gene symbols (OMIM + DisGeNET, cleaned)
-│   └── diseases/                  # Disease term files (one per disease area)
-│       ├── cvd.txt                # Cardiovascular disease (184 terms, default)
-│       ├── alzheimers.txt         # Alzheimer's & dementias (35 terms)
-│       ├── cancer.txt             # Cancer / oncology (70 terms)
-│       ├── asthma.txt             # Asthma & respiratory (48 terms)
-│       └── diabetes.txt           # Diabetes & metabolic (52 terms)
-├── database_visualization/
-│   ├── cardiokb_databases.csv               # 26 source database inventory
-│   ├── cardiokb_source_schema_template.html # D3 force graph template (19 nodes, 43 edges)
-│   ├── cardiokb_source_schema_latest.html   # Generated interactive visualization
-│   └── build_latest_schema.py               # Build script (injects CSV data into template)
+├── ontology/                   # Disease term files, gene lists, schema definitions
 ├── reports/                    # Pipeline health reports + ID mapping validation report
 ├── docs/                       # Research plan, specific aims, changelog, system design
-├── .claude/
-│   └── skills/                 # Claude Code skill files (auto-loaded for AI-assisted development)
-│       └── database-parsing/   # Step-by-step guide for adding new data source parsers
-├── models/                     # (Future) ML models
-└── run.sh                      # Launches Flask web interface
+├── Dockerfile                  # Flask web app container (Python 3.11-slim)
+├── docker-compose.yml          # Full stack: Memgraph + Flask app
+├── .dockerignore               # Excludes data/, .git, .env from Docker build
+├── .env.example                # Environment variable template (copy to .env)
+├── requirements.txt            # Python dependencies
+└── run.sh                      # Launches Flask web interface (local dev)
 ```
 
-## Running the Pipeline
+## Deployment (Docker)
+
+The recommended way to run CardioKB is via Docker Compose, which bundles the Flask web app and Memgraph into a single stack.
+
+### Prerequisites
+
+- Docker and Docker Compose
+
+### Quick Start
+
+```bash
+# 1. Copy and fill in the environment file
+cp .env.example .env
+# Edit .env — set at minimum: MEMGRAPH_PASSWORD
+
+# 2. Import the pre-built graph data
+./scripts/import_graph.sh data/export/memgraph-data.tar.gz
+
+# 3. Start the stack
+docker compose up -d
+
+# App is now live at http://localhost:5050
+```
+
+### Environment Variables
+
+Copy `.env.example` to `.env` and fill in the values:
+
+| Variable | Required | Purpose |
+|----------|----------|---------|
+| `MEMGRAPH_PASSWORD` | Yes | Memgraph authentication. Web app returns 503 without it. |
+| `MEMGRAPH_URI` | No | Auto-set to `bolt://memgraph:7687` inside Docker. |
+| `MEMGRAPH_USERNAME` | No | Leave blank for default Memgraph auth. |
+| `ANTHROPIC_API_KEY` | For AI features | Powers "Build Knowledge Graph" sidebar (Claude API). |
+| `ADMIN_PASSWORD` | For admin features | Required to run pipeline or add databases from the UI. |
+| `DRUGBANK_USERNAME` | For pipeline rebuild | Only needed if re-running the ETL pipeline from scratch. |
+| `DRUGBANK_PASSWORD` | For pipeline rebuild | Or place DrugBank XML at `data/raw/drugbank/`. |
+
+### Graph Export / Import
+
+The graph data (4.9M nodes, 7.7M relationships) is exported as a compressed Memgraph volume backup (~1.2 GB):
+
+```bash
+# Export from current Memgraph (run on source machine)
+./scripts/export_graph.sh
+# Produces: data/export/memgraph-data.tar.gz
+
+# Import on target host
+./scripts/import_graph.sh data/export/memgraph-data.tar.gz
+```
+
+A Cypher text dump is also available for portability (slower, much larger):
+```bash
+./scripts/export_graph.sh --cypher
+```
+
+### Docker Architecture
+
+```
+docker compose up -d
+  ├── memgraph     (memgraph/memgraph:latest)  — Graph database on port 7687
+  └── app          (Dockerfile, Python 3.11)   — Flask web app on port 5050
+                     connects to bolt://memgraph:7687
+```
+
+Memgraph data is persisted in a Docker volume (`memgraph-data`), so it survives container restarts.
+
+## Running the Pipeline (Local Development)
+
+The ETL pipeline runs separately from the Docker stack, typically on a development machine.
 
 ### Prerequisites
 
 - Python 3.11 (conda env: `cardiokb`)
-- Memgraph instance running locally or remotely (only needed without `--skip-neo4j`)
+- Memgraph instance running (Docker or local)
 
 ### Installation
 
 ```bash
 conda activate cardiokb
 pip install -r requirements.txt
-```
-
-### Environment Variables
-
-Create a `.env` file in the project root:
-
-```bash
-# Required for Memgraph loading
-NEO4J_URI=bolt://localhost:7687
-NEO4J_USERNAME=
-NEO4J_PASSWORD=
-
-# Optional — DrugBank XML auto-detected if present in data/raw/drugbank/
-DRUGBANK_USERNAME=<username>
-DRUGBANK_PASSWORD=<password>
-
-# Optional
-CARDIOKB_LOG_LEVEL=INFO
 ```
 
 ### Run
@@ -281,19 +293,9 @@ python src/main.py --skip-download
 
 # Both flags
 python src/main.py --skip-download --skip-neo4j
-
-# Run individual source parsers standalone
-python scripts/run_drugbank.py              # DrugBank only (parses XML)
-python scripts/run_drugbank.py --skip-neo4j  # Parse + TSV only, no graph load
 ```
 
-### TSV Export
-
-The pipeline exports all parsed data to `data/processed/<source>/` as tab-separated files. These serve as an archived, reproducible snapshot of each run.
-
 ### Verify the Graph
-
-After loading into Memgraph, run the verification script:
 
 ```bash
 python scripts/verify_graph.py --uri bolt://localhost:7687
@@ -316,7 +318,7 @@ Additional disease filters available for future use: `alzheimers.txt` (35), `can
 
 ## Web Interface
 
-Launch with `bash run.sh` or `python src/api.py --port 5050`. Features:
+Launch with `docker compose up -d` (production) or `python src/api.py --port 5050` (local dev). Features:
 
 - **Explore tab** — Interactive vis.js graph visualization of disease subgraphs
   - Nodes ranked by disease-specificity score (`1 / number of diseases connected`)

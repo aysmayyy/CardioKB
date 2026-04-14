@@ -1,0 +1,30 @@
+services:
+  memgraph:
+    image: memgraph/memgraph:latest
+    ports:
+      - "7687:7687"
+      - "7444:7444"
+    volumes:
+      - memgraph-data:/var/lib/memgraph
+      - memgraph-config:/etc/memgraph
+      - memgraph-logs:/var/log/memgraph
+    restart: unless-stopped
+
+  app:
+    build: .
+    ports:
+      - "5050:5050"
+    environment:
+      - MEMGRAPH_URI=bolt://memgraph:7687
+      - MEMGRAPH_USERNAME=${MEMGRAPH_USERNAME:-}
+      - MEMGRAPH_PASSWORD=${MEMGRAPH_PASSWORD}
+      - ANTHROPIC_API_KEY=${ANTHROPIC_API_KEY:-}
+      - ADMIN_PASSWORD=${ADMIN_PASSWORD:-}
+    depends_on:
+      - memgraph
+    restart: unless-stopped
+
+volumes:
+  memgraph-data:
+  memgraph-config:
+  memgraph-logs:

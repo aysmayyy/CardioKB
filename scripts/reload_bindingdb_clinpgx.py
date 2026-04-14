@@ -116,12 +116,12 @@ def normalize_clinpgx():
 
 
 def main():
-    uri = os.getenv('NEO4J_URI', 'bolt://localhost:7687')
-    username = os.getenv('NEO4J_USERNAME', 'neo4j')
-    password = os.getenv('NEO4J_PASSWORD', '')
+    uri = os.getenv('MEMGRAPH_URI', 'bolt://localhost:7687')
+    username = os.getenv('MEMGRAPH_USERNAME', '')
+    password = os.getenv('MEMGRAPH_PASSWORD', '')
 
     if not password:
-        logger.error("NEO4J_PASSWORD not set")
+        logger.error("MEMGRAPH_PASSWORD not set")
         sys.exit(1)
 
     # Step 1: Re-parse BindingDB

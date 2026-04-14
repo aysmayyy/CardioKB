@@ -949,12 +949,12 @@ class CardioKBPipeline:
         Args:
             parsed_data: Dictionary of parsed data from all sources.
         """
-        uri = os.getenv('NEO4J_URI', 'bolt://localhost:7687')
-        username = os.getenv('NEO4J_USERNAME', 'neo4j')
-        password = os.getenv('NEO4J_PASSWORD', '')
+        uri = os.getenv('MEMGRAPH_URI', 'bolt://localhost:7687')
+        username = os.getenv('MEMGRAPH_USERNAME', '')
+        password = os.getenv('MEMGRAPH_PASSWORD', '')
 
         if not password:
-            logger.error("NEO4J_PASSWORD not set. Set it in .env or environment.")
+            logger.error("MEMGRAPH_PASSWORD not set. Set it in .env or environment.")
             return
 
         try:

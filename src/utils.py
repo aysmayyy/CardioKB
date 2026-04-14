@@ -106,11 +106,11 @@ is_cardiovascular_related = is_disease_related
 # ---------------------------------------------------------------------------
 
 def _get_neo4j_driver():
-    """Create a Neo4j driver from env vars. Returns None if password unset."""
+    """Create a Memgraph driver from env vars. Returns None if password unset."""
     from neo4j import GraphDatabase
-    uri = os.getenv('NEO4J_URI', 'bolt://localhost:7687')
-    username = os.getenv('NEO4J_USERNAME', 'neo4j')
-    password = os.getenv('NEO4J_PASSWORD', '')
+    uri = os.getenv('MEMGRAPH_URI', 'bolt://localhost:7687')
+    username = os.getenv('MEMGRAPH_USERNAME', '')
+    password = os.getenv('MEMGRAPH_PASSWORD', '')
     if not password:
         return None
     return GraphDatabase.driver(uri, auth=(username, password))
@@ -188,7 +188,7 @@ def add_to_disease_cache(disease_name: str, stats: Dict) -> Dict:
     """
     driver = _get_neo4j_driver()
     if not driver:
-        raise RuntimeError("NEO4J_PASSWORD not set — cannot write cache")
+        raise RuntimeError("MEMGRAPH_PASSWORD not set — cannot write cache")
 
     try:
         with driver.session() as session:

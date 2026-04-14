@@ -330,11 +330,11 @@ def _run_disgenet(disease_key: str, filter_path: str) -> dict:
         df.to_csv(out_dir / f'{name}.tsv', sep='\t', index=False)
 
     # Load into Neo4j
-    uri = os.getenv('NEO4J_URI', 'bolt://localhost:7687')
-    username = os.getenv('NEO4J_USERNAME', 'neo4j')
-    password = os.getenv('NEO4J_PASSWORD', '')
+    uri = os.getenv('MEMGRAPH_URI', 'bolt://localhost:7687')
+    username = os.getenv('MEMGRAPH_USERNAME', '')
+    password = os.getenv('MEMGRAPH_PASSWORD', '')
     if not password:
-        raise RuntimeError("NEO4J_PASSWORD not set")
+        raise RuntimeError("MEMGRAPH_PASSWORD not set")
 
     with Neo4jLoader(uri, username, password) as loader:
         if diseases is not None and len(diseases) > 0:
@@ -356,7 +356,7 @@ def _query_subgraph_stats(disease_key: str) -> dict:
 
     driver = _get_neo4j_driver()
     if not driver:
-        return {"error": "NEO4J_PASSWORD not set"}
+        return {"error": "MEMGRAPH_PASSWORD not set"}
 
     stats = {}
     try:
@@ -575,7 +575,7 @@ def list_cached():
 
     driver = _get_neo4j_driver()
     if not driver:
-        print("NEO4J_PASSWORD not set")
+        print("MEMGRAPH_PASSWORD not set")
         return
 
     try:

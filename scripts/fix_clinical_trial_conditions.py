@@ -208,8 +208,8 @@ def normalize(s: str) -> str:
 
 def run():
     driver = GraphDatabase.driver(
-        os.getenv("NEO4J_URI", "bolt://localhost:7687"),
-        auth=("neo4j", os.getenv("NEO4J_PASSWORD")),
+        os.getenv("MEMGRAPH_URI", "bolt://localhost:7687"),
+        auth=(os.getenv("MEMGRAPH_USERNAME", ""), os.getenv("MEMGRAPH_PASSWORD")),
     )
 
     with driver.session() as session:

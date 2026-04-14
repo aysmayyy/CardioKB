@@ -1,12 +1,109 @@
 # CardioKB Setup Guide
 
-## Prerequisites
+## Option 1: Docker Deployment (Recommended)
+
+The easiest way to run CardioKB. Bundles the Flask web app and Memgraph graph database into a single Docker Compose stack.
+
+### Prerequisites
+
+- Docker and Docker Compose
+- The graph export archive (`data/export/memgraph-data.tar.gz`)
+
+### Steps
+
+#### 1. Clone the Repository
+
+```bash
+git clone <repo-url>
+cd Cardio-KB
+```
+
+#### 2. Configure Environment Variables
+
+```bash
+cp .env.example .env
+```
+
+Edit `.env` and fill in the required values:
+
+| Variable | Required | Purpose |
+|----------|----------|---------|
+| `MEMGRAPH_PASSWORD` | **Yes** | Memgraph authentication. The web app returns 503 on all graph endpoints without this. |
+| `MEMGRAPH_URI` | No | Auto-set to `bolt://memgraph:7687` inside Docker Compose. Only change for external Memgraph. |
+| `MEMGRAPH_USERNAME` | No | Leave blank for default Memgraph auth. |
+| `ANTHROPIC_API_KEY` | For AI features | Powers the "Build Knowledge Graph" sidebar feature that uses Claude API to enrich the graph with clinical trials for any disease on demand. Get a key at https://console.anthropic.com/ |
+| `ADMIN_PASSWORD` | For admin features | Password for admin-only UI features: running the full ETL pipeline and adding new database sources via the DatabaseAgent. |
+| `DRUGBANK_USERNAME` | For pipeline rebuild | Only needed if re-running the ETL pipeline from scratch. |
+| `DRUGBANK_PASSWORD` | For pipeline rebuild | Alternatively, place the DrugBank XML file at `data/raw/drugbank/`. |
+
+#### 3. Import the Graph Data
+
+The pre-built graph (4.9M nodes, 7.7M relationships) is distributed as a compressed Memgraph volume backup (~1.2 GB):
+
+```bash
+./scripts/import_graph.sh data/export/memgraph-data.tar.gz
+```
+
+This creates a Docker volume with the full graph data and starts Memgraph.
+
+#### 4. Start the Stack
+
+```bash
+docker compose up -d
+```
+
+The web interface is now live at **http://localhost:5050**.
+
+#### Verify
+
+```bash
+# Check both containers are running
+docker compose ps
+
+# Test the API
+curl http://localhost:5050/api/graph-stats
+```
+
+#### Stop / Restart
+
+```bash
+docker compose down      # Stop (data persists in Docker volume)
+docker compose up -d     # Restart
+```
+
+### Docker Architecture
+
+```
+docker compose up -d
+  ├── memgraph     (memgraph/memgraph:latest)  — Graph database on port 7687
+  │                 Volume: memgraph-data (persists across restarts)
+  └── app          (Dockerfile, Python 3.11)   — Flask web app on port 5050
+                    Connects to bolt://memgraph:7687
+```
+
+### Graph Export (for transferring to another host)
+
+```bash
+# Export from current Memgraph instance
+./scripts/export_graph.sh
+# Produces: data/export/memgraph-data.tar.gz (~1.2 GB)
+
+# Transfer to target host and import
+scp data/export/memgraph-data.tar.gz user@host:/path/to/Cardio-KB/data/export/
+ssh user@host "cd /path/to/Cardio-KB && ./scripts/import_graph.sh data/export/memgraph-data.tar.gz"
+```
+
+---
+
+## Option 2: Local Development Setup
+
+For running the ETL pipeline or developing new parsers.
+
+### Prerequisites
 
 - Python 3.11 (conda recommended)
-- Memgraph (knowledge graph database, via Docker)
+- Memgraph (via Docker or native install)
 - pip or conda package manager
-
-## Installation
 
 ### 1. Create a Virtual Environment
 
@@ -20,8 +117,6 @@ conda activate cardiokb
 ```bash
 python -m venv cardiokb
 source cardiokb/bin/activate  # On macOS/Linux
-# or
-cardiokb\Scripts\activate  # On Windows
 ```
 
 ### 2. Install Dependencies
@@ -31,7 +126,7 @@ pip install -r requirements.txt
 ```
 
 Key dependencies:
-- **neo4j**: Bolt protocol graph database driver (works with Memgraph)
+- **neo4j**: Bolt protocol graph database driver (compatible with Memgraph)
 - **pandas & numpy**: Data processing
 - **requests**: API calls (ClinPGx, DoRothEA, ClinicalTrials.gov, etc.)
 - **flask**: Web dashboard backend
@@ -39,37 +134,25 @@ Key dependencies:
 - **lxml**: XML parsing (DrugBank)
 - **scipy**: Scientific computing
 - **python-dotenv**: Environment variable management
-- **pytest**: Testing framework
 
-## Configuration
-
-### Environment Variables
-
-Create a `.env` file in the project root:
+### 3. Configure Environment
 
 ```bash
-# Memgraph (required)
-NEO4J_URI=bolt://localhost:7687
-NEO4J_USERNAME=
-NEO4J_PASSWORD=
-
-# DrugBank credentials (or place full-database XML at data/raw/drugbank/)
-DRUGBANK_USERNAME=your_email
-DRUGBANK_PASSWORD=your_password
+cp .env.example .env
 ```
 
-### Memgraph Setup
+Edit `.env` — at minimum set `MEMGRAPH_PASSWORD`.
 
-1. Install Docker and start Memgraph with persistence:
-   ```bash
-   docker run -d --name memgraph -p 7687:7687 -p 7444:7444 \
-     -v memgraph-data:/var/lib/memgraph memgraph/memgraph:latest \
-     --storage-snapshot-interval-sec=300 --storage-wal-enabled=true \
-     --storage-snapshot-on-exit=true
-   ```
-2. Ensure `bolt://localhost:7687` is reachable
+### 4. Start Memgraph
 
-## Running the Pipeline
+```bash
+docker run -d --name memgraph -p 7687:7687 -p 7444:7444 \
+  -v memgraph-data:/var/lib/memgraph memgraph/memgraph:latest \
+  --storage-snapshot-interval-sec=300 --storage-wal-enabled=true \
+  --storage-snapshot-on-exit=true
+```
+
+### 5. Run the Pipeline
 
 ```bash
 # Full pipeline: download -> parse -> TSV export -> Memgraph load
@@ -80,29 +163,17 @@ python src/main.py --skip-neo4j
 
 # Use cached downloads (no re-downloading)
 python src/main.py --skip-download
-
-# Both flags (parse from cache, no graph load)
-python src/main.py --skip-download --skip-neo4j
 ```
 
-## Web Dashboard
-
-The web dashboard provides interactive graph visualization, Cypher querying, and pipeline health monitoring.
+### 6. Launch Web Dashboard (local dev)
 
 ```bash
-# Launch Flask server + open browser
 ./run.sh
-
-# Or manually
+# or
 python src/api.py --port 5050
 ```
 
-**Dashboard features:**
-- **Explore tab**: Interactive vis.js force-directed graph of disease subgraphs, click nodes to inspect properties and neighbors, filter by node type, export as CSV/JSON
-- **Query tab**: Run Cypher queries with results displayed as both table and graph visualization, pre-built query templates for common patterns
-- **Build Knowledge Graph** (sidebar): AI-powered disease enrichment via ClinicalTrials.gov API v2
-- **Extract Disease Subgraph** (sidebar): N-hop subgraph extraction with JSON/CSV export
-- **Admin section**: Parser status, health checks, node/relationship charts, pipeline log
+---
 
 ## Project Structure
 
@@ -120,57 +191,29 @@ Cardio-KB/
 │   ├── id_mapping.py            # Cross-database ID remapping
 │   ├── utils.py                 # Shared utilities
 │   └── parsers/                 # 26 data source parsers
-│       ├── base_parser.py       # BaseParser abstract class
-│       └── hetionet_components/ # 12 Hetionet-derived component parsers
 ├── interface/
 │   └── index.html               # Web dashboard (Explore + Query tabs)
-├── ontology/
-│   ├── disease_filter.txt       # Symlink -> diseases/cvd.txt
-│   └── diseases/                # Disease term files (cvd, alzheimers, cancer, etc.)
-├── data/
-│   ├── raw/                     # Downloaded source data
-│   └── processed/               # Exported TSV files for Memgraph
-├── scripts/                     # Data processing and verification scripts
-├── reports/                     # Generated pipeline health reports
-├── docs/                        # Documentation, research plan
-├── .claude/skills/              # Claude Code custom skills
-├── run.sh                       # Launch script
+├── scripts/
+│   ├── export_graph.sh          # Export Memgraph data for deployment
+│   ├── import_graph.sh          # Import Memgraph data on target host
+│   ├── compute_specificity.py   # Pre-compute disease-specificity scores
+│   └── verify_graph.py          # Graph verification
+├── ontology/                    # Disease term files, gene lists, schema definitions
+├── data/                        # Raw downloads, processed TSVs, export archives
+├── Dockerfile                   # Flask web app container
+├── docker-compose.yml           # Full stack: Memgraph + Flask app
+├── .env.example                 # Environment variable template
 └── requirements.txt             # Python dependencies
-```
-
-## Data Sources (26 Parsers)
-
-All parsers extend `BaseParser` from `src/parsers/base_parser.py`.
-
-**Credential-gated (require env vars):**
-- DrugBank (`DRUGBANK_USERNAME`/`DRUGBANK_PASSWORD` or place XML file at `data/raw/drugbank/`)
-
-**Public sources (no credentials needed):**
-ClinicalTrials.gov, ClinPGx, NCBI Gene, DoRothEA, Disease Ontology, Gene Ontology, Uberon, MeSH, SIDER, LINCS L1000, MEDLINE, DrugCentral, BindingDB, PubTator Central, CTD, Bgee, Jensen TISSUES, HPO, Reactome, STRING, OpenTargets, HGNC Gene Families, ClinVar, DrugAge, AnAge
-
-## Disease Scope
-
-Disease term files in `ontology/diseases/` control which diseases are filtered:
-
-| File | Terms | Area |
-|------|-------|------|
-| `cvd.txt` | 184 | Cardiovascular disease (default) |
-| `alzheimers.txt` | 35 | Alzheimer's & related dementias |
-| `cancer.txt` | 70 | Cancer / oncology |
-| `asthma.txt` | 48 | Asthma & respiratory diseases |
-| `diabetes.txt` | 52 | Diabetes & metabolic diseases |
-
-The active filter is `ontology/disease_filter.txt` (symlink to `diseases/cvd.txt`). The **ClinicalTrialsParser** queries ClinicalTrials.gov API v2 per disease term from this filter. All other parsers are disease-agnostic.
-
-## Running Tests
-
-```bash
-pytest tests/
 ```
 
 ## Troubleshooting
 
-### Module Not Found Errors
+### Docker Issues
+- **Port conflict**: If port 5050 or 7687 is in use, stop existing services or change ports in `docker-compose.yml`
+- **Volume permissions**: Run `docker compose down -v` to reset volumes (destroys graph data — re-import needed)
+- **Container logs**: `docker compose logs app` or `docker compose logs memgraph`
+
+### Module Not Found Errors (local dev)
 1. Ensure conda/venv is activated
 2. Install dependencies: `pip install -r requirements.txt`
 3. Run from project root (parsers use relative imports)
@@ -180,7 +223,7 @@ pytest tests/
 - Restart if needed: `docker restart memgraph`
 - Ensure bolt port 7687 is not blocked
 
-### Large Downloads
+### Large Downloads (pipeline only)
 Some sources download large files:
 - **PubTator Central**: ~4 GB FTP files
 - **Bgee**: ~1.5 GB expression data

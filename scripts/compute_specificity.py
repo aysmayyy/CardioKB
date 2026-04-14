@@ -32,12 +32,12 @@ def compute_specificity(uri=None, username=None, password=None):
 
     from neo4j import GraphDatabase
 
-    uri = uri or os.getenv('NEO4J_URI', 'bolt://localhost:7687')
-    username = username or os.getenv('NEO4J_USERNAME', 'neo4j')
-    password = password or os.getenv('NEO4J_PASSWORD', '')
+    uri = uri or os.getenv('MEMGRAPH_URI', 'bolt://localhost:7687')
+    username = username or os.getenv('MEMGRAPH_USERNAME', '')
+    password = password or os.getenv('MEMGRAPH_PASSWORD', '')
 
     if not password:
-        logger.error("NEO4J_PASSWORD not set — cannot compute specificity scores")
+        logger.error("MEMGRAPH_PASSWORD not set — cannot compute specificity scores")
         return
 
     driver = GraphDatabase.driver(uri, auth=(username, password))

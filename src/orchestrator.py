@@ -458,9 +458,9 @@ def run_health_check(disease: str = 'cvd',
     log_data = parse_build_log(log_file)
 
     # Query graph database (source of truth for parser status)
-    uri = os.getenv('NEO4J_URI', 'bolt://localhost:7687')
-    username = os.getenv('NEO4J_USERNAME', 'neo4j')
-    password = os.getenv('NEO4J_PASSWORD', '')
+    uri = os.getenv('MEMGRAPH_URI', 'bolt://localhost:7687')
+    username = os.getenv('MEMGRAPH_USERNAME', '')
+    password = os.getenv('MEMGRAPH_PASSWORD', '')
 
     neo4j_stats = None
     if password:
@@ -506,7 +506,7 @@ def run_health_check(disease: str = 'cvd',
         except Exception as e:
             emit('error', {'message': f'Graph query failed: {e}'})
     else:
-        emit('error', {'message': 'NEO4J_PASSWORD not set — skipping graph stats'})
+        emit('error', {'message': 'MEMGRAPH_PASSWORD not set — skipping graph stats'})
 
     # Health checks
     emit('status', {'message': 'Running health checks...'})
