@@ -95,7 +95,8 @@ python src/main.py --skip-download --skip-neo4j
 ## Environment Variables
 All env vars use `MEMGRAPH_` prefix (not `NEO4J_`). See `.env.example` for the full list:
 - `MEMGRAPH_URI`, `MEMGRAPH_USERNAME`, `MEMGRAPH_PASSWORD` — Graph database connection
-- `ANTHROPIC_API_KEY` — AI agent features (Build Knowledge Graph)
+- `ANTHROPIC_API_KEY` — AI agent features (Build Knowledge Graph) — direct Anthropic API
+- `ANTHROPIC_FOUNDRY_API_KEY`, `ANTHROPIC_FOUNDRY_BASE_URL` — Azure AI Foundry (preferred; takes priority over `ANTHROPIC_API_KEY` when both are set)
 - `ADMIN_PASSWORD` — Admin UI features (pipeline run, add database)
 - `DRUGBANK_USERNAME`, `DRUGBANK_PASSWORD` — Pipeline only (optional)
 

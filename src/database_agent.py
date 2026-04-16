@@ -34,8 +34,12 @@ MODEL = os.getenv('DATABASE_AGENT_MODEL', 'claude-haiku-4-5-20251001')
 
 
 def _get_client():
-    """Create an Anthropic client."""
+    """Create an Anthropic client, preferring Azure Foundry if configured."""
     import anthropic
+    foundry_key = os.getenv('ANTHROPIC_FOUNDRY_API_KEY')
+    foundry_url = os.getenv('ANTHROPIC_FOUNDRY_BASE_URL')
+    if foundry_key and foundry_url:
+        return anthropic.Anthropic(api_key=foundry_key, base_url=foundry_url)
     api_key = os.getenv('ANTHROPIC_API_KEY')
     if not api_key:
         raise RuntimeError("ANTHROPIC_API_KEY not set")
