@@ -260,3 +260,4 @@ ontology/diseases/agent_filter_*.txt
 .DS_Store
 Thumbs.db
 ~$*
+data/export/*
