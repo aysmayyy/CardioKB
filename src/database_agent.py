@@ -30,7 +30,7 @@ load_dotenv()
 logger = logging.getLogger('cardiokb.database_agent')
 
 PROJECT_ROOT = Path(__file__).parent.parent
-MODEL = os.getenv('DATABASE_AGENT_MODEL', 'claude-sonnet-4-6')
+MODEL = os.getenv('ANTHROPIC_FOUNDRY_MODEL', 'claude-opus-4-7')
 
 
 def _get_client():
