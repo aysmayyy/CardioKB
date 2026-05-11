@@ -28,7 +28,7 @@ print('=' * 60)
 
 expected_sources = {
     'Bgee', 'BindingDB', 'CTD', 'ClinPGx', 'ClinVar', 'ClinicalTrials.gov',
-    'DoRothEA', 'DrugAge', 'DrugBank', 'DrugCentral', 'Gene Ontology',
+    'Disease Ontology', 'DoRothEA', 'DrugBank', 'DrugCentral', 'Gene Ontology',
     'HGNC', 'HPO', 'Jensen TISSUES', 'LINCS L1000', 'MEDLINE',
     'OpenTargets', 'PubTator', 'Reactome', 'SIDER', 'STRING'
 }
@@ -60,11 +60,9 @@ if missing:
 # Node-only sources
 print('\n  Node-only sources:')
 node_only = {
-    'Disease Ontology': 'Disease',
     'Uberon': 'BodyPart',
     'NCBI Gene': 'Gene',
     'NCBI MeSH': 'Symptom',
-    'AnAge': 'Species',
 }
 for name, label in node_only.items():
     cnt = q(f'MATCH (n:{label}) RETURN count(n) AS c')[0]['c']

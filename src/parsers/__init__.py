@@ -33,6 +33,10 @@ Hetionet component parsers (disease-agnostic):
   - CTDParser: chemicalIncreases/DecreasesExpression edges
   - BgeeParser: bodyPartOver/UnderexpressesGene edges
   - HetionetPrecomputedParser: Gene-gene relationship edges
+
+Skipped (removed during deduplication):
+  - DrugAgeParser: Drug aging properties (sparse, removed)
+  - AnAgeParser: Species longevity (sparse, removed)
 """
 
 from .base_parser import BaseParser
@@ -112,8 +116,8 @@ __all__ = [
     'HGNCFamiliesParser',
     'HGNCParser',
     'ClinVarParser',
-    'DrugAgeParser',
+    # 'DrugAgeParser',  # REMOVED: sparse, AgeingProperty nodes not CVD-critical
     'CellAgeParser',
-    'AnAgeParser',
+    # 'AnAgeParser',  # REMOVED: sparse, Species nodes not connected
     'GenAgeParser',
 ]

@@ -1,0 +1,829 @@
+<?xml version="1.0"?>
+<rdf:RDF xmlns="http://cardiokb.org/ontologies/cardiokb.owl#"
+     xml:base="http://cardiokb.org/ontologies/cardiokb.owl"
+     xmlns:owl="http://www.w3.org/2002/07/owl#"
+     xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#"
+     xmlns:xml="http://www.w3.org/XML/1998/namespace"
+     xmlns:xsd="http://www.w3.org/2001/XMLSchema#"
+     xmlns:rdfs="http://www.w3.org/2000/01/rdf-schema#"
+     xmlns:cardiokb="http://cardiokb.org/ontologies/cardiokb.owl#">
+
+    <owl:Ontology rdf:about="http://cardiokb.org/ontologies/cardiokb.owl">
+        <owl:versionIRI rdf:resource="http://cardiokb.org/ontologies/cardiokb.owl/1.0.0"/>
+        <cardiokb:language xml:lang="en">English</cardiokb:language>
+        <rdfs:comment xml:lang="en">CardioKB - A Cardiovascular Disease Knowledge Graph Ontology
+
+This ontology describes entities relevant to cardiovascular disease etiology, drug discovery, and precision medicine. It integrates 23 data sources including clinical trials, pharmacogenomics, gene expression, and disease associations.
+
+Individuals are modeled as idealized entities corresponding to examples of a certain class. For example, 'aspirin' is an individual of the class Drug, and 'APOE' is an individual of the class Gene. This design is beneficial when the ontology populates a graph database where each individual corresponds to a node, data properties correspond to node attributes, and object properties correspond to edges.</rdfs:comment>
+        <rdfs:label xml:lang="en">CardioKB Ontology</rdfs:label>
+        <owl:versionInfo xml:lang="en">1.0.0</owl:versionInfo>
+    </owl:Ontology>
+
+    <!-- Annotation properties -->
+
+    <owl:AnnotationProperty rdf:about="http://cardiokb.org/ontologies/cardiokb.owl#language"/>
+
+    <owl:AnnotationProperty rdf:about="http://cardiokb.org/ontologies/cardiokb.owl#individualLabelPrefix">
+        <rdfs:comment>String prefix that precedes the unique label on a named individual of the corresponding class.</rdfs:comment>
+        <rdfs:range rdf:resource="http://www.w3.org/2001/XMLSchema#string"/>
+    </owl:AnnotationProperty>
+
+    <owl:AnnotationProperty rdf:about="http://cardiokb.org/ontologies/cardiokb.owl#sourceDatabase">
+        <rdfs:comment>The primary source database for this entity type.</rdfs:comment>
+        <rdfs:range rdf:resource="http://www.w3.org/2001/XMLSchema#string"/>
+    </owl:AnnotationProperty>
+
+    <owl:AnnotationProperty rdf:about="http://cardiokb.org/ontologies/cardiokb.owl#edgeSource">
+        <rdfs:comment>The source database for this relationship type.</rdfs:comment>
+        <rdfs:range rdf:resource="http://www.w3.org/2001/XMLSchema#string"/>
+    </owl:AnnotationProperty>
+
+    <!-- Datatype Properties - Base Properties -->
+
+    <owl:DatatypeProperty rdf:about="http://cardiokb.org/ontologies/cardiokb.owl#commonName">
+        <rdfs:range rdf:resource="http://www.w3.org/2001/XMLSchema#string"/>
+        <rdfs:comment>Common name of the entity</rdfs:comment>
+    </owl:DatatypeProperty>
+
+    <owl:DatatypeProperty rdf:about="http://cardiokb.org/ontologies/cardiokb.owl#identifier">
+        <rdfs:range rdf:resource="http://www.w3.org/2001/XMLSchema#string"/>
+        <rdfs:comment>Primary identifier for the entity</rdfs:comment>
+    </owl:DatatypeProperty>
+
+    <owl:DatatypeProperty rdf:about="http://cardiokb.org/ontologies/cardiokb.owl#definition">
+        <rdfs:range rdf:resource="http://www.w3.org/2001/XMLSchema#string"/>
+        <rdfs:comment>Textual definition of a term</rdfs:comment>
+    </owl:DatatypeProperty>
+
+    <owl:DatatypeProperty rdf:about="http://cardiokb.org/ontologies/cardiokb.owl#dbXref">
+        <rdfs:range rdf:resource="http://www.w3.org/2001/XMLSchema#string"/>
+        <rdfs:comment>Database cross-reference</rdfs:comment>
+    </owl:DatatypeProperty>
+
+    <!-- Datatype Properties - Gene Properties -->
+
+    <owl:DatatypeProperty rdf:about="http://cardiokb.org/ontologies/cardiokb.owl#geneDataProperty"/>
+
+    <owl:DatatypeProperty rdf:about="http://cardiokb.org/ontologies/cardiokb.owl#geneSymbol">
+        <rdfs:subPropertyOf rdf:resource="http://cardiokb.org/ontologies/cardiokb.owl#geneDataProperty"/>
+        <rdf:type rdf:resource="http://www.w3.org/2002/07/owl#FunctionalProperty"/>
+        <rdfs:domain rdf:resource="http://cardiokb.org/ontologies/cardiokb.owl#Gene"/>
+        <rdfs:range rdf:resource="http://www.w3.org/2001/XMLSchema#string"/>
+        <rdfs:comment>HGNC gene symbol</rdfs:comment>
+    </owl:DatatypeProperty>
+
+    <owl:DatatypeProperty rdf:about="http://cardiokb.org/ontologies/cardiokb.owl#xrefEntrezGene">
+        <rdfs:subPropertyOf rdf:resource="http://cardiokb.org/ontologies/cardiokb.owl#geneDataProperty"/>
+        <rdfs:subPropertyOf rdf:resource="http://cardiokb.org/ontologies/cardiokb.owl#dbXref"/>
+        <rdfs:domain rdf:resource="http://cardiokb.org/ontologies/cardiokb.owl#Gene"/>
+        <rdfs:range rdf:resource="http://www.w3.org/2001/XMLSchema#integer"/>
+        <rdfs:comment>NCBI Entrez Gene ID</rdfs:comment>
+    </owl:DatatypeProperty>
+
+    <owl:DatatypeProperty rdf:about="http://cardiokb.org/ontologies/cardiokb.owl#xrefEnsembl">
+        <rdfs:subPropertyOf rdf:resource="http://cardiokb.org/ontologies/cardiokb.owl#geneDataProperty"/>
+        <rdfs:subPropertyOf rdf:resource="http://cardiokb.org/ontologies/cardiokb.owl#dbXref"/>
+        <rdfs:domain rdf:resource="http://cardiokb.org/ontologies/cardiokb.owl#Gene"/>
+        <rdfs:range rdf:resource="http://www.w3.org/2001/XMLSchema#string"/>
+        <rdfs:comment>Ensembl gene ID</rdfs:comment>
+    </owl:DatatypeProperty>
+
+    <owl:DatatypeProperty rdf:about="http://cardiokb.org/ontologies/cardiokb.owl#xrefUniProt">
+        <rdfs:subPropertyOf rdf:resource="http://cardiokb.org/ontologies/cardiokb.owl#geneDataProperty"/>
+        <rdfs:subPropertyOf rdf:resource="http://cardiokb.org/ontologies/cardiokb.owl#dbXref"/>
+        <rdfs:domain rdf:resource="http://cardiokb.org/ontologies/cardiokb.owl#Gene"/>
+        <rdfs:range rdf:resource="http://www.w3.org/2001/XMLSchema#string"/>
+        <rdfs:comment>UniProt accession</rdfs:comment>
+    </owl:DatatypeProperty>
+
+    <owl:DatatypeProperty rdf:about="http://cardiokb.org/ontologies/cardiokb.owl#specificityScore">
+        <rdfs:subPropertyOf rdf:resource="http://cardiokb.org/ontologies/cardiokb.owl#geneDataProperty"/>
+        <rdfs:domain rdf:resource="http://cardiokb.org/ontologies/cardiokb.owl#Gene"/>
+        <rdfs:range rdf:resource="http://www.w3.org/2001/XMLSchema#double"/>
+        <rdfs:comment>CVD specificity score computed from disease associations</rdfs:comment>
+    </owl:DatatypeProperty>
+
+    <!-- Datatype Properties - Disease Properties -->
+
+    <owl:DatatypeProperty rdf:about="http://cardiokb.org/ontologies/cardiokb.owl#diseaseDataProperty"/>
+
+    <owl:DatatypeProperty rdf:about="http://cardiokb.org/ontologies/cardiokb.owl#xrefDiseaseOntology">
+        <rdfs:subPropertyOf rdf:resource="http://cardiokb.org/ontologies/cardiokb.owl#diseaseDataProperty"/>
+        <rdfs:subPropertyOf rdf:resource="http://cardiokb.org/ontologies/cardiokb.owl#dbXref"/>
+        <rdf:type rdf:resource="http://www.w3.org/2002/07/owl#FunctionalProperty"/>
+        <rdfs:domain rdf:resource="http://cardiokb.org/ontologies/cardiokb.owl#Disease"/>
+        <rdfs:range rdf:resource="http://www.w3.org/2001/XMLSchema#string"/>
+        <rdfs:comment>Disease Ontology ID (DOID)</rdfs:comment>
+    </owl:DatatypeProperty>
+
+    <owl:DatatypeProperty rdf:about="http://cardiokb.org/ontologies/cardiokb.owl#xrefMeSHDisease">
+        <rdfs:subPropertyOf rdf:resource="http://cardiokb.org/ontologies/cardiokb.owl#diseaseDataProperty"/>
+        <rdfs:subPropertyOf rdf:resource="http://cardiokb.org/ontologies/cardiokb.owl#dbXref"/>
+        <rdfs:domain rdf:resource="http://cardiokb.org/ontologies/cardiokb.owl#Disease"/>
+        <rdfs:range rdf:resource="http://www.w3.org/2001/XMLSchema#string"/>
+        <rdfs:comment>MeSH disease ID</rdfs:comment>
+    </owl:DatatypeProperty>
+
+    <owl:DatatypeProperty rdf:about="http://cardiokb.org/ontologies/cardiokb.owl#xrefOMIM">
+        <rdfs:subPropertyOf rdf:resource="http://cardiokb.org/ontologies/cardiokb.owl#diseaseDataProperty"/>
+        <rdfs:subPropertyOf rdf:resource="http://cardiokb.org/ontologies/cardiokb.owl#dbXref"/>
+        <rdfs:domain rdf:resource="http://cardiokb.org/ontologies/cardiokb.owl#Disease"/>
+        <rdfs:range rdf:resource="http://www.w3.org/2001/XMLSchema#string"/>
+        <rdfs:comment>OMIM disease ID</rdfs:comment>
+    </owl:DatatypeProperty>
+
+    <!-- Datatype Properties - Drug Properties -->
+
+    <owl:DatatypeProperty rdf:about="http://cardiokb.org/ontologies/cardiokb.owl#drugDataProperty"/>
+
+    <owl:DatatypeProperty rdf:about="http://cardiokb.org/ontologies/cardiokb.owl#xrefDrugBankID">
+        <rdfs:subPropertyOf rdf:resource="http://cardiokb.org/ontologies/cardiokb.owl#drugDataProperty"/>
+        <rdfs:subPropertyOf rdf:resource="http://cardiokb.org/ontologies/cardiokb.owl#dbXref"/>
+        <rdf:type rdf:resource="http://www.w3.org/2002/07/owl#FunctionalProperty"/>
+        <rdfs:domain rdf:resource="http://cardiokb.org/ontologies/cardiokb.owl#Drug"/>
+        <rdfs:range rdf:resource="http://www.w3.org/2001/XMLSchema#string"/>
+        <rdfs:comment>DrugBank ID</rdfs:comment>
+    </owl:DatatypeProperty>
+
+    <owl:DatatypeProperty rdf:about="http://cardiokb.org/ontologies/cardiokb.owl#xrefPubChemCID">
+        <rdfs:subPropertyOf rdf:resource="http://cardiokb.org/ontologies/cardiokb.owl#drugDataProperty"/>
+        <rdfs:subPropertyOf rdf:resource="http://cardiokb.org/ontologies/cardiokb.owl#dbXref"/>
+        <rdfs:domain rdf:resource="http://cardiokb.org/ontologies/cardiokb.owl#Drug"/>
+        <rdfs:range rdf:resource="http://www.w3.org/2001/XMLSchema#string"/>
+        <rdfs:comment>PubChem compound ID</rdfs:comment>
+    </owl:DatatypeProperty>
+
+    <owl:DatatypeProperty rdf:about="http://cardiokb.org/ontologies/cardiokb.owl#drugSMILES">
+        <rdfs:subPropertyOf rdf:resource="http://cardiokb.org/ontologies/cardiokb.owl#drugDataProperty"/>
+        <rdfs:domain rdf:resource="http://cardiokb.org/ontologies/cardiokb.owl#Drug"/>
+        <rdfs:range rdf:resource="http://www.w3.org/2001/XMLSchema#string"/>
+        <rdfs:comment>SMILES structure representation</rdfs:comment>
+    </owl:DatatypeProperty>
+
+    <owl:DatatypeProperty rdf:about="http://cardiokb.org/ontologies/cardiokb.owl#drugInChI">
+        <rdfs:subPropertyOf rdf:resource="http://cardiokb.org/ontologies/cardiokb.owl#drugDataProperty"/>
+        <rdfs:domain rdf:resource="http://cardiokb.org/ontologies/cardiokb.owl#Drug"/>
+        <rdfs:range rdf:resource="http://www.w3.org/2001/XMLSchema#string"/>
+        <rdfs:comment>InChI structure representation</rdfs:comment>
+    </owl:DatatypeProperty>
+
+    <!-- Datatype Properties - Variant Properties -->
+
+    <owl:DatatypeProperty rdf:about="http://cardiokb.org/ontologies/cardiokb.owl#variantDataProperty"/>
+
+    <owl:DatatypeProperty rdf:about="http://cardiokb.org/ontologies/cardiokb.owl#variantId">
+        <rdfs:subPropertyOf rdf:resource="http://cardiokb.org/ontologies/cardiokb.owl#variantDataProperty"/>
+        <rdf:type rdf:resource="http://www.w3.org/2002/07/owl#FunctionalProperty"/>
+        <rdfs:domain rdf:resource="http://cardiokb.org/ontologies/cardiokb.owl#Variant"/>
+        <rdfs:range rdf:resource="http://www.w3.org/2001/XMLSchema#string"/>
+        <rdfs:comment>ClinVar variant ID</rdfs:comment>
+    </owl:DatatypeProperty>
+
+    <owl:DatatypeProperty rdf:about="http://cardiokb.org/ontologies/cardiokb.owl#xrefDbSNP">
+        <rdfs:subPropertyOf rdf:resource="http://cardiokb.org/ontologies/cardiokb.owl#variantDataProperty"/>
+        <rdfs:subPropertyOf rdf:resource="http://cardiokb.org/ontologies/cardiokb.owl#dbXref"/>
+        <rdfs:domain rdf:resource="http://cardiokb.org/ontologies/cardiokb.owl#Variant"/>
+        <rdfs:range rdf:resource="http://www.w3.org/2001/XMLSchema#string"/>
+        <rdfs:comment>dbSNP rsID</rdfs:comment>
+    </owl:DatatypeProperty>
+
+    <owl:DatatypeProperty rdf:about="http://cardiokb.org/ontologies/cardiokb.owl#clinicalSignificance">
+        <rdfs:subPropertyOf rdf:resource="http://cardiokb.org/ontologies/cardiokb.owl#variantDataProperty"/>
+        <rdfs:domain rdf:resource="http://cardiokb.org/ontologies/cardiokb.owl#Variant"/>
+        <rdfs:range rdf:resource="http://www.w3.org/2001/XMLSchema#string"/>
+        <rdfs:comment>ClinVar clinical significance classification</rdfs:comment>
+    </owl:DatatypeProperty>
+
+    <!-- Datatype Properties - Clinical Trial Properties -->
+
+    <owl:DatatypeProperty rdf:about="http://cardiokb.org/ontologies/cardiokb.owl#clinicalTrialDataProperty"/>
+
+    <owl:DatatypeProperty rdf:about="http://cardiokb.org/ontologies/cardiokb.owl#trialId">
+        <rdfs:subPropertyOf rdf:resource="http://cardiokb.org/ontologies/cardiokb.owl#clinicalTrialDataProperty"/>
+        <rdf:type rdf:resource="http://www.w3.org/2002/07/owl#FunctionalProperty"/>
+        <rdfs:domain rdf:resource="http://cardiokb.org/ontologies/cardiokb.owl#ClinicalTrial"/>
+        <rdfs:range rdf:resource="http://www.w3.org/2001/XMLSchema#string"/>
+        <rdfs:comment>ClinicalTrials.gov NCT ID</rdfs:comment>
+    </owl:DatatypeProperty>
+
+    <owl:DatatypeProperty rdf:about="http://cardiokb.org/ontologies/cardiokb.owl#trialPhase">
+        <rdfs:subPropertyOf rdf:resource="http://cardiokb.org/ontologies/cardiokb.owl#clinicalTrialDataProperty"/>
+        <rdfs:domain rdf:resource="http://cardiokb.org/ontologies/cardiokb.owl#ClinicalTrial"/>
+        <rdfs:range rdf:resource="http://www.w3.org/2001/XMLSchema#string"/>
+        <rdfs:comment>Clinical trial phase</rdfs:comment>
+    </owl:DatatypeProperty>
+
+    <owl:DatatypeProperty rdf:about="http://cardiokb.org/ontologies/cardiokb.owl#trialStatus">
+        <rdfs:subPropertyOf rdf:resource="http://cardiokb.org/ontologies/cardiokb.owl#clinicalTrialDataProperty"/>
+        <rdfs:domain rdf:resource="http://cardiokb.org/ontologies/cardiokb.owl#ClinicalTrial"/>
+        <rdfs:range rdf:resource="http://www.w3.org/2001/XMLSchema#string"/>
+        <rdfs:comment>Current trial status</rdfs:comment>
+    </owl:DatatypeProperty>
+
+    <!-- Datatype Properties - Ontology Term Properties -->
+
+    <owl:DatatypeProperty rdf:about="http://cardiokb.org/ontologies/cardiokb.owl#geneOntologyId">
+        <rdf:type rdf:resource="http://www.w3.org/2002/07/owl#FunctionalProperty"/>
+        <rdfs:range rdf:resource="http://www.w3.org/2001/XMLSchema#string"/>
+        <rdfs:comment>Gene Ontology ID (GO:XXXXXXX)</rdfs:comment>
+    </owl:DatatypeProperty>
+
+    <owl:DatatypeProperty rdf:about="http://cardiokb.org/ontologies/cardiokb.owl#xrefUberon">
+        <rdf:type rdf:resource="http://www.w3.org/2002/07/owl#FunctionalProperty"/>
+        <rdfs:domain rdf:resource="http://cardiokb.org/ontologies/cardiokb.owl#BodyPart"/>
+        <rdfs:range rdf:resource="http://www.w3.org/2001/XMLSchema#string"/>
+        <rdfs:comment>Uberon anatomy ID</rdfs:comment>
+    </owl:DatatypeProperty>
+
+    <owl:DatatypeProperty rdf:about="http://cardiokb.org/ontologies/cardiokb.owl#xrefHPO">
+        <rdf:type rdf:resource="http://www.w3.org/2002/07/owl#FunctionalProperty"/>
+        <rdfs:domain rdf:resource="http://cardiokb.org/ontologies/cardiokb.owl#Phenotype"/>
+        <rdfs:range rdf:resource="http://www.w3.org/2001/XMLSchema#string"/>
+        <rdfs:comment>Human Phenotype Ontology ID</rdfs:comment>
+    </owl:DatatypeProperty>
+
+    <owl:DatatypeProperty rdf:about="http://cardiokb.org/ontologies/cardiokb.owl#xrefMeSH">
+        <rdf:type rdf:resource="http://www.w3.org/2002/07/owl#FunctionalProperty"/>
+        <rdfs:domain rdf:resource="http://cardiokb.org/ontologies/cardiokb.owl#Symptom"/>
+        <rdfs:range rdf:resource="http://www.w3.org/2001/XMLSchema#string"/>
+        <rdfs:comment>MeSH ID</rdfs:comment>
+    </owl:DatatypeProperty>
+
+    <owl:DatatypeProperty rdf:about="http://cardiokb.org/ontologies/cardiokb.owl#xrefUmlsCUI">
+        <rdf:type rdf:resource="http://www.w3.org/2002/07/owl#FunctionalProperty"/>
+        <rdfs:domain rdf:resource="http://cardiokb.org/ontologies/cardiokb.owl#SideEffect"/>
+        <rdfs:range rdf:resource="http://www.w3.org/2001/XMLSchema#string"/>
+        <rdfs:comment>UMLS Concept Unique Identifier</rdfs:comment>
+    </owl:DatatypeProperty>
+
+    <!-- Datatype Properties - Relationship Edge Properties -->
+
+    <owl:DatatypeProperty rdf:about="http://cardiokb.org/ontologies/cardiokb.owl#associationScore">
+        <rdfs:range rdf:resource="http://www.w3.org/2001/XMLSchema#double"/>
+        <rdfs:comment>Association score from source database</rdfs:comment>
+    </owl:DatatypeProperty>
+
+    <owl:DatatypeProperty rdf:about="http://cardiokb.org/ontologies/cardiokb.owl#confidence">
+        <rdfs:range rdf:resource="http://www.w3.org/2001/XMLSchema#double"/>
+        <rdfs:comment>Confidence score</rdfs:comment>
+    </owl:DatatypeProperty>
+
+    <owl:DatatypeProperty rdf:about="http://cardiokb.org/ontologies/cardiokb.owl#expressionScore">
+        <rdfs:range rdf:resource="http://www.w3.org/2001/XMLSchema#double"/>
+        <rdfs:comment>Expression score from Bgee</rdfs:comment>
+    </owl:DatatypeProperty>
+
+    <owl:DatatypeProperty rdf:about="http://cardiokb.org/ontologies/cardiokb.owl#morScore">
+        <rdfs:range rdf:resource="http://www.w3.org/2001/XMLSchema#double"/>
+        <rdfs:comment>Mode of regulation score from DoRothEA</rdfs:comment>
+    </owl:DatatypeProperty>
+
+    <owl:DatatypeProperty rdf:about="http://cardiokb.org/ontologies/cardiokb.owl#zScore">
+        <rdfs:range rdf:resource="http://www.w3.org/2001/XMLSchema#double"/>
+        <rdfs:comment>Z-score from LINCS L1000</rdfs:comment>
+    </owl:DatatypeProperty>
+
+    <owl:DatatypeProperty rdf:about="http://cardiokb.org/ontologies/cardiokb.owl#source">
+        <rdfs:range rdf:resource="http://www.w3.org/2001/XMLSchema#string"/>
+        <rdfs:comment>Source database for this relationship</rdfs:comment>
+    </owl:DatatypeProperty>
+
+    <!-- Object Properties - Base Property Hierarchies -->
+
+    <owl:ObjectProperty rdf:about="http://cardiokb.org/ontologies/cardiokb.owl#geneObjectProperty"/>
+    <owl:ObjectProperty rdf:about="http://cardiokb.org/ontologies/cardiokb.owl#diseaseObjectProperty"/>
+    <owl:ObjectProperty rdf:about="http://cardiokb.org/ontologies/cardiokb.owl#drugObjectProperty"/>
+    <owl:ObjectProperty rdf:about="http://cardiokb.org/ontologies/cardiokb.owl#variantObjectProperty"/>
+    <owl:ObjectProperty rdf:about="http://cardiokb.org/ontologies/cardiokb.owl#clinicalTrialObjectProperty"/>
+
+    <!-- Object Properties - Gene-Disease Associations -->
+
+    <owl:ObjectProperty rdf:about="http://cardiokb.org/ontologies/cardiokb.owl#geneAssociatesWithDisease">
+        <rdfs:subPropertyOf rdf:resource="http://cardiokb.org/ontologies/cardiokb.owl#geneObjectProperty"/>
+        <rdfs:domain rdf:resource="http://cardiokb.org/ontologies/cardiokb.owl#Gene"/>
+        <rdfs:range rdf:resource="http://cardiokb.org/ontologies/cardiokb.owl#Disease"/>
+        <cardiokb:edgeSource>OpenTargets</cardiokb:edgeSource>
+    </owl:ObjectProperty>
+
+    <owl:ObjectProperty rdf:about="http://cardiokb.org/ontologies/cardiokb.owl#diseaseAssociatesWithGene">
+        <owl:inverseOf rdf:resource="http://cardiokb.org/ontologies/cardiokb.owl#geneAssociatesWithDisease"/>
+        <rdfs:subPropertyOf rdf:resource="http://cardiokb.org/ontologies/cardiokb.owl#diseaseObjectProperty"/>
+        <rdfs:domain rdf:resource="http://cardiokb.org/ontologies/cardiokb.owl#Disease"/>
+        <rdfs:range rdf:resource="http://cardiokb.org/ontologies/cardiokb.owl#Gene"/>
+    </owl:ObjectProperty>
+
+    <!-- Object Properties - Gene-Gene Interactions -->
+
+    <owl:ObjectProperty rdf:about="http://cardiokb.org/ontologies/cardiokb.owl#geneInteractsWithGene">
+        <rdf:type rdf:resource="http://www.w3.org/2002/07/owl#SymmetricProperty"/>
+        <rdfs:subPropertyOf rdf:resource="http://cardiokb.org/ontologies/cardiokb.owl#geneObjectProperty"/>
+        <rdfs:domain rdf:resource="http://cardiokb.org/ontologies/cardiokb.owl#Gene"/>
+        <rdfs:range rdf:resource="http://cardiokb.org/ontologies/cardiokb.owl#Gene"/>
+        <cardiokb:edgeSource>STRING</cardiokb:edgeSource>
+    </owl:ObjectProperty>
+
+    <owl:ObjectProperty rdf:about="http://cardiokb.org/ontologies/cardiokb.owl#geneRegulatesGene">
+        <rdfs:subPropertyOf rdf:resource="http://cardiokb.org/ontologies/cardiokb.owl#geneObjectProperty"/>
+        <rdfs:domain rdf:resource="http://cardiokb.org/ontologies/cardiokb.owl#Gene"/>
+        <rdfs:range rdf:resource="http://cardiokb.org/ontologies/cardiokb.owl#Gene"/>
+        <cardiokb:edgeSource>LINCS L1000</cardiokb:edgeSource>
+    </owl:ObjectProperty>
+
+    <!-- Object Properties - Gene Ontology Associations -->
+
+    <owl:ObjectProperty rdf:about="http://cardiokb.org/ontologies/cardiokb.owl#geneParticipatesInBiologicalProcess">
+        <rdfs:subPropertyOf rdf:resource="http://cardiokb.org/ontologies/cardiokb.owl#geneObjectProperty"/>
+        <rdfs:domain rdf:resource="http://cardiokb.org/ontologies/cardiokb.owl#Gene"/>
+        <rdfs:range rdf:resource="http://cardiokb.org/ontologies/cardiokb.owl#BiologicalProcess"/>
+        <cardiokb:edgeSource>Gene Ontology</cardiokb:edgeSource>
+    </owl:ObjectProperty>
+
+    <owl:ObjectProperty rdf:about="http://cardiokb.org/ontologies/cardiokb.owl#geneHasMolecularFunction">
+        <rdfs:subPropertyOf rdf:resource="http://cardiokb.org/ontologies/cardiokb.owl#geneObjectProperty"/>
+        <rdfs:domain rdf:resource="http://cardiokb.org/ontologies/cardiokb.owl#Gene"/>
+        <rdfs:range rdf:resource="http://cardiokb.org/ontologies/cardiokb.owl#MolecularFunction"/>
+        <cardiokb:edgeSource>Gene Ontology</cardiokb:edgeSource>
+    </owl:ObjectProperty>
+
+    <owl:ObjectProperty rdf:about="http://cardiokb.org/ontologies/cardiokb.owl#geneAssociatedWithCellularComponent">
+        <rdfs:subPropertyOf rdf:resource="http://cardiokb.org/ontologies/cardiokb.owl#geneObjectProperty"/>
+        <rdfs:domain rdf:resource="http://cardiokb.org/ontologies/cardiokb.owl#Gene"/>
+        <rdfs:range rdf:resource="http://cardiokb.org/ontologies/cardiokb.owl#CellularComponent"/>
+        <cardiokb:edgeSource>Gene Ontology</cardiokb:edgeSource>
+    </owl:ObjectProperty>
+
+    <!-- Object Properties - Gene-Pathway -->
+
+    <owl:ObjectProperty rdf:about="http://cardiokb.org/ontologies/cardiokb.owl#geneInPathway">
+        <rdfs:subPropertyOf rdf:resource="http://cardiokb.org/ontologies/cardiokb.owl#geneObjectProperty"/>
+        <rdfs:domain rdf:resource="http://cardiokb.org/ontologies/cardiokb.owl#Gene"/>
+        <rdfs:range rdf:resource="http://cardiokb.org/ontologies/cardiokb.owl#Pathway"/>
+        <cardiokb:edgeSource>Reactome</cardiokb:edgeSource>
+    </owl:ObjectProperty>
+
+    <owl:ObjectProperty rdf:about="http://cardiokb.org/ontologies/cardiokb.owl#pathwayContainsGene">
+        <owl:inverseOf rdf:resource="http://cardiokb.org/ontologies/cardiokb.owl#geneInPathway"/>
+        <rdfs:domain rdf:resource="http://cardiokb.org/ontologies/cardiokb.owl#Pathway"/>
+        <rdfs:range rdf:resource="http://cardiokb.org/ontologies/cardiokb.owl#Gene"/>
+    </owl:ObjectProperty>
+
+    <!-- Object Properties - Gene-Phenotype -->
+
+    <owl:ObjectProperty rdf:about="http://cardiokb.org/ontologies/cardiokb.owl#geneAssociatesWithPhenotype">
+        <rdfs:subPropertyOf rdf:resource="http://cardiokb.org/ontologies/cardiokb.owl#geneObjectProperty"/>
+        <rdfs:domain rdf:resource="http://cardiokb.org/ontologies/cardiokb.owl#Gene"/>
+        <rdfs:range rdf:resource="http://cardiokb.org/ontologies/cardiokb.owl#Phenotype"/>
+        <cardiokb:edgeSource>HPO</cardiokb:edgeSource>
+    </owl:ObjectProperty>
+
+    <!-- Object Properties - Gene-BodyPart Expression -->
+
+    <owl:ObjectProperty rdf:about="http://cardiokb.org/ontologies/cardiokb.owl#geneExpressedInBodyPart">
+        <rdfs:subPropertyOf rdf:resource="http://cardiokb.org/ontologies/cardiokb.owl#geneObjectProperty"/>
+        <rdfs:domain rdf:resource="http://cardiokb.org/ontologies/cardiokb.owl#Gene"/>
+        <rdfs:range rdf:resource="http://cardiokb.org/ontologies/cardiokb.owl#BodyPart"/>
+        <cardiokb:edgeSource>Jensen TISSUES</cardiokb:edgeSource>
+    </owl:ObjectProperty>
+
+    <owl:ObjectProperty rdf:about="http://cardiokb.org/ontologies/cardiokb.owl#bodyPartOverexpressesGene">
+        <rdfs:domain rdf:resource="http://cardiokb.org/ontologies/cardiokb.owl#BodyPart"/>
+        <rdfs:range rdf:resource="http://cardiokb.org/ontologies/cardiokb.owl#Gene"/>
+        <cardiokb:edgeSource>Bgee</cardiokb:edgeSource>
+    </owl:ObjectProperty>
+
+    <owl:ObjectProperty rdf:about="http://cardiokb.org/ontologies/cardiokb.owl#bodyPartUnderexpressesGene">
+        <rdfs:domain rdf:resource="http://cardiokb.org/ontologies/cardiokb.owl#BodyPart"/>
+        <rdfs:range rdf:resource="http://cardiokb.org/ontologies/cardiokb.owl#Gene"/>
+        <cardiokb:edgeSource>Bgee</cardiokb:edgeSource>
+    </owl:ObjectProperty>
+
+    <!-- Object Properties - Gene-Family -->
+
+    <owl:ObjectProperty rdf:about="http://cardiokb.org/ontologies/cardiokb.owl#geneInFamily">
+        <rdfs:subPropertyOf rdf:resource="http://cardiokb.org/ontologies/cardiokb.owl#geneObjectProperty"/>
+        <rdfs:domain rdf:resource="http://cardiokb.org/ontologies/cardiokb.owl#Gene"/>
+        <rdfs:range rdf:resource="http://cardiokb.org/ontologies/cardiokb.owl#GeneFamily"/>
+        <cardiokb:edgeSource>HGNC</cardiokb:edgeSource>
+    </owl:ObjectProperty>
+
+    <owl:ObjectProperty rdf:about="http://cardiokb.org/ontologies/cardiokb.owl#familyContainsGene">
+        <owl:inverseOf rdf:resource="http://cardiokb.org/ontologies/cardiokb.owl#geneInFamily"/>
+        <rdfs:domain rdf:resource="http://cardiokb.org/ontologies/cardiokb.owl#GeneFamily"/>
+        <rdfs:range rdf:resource="http://cardiokb.org/ontologies/cardiokb.owl#Gene"/>
+    </owl:ObjectProperty>
+
+    <!-- Object Properties - Gene-Variant -->
+
+    <owl:ObjectProperty rdf:about="http://cardiokb.org/ontologies/cardiokb.owl#hasVariant">
+        <rdfs:subPropertyOf rdf:resource="http://cardiokb.org/ontologies/cardiokb.owl#geneObjectProperty"/>
+        <rdfs:domain rdf:resource="http://cardiokb.org/ontologies/cardiokb.owl#Gene"/>
+        <rdfs:range rdf:resource="http://cardiokb.org/ontologies/cardiokb.owl#Variant"/>
+        <cardiokb:edgeSource>ClinVar</cardiokb:edgeSource>
+    </owl:ObjectProperty>
+
+    <owl:ObjectProperty rdf:about="http://cardiokb.org/ontologies/cardiokb.owl#variantInGene">
+        <owl:inverseOf rdf:resource="http://cardiokb.org/ontologies/cardiokb.owl#hasVariant"/>
+        <rdfs:subPropertyOf rdf:resource="http://cardiokb.org/ontologies/cardiokb.owl#variantObjectProperty"/>
+        <rdfs:domain rdf:resource="http://cardiokb.org/ontologies/cardiokb.owl#Variant"/>
+        <rdfs:range rdf:resource="http://cardiokb.org/ontologies/cardiokb.owl#Gene"/>
+    </owl:ObjectProperty>
+
+    <!-- Object Properties - Disease-Variant -->
+
+    <owl:ObjectProperty rdf:about="http://cardiokb.org/ontologies/cardiokb.owl#associatedWithVariant">
+        <rdfs:subPropertyOf rdf:resource="http://cardiokb.org/ontologies/cardiokb.owl#diseaseObjectProperty"/>
+        <rdfs:domain rdf:resource="http://cardiokb.org/ontologies/cardiokb.owl#Disease"/>
+        <rdfs:range rdf:resource="http://cardiokb.org/ontologies/cardiokb.owl#Variant"/>
+        <cardiokb:edgeSource>ClinVar</cardiokb:edgeSource>
+    </owl:ObjectProperty>
+
+    <owl:ObjectProperty rdf:about="http://cardiokb.org/ontologies/cardiokb.owl#variantAssociatedWithDisease">
+        <owl:inverseOf rdf:resource="http://cardiokb.org/ontologies/cardiokb.owl#associatedWithVariant"/>
+        <rdfs:subPropertyOf rdf:resource="http://cardiokb.org/ontologies/cardiokb.owl#variantObjectProperty"/>
+        <rdfs:domain rdf:resource="http://cardiokb.org/ontologies/cardiokb.owl#Variant"/>
+        <rdfs:range rdf:resource="http://cardiokb.org/ontologies/cardiokb.owl#Disease"/>
+    </owl:ObjectProperty>
+
+    <!-- Object Properties - TF-Gene Regulation -->
+
+    <owl:ObjectProperty rdf:about="http://cardiokb.org/ontologies/cardiokb.owl#transcriptionFactorInteractsWithGene">
+        <rdfs:domain rdf:resource="http://cardiokb.org/ontologies/cardiokb.owl#TranscriptionFactor"/>
+        <rdfs:range rdf:resource="http://cardiokb.org/ontologies/cardiokb.owl#Gene"/>
+        <cardiokb:edgeSource>DoRothEA</cardiokb:edgeSource>
+    </owl:ObjectProperty>
+
+    <!-- Object Properties - Drug-Gene -->
+
+    <owl:ObjectProperty rdf:about="http://cardiokb.org/ontologies/cardiokb.owl#drugBindsGene">
+        <rdfs:subPropertyOf rdf:resource="http://cardiokb.org/ontologies/cardiokb.owl#drugObjectProperty"/>
+        <rdfs:domain rdf:resource="http://cardiokb.org/ontologies/cardiokb.owl#Drug"/>
+        <rdfs:range rdf:resource="http://cardiokb.org/ontologies/cardiokb.owl#Gene"/>
+        <cardiokb:edgeSource>DrugBank</cardiokb:edgeSource>
+    </owl:ObjectProperty>
+
+    <owl:ObjectProperty rdf:about="http://cardiokb.org/ontologies/cardiokb.owl#chemicalBindsGene">
+        <rdfs:subPropertyOf rdf:resource="http://cardiokb.org/ontologies/cardiokb.owl#drugObjectProperty"/>
+        <rdfs:domain rdf:resource="http://cardiokb.org/ontologies/cardiokb.owl#Drug"/>
+        <rdfs:range rdf:resource="http://cardiokb.org/ontologies/cardiokb.owl#Gene"/>
+        <cardiokb:edgeSource>BindingDB</cardiokb:edgeSource>
+    </owl:ObjectProperty>
+
+    <owl:ObjectProperty rdf:about="http://cardiokb.org/ontologies/cardiokb.owl#chemicalIncreasesExpression">
+        <rdfs:subPropertyOf rdf:resource="http://cardiokb.org/ontologies/cardiokb.owl#drugObjectProperty"/>
+        <rdfs:domain rdf:resource="http://cardiokb.org/ontologies/cardiokb.owl#Drug"/>
+        <rdfs:range rdf:resource="http://cardiokb.org/ontologies/cardiokb.owl#Gene"/>
+        <cardiokb:edgeSource>CTD</cardiokb:edgeSource>
+    </owl:ObjectProperty>
+
+    <owl:ObjectProperty rdf:about="http://cardiokb.org/ontologies/cardiokb.owl#chemicalDecreasesExpression">
+        <rdfs:subPropertyOf rdf:resource="http://cardiokb.org/ontologies/cardiokb.owl#drugObjectProperty"/>
+        <rdfs:domain rdf:resource="http://cardiokb.org/ontologies/cardiokb.owl#Drug"/>
+        <rdfs:range rdf:resource="http://cardiokb.org/ontologies/cardiokb.owl#Gene"/>
+        <cardiokb:edgeSource>CTD</cardiokb:edgeSource>
+    </owl:ObjectProperty>
+
+    <owl:ObjectProperty rdf:about="http://cardiokb.org/ontologies/cardiokb.owl#compoundUpregulatesGene">
+        <rdfs:subPropertyOf rdf:resource="http://cardiokb.org/ontologies/cardiokb.owl#drugObjectProperty"/>
+        <rdfs:domain rdf:resource="http://cardiokb.org/ontologies/cardiokb.owl#Drug"/>
+        <rdfs:range rdf:resource="http://cardiokb.org/ontologies/cardiokb.owl#Gene"/>
+        <cardiokb:edgeSource>LINCS L1000</cardiokb:edgeSource>
+    </owl:ObjectProperty>
+
+    <owl:ObjectProperty rdf:about="http://cardiokb.org/ontologies/cardiokb.owl#compoundDownregulatesGene">
+        <rdfs:subPropertyOf rdf:resource="http://cardiokb.org/ontologies/cardiokb.owl#drugObjectProperty"/>
+        <rdfs:domain rdf:resource="http://cardiokb.org/ontologies/cardiokb.owl#Drug"/>
+        <rdfs:range rdf:resource="http://cardiokb.org/ontologies/cardiokb.owl#Gene"/>
+        <cardiokb:edgeSource>LINCS L1000</cardiokb:edgeSource>
+    </owl:ObjectProperty>
+
+    <!-- Object Properties - Drug-Disease -->
+
+    <owl:ObjectProperty rdf:about="http://cardiokb.org/ontologies/cardiokb.owl#drugTreatsDisease">
+        <rdfs:subPropertyOf rdf:resource="http://cardiokb.org/ontologies/cardiokb.owl#drugObjectProperty"/>
+        <rdfs:domain rdf:resource="http://cardiokb.org/ontologies/cardiokb.owl#Drug"/>
+        <rdfs:range rdf:resource="http://cardiokb.org/ontologies/cardiokb.owl#Disease"/>
+        <cardiokb:edgeSource>DrugCentral</cardiokb:edgeSource>
+    </owl:ObjectProperty>
+
+    <owl:ObjectProperty rdf:about="http://cardiokb.org/ontologies/cardiokb.owl#drugPalliatesDisease">
+        <rdfs:subPropertyOf rdf:resource="http://cardiokb.org/ontologies/cardiokb.owl#drugObjectProperty"/>
+        <rdfs:domain rdf:resource="http://cardiokb.org/ontologies/cardiokb.owl#Drug"/>
+        <rdfs:range rdf:resource="http://cardiokb.org/ontologies/cardiokb.owl#Disease"/>
+        <cardiokb:edgeSource>DrugCentral</cardiokb:edgeSource>
+    </owl:ObjectProperty>
+
+    <!-- Object Properties - Drug-SideEffect -->
+
+    <owl:ObjectProperty rdf:about="http://cardiokb.org/ontologies/cardiokb.owl#compoundCausesSideEffect">
+        <rdfs:subPropertyOf rdf:resource="http://cardiokb.org/ontologies/cardiokb.owl#drugObjectProperty"/>
+        <rdfs:domain rdf:resource="http://cardiokb.org/ontologies/cardiokb.owl#Drug"/>
+        <rdfs:range rdf:resource="http://cardiokb.org/ontologies/cardiokb.owl#SideEffect"/>
+        <cardiokb:edgeSource>SIDER</cardiokb:edgeSource>
+    </owl:ObjectProperty>
+
+    <!-- Object Properties - Drug-PharmacologicClass -->
+
+    <owl:ObjectProperty rdf:about="http://cardiokb.org/ontologies/cardiokb.owl#pharmacologicClassIncludesCompound">
+        <rdfs:domain rdf:resource="http://cardiokb.org/ontologies/cardiokb.owl#PharmacologicClass"/>
+        <rdfs:range rdf:resource="http://cardiokb.org/ontologies/cardiokb.owl#Drug"/>
+        <cardiokb:edgeSource>DrugCentral</cardiokb:edgeSource>
+    </owl:ObjectProperty>
+
+    <owl:ObjectProperty rdf:about="http://cardiokb.org/ontologies/cardiokb.owl#compoundInPharmacologicClass">
+        <owl:inverseOf rdf:resource="http://cardiokb.org/ontologies/cardiokb.owl#pharmacologicClassIncludesCompound"/>
+        <rdfs:subPropertyOf rdf:resource="http://cardiokb.org/ontologies/cardiokb.owl#drugObjectProperty"/>
+        <rdfs:domain rdf:resource="http://cardiokb.org/ontologies/cardiokb.owl#Drug"/>
+        <rdfs:range rdf:resource="http://cardiokb.org/ontologies/cardiokb.owl#PharmacologicClass"/>
+    </owl:ObjectProperty>
+
+    <!-- Object Properties - Disease-Disease -->
+
+    <owl:ObjectProperty rdf:about="http://cardiokb.org/ontologies/cardiokb.owl#diseaseIsSubtypeOf">
+        <rdf:type rdf:resource="http://www.w3.org/2002/07/owl#TransitiveProperty"/>
+        <rdfs:subPropertyOf rdf:resource="http://cardiokb.org/ontologies/cardiokb.owl#diseaseObjectProperty"/>
+        <rdfs:domain rdf:resource="http://cardiokb.org/ontologies/cardiokb.owl#Disease"/>
+        <rdfs:range rdf:resource="http://cardiokb.org/ontologies/cardiokb.owl#Disease"/>
+        <cardiokb:edgeSource>Disease Ontology</cardiokb:edgeSource>
+    </owl:ObjectProperty>
+
+    <owl:ObjectProperty rdf:about="http://cardiokb.org/ontologies/cardiokb.owl#diseaseAssociatesWithDisease">
+        <rdf:type rdf:resource="http://www.w3.org/2002/07/owl#SymmetricProperty"/>
+        <rdfs:subPropertyOf rdf:resource="http://cardiokb.org/ontologies/cardiokb.owl#diseaseObjectProperty"/>
+        <rdfs:domain rdf:resource="http://cardiokb.org/ontologies/cardiokb.owl#Disease"/>
+        <rdfs:range rdf:resource="http://cardiokb.org/ontologies/cardiokb.owl#Disease"/>
+        <cardiokb:edgeSource>PubTator</cardiokb:edgeSource>
+    </owl:ObjectProperty>
+
+    <!-- Object Properties - Clinical Trials -->
+
+    <owl:ObjectProperty rdf:about="http://cardiokb.org/ontologies/cardiokb.owl#STUDIES_CONDITION">
+        <rdfs:subPropertyOf rdf:resource="http://cardiokb.org/ontologies/cardiokb.owl#clinicalTrialObjectProperty"/>
+        <rdfs:domain rdf:resource="http://cardiokb.org/ontologies/cardiokb.owl#ClinicalTrial"/>
+        <rdfs:range rdf:resource="http://cardiokb.org/ontologies/cardiokb.owl#Disease"/>
+        <cardiokb:edgeSource>ClinicalTrials.gov</cardiokb:edgeSource>
+    </owl:ObjectProperty>
+
+    <owl:ObjectProperty rdf:about="http://cardiokb.org/ontologies/cardiokb.owl#TESTS_INTERVENTION">
+        <rdfs:subPropertyOf rdf:resource="http://cardiokb.org/ontologies/cardiokb.owl#clinicalTrialObjectProperty"/>
+        <rdfs:domain rdf:resource="http://cardiokb.org/ontologies/cardiokb.owl#ClinicalTrial"/>
+        <rdfs:range rdf:resource="http://cardiokb.org/ontologies/cardiokb.owl#Drug"/>
+        <cardiokb:edgeSource>ClinicalTrials.gov</cardiokb:edgeSource>
+    </owl:ObjectProperty>
+
+    <!-- Object Properties - Pharmacogenomics (ClinPGx) -->
+
+    <owl:ObjectProperty rdf:about="http://cardiokb.org/ontologies/cardiokb.owl#VARIANT_IN">
+        <rdfs:subPropertyOf rdf:resource="http://cardiokb.org/ontologies/cardiokb.owl#variantObjectProperty"/>
+        <rdfs:domain rdf:resource="http://cardiokb.org/ontologies/cardiokb.owl#Variant"/>
+        <rdfs:range rdf:resource="http://cardiokb.org/ontologies/cardiokb.owl#Gene"/>
+        <cardiokb:edgeSource>ClinPGx</cardiokb:edgeSource>
+    </owl:ObjectProperty>
+
+    <owl:ObjectProperty rdf:about="http://cardiokb.org/ontologies/cardiokb.owl#AFFECTS_RESPONSE_TO">
+        <rdfs:subPropertyOf rdf:resource="http://cardiokb.org/ontologies/cardiokb.owl#geneObjectProperty"/>
+        <rdfs:domain rdf:resource="http://cardiokb.org/ontologies/cardiokb.owl#Gene"/>
+        <rdfs:range rdf:resource="http://cardiokb.org/ontologies/cardiokb.owl#Drug"/>
+        <cardiokb:edgeSource>ClinPGx</cardiokb:edgeSource>
+    </owl:ObjectProperty>
+
+    <owl:ObjectProperty rdf:about="http://cardiokb.org/ontologies/cardiokb.owl#AFFECTS_RESPONSE_TO_CLASS">
+        <rdfs:subPropertyOf rdf:resource="http://cardiokb.org/ontologies/cardiokb.owl#geneObjectProperty"/>
+        <rdfs:domain rdf:resource="http://cardiokb.org/ontologies/cardiokb.owl#Gene"/>
+        <rdfs:range rdf:resource="http://cardiokb.org/ontologies/cardiokb.owl#PharmacologicClass"/>
+        <cardiokb:edgeSource>ClinPGx</cardiokb:edgeSource>
+        <rdfs:comment>Gene affects response to a pharmacologic class of drugs</rdfs:comment>
+    </owl:ObjectProperty>
+
+    <owl:ObjectProperty rdf:about="http://cardiokb.org/ontologies/cardiokb.owl#drugLabelAnnotatesGene">
+        <rdfs:domain rdf:resource="http://cardiokb.org/ontologies/cardiokb.owl#DrugLabel"/>
+        <rdfs:range rdf:resource="http://cardiokb.org/ontologies/cardiokb.owl#Gene"/>
+        <cardiokb:edgeSource>ClinPGx</cardiokb:edgeSource>
+    </owl:ObjectProperty>
+
+    <owl:ObjectProperty rdf:about="http://cardiokb.org/ontologies/cardiokb.owl#drugLabelDescribesDrug">
+        <rdfs:domain rdf:resource="http://cardiokb.org/ontologies/cardiokb.owl#DrugLabel"/>
+        <rdfs:range rdf:resource="http://cardiokb.org/ontologies/cardiokb.owl#Drug"/>
+        <cardiokb:edgeSource>ClinPGx</cardiokb:edgeSource>
+    </owl:ObjectProperty>
+
+    <!-- Classes - Top-Level Concepts -->
+
+    <owl:Class rdf:about="http://cardiokb.org/ontologies/cardiokb.owl#BiologicalEntity">
+        <rdfs:comment>Top-level class for all biological entities in CardioKB</rdfs:comment>
+    </owl:Class>
+
+    <owl:Class rdf:about="http://cardiokb.org/ontologies/cardiokb.owl#ChemicalEntity">
+        <rdfs:comment>Top-level class for chemical/drug entities</rdfs:comment>
+    </owl:Class>
+
+    <owl:Class rdf:about="http://cardiokb.org/ontologies/cardiokb.owl#OntologyTerm">
+        <rdfs:comment>Top-level class for ontology terms (GO, HPO, etc.)</rdfs:comment>
+    </owl:Class>
+
+    <owl:Class rdf:about="http://cardiokb.org/ontologies/cardiokb.owl#ClinicalEntity">
+        <rdfs:comment>Top-level class for clinical data entities</rdfs:comment>
+    </owl:Class>
+
+    <!-- Classes - Biological Entities -->
+
+    <owl:Class rdf:about="http://cardiokb.org/ontologies/cardiokb.owl#Gene">
+        <rdfs:subClassOf rdf:resource="http://cardiokb.org/ontologies/cardiokb.owl#BiologicalEntity"/>
+        <rdfs:subClassOf>
+            <owl:Restriction>
+                <owl:onProperty rdf:resource="http://cardiokb.org/ontologies/cardiokb.owl#geneSymbol"/>
+                <owl:someValuesFrom rdf:resource="http://www.w3.org/2001/XMLSchema#string"/>
+            </owl:Restriction>
+        </rdfs:subClassOf>
+        <cardiokb:individualLabelPrefix>gene_</cardiokb:individualLabelPrefix>
+        <cardiokb:sourceDatabase>NCBI Gene</cardiokb:sourceDatabase>
+        <rdfs:comment>Human genes (194,553 nodes)</rdfs:comment>
+    </owl:Class>
+
+    <owl:Class rdf:about="http://cardiokb.org/ontologies/cardiokb.owl#Variant">
+        <rdfs:subClassOf rdf:resource="http://cardiokb.org/ontologies/cardiokb.owl#BiologicalEntity"/>
+        <rdfs:subClassOf>
+            <owl:Restriction>
+                <owl:onProperty rdf:resource="http://cardiokb.org/ontologies/cardiokb.owl#variantId"/>
+                <owl:someValuesFrom rdf:resource="http://www.w3.org/2001/XMLSchema#string"/>
+            </owl:Restriction>
+        </rdfs:subClassOf>
+        <cardiokb:individualLabelPrefix>var_</cardiokb:individualLabelPrefix>
+        <cardiokb:sourceDatabase>ClinVar</cardiokb:sourceDatabase>
+        <rdfs:comment>Genetic variants (4,488,042 nodes)</rdfs:comment>
+    </owl:Class>
+
+    <owl:Class rdf:about="http://cardiokb.org/ontologies/cardiokb.owl#TranscriptionFactor">
+        <rdfs:subClassOf rdf:resource="http://cardiokb.org/ontologies/cardiokb.owl#BiologicalEntity"/>
+        <cardiokb:individualLabelPrefix>tf_</cardiokb:individualLabelPrefix>
+        <cardiokb:sourceDatabase>DoRothEA</cardiokb:sourceDatabase>
+        <rdfs:comment>Transcription factors (367 nodes)</rdfs:comment>
+    </owl:Class>
+
+    <owl:Class rdf:about="http://cardiokb.org/ontologies/cardiokb.owl#GeneFamily">
+        <rdfs:subClassOf rdf:resource="http://cardiokb.org/ontologies/cardiokb.owl#BiologicalEntity"/>
+        <cardiokb:individualLabelPrefix>fam_</cardiokb:individualLabelPrefix>
+        <cardiokb:sourceDatabase>HGNC Families</cardiokb:sourceDatabase>
+        <rdfs:comment>Gene families (1,934 nodes)</rdfs:comment>
+    </owl:Class>
+
+    <!-- Classes - Disease and Medical Entities -->
+
+    <owl:Class rdf:about="http://cardiokb.org/ontologies/cardiokb.owl#Disease">
+        <rdfs:subClassOf rdf:resource="http://cardiokb.org/ontologies/cardiokb.owl#ClinicalEntity"/>
+        <rdfs:subClassOf>
+            <owl:Restriction>
+                <owl:onProperty rdf:resource="http://cardiokb.org/ontologies/cardiokb.owl#xrefDiseaseOntology"/>
+                <owl:someValuesFrom rdf:resource="http://www.w3.org/2001/XMLSchema#string"/>
+            </owl:Restriction>
+        </rdfs:subClassOf>
+        <cardiokb:individualLabelPrefix>dis_</cardiokb:individualLabelPrefix>
+        <cardiokb:sourceDatabase>Disease Ontology</cardiokb:sourceDatabase>
+        <rdfs:comment>Diseases from Disease Ontology (12,012 nodes)</rdfs:comment>
+    </owl:Class>
+
+    <owl:Class rdf:about="http://cardiokb.org/ontologies/cardiokb.owl#Phenotype">
+        <rdfs:subClassOf rdf:resource="http://cardiokb.org/ontologies/cardiokb.owl#ClinicalEntity"/>
+        <rdfs:subClassOf>
+            <owl:Restriction>
+                <owl:onProperty rdf:resource="http://cardiokb.org/ontologies/cardiokb.owl#xrefHPO"/>
+                <owl:someValuesFrom rdf:resource="http://www.w3.org/2001/XMLSchema#string"/>
+            </owl:Restriction>
+        </rdfs:subClassOf>
+        <cardiokb:individualLabelPrefix>hp_</cardiokb:individualLabelPrefix>
+        <cardiokb:sourceDatabase>HPO</cardiokb:sourceDatabase>
+        <rdfs:comment>Human phenotypes (19,389 nodes)</rdfs:comment>
+    </owl:Class>
+
+    <owl:Class rdf:about="http://cardiokb.org/ontologies/cardiokb.owl#Symptom">
+        <rdfs:subClassOf rdf:resource="http://cardiokb.org/ontologies/cardiokb.owl#ClinicalEntity"/>
+        <rdfs:subClassOf>
+            <owl:Restriction>
+                <owl:onProperty rdf:resource="http://cardiokb.org/ontologies/cardiokb.owl#xrefMeSH"/>
+                <owl:someValuesFrom rdf:resource="http://www.w3.org/2001/XMLSchema#string"/>
+            </owl:Restriction>
+        </rdfs:subClassOf>
+        <cardiokb:individualLabelPrefix>sym_</cardiokb:individualLabelPrefix>
+        <cardiokb:sourceDatabase>NCBI MeSH</cardiokb:sourceDatabase>
+        <rdfs:comment>Disease symptoms (966 nodes)</rdfs:comment>
+    </owl:Class>
+
+    <owl:Class rdf:about="http://cardiokb.org/ontologies/cardiokb.owl#ClinicalTrial">
+        <rdfs:subClassOf rdf:resource="http://cardiokb.org/ontologies/cardiokb.owl#ClinicalEntity"/>
+        <rdfs:subClassOf>
+            <owl:Restriction>
+                <owl:onProperty rdf:resource="http://cardiokb.org/ontologies/cardiokb.owl#trialId"/>
+                <owl:someValuesFrom rdf:resource="http://www.w3.org/2001/XMLSchema#string"/>
+            </owl:Restriction>
+        </rdfs:subClassOf>
+        <cardiokb:individualLabelPrefix>nct_</cardiokb:individualLabelPrefix>
+        <cardiokb:sourceDatabase>ClinicalTrials.gov</cardiokb:sourceDatabase>
+        <rdfs:comment>Clinical trials (85,677 nodes)</rdfs:comment>
+    </owl:Class>
+
+    <!-- Classes - Chemical/Drug Entities -->
+
+    <owl:Class rdf:about="http://cardiokb.org/ontologies/cardiokb.owl#Drug">
+        <rdfs:subClassOf rdf:resource="http://cardiokb.org/ontologies/cardiokb.owl#ChemicalEntity"/>
+        <rdfs:subClassOf>
+            <owl:Restriction>
+                <owl:onProperty rdf:resource="http://cardiokb.org/ontologies/cardiokb.owl#commonName"/>
+                <owl:someValuesFrom rdf:resource="http://www.w3.org/2001/XMLSchema#string"/>
+            </owl:Restriction>
+        </rdfs:subClassOf>
+        <cardiokb:individualLabelPrefix>drug_</cardiokb:individualLabelPrefix>
+        <cardiokb:sourceDatabase>DrugBank + CTD</cardiokb:sourceDatabase>
+        <rdfs:comment>Drugs and chemicals (24,414 nodes: 19,842 DrugBank + 4,572 CTD unique)</rdfs:comment>
+    </owl:Class>
+
+    <owl:Class rdf:about="http://cardiokb.org/ontologies/cardiokb.owl#SideEffect">
+        <rdfs:subClassOf rdf:resource="http://cardiokb.org/ontologies/cardiokb.owl#ChemicalEntity"/>
+        <rdfs:subClassOf>
+            <owl:Restriction>
+                <owl:onProperty rdf:resource="http://cardiokb.org/ontologies/cardiokb.owl#xrefUmlsCUI"/>
+                <owl:someValuesFrom rdf:resource="http://www.w3.org/2001/XMLSchema#string"/>
+            </owl:Restriction>
+        </rdfs:subClassOf>
+        <cardiokb:individualLabelPrefix>se_</cardiokb:individualLabelPrefix>
+        <cardiokb:sourceDatabase>SIDER</cardiokb:sourceDatabase>
+        <rdfs:comment>Drug side effects (5,734 nodes)</rdfs:comment>
+    </owl:Class>
+
+    <owl:Class rdf:about="http://cardiokb.org/ontologies/cardiokb.owl#PharmacologicClass">
+        <rdfs:subClassOf rdf:resource="http://cardiokb.org/ontologies/cardiokb.owl#ChemicalEntity"/>
+        <cardiokb:individualLabelPrefix>pc_</cardiokb:individualLabelPrefix>
+        <cardiokb:sourceDatabase>DrugCentral</cardiokb:sourceDatabase>
+        <rdfs:comment>Drug pharmacologic classes (1,646 nodes)</rdfs:comment>
+    </owl:Class>
+
+    <owl:Class rdf:about="http://cardiokb.org/ontologies/cardiokb.owl#DrugLabel">
+        <rdfs:subClassOf rdf:resource="http://cardiokb.org/ontologies/cardiokb.owl#ChemicalEntity"/>
+        <cardiokb:individualLabelPrefix>dl_</cardiokb:individualLabelPrefix>
+        <cardiokb:sourceDatabase>ClinPGx</cardiokb:sourceDatabase>
+        <rdfs:comment>FDA drug labels (378 nodes)</rdfs:comment>
+    </owl:Class>
+
+    <!-- Classes - Anatomy and Structure -->
+
+    <owl:Class rdf:about="http://cardiokb.org/ontologies/cardiokb.owl#BodyPart">
+        <rdfs:subClassOf rdf:resource="http://cardiokb.org/ontologies/cardiokb.owl#BiologicalEntity"/>
+        <rdfs:subClassOf>
+            <owl:Restriction>
+                <owl:onProperty rdf:resource="http://cardiokb.org/ontologies/cardiokb.owl#xrefUberon"/>
+                <owl:someValuesFrom rdf:resource="http://www.w3.org/2001/XMLSchema#string"/>
+            </owl:Restriction>
+        </rdfs:subClassOf>
+        <cardiokb:individualLabelPrefix>uberon_</cardiokb:individualLabelPrefix>
+        <cardiokb:sourceDatabase>Uberon</cardiokb:sourceDatabase>
+        <rdfs:comment>Anatomical structures (14,937 nodes)</rdfs:comment>
+    </owl:Class>
+
+    <owl:Class rdf:about="http://cardiokb.org/ontologies/cardiokb.owl#Pathway">
+        <rdfs:subClassOf rdf:resource="http://cardiokb.org/ontologies/cardiokb.owl#BiologicalEntity"/>
+        <cardiokb:individualLabelPrefix>path_</cardiokb:individualLabelPrefix>
+        <cardiokb:sourceDatabase>Reactome</cardiokb:sourceDatabase>
+        <rdfs:comment>Biological pathways (2,806 nodes)</rdfs:comment>
+    </owl:Class>
+
+    <!-- Classes - Gene Ontology Terms -->
+
+    <owl:Class rdf:about="http://cardiokb.org/ontologies/cardiokb.owl#BiologicalProcess">
+        <rdfs:subClassOf rdf:resource="http://cardiokb.org/ontologies/cardiokb.owl#OntologyTerm"/>
+        <rdfs:subClassOf>
+            <owl:Restriction>
+                <owl:onProperty rdf:resource="http://cardiokb.org/ontologies/cardiokb.owl#geneOntologyId"/>
+                <owl:someValuesFrom rdf:resource="http://www.w3.org/2001/XMLSchema#string"/>
+            </owl:Restriction>
+        </rdfs:subClassOf>
+        <cardiokb:individualLabelPrefix>go_bp_</cardiokb:individualLabelPrefix>
+        <cardiokb:sourceDatabase>Gene Ontology</cardiokb:sourceDatabase>
+        <rdfs:comment>GO biological processes (24,547 nodes)</rdfs:comment>
+    </owl:Class>
+
+    <owl:Class rdf:about="http://cardiokb.org/ontologies/cardiokb.owl#MolecularFunction">
+        <rdfs:subClassOf rdf:resource="http://cardiokb.org/ontologies/cardiokb.owl#OntologyTerm"/>
+        <rdfs:subClassOf>
+            <owl:Restriction>
+                <owl:onProperty rdf:resource="http://cardiokb.org/ontologies/cardiokb.owl#geneOntologyId"/>
+                <owl:someValuesFrom rdf:resource="http://www.w3.org/2001/XMLSchema#string"/>
+            </owl:Restriction>
+        </rdfs:subClassOf>
+        <cardiokb:individualLabelPrefix>go_mf_</cardiokb:individualLabelPrefix>
+        <cardiokb:sourceDatabase>Gene Ontology</cardiokb:sourceDatabase>
+        <rdfs:comment>GO molecular functions (10,123 nodes)</rdfs:comment>
+    </owl:Class>
+
+    <owl:Class rdf:about="http://cardiokb.org/ontologies/cardiokb.owl#CellularComponent">
+        <rdfs:subClassOf rdf:resource="http://cardiokb.org/ontologies/cardiokb.owl#OntologyTerm"/>
+        <rdfs:subClassOf>
+            <owl:Restriction>
+                <owl:onProperty rdf:resource="http://cardiokb.org/ontologies/cardiokb.owl#geneOntologyId"/>
+                <owl:someValuesFrom rdf:resource="http://www.w3.org/2001/XMLSchema#string"/>
+            </owl:Restriction>
+        </rdfs:subClassOf>
+        <cardiokb:individualLabelPrefix>go_cc_</cardiokb:individualLabelPrefix>
+        <cardiokb:sourceDatabase>Gene Ontology</cardiokb:sourceDatabase>
+        <rdfs:comment>GO cellular components (4,069 nodes)</rdfs:comment>
+    </owl:Class>
+
+</rdf:RDF>

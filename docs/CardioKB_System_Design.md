@@ -2,7 +2,7 @@
 
 ## 1. System Overview
 
-CardioKB is a CVD-focused biomedical knowledge graph integrating 26 deduplicated data sources into Memgraph. The system consists of four main components:
+CardioKB is a CVD-focused biomedical knowledge graph integrating 24 deduplicated data sources into Memgraph. The system consists of four main components:
 
 1. **ETL Pipeline** — Downloads, parses, and loads biomedical data into the graph (runs locally)
 2. **Graph Database** — Memgraph instance storing 4.9M nodes and 7.7M relationships
@@ -16,7 +16,7 @@ The web app and Memgraph are fully Dockerized via `docker-compose.yml`. The ETL 
 │                     CardioKB Architecture                            │
 │                                                                      │
 │  ┌─────────────┐    ┌──────────────┐                                 │
-│  │ 26 Data     │───>│ ETL Pipeline │──┐  (runs locally, not in       │
+│  │ 24 Data     │───>│ ETL Pipeline │──┐  (runs locally, not in       │
 │  │ Sources     │    │ (main.py)    │  │   Docker — pipeline only)    │
 │  │ (APIs, FTP, │    └──────────────┘  │                              │
 │  │  XML, TSV)  │                      │                              │
@@ -28,10 +28,10 @@ The web app and Memgraph are fully Dockerized via `docker-compose.yml`. The ETL 
 │  │  ┌──────────────────┐  ┌─┴───────────────────────────┐  │   │     │
 │  │  │ Flask App (:5050)│  │ Memgraph (bolt://memgraph:  │  │   │     │
 │  │  │                  │──│          7687)               │  │   │     │
-│  │  │ /api/query       │  │ 4,896,258 nodes             │  │   │     │
-│  │  │ /api/graph-stats │  │ 7,683,150 relationships     │  │   │     │
-│  │  │ /api/agent/*     │  │ 19 node types               │  │   │     │
-│  │  │ /api/subgraph    │  │ 43 relationship types       │  │   │     │
+│  │  │ /api/query       │  │ 4,891,227 nodes             │  │   │     │
+│  │  │ /api/graph-stats │  │ 7,682,399 relationships     │  │   │     │
+│  │  │ /api/agent/*     │  │ 17 node types               │  │   │     │
+│  │  │ /api/subgraph    │  │ 42 relationship types       │  │   │     │
 │  │  └────────┬─────────┘  └─────────────────────────────┘  │   │     │
 │  │           │             Volume: memgraph-data            │   │     │
 │  └───────────┼──────────────────────────────────────────────┘   │     │
@@ -72,12 +72,12 @@ See `.env.example` for the full list with descriptions.
 
 | Metric | Value |
 |--------|-------|
-| Total nodes | 4,896,258 |
-| Total relationships | 7,683,150 |
-| Node types | 19 |
-| Relationship types | 43 |
-| Data sources | 26 |
-| Source labels on edges | 23 |
+| Total nodes | 4,891,227 |
+| Total relationships | 7,682,399 |
+| Node types | 17 |
+| Relationship types | 42 |
+| Data sources | 24 |
+| Source labels on edges | 21 |
 | Ontology configs | 86 |
 
 ## 3. Source-to-Schema Mapping
@@ -98,7 +98,6 @@ Each node type has exactly one authoritative source that creates/manages those n
 | Disease | 12,012 | Disease Ontology | `xrefDiseaseOntology`, `commonName`, `definition` |
 | MolecularFunction | 10,123 | Gene Ontology | `geneOntologyId`, `commonName`, `definition` |
 | SideEffect | 5,734 | SIDER | `xrefUmlsCUI`, `commonName` |
-| Species | 4,645 | AnAge | `speciesName`, `commonName`, `maximumLifespan`, `sampleSize` |
 | CellularComponent | 4,069 | Gene Ontology | `geneOntologyId`, `commonName`, `definition` |
 | Pathway | 2,806 | Reactome | `pathwayName` |
 | GeneFamily | 1,934 | HGNC Families | `familyId`, `familyName` |
@@ -106,7 +105,6 @@ Each node type has exactly one authoritative source that creates/manages those n
 | Symptom | 966 | NCBI MeSH | `xrefMeSH`, `commonName`, `meshTreeNumber` |
 | DrugLabel | 378 | ClinPGx | `labelId`, `commonName`, `drug`, `gene`, `regulatorySource`, `testing`, `biomarkerStatus`, `alternateDrugAvailable` |
 | TranscriptionFactor | 367 | DoRothEA | `TF` |
-| AgeingProperty | 3 | DrugAge | `propertyName` |
 
 All nodes carry `specificityScore` (pre-computed: `1.0 / count(Disease neighbors)`; Disease nodes get 0.0, unconnected nodes get 1.0).
 
@@ -139,9 +137,8 @@ Each row shows the source database, the edge it contributes, the node types it c
 | **Gene Ontology** | `geneAssociatedWithCellularComponent` | Gene → CellularComponent | 25,794 | — |
 | **Reactome** | `geneInPathway` | Gene → Pathway | 44,979 | — |
 | **Reactome** | `pathwayContainsGene` | Pathway → Gene | 44,979 | — |
-| **ClinicalTrials.gov** | `STUDIES_CONDITION` | ClinicalTrial → Disease | 27,866 | — |
-| **ClinicalTrials.gov** | `TESTS_INTERVENTION` | ClinicalTrial → Drug | 17,492 | — |
-| **NCBI Gene** | `geneInSpecies` | Gene → Species | 26,417 | — |
+| **ClinicalTrials.gov** | `STUDIES_CONDITION` | ClinicalTrial → Disease | 33,219 | — |
+| **ClinicalTrials.gov** | `TESTS_INTERVENTION` | ClinicalTrial → Drug | 3,135 | — |
 | **DrugCentral** | `pharmacologicClassIncludesCompound` | PharmacologicClass → Drug | 16,403 | — |
 | **DrugCentral** | `compoundInPharmacologicClass` | Drug → PharmacologicClass | 16,403 | — |
 | **DrugCentral** | `drugTreatsDisease` | Drug → Disease | 245 | — |
@@ -155,11 +152,7 @@ Each row shows the source database, the edge it contributes, the node types it c
 | **ClinPGx** | `drugLabelAnnotatesGene` | DrugLabel → Gene | 503 | — |
 | **ClinPGx** | `drugLabelDescribesDrug` | DrugLabel → Drug | 345 | — |
 | **ClinPGx** | `AFFECTS_RESPONSE_TO` | Gene → Drug / PharmacologicClass | 243 | — |
-| **DrugAge** | `associatedWithAging` | Gene → AgeingProperty | 386 | — |
-| **Disease Ontology** | `diseaseIsSubtypeOf` | Disease → Disease | 258 | — |
-| **MEDLINE** | `diseaseLocalizesToAnatomy` | Disease → BodyPart | 244 | — |
-| **MEDLINE** | `diseasePresentsSymptom` | Disease → Symptom | 117 | — |
-| **MEDLINE** | `diseaseResemblesDisease` | Disease → Disease | 4 | — |
+| **Disease Ontology** | `diseaseIsSubtypeOf` | Disease → Disease | 6,447 | — |
 
 ### 3.3 Per-Source Summary
 
@@ -167,7 +160,7 @@ Each row shows the source database, the edge it contributes, the node types it c
 |---|--------|--------|--------|-------------------|-------------------|------------:|
 | 1 | ClinicalTrials.gov | ClinicalTrialsParser | Public API v2 | ClinicalTrial (85,691) | STUDIES_CONDITION, TESTS_INTERVENTION | 45,358 |
 | 2 | ClinPGx | ClinPGxParser | Public API | DrugLabel (378) | VARIANT_IN, drugLabelAnnotatesGene, drugLabelDescribesDrug, AFFECTS_RESPONSE_TO | 2,182 |
-| 3 | NCBI Gene | NCBIGeneParser | Public FTP | Gene (194,553) | geneInSpecies | 26,417 |
+| 3 | NCBI Gene | NCBIGeneParser | Public FTP | Gene (194,553) | — | 0 |
 | 4 | DoRothEA | DoRothEAParser | Public API | TranscriptionFactor (367) | transcriptionFactorInteractsWithGene | 12,985 |
 | 5 | DrugBank | DrugBankParser | XML file | Drug (19,842) | drugBindsGene | 12,089 |
 | 6 | Disease Ontology | DiseaseOntologyParser | Public | Disease (12,012) | diseaseIsSubtypeOf | 258 |
@@ -176,8 +169,7 @@ Each row shows the source database, the edge it contributes, the node types it c
 | 9 | NCBI MeSH | MeSHParser | Public | Symptom (966) | — | 0 |
 | 10 | SIDER | SIDERParser | Public | SideEffect (5,734) | compoundCausesSideEffect | 148,518 |
 | 11 | LINCS L1000 | LINCS1000Parser | Public | — | geneRegulatesGene, compoundUpregulatesGene, compoundDownregulatesGene | 171,036 |
-| 12 | MEDLINE | MEDLINECooccurrenceParser | Public | — | diseaseLocalizesToAnatomy, diseasePresentsSymptom, diseaseResemblesDisease | 365 |
-| 13 | DrugCentral | DrugCentralParser | Public | PharmacologicClass (1,646) | 4 edge types | 33,147 |
+| 12 | DrugCentral | DrugCentralParser | Public | PharmacologicClass (1,646) | 4 edge types | 33,147 |
 | 14 | BindingDB | BindingDBParser | Public | — | chemicalBindsGene | 12,250 |
 | 15 | PubTator | PubTatorParser | Public FTP | — | geneAssociatesWithDisease, diseaseAssociatesWithDisease | 677,694 |
 | 16 | CTD | CTDParser | Public | Drug (4,572 unique) | chemicalIncreasesExpression, chemicalDecreasesExpression | 214,402 |
@@ -186,11 +178,10 @@ Each row shows the source database, the edge it contributes, the node types it c
 | 19 | HPO | HPOParser | Public | Phenotype (19,389) | geneAssociatesWithPhenotype | 162,994 |
 | 20 | Reactome | ReactomeParser | Public | Pathway (2,806) | geneInPathway, pathwayContainsGene | 89,958 |
 | 21 | STRING | STRINGParser | Public | — | geneInteractsWithGene | 121,170 |
-| 22 | OpenTargets | OpenTargetsParser | Public | — | geneAssociatesWithDisease | 103,879 |
-| 23 | HGNC Families | HGNCFamiliesParser | Public | GeneFamily (1,934) | geneInFamily, familyContainsGene | 10,246 |
-| 24 | ClinVar | ClinVarParser | Public FTP | Variant (4,488,042) | hasVariant, variantInGene, associatedWithVariant, variantAssociatedWithDisease | 4,733,604 |
-| 25 | DrugAge | DrugAgeParser | Public | AgeingProperty (3) | associatedWithAging | 386 |
-| 26 | AnAge | AnAgeParser | Public | Species (4,645) | — | 0 |
+| 20 | OpenTargets | OpenTargetsParser | Public | — | geneAssociatesWithDisease | 103,879 |
+| 21 | HGNC Families | HGNCFamiliesParser | Public | GeneFamily (1,934) | geneInFamily, familyContainsGene | 10,246 |
+| 22 | ClinVar | ClinVarParser | Public FTP | Variant (4,488,042) | hasVariant, variantInGene, associatedWithVariant, variantAssociatedWithDisease | 4,733,604 |
+| 23 | ClinPGx | ClinPGxParser | Public API | DrugLabel (378) | VARIANT_IN, drugLabelAnnotatesGene, drugLabelDescribesDrug, AFFECTS_RESPONSE_TO | 2,182 |
 
 ## 4. ETL Pipeline Architecture
 
@@ -220,7 +211,7 @@ main.py [--skip-download] [--skip-neo4j]
 
 ### 4.2 Parser Architecture
 
-All 26 parsers inherit from `BaseParser` (`src/parsers/base_parser.py`):
+All 24 parsers inherit from `BaseParser` (`src/parsers/base_parser.py`):
 
 ```python
 class BaseParser:
@@ -231,8 +222,8 @@ class BaseParser:
 
 Parser categories:
 - **Direct (5)**: Custom parsers hitting live APIs/files (ClinicalTrials, ClinPGx, NCBI Gene, DoRothEA, DrugBank)
-- **Hetionet-derived (17)**: Parse from Hetionet component files or original source data (in `parsers/hetionet_components/`)
-- **Agent-generated (4)**: Created by DatabaseAgent (HGNC Families, ClinVar, DrugAge, AnAge)
+- **Hetionet-derived (16)**: Parse from Hetionet component files or original source data (in `parsers/hetionet_components/`)
+- **Agent-generated (2)**: Created by DatabaseAgent (HGNC Families, ClinVar)
 
 ### 4.3 Ontology Configs
 
@@ -344,7 +335,7 @@ Autonomously generates new parsers from a database name + download URL:
 3. Saves parser file, registers configs, integrates into pipeline
 4. Executes parser, validates output, loads into Memgraph
 
-**4 parsers in production**: HGNC Families, ClinVar, DrugAge, AnAge
+**2 parsers in production**: HGNC Families, ClinVar
 
 ### 7.2 DiseaseQueryAgent (`src/disease_agent.py`)
 
@@ -370,7 +361,7 @@ Three sources use archived/pinned data with no live API replacement:
 ## 9. Deduplication Principles
 
 1. **One authoritative source per edge type** — no two databases contribute the same relationship type, with the exception of `geneAssociatesWithDisease` (OpenTargets curated + PubTator literature-mined = complementary evidence)
-2. **10 sources removed** during systematic dedup audit (DisGeNET, GWAS Catalog, Jensen DISEASES, OMIM, WikiPathways, AOP-DB, HGNC base, CellAge, GenAge, Hetionet precomputed)
+2. **12 sources removed** during systematic dedup audit (DisGeNET, GWAS Catalog, Jensen DISEASES, OMIM, WikiPathways, AOP-DB, HGNC base, CellAge, GenAge, Hetionet precomputed, DrugAge, AnAge)
 3. **Full rationale** documented in `docs/CardioKB_Redundancy_Changelog.docx`
 
 ## 10. Docker Deployment

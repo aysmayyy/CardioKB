@@ -2,9 +2,9 @@
 # CardioKB Data Sources
 
 ## Summary
-- **26 databases** — 26 parsers, all working, deduplicated (one authoritative source per node/edge type)
-- **4,896,258 nodes** | **7,683,150 relationships** | **19 node types** | **43 relationship types** | **23 source labels**
-- **3 legacy sources** retained as-is: SIDER (2015), LINCS L1000 (2020), MEDLINE (pinned GitHub commit) — no live API alternatives available
+- **23 databases** — 23 parsers, all working, deduplicated (one authoritative source per node/edge type)
+- **4,891,227 nodes** | **7,682,399 relationships** | **17 node types** | **40 relationship types** | **20 source labels**
+- **2 legacy sources** retained as-is: SIDER (2015), LINCS L1000 (2020) — no live API alternatives available
 
 ## Direct Parsers (5)
 
@@ -16,7 +16,7 @@
 | 4 | DoRothEA (OmniPath) | Public API | Working | 12,985 TF-gene interactions with morScore + confidence |
 | 5 | DrugBank | XML file | Working | 19,842 drugs + 4,572 CTD unique Drug nodes, 12,089 drugBindsGene edges |
 
-## Hetionet-Derived Component Parsers (17)
+## Hetionet-Derived Component Parsers (16)
 
 | # | Database | Access Type | Parser Status | Notes |
 |---|----------|-------------|---------------|-------|
@@ -26,7 +26,7 @@
 | 9 | NCBI MeSH (symptoms) | Public | Working | 966 symptom nodes (nodes only) |
 | 10 | SIDER (side effects) | Public | Working | 5,734 side effects, 148,518 compoundCausesSideEffect edges. **Legacy: pinned to 2015 GitHub commit; retained — no live API alternative** |
 | 11 | LINCS L1000 (gene expression) | Public | Working | 150,540 geneRegulatesGene + 10,218 compoundDownregulatesGene + 10,278 compoundUpregulatesGene edges with zScore. **Legacy: pinned to 2020 GitHub commit; retained — clue.io API requires institutional access** |
-| 12 | MEDLINE (literature cooccurrence) | Public | Working | 244 diseaseLocalizesToAnatomy + 117 diseasePresentsSymptom + 4 diseaseResemblesDisease edges. **Legacy: pinned GitHub commit; retained — unique anatomy/symptom cooccurrence not covered by PubTator** |
+| ~~12~~ | ~~MEDLINE (literature cooccurrence)~~ | ~~Public~~ | ~~Removed~~ | ~~365 total edges~~ — **Removed: minimal value (365 edges), anatomy/symptom cooccurrence too sparse for ML** |
 | 13 | DrugCentral (drug-disease) | Public | Working | 16,403 pharmacologicClassIncludesCompound + 16,403 compoundInPharmacologicClass + 245 drugTreatsDisease + 96 drugPalliatesDisease edges (CUI-to-DOID mapped) |
 | 14 | BindingDB (drug-target) | Public | Working | 12,250 chemicalBindsGene edges |
 | 15 | PubTator Central (literature mining) | Public FTP | Working | 673,374 geneAssociatesWithDisease + 4,320 diseaseAssociatesWithDisease edges (after CVD AND-filter) |
@@ -38,16 +38,14 @@
 | 21 | STRING | Public | Working | 121,170 geneInteractsWithGene edges (confidence > 700) |
 | 22 | OpenTargets | Public | Working | 103,879 geneAssociatesWithDisease edges (after CVD AND-filter, via EFO-to-DOID mapping) |
 
-## Agent-Generated Parsers (4)
+## Agent-Generated Parsers (2)
 
 | # | Database | Access Type | Parser Status | Notes |
 |---|----------|-------------|---------------|-------|
-| 23 | HGNC Gene Families | Public | Working | 1,934 GeneFamily nodes, 5,123 geneInFamily + 5,123 familyContainsGene edges |
-| 24 | ClinVar | Public FTP | Working | 4,488,042 Variant nodes, 2,267,095 hasVariant + 2,267,095 variantInGene + 99,707 associatedWithVariant + 99,707 variantAssociatedWithDisease edges |
-| 25 | DrugAge | Public | Working | 386 associatedWithAging edges, 3 AgeingProperty nodes |
-| 26 | AnAge | Public | Working | 4,645 Species longevity nodes (nodes only) |
+| 21 | HGNC Gene Families | Public | Working | 1,934 GeneFamily nodes, 5,123 geneInFamily + 5,123 familyContainsGene edges |
+| 22 | ClinVar | Public FTP | Working | 4,488,042 Variant nodes, 2,267,095 hasVariant + 2,267,095 variantInGene + 99,707 associatedWithVariant + 99,707 variantAssociatedWithDisease edges |
 
-## Sources Removed During Deduplication (10)
+## Sources Removed During Deduplication (13)
 
 | Removed Source | Was Providing | Replaced By | Rationale |
 |---------------|---------------|-------------|-----------|
@@ -61,6 +59,9 @@
 | CellAge | Senescence gene nodes | NCBI Gene | Node-only source, genes already in NCBI Gene |
 | GenAge | Aging gene nodes | NCBI Gene | Node-only source, genes already in NCBI Gene |
 | Hetionet (precomputed) | 138K side effects + 5K PPI + 127 covariance | SIDER + STRING | Side effects covered by SIDER, PPI by STRING; covariance dropped (127 edges) |
+| **DrugAge** | 386 associatedWithAging edges, 3 AgeingProperty nodes | — | **Too sparse (386 edges) for ML applications; minimal analytical value** |
+| **AnAge** | 4,645 Species nodes | — | **Node-only source with no edges; hurts ML model training** |
+| **MEDLINE** | 365 cooccurrence edges (anatomy/symptom/disease) | — | **Too sparse (365 edges); minimal value vs. maintenance cost** |
 
 ## Sources Modified During Deduplication (2)
 
@@ -69,10 +70,10 @@
 | PubTator Central | Kept geneAssociatesWithDisease (literature-mined, complementary to OpenTargets curated) + diseaseAssociatesWithDisease (unique). CVD AND-filter applied to scope results. | PubTator provides literature cooccurrence evidence distinct from OpenTargets curated associations |
 | ClinPGx | Removed Variant from node contribution. Kept DrugLabel nodes and all 4 unique edge types. | ClinVar is primary Variant source (4.5M vs 1.1K) |
 
-## Relationship Source Labels (23)
+## Relationship Source Labels (20)
 
 All relationships carry a `source` property identifying the originating database:
 
-`Bgee`, `BindingDB`, `CTD`, `ClinPGx`, `ClinVar`, `ClinicalTrials.gov`, `Disease Ontology`, `DoRothEA`, `DrugAge`, `DrugBank`, `DrugCentral`, `Gene Ontology`, `HGNC`, `HPO`, `Jensen TISSUES`, `LINCS L1000`, `MEDLINE`, `NCBI Gene`, `OpenTargets`, `PubTator`, `Reactome`, `SIDER`, `STRING`
+`Bgee`, `BindingDB`, `CTD`, `ClinPGx`, `ClinVar`, `ClinicalTrials.gov`, `Disease Ontology`, `DoRothEA`, `DrugBank`, `DrugCentral`, `Gene Ontology`, `HGNC`, `HPO`, `Jensen TISSUES`, `LINCS L1000`, `OpenTargets`, `PubTator`, `Reactome`, `SIDER`, `STRING`
 
-HGNC Families uses `HGNC` as its source label. Disease Ontology and NCBI Gene also contribute relationship source labels (diseaseIsSubtypeOf and geneInSpecies respectively).
+HGNC Families uses `HGNC` as its source label. Disease Ontology contributes relationship source labels (diseaseIsSubtypeOf).

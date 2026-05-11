@@ -1,5 +1,5 @@
 # CardioKB Node Types
-# 19 node types in the CVD knowledge graph
+# 17 node types in the CVD knowledge graph
 # Format: NodeType | Primary Key | Source Database | Description
 
 Gene | geneSymbol | NCBI Gene | Human genes (194,553 nodes)
@@ -19,5 +19,3 @@ TranscriptionFactor | TF | DoRothEA | Transcription factors (367 nodes)
 PharmacologicClass | classId | DrugCentral | Drug pharmacologic classes (1,646 nodes)
 GeneFamily | familyId | HGNC Families | Gene families (1,934 nodes)
 DrugLabel | labelId | ClinPGx | FDA drug labels (378 nodes)
-AgeingProperty | propertyName | DrugAge | Aging properties (3 nodes)
-Species | speciesName | AnAge | Species longevity data (4,645 nodes)

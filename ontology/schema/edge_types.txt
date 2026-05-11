@@ -1,5 +1,5 @@
 # CardioKB Edge Types
-# 43 unique relationship types in the CVD knowledge graph (after redundancy removal + CVD filtering)
+# 42 unique relationship types in the CVD knowledge graph (after redundancy removal + CVD filtering)
 # Format: EdgeType | Source -> Target | Source Database | Edge Count
 
 # Gene-Disease associations
@@ -65,11 +65,11 @@ compoundInPharmacologicClass | Drug -> PharmacologicClass | DrugCentral | 16,403
 # Disease-Disease
 diseaseIsSubtypeOf | Disease -> Disease | Disease Ontology | 6,447
 diseaseAssociatesWithDisease | Disease -> Disease | PubTator | 806,900
-diseaseResemblesDisease | Disease -> Disease | MEDLINE | 148
+diseaseResemblesDisease | Disease -> Disease | MEDLINE | 4
 
-# Disease-Symptom/Anatomy
-diseasePresentsSymptom | Disease -> Symptom | MEDLINE | 524
-diseaseLocalizesToAnatomy | Disease -> BodyPart | MEDLINE | 726
+# Disease-Symptom/Anatomy (MEDLINE)
+diseasePresentsSymptom | Disease -> Symptom | MEDLINE | 117
+diseaseLocalizesToAnatomy | Disease -> BodyPart | MEDLINE | 244
 
 # Clinical Trials
 STUDIES_CONDITION | ClinicalTrial -> Disease | ClinicalTrials.gov | 33,219
@@ -78,11 +78,7 @@ TESTS_INTERVENTION | ClinicalTrial -> Drug | ClinicalTrials.gov | 3,135
 # Pharmacogenomics (ClinPGx)
 VARIANT_IN | Variant -> Gene | ClinPGx | 1,091
 AFFECTS_RESPONSE_TO | Gene -> Drug | ClinPGx | 243
+AFFECTS_RESPONSE_TO_CLASS | Gene -> PharmacologicClass | ClinPGx | (from pharma class annotations)
 drugLabelAnnotatesGene | DrugLabel -> Gene | ClinPGx | 503
 drugLabelDescribesDrug | DrugLabel -> Drug | ClinPGx | 50
 
-# Species
-geneInSpecies | Gene -> Species | NCBI Gene | 28,999
-
-# Aging
-associatedWithAging | Gene -> AgeingProperty | DrugAge | 386

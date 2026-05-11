@@ -59,8 +59,8 @@ from src.parsers import (
     OpenTargetsParser,
     HGNCFamiliesParser,
     ClinVarParser,
-    DrugAgeParser,
-    AnAgeParser,
+    # DrugAgeParser — REMOVED (too sparse: 386 edges)
+    # AnAgeParser — REMOVED (node-only, no edges)
 )
 
 logger = logging.getLogger(__name__)
@@ -651,13 +651,9 @@ class CardioKBPipeline:
         parsers['clinvar'] = ClinVarParser(
             data_dir=str(self.raw_dir),
         )
-        parsers['drugage'] = DrugAgeParser(
-            data_dir=str(self.raw_dir),
-        )
+        # DrugAge — removed (too sparse: 386 edges)
         # CellAge — removed
-        parsers['anage'] = AnAgeParser(
-            data_dir=str(self.raw_dir),
-        )
+        # AnAge — removed (node-only, no edges)
         # GenAge — removed
         # Parsers requiring credentials (only add if configured)
         # OMIM — removed (redundant with OpenTargets + HPO)
@@ -1012,23 +1008,7 @@ class CardioKBPipeline:
                 # Post-load: tag CVD-relevant Disease nodes
                 self._tag_cvd_diseases(loader)
 
-                # Post-load: link all connected Gene nodes to Homo sapiens Species node
-                # (AnAge provides Species nodes; NCBI Gene provides human genes)
-                logger.info("Post-load: creating geneInSpecies edges (Gene → Homo sapiens)...")
-                try:
-                    with loader.driver.session() as session:
-                        result = session.run(
-                            'MATCH (sp:Species {speciesName: "Homo sapiens"}) '
-                            'MATCH (g:Gene)--() '
-                            'WITH DISTINCT g, sp '
-                            'MERGE (g)-[r:geneInSpecies]->(sp) '
-                            'ON CREATE SET r.source = "NCBI Gene" '
-                            'RETURN count(r) AS cnt'
-                        )
-                        cnt = result.single()['cnt']
-                        logger.info(f"  Created {cnt} geneInSpecies edges")
-                except Exception as e:
-                    logger.warning(f"  geneInSpecies post-load failed: {e}")
+                # geneInSpecies edges removed (AnAge Species nodes no longer loaded)
 
         except Exception as e:
             logger.error(f"Neo4j loading failed: {e}")
