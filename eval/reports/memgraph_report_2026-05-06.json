@@ -1,0 +1,1639 @@
+{
+  "run_timestamp": "2026-05-07T17:44:50.134497+00:00",
+  "entity_counts": {
+    "AgeingProperty": 3,
+    "BiologicalProcess": 24547,
+    "BodyPart": 14937,
+    "CellularComponent": 4069,
+    "ClinicalTrial": 85691,
+    "Disease": 12096,
+    "DiseaseCache": 1,
+    "Drug": 24429,
+    "DrugLabel": 378,
+    "Gene": 194559,
+    "GeneFamily": 1934,
+    "MolecularFunction": 10123,
+    "Pathway": 2806,
+    "PharmacologicClass": 1646,
+    "Phenotype": 19389,
+    "SideEffect": 5734,
+    "Species": 4645,
+    "Symptom": 966,
+    "TranscriptionFactor": 367,
+    "Variant": 4488042,
+    "_Metadata": 1
+  },
+  "metrics": [
+    {
+      "name": "Total node count per label",
+      "data_type": "integer",
+      "tier": 1,
+      "result": 3,
+      "note": "Label: AgeingProperty",
+      "label": "AgeingProperty"
+    },
+    {
+      "name": "Total node count per label",
+      "data_type": "integer",
+      "tier": 1,
+      "result": 24547,
+      "note": "Label: BiologicalProcess",
+      "label": "BiologicalProcess"
+    },
+    {
+      "name": "Total node count per label",
+      "data_type": "integer",
+      "tier": 1,
+      "result": 14937,
+      "note": "Label: BodyPart",
+      "label": "BodyPart"
+    },
+    {
+      "name": "Total node count per label",
+      "data_type": "integer",
+      "tier": 1,
+      "result": 4069,
+      "note": "Label: CellularComponent",
+      "label": "CellularComponent"
+    },
+    {
+      "name": "Total node count per label",
+      "data_type": "integer",
+      "tier": 1,
+      "result": 85691,
+      "note": "Label: ClinicalTrial",
+      "label": "ClinicalTrial"
+    },
+    {
+      "name": "Total node count per label",
+      "data_type": "integer",
+      "tier": 1,
+      "result": 12096,
+      "note": "Label: Disease",
+      "label": "Disease"
+    },
+    {
+      "name": "Total node count per label",
+      "data_type": "integer",
+      "tier": 1,
+      "result": 1,
+      "note": "Label: DiseaseCache",
+      "label": "DiseaseCache"
+    },
+    {
+      "name": "Total node count per label",
+      "data_type": "integer",
+      "tier": 1,
+      "result": 24429,
+      "note": "Label: Drug",
+      "label": "Drug"
+    },
+    {
+      "name": "Total node count per label",
+      "data_type": "integer",
+      "tier": 1,
+      "result": 378,
+      "note": "Label: DrugLabel",
+      "label": "DrugLabel"
+    },
+    {
+      "name": "Total node count per label",
+      "data_type": "integer",
+      "tier": 1,
+      "result": 194559,
+      "note": "Label: Gene",
+      "label": "Gene"
+    },
+    {
+      "name": "Total node count per label",
+      "data_type": "integer",
+      "tier": 1,
+      "result": 1934,
+      "note": "Label: GeneFamily",
+      "label": "GeneFamily"
+    },
+    {
+      "name": "Total node count per label",
+      "data_type": "integer",
+      "tier": 1,
+      "result": 10123,
+      "note": "Label: MolecularFunction",
+      "label": "MolecularFunction"
+    },
+    {
+      "name": "Total node count per label",
+      "data_type": "integer",
+      "tier": 1,
+      "result": 2806,
+      "note": "Label: Pathway",
+      "label": "Pathway"
+    },
+    {
+      "name": "Total node count per label",
+      "data_type": "integer",
+      "tier": 1,
+      "result": 1646,
+      "note": "Label: PharmacologicClass",
+      "label": "PharmacologicClass"
+    },
+    {
+      "name": "Total node count per label",
+      "data_type": "integer",
+      "tier": 1,
+      "result": 19389,
+      "note": "Label: Phenotype",
+      "label": "Phenotype"
+    },
+    {
+      "name": "Total node count per label",
+      "data_type": "integer",
+      "tier": 1,
+      "result": 5734,
+      "note": "Label: SideEffect",
+      "label": "SideEffect"
+    },
+    {
+      "name": "Total node count per label",
+      "data_type": "integer",
+      "tier": 1,
+      "result": 4645,
+      "note": "Label: Species",
+      "label": "Species"
+    },
+    {
+      "name": "Total node count per label",
+      "data_type": "integer",
+      "tier": 1,
+      "result": 966,
+      "note": "Label: Symptom",
+      "label": "Symptom"
+    },
+    {
+      "name": "Total node count per label",
+      "data_type": "integer",
+      "tier": 1,
+      "result": 367,
+      "note": "Label: TranscriptionFactor",
+      "label": "TranscriptionFactor"
+    },
+    {
+      "name": "Total node count per label",
+      "data_type": "integer",
+      "tier": 1,
+      "result": 4488042,
+      "note": "Label: Variant",
+      "label": "Variant"
+    },
+    {
+      "name": "Total node count per label",
+      "data_type": "integer",
+      "tier": 1,
+      "result": 1,
+      "note": "Label: _Metadata",
+      "label": "_Metadata"
+    },
+    {
+      "name": "Total edge count per type",
+      "data_type": "integer",
+      "tier": 1,
+      "result": 243,
+      "note": "Relationship type: AFFECTS_RESPONSE_TO",
+      "relationship_type": "AFFECTS_RESPONSE_TO"
+    },
+    {
+      "name": "Total edge count per type",
+      "data_type": "integer",
+      "tier": 1,
+      "result": 27866,
+      "note": "Relationship type: STUDIES_CONDITION",
+      "relationship_type": "STUDIES_CONDITION"
+    },
+    {
+      "name": "Total edge count per type",
+      "data_type": "integer",
+      "tier": 1,
+      "result": 17492,
+      "note": "Relationship type: TESTS_INTERVENTION",
+      "relationship_type": "TESTS_INTERVENTION"
+    },
+    {
+      "name": "Total edge count per type",
+      "data_type": "integer",
+      "tier": 1,
+      "result": 1091,
+      "note": "Relationship type: VARIANT_IN",
+      "relationship_type": "VARIANT_IN"
+    },
+    {
+      "name": "Total edge count per type",
+      "data_type": "integer",
+      "tier": 1,
+      "result": 386,
+      "note": "Relationship type: associatedWithAging",
+      "relationship_type": "associatedWithAging"
+    },
+    {
+      "name": "Total edge count per type",
+      "data_type": "integer",
+      "tier": 1,
+      "result": 99707,
+      "note": "Relationship type: associatedWithVariant",
+      "relationship_type": "associatedWithVariant"
+    },
+    {
+      "name": "Total edge count per type",
+      "data_type": "integer",
+      "tier": 1,
+      "result": 1872,
+      "note": "Relationship type: bodyPartOverexpressesGene",
+      "relationship_type": "bodyPartOverexpressesGene"
+    },
+    {
+      "name": "Total edge count per type",
+      "data_type": "integer",
+      "tier": 1,
+      "result": 784026,
+      "note": "Relationship type: bodyPartUnderexpressesGene",
+      "relationship_type": "bodyPartUnderexpressesGene"
+    },
+    {
+      "name": "Total edge count per type",
+      "data_type": "integer",
+      "tier": 1,
+      "result": 12250,
+      "note": "Relationship type: chemicalBindsGene",
+      "relationship_type": "chemicalBindsGene"
+    },
+    {
+      "name": "Total edge count per type",
+      "data_type": "integer",
+      "tier": 1,
+      "result": 97951,
+      "note": "Relationship type: chemicalDecreasesExpression",
+      "relationship_type": "chemicalDecreasesExpression"
+    },
+    {
+      "name": "Total edge count per type",
+      "data_type": "integer",
+      "tier": 1,
+      "result": 116451,
+      "note": "Relationship type: chemicalIncreasesExpression",
+      "relationship_type": "chemicalIncreasesExpression"
+    },
+    {
+      "name": "Total edge count per type",
+      "data_type": "integer",
+      "tier": 1,
+      "result": 148518,
+      "note": "Relationship type: compoundCausesSideEffect",
+      "relationship_type": "compoundCausesSideEffect"
+    },
+    {
+      "name": "Total edge count per type",
+      "data_type": "integer",
+      "tier": 1,
+      "result": 10218,
+      "note": "Relationship type: compoundDownregulatesGene",
+      "relationship_type": "compoundDownregulatesGene"
+    },
+    {
+      "name": "Total edge count per type",
+      "data_type": "integer",
+      "tier": 1,
+      "result": 16403,
+      "note": "Relationship type: compoundInPharmacologicClass",
+      "relationship_type": "compoundInPharmacologicClass"
+    },
+    {
+      "name": "Total edge count per type",
+      "data_type": "integer",
+      "tier": 1,
+      "result": 10278,
+      "note": "Relationship type: compoundUpregulatesGene",
+      "relationship_type": "compoundUpregulatesGene"
+    },
+    {
+      "name": "Total edge count per type",
+      "data_type": "integer",
+      "tier": 1,
+      "result": 4320,
+      "note": "Relationship type: diseaseAssociatesWithDisease",
+      "relationship_type": "diseaseAssociatesWithDisease"
+    },
+    {
+      "name": "Total edge count per type",
+      "data_type": "integer",
+      "tier": 1,
+      "result": 258,
+      "note": "Relationship type: diseaseIsSubtypeOf",
+      "relationship_type": "diseaseIsSubtypeOf"
+    },
+    {
+      "name": "Total edge count per type",
+      "data_type": "integer",
+      "tier": 1,
+      "result": 244,
+      "note": "Relationship type: diseaseLocalizesToAnatomy",
+      "relationship_type": "diseaseLocalizesToAnatomy"
+    },
+    {
+      "name": "Total edge count per type",
+      "data_type": "integer",
+      "tier": 1,
+      "result": 117,
+      "note": "Relationship type: diseasePresentsSymptom",
+      "relationship_type": "diseasePresentsSymptom"
+    },
+    {
+      "name": "Total edge count per type",
+      "data_type": "integer",
+      "tier": 1,
+      "result": 4,
+      "note": "Relationship type: diseaseResemblesDisease",
+      "relationship_type": "diseaseResemblesDisease"
+    },
+    {
+      "name": "Total edge count per type",
+      "data_type": "integer",
+      "tier": 1,
+      "result": 12099,
+      "note": "Relationship type: drugBindsGene",
+      "relationship_type": "drugBindsGene"
+    },
+    {
+      "name": "Total edge count per type",
+      "data_type": "integer",
+      "tier": 1,
+      "result": 503,
+      "note": "Relationship type: drugLabelAnnotatesGene",
+      "relationship_type": "drugLabelAnnotatesGene"
+    },
+    {
+      "name": "Total edge count per type",
+      "data_type": "integer",
+      "tier": 1,
+      "result": 345,
+      "note": "Relationship type: drugLabelDescribesDrug",
+      "relationship_type": "drugLabelDescribesDrug"
+    },
+    {
+      "name": "Total edge count per type",
+      "data_type": "integer",
+      "tier": 1,
+      "result": 96,
+      "note": "Relationship type: drugPalliatesDisease",
+      "relationship_type": "drugPalliatesDisease"
+    },
+    {
+      "name": "Total edge count per type",
+      "data_type": "integer",
+      "tier": 1,
+      "result": 250,
+      "note": "Relationship type: drugTreatsDisease",
+      "relationship_type": "drugTreatsDisease"
+    },
+    {
+      "name": "Total edge count per type",
+      "data_type": "integer",
+      "tier": 1,
+      "result": 5123,
+      "note": "Relationship type: familyContainsGene",
+      "relationship_type": "familyContainsGene"
+    },
+    {
+      "name": "Total edge count per type",
+      "data_type": "integer",
+      "tier": 1,
+      "result": 25794,
+      "note": "Relationship type: geneAssociatedWithCellularComponent",
+      "relationship_type": "geneAssociatedWithCellularComponent"
+    },
+    {
+      "name": "Total edge count per type",
+      "data_type": "integer",
+      "tier": 1,
+      "result": 777271,
+      "note": "Relationship type: geneAssociatesWithDisease",
+      "relationship_type": "geneAssociatesWithDisease"
+    },
+    {
+      "name": "Total edge count per type",
+      "data_type": "integer",
+      "tier": 1,
+      "result": 162994,
+      "note": "Relationship type: geneAssociatesWithPhenotype",
+      "relationship_type": "geneAssociatesWithPhenotype"
+    },
+    {
+      "name": "Total edge count per type",
+      "data_type": "integer",
+      "tier": 1,
+      "result": 215235,
+      "note": "Relationship type: geneExpressedInBodyPart",
+      "relationship_type": "geneExpressedInBodyPart"
+    },
+    {
+      "name": "Total edge count per type",
+      "data_type": "integer",
+      "tier": 1,
+      "result": 26935,
+      "note": "Relationship type: geneHasMolecularFunction",
+      "relationship_type": "geneHasMolecularFunction"
+    },
+    {
+      "name": "Total edge count per type",
+      "data_type": "integer",
+      "tier": 1,
+      "result": 5123,
+      "note": "Relationship type: geneInFamily",
+      "relationship_type": "geneInFamily"
+    },
+    {
+      "name": "Total edge count per type",
+      "data_type": "integer",
+      "tier": 1,
+      "result": 44979,
+      "note": "Relationship type: geneInPathway",
+      "relationship_type": "geneInPathway"
+    },
+    {
+      "name": "Total edge count per type",
+      "data_type": "integer",
+      "tier": 1,
+      "result": 26417,
+      "note": "Relationship type: geneInSpecies",
+      "relationship_type": "geneInSpecies"
+    },
+    {
+      "name": "Total edge count per type",
+      "data_type": "integer",
+      "tier": 1,
+      "result": 121170,
+      "note": "Relationship type: geneInteractsWithGene",
+      "relationship_type": "geneInteractsWithGene"
+    },
+    {
+      "name": "Total edge count per type",
+      "data_type": "integer",
+      "tier": 1,
+      "result": 50350,
+      "note": "Relationship type: geneParticipatesInBiologicalProcess",
+      "relationship_type": "geneParticipatesInBiologicalProcess"
+    },
+    {
+      "name": "Total edge count per type",
+      "data_type": "integer",
+      "tier": 1,
+      "result": 150540,
+      "note": "Relationship type: geneRegulatesGene",
+      "relationship_type": "geneRegulatesGene"
+    },
+    {
+      "name": "Total edge count per type",
+      "data_type": "integer",
+      "tier": 1,
+      "result": 2267095,
+      "note": "Relationship type: hasVariant",
+      "relationship_type": "hasVariant"
+    },
+    {
+      "name": "Total edge count per type",
+      "data_type": "integer",
+      "tier": 1,
+      "result": 44979,
+      "note": "Relationship type: pathwayContainsGene",
+      "relationship_type": "pathwayContainsGene"
+    },
+    {
+      "name": "Total edge count per type",
+      "data_type": "integer",
+      "tier": 1,
+      "result": 16403,
+      "note": "Relationship type: pharmacologicClassIncludesCompound",
+      "relationship_type": "pharmacologicClassIncludesCompound"
+    },
+    {
+      "name": "Total edge count per type",
+      "data_type": "integer",
+      "tier": 1,
+      "result": 12985,
+      "note": "Relationship type: transcriptionFactorInteractsWithGene",
+      "relationship_type": "transcriptionFactorInteractsWithGene"
+    },
+    {
+      "name": "Total edge count per type",
+      "data_type": "integer",
+      "tier": 1,
+      "result": 99707,
+      "note": "Relationship type: variantAssociatedWithDisease",
+      "relationship_type": "variantAssociatedWithDisease"
+    },
+    {
+      "name": "Total edge count per type",
+      "data_type": "integer",
+      "tier": 1,
+      "result": 2267095,
+      "note": "Relationship type: variantInGene",
+      "relationship_type": "variantInGene"
+    },
+    {
+      "name": "Relationship resolution rate per mapping",
+      "data_type": "float",
+      "tier": 1,
+      "result": 1.0,
+      "source": "drugbank",
+      "mapping": "drugbank.drug_binds_gene",
+      "note": "Fraction of TSV rows where both subject and object identifiers match existing graph nodes"
+    },
+    {
+      "name": "Relationship resolution rate per mapping",
+      "data_type": "float",
+      "tier": 1,
+      "result": 1.0,
+      "source": "dorothea",
+      "mapping": "dorothea.tf_gene_interactions",
+      "note": "Fraction of TSV rows where both subject and object identifiers match existing graph nodes"
+    },
+    {
+      "name": "Relationship resolution rate per mapping",
+      "data_type": "float",
+      "tier": 1,
+      "result": 1.0,
+      "source": "clinicaltrials",
+      "mapping": "clinicaltrials.trial_studies_condition",
+      "note": "Fraction of TSV rows where both subject and object identifiers match existing graph nodes"
+    },
+    {
+      "name": "Relationship resolution rate per mapping",
+      "data_type": "float",
+      "tier": 1,
+      "result": 0.912467,
+      "source": "clinicaltrials",
+      "mapping": "clinicaltrials.trial_tests_intervention",
+      "note": "Fraction of TSV rows where both subject and object identifiers match existing graph nodes"
+    },
+    {
+      "name": "Relationship resolution rate per mapping",
+      "data_type": "float",
+      "tier": 1,
+      "result": 1.0,
+      "source": "clinpgx",
+      "mapping": "clinpgx.clinical_annotations",
+      "note": "Fraction of TSV rows where both subject and object identifiers match existing graph nodes"
+    },
+    {
+      "name": "Relationship resolution rate per mapping",
+      "data_type": "float",
+      "tier": 1,
+      "result": 1.0,
+      "source": "clinpgx",
+      "mapping": "clinpgx.variant_in_gene",
+      "note": "Fraction of TSV rows where both subject and object identifiers match existing graph nodes"
+    },
+    {
+      "name": "Relationship resolution rate per mapping",
+      "data_type": "float",
+      "tier": 1,
+      "result": 1.0,
+      "source": "clinpgx",
+      "mapping": "clinpgx.clinical_annotations_pharma_class",
+      "note": "Fraction of TSV rows where both subject and object identifiers match existing graph nodes"
+    },
+    {
+      "name": "Relationship resolution rate per mapping",
+      "data_type": "float",
+      "tier": 1,
+      "result": 1.0,
+      "source": "clinpgx",
+      "mapping": "clinpgx.drug_label_annotates_gene",
+      "note": "Fraction of TSV rows where both subject and object identifiers match existing graph nodes"
+    },
+    {
+      "name": "Relationship resolution rate per mapping",
+      "data_type": "float",
+      "tier": 1,
+      "result": 0.958333,
+      "source": "clinpgx",
+      "mapping": "clinpgx.drug_label_describes_drug",
+      "note": "Fraction of TSV rows where both subject and object identifiers match existing graph nodes"
+    },
+    {
+      "name": "Relationship resolution rate per mapping",
+      "data_type": "float",
+      "tier": 1,
+      "result": 1.0,
+      "source": "disease_ontology",
+      "mapping": "disease_ontology.disease_hierarchy",
+      "note": "Fraction of TSV rows where both subject and object identifiers match existing graph nodes"
+    },
+    {
+      "name": "Relationship resolution rate per mapping",
+      "data_type": "float",
+      "tier": 1,
+      "result": 1.0,
+      "source": "gene_ontology",
+      "mapping": "gene_ontology.gene_bp_associations",
+      "note": "Fraction of TSV rows where both subject and object identifiers match existing graph nodes"
+    },
+    {
+      "name": "Relationship resolution rate per mapping",
+      "data_type": "float",
+      "tier": 1,
+      "result": 1.0,
+      "source": "gene_ontology",
+      "mapping": "gene_ontology.gene_mf_associations",
+      "note": "Fraction of TSV rows where both subject and object identifiers match existing graph nodes"
+    },
+    {
+      "name": "Relationship resolution rate per mapping",
+      "data_type": "float",
+      "tier": 1,
+      "result": 1.0,
+      "source": "gene_ontology",
+      "mapping": "gene_ontology.gene_cc_associations",
+      "note": "Fraction of TSV rows where both subject and object identifiers match existing graph nodes"
+    },
+    {
+      "name": "Relationship resolution rate per mapping",
+      "data_type": "float",
+      "tier": 1,
+      "result": 1.0,
+      "source": "sider",
+      "mapping": "sider.compound_causes_side_effect",
+      "note": "Fraction of TSV rows where both subject and object identifiers match existing graph nodes"
+    },
+    {
+      "name": "Relationship resolution rate per mapping",
+      "data_type": "float",
+      "tier": 1,
+      "result": 1.0,
+      "source": "lincs",
+      "mapping": "lincs.compound_upregulates_gene",
+      "note": "Fraction of TSV rows where both subject and object identifiers match existing graph nodes"
+    },
+    {
+      "name": "Relationship resolution rate per mapping",
+      "data_type": "float",
+      "tier": 1,
+      "result": 1.0,
+      "source": "lincs",
+      "mapping": "lincs.compound_downregulates_gene",
+      "note": "Fraction of TSV rows where both subject and object identifiers match existing graph nodes"
+    },
+    {
+      "name": "Relationship resolution rate per mapping",
+      "data_type": "float",
+      "tier": 1,
+      "result": 1.0,
+      "source": "lincs",
+      "mapping": "lincs.gene_regulates_gene",
+      "note": "Fraction of TSV rows where both subject and object identifiers match existing graph nodes"
+    },
+    {
+      "name": "Relationship resolution rate per mapping",
+      "data_type": "float",
+      "tier": 1,
+      "result": 1.0,
+      "source": "medline",
+      "mapping": "medline.disease_symptom_cooccurrence",
+      "note": "Fraction of TSV rows where both subject and object identifiers match existing graph nodes"
+    },
+    {
+      "name": "Relationship resolution rate per mapping",
+      "data_type": "float",
+      "tier": 1,
+      "result": 1.0,
+      "source": "medline",
+      "mapping": "medline.disease_anatomy_cooccurrence",
+      "note": "Fraction of TSV rows where both subject and object identifiers match existing graph nodes"
+    },
+    {
+      "name": "Relationship resolution rate per mapping",
+      "data_type": "float",
+      "tier": 1,
+      "result": 1.0,
+      "source": "medline",
+      "mapping": "medline.disease_disease_cooccurrence",
+      "note": "Fraction of TSV rows where both subject and object identifiers match existing graph nodes"
+    },
+    {
+      "name": "Relationship resolution rate per mapping",
+      "data_type": "float",
+      "tier": 1,
+      "result": 1.0,
+      "source": "drugcentral",
+      "mapping": "drugcentral.pharmacologic_class_includes_compound",
+      "note": "Fraction of TSV rows where both subject and object identifiers match existing graph nodes"
+    },
+    {
+      "name": "Relationship resolution rate per mapping",
+      "data_type": "float",
+      "tier": 1,
+      "result": 1.0,
+      "source": "drugcentral",
+      "mapping": "drugcentral.drug_treats_disease",
+      "note": "Fraction of TSV rows where both subject and object identifiers match existing graph nodes"
+    },
+    {
+      "name": "Relationship resolution rate per mapping",
+      "data_type": "float",
+      "tier": 1,
+      "result": 1.0,
+      "source": "drugcentral",
+      "mapping": "drugcentral.drug_palliates_disease",
+      "note": "Fraction of TSV rows where both subject and object identifiers match existing graph nodes"
+    },
+    {
+      "name": "Relationship resolution rate per mapping",
+      "data_type": "float",
+      "tier": 1,
+      "result": 1.0,
+      "source": "pubtator",
+      "mapping": "pubtator.disease_disease_cooccurrence",
+      "note": "Fraction of TSV rows where both subject and object identifiers match existing graph nodes"
+    },
+    {
+      "name": "Relationship resolution rate per mapping",
+      "data_type": "float",
+      "tier": 1,
+      "result": 0.999763,
+      "source": "pubtator",
+      "mapping": "pubtator.gene_disease_literature",
+      "note": "Fraction of TSV rows where both subject and object identifiers match existing graph nodes"
+    },
+    {
+      "name": "Relationship resolution rate per mapping",
+      "data_type": "float",
+      "tier": 1,
+      "result": 1.0,
+      "source": "bindingdb",
+      "mapping": "bindingdb.drug_binds_gene",
+      "note": "Fraction of TSV rows where both subject and object identifiers match existing graph nodes"
+    },
+    {
+      "name": "Relationship resolution rate per mapping",
+      "data_type": "float",
+      "tier": 1,
+      "result": 1.0,
+      "source": "ctd",
+      "mapping": "ctd.chemical_increases_expression",
+      "note": "Fraction of TSV rows where both subject and object identifiers match existing graph nodes"
+    },
+    {
+      "name": "Relationship resolution rate per mapping",
+      "data_type": "float",
+      "tier": 1,
+      "result": 1.0,
+      "source": "ctd",
+      "mapping": "ctd.chemical_decreases_expression",
+      "note": "Fraction of TSV rows where both subject and object identifiers match existing graph nodes"
+    },
+    {
+      "name": "Relationship resolution rate per mapping",
+      "data_type": "float",
+      "tier": 1,
+      "result": 0.944501,
+      "source": "bgee",
+      "mapping": "bgee.bodypart_overexpresses_gene",
+      "note": "Fraction of TSV rows where both subject and object identifiers match existing graph nodes"
+    },
+    {
+      "name": "Relationship resolution rate per mapping",
+      "data_type": "float",
+      "tier": 1,
+      "result": 0.999584,
+      "source": "bgee",
+      "mapping": "bgee.bodypart_underexpresses_gene",
+      "note": "Fraction of TSV rows where both subject and object identifiers match existing graph nodes"
+    },
+    {
+      "name": "Relationship resolution rate per mapping",
+      "data_type": "float",
+      "tier": 1,
+      "result": 1.0,
+      "source": "jensentissues",
+      "mapping": "jensentissues.gene_tissue_associations",
+      "note": "Fraction of TSV rows where both subject and object identifiers match existing graph nodes"
+    },
+    {
+      "name": "Relationship resolution rate per mapping",
+      "data_type": "float",
+      "tier": 1,
+      "result": 0.999914,
+      "source": "hpo",
+      "mapping": "hpo.gene_phenotype_associations",
+      "note": "Fraction of TSV rows where both subject and object identifiers match existing graph nodes"
+    },
+    {
+      "name": "Relationship resolution rate per mapping",
+      "data_type": "float",
+      "tier": 1,
+      "result": 0.993909,
+      "source": "reactome",
+      "mapping": "reactome.gene_pathway",
+      "note": "Fraction of TSV rows where both subject and object identifiers match existing graph nodes"
+    },
+    {
+      "name": "Relationship resolution rate per mapping",
+      "data_type": "float",
+      "tier": 1,
+      "result": 1.0,
+      "source": "string",
+      "mapping": "string.gene_interacts_gene",
+      "note": "Fraction of TSV rows where both subject and object identifiers match existing graph nodes"
+    },
+    {
+      "name": "Relationship resolution rate per mapping",
+      "data_type": "float",
+      "tier": 1,
+      "result": 0.99972,
+      "source": "opentargets",
+      "mapping": "opentargets.gene_disease",
+      "note": "Fraction of TSV rows where both subject and object identifiers match existing graph nodes"
+    },
+    {
+      "name": "Relationship resolution rate per mapping",
+      "data_type": "float",
+      "tier": 1,
+      "result": 1.0,
+      "source": "hgncfamilies",
+      "mapping": "hgncfamilies.gene_family_edges",
+      "note": "Fraction of TSV rows where both subject and object identifiers match existing graph nodes"
+    },
+    {
+      "name": "Relationship resolution rate per mapping",
+      "data_type": "float",
+      "tier": 1,
+      "result": 0.999892,
+      "source": "clinvar",
+      "mapping": "clinvar.gene_variant",
+      "note": "Fraction of TSV rows where both subject and object identifiers match existing graph nodes"
+    },
+    {
+      "name": "Relationship resolution rate per mapping",
+      "data_type": "float",
+      "tier": 1,
+      "result": 1.0,
+      "source": "clinvar",
+      "mapping": "clinvar.disease_variant_omim",
+      "note": "Fraction of TSV rows where both subject and object identifiers match existing graph nodes"
+    },
+    {
+      "name": "Relationship resolution rate per mapping",
+      "data_type": "float",
+      "tier": 1,
+      "result": 1.0,
+      "source": "drugage",
+      "mapping": "drugage.gene_aging_association",
+      "note": "Fraction of TSV rows where both subject and object identifiers match existing graph nodes"
+    },
+    {
+      "name": "Orphan node rate",
+      "data_type": "float",
+      "tier": 2,
+      "result": 0.0,
+      "note": "Label: AgeingProperty \u2014 fraction of nodes with zero edges",
+      "label": "AgeingProperty"
+    },
+    {
+      "name": "Orphan node rate",
+      "data_type": "float",
+      "tier": 2,
+      "result": 0.655966,
+      "note": "Label: BiologicalProcess \u2014 fraction of nodes with zero edges",
+      "label": "BiologicalProcess"
+    },
+    {
+      "name": "Orphan node rate",
+      "data_type": "float",
+      "tier": 2,
+      "result": 0.956953,
+      "note": "Label: BodyPart \u2014 fraction of nodes with zero edges",
+      "label": "BodyPart"
+    },
+    {
+      "name": "Orphan node rate",
+      "data_type": "float",
+      "tier": 2,
+      "result": 0.668223,
+      "note": "Label: CellularComponent \u2014 fraction of nodes with zero edges",
+      "label": "CellularComponent"
+    },
+    {
+      "name": "Orphan node rate",
+      "data_type": "float",
+      "tier": 2,
+      "result": 0.595103,
+      "note": "Label: ClinicalTrial \u2014 fraction of nodes with zero edges",
+      "label": "ClinicalTrial"
+    },
+    {
+      "name": "Orphan node rate",
+      "data_type": "float",
+      "tier": 2,
+      "result": 0.975364,
+      "note": "Label: Disease \u2014 fraction of nodes with zero edges",
+      "label": "Disease"
+    },
+    {
+      "name": "Orphan node rate",
+      "data_type": "float",
+      "tier": 2,
+      "result": 1.0,
+      "note": "Label: DiseaseCache \u2014 fraction of nodes with zero edges",
+      "label": "DiseaseCache"
+    },
+    {
+      "name": "Orphan node rate",
+      "data_type": "float",
+      "tier": 2,
+      "result": 0.481927,
+      "note": "Label: Drug \u2014 fraction of nodes with zero edges",
+      "label": "Drug"
+    },
+    {
+      "name": "Orphan node rate",
+      "data_type": "float",
+      "tier": 2,
+      "result": 0.0,
+      "note": "Label: DrugLabel \u2014 fraction of nodes with zero edges",
+      "label": "DrugLabel"
+    },
+    {
+      "name": "Orphan node rate",
+      "data_type": "float",
+      "tier": 2,
+      "result": 0.864221,
+      "note": "Label: Gene \u2014 fraction of nodes with zero edges",
+      "label": "Gene"
+    },
+    {
+      "name": "Orphan node rate",
+      "data_type": "float",
+      "tier": 2,
+      "result": 0.367115,
+      "note": "Label: GeneFamily \u2014 fraction of nodes with zero edges",
+      "label": "GeneFamily"
+    },
+    {
+      "name": "Orphan node rate",
+      "data_type": "float",
+      "tier": 2,
+      "result": 0.697916,
+      "note": "Label: MolecularFunction \u2014 fraction of nodes with zero edges",
+      "label": "MolecularFunction"
+    },
+    {
+      "name": "Orphan node rate",
+      "data_type": "float",
+      "tier": 2,
+      "result": 0.092659,
+      "note": "Label: Pathway \u2014 fraction of nodes with zero edges",
+      "label": "Pathway"
+    },
+    {
+      "name": "Orphan node rate",
+      "data_type": "float",
+      "tier": 2,
+      "result": 0.001215,
+      "note": "Label: PharmacologicClass \u2014 fraction of nodes with zero edges",
+      "label": "PharmacologicClass"
+    },
+    {
+      "name": "Orphan node rate",
+      "data_type": "float",
+      "tier": 2,
+      "result": 0.525143,
+      "note": "Label: Phenotype \u2014 fraction of nodes with zero edges",
+      "label": "Phenotype"
+    },
+    {
+      "name": "Orphan node rate",
+      "data_type": "float",
+      "tier": 2,
+      "result": 0.001395,
+      "note": "Label: SideEffect \u2014 fraction of nodes with zero edges",
+      "label": "SideEffect"
+    },
+    {
+      "name": "Orphan node rate",
+      "data_type": "float",
+      "tier": 2,
+      "result": 0.999785,
+      "note": "Label: Species \u2014 fraction of nodes with zero edges",
+      "label": "Species"
+    },
+    {
+      "name": "Orphan node rate",
+      "data_type": "float",
+      "tier": 2,
+      "result": 0.925466,
+      "note": "Label: Symptom \u2014 fraction of nodes with zero edges",
+      "label": "Symptom"
+    },
+    {
+      "name": "Orphan node rate",
+      "data_type": "float",
+      "tier": 2,
+      "result": 0.092643,
+      "note": "Label: TranscriptionFactor \u2014 fraction of nodes with zero edges",
+      "label": "TranscriptionFactor"
+    },
+    {
+      "name": "Orphan node rate",
+      "data_type": "float",
+      "tier": 2,
+      "result": 0.49458,
+      "note": "Label: Variant \u2014 fraction of nodes with zero edges",
+      "label": "Variant"
+    },
+    {
+      "name": "Orphan node rate",
+      "data_type": "float",
+      "tier": 2,
+      "result": 1.0,
+      "note": "Label: _Metadata \u2014 fraction of nodes with zero edges",
+      "label": "_Metadata"
+    },
+    {
+      "name": "Duplicate edge rate",
+      "data_type": "float",
+      "tier": 2,
+      "result": 0.0,
+      "note": "0 duplicate (subject, rel_type, object) triples of 7,683,183 computable edges",
+      "duplicate_edge_count": 0,
+      "duplicate_by_type": {
+        "AFFECTS_RESPONSE_TO": 0,
+        "STUDIES_CONDITION": 0,
+        "TESTS_INTERVENTION": 0,
+        "VARIANT_IN": 0,
+        "associatedWithAging": 0,
+        "associatedWithVariant": 0,
+        "bodyPartOverexpressesGene": 0,
+        "bodyPartUnderexpressesGene": 0,
+        "chemicalBindsGene": 0,
+        "chemicalDecreasesExpression": 0,
+        "chemicalIncreasesExpression": 0,
+        "compoundCausesSideEffect": 0,
+        "compoundDownregulatesGene": 0,
+        "compoundInPharmacologicClass": 0,
+        "compoundUpregulatesGene": 0,
+        "diseaseAssociatesWithDisease": 0,
+        "diseaseIsSubtypeOf": 0,
+        "diseaseLocalizesToAnatomy": 0,
+        "diseasePresentsSymptom": 0,
+        "diseaseResemblesDisease": 0,
+        "drugBindsGene": 0,
+        "drugLabelAnnotatesGene": 0,
+        "drugLabelDescribesDrug": 0,
+        "drugPalliatesDisease": 0,
+        "drugTreatsDisease": 0,
+        "familyContainsGene": 0,
+        "geneAssociatedWithCellularComponent": 0,
+        "geneAssociatesWithDisease": 0,
+        "geneAssociatesWithPhenotype": 0,
+        "geneExpressedInBodyPart": 0,
+        "geneHasMolecularFunction": 0,
+        "geneInFamily": 0,
+        "geneInPathway": 0,
+        "geneInSpecies": 0,
+        "geneInteractsWithGene": 0,
+        "geneParticipatesInBiologicalProcess": 0,
+        "geneRegulatesGene": 0,
+        "hasVariant": 0,
+        "pathwayContainsGene": 0,
+        "pharmacologicClassIncludesCompound": 0,
+        "transcriptionFactorInteractsWithGene": 0,
+        "variantAssociatedWithDisease": 0,
+        "variantInGene": 0
+      }
+    },
+    {
+      "name": "Largest connected component fraction",
+      "data_type": "float",
+      "tier": 2,
+      "result": null,
+      "note": "Memgraph MAGE weakly_connected_components procedure not available. Install MAGE: https://github.com/memgraph/mage",
+      "component_count": null
+    },
+    {
+      "name": "Average node degree per label",
+      "data_type": "float",
+      "tier": 2,
+      "result": 128.6667,
+      "note": "Label: AgeingProperty \u2014 mean edge count (in + out) per node",
+      "label": "AgeingProperty"
+    },
+    {
+      "name": "Average node degree per label",
+      "data_type": "float",
+      "tier": 2,
+      "result": 2.0512,
+      "note": "Label: BiologicalProcess \u2014 mean edge count (in + out) per node",
+      "label": "BiologicalProcess"
+    },
+    {
+      "name": "Average node degree per label",
+      "data_type": "float",
+      "tier": 2,
+      "result": 67.04,
+      "note": "Label: BodyPart \u2014 mean edge count (in + out) per node",
+      "label": "BodyPart"
+    },
+    {
+      "name": "Average node degree per label",
+      "data_type": "float",
+      "tier": 2,
+      "result": 6.3391,
+      "note": "Label: CellularComponent \u2014 mean edge count (in + out) per node",
+      "label": "CellularComponent"
+    },
+    {
+      "name": "Average node degree per label",
+      "data_type": "float",
+      "tier": 2,
+      "result": 0.5293,
+      "note": "Label: ClinicalTrial \u2014 mean edge count (in + out) per node",
+      "label": "ClinicalTrial"
+    },
+    {
+      "name": "Average node degree per label",
+      "data_type": "float",
+      "tier": 2,
+      "result": 83.8643,
+      "note": "Label: Disease \u2014 mean edge count (in + out) per node",
+      "label": "Disease"
+    },
+    {
+      "name": "Average node degree per label",
+      "data_type": "float",
+      "tier": 2,
+      "result": 0.0,
+      "note": "Label: DiseaseCache \u2014 mean edge count (in + out) per node",
+      "label": "DiseaseCache"
+    },
+    {
+      "name": "Average node degree per label",
+      "data_type": "float",
+      "tier": 2,
+      "result": 18.7882,
+      "note": "Label: Drug \u2014 mean edge count (in + out) per node",
+      "label": "Drug"
+    },
+    {
+      "name": "Average node degree per label",
+      "data_type": "float",
+      "tier": 2,
+      "result": 2.2434,
+      "note": "Label: DrugLabel \u2014 mean edge count (in + out) per node",
+      "label": "DrugLabel"
+    },
+    {
+      "name": "Average node degree per label",
+      "data_type": "float",
+      "tier": 2,
+      "result": 38.6678,
+      "note": "Label: Gene \u2014 mean edge count (in + out) per node",
+      "label": "Gene"
+    },
+    {
+      "name": "Average node degree per label",
+      "data_type": "float",
+      "tier": 2,
+      "result": 5.2978,
+      "note": "Label: GeneFamily \u2014 mean edge count (in + out) per node",
+      "label": "GeneFamily"
+    },
+    {
+      "name": "Average node degree per label",
+      "data_type": "float",
+      "tier": 2,
+      "result": 2.6608,
+      "note": "Label: MolecularFunction \u2014 mean edge count (in + out) per node",
+      "label": "MolecularFunction"
+    },
+    {
+      "name": "Average node degree per label",
+      "data_type": "float",
+      "tier": 2,
+      "result": 32.0592,
+      "note": "Label: Pathway \u2014 mean edge count (in + out) per node",
+      "label": "Pathway"
+    },
+    {
+      "name": "Average node degree per label",
+      "data_type": "float",
+      "tier": 2,
+      "result": 19.9423,
+      "note": "Label: PharmacologicClass \u2014 mean edge count (in + out) per node",
+      "label": "PharmacologicClass"
+    },
+    {
+      "name": "Average node degree per label",
+      "data_type": "float",
+      "tier": 2,
+      "result": 8.4065,
+      "note": "Label: Phenotype \u2014 mean edge count (in + out) per node",
+      "label": "Phenotype"
+    },
+    {
+      "name": "Average node degree per label",
+      "data_type": "float",
+      "tier": 2,
+      "result": 25.9013,
+      "note": "Label: SideEffect \u2014 mean edge count (in + out) per node",
+      "label": "SideEffect"
+    },
+    {
+      "name": "Average node degree per label",
+      "data_type": "float",
+      "tier": 2,
+      "result": 5.6872,
+      "note": "Label: Species \u2014 mean edge count (in + out) per node",
+      "label": "Species"
+    },
+    {
+      "name": "Average node degree per label",
+      "data_type": "float",
+      "tier": 2,
+      "result": 0.1211,
+      "note": "Label: Symptom \u2014 mean edge count (in + out) per node",
+      "label": "Symptom"
+    },
+    {
+      "name": "Average node degree per label",
+      "data_type": "float",
+      "tier": 2,
+      "result": 35.3815,
+      "note": "Label: TranscriptionFactor \u2014 mean edge count (in + out) per node",
+      "label": "TranscriptionFactor"
+    },
+    {
+      "name": "Average node degree per label",
+      "data_type": "float",
+      "tier": 2,
+      "result": 1.055,
+      "note": "Label: Variant \u2014 mean edge count (in + out) per node",
+      "label": "Variant"
+    },
+    {
+      "name": "Average node degree per label",
+      "data_type": "float",
+      "tier": 2,
+      "result": 0.0,
+      "note": "Label: _Metadata \u2014 mean edge count (in + out) per node",
+      "label": "_Metadata"
+    },
+    {
+      "name": "Run-to-run entity count delta",
+      "data_type": "object",
+      "tier": 2,
+      "result": null,
+      "note": "No --baseline provided; pass a previous JSON report to enable"
+    },
+    {
+      "name": "High-degree outlier count per relationship type",
+      "data_type": "integer",
+      "tier": 3,
+      "result": 2,
+      "note": "Nodes exceeding 99th-percentile degree for :AFFECTS_RESPONSE_TO edges",
+      "relationship_type": "AFFECTS_RESPONSE_TO"
+    },
+    {
+      "name": "High-degree outlier count per relationship type",
+      "data_type": "integer",
+      "tier": 3,
+      "result": 161,
+      "note": "Nodes exceeding 99th-percentile degree for :STUDIES_CONDITION edges",
+      "relationship_type": "STUDIES_CONDITION"
+    },
+    {
+      "name": "High-degree outlier count per relationship type",
+      "data_type": "integer",
+      "tier": 3,
+      "result": 136,
+      "note": "Nodes exceeding 99th-percentile degree for :TESTS_INTERVENTION edges",
+      "relationship_type": "TESTS_INTERVENTION"
+    },
+    {
+      "name": "High-degree outlier count per relationship type",
+      "data_type": "integer",
+      "tier": 3,
+      "result": 10,
+      "note": "Nodes exceeding 99th-percentile degree for :VARIANT_IN edges",
+      "relationship_type": "VARIANT_IN"
+    },
+    {
+      "name": "High-degree outlier count per relationship type",
+      "data_type": "integer",
+      "tier": 3,
+      "result": 3,
+      "note": "Nodes exceeding 99th-percentile degree for :associatedWithAging edges",
+      "relationship_type": "associatedWithAging"
+    },
+    {
+      "name": "High-degree outlier count per relationship type",
+      "data_type": "integer",
+      "tier": 3,
+      "result": 382,
+      "note": "Nodes exceeding 99th-percentile degree for :associatedWithVariant edges",
+      "relationship_type": "associatedWithVariant"
+    },
+    {
+      "name": "High-degree outlier count per relationship type",
+      "data_type": "integer",
+      "tier": 3,
+      "result": 4,
+      "note": "Nodes exceeding 99th-percentile degree for :bodyPartOverexpressesGene edges",
+      "relationship_type": "bodyPartOverexpressesGene"
+    },
+    {
+      "name": "High-degree outlier count per relationship type",
+      "data_type": "integer",
+      "tier": 3,
+      "result": 41,
+      "note": "Nodes exceeding 99th-percentile degree for :bodyPartUnderexpressesGene edges",
+      "relationship_type": "bodyPartUnderexpressesGene"
+    },
+    {
+      "name": "High-degree outlier count per relationship type",
+      "data_type": "integer",
+      "tier": 3,
+      "result": 22,
+      "note": "Nodes exceeding 99th-percentile degree for :chemicalBindsGene edges",
+      "relationship_type": "chemicalBindsGene"
+    },
+    {
+      "name": "High-degree outlier count per relationship type",
+      "data_type": "integer",
+      "tier": 3,
+      "result": 76,
+      "note": "Nodes exceeding 99th-percentile degree for :chemicalDecreasesExpression edges",
+      "relationship_type": "chemicalDecreasesExpression"
+    },
+    {
+      "name": "High-degree outlier count per relationship type",
+      "data_type": "integer",
+      "tier": 3,
+      "result": 92,
+      "note": "Nodes exceeding 99th-percentile degree for :chemicalIncreasesExpression edges",
+      "relationship_type": "chemicalIncreasesExpression"
+    },
+    {
+      "name": "High-degree outlier count per relationship type",
+      "data_type": "integer",
+      "tier": 3,
+      "result": 70,
+      "note": "Nodes exceeding 99th-percentile degree for :compoundCausesSideEffect edges",
+      "relationship_type": "compoundCausesSideEffect"
+    },
+    {
+      "name": "High-degree outlier count per relationship type",
+      "data_type": "integer",
+      "tier": 3,
+      "result": 16,
+      "note": "Nodes exceeding 99th-percentile degree for :compoundDownregulatesGene edges",
+      "relationship_type": "compoundDownregulatesGene"
+    },
+    {
+      "name": "High-degree outlier count per relationship type",
+      "data_type": "integer",
+      "tier": 3,
+      "result": 46,
+      "note": "Nodes exceeding 99th-percentile degree for :compoundInPharmacologicClass edges",
+      "relationship_type": "compoundInPharmacologicClass"
+    },
+    {
+      "name": "High-degree outlier count per relationship type",
+      "data_type": "integer",
+      "tier": 3,
+      "result": 17,
+      "note": "Nodes exceeding 99th-percentile degree for :compoundUpregulatesGene edges",
+      "relationship_type": "compoundUpregulatesGene"
+    },
+    {
+      "name": "High-degree outlier count per relationship type",
+      "data_type": "integer",
+      "tier": 3,
+      "result": 2,
+      "note": "Nodes exceeding 99th-percentile degree for :diseaseAssociatesWithDisease edges",
+      "relationship_type": "diseaseAssociatesWithDisease"
+    },
+    {
+      "name": "High-degree outlier count per relationship type",
+      "data_type": "integer",
+      "tier": 3,
+      "result": 3,
+      "note": "Nodes exceeding 99th-percentile degree for :diseaseIsSubtypeOf edges",
+      "relationship_type": "diseaseIsSubtypeOf"
+    },
+    {
+      "name": "High-degree outlier count per relationship type",
+      "data_type": "integer",
+      "tier": 3,
+      "result": 2,
+      "note": "Nodes exceeding 99th-percentile degree for :diseaseLocalizesToAnatomy edges",
+      "relationship_type": "diseaseLocalizesToAnatomy"
+    },
+    {
+      "name": "High-degree outlier count per relationship type",
+      "data_type": "integer",
+      "tier": 3,
+      "result": 1,
+      "note": "Nodes exceeding 99th-percentile degree for :diseasePresentsSymptom edges",
+      "relationship_type": "diseasePresentsSymptom"
+    },
+    {
+      "name": "High-degree outlier count per relationship type",
+      "data_type": "integer",
+      "tier": 3,
+      "result": 0,
+      "note": "Nodes exceeding 99th-percentile degree for :diseaseResemblesDisease edges",
+      "relationship_type": "diseaseResemblesDisease"
+    },
+    {
+      "name": "High-degree outlier count per relationship type",
+      "data_type": "integer",
+      "tier": 3,
+      "result": 73,
+      "note": "Nodes exceeding 99th-percentile degree for :drugBindsGene edges",
+      "relationship_type": "drugBindsGene"
+    },
+    {
+      "name": "High-degree outlier count per relationship type",
+      "data_type": "integer",
+      "tier": 3,
+      "result": 4,
+      "note": "Nodes exceeding 99th-percentile degree for :drugLabelAnnotatesGene edges",
+      "relationship_type": "drugLabelAnnotatesGene"
+    },
+    {
+      "name": "High-degree outlier count per relationship type",
+      "data_type": "integer",
+      "tier": 3,
+      "result": 5,
+      "note": "Nodes exceeding 99th-percentile degree for :drugLabelDescribesDrug edges",
+      "relationship_type": "drugLabelDescribesDrug"
+    },
+    {
+      "name": "High-degree outlier count per relationship type",
+      "data_type": "integer",
+      "tier": 3,
+      "result": 1,
+      "note": "Nodes exceeding 99th-percentile degree for :drugPalliatesDisease edges",
+      "relationship_type": "drugPalliatesDisease"
+    },
+    {
+      "name": "High-degree outlier count per relationship type",
+      "data_type": "integer",
+      "tier": 3,
+      "result": 3,
+      "note": "Nodes exceeding 99th-percentile degree for :drugTreatsDisease edges",
+      "relationship_type": "drugTreatsDisease"
+    },
+    {
+      "name": "High-degree outlier count per relationship type",
+      "data_type": "integer",
+      "tier": 3,
+      "result": 46,
+      "note": "Nodes exceeding 99th-percentile degree for :familyContainsGene edges",
+      "relationship_type": "familyContainsGene"
+    },
+    {
+      "name": "High-degree outlier count per relationship type",
+      "data_type": "integer",
+      "tier": 3,
+      "result": 51,
+      "note": "Nodes exceeding 99th-percentile degree for :geneAssociatedWithCellularComponent edges",
+      "relationship_type": "geneAssociatedWithCellularComponent"
+    },
+    {
+      "name": "High-degree outlier count per relationship type",
+      "data_type": "integer",
+      "tier": 3,
+      "result": 260,
+      "note": "Nodes exceeding 99th-percentile degree for :geneAssociatesWithDisease edges",
+      "relationship_type": "geneAssociatesWithDisease"
+    },
+    {
+      "name": "High-degree outlier count per relationship type",
+      "data_type": "integer",
+      "tier": 3,
+      "result": 119,
+      "note": "Nodes exceeding 99th-percentile degree for :geneAssociatesWithPhenotype edges",
+      "relationship_type": "geneAssociatesWithPhenotype"
+    },
+    {
+      "name": "High-degree outlier count per relationship type",
+      "data_type": "integer",
+      "tier": 3,
+      "result": 40,
+      "note": "Nodes exceeding 99th-percentile degree for :geneExpressedInBodyPart edges",
+      "relationship_type": "geneExpressedInBodyPart"
+    },
+    {
+      "name": "High-degree outlier count per relationship type",
+      "data_type": "integer",
+      "tier": 3,
+      "result": 68,
+      "note": "Nodes exceeding 99th-percentile degree for :geneHasMolecularFunction edges",
+      "relationship_type": "geneHasMolecularFunction"
+    },
+    {
+      "name": "High-degree outlier count per relationship type",
+      "data_type": "integer",
+      "tier": 3,
+      "result": 46,
+      "note": "Nodes exceeding 99th-percentile degree for :geneInFamily edges",
+      "relationship_type": "geneInFamily"
+    },
+    {
+      "name": "High-degree outlier count per relationship type",
+      "data_type": "integer",
+      "tier": 3,
+      "result": 56,
+      "note": "Nodes exceeding 99th-percentile degree for :geneInPathway edges",
+      "relationship_type": "geneInPathway"
+    },
+    {
+      "name": "High-degree outlier count per relationship type",
+      "data_type": "integer",
+      "tier": 3,
+      "result": 1,
+      "note": "Nodes exceeding 99th-percentile degree for :geneInSpecies edges",
+      "relationship_type": "geneInSpecies"
+    },
+    {
+      "name": "High-degree outlier count per relationship type",
+      "data_type": "integer",
+      "tier": 3,
+      "result": 131,
+      "note": "Nodes exceeding 99th-percentile degree for :geneInteractsWithGene edges",
+      "relationship_type": "geneInteractsWithGene"
+    },
+    {
+      "name": "High-degree outlier count per relationship type",
+      "data_type": "integer",
+      "tier": 3,
+      "result": 119,
+      "note": "Nodes exceeding 99th-percentile degree for :geneParticipatesInBiologicalProcess edges",
+      "relationship_type": "geneParticipatesInBiologicalProcess"
+    },
+    {
+      "name": "High-degree outlier count per relationship type",
+      "data_type": "integer",
+      "tier": 3,
+      "result": 82,
+      "note": "Nodes exceeding 99th-percentile degree for :geneRegulatesGene edges",
+      "relationship_type": "geneRegulatesGene"
+    },
+    {
+      "name": "High-degree outlier count per relationship type",
+      "data_type": "integer",
+      "tier": 3,
+      "result": 3759,
+      "note": "Nodes exceeding 99th-percentile degree for :hasVariant edges",
+      "relationship_type": "hasVariant"
+    },
+    {
+      "name": "High-degree outlier count per relationship type",
+      "data_type": "integer",
+      "tier": 3,
+      "result": 56,
+      "note": "Nodes exceeding 99th-percentile degree for :pathwayContainsGene edges",
+      "relationship_type": "pathwayContainsGene"
+    },
+    {
+      "name": "High-degree outlier count per relationship type",
+      "data_type": "integer",
+      "tier": 3,
+      "result": 46,
+      "note": "Nodes exceeding 99th-percentile degree for :pharmacologicClassIncludesCompound edges",
+      "relationship_type": "pharmacologicClassIncludesCompound"
+    },
+    {
+      "name": "High-degree outlier count per relationship type",
+      "data_type": "integer",
+      "tier": 3,
+      "result": 49,
+      "note": "Nodes exceeding 99th-percentile degree for :transcriptionFactorInteractsWithGene edges",
+      "relationship_type": "transcriptionFactorInteractsWithGene"
+    },
+    {
+      "name": "High-degree outlier count per relationship type",
+      "data_type": "integer",
+      "tier": 3,
+      "result": 382,
+      "note": "Nodes exceeding 99th-percentile degree for :variantAssociatedWithDisease edges",
+      "relationship_type": "variantAssociatedWithDisease"
+    },
+    {
+      "name": "High-degree outlier count per relationship type",
+      "data_type": "integer",
+      "tier": 3,
+      "result": 3759,
+      "note": "Nodes exceeding 99th-percentile degree for :variantInGene edges",
+      "relationship_type": "variantInGene"
+    }
+  ]
+}
