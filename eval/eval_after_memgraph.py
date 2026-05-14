@@ -517,6 +517,244 @@ def get_node_creation_stats_per_source(driver):
 
 
 # ---------------------------------------------------------------------------
+# Tier 2 — Cross-source merge analysis
+# ---------------------------------------------------------------------------
+
+def get_cross_source_node_analysis(driver):
+    """
+    Analyze which node types are touched by multiple sources and compute
+    merge statistics for each.
+
+    Returns {
+        'node_type_sources': {node_type: {source: count, ...}, ...},
+        'multi_source_summary': {node_type: {
+            'total_nodes': int,
+            'multi_source_nodes': int,
+            'single_source_nodes': int,
+            'merge_rate': float,
+            'source_distribution': {num_sources: count, ...}
+        }, ...}
+    }
+    """
+    # Get which sources touch each node type
+    rows = run_query(
+        driver,
+        """
+        MATCH (n)-[r]-()
+        WHERE r.source IS NOT NULL
+        WITH labels(n)[0] AS node_type, r.source AS source, count(DISTINCT n) AS node_count
+        RETURN node_type, source, node_count
+        ORDER BY node_type, node_count DESC
+        """,
+    )
+
+    node_type_sources = {}
+    for row in rows:
+        nt = row['node_type']
+        src = row['source']
+        cnt = int(row['node_count'])
+        if nt not in node_type_sources:
+            node_type_sources[nt] = {}
+        node_type_sources[nt][src] = cnt
+
+    # For multi-source node types, compute detailed merge stats
+    multi_source_summary = {}
+    multi_source_types = [nt for nt, sources in node_type_sources.items() if len(sources) > 1]
+
+    for nt in multi_source_types:
+        try:
+            # Get actual unique node count
+            actual = run_query(driver, f"MATCH (n:{nt}) RETURN count(n) AS cnt")[0]['cnt']
+
+            # Get source distribution per node
+            dist_rows = run_query(
+                driver,
+                f"""
+                MATCH (n:{nt})-[r]-()
+                WHERE r.source IS NOT NULL
+                WITH n, collect(DISTINCT r.source) AS sources
+                RETURN size(sources) AS source_count, count(n) AS node_count
+                ORDER BY source_count DESC
+                """,
+            )
+
+            source_distribution = {}
+            multi_source_nodes = 0
+            single_source_nodes = 0
+
+            for row in dist_rows:
+                sc = int(row['source_count'])
+                nc = int(row['node_count'])
+                source_distribution[sc] = nc
+                if sc > 1:
+                    multi_source_nodes += nc
+                else:
+                    single_source_nodes += nc
+
+            total_with_rels = multi_source_nodes + single_source_nodes
+            merge_rate = multi_source_nodes / total_with_rels if total_with_rels > 0 else 0
+
+            multi_source_summary[nt] = {
+                'total_nodes': actual,
+                'nodes_with_relationships': total_with_rels,
+                'multi_source_nodes': multi_source_nodes,
+                'single_source_nodes': single_source_nodes,
+                'merge_rate': round(merge_rate, 4),
+                'source_distribution': source_distribution,
+                'num_sources': len(node_type_sources[nt]),
+            }
+        except Exception as exc:
+            multi_source_summary[nt] = {'error': str(exc)}
+
+    return {
+        'node_type_sources': node_type_sources,
+        'multi_source_summary': multi_source_summary,
+    }
+
+
+def get_drug_merge_detail(driver):
+    """
+    Detailed analysis of drug merging between CTD and DrugBank.
+
+    Returns {
+        'ctd_total': int,
+        'drugbank_total': int,
+        'merged_both': int,
+        'ctd_only': int,
+        'drugbank_only': int,
+        'merge_rate': float
+    }
+    """
+    try:
+        ctd_drugs = run_query(
+            driver,
+            """
+            MATCH (d:Drug)-[r]-()
+            WHERE r.source = "CTD"
+            RETURN count(DISTINCT d) AS cnt
+            """,
+        )[0]['cnt']
+
+        db_drugs = run_query(
+            driver,
+            """
+            MATCH (d:Drug)-[r]-()
+            WHERE r.source = "DrugBank"
+            RETURN count(DISTINCT d) AS cnt
+            """,
+        )[0]['cnt']
+
+        both = run_query(
+            driver,
+            """
+            MATCH (d:Drug)-[r1]-(), (d)-[r2]-()
+            WHERE r1.source = "CTD" AND r2.source = "DrugBank"
+            RETURN count(DISTINCT d) AS cnt
+            """,
+        )[0]['cnt']
+
+        ctd_only = ctd_drugs - both
+        drugbank_only = db_drugs - both
+        merge_rate = both / ctd_drugs if ctd_drugs > 0 else 0
+
+        return {
+            'ctd_total': int(ctd_drugs),
+            'drugbank_total': int(db_drugs),
+            'merged_both': int(both),
+            'ctd_only': int(ctd_only),
+            'drugbank_only': int(drugbank_only),
+            'merge_rate': round(merge_rate, 4),
+        }
+    except Exception as exc:
+        return {'error': str(exc)}
+
+
+def get_gene_integration_depth(driver):
+    """
+    Analyze how deeply genes are integrated across sources.
+
+    Returns {
+        'high_integration': int (10+ sources),
+        'medium_integration': int (5-9 sources),
+        'low_integration': int (2-4 sources),
+        'single_source': int (1 source),
+        'total': int
+    }
+    """
+    try:
+        rows = run_query(
+            driver,
+            """
+            MATCH (g:Gene)-[r]-()
+            WHERE r.source IS NOT NULL
+            WITH g, count(DISTINCT r.source) AS source_count
+            RETURN
+                sum(CASE WHEN source_count >= 10 THEN 1 ELSE 0 END) AS high_integration,
+                sum(CASE WHEN source_count >= 5 AND source_count < 10 THEN 1 ELSE 0 END) AS medium_integration,
+                sum(CASE WHEN source_count >= 2 AND source_count < 5 THEN 1 ELSE 0 END) AS low_integration,
+                sum(CASE WHEN source_count = 1 THEN 1 ELSE 0 END) AS single_source,
+                count(g) AS total
+            """,
+        )[0]
+
+        return {
+            'high_integration': int(rows['high_integration']),
+            'medium_integration': int(rows['medium_integration']),
+            'low_integration': int(rows['low_integration']),
+            'single_source': int(rows['single_source']),
+            'total': int(rows['total']),
+        }
+    except Exception as exc:
+        return {'error': str(exc)}
+
+
+def get_id_duplicate_check(driver):
+    """
+    Check for duplicate IDs across all major entity types.
+    Zero duplicates = perfect ID-based merging.
+
+    Returns {node_type: {'duplicate_count': int, 'id_property': str}, ...}
+    """
+    checks = [
+        ('Gene', 'geneId'),
+        ('Drug', 'drugId'),
+        ('Disease', 'diseaseId'),
+        ('Variant', 'variantId'),
+        ('ClinicalTrial', 'trialId'),
+        ('Phenotype', 'phenotypeId'),
+        ('Pathway', 'pathwayId'),
+    ]
+
+    results = {}
+    for node_type, id_prop in checks:
+        try:
+            rows = run_query(
+                driver,
+                f"""
+                MATCH (n:{node_type})
+                WHERE n.{id_prop} IS NOT NULL
+                WITH n.{id_prop} AS id, count(*) AS cnt
+                WHERE cnt > 1
+                RETURN count(*) AS dup_count
+                """,
+            )
+            dup_count = int(rows[0]['dup_count']) if rows else 0
+            results[node_type] = {
+                'duplicate_count': dup_count,
+                'id_property': id_prop,
+                'status': 'PASS' if dup_count == 0 else 'FAIL',
+            }
+        except Exception:
+            results[node_type] = {
+                'duplicate_count': None,
+                'id_property': id_prop,
+                'status': 'SKIPPED',
+            }
+
+    return results
+
+
+# ---------------------------------------------------------------------------
 # Tier 3 — high-degree outlier count per relationship type
 # ---------------------------------------------------------------------------
 
@@ -724,6 +962,39 @@ def run_eval(baseline_path=None):
         for source, stats in merge_rates.items()
     }
 
+    # ── Tier 2: Cross-source merge analysis ─────────────────────────────────────
+    print("Computing cross-source merge analysis...", file=sys.stderr)
+    cross_source_analysis = get_cross_source_node_analysis(driver)
+    drug_merge_detail = get_drug_merge_detail(driver)
+    gene_integration = get_gene_integration_depth(driver)
+    id_duplicates = get_id_duplicate_check(driver)
+
+    # Add cross-source metrics
+    for nt, stats in cross_source_analysis.get('multi_source_summary', {}).items():
+        if 'error' not in stats:
+            metrics.append(make_metric(
+                name="Cross-source node integration",
+                data_type="float", tier=2,
+                result=stats.get('merge_rate'),
+                node_type=nt,
+                num_sources=stats.get('num_sources'),
+                multi_source_nodes=stats.get('multi_source_nodes'),
+                single_source_nodes=stats.get('single_source_nodes'),
+                note=f"{nt}: {stats.get('multi_source_nodes', 0):,} nodes from {stats.get('num_sources', 0)} sources",
+            ))
+
+    # Add ID duplicate check metrics
+    for nt, stats in id_duplicates.items():
+        metrics.append(make_metric(
+            name="ID-based duplicate check",
+            data_type="integer", tier=2,
+            result=stats.get('duplicate_count'),
+            node_type=nt,
+            id_property=stats.get('id_property'),
+            status=stats.get('status'),
+            note=f"{nt}.{stats.get('id_property')}: {stats.get('duplicate_count', 'N/A')} duplicates",
+        ))
+
     # ── Tier 3: High-degree outlier count per relationship type ───────────────
     print("Computing high-degree outliers per relationship type...", file=sys.stderr)
     outliers = get_high_degree_outliers(driver, edge_counts, percentile=99.0)
@@ -744,8 +1015,133 @@ def run_eval(baseline_path=None):
         "entity_counts": node_counts,
         "merge_rate_summary": merge_rate_summary,
         "source_node_stats": source_node_stats,
+        "cross_source_analysis": cross_source_analysis,
+        "drug_merge_detail": drug_merge_detail,
+        "gene_integration": gene_integration,
+        "id_duplicates": id_duplicates,
         "metrics": metrics,
     }
+
+
+# ---------------------------------------------------------------------------
+# Markdown report generator
+# ---------------------------------------------------------------------------
+
+def generate_markdown_report(report):
+    """Generate a human-readable markdown report from the eval results."""
+    lines = []
+    timestamp = report.get('run_timestamp', '')[:10]
+    entity_counts = report.get('entity_counts', {})
+    metrics = report.get('metrics', [])
+
+    lines.append(f"# CardioKB Evaluation Report — {timestamp}")
+    lines.append("")
+    lines.append(f"**Generated:** {report.get('run_timestamp', 'N/A')}")
+    lines.append("")
+
+    # Test Results Summary
+    t1 = [m for m in metrics if m.get('tier') == 1]
+    t2 = [m for m in metrics if m.get('tier') == 2]
+    t1_pass = sum(1 for m in t1 if m.get('result') not in [None, 0, 'Fail'])
+    t2_pass = sum(1 for m in t2 if m.get('result') not in [None, 0, 'Fail'])
+
+    lines.append("## Test Results Summary")
+    lines.append("")
+    lines.append(f"- **Tier 1 (blocking):** {t1_pass}/{len(t1)} passing")
+    lines.append(f"- **Tier 2 (quality):** {t2_pass}/{len(t2)} passing")
+    lines.append("")
+
+    # Entity Counts
+    lines.append("## Entity Counts")
+    lines.append("")
+    lines.append("| Node Type | Count |")
+    lines.append("|-----------|-------|")
+    for label, cnt in sorted(entity_counts.items(), key=lambda x: -x[1]):
+        lines.append(f"| {label} | {cnt:,} |")
+    lines.append("")
+
+    # Cross-Source Integration
+    cross_source = report.get('cross_source_analysis', {})
+    multi_source_summary = cross_source.get('multi_source_summary', {})
+
+    if multi_source_summary:
+        lines.append("## Cross-Source Integration")
+        lines.append("")
+        lines.append("Node types touched by multiple sources:")
+        lines.append("")
+        lines.append("| Node Type | # Sources | Multi-Source Nodes | Single-Source | Integration Rate |")
+        lines.append("|-----------|-----------|-------------------|---------------|------------------|")
+
+        for nt, stats in sorted(multi_source_summary.items(), key=lambda x: -x[1].get('num_sources', 0)):
+            if 'error' not in stats:
+                num_src = stats.get('num_sources', 0)
+                multi = stats.get('multi_source_nodes', 0)
+                single = stats.get('single_source_nodes', 0)
+                rate = stats.get('merge_rate', 0) * 100
+                lines.append(f"| {nt} | {num_src} | {multi:,} | {single:,} | {rate:.1f}% |")
+        lines.append("")
+
+    # Drug Merge Detail
+    drug_merge = report.get('drug_merge_detail', {})
+    if drug_merge and 'error' not in drug_merge:
+        lines.append("### Drug Merging: CTD → DrugBank")
+        lines.append("")
+        lines.append(f"- **CTD drugs total:** {drug_merge.get('ctd_total', 0):,}")
+        lines.append(f"- **Merged with DrugBank:** {drug_merge.get('merged_both', 0):,} ({drug_merge.get('merge_rate', 0)*100:.1f}%)")
+        lines.append(f"- **CTD-only:** {drug_merge.get('ctd_only', 0):,} (environmental chemicals, research compounds)")
+        lines.append("")
+
+    # Gene Integration Depth
+    gene_int = report.get('gene_integration', {})
+    if gene_int and 'error' not in gene_int:
+        lines.append("### Gene Integration Depth")
+        lines.append("")
+        lines.append("| Integration Level | Genes |")
+        lines.append("|-------------------|-------|")
+        lines.append(f"| High (10+ sources) | {gene_int.get('high_integration', 0):,} |")
+        lines.append(f"| Medium (5-9 sources) | {gene_int.get('medium_integration', 0):,} |")
+        lines.append(f"| Low (2-4 sources) | {gene_int.get('low_integration', 0):,} |")
+        lines.append(f"| Single source | {gene_int.get('single_source', 0):,} |")
+        lines.append("")
+
+    # ID Duplicate Check
+    id_dups = report.get('id_duplicates', {})
+    if id_dups:
+        lines.append("## ID-Based Duplicate Check")
+        lines.append("")
+        lines.append("| Entity Type | ID Property | Duplicates | Status |")
+        lines.append("|-------------|-------------|------------|--------|")
+        for nt, stats in sorted(id_dups.items()):
+            dup_count = stats.get('duplicate_count')
+            dup_str = str(dup_count) if dup_count is not None else 'N/A'
+            status = stats.get('status', 'N/A')
+            status_icon = '✓' if status == 'PASS' else ('✗' if status == 'FAIL' else '—')
+            lines.append(f"| {nt} | {stats.get('id_property', '')} | {dup_str} | {status_icon} {status} |")
+        lines.append("")
+
+    # Merge Rate by Source
+    merge_summary = report.get('merge_rate_summary', {})
+    if merge_summary:
+        lines.append("## Merge Rate by Source Database")
+        lines.append("")
+        lines.append("| Source | Merge Rate | Nodes | Duplicates | Status |")
+        lines.append("|--------|------------|-------|------------|--------|")
+        for source, stats in sorted(merge_summary.items()):
+            rate = stats.get('merge_rate')
+            rate_str = f"{rate*100:.1f}%" if rate is not None else 'N/A'
+            total = stats.get('total_nodes', 0)
+            dups = stats.get('duplicates', 0)
+            flagged = stats.get('flagged', False)
+            status = '⚠️ LOW' if flagged else '✓'
+            lines.append(f"| {source} | {rate_str} | {total:,} | {dups} | {status} |")
+        lines.append("")
+
+    # Footer
+    lines.append("---")
+    lines.append("")
+    lines.append("*Generated by eval_after_memgraph.py*")
+
+    return "\n".join(lines)
 
 
 # ---------------------------------------------------------------------------
@@ -793,6 +1189,55 @@ def print_summary(report):
     print(f"    Low resolution (<50%) : {len(low_res)}")
     print(f"  Tier 2 metrics : {len(t2):>5}")
     print(f"  Tier 3 metrics : {len(t3):>5}")
+
+    # Cross-source integration summary
+    cross_source = report.get("cross_source_analysis", {})
+    multi_source_summary = cross_source.get("multi_source_summary", {})
+    if multi_source_summary:
+        print(f"\n  {'─'*56}")
+        print(f"  CROSS-SOURCE INTEGRATION")
+        print(f"  {'─'*56}")
+        for nt, stats in sorted(multi_source_summary.items(), key=lambda x: -x[1].get('num_sources', 0)):
+            if 'error' not in stats:
+                num_src = stats.get('num_sources', 0)
+                multi = stats.get('multi_source_nodes', 0)
+                rate = stats.get('merge_rate', 0) * 100
+                print(f"    {nt:<20} {num_src:>2} sources  {multi:>8,} multi-source nodes  ({rate:>5.1f}%)")
+
+    # Gene integration depth
+    gene_int = report.get("gene_integration", {})
+    if gene_int and 'error' not in gene_int:
+        print(f"\n  {'─'*56}")
+        print(f"  GENE INTEGRATION DEPTH")
+        print(f"  {'─'*56}")
+        print(f"    High (10+ sources)   : {gene_int.get('high_integration', 0):>8,}")
+        print(f"    Medium (5-9 sources) : {gene_int.get('medium_integration', 0):>8,}")
+        print(f"    Low (2-4 sources)    : {gene_int.get('low_integration', 0):>8,}")
+        print(f"    Single source        : {gene_int.get('single_source', 0):>8,}")
+
+    # Drug merge detail
+    drug_merge = report.get("drug_merge_detail", {})
+    if drug_merge and 'error' not in drug_merge:
+        print(f"\n  {'─'*56}")
+        print(f"  DRUG MERGING: CTD → DrugBank")
+        print(f"  {'─'*56}")
+        print(f"    CTD drugs total      : {drug_merge.get('ctd_total', 0):>8,}")
+        print(f"    Merged with DrugBank : {drug_merge.get('merged_both', 0):>8,} ({drug_merge.get('merge_rate', 0)*100:.1f}%)")
+        print(f"    CTD-only             : {drug_merge.get('ctd_only', 0):>8,}")
+
+    # ID duplicate check
+    id_dups = report.get("id_duplicates", {})
+    if id_dups:
+        all_pass = all(s.get('status') == 'PASS' for s in id_dups.values() if s.get('status') != 'SKIPPED')
+        print(f"\n  {'─'*56}")
+        print(f"  ID-BASED DUPLICATE CHECK {'✓ ALL PASS' if all_pass else '⚠️ ISSUES FOUND'}")
+        print(f"  {'─'*56}")
+        for nt, stats in sorted(id_dups.items()):
+            dup = stats.get('duplicate_count')
+            status = stats.get('status', 'N/A')
+            icon = '✓' if status == 'PASS' else ('✗' if status == 'FAIL' else '—')
+            dup_str = str(dup) if dup is not None else 'N/A'
+            print(f"    {nt:<20} {stats.get('id_property', ''):<15} {dup_str:>5} duplicates  {icon}")
 
     # Merge rate summary
     merge_summary = report.get("merge_rate_summary", {})
@@ -860,12 +1305,20 @@ def main():
     )
     parser.add_argument(
         "--output", metavar="FILE",
-        help="Write JSON report to FILE (default: stdout)",
+        help="Write JSON report to FILE (default: auto-generated dated filename)",
     )
     parser.add_argument(
         "--baseline", metavar="FILE",
         help=("Path to a previous eval_after_memgraph.py JSON report. "
               "Enables run-to-run entity count delta (Tier 2)."),
+    )
+    parser.add_argument(
+        "--no-markdown", action="store_true",
+        help="Skip generating the markdown summary report",
+    )
+    parser.add_argument(
+        "--json-only", action="store_true",
+        help="Output JSON to stdout, skip file writing and summary",
     )
     args = parser.parse_args()
 
@@ -874,14 +1327,31 @@ def main():
 
     json_str = json.dumps(report, indent=2)
 
+    if args.json_only:
+        print(json_str)
+        return
+
+    # Auto-generate dated filename if not specified
+    timestamp = datetime.datetime.now().strftime("%Y%m%d_%H%M%S")
+    date_str = datetime.datetime.now().strftime("%Y-%m-%d")
+
     if args.output:
         out_path = Path(args.output)
-        out_path.parent.mkdir(parents=True, exist_ok=True)
-        out_path.write_text(json_str, encoding="utf-8")
-        print(f"Report written to {out_path}", file=sys.stderr)
-        print_summary(report)
     else:
-        print(json_str)
+        out_path = SCRIPT_DIR / "reports" / f"memgraph_report_{timestamp}.json"
+
+    out_path.parent.mkdir(parents=True, exist_ok=True)
+    out_path.write_text(json_str, encoding="utf-8")
+    print(f"JSON report written to {out_path}", file=sys.stderr)
+
+    # Generate markdown report
+    if not args.no_markdown:
+        md_content = generate_markdown_report(report)
+        md_path = out_path.parent / f"eval_report_{date_str}.md"
+        md_path.write_text(md_content, encoding="utf-8")
+        print(f"Markdown report written to {md_path}", file=sys.stderr)
+
+    print_summary(report)
 
 
 if __name__ == "__main__":
