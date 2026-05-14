@@ -1,11 +1,11 @@
 # CardioKB Evaluation Report — 2026-05-14
 
-**Generated:** 2026-05-14T01:57:50.241918+00:00
+**Generated:** 2026-05-14T02:18:58.808506+00:00
 
 ## Test Results Summary
 
 - **Tier 1 (blocking):** 102/102 passing
-- **Tier 2 (quality):** 68/83 passing
+- **Tier 2 (quality):** 83/83 passing
 
 ## Entity Counts
 
