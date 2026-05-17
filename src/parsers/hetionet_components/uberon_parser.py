@@ -126,12 +126,55 @@ class UberonParser(BaseParser):
             logger.error(f"Error parsing Uberon with obonet: {e}")
             return {}
 
+    def _preprocess_obo(self, obo_path: Path) -> Path:
+        """
+        Return a sanitised copy of the OBO file with malformed xref lines removed.
+
+        Some Uberon releases contain xref URIs with backslashes (e.g.
+        ``xref: http://neurolex.org/wiki/Category\:Embryonic_organism``)
+        which are illegal in OBO format and cause pronto to raise a SyntaxError.
+        We strip those lines so the rest of the ontology can be parsed normally.
+
+        Args:
+            obo_path: Path to the original OBO file.
+
+        Returns:
+            Path to the sanitised OBO file (written alongside the original).
+        """
+        sanitised_path = obo_path.parent / (obo_path.stem + "_sanitised.obo")
+
+        # Only rebuild if the source is newer than the cached sanitised copy
+        if (
+            sanitised_path.exists()
+            and sanitised_path.stat().st_mtime >= obo_path.stat().st_mtime
+        ):
+            logger.info(f"Using cached sanitised OBO: {sanitised_path}")
+            return sanitised_path
+
+        logger.info("Sanitising Uberon OBO file (removing malformed xref lines)...")
+        removed = 0
+        with open(obo_path, "r", encoding="utf-8", errors="replace") as src, \
+             open(sanitised_path, "w", encoding="utf-8") as dst:
+            for line in src:
+                # Drop xref lines that contain a backslash — these are
+                # malformed URIs that pronto's fastobo backend cannot parse.
+                if line.startswith("xref:") and "\\" in line:
+                    removed += 1
+                    continue
+                dst.write(line)
+
+        logger.info(f"Removed {removed} malformed xref lines; sanitised file: {sanitised_path}")
+        return sanitised_path
+
     def _parse_with_pronto(self, obo_path: Path) -> Dict[str, pd.DataFrame]:
-        """Parse using pronto library."""
+        """Parse using pronto library (with sanitised OBO fallback to manual parser)."""
         logger.info("Parsing Uberon with pronto...")
 
+        # Sanitise the OBO file first to avoid SyntaxErrors on malformed xrefs
+        sanitised_path = self._preprocess_obo(obo_path)
+
         try:
-            ontology = pronto.Ontology(str(obo_path))
+            ontology = pronto.Ontology(str(sanitised_path))
 
             anatomy_terms = []
 
@@ -157,7 +200,72 @@ class UberonParser(BaseParser):
             }
 
         except Exception as e:
-            logger.error(f"Error parsing Uberon with pronto: {e}")
+            logger.warning(
+                f"pronto failed ({e}); falling back to manual OBO parser"
+            )
+            return self._parse_obo_manual(sanitised_path)
+
+    def _parse_obo_manual(self, obo_path: Path) -> Dict[str, pd.DataFrame]:
+        """
+        Lightweight line-by-line OBO parser.
+
+        Handles Uberon files that reference external ontology terms (e.g.
+        COB:0000013) which cause pronto's symmetrize_lineage step to raise
+        a KeyError.  We only need id / name / def / synonym — no lineage
+        traversal required.
+        """
+        logger.info(f"Manual OBO parse: {obo_path}")
+
+        anatomy_terms = []
+        in_term = False
+        current: dict = {}
+
+        def _flush(current: dict):
+            uid = current.get("id", "")
+            if uid.startswith("UBERON:") and not current.get("is_obsolete"):
+                anatomy_terms.append({
+                    "uberon_id": uid,
+                    "name": current.get("name", ""),
+                    "definition": self._clean_definition(current.get("def", "")),
+                    "synonyms": "|".join(current.get("synonyms", [])),
+                })
+
+        try:
+            with open(obo_path, "r", encoding="utf-8", errors="replace") as fh:
+                for raw_line in fh:
+                    line = raw_line.rstrip()
+                    if line == "[Term]":
+                        if in_term:
+                            _flush(current)
+                        current = {}
+                        in_term = True
+                    elif line.startswith("[") and line.endswith("]"):
+                        # [Typedef] or other stanza — stop collecting
+                        if in_term:
+                            _flush(current)
+                        current = {}
+                        in_term = False
+                    elif in_term:
+                        if line.startswith("id: "):
+                            current["id"] = line[4:].strip()
+                        elif line.startswith("name: "):
+                            current["name"] = line[6:].strip()
+                        elif line.startswith("def: "):
+                            current["def"] = line[5:].strip()
+                        elif line.startswith("synonym: "):
+                            current.setdefault("synonyms", []).append(line[9:].strip())
+                        elif line.startswith("is_obsolete: true"):
+                            current["is_obsolete"] = True
+
+            # Flush the last term
+            if in_term:
+                _flush(current)
+
+            logger.info(f"Manual OBO parser: {len(anatomy_terms)} Uberon anatomy terms")
+            return {"anatomy_nodes": pd.DataFrame(anatomy_terms)}
+
+        except Exception as e:
+            logger.error(f"Manual OBO parser failed: {e}")
             return {}
 
     def _clean_definition(self, definition: str) -> str:

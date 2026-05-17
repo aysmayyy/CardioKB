@@ -306,13 +306,6 @@ Individuals are modeled as idealized entities corresponding to examples of a cer
         <cardiokb:edgeSource>OpenTargets</cardiokb:edgeSource>
     </owl:ObjectProperty>
 
-    <owl:ObjectProperty rdf:about="http://cardiokb.org/ontologies/cardiokb.owl#diseaseAssociatesWithGene">
-        <owl:inverseOf rdf:resource="http://cardiokb.org/ontologies/cardiokb.owl#geneAssociatesWithDisease"/>
-        <rdfs:subPropertyOf rdf:resource="http://cardiokb.org/ontologies/cardiokb.owl#diseaseObjectProperty"/>
-        <rdfs:domain rdf:resource="http://cardiokb.org/ontologies/cardiokb.owl#Disease"/>
-        <rdfs:range rdf:resource="http://cardiokb.org/ontologies/cardiokb.owl#Gene"/>
-    </owl:ObjectProperty>
-
     <!-- Object Properties - Gene-Gene Interactions -->
 
     <owl:ObjectProperty rdf:about="http://cardiokb.org/ontologies/cardiokb.owl#geneInteractsWithGene">
@@ -366,6 +359,7 @@ Individuals are modeled as idealized entities corresponding to examples of a cer
         <owl:inverseOf rdf:resource="http://cardiokb.org/ontologies/cardiokb.owl#geneInPathway"/>
         <rdfs:domain rdf:resource="http://cardiokb.org/ontologies/cardiokb.owl#Pathway"/>
         <rdfs:range rdf:resource="http://cardiokb.org/ontologies/cardiokb.owl#Gene"/>
+        <cardiokb:edgeSource>Reactome</cardiokb:edgeSource>
     </owl:ObjectProperty>
 
     <!-- Object Properties - Gene-Phenotype -->
@@ -411,6 +405,7 @@ Individuals are modeled as idealized entities corresponding to examples of a cer
         <owl:inverseOf rdf:resource="http://cardiokb.org/ontologies/cardiokb.owl#geneInFamily"/>
         <rdfs:domain rdf:resource="http://cardiokb.org/ontologies/cardiokb.owl#GeneFamily"/>
         <rdfs:range rdf:resource="http://cardiokb.org/ontologies/cardiokb.owl#Gene"/>
+        <cardiokb:edgeSource>HGNC Families</cardiokb:edgeSource>
     </owl:ObjectProperty>
 
     <!-- Object Properties - Gene-Variant -->
@@ -427,6 +422,7 @@ Individuals are modeled as idealized entities corresponding to examples of a cer
         <rdfs:subPropertyOf rdf:resource="http://cardiokb.org/ontologies/cardiokb.owl#variantObjectProperty"/>
         <rdfs:domain rdf:resource="http://cardiokb.org/ontologies/cardiokb.owl#Variant"/>
         <rdfs:range rdf:resource="http://cardiokb.org/ontologies/cardiokb.owl#Gene"/>
+        <cardiokb:edgeSource>ClinVar</cardiokb:edgeSource>
     </owl:ObjectProperty>
 
     <!-- Object Properties - Disease-Variant -->
@@ -443,6 +439,7 @@ Individuals are modeled as idealized entities corresponding to examples of a cer
         <rdfs:subPropertyOf rdf:resource="http://cardiokb.org/ontologies/cardiokb.owl#variantObjectProperty"/>
         <rdfs:domain rdf:resource="http://cardiokb.org/ontologies/cardiokb.owl#Variant"/>
         <rdfs:range rdf:resource="http://cardiokb.org/ontologies/cardiokb.owl#Disease"/>
+        <cardiokb:edgeSource>ClinVar</cardiokb:edgeSource>
     </owl:ObjectProperty>
 
     <!-- Object Properties - TF-Gene Regulation -->
@@ -535,6 +532,7 @@ Individuals are modeled as idealized entities corresponding to examples of a cer
         <rdfs:subPropertyOf rdf:resource="http://cardiokb.org/ontologies/cardiokb.owl#drugObjectProperty"/>
         <rdfs:domain rdf:resource="http://cardiokb.org/ontologies/cardiokb.owl#Drug"/>
         <rdfs:range rdf:resource="http://cardiokb.org/ontologies/cardiokb.owl#PharmacologicClass"/>
+        <cardiokb:edgeSource>DrugCentral</cardiokb:edgeSource>
     </owl:ObjectProperty>
 
     <!-- Object Properties - Disease-Disease -->
@@ -553,6 +551,30 @@ Individuals are modeled as idealized entities corresponding to examples of a cer
         <rdfs:domain rdf:resource="http://cardiokb.org/ontologies/cardiokb.owl#Disease"/>
         <rdfs:range rdf:resource="http://cardiokb.org/ontologies/cardiokb.owl#Disease"/>
         <cardiokb:edgeSource>PubTator</cardiokb:edgeSource>
+    </owl:ObjectProperty>
+
+    <!-- Object Properties - MEDLINE Co-occurrence -->
+
+    <owl:ObjectProperty rdf:about="http://cardiokb.org/ontologies/cardiokb.owl#diseasePresentsSymptom">
+        <rdfs:subPropertyOf rdf:resource="http://cardiokb.org/ontologies/cardiokb.owl#diseaseObjectProperty"/>
+        <rdfs:domain rdf:resource="http://cardiokb.org/ontologies/cardiokb.owl#Disease"/>
+        <rdfs:range rdf:resource="http://cardiokb.org/ontologies/cardiokb.owl#Symptom"/>
+        <cardiokb:edgeSource>MEDLINE</cardiokb:edgeSource>
+    </owl:ObjectProperty>
+
+    <owl:ObjectProperty rdf:about="http://cardiokb.org/ontologies/cardiokb.owl#diseaseLocalizesToAnatomy">
+        <rdfs:subPropertyOf rdf:resource="http://cardiokb.org/ontologies/cardiokb.owl#diseaseObjectProperty"/>
+        <rdfs:domain rdf:resource="http://cardiokb.org/ontologies/cardiokb.owl#Disease"/>
+        <rdfs:range rdf:resource="http://cardiokb.org/ontologies/cardiokb.owl#Anatomy"/>
+        <cardiokb:edgeSource>MEDLINE</cardiokb:edgeSource>
+    </owl:ObjectProperty>
+
+    <owl:ObjectProperty rdf:about="http://cardiokb.org/ontologies/cardiokb.owl#diseaseResemblesDisease">
+        <rdf:type rdf:resource="http://www.w3.org/2002/07/owl#SymmetricProperty"/>
+        <rdfs:subPropertyOf rdf:resource="http://cardiokb.org/ontologies/cardiokb.owl#diseaseObjectProperty"/>
+        <rdfs:domain rdf:resource="http://cardiokb.org/ontologies/cardiokb.owl#Disease"/>
+        <rdfs:range rdf:resource="http://cardiokb.org/ontologies/cardiokb.owl#Disease"/>
+        <cardiokb:edgeSource>MEDLINE</cardiokb:edgeSource>
     </owl:ObjectProperty>
 
     <!-- Object Properties - Clinical Trials -->

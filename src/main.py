@@ -227,7 +227,8 @@ class CardioKBPipeline:
         parsers = self._get_parsers()
 
         # Sources with very slow raw-file parsing; prefer cached TSVs when available
-        SLOW_PARSERS = {'pubtator', 'bgee'}
+        # clinvar: 3.6 GB raw file → ~3 min parse; bgee/pubtator: large FTP files
+        SLOW_PARSERS = {'pubtator', 'bgee', 'clinvar'}
 
         for source_name, parser in parsers.items():
             logger.info(f"{'=' * 60}")

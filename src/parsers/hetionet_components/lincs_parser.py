@@ -132,11 +132,17 @@ class LINCS1000Parser(BaseParser):
             n: Maximum number of genes per group
 
         Returns:
-            Filtered DataFrame
+            Filtered DataFrame (all original columns preserved)
         """
-        return df.groupby(['perturbagen', 'direction', 'status']).apply(
-            lambda x: x.nlargest(n, 'nlog10_bonferroni_pval')
-        ).reset_index(drop=True)
+        # Sort descending by p-value significance, then take top-n per group.
+        # groupby().head() preserves all columns (unlike apply() in pandas ≥2.2
+        # which drops the group-key columns from the result).
+        return (
+            df.sort_values('nlog10_bonferroni_pval', ascending=False)
+              .groupby(['perturbagen', 'direction', 'status'], sort=False)
+              .head(n)
+              .reset_index(drop=True)
+        )
 
     def _parse_compound_gene_dysregulation(self, drug_path: Path) -> tuple:
         """

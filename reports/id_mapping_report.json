@@ -1,5 +1,5 @@
 {
-  "generated_at": "2026-04-08T22:44:53.224477",
+  "generated_at": "2026-05-16T21:07:26.015217",
   "entries": [
     {
       "config": "drugbank.drug_binds_gene",
@@ -219,7 +219,7 @@
     },
     {
       "config": "clinpgx.clinical_annotations_pharma_class",
-      "relationship_type": "AFFECTS_RESPONSE_TO",
+      "relationship_type": "AFFECTS_RESPONSE_TO_CLASS",
       "source_label": "ClinPGx",
       "sides": [
         {
@@ -527,8 +527,8 @@
           "node_type": "Gene",
           "property": "xrefNcbiGene",
           "column": "entrez_gene_id",
-          "total": 1086,
-          "matched": 1086,
+          "total": 1089,
+          "matched": 1089,
           "unmatched": 0,
           "match_rate": 100.0,
           "unmatched_edges": 0,
@@ -562,8 +562,8 @@
           "node_type": "Gene",
           "property": "xrefNcbiGene",
           "column": "entrez_gene_id",
-          "total": 925,
-          "matched": 925,
+          "total": 929,
+          "matched": 929,
           "unmatched": 0,
           "match_rate": 100.0,
           "unmatched_edges": 0,
@@ -597,8 +597,8 @@
           "node_type": "Gene",
           "property": "xrefNcbiGene",
           "column": "target_gene",
-          "total": 6548,
-          "matched": 6548,
+          "total": 6547,
+          "matched": 6547,
           "unmatched": 0,
           "match_rate": 100.0,
           "unmatched_edges": 0,
@@ -1364,41 +1364,6 @@
           "column": "variant_id",
           "total": 92038,
           "matched": 92038,
-          "unmatched": 0,
-          "match_rate": 100.0,
-          "unmatched_edges": 0,
-          "sample_unmatched": {},
-          "nodes_created": 0,
-          "edges_recovered": 0
-        }
-      ]
-    },
-    {
-      "config": "drugage.gene_aging_association",
-      "relationship_type": "associatedWithAging",
-      "source_label": "DrugAge",
-      "sides": [
-        {
-          "side": "subject",
-          "node_type": "Gene",
-          "property": "xrefNcbiGene",
-          "column": "geneId",
-          "total": 386,
-          "matched": 386,
-          "unmatched": 0,
-          "match_rate": 100.0,
-          "unmatched_edges": 0,
-          "sample_unmatched": {},
-          "nodes_created": 0,
-          "edges_recovered": 0
-        },
-        {
-          "side": "object",
-          "node_type": "AgeingProperty",
-          "property": "propertyName",
-          "column": "agingProperty",
-          "total": 3,
-          "matched": 3,
           "unmatched": 0,
           "match_rate": 100.0,
           "unmatched_edges": 0,

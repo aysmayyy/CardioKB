@@ -1,6 +1,7 @@
 services:
   memgraph:
     image: memgraph/memgraph:latest
+    command: ["--memory-limit=32768"]
     ports:
       - "7687:7687"
       - "7444:7444"

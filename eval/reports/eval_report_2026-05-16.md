@@ -1,28 +1,26 @@
-# CardioKB Evaluation Report — 2026-05-14
+# CardioKB Evaluation Report — 2026-05-17
 
-**Generated:** 2026-05-14T02:18:58.808506+00:00
+**Generated:** 2026-05-17T04:45:37.058995+00:00
 
 ## Test Results Summary
 
-- **Tier 1 (blocking):** 102/102 passing
-- **Tier 2 (quality):** 83/83 passing
+- **Tier 1 (blocking):** 96/96 passing
+- **Tier 2 (quality):** 73/73 passing
 
-        
 ## Entity Counts
 
 | Node Type | Count |
 |-----------|-------|
 | Variant | 4,488,042 |
-| Gene | 194,559 |
-| ClinicalTrial | 85,691 |
+| Gene | 193,687 |
+| ClinicalTrial | 85,677 |
 | BiologicalProcess | 24,547 |
-| Drug | 24,429 |
+| Drug | 24,414 |
 | Phenotype | 19,389 |
 | BodyPart | 14,937 |
-| Disease | 12,096 |
+| Disease | 12,012 |
 | MolecularFunction | 10,123 |
 | SideEffect | 5,734 |
-| Species | 4,645 |
 | CellularComponent | 4,069 |
 | Pathway | 2,806 |
 | GeneFamily | 1,934 |
@@ -30,8 +28,6 @@
 | Symptom | 966 |
 | DrugLabel | 378 |
 | TranscriptionFactor | 367 |
-| AgeingProperty | 3 |
-| DiseaseCache | 1 |
 | _Metadata | 1 |
 
 ## Cross-Source Integration
@@ -40,12 +36,12 @@ Node types touched by multiple sources:
 
 | Node Type | # Sources | Multi-Source Nodes | Single-Source | Integration Rate |
 |-----------|-----------|-------------------|---------------|------------------|
-| Gene | 20 | 26,417 | 0 | 100.0% |
-| Drug | 10 | 3,857 | 8,799 | 30.5% |
-| Disease | 9 | 255 | 43 | 85.6% |
+| Gene | 16 | 17,489 | 8,928 | 66.2% |
+| Drug | 8 | 3,857 | 8,790 | 30.5% |
+| Disease | 6 | 226 | 72 | 75.8% |
 | BodyPart | 3 | 106 | 537 | 16.5% |
 | PharmacologicClass | 2 | 7 | 1,637 | 0.4% |
-| Variant | 2 | 0 | 2,268,347 | 0.0% |
+| Variant | 2 | 0 | 2,268,155 | 0.0% |
 
 ### Drug Merging: CTD → DrugBank
 
@@ -57,10 +53,10 @@ Node types touched by multiple sources:
 
 | Integration Level | Genes |
 |-------------------|-------|
-| High (10+ sources) | 3,587 |
-| Medium (5-9 sources) | 5,020 |
-| Low (2-4 sources) | 17,810 |
-| Single source | 0 |
+| High (10+ sources) | 3,415 |
+| Medium (5-9 sources) | 1,535 |
+| Low (2-4 sources) | 12,539 |
+| Single source | 8,928 |
 
 ## ID-Based Duplicate Check
 
@@ -81,14 +77,11 @@ Node types touched by multiple sources:
 | Bgee | 100.0% | 4,208 | 0 | ✓ |
 | BindingDB | 100.0% | 2,629 | 0 | ✓ |
 | CTD | 100.0% | 9,864 | 0 | ✓ |
-| CardioKB_Demo | 100.0% | 14 | 0 | ✓ |
 | ClinPGx | 100.0% | 1,747 | 0 | ✓ |
-| ClinVar | 100.0% | 2,271,208 | 0 | ✓ |
+| ClinVar | 100.0% | 2,270,878 | 0 | ✓ |
 | ClinicalTrials.gov | 100.0% | 36,580 | 0 | ✓ |
-| Curated CVD Knowledge | 100.0% | 39 | 0 | ✓ |
 | Disease Ontology | 100.0% | 269 | 0 | ✓ |
 | DoRothEA | 100.0% | 4,887 | 0 | ✓ |
-| DrugAge | 100.0% | 389 | 0 | ✓ |
 | DrugBank | 100.0% | 7,325 | 0 | ✓ |
 | DrugCentral | 100.0% | 4,637 | 0 | ✓ |
 | Gene Ontology | 100.0% | 16,549 | 0 | ✓ |
@@ -97,7 +90,6 @@ Node types touched by multiple sources:
 | Jensen TISSUES | 100.0% | 3,997 | 0 | ✓ |
 | LINCS L1000 | 100.0% | 9,198 | 0 | ✓ |
 | MEDLINE | 100.0% | 195 | 0 | ✓ |
-| NCBI Gene | 100.0% | 26,418 | 0 | ✓ |
 | OpenTargets | 100.0% | 14,542 | 0 | ✓ |
 | PubTator | 100.0% | 26,167 | 0 | ✓ |
 | Reactome | 100.0% | 5,565 | 0 | ✓ |
