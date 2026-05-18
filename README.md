@@ -2,7 +2,7 @@
 
 A cardiovascular disease (CVD) focused biomedical knowledge graph pipeline that integrates 24 deduplicated data sources into a Memgraph graph for disease research, feature selection, and precision medicine. Each node type and edge type is served by exactly one authoritative database — no redundancy. Adapted from the AlzKB (Alzheimer's Knowledge Base) architecture with custom parsers and AI-powered parser generation. Features a **DatabaseAgent** that autonomously generates new parsers from just a name and URL, a **DiseaseQueryAgent** for on-demand disease enrichment, and a web dashboard with interactive graph exploration and Browser-style querying.
 
-**Graph stats:** 4,890,728 nodes | 7,456,921 relationships | 17 node types | 41 relationship types | 24 sources | 21 source labels
+**Graph stats:** 4,879,019 nodes | 7,456,921 relationships | 17 node types | 40 relationship types | 24 sources | 21 source labels
 *Stats are current as of last pipeline run; see Memgraph or `GET /api/graph-stats` for live counts.*
 
 ## Pipeline Status

@@ -402,11 +402,9 @@ class CardioKBPipeline:
                         f"({gdr['primary_gene_symbol'].nunique()} unique genes)"
                     )
 
-        # Post-processing: remap disease IDs to DOID
+        # Post-processing: enrich DrugBank with MeSH IDs (doesn't need disease_ontology)
         from src.id_mapping import remap_pubtator_mesh_to_doid, remap_gwas_disease_to_doid, remap_drugcentral_cui_to_doid, remap_clinvar_omim_to_doid, enrich_drugbank_with_mesh
         enrich_drugbank_with_mesh(parsed_data)
-        remap_drugcentral_cui_to_doid(parsed_data)
-        remap_clinvar_omim_to_doid(parsed_data)
 
         # TSV fallback: for sources that failed parsing or returned all-empty
         # DataFrames, load from existing processed TSVs
@@ -436,6 +434,12 @@ class CardioKBPipeline:
                         if fallback_data:
                             parsed_data[source_name] = fallback_data
 
+        # Post-processing: remap disease IDs to DOID (requires disease_ontology)
+        # These must run AFTER TSV fallback to ensure disease_xrefs is available
+        if 'drugcentral' in parsed_data and 'disease_ontology' in parsed_data:
+            remap_drugcentral_cui_to_doid(parsed_data)
+        if 'clinvar' in parsed_data and 'disease_ontology' in parsed_data:
+            remap_clinvar_omim_to_doid(parsed_data)
         if 'pubtator' in parsed_data and 'disease_ontology' in parsed_data:
             remap_pubtator_mesh_to_doid(parsed_data)
         if 'gwas' in parsed_data and 'disease_ontology' in parsed_data:
@@ -1289,6 +1293,42 @@ class CardioKBPipeline:
             v = str(val).lower()
             return any(p.search(v) for p in _cvd_term_patterns)
 
+        # ── Option 1: Filter Disease nodes to only CVD-relevant diseases ──
+        # This prevents 97%+ orphan Disease nodes by only loading diseases
+        # that will actually have relationships in the CVD-scoped graph.
+        if 'disease_ontology' in parsed_data and 'disease_nodes' in parsed_data['disease_ontology']:
+            dn_df = parsed_data['disease_ontology']['disease_nodes']
+            before_nodes = len(dn_df)
+            # Filter to DOIDs that are CVD-relevant
+            if cvd_doids:
+                dn_df = dn_df[dn_df['doid'].isin(cvd_doids)].reset_index(drop=True)
+                parsed_data['disease_ontology']['disease_nodes'] = dn_df
+                logger.info(f"  Filtered disease_nodes: {before_nodes:,} → {len(dn_df):,} "
+                           f"({len(cvd_doids)} CVD-relevant DOIDs)")
+
+            # Also filter disease_xrefs to only CVD DOIDs
+            if 'disease_xrefs' in parsed_data['disease_ontology']:
+                xrefs_df = parsed_data['disease_ontology']['disease_xrefs']
+                before_xrefs = len(xrefs_df)
+                xrefs_df = xrefs_df[xrefs_df['doid'].isin(cvd_doids)].reset_index(drop=True)
+                parsed_data['disease_ontology']['disease_xrefs'] = xrefs_df
+                logger.info(f"  Filtered disease_xrefs: {before_xrefs:,} → {len(xrefs_df):,}")
+
+            # Filter disease_hierarchy to edges where BOTH ends are CVD-relevant
+            if 'disease_hierarchy' in parsed_data['disease_ontology']:
+                dh_df = parsed_data['disease_ontology']['disease_hierarchy']
+                before_hier = len(dh_df)
+                # Column names are 'child_id' and 'parent_id' (not child_doid/parent_doid)
+                child_col = 'child_id' if 'child_id' in dh_df.columns else 'child_doid'
+                parent_col = 'parent_id' if 'parent_id' in dh_df.columns else 'parent_doid'
+                dh_df = dh_df[
+                    dh_df[child_col].isin(cvd_doids) &
+                    dh_df[parent_col].isin(cvd_doids)
+                ].reset_index(drop=True)
+                parsed_data['disease_ontology']['disease_hierarchy'] = dh_df
+                logger.info(f"  Filtered disease_hierarchy: {before_hier:,} → {len(dh_df):,} "
+                           f"(CVD internal edges only)")
+
         # ── Apply filtering to each relationship DataFrame ─────────────
         total_before = 0
         total_after = 0
@@ -1302,6 +1342,13 @@ class CardioKBPipeline:
                 if config.get('data_type') != 'relationship':
                     continue
                 if config.get('skip', False):
+                    continue
+
+                # Keep full disease hierarchy (Option 2) - don't filter diseaseIsSubtypeOf
+                # This preserves the Disease Ontology tree structure for navigation
+                if config_key == 'disease_ontology.disease_hierarchy':
+                    total_after += len(data[data_name])
+                    logger.info(f"  {config_key}: {len(data[data_name]):>10,} edges (kept full hierarchy)")
                     continue
 
                 pc = config.get('parse_config', {})

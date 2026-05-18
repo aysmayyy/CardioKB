@@ -446,12 +446,19 @@ def remap_drugcentral_cui_to_doid(parsed_data: Dict[str, Dict[str, pd.DataFrame]
     dc_data = parsed_data.get('drugcentral', {})
 
     xrefs_df = do_data.get('disease_xrefs')
-    if xrefs_df is None or xrefs_df.empty:
+    if xrefs_df is None or (hasattr(xrefs_df, 'empty') and xrefs_df.empty):
         logger.warning("No disease_xrefs available for CUI->DOID mapping; skipping DrugCentral remap")
         return
 
+    # Debug: log xrefs structure
+    logger.info(f"disease_xrefs for CUI mapping: type={type(xrefs_df)}, columns={list(xrefs_df.columns) if hasattr(xrefs_df, 'columns') else 'N/A'}, len={len(xrefs_df)}")
+
     # Build UMLS_CUI:Cxxxx -> DOID:xxxx lookup
+    if 'xref' not in xrefs_df.columns:
+        logger.warning(f"'xref' column not in disease_xrefs for CUI mapping")
+        return
     cui_rows = xrefs_df[xrefs_df['xref'].str.startswith('UMLS_CUI:', na=False)].copy()
+    logger.info(f"Found {len(cui_rows)} UMLS_CUI rows in disease_xrefs")
     # Strip prefix: "UMLS_CUI:C0020538" -> "C0020538"
     cui_to_doid = dict(zip(
         cui_rows['xref'].str.replace('UMLS_CUI:', '', regex=False),
@@ -516,12 +523,19 @@ def remap_clinvar_omim_to_doid(parsed_data: Dict[str, Dict[str, pd.DataFrame]]) 
     cv_data = parsed_data.get('clinvar', {})
 
     xrefs_df = do_data.get('disease_xrefs')
-    if xrefs_df is None or xrefs_df.empty:
+    if xrefs_df is None or (hasattr(xrefs_df, 'empty') and xrefs_df.empty):
         logger.warning("No disease_xrefs available for OMIM->DOID mapping; skipping ClinVar remap")
         return
 
+    # Debug: log xrefs structure
+    logger.info(f"disease_xrefs type: {type(xrefs_df)}, columns: {list(xrefs_df.columns) if hasattr(xrefs_df, 'columns') else 'N/A'}, len: {len(xrefs_df)}")
+
     # Build MIM number -> DOID lookup (MIM:251300 -> strip to '251300')
+    if 'xref' not in xrefs_df.columns:
+        logger.warning(f"'xref' column not in disease_xrefs columns: {list(xrefs_df.columns)}")
+        return
     mim_rows = xrefs_df[xrefs_df['xref'].str.startswith('MIM:', na=False)].copy()
+    logger.info(f"Found {len(mim_rows)} MIM rows in disease_xrefs")
     mim_to_doid = dict(zip(
         mim_rows['xref'].str.replace('MIM:', '', regex=False),
         mim_rows['doid']

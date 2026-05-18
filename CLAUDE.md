@@ -11,7 +11,7 @@
 12-week rotation project (Jan-Apr 2026) building a CVD-focused biomedical knowledge graph. The graph integrates 24 deduplicated data sources (each node type and edge type served by exactly one authoritative database) into Memgraph for disease research, feature selection, and precision medicine. Adapted from AlzKB (Alzheimer's Knowledge Base) with custom parsers and AI-powered parser generation. The **DatabaseAgent** (`src/database_agent.py`) autonomously generates new parsers from just a name and URL using Claude API. The **DiseaseQueryAgent** (`src/disease_agent.py`) enriches the graph for any disease on demand via ClinicalTrials.gov API v2. Three legacy sources (SIDER, LINCS L1000, MEDLINE) are retained as-is — no live API alternatives available.
 
 ## Current Graph Stats
-- **4,890,728 nodes** | **7,456,921 relationships** | **17 node types** | **41 relationship types** | **24 sources** | **21 source labels**
+- **4,879,019 nodes** | **7,456,921 relationships** | **17 node types** | **40 relationship types** | **24 sources** | **21 source labels**
 - All relationships carry a `source` property identifying the originating database (e.g., `source: "OpenTargets"`)
 - *Stats are current as of last pipeline run; see Memgraph or `GET /api/graph-stats` for live counts.*
 
