@@ -462,15 +462,6 @@ th { color: var(--text-muted); font-weight: 600; text-transform: uppercase; font
                 <div id="adminError" style="color:var(--red);font-size:0.78rem;margin-top:0.3rem;display:none"></div>
             </div>
             <div id="advancedUnlocked" style="display:none">
-                <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:0.3rem">
-                    <h3 style="margin-bottom:0">Add New Database <span style="font-size:0.65rem;font-weight:600;background:rgba(139,92,246,0.15);color:#a78bfa;padding:0.15rem 0.4rem;border-radius:4px;margin-left:0.3rem;vertical-align:middle">AI</span></h3>
-                    <button class="info-btn-sm" data-info="adddb">?</button>
-                </div>
-                <div style="font-size:0.75rem;color:var(--text-muted);margin-bottom:0.4rem;line-height:1.45">Provide a name and data URL. The AI agent auto-generates a parser and loads it into the graph.</div>
-                <input type="text" class="agent-input" id="addDbName" placeholder="Database name (e.g. PhosphoSitePlus)" data-tip="Human-readable name for the new data source" />
-                <input type="text" class="agent-input" id="addDbUrl" placeholder="Data download URL (TSV, CSV, JSON, or gzipped)" data-tip="Direct download link to the source data file. The agent samples the first 64KB to detect format and columns." />
-                <button class="run-btn" id="addDbBtn" onclick="addDatabase()" style="font-size:0.82rem;padding:0.5rem;margin-bottom:0.75rem" data-tip="Launch the DatabaseAgent: sample file, generate parser via Claude AI, run parser, load into graph">Build Parser</button>
-
                 <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:0.5rem">
                     <h3 style="margin-bottom:0">Run Pipeline</h3>
                     <button class="info-btn-sm" data-info="pipeline">?</button>
@@ -490,7 +481,7 @@ th { color: var(--text-muted); font-weight: 600; text-transform: uppercase; font
         <div class="stat-card" data-tip="Total connections between entities (gene-disease, drug-target, etc.)"><div class="value" id="statRels"><span class="spinner"></span></div><div class="label">Total Relationships</div></div>
         <div class="stat-card" data-tip="Distinct entity categories: Gene, Disease, Drug, Pathway, etc."><div class="value" id="statNodeTypes"><span class="spinner"></span></div><div class="label">Node Types</div></div>
         <div class="stat-card" data-tip="Distinct relationship types: ASSOCIATES_WITH, TARGETS, TREATS, etc."><div class="value" id="statRelTypes"><span class="spinner"></span></div><div class="label">Rel Types</div></div>
-        <div class="stat-card" data-tip="Number of integrated databases contributing relationships. Add more via Admin > Add New Database."><div class="value" id="statSources"><span class="spinner"></span></div><div class="label">Sources</div></div>
+        <div class="stat-card" data-tip="Number of integrated databases contributing relationships."><div class="value" id="statSources"><span class="spinner"></span></div><div class="label">Sources</div></div>
     </div>
 
     <!-- Tabs -->
@@ -653,7 +644,6 @@ th { color: var(--text-muted); font-weight: 600; text-transform: uppercase; font
             <ul>
                 <li><span id="aboutNodeCount">--</span> nodes across <span id="aboutNodeTypeCount">--</span> entity types, <span id="aboutRelCount">--</span> relationships from <span id="aboutRelSourceCount">--</span> sources</li>
                 <li>Search CVD subtypes (heart failure, atrial fibrillation, coronary artery disease...) or related genes/drugs</li>
-                <li>Add entirely new databases &mdash; the AI-powered DatabaseAgent writes the parser for you</li>
             </ul>
         </div>
         <div class="modal-step" data-step="1">
@@ -668,20 +658,9 @@ th { color: var(--text-muted); font-weight: 600; text-transform: uppercase; font
             </ul>
             <p style="margin-top:0.5rem">The <strong>Query tab</strong> gives you direct Cypher access to the CVD graph &mdash; click a template or write your own (read-only, Cmd+Enter to run).</p>
         </div>
-        <div class="modal-step" data-step="2">
-            <h2>Admin: Add New Databases <span style="font-size:0.7rem;font-weight:600;background:rgba(139,92,246,0.15);color:#a78bfa;padding:0.15rem 0.4rem;border-radius:4px;vertical-align:middle">AI</span></h2>
-            <p>Under <strong>Advanced</strong> in the sidebar (password-protected), the <strong>Add New Database</strong> panel lets you expand the graph with any public data source:</p>
-            <ul>
-                <li>Enter a <strong>database name</strong> and a <strong>direct download URL</strong> (TSV, CSV, JSON, or gzipped)</li>
-                <li>Click <strong>Build Parser</strong> &mdash; the DatabaseAgent (Claude AI) samples the file, generates a complete parser, integrates it into the pipeline, and loads the data into the graph</li>
-                <li>The agent handles format detection, column mapping, ontology config, and ID validation automatically</li>
-            </ul>
-            <p style="margin-top:0.5rem">Also in Admin: <strong>Run Pipeline</strong> (full rebuild of all <span class="live-source-count">--</span> sources).</p>
-        </div>
         <div class="modal-dots">
             <span class="dot active" data-dot="0"></span>
             <span class="dot" data-dot="1"></span>
-            <span class="dot" data-dot="2"></span>
         </div>
         <div class="modal-actions">
             <button class="btn-secondary" onclick="closeWelcome()">Skip</button>
@@ -793,16 +772,6 @@ th { color: var(--text-muted); font-weight: 600; text-transform: uppercase; font
             '<h4>Health Check</h4>' +
             '<p>Verifies every data source parser in the pipeline: checks that raw data was downloaded, parsed into TSVs, and loaded into the graph with correct node/relationship counts.</p>' +
             '<p>Also tests database connectivity, relationship <code>source</code> tagging, and ID mapping integrity. Green = data present; red = missing or mismatched.</p>',
-
-        adddb:
-            '<h4>DatabaseAgent (AI Parser Generator)</h4>' +
-            '<p>Provide any biomedical database name and a download URL. The agent (powered by Claude) will:</p>' +
-            '<p><strong>1.</strong> Download and sample the file (first 64KB)<br>' +
-            '<strong>2.</strong> Auto-detect format (TSV, CSV, JSON, XML)<br>' +
-            '<strong>3.</strong> Generate a complete Python parser<br>' +
-            '<strong>4.</strong> Create ontology configs for graph mapping<br>' +
-            '<strong>5.</strong> Run the parser and load data into the graph</p>' +
-            '<p>The entire process takes 1&ndash;3 minutes. The new source appears in Health Check immediately.</p>',
 
         pipeline:
             '<h4>Full Pipeline Run</h4>' +
@@ -1117,62 +1086,6 @@ async function unlockAdvanced() {
         errEl.textContent = 'Connection failed: ' + e.message;
         errEl.style.display = 'block';
     }
-}
-
-async function addDatabase() {
-    const nameInput = document.getElementById('addDbName');
-    const urlInput = document.getElementById('addDbUrl');
-    const btn = document.getElementById('addDbBtn');
-    const name = nameInput.value.trim();
-    const url = urlInput.value.trim();
-    if (!name || !url) { (name ? urlInput : nameInput).focus(); return; }
-
-    // Auto-open admin section
-    const toggle = document.getElementById('adminToggle');
-    const body = document.getElementById('adminBody');
-    if (!body.classList.contains('open')) { toggle.classList.add('open'); body.classList.add('open'); }
-
-    btn.disabled = true;
-    btn.innerHTML = '<span class="spinner"></span>Building...';
-    document.getElementById('logPanel').innerHTML = '';
-    log('Adding database "' + name + '" from ' + url + '...', 'info');
-
-    try {
-        const res = await fetch('/api/agent/add-database', {
-            method: 'POST',
-            headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify({ name, url, password: adminPassword }),
-        });
-        if (!res.ok) {
-            const err = await res.json().catch(() => ({}));
-            log('Add database error: ' + (err.error || res.statusText), 'err');
-            btn.disabled = false; btn.textContent = 'Build'; return;
-        }
-        const reader = res.body.getReader();
-        const decoder = new TextDecoder();
-        let buffer = '';
-        while (true) {
-            const { done, value } = await reader.read();
-            if (done) break;
-            buffer += decoder.decode(value, { stream: true });
-            let boundary;
-            while ((boundary = buffer.indexOf('\n\n')) !== -1) {
-                const frame = buffer.slice(0, boundary);
-                buffer = buffer.slice(boundary + 2);
-                let event = 'message', data = '';
-                for (const line of frame.split('\n')) {
-                    if (line.startsWith('event: ')) event = line.slice(7);
-                    else if (line.startsWith('data: ')) data = line.slice(6);
-                }
-                if (!data) continue;
-                const parsed = JSON.parse(data);
-                if (event === 'status') log('Agent: ' + parsed.message, 'info');
-                else if (event === 'result') { log('Agent: database added successfully', 'ok'); loadGraphStats(); }
-                else if (event === 'error') log('Agent error: ' + parsed.message, 'err');
-            }
-        }
-    } catch (e) { log('Add database error: ' + e.message, 'err'); }
-    btn.disabled = false; btn.textContent = 'Build';
 }
 
 async function runPipeline() {
