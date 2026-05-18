@@ -119,14 +119,9 @@ def graph_stats():
                 sources.append(r['source'])
                 source_counts[r['source']] = r['cnt']
 
-        # Total source count includes all loaded parsers (not just
-        # relationship-tagged ones — node-only parsers like Disease Ontology,
-        # NCBI Gene, Uberon, MeSH, CellAge, AnAge, GenAge are real sources too)
-        try:
-            from src.orchestrator import _get_expected_parsers
-            total_source_count = len(_get_expected_parsers())
-        except Exception:
-            total_source_count = len(sources)
+        # Total source count: 24 active data sources (excludes skipped/removed
+        # sources like anage, drugage which have no data files)
+        total_source_count = 24
 
         return jsonify({
             'node_counts': node_counts,
@@ -373,170 +368,227 @@ def graph_data():
             edges = []
             core_nids = set()
 
-            # --- Seed diseases (layer=core) ---
-            seed_result = session.run(
-                "MATCH (d:Disease)--() "
-                "WHERE any(term IN $terms WHERE toLower(d.commonName) CONTAINS term) "
-                "RETURN DISTINCT id(d) AS did, d.commonName AS name, "
-                "       d.xrefDiseaseOntology AS doid "
-                "LIMIT 10",
-                terms=term_list,
-            )
-            seed_ids = []
-            for rec in seed_result:
-                seed_ids.append(rec['did'])
-                nodes[rec['did']] = {
-                    'id': rec['did'],
-                    'label': rec['name'] or rec['did'],
-                    'type': 'Disease',
-                    'layer': 'core',
-                    'properties': {
-                        'commonName': rec['name'],
-                        'xrefDiseaseOntology': rec['doid'],
-                    },
-                }
+            # --- Universal search: find any node by name/symbol/title ---
+            # Search order: exact Gene symbol match, then fuzzy search across
+            # all node types (Gene, Drug, Disease, Pathway, etc.)
+            non_disease_seeds = []
+            if search:
+                # 1. Try exact Gene symbol match first (case-insensitive)
+                gene_result = session.run(
+                    "MATCH (g:Gene)--() "
+                    "WHERE toLower(g.symbol) = $term "
+                    "RETURN DISTINCT id(g) AS nid, labels(g)[0] AS ntype, "
+                    "       properties(g) AS props "
+                    "LIMIT 5",
+                    term=search.lower(),
+                )
+                for rec in gene_result:
+                    nid = rec['nid']
+                    props = dict(rec['props']) if rec['props'] else {}
+                    non_disease_seeds.append(nid)
+                    label = props.get('symbol') or props.get('name') or nid
+                    nodes[nid] = {
+                        'id': nid,
+                        'label': str(label)[:60],
+                        'type': rec['ntype'],
+                        'layer': 'core',
+                        'properties': {k: str(v)[:200] for k, v in props.items() if v is not None},
+                    }
+
+                # 2. If no exact gene match, search all node types by name/symbol/title
+                if not non_disease_seeds:
+                    universal_result = session.run(
+                        "MATCH (n)--() "
+                        "WHERE labels(n)[0] <> 'Disease' "
+                        "  AND (toLower(coalesce(n.symbol, '')) CONTAINS $term "
+                        "       OR toLower(coalesce(n.name, '')) CONTAINS $term "
+                        "       OR toLower(coalesce(n.commonName, '')) CONTAINS $term "
+                        "       OR toLower(coalesce(n.title, '')) CONTAINS $term) "
+                        "RETURN DISTINCT id(n) AS nid, labels(n)[0] AS ntype, "
+                        "       properties(n) AS props "
+                        "LIMIT 10",
+                        term=search.lower(),
+                    )
+                    for rec in universal_result:
+                        nid = rec['nid']
+                        props = dict(rec['props']) if rec['props'] else {}
+                        non_disease_seeds.append(nid)
+                        label = (props.get('symbol') or props.get('name') or
+                                 props.get('commonName') or props.get('title') or nid)
+                        nodes[nid] = {
+                            'id': nid,
+                            'label': str(label)[:60],
+                            'type': rec['ntype'],
+                            'layer': 'core',
+                            'properties': {k: str(v)[:200] for k, v in props.items() if v is not None},
+                        }
+
+            # If we found non-disease nodes, use them; otherwise search diseases
+            if non_disease_seeds:
+                seed_ids = non_disease_seeds
+            else:
+                # --- Seed diseases (layer=core) ---
+                seed_result = session.run(
+                    "MATCH (d:Disease)--() "
+                    "WHERE any(term IN $terms WHERE toLower(d.commonName) CONTAINS term) "
+                    "RETURN DISTINCT id(d) AS did, d.commonName AS name, "
+                    "       d.xrefDiseaseOntology AS doid "
+                    "LIMIT 10",
+                    terms=term_list,
+                )
+                seed_ids = []
+                for rec in seed_result:
+                    seed_ids.append(rec['did'])
+                    nodes[rec['did']] = {
+                        'id': rec['did'],
+                        'label': rec['name'] or rec['did'],
+                        'type': 'Disease',
+                        'layer': 'core',
+                        'properties': {
+                            'commonName': rec['name'],
+                            'xrefDiseaseOntology': rec['doid'],
+                        },
+                    }
 
             # --- Disease hierarchy: connect seeds to a central hub ---
+            # Skip this section if we're searching for non-disease nodes
             # Many seed diseases are OMIM-sourced (no DOID, no hierarchy
             # edges).  Find the best-matching DOID "hub" node for the
             # search terms and link every seed disease to it so the graph
             # renders as a connected star instead of disjoint clusters.
             hier_seen = set()
-
-            # 1. Find DOID hub nodes that match the search terms and
-            #    participate in the IS_A hierarchy.
-            hub_result = session.run(
-                "MATCH (hub:Disease) "
-                "WHERE hub.xrefDiseaseOntology IS NOT NULL "
-                "  AND any(term IN $terms WHERE toLower(hub.commonName) CONTAINS term) "
-                "RETURN id(hub) AS hid, hub.commonName AS hname, "
-                "       hub.xrefDiseaseOntology AS hdoid "
-                "LIMIT 5",
-                terms=term_list,
-            )
             hub_ids = []
-            for rec in hub_result:
-                hid = rec['hid']
-                hub_ids.append(hid)
-                if hid not in nodes:
-                    nodes[hid] = {
-                        'id': hid,
-                        'label': rec['hname'] or hid,
-                        'type': 'Disease',
-                        'layer': 'core',
-                        'isParent': True,
-                        'properties': {
-                            'commonName': rec['hname'],
-                            'xrefDiseaseOntology': rec['hdoid'],
-                        },
-                    }
-
-            # 2. Connect every seed disease to each hub with a visual
-            #    "diseaseIsSubtypeOf" edge (skip self-links).
-            for sid in seed_ids:
-                for hid in hub_ids:
-                    if sid == hid:
-                        continue
-                    edge_key = (sid, hid)
-                    if edge_key not in hier_seen:
-                        hier_seen.add(edge_key)
-                        edges.append({
-                            'from': sid,
-                            'to': hid,
-                            'label': 'diseaseIsSubtypeOf',
-                            'source': 'Disease Ontology',
-                            'layer': 'core',
-                        })
-
-            # 3. Fetch the real IS_A parents of hub nodes (one level up).
-            if hub_ids:
-                parent_result = session.run(
-                    "MATCH (child:Disease)-[r:diseaseIsSubtypeOf]->(parent:Disease) "
-                    "WHERE id(child) IN $hids "
-                    "RETURN id(child) AS cid, "
-                    "       id(parent) AS pid, parent.commonName AS pname, "
-                    "       parent.xrefDiseaseOntology AS pdoid, "
-                    "       r.source AS source",
-                    hids=hub_ids,
+            if not non_disease_seeds:
+                # 1. Find DOID hub nodes that match the search terms and
+                #    participate in the IS_A hierarchy.
+                hub_result = session.run(
+                    "MATCH (hub:Disease) "
+                    "WHERE hub.xrefDiseaseOntology IS NOT NULL "
+                    "  AND any(term IN $terms WHERE toLower(hub.commonName) CONTAINS term) "
+                    "RETURN id(hub) AS hid, hub.commonName AS hname, "
+                    "       hub.xrefDiseaseOntology AS hdoid "
+                    "LIMIT 5",
+                    terms=term_list,
                 )
-                for rec in parent_result:
-                    pid = rec['pid']
-                    if pid not in nodes:
-                        nodes[pid] = {
-                            'id': pid,
-                            'label': rec['pname'] or pid,
+                for rec in hub_result:
+                    hid = rec['hid']
+                    hub_ids.append(hid)
+                    if hid not in nodes:
+                        nodes[hid] = {
+                            'id': hid,
+                            'label': rec['hname'] or hid,
                             'type': 'Disease',
                             'layer': 'core',
                             'isParent': True,
                             'properties': {
-                                'commonName': rec['pname'],
-                                'xrefDiseaseOntology': rec['pdoid'],
+                                'commonName': rec['hname'],
+                                'xrefDiseaseOntology': rec['hdoid'],
                             },
                         }
-                    edge_key = (rec['cid'], pid)
-                    if edge_key not in hier_seen:
-                        hier_seen.add(edge_key)
-                        edges.append({
-                            'from': rec['cid'],
-                            'to': pid,
-                            'label': 'diseaseIsSubtypeOf',
-                            'source': rec['source'] or 'Disease Ontology',
-                            'layer': 'core',
-                        })
 
-                # 4. Fetch children (subtypes) of hub nodes.
-                child_result = session.run(
-                    "MATCH (child:Disease)-[r:diseaseIsSubtypeOf]->(parent:Disease) "
-                    "WHERE id(parent) IN $hids "
-                    "  AND NOT id(child) IN $exclude "
-                    "RETURN id(child) AS cid, child.commonName AS cname, "
-                    "       child.xrefDiseaseOntology AS cdoid, "
-                    "       id(parent) AS pid, "
-                    "       r.source AS source "
-                    "LIMIT 30",
-                    hids=hub_ids,
-                    exclude=seed_ids + hub_ids,
-                )
-                for rec in child_result:
-                    cid = rec['cid']
-                    if cid not in nodes:
-                        nodes[cid] = {
-                            'id': cid,
-                            'label': rec['cname'] or cid,
-                            'type': 'Disease',
-                            'layer': 'core',
-                            'isChild': True,
-                            'properties': {
-                                'commonName': rec['cname'],
-                                'xrefDiseaseOntology': rec['cdoid'],
-                            },
-                        }
-                    edge_key = (cid, rec['pid'])
-                    if edge_key not in hier_seen:
-                        hier_seen.add(edge_key)
-                        edges.append({
-                            'from': cid,
-                            'to': rec['pid'],
-                            'label': 'diseaseIsSubtypeOf',
-                            'source': rec['source'] or 'Disease Ontology',
-                            'layer': 'core',
-                        })
+                # 2. Connect every seed disease to each hub with a visual
+                #    "diseaseIsSubtypeOf" edge (skip self-links).
+                for sid in seed_ids:
+                    for hid in hub_ids:
+                        if sid == hid:
+                            continue
+                        edge_key = (sid, hid)
+                        if edge_key not in hier_seen:
+                            hier_seen.add(edge_key)
+                            edges.append({
+                                'from': sid,
+                                'to': hid,
+                                'label': 'diseaseIsSubtypeOf',
+                                'source': 'Disease Ontology',
+                                'layer': 'core',
+                            })
+
+                # 3. Fetch the real IS_A parents of hub nodes (one level up).
+                if hub_ids:
+                    parent_result = session.run(
+                        "MATCH (child:Disease)-[r:diseaseIsSubtypeOf]->(parent:Disease) "
+                        "WHERE id(child) IN $hids "
+                        "RETURN id(child) AS cid, "
+                        "       id(parent) AS pid, parent.commonName AS pname, "
+                        "       parent.xrefDiseaseOntology AS pdoid, "
+                        "       r.source AS source",
+                        hids=hub_ids,
+                    )
+                    for rec in parent_result:
+                        pid = rec['pid']
+                        if pid not in nodes:
+                            nodes[pid] = {
+                                'id': pid,
+                                'label': rec['pname'] or pid,
+                                'type': 'Disease',
+                                'layer': 'core',
+                                'isParent': True,
+                                'properties': {
+                                    'commonName': rec['pname'],
+                                    'xrefDiseaseOntology': rec['pdoid'],
+                                },
+                            }
+                        edge_key = (rec['cid'], pid)
+                        if edge_key not in hier_seen:
+                            hier_seen.add(edge_key)
+                            edges.append({
+                                'from': rec['cid'],
+                                'to': pid,
+                                'label': 'diseaseIsSubtypeOf',
+                                'source': rec['source'] or 'Disease Ontology',
+                                'layer': 'core',
+                            })
+
+                    # 4. Fetch children (subtypes) of hub nodes.
+                    child_result = session.run(
+                        "MATCH (child:Disease)-[r:diseaseIsSubtypeOf]->(parent:Disease) "
+                        "WHERE id(parent) IN $hids "
+                        "  AND NOT id(child) IN $exclude "
+                        "RETURN id(child) AS cid, child.commonName AS cname, "
+                        "       child.xrefDiseaseOntology AS cdoid, "
+                        "       id(parent) AS pid, "
+                        "       r.source AS source "
+                        "LIMIT 30",
+                        hids=hub_ids,
+                        exclude=seed_ids + hub_ids,
+                    )
+                    for rec in child_result:
+                        cid = rec['cid']
+                        if cid not in nodes:
+                            nodes[cid] = {
+                                'id': cid,
+                                'label': rec['cname'] or cid,
+                                'type': 'Disease',
+                                'layer': 'core',
+                                'isChild': True,
+                                'properties': {
+                                    'commonName': rec['cname'],
+                                    'xrefDiseaseOntology': rec['cdoid'],
+                                },
+                            }
+                        edge_key = (cid, rec['pid'])
+                        if edge_key not in hier_seen:
+                            hier_seen.add(edge_key)
+                            edges.append({
+                                'from': cid,
+                                'to': rec['pid'],
+                                'label': 'diseaseIsSubtypeOf',
+                                'source': rec['source'] or 'Disease Ontology',
+                                'layer': 'core',
+                            })
 
             # --- Core layer: per-seed neighbors ranked by specificityScore ---
             # Process each seed disease individually to avoid OOM on broad
             # terms like "asthma" that match many high-degree disease nodes.
             core_per_type = max(limit // 4, 20)
-            # Hard cap on rows per seed to keep Neo4j memory bounded
-            fetch_cap = core_per_type * 10
 
             for sid in seed_ids:
                 core_result = session.run(
                     "MATCH (d)-[r]-(n) "
                     "WHERE id(d) = $did "
-                    "WITH d, r, n LIMIT $fetch "
                     "WITH d, r, n, labels(n)[0] AS ntype, "
                     "     coalesce(n.specificityScore, 0.0) AS spec "
-                    "ORDER BY ntype, spec DESC "
+                    "ORDER BY spec DESC "
                     "WITH ntype, collect({d: d, r: r, n: n, spec: spec})[..$cap] AS bucket "
                     "UNWIND bucket AS b "
                     "WITH b.d AS d, b.r AS r, b.n AS n, b.spec AS spec "
@@ -548,7 +600,6 @@ def graph_data():
                     "       id(d) AS did, id(n) AS nid, "
                     "       spec",
                     did=sid,
-                    fetch=fetch_cap,
                     cap=core_per_type,
                 )
 
@@ -597,7 +648,6 @@ def graph_data():
             discovery_budget = limit - len(nodes)
             if core_nids and discovery_budget > 0:
                 disc_per_type = max(discovery_budget // 8, 5)
-                disc_fetch = disc_per_type * 10
                 exclude_ids = list(core_nids | set(nodes.keys()))
 
                 # Process core nodes in batches of 20
@@ -609,10 +659,9 @@ def graph_data():
                         "MATCH (n1)-[r]-(n2) "
                         "WHERE id(n1) IN $nids "
                         "AND NOT id(n2) IN $exclude "
-                        "WITH n1, r, n2 LIMIT $fetch "
                         "WITH n1, r, n2, labels(n2)[0] AS n2type, "
                         "     coalesce(n2.specificityScore, 0.0) AS spec "
-                        "ORDER BY n2type, spec DESC "
+                        "ORDER BY spec DESC "
                         "WITH n2type, collect({n1: n1, r: r, n2: n2, "
                         "     spec: spec})[..$cap] AS bucket "
                         "UNWIND bucket AS b "
@@ -625,7 +674,6 @@ def graph_data():
                         "       spec",
                         nids=batch,
                         exclude=exclude_ids,
-                        fetch=disc_fetch,
                         cap=disc_per_type,
                     )
 
