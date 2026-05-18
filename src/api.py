@@ -23,7 +23,7 @@ _project_root = str(Path(__file__).parent.parent)
 if _project_root not in sys.path:
     sys.path.insert(0, _project_root)
 
-from src.orchestrator import (
+from src.admin_agent import (
     DISEASE_FILTERS,
     _get_expected_parsers,
     run_health_check,
@@ -219,104 +219,22 @@ def disease_stats():
 def agent_build_sse():
     """
     Run the disease agent and stream progress as Server-Sent Events.
-
-    Request body (JSON):
-        disease: Disease name to process (e.g., "parkinson's disease", "PD")
-
-    SSE events:
-        status  — progress updates with phase and message
-        result  — final result dict
-        error   — error message
+    NOTE: Agent feature migrated to BaseAgent - see ~/Desktop/BaseAgent/cardiokb.ipynb
     """
-    body = request.get_json(silent=True) or {}
-    disease = (body.get('disease') or '').strip()
-    if not disease:
-        return jsonify({'error': 'Missing "disease" field'}), 400
-
-    q = queue.Queue()
-
-    def on_progress(event: str, data: dict):
-        q.put((event, data))
-
-    def run():
-        try:
-            from src.agent import run_agent
-            result = run_agent(disease, on_progress=on_progress)
-            q.put(('result', result))
-        except Exception as e:
-            q.put(('error', {'message': str(e)}))
-        finally:
-            q.put(None)  # sentinel
-
-    thread = threading.Thread(target=run, daemon=True)
-    thread.start()
-
-    def generate():
-        while True:
-            item = q.get()
-            if item is None:
-                break
-            event, data = item
-            payload = json.dumps(data, default=str)
-            yield f"event: {event}\ndata: {payload}\n\n"
-
-    return Response(generate(), mimetype='text/event-stream',
-                    headers={'Cache-Control': 'no-cache',
-                             'X-Accel-Buffering': 'no'})
+    return jsonify({
+        'error': 'Agent feature migrated to BaseAgent. Use ~/Desktop/BaseAgent/cardiokb.ipynb'
+    }), 501
 
 
 @app.route('/api/agent/build-disease-graph', methods=['POST'])
 def agent_build_disease_graph():
     """
     Run the DiseaseQueryAgent and stream progress as Server-Sent Events.
-
-    Fetches DisGeNET gene-disease associations AND ClinicalTrials.gov trials,
-    loads both into Neo4j, and returns subgraph stats.
-
-    Request body (JSON):
-        disease: Disease name to process (e.g., "lupus", "Parkinson's")
-
-    SSE events:
-        status  - progress updates with phase and message
-        result  - final result dict
-        error   - error message
+    NOTE: Agent feature migrated to BaseAgent - see ~/Desktop/BaseAgent/cardiokb.ipynb
     """
-    body = request.get_json(silent=True) or {}
-    disease = (body.get('disease') or '').strip()
-    if not disease:
-        return jsonify({'error': 'Missing "disease" field'}), 400
-
-    q = queue.Queue()
-
-    def on_progress(event: str, data: dict):
-        q.put((event, data))
-
-    def run():
-        try:
-            from src.disease_agent import DiseaseQueryAgent
-            agent = DiseaseQueryAgent(disease, on_progress=on_progress)
-            result = agent.run()
-            q.put(('result', result))
-        except Exception as e:
-            q.put(('error', {'message': str(e)}))
-        finally:
-            q.put(None)
-
-    thread = threading.Thread(target=run, daemon=True)
-    thread.start()
-
-    def generate():
-        while True:
-            item = q.get()
-            if item is None:
-                break
-            event, data = item
-            payload = json.dumps(data, default=str)
-            yield f"event: {event}\ndata: {payload}\n\n"
-
-    return Response(generate(), mimetype='text/event-stream',
-                    headers={'Cache-Control': 'no-cache',
-                             'X-Accel-Buffering': 'no'})
+    return jsonify({
+        'error': 'Agent feature migrated to BaseAgent. Use ~/Desktop/BaseAgent/cardiokb.ipynb'
+    }), 501
 
 
 @app.route('/api/graph')
@@ -1050,59 +968,11 @@ def admin_verify():
 @app.route('/api/agent/add-database', methods=['POST'])
 def agent_add_database():
     """Add a new database source via the autonomous database agent.
-
-    Uses Claude to generate a complete parser, ontology configs, and pipeline
-    registration. Then runs the parser, validates ID mappings, and loads into Neo4j.
-
-    Request body (JSON):
-        name: Database name (e.g., "PhosphoSitePlus")
-        url: Database URL or data download URL
-        password: Admin password
-
-    SSE events:
-        status  - progress updates with phase and message
-        result  - final result dict
-        error   - error message
+    NOTE: Agent feature migrated to BaseAgent - see ~/Desktop/BaseAgent/cardiokb.ipynb
     """
-    body = request.get_json(silent=True) or {}
-    admin_pw = os.getenv('ADMIN_PASSWORD', '')
-    if not admin_pw or (body.get('password') or '') != admin_pw:
-        return jsonify({'error': 'Unauthorized'}), 403
-
-    name = (body.get('name') or '').strip()
-    url = (body.get('url') or '').strip()
-    if not name or not url:
-        return jsonify({'error': 'Missing "name" and/or "url" fields'}), 400
-
-    q = queue.Queue()
-
-    def on_progress(event, data):
-        q.put((event, data))
-
-    def run():
-        try:
-            from src.database_agent import run_database_agent
-            run_database_agent(name, url, on_progress=on_progress)
-        except Exception as e:
-            q.put(('error', {'message': str(e)}))
-        finally:
-            q.put(None)
-
-    thread = threading.Thread(target=run, daemon=True)
-    thread.start()
-
-    def generate():
-        while True:
-            item = q.get()
-            if item is None:
-                break
-            event, data = item
-            payload = json.dumps(data, default=str)
-            yield f"event: {event}\ndata: {payload}\n\n"
-
-    return Response(generate(), mimetype='text/event-stream',
-                    headers={'Cache-Control': 'no-cache',
-                             'X-Accel-Buffering': 'no'})
+    return jsonify({
+        'error': 'Agent feature migrated to BaseAgent. Use ~/Desktop/BaseAgent/cardiokb.ipynb'
+    }), 501
 
 
 @app.route('/api/pipeline/run', methods=['POST'])
@@ -1219,7 +1089,7 @@ def _reload_unloaded_parsers():
     from neo4j import GraphDatabase
     from src.ontology_configs import ONTOLOGY_CONFIGS
     from src.memgraph_loader import Neo4jLoader
-    from src.orchestrator import _build_parser_metadata
+    from src.admin_agent import _build_parser_metadata
 
     log = _logging.getLogger('cardiokb.startup')
 

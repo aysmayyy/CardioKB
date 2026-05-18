@@ -1,5 +1,5 @@
 """
-CardioKB Pipeline Orchestrator
+CardioKB Admin Agent
 
 Runs pipeline health checks against the Memgraph database and the latest build log,
 then generates a self-contained HTML report at reports/pipeline_report.html.
@@ -7,10 +7,10 @@ then generates a self-contained HTML report at reports/pipeline_report.html.
 Can also stream progress events for the web interface via a callback.
 
 Usage:
-    python src/orchestrator.py
-    python src/orchestrator.py --log-file logs/cardiokb_build.log
-    python src/orchestrator.py --output reports/pipeline_report.html
-    python src/orchestrator.py --disease alzheimers
+    python src/admin_agent.py
+    python src/admin_agent.py --log-file logs/cardiokb_build.log
+    python src/admin_agent.py --output reports/pipeline_report.html
+    python src/admin_agent.py --disease alzheimers
 """
 
 import os

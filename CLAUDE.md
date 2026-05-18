@@ -8,7 +8,7 @@
 - After every successful pipeline run or significant code change, automatically update `README.md` with current graph stats (node/relationship counts, source counts) and commit and push without being asked.
 
 ## Project Overview
-12-week rotation project (Jan-Apr 2026) building a CVD-focused biomedical knowledge graph. The graph integrates 24 deduplicated data sources (each node type and edge type served by exactly one authoritative database) into Memgraph for disease research, feature selection, and precision medicine. Adapted from AlzKB (Alzheimer's Knowledge Base) with custom parsers and AI-powered parser generation. The **DatabaseAgent** (`src/database_agent.py`) autonomously generates new parsers from just a name and URL using Claude API. The **DiseaseQueryAgent** (`src/disease_agent.py`) enriches the graph for any disease on demand via ClinicalTrials.gov API v2. Three legacy sources (SIDER, LINCS L1000, MEDLINE) are retained as-is — no live API alternatives available.
+12-week rotation project (Jan-Apr 2026) building a CVD-focused biomedical knowledge graph. The graph integrates 24 deduplicated data sources (each node type and edge type served by exactly one authoritative database) into Memgraph for disease research, feature selection, and precision medicine. Built using **BaseAgent** multi-agent orchestration (`~/Desktop/BaseAgent/cardiokb.ipynb`) with parser templates adapted for CardioKB's schema. Three legacy sources (SIDER, LINCS L1000, MEDLINE) are retained as-is — no live API alternatives available.
 
 ## Current Graph Stats
 - **4,879,019 nodes** | **7,456,921 relationships** | **17 node types** | **40 relationship types** | **24 sources** | **21 source labels**
@@ -25,23 +25,20 @@
 
 ## Project Structure
 - `src/main.py` — Pipeline orchestrator (supports `--skip-neo4j`, `--skip-download`)
-- `src/parsers/` — 26 data source parsers (inherit from `BaseParser` in `base_parser.py`)
+- `src/parsers/` — Data source parsers (inherit from `BaseParser` in `base_parser.py`)
   - `src/parsers/hetionet_components/` — 12 Hetionet-derived component parsers
-- `src/database_agent.py` — Autonomous parser generator (Claude API + sample download + graph load)
 - `src/ontology_configs.py` — 86 ontology configs mapping source data to graph schema
 - `src/memgraph_loader.py` — Cypher-based Memgraph batch loader (auto-sets `r.source` from config `source_label`)
 - `src/id_mapping.py` — Central ID mapping module: cross-database ID remapping (PubTator MeSH-to-DOID), validate_mapping(), suggest_mapping(), create_missing_nodes(), CLI interface
 - `src/utils.py` — Shared utilities (`load_disease_terms()`, `get_disease_search_pattern()`)
+- `src/api.py` — Flask backend with SSE streaming, disease subgraph API
+- `src/admin_agent.py` — Pipeline health check with dynamic graph-based parser status detection
 - `ontology/disease_filter.txt` — Symlink to `diseases/cvd.txt` (active disease filter)
 - `ontology/diseases/` — Disease term files: `cvd.txt` (184), `alzheimers.txt` (35), `cancer.txt` (70), `asthma.txt` (48), `diabetes.txt` (52)
 - `data/raw/` — Downloaded source data
 - `data/processed/` — Exported TSV files for graph loading
 - `data/output/` — Release notes and build artifacts
-- `interface/index.html` — Web dashboard with Explore (graph viz), Query (multi-panel), sidebar Build Knowledge Graph (AI disease enrichment), and Extract Disease Subgraph (N-hop extraction + JSON/CSV export)
-- `src/agent.py` — Base disease agent (Claude API)
-- `src/disease_agent.py` — DiseaseQueryAgent class: ClinicalTrials.gov API v2 fetching, graph loading, caching, SSE progress
-- `src/api.py` — Flask backend with SSE streaming, disease subgraph API, and agent builds (`/api/agent/build`, `/api/agent/build-disease-graph`)
-- `src/orchestrator.py` — Pipeline health check with dynamic graph-based parser status detection
+- `interface/index.html` — Web dashboard with Explore (graph viz), Query (multi-panel), and Extract Disease Subgraph (N-hop extraction + JSON/CSV export)
 - `run.sh` — Launches Flask + opens browser (local dev)
 - `Dockerfile` — Flask web app container (Python 3.11-slim)
 - `docker-compose.yml` — Full stack: Memgraph + Flask app
@@ -157,7 +154,7 @@ CVD ontology files: `ontology/genes/cvd.txt` (3,984 gene symbols from OMIM + Dis
 | 21 | STRING | STRINGParser | Public | Working (121,170 geneInteractsWithGene edges, confidence > 700) |
 | 22 | OpenTargets | OpenTargetsParser | Public | Working (32,826 geneAssociatesWithDisease edges after CVD AND-filter, via EFO-to-DOID mapping) |
 
-### Agent-Generated Parsers (2)
+### Additional Parsers (2)
 | # | Source | Parser | Access | Status |
 |---|--------|--------|--------|--------|
 | 23 | HGNC Gene Families | HGNCFamiliesParser | Public | Working (1,934 GeneFamily nodes, 5,123 geneInFamily + 5,123 familyContainsGene edges) |
@@ -165,6 +162,8 @@ CVD ontology files: `ontology/genes/cvd.txt` (3,984 gene symbols from OMIM + Dis
 
 ### Sources Removed (12) — see docs/CardioKB_Redundancy_Changelog.docx
 DisGeNET, GWAS Catalog, Jensen DISEASES, OMIM, WikiPathways, AOP-DB, HGNC (base), CellAge, GenAge, Hetionet (precomputed), DrugAge, AnAge
+
+*Note: OMIM, WikiPathways, AOP-DB, AnAge, CellAge, GenAge, DrugAge parsers removed from codebase (preserved on `original-manual-build` branch)*
 
 ## Ontology Configs
 86 entries in `src/ontology_configs.py` mapping parsed TSV files to graph node/relationship types, properties, and loading strategies. Each relationship config includes a `source_label` field that the loader sets as `r.source` on every relationship.

@@ -1,6 +1,6 @@
 # CardioKB: CVD Biomedical Knowledge Graph
 
-A cardiovascular disease (CVD) focused biomedical knowledge graph pipeline that integrates 24 deduplicated data sources into a Memgraph graph for disease research, feature selection, and precision medicine. Each node type and edge type is served by exactly one authoritative database — no redundancy. Adapted from the AlzKB (Alzheimer's Knowledge Base) architecture with custom parsers and AI-powered parser generation. Features a **DatabaseAgent** that autonomously generates new parsers from just a name and URL, a **DiseaseQueryAgent** for on-demand disease enrichment, and a web dashboard with interactive graph exploration and Browser-style querying.
+A cardiovascular disease (CVD) focused biomedical knowledge graph pipeline that integrates 24 deduplicated data sources into a Memgraph graph for disease research, feature selection, and precision medicine. Each node type and edge type is served by exactly one authoritative database — no redundancy. Built using **BaseAgent** multi-agent orchestration with parser templates adapted for CardioKB's schema. Features a web dashboard with interactive graph exploration and Browser-style querying.
 
 **Graph stats:** 4,879,019 nodes | 7,456,921 relationships | 17 node types | 40 relationship types | 24 sources | 21 source labels
 *Stats are current as of last pipeline run; see Memgraph or `GET /api/graph-stats` for live counts.*
@@ -153,16 +153,12 @@ See `docs/CardioKB_Redundancy_Changelog.docx` for full rationale and impact asse
 Cardio-KB/
 ├── src/
 │   ├── main.py                 # Pipeline orchestrator (--skip-neo4j, --skip-download)
-│   ├── agent.py                # Base disease agent (Claude API)
-│   ├── disease_agent.py        # DiseaseQueryAgent (ClinicalTrials.gov API v2)
-│   ├── database_agent.py       # Autonomous parser generator (Claude API + sample download)
-│   ├── api.py                  # Flask backend with SSE streaming + agent endpoints
-│   ├── orchestrator.py         # Health check with dynamic graph-based parser detection
+│   ├── api.py                  # Flask backend with SSE streaming
 │   ├── memgraph_loader.py      # Cypher-based Memgraph batch loader
 │   ├── ontology_configs.py     # 86 ontology configs for graph schema mapping
 │   ├── id_mapping.py           # Central ID mapping: validate, suggest, create_missing_nodes, CLI
 │   ├── utils.py                # Disease filtering utilities (load_disease_terms, etc.)
-│   └── parsers/                # 26 data source parsers
+│   └── parsers/                # Data source parsers (BaseAgent template-derived)
 │       ├── base_parser.py      # Abstract base class for all parsers
 │       └── hetionet_components/# Hetionet-derived component parsers
 ├── interface/
@@ -324,33 +320,14 @@ Launch with `docker compose up -d` (production) or `python src/api.py --port 505
   - Panels show results as both table and graph visualization with tab switching
   - Collapse/expand, close individual panels, or Clear All
   - Query templates for common patterns; Ctrl+Enter shortcut
-- **Build Knowledge Graph** (sidebar) — AI-powered disease enrichment
-  - Enter any disease name; AI standardizes via Claude, fetches clinical trials from ClinicalTrials.gov API v2
-  - Loads data into Memgraph, caches results (same disease returns instantly next time)
+- **Build Knowledge Graph** (sidebar) — Disease enrichment
+  - Enter disease name to fetch and load clinical trials data
   - Auto-opens Explore tab with the disease after building
 - **Extract Disease Subgraph** (sidebar) — Extract complete N-hop subgraphs from existing data
   - Configurable hop slider (1-3): 1-hop = direct, 2-hop = shared pathways, 3-hop = broad hypothesis generation
   - Export as JSON or CSV for downstream analysis
 - **Dashboard** — Live graph stats (nodes, relationships, types, sources)
 - **Admin** — Parser status, pipeline health check, full pipeline run
-
-## DatabaseAgent: Autonomous Parser Generation
-
-The **DatabaseAgent** (`src/database_agent.py`) uses Claude API to autonomously generate complete parsers for new biomedical data sources. Users provide only a database name and a download URL.
-
-### How It Works
-
-1. **Sample download** — Downloads the first 64KB to detect format (TSV, CSV, JSON, XML)
-2. **Code generation** — Sends file sample + BaseParser source to Claude, generates parser + ontology configs
-3. **Pipeline integration** — Saves parser, adds configs, registers in pipeline
-4. **Execute & validate** — Runs parser, validates IDs, loads into Memgraph, verifies counts
-
-### Agent-Generated Parsers in Production
-
-| Source | Nodes/Edges Added |
-|--------|-------------------|
-| HGNC Gene Families | 1,934 GeneFamily nodes, 5,123 geneInFamily + 5,123 familyContainsGene edges |
-| ClinVar | 4,488,042 Variant nodes, 2,267,095 hasVariant + 2,267,095 variantInGene edges |
 
 ## Architecture Notes
 
