@@ -25,12 +25,10 @@ Hetionet component parsers (disease-agnostic):
   - LINCS1000Parser: LINCS L1000 expression edges (CuG, CdG, GrG)
   - MEDLINECooccurrenceParser: MEDLINE co-occurrence edges (DpS, DlA, DrD)
   - DrugCentralParser: Drug-treats/palliates, PharmClass nodes, PCiC edges
-  - GWASParser: Gene-disease association edges
   - PubTatorParser: Literature-mined co-occurrences
   - BindingDBParser: chemicalBindsGene edges
   - CTDParser: chemicalIncreases/DecreasesExpression edges
   - BgeeParser: bodyPartOver/UnderexpressesGene edges
-  - HetionetPrecomputedParser: Gene-gene relationship edges
 """
 
 from .base_parser import BaseParser
@@ -50,12 +48,10 @@ from .hetionet_components import (
     GeneOntologyParser,
     UberonParser,
     MeSHParser,
-    GWASParser,
     DrugCentralParser,
     BindingDBParser,
     BgeeParser,
     CTDParser,
-    HetionetPrecomputedParser,
     PubTatorParser,
     SIDERParser,
     LINCS1000Parser,
@@ -80,12 +76,10 @@ __all__ = [
     'GeneOntologyParser',
     'UberonParser',
     'MeSHParser',
-    'GWASParser',
     'DrugCentralParser',
     'BindingDBParser',
     'BgeeParser',
     'CTDParser',
-    'HetionetPrecomputedParser',
     'PubTatorParser',
     'SIDERParser',
     'LINCS1000Parser',
