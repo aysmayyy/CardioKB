@@ -451,26 +451,6 @@ th { color: var(--text-muted); font-weight: 600; text-transform: uppercase; font
         </div>
     </div>
 
-    <div>
-        <button class="admin-toggle" id="advancedToggle" onclick="toggleAdvanced()" style="background:var(--bg);font-size:0.82rem;padding:0.6rem 0.75rem">
-            Advanced <span class="arrow">&#9660;</span>
-        </button>
-        <div class="admin-body" id="advancedBody">
-            <div id="advancedLocked" style="text-align:center;padding:0.5rem 0">
-                <input type="password" class="agent-input" id="adminPassword" placeholder="Admin password" style="margin-bottom:0.4rem" />
-                <button class="run-btn" id="adminUnlockBtn" onclick="unlockAdvanced()" style="font-size:0.82rem;padding:0.5rem">Unlock</button>
-                <div id="adminError" style="color:var(--red);font-size:0.78rem;margin-top:0.3rem;display:none"></div>
-            </div>
-            <div id="advancedUnlocked" style="display:none">
-                <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:0.5rem">
-                    <h3 style="margin-bottom:0">Run Pipeline</h3>
-                    <button class="info-btn-sm" data-info="pipeline">?</button>
-                </div>
-                <button class="run-btn" id="pipelineBtn" onclick="runPipeline()" data-tip="Run the full data pipeline for all sources (download, parse, load into graph)" style="font-size:0.82rem;padding:0.5rem">Run Pipeline</button>
-            </div>
-        </div>
-    </div>
-
     <button class="theme-toggle" onclick="toggleTheme()" data-tip="Switch between dark and light themes">Toggle Light / Dark</button>
 </aside>
 
@@ -773,12 +753,6 @@ th { color: var(--text-muted); font-weight: 600; text-transform: uppercase; font
             '<p>Verifies every data source parser in the pipeline: checks that raw data was downloaded, parsed into TSVs, and loaded into the graph with correct node/relationship counts.</p>' +
             '<p>Also tests database connectivity, relationship <code>source</code> tagging, and ID mapping integrity. Green = data present; red = missing or mismatched.</p>',
 
-        pipeline:
-            '<h4>Full Pipeline Run</h4>' +
-            '<p>Runs the complete data pipeline for all sources: <strong>download</strong> raw data &rarr; <strong>parse</strong> into TSVs &rarr; <strong>load</strong> into the graph.</p>' +
-            '<p>This is a long-running operation (30&ndash;60 min depending on network speed). It re-downloads all source data and rebuilds the graph from scratch. Use sparingly &mdash; typically only needed after adding new parsers or updating data sources.</p>' +
-            '<p><strong>Not agentic</strong> &mdash; executes a fixed pipeline of <span class="live-source-count">--</span> parsers in sequence.</p>',
-
         discovery:
             '<h4>Core vs Discovery Layers</h4>' +
             '<div class="info-tier"><div class="info-dot" style="background:var(--accent)"></div>' +
@@ -1048,96 +1022,6 @@ function toggleTheme() {
     currentTheme = currentTheme === 'light' ? '' : 'light';
     document.documentElement.setAttribute('data-theme', currentTheme);
     updateChartColors();
-}
-
-// ---- Advanced Section ----
-let adminPassword = '';
-
-function toggleAdvanced() {
-    const toggle = document.getElementById('advancedToggle');
-    const body = document.getElementById('advancedBody');
-    toggle.classList.toggle('open');
-    body.classList.toggle('open');
-}
-
-async function unlockAdvanced() {
-    const pwInput = document.getElementById('adminPassword');
-    const errEl = document.getElementById('adminError');
-    const pw = pwInput.value.trim();
-    if (!pw) { pwInput.focus(); return; }
-
-    errEl.style.display = 'none';
-    try {
-        const res = await fetch('/api/admin/verify', {
-            method: 'POST',
-            headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify({ password: pw }),
-        });
-        const data = await res.json();
-        if (data.ok) {
-            adminPassword = pw;
-            document.getElementById('advancedLocked').style.display = 'none';
-            document.getElementById('advancedUnlocked').style.display = 'block';
-        } else {
-            errEl.textContent = data.error || 'Invalid password';
-            errEl.style.display = 'block';
-        }
-    } catch (e) {
-        errEl.textContent = 'Connection failed: ' + e.message;
-        errEl.style.display = 'block';
-    }
-}
-
-async function runPipeline() {
-    const btn = document.getElementById('pipelineBtn');
-
-    // Auto-open admin section
-    const toggle = document.getElementById('adminToggle');
-    const body = document.getElementById('adminBody');
-    if (!body.classList.contains('open')) { toggle.classList.add('open'); body.classList.add('open'); }
-
-    btn.disabled = true;
-    btn.innerHTML = '<span class="spinner"></span>Running...';
-    document.getElementById('logPanel').innerHTML = '';
-    log('Starting full pipeline run...', 'info');
-
-    try {
-        const res = await fetch('/api/pipeline/run', {
-            method: 'POST',
-            headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify({ password: adminPassword }),
-        });
-        if (!res.ok) {
-            const err = await res.json().catch(() => ({}));
-            log('Pipeline error: ' + (err.error || res.statusText), 'err');
-            btn.disabled = false; btn.textContent = 'Run Pipeline'; return;
-        }
-        const reader = res.body.getReader();
-        const decoder = new TextDecoder();
-        let buffer = '';
-        while (true) {
-            const { done, value } = await reader.read();
-            if (done) break;
-            buffer += decoder.decode(value, { stream: true });
-            let boundary;
-            while ((boundary = buffer.indexOf('\n\n')) !== -1) {
-                const frame = buffer.slice(0, boundary);
-                buffer = buffer.slice(boundary + 2);
-                let event = 'message', data = '';
-                for (const line of frame.split('\n')) {
-                    if (line.startsWith('event: ')) event = line.slice(7);
-                    else if (line.startsWith('data: ')) data = line.slice(6);
-                }
-                if (!data) continue;
-                const parsed = JSON.parse(data);
-                if (event === 'status') log('Pipeline: ' + parsed.message, 'info');
-                else if (event === 'log') log(parsed.message);
-                else if (event === 'error') log('Pipeline error: ' + parsed.message, 'err');
-            }
-        }
-    } catch (e) { log('Pipeline error: ' + e.message, 'err'); }
-    btn.disabled = false; btn.textContent = 'Run Pipeline';
-    loadGraphStats();
 }
 
 // ---- Logging ----
@@ -1845,7 +1729,6 @@ function runHealthCheck() {
 }
 
 document.addEventListener('DOMContentLoaded', () => {
-    document.getElementById('adminPassword').addEventListener('keydown', e => { if (e.key === 'Enter') unlockAdvanced(); });
     document.getElementById('exploreSearch').addEventListener('keydown', e => { if (e.key === 'Enter') loadExploreGraph(); });
     document.getElementById('cypherInput').addEventListener('keydown', e => {
         if ((e.metaKey || e.ctrlKey) && e.key === 'Enter') runCypherQuery();
@@ -1860,8 +1743,6 @@ function renderParserTable(parsers) {
     // Update dynamic source counts across the UI
     const runBtn = document.getElementById('runBtn');
     if (runBtn) runBtn.setAttribute('data-tip', 'Check all ' + parserCount + ' parsers, database connectivity, and data integrity');
-    const pipelineBtn = document.getElementById('pipelineBtn');
-    if (pipelineBtn) pipelineBtn.setAttribute('data-tip', 'Run the full data pipeline for all ' + parserCount + ' sources (download, parse, load into graph)');
     const qsc = document.getElementById('querySourceCount');
     if (qsc) qsc.textContent = parserCount;
     const asc = document.getElementById('aboutSourceCount');
