@@ -2,7 +2,7 @@
 
 A cardiovascular disease (CVD) focused biomedical knowledge graph pipeline that integrates 24 deduplicated data sources into a Memgraph graph for disease research, feature selection, and precision medicine. Each node type and edge type is served by exactly one authoritative database — no redundancy. Adapted from the AlzKB (Alzheimer's Knowledge Base) architecture with custom parsers and AI-powered parser generation. Features a **DatabaseAgent** that autonomously generates new parsers from just a name and URL, a **DiseaseQueryAgent** for on-demand disease enrichment, and a web dashboard with interactive graph exploration and Browser-style querying.
 
-**Graph stats:** 4,891,227 nodes | 7,682,399 relationships | 17 node types | 42 relationship types | 24 sources | 21 source labels
+**Graph stats:** 4,890,728 nodes | 7,456,921 relationships | 17 node types | 41 relationship types | 24 sources | 21 source labels
 *Stats are current as of last pipeline run; see Memgraph or `GET /api/graph-stats` for live counts.*
 
 ## Pipeline Status
@@ -22,9 +22,9 @@ A cardiovascular disease (CVD) focused biomedical knowledge graph pipeline that 
 
 | # | Source | Access | Status |
 |---|--------|--------|--------|
-| 1 | ClinicalTrials.gov | Public API v2 | Working (85,691 trials, 27,866 STUDIES_CONDITION + 17,492 TESTS_INTERVENTION edges) |
-| 2 | ClinPGx (PharmGKB successor) | Public API | Working (1,091 VARIANT_IN, 503 drugLabelAnnotatesGene, 345 drugLabelDescribesDrug, 243 AFFECTS_RESPONSE_TO edges) |
-| 3 | NCBI Gene | Public FTP | Working (194,553 genes) |
+| 1 | ClinicalTrials.gov | Public API v2 | Working (85,677 trials, 27,866 STUDIES_CONDITION + 17,492 TESTS_INTERVENTION edges) |
+| 2 | ClinPGx (PharmGKB successor) | Public API | Working (1,091 VARIANT_IN, 503 drugLabelAnnotatesGene, 345 drugLabelDescribesDrug, 224 AFFECTS_RESPONSE_TO, 19 AFFECTS_RESPONSE_TO_CLASS edges) |
+| 3 | NCBI Gene | Public FTP | Working (193,687 genes) |
 | 4 | DoRothEA (OmniPath) | Public API | Working (12,985 TF-gene interactions, with morScore + confidence properties) |
 | 5 | DrugBank | XML file | Working (19,842 drugs + 4,572 CTD unique Drug nodes, 12,089 drugBindsGene edges) |
 
@@ -37,25 +37,25 @@ A cardiovascular disease (CVD) focused biomedical knowledge graph pipeline that 
 | 8 | Uberon (anatomy) | Public | Working (14,937 anatomy nodes) |
 | 9 | MeSH (symptoms) | Public | Working (966 symptom nodes) |
 | 10 | SIDER (side effects) | Public | Working (5,734 side effects, 148,518 compoundCausesSideEffect edges) -- **Legacy: pinned to 2015 GitHub commit; retained — no live API alternative** |
-| 11 | LINCS L1000 (gene expression) | Public | Working (150,540 geneRegulates + 10,218 downreg + 10,278 upreg edges, with zScore) -- **Legacy: pinned to 2020 GitHub commit; retained — clue.io requires institutional access** |
+| 11 | LINCS L1000 (gene expression) | Public | Working (150,535 geneRegulates + 10,212 downreg + 10,277 upreg edges, with zScore) -- **Legacy: pinned to 2020 GitHub commit; retained — clue.io requires institutional access** |
 | 12 | MEDLINE (literature cooccurrence) | Public | Working (365 edges: 244 anatomy + 117 symptom + 4 disease cooccurrence) -- **Legacy: pinned GitHub commit** |
-| 13 | DrugCentral (drug-disease) | Public | Working (16,403 pharmacologic class + 779 treats + 189 palliates edges, CUI-to-DOID mapped) |
+| 13 | DrugCentral (drug-disease) | Public | Working (16,403 pharmacologic class + 245 treats + 96 palliates edges, CUI-to-DOID mapped) |
 | 14 | BindingDB (drug-target) | Public | Working (12,250 chemicalBindsGene edges) |
-| 15 | PubTator Central (literature mining) | Public FTP | Working (673,374 geneAssociatesWithDisease + 806,900 diseaseAssociatesWithDisease edges after CVD AND-filter) |
+| 15 | PubTator Central (literature mining) | Public FTP | Working (744,427 geneAssociatesWithDisease + 4,320 diseaseAssociatesWithDisease edges after CVD AND-filter) |
 | 16 | CTD (chemical-gene) | Public | Working (4,572 unique Drug nodes, 116,451 chemicalIncreasesExpression + 97,951 chemicalDecreasesExpression edges) |
 | 17 | Bgee (gene expression) | Public FTP | Working (784,026 underexpresses + 1,872 overexpresses edges, with expressionScore) |
-| 18 | Jensen TISSUES (gene-tissue) | Public | Working (271,657 geneExpressedInBodyPart edges) |
+| 18 | Jensen TISSUES (gene-tissue) | Public | Working (215,235 geneExpressedInBodyPart edges) |
 | 19 | HPO (Human Phenotype Ontology) | Public | Working (19,389 phenotypes, 162,994 gene-phenotype edges) |
 | 20 | Reactome | Public | Working (44,979 geneInPathway + 44,979 pathwayContainsGene edges) |
 | 21 | STRING | Public | Working (121,170 geneInteractsWithGene edges, confidence > 700) |
-| 22 | OpenTargets | Public | Working (103,879 geneAssociatesWithDisease edges after CVD AND-filter, via EFO-to-DOID mapping) |
+| 22 | OpenTargets | Public | Working (32,826 geneAssociatesWithDisease edges after CVD AND-filter, via EFO-to-DOID mapping) |
 
 ### Agent-Generated Parsers (2)
 
 | # | Source | Access | Status |
 |---|--------|--------|--------|
 | 23 | HGNC Gene Families | Public | Working (1,934 GeneFamily nodes, 5,123 geneInFamily + 5,123 familyContainsGene edges) |
-| 24 | ClinVar | Public FTP | Working (4,488,042 Variant nodes, 2,267,095 hasVariant + 2,267,095 variantInGene + 594,101 associatedWithVariant + 594,101 variantAssociatedWithDisease edges) |
+| 24 | ClinVar | Public FTP | Working (4,488,042 Variant nodes, 2,267,095 hasVariant + 2,267,095 variantInGene edges) |
 
 ### Sources Removed During Deduplication (12)
 
@@ -83,8 +83,8 @@ See `docs/CardioKB_Redundancy_Changelog.docx` for full rationale and impact asse
 | Node Type | Count | Source |
 |-----------|------:|--------|
 | Variant | 4,488,042 | ClinVar |
-| Gene | 194,553 | NCBI Gene |
-| ClinicalTrial | 85,691 | ClinicalTrials.gov |
+| Gene | 193,687 | NCBI Gene |
+| ClinicalTrial | 85,677 | ClinicalTrials.gov |
 | BiologicalProcess | 24,547 | Gene Ontology |
 | Drug | 24,414 | DrugBank + CTD |
 | Phenotype | 19,389 | HPO |
@@ -100,7 +100,7 @@ See `docs/CardioKB_Redundancy_Changelog.docx` for full rationale and impact asse
 | DrugLabel | 378 | ClinPGx |
 | TranscriptionFactor | 367 | DoRothEA |
 
-### Relationship Types (42)
+### Relationship Types (41)
 
 | Relationship Type | Source | Count |
 |-------------------|--------|------:|
@@ -108,42 +108,41 @@ See `docs/CardioKB_Redundancy_Changelog.docx` for full rationale and impact asse
 | variantInGene | ClinVar | 2,267,095 |
 | bodyPartUnderexpressesGene | Bgee | 784,026 |
 | geneAssociatesWithDisease | OpenTargets + PubTator | 777,253 |
-| geneExpressedInBodyPart | Jensen TISSUES | 271,657 |
+| geneExpressedInBodyPart | Jensen TISSUES | 215,235 |
 | geneAssociatesWithPhenotype | HPO | 162,994 |
-| geneRegulatesGene | LINCS L1000 | 150,540 |
+| geneRegulatesGene | LINCS L1000 | 150,535 |
 | compoundCausesSideEffect | SIDER | 148,518 |
 | geneInteractsWithGene | STRING | 121,170 |
 | chemicalIncreasesExpression | CTD | 116,451 |
-| variantAssociatedWithDisease | ClinVar | 594,101 |
-| associatedWithVariant | ClinVar | 594,101 |
 | chemicalDecreasesExpression | CTD | 97,951 |
 | geneParticipatesInBiologicalProcess | Gene Ontology | 50,350 |
 | geneInPathway | Reactome | 44,979 |
 | pathwayContainsGene | Reactome | 44,979 |
-| STUDIES_CONDITION | ClinicalTrials.gov | 33,219 |
+| STUDIES_CONDITION | ClinicalTrials.gov | 27,866 |
 | geneHasMolecularFunction | Gene Ontology | 26,935 |
 | geneAssociatedWithCellularComponent | Gene Ontology | 25,794 |
-| TESTS_INTERVENTION | ClinicalTrials.gov | 3,135 |
+| TESTS_INTERVENTION | ClinicalTrials.gov | 17,492 |
 | compoundInPharmacologicClass | DrugCentral | 16,403 |
 | pharmacologicClassIncludesCompound | DrugCentral | 16,403 |
 | transcriptionFactorInteractsWithGene | DoRothEA | 12,985 |
 | chemicalBindsGene | BindingDB | 12,250 |
 | drugBindsGene | DrugBank | 12,089 |
-| compoundUpregulatesGene | LINCS L1000 | 10,278 |
-| compoundDownregulatesGene | LINCS L1000 | 10,218 |
-| diseaseAssociatesWithDisease | PubTator | 806,900 |
+| compoundUpregulatesGene | LINCS L1000 | 10,277 |
+| compoundDownregulatesGene | LINCS L1000 | 10,212 |
 | geneInFamily | HGNC Families | 5,123 |
 | familyContainsGene | HGNC Families | 5,123 |
+| diseaseAssociatesWithDisease | PubTator | 4,320 |
 | bodyPartOverexpressesGene | Bgee | 1,872 |
 | VARIANT_IN | ClinPGx | 1,091 |
-| drugTreatsDisease | DrugCentral | 779 |
 | drugLabelAnnotatesGene | ClinPGx | 503 |
 | drugLabelDescribesDrug | ClinPGx | 345 |
-| diseaseIsSubtypeOf | Disease Ontology | 6,447 |
-| AFFECTS_RESPONSE_TO | ClinPGx | 243 |
+| diseaseIsSubtypeOf | Disease Ontology | 258 |
+| drugTreatsDisease | DrugCentral | 245 |
 | diseaseLocalizesToAnatomy | MEDLINE | 244 |
-| drugPalliatesDisease | DrugCentral | 189 |
+| AFFECTS_RESPONSE_TO | ClinPGx | 224 |
 | diseasePresentsSymptom | MEDLINE | 117 |
+| drugPalliatesDisease | DrugCentral | 96 |
+| AFFECTS_RESPONSE_TO_CLASS | ClinPGx | 19 |
 | diseaseResemblesDisease | MEDLINE | 4 |
 
 **Relationship source labels (21):** Bgee, BindingDB, CTD, ClinPGx, ClinVar, ClinicalTrials.gov, Disease Ontology, DoRothEA, DrugBank, DrugCentral, Gene Ontology, HGNC, HPO, Jensen TISSUES, LINCS L1000, MEDLINE, OpenTargets, PubTator, Reactome, SIDER, STRING
@@ -230,7 +229,7 @@ Copy `.env.example` to `.env` and fill in the values:
 
 ### Graph Export / Import
 
-The graph data (4.9M nodes, 7.7M relationships) is exported as a compressed Memgraph volume backup (~1.2 GB):
+The graph data (4.9M nodes, 7.5M relationships) is exported as a compressed Memgraph volume backup (~1.2 GB):
 
 ```bash
 # Export from current Memgraph (run on source machine)
@@ -351,7 +350,7 @@ The **DatabaseAgent** (`src/database_agent.py`) uses Claude API to autonomously 
 | Source | Nodes/Edges Added |
 |--------|-------------------|
 | HGNC Gene Families | 1,934 GeneFamily nodes, 5,123 geneInFamily + 5,123 familyContainsGene edges |
-| ClinVar | 4,488,042 Variant nodes, 2,267,095 hasVariant + 2,267,095 variantInGene + 594,101 associatedWithVariant + 594,101 variantAssociatedWithDisease edges |
+| ClinVar | 4,488,042 Variant nodes, 2,267,095 hasVariant + 2,267,095 variantInGene edges |
 
 ## Architecture Notes
 
