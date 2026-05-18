@@ -421,23 +421,12 @@ th { color: var(--text-muted); font-weight: 600; text-transform: uppercase; font
     <h1>CardioKB <span>Cardiovascular Knowledge Graph</span></h1>
 
     <div style="font-size:0.8rem;color:var(--text-muted);line-height:1.55;padding:0.75rem;background:var(--bg);border-radius:6px;border:1px solid var(--border)">
-        A cardiovascular disease knowledge graph integrating <strong style="color:var(--text)"><span id="sidebarSourceCount">--</span> data sources</strong>. <strong style="color:var(--text)">Build Knowledge Graph</strong> fetches fresh CVD data via AI. <strong style="color:var(--text)">Explore</strong> visualizes subgraphs. <strong style="color:var(--text)">Query</strong> runs Cypher. <strong style="color:var(--text)">Admin</strong> adds entirely new databases.
+        A cardiovascular disease knowledge graph integrating <strong style="color:var(--text)"><span id="sidebarSourceCount">--</span> data sources</strong>. <strong style="color:var(--text)">Explore</strong> visualizes subgraphs. <strong style="color:var(--text)">Query</strong> runs Cypher. <strong style="color:var(--text)">Admin</strong> adds entirely new databases.
     </div>
 
     <div style="display:flex;align-items:center;gap:0.4rem">
-        <button class="run-btn" id="runBtn" onclick="runHealthCheck()" data-tip="Check all parsers (including agent-generated ones), database connectivity, and data integrity" style="flex:1">Run Health Check</button>
+        <button class="run-btn" id="runBtn" onclick="runHealthCheck()" data-tip="Check all parsers, database connectivity, and data integrity" style="flex:1">Run Health Check</button>
         <button class="info-btn-sm" data-info="healthcheck">?</button>
-    </div>
-
-    <div style="background:var(--bg);border-radius:8px;border:1px solid var(--border);padding:0.75rem;margin-bottom:0.5rem">
-        <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:0.4rem">
-            <h3 style="margin-bottom:0">Build Knowledge Graph <span style="font-size:0.65rem;font-weight:600;background:rgba(139,92,246,0.15);color:#a78bfa;padding:0.15rem 0.4rem;border-radius:4px;margin-left:0.3rem;vertical-align:middle">AI</span></h3>
-            <button class="info-btn-sm" data-info="buildkg">?</button>
-        </div>
-        <div style="font-size:0.75rem;color:var(--text-muted);margin-bottom:0.4rem;line-height:1.45">AI fetches fresh gene-disease associations and clinical trials for cardiovascular diseases, then loads into the graph. Best for <strong style="color:var(--text)">specific CVD subtypes</strong> (e.g. heart failure, cardiomyopathy). Broad categories are capped at 200 disease IDs &mdash; use the full pipeline for comprehensive coverage.</div>
-        <input type="text" class="agent-input" id="buildKgInput" placeholder="e.g. heart failure, cardiomyopathy, aortic stenosis..." data-tip="Enter a cardiovascular disease name -- AI standardizes it and fetches data from multiple sources" />
-        <button class="run-btn" id="buildKgBtn" onclick="buildKnowledgeGraph()" style="font-size:0.82rem;padding:0.5rem" data-tip="Standardize disease name, fetch gene-disease associations + clinical trials, load into graph">Build Graph</button>
-        <div id="buildKgResult" style="display:none;font-size:0.75rem;color:var(--text-muted);line-height:1.55;margin-top:0.4rem;padding:0.5rem;background:var(--surface);border-radius:6px;border:1px solid var(--border)"></div>
     </div>
 
     <div style="background:var(--bg);border-radius:8px;border:1px solid var(--border);padding:0.75rem">
@@ -664,22 +653,10 @@ th { color: var(--text-muted); font-weight: 600; text-transform: uppercase; font
             <ul>
                 <li><span id="aboutNodeCount">--</span> nodes across <span id="aboutNodeTypeCount">--</span> entity types, <span id="aboutRelCount">--</span> relationships from <span id="aboutRelSourceCount">--</span> sources</li>
                 <li>Search CVD subtypes (heart failure, atrial fibrillation, coronary artery disease...) or related genes/drugs</li>
-                <li><strong>Build Knowledge Graph</strong> &mdash; AI fetches fresh data for CVD subtypes you name</li>
                 <li>Add entirely new databases &mdash; the AI-powered DatabaseAgent writes the parser for you</li>
             </ul>
         </div>
         <div class="modal-step" data-step="1">
-            <h2>Build Knowledge Graph <span style="font-size:0.7rem;font-weight:600;background:rgba(139,92,246,0.15);color:#a78bfa;padding:0.15rem 0.4rem;border-radius:4px;vertical-align:middle">AI</span></h2>
-            <p>In the sidebar, <strong>Build Knowledge Graph</strong> uses AI to enrich the graph for cardiovascular disease subtypes:</p>
-            <ul>
-                <li><strong>Type a CVD subtype</strong> &mdash; abbreviations, synonyms, and informal names all work (e.g. "AFib", "HF", "CHD")</li>
-                <li>AI standardizes the name, then fetches <strong>gene-disease associations</strong> and <strong>clinical trials</strong> from multiple sources</li>
-                <li>Data is loaded into the graph and <strong>cached</strong> &mdash; the same disease returns instantly next time</li>
-                <li>After building, the <strong>Explore tab</strong> auto-opens with your disease so you can visualize the results immediately</li>
-            </ul>
-            <p style="margin-top:0.5rem"><strong>Extract Disease Subgraph</strong> (below it) queries <em>existing</em> CVD data only &mdash; use Build first if coverage is thin.</p>
-        </div>
-        <div class="modal-step" data-step="2">
             <h2>Explore &amp; Query</h2>
             <p>The <strong>Explore tab</strong> visualizes cardiovascular disease subgraphs:</p>
             <ul>
@@ -691,7 +668,7 @@ th { color: var(--text-muted); font-weight: 600; text-transform: uppercase; font
             </ul>
             <p style="margin-top:0.5rem">The <strong>Query tab</strong> gives you direct Cypher access to the CVD graph &mdash; click a template or write your own (read-only, Cmd+Enter to run).</p>
         </div>
-        <div class="modal-step" data-step="3">
+        <div class="modal-step" data-step="2">
             <h2>Admin: Add New Databases <span style="font-size:0.7rem;font-weight:600;background:rgba(139,92,246,0.15);color:#a78bfa;padding:0.15rem 0.4rem;border-radius:4px;vertical-align:middle">AI</span></h2>
             <p>Under <strong>Advanced</strong> in the sidebar (password-protected), the <strong>Add New Database</strong> panel lets you expand the graph with any public data source:</p>
             <ul>
@@ -705,7 +682,6 @@ th { color: var(--text-muted); font-weight: 600; text-transform: uppercase; font
             <span class="dot active" data-dot="0"></span>
             <span class="dot" data-dot="1"></span>
             <span class="dot" data-dot="2"></span>
-            <span class="dot" data-dot="3"></span>
         </div>
         <div class="modal-actions">
             <button class="btn-secondary" onclick="closeWelcome()">Skip</button>
@@ -745,7 +721,7 @@ th { color: var(--text-muted); font-weight: 600; text-transform: uppercase; font
         </ul>
         <p style="margin:0.75rem 0"><strong>Thin results?</strong></p>
         <ul>
-            <li>If a disease shows few connections, use <strong>Build Knowledge Graph</strong> in the sidebar to fetch fresh gene-disease associations and clinical trials via AI, then re-explore.</li>
+            <li>If a disease shows few connections, try a more specific CVD subtype name or increase the hop count in Extract Disease Subgraph.</li>
         </ul>
         <div class="modal-actions" style="justify-content:flex-end">
             <button class="btn-primary" onclick="document.getElementById('methodologyModal').classList.add('hidden')">Got it</button>
@@ -833,13 +809,6 @@ th { color: var(--text-muted); font-weight: 600; text-transform: uppercase; font
             '<p>Runs the complete data pipeline for all sources: <strong>download</strong> raw data &rarr; <strong>parse</strong> into TSVs &rarr; <strong>load</strong> into the graph.</p>' +
             '<p>This is a long-running operation (30&ndash;60 min depending on network speed). It re-downloads all source data and rebuilds the graph from scratch. Use sparingly &mdash; typically only needed after adding new parsers or updating data sources.</p>' +
             '<p><strong>Not agentic</strong> &mdash; executes a fixed pipeline of <span class="live-source-count">--</span> parsers in sequence.</p>',
-
-        buildkg:
-            '<h4>Build Knowledge Graph</h4>' +
-            '<p><strong>Agentic</strong> &mdash; AI fetches fresh data from DisGeNET and ClinicalTrials.gov for this specific CVD subtype, then combines with the existing graph.</p>' +
-            '<p><strong>Steps:</strong> Standardize disease name &rarr; Check current coverage &rarr; Fetch gene-disease associations (DisGeNET API, max 200 disease IDs) &rarr; Fetch clinical trials (ClinicalTrials.gov API v2, max 500 trials) &rarr; Load into graph &rarr; Auto-open Explore tab.</p>' +
-            '<p>Results are cached &mdash; subsequent requests for the same disease return instantly.</p>' +
-            '<p><strong>Best for specific CVD subtypes</strong> (heart failure, cardiomyopathy, aortic stenosis). The broad term &ldquo;cardiovascular disease&rdquo; is capped to keep response times under 2 minutes &mdash; use the full pipeline (Admin &rarr; Run Pipeline) for comprehensive coverage.</p>',
 
         discovery:
             '<h4>Core vs Discovery Layers</h4>' +
@@ -1962,121 +1931,7 @@ function runHealthCheck() {
     }
 }
 
-// ---- Agent Build (SSE) ----
-async function buildKnowledgeGraph() {
-    const input = document.getElementById('buildKgInput');
-    const btn = document.getElementById('buildKgBtn');
-    const disease = input.value.trim();
-    if (!disease) { input.focus(); return; }
-
-    // Auto-open Advanced to show log panel
-    const toggle = document.getElementById('advancedToggle');
-    const body = document.getElementById('advancedBody');
-    if (!body.classList.contains('open')) { toggle.classList.add('open'); body.classList.add('open'); }
-
-    btn.disabled = true;
-    btn.innerHTML = '<span class="spinner"></span>Building...';
-    input.disabled = true;
-    document.getElementById('logPanel').innerHTML = '';
-    log('Build KG: processing "' + disease + '"...', 'info');
-
-    try {
-        const res = await fetch('/api/agent/build-disease-graph', {
-            method: 'POST',
-            headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify({ disease }),
-        });
-        if (!res.ok) {
-            const err = await res.json().catch(() => ({}));
-            log('Build KG error: ' + (err.error || res.statusText), 'err');
-            buildKgFinish(); return;
-        }
-        const reader = res.body.getReader();
-        const decoder = new TextDecoder();
-        let buffer = '';
-        let resultData = null;
-        while (true) {
-            const { done, value } = await reader.read();
-            if (done) break;
-            buffer += decoder.decode(value, { stream: true });
-            let boundary;
-            while ((boundary = buffer.indexOf('\n\n')) !== -1) {
-                const frame = buffer.slice(0, boundary);
-                buffer = buffer.slice(boundary + 2);
-                let event = 'message', data = '';
-                for (const line of frame.split('\n')) {
-                    if (line.startsWith('event: ')) event = line.slice(7);
-                    else if (line.startsWith('data: ')) data = line.slice(6);
-                }
-                if (!data) continue;
-                const parsed = JSON.parse(data);
-                if (event === 'status') {
-                    log('Build KG: ' + parsed.message, 'info');
-                } else if (event === 'result') {
-                    resultData = parsed;
-                    if (parsed.cached) {
-                        log('Build KG: loaded from cache', 'ok');
-                    } else {
-                        const parts = [];
-                        if (parsed.disgenet_edges_loaded) parts.push(parsed.disgenet_edges_loaded + ' gene-disease edges');
-                        if (parsed.trials_loaded) parts.push(parsed.trials_loaded + ' clinical trials');
-                        log('Build KG: complete -- ' + (parts.join(', ') || 'done'), 'ok');
-                    }
-                    if (parsed.subgraph_stats) {
-                        const s = parsed.subgraph_stats;
-                        log('  Genes: ' + (s.unique_genes || 0).toLocaleString() +
-                            ' | Diseases: ' + (s.unique_diseases || 0).toLocaleString() +
-                            ' | DisGeNET edges: ' + (s.disgenet_edges || 0).toLocaleString(), 'ok');
-                    }
-                    // Show result summary in sidebar
-                    const resEl = document.getElementById('buildKgResult');
-                    const name = parsed.canonical_name || disease;
-                    let html = '<strong style="color:var(--text)">' + name + '</strong>';
-                    if (parsed.cached) {
-                        html += ' <span style="color:var(--green)">(cached)</span>';
-                    }
-                    html += '<br>';
-                    const s = parsed.subgraph_stats || {};
-                    const gda = parsed.disgenet_edges_loaded || s.disgenet_edges || 0;
-                    const trials = parsed.trials_loaded || 0;
-                    if (gda > 0 || trials > 0) {
-                        const items = [];
-                        if (gda > 0) items.push(gda.toLocaleString() + ' gene-disease edges');
-                        if ((s.unique_genes || 0) > 0) items.push((s.unique_genes).toLocaleString() + ' genes');
-                        if (trials > 0) items.push(trials.toLocaleString() + ' clinical trials');
-                        html += items.join(' &middot; ');
-                        html += '<br><span style="color:var(--accent);cursor:pointer" onclick="switchTab(\'explore\');loadExploreGraph()">Explore in graph &rarr;</span>';
-                    } else if (parsed.error) {
-                        html += '<span style="color:var(--red)">' + parsed.error + '</span>';
-                    } else {
-                        html += 'No new data found. Try a more specific disease name.';
-                    }
-                    resEl.innerHTML = html;
-                    resEl.style.display = 'block';
-                    loadGraphStats();
-                } else if (event === 'error') {
-                    log('Build KG error: ' + parsed.message, 'err');
-                }
-            }
-        }
-        // Auto-populate Explore tab with canonical name
-        if (resultData && resultData.canonical_name) {
-            document.getElementById('exploreSearch').value = resultData.canonical_name;
-            switchTab('explore');
-            loadExploreGraph();
-        }
-    } catch (e) { log('Build KG error: ' + e.message, 'err'); }
-
-    buildKgFinish();
-    function buildKgFinish() {
-        btn.disabled = false;
-        btn.textContent = 'Build Graph';
-        input.disabled = false;
-    }
-}
-
 document.addEventListener('DOMContentLoaded', () => {
-    document.getElementById('buildKgInput').addEventListener('keydown', e => { if (e.key === 'Enter') buildKnowledgeGraph(); });
     document.getElementById('adminPassword').addEventListener('keydown', e => { if (e.key === 'Enter') unlockAdvanced(); });
     document.getElementById('exploreSearch').addEventListener('keydown', e => { if (e.key === 'Enter') loadExploreGraph(); });
     document.getElementById('cypherInput').addEventListener('keydown', e => {
@@ -2091,7 +1946,7 @@ function renderParserTable(parsers) {
     const parserCount = Object.keys(parsers).length;
     // Update dynamic source counts across the UI
     const runBtn = document.getElementById('runBtn');
-    if (runBtn) runBtn.setAttribute('data-tip', 'Check all ' + parserCount + ' parsers (including agent-generated ones), database connectivity, and data integrity');
+    if (runBtn) runBtn.setAttribute('data-tip', 'Check all ' + parserCount + ' parsers, database connectivity, and data integrity');
     const pipelineBtn = document.getElementById('pipelineBtn');
     if (pipelineBtn) pipelineBtn.setAttribute('data-tip', 'Run the full data pipeline for all ' + parserCount + ' sources (download, parse, load into graph)');
     const qsc = document.getElementById('querySourceCount');
