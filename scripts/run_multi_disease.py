@@ -1,8 +1,18 @@
 """
+DEPRECATED: DisGeNET has been removed from the CardioKB pipeline.
+
+This script was used to load DisGeNET data for multiple disease filters,
+but DisGeNET is now marked as redundant with OpenTargets + PubTator.
+The disgenet.gene_disease_associations config is skipped.
+
+See docs/CardioKB_Redundancy_Changelog.docx for rationale.
+
+If you need to re-enable DisGeNET, first set skip=False in ontology_configs.py
+for the disgenet.* configs, then run this script.
+
+Original description:
 Run DisGeNET for all 5 disease filters sequentially, appending edges to
 Neo4j and tagging each with disease_scope.
-
-All other parsers are already loaded — this script ONLY touches DisGeNET.
 
 Usage:
     python scripts/run_multi_disease.py

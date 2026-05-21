@@ -28,19 +28,19 @@ DISGENET_DISEASES = 'diseases'
 DISGENET_GENE_DISEASE_ASSOCIATIONS = 'gene_disease_associations'
 # DrugBank
 DRUGBANK_DRUGS = 'drugs'
-DRUGBANK_DRUG_BINDS_GENE = 'drug_binds_gene'
+DRUGBANK_DRUG_BINDS_GENE = 'drug_gene_edges'
 # NCBI Gene
 NCBI_GENES = 'genes'
 # DoRothEA
 DOROTHEA_TRANSCRIPTION_FACTORS = 'transcription_factors'
 DOROTHEA_TF_GENE_INTERACTIONS = 'tf_gene_interactions'
 # ClinicalTrials.gov
-CT_CLINICAL_TRIALS = 'clinical_trials'
-CT_TRIAL_STUDIES_CONDITION = 'trial_studies_condition'
-CT_TRIAL_TESTS_INTERVENTION = 'trial_tests_intervention'
+CT_CLINICAL_TRIALS = 'trial_nodes'
+CT_TRIAL_STUDIES_CONDITION = 'trial_disease_associations'
+CT_TRIAL_TESTS_INTERVENTION = 'trial_intervention_associations'
 # ClinPGx
-CLINPGX_CLINICAL_ANNOTATIONS = 'clinical_annotations'
-CLINPGX_DRUG_LABELS = 'drug_labels'
+CLINPGX_CLINICAL_ANNOTATIONS = 'gene_drug_interactions'
+CLINPGX_DRUG_LABELS = 'drug_label_nodes'
 CLINPGX_VARIANTS = 'variants'
 CLINPGX_VARIANT_IN_GENE = 'variant_in_gene'
 CLINPGX_CLINICAL_ANNOTATIONS_PHARMA_CLASS = 'clinical_annotations_pharma_class'
@@ -52,7 +52,7 @@ OMIM_GENE_PHENOTYPE_MAP = 'gene_phenotype_map'
 OMIM_GENE_DISEASE = 'gene_disease'
 
 # Hetionet Components — Disease Ontology
-DO_DISEASE_NODES = 'disease_nodes'
+DO_DISEASE_NODES = 'slim_terms'
 DO_DISEASE_ANATOMY = 'disease_anatomy'
 DO_DISEASE_XREFS = 'disease_xrefs'
 DO_DISEASE_HIERARCHY = 'disease_hierarchy'
@@ -64,15 +64,15 @@ GO_GENE_BP = 'gene_bp_associations'
 GO_GENE_MF = 'gene_mf_associations'
 GO_GENE_CC = 'gene_cc_associations'
 # Hetionet Components — Uberon
-UBERON_ANATOMY_NODES = 'anatomy_nodes'
+UBERON_ANATOMY_NODES = 'uberon_nodes'
 # Hetionet Components — MeSH
 MESH_SYMPTOM_NODES = 'symptom_nodes'
 # Hetionet Components — SIDER
 SIDER_SIDE_EFFECT_NODES = 'side_effect_nodes'
-SIDER_COMPOUND_CAUSES_SE = 'compound_causes_side_effect'
+SIDER_COMPOUND_CAUSES_SE = 'drug_side_effect_associations'
 # Hetionet Components — LINCS
-LINCS_CUG = 'compound_upregulates_gene'
-LINCS_CDG = 'compound_downregulates_gene'
+LINCS_CUG = 'compound_gene_up'
+LINCS_CDG = 'compound_gene_down'
 LINCS_GRG = 'gene_regulates_gene'
 # Hetionet Components — MEDLINE
 MEDLINE_DPS = 'disease_symptom_cooccurrence'
@@ -80,14 +80,14 @@ MEDLINE_DLA = 'disease_anatomy_cooccurrence'
 MEDLINE_DRD = 'disease_disease_cooccurrence'
 # Hetionet Components — DrugCentral
 DC_PHARMACOLOGIC_CLASSES = 'pharmacologic_classes'
-DC_PCIC = 'pharmacologic_class_includes_compound'
+DC_PCIC = 'drug_in_class'
 DC_DRUG_TREATS = 'drug_treats_disease'
 DC_DRUG_PALLIATES = 'drug_palliates_disease'
 # Hetionet Components — GWAS
 GWAS_GENE_DISEASE = 'gene_disease_gwas'
 # Hetionet Components — PubTator
 PUBTATOR_DD_COOCCURRENCE = 'disease_disease_cooccurrence'
-PUBTATOR_GD_LITERATURE = 'gene_disease_literature'
+PUBTATOR_GD_LITERATURE = 'pubtator_gene_disease'
 # Hetionet Components — BindingDB
 BINDINGDB_DRUG_BINDS_GENE = 'drug_binds_gene'
 # Hetionet Components — CTD
@@ -95,8 +95,8 @@ CTD_CHEMICAL_NODES = 'chemical_nodes'
 CTD_CHEM_INCREASES_EXPR = 'chemical_increases_expression'
 CTD_CHEM_DECREASES_EXPR = 'chemical_decreases_expression'
 # Hetionet Components — Bgee
-BGEE_OVEREXPRESSES = 'bodypart_overexpresses_gene'
-BGEE_UNDEREXPRESSES = 'bodypart_underexpresses_gene'
+BGEE_OVEREXPRESSES = 'anatomy_expresses_gene'
+BGEE_UNDEREXPRESSES = 'anatomy_expresses_gene'
 # Hetionet Components — Hetionet Precomputed
 HETIO_GENE_INTERACTS = 'gene_interacts'
 HETIO_GENE_COVARIES = 'gene_covaries'
@@ -108,25 +108,25 @@ JENSENLAB_GENE_DISEASE = 'gene_disease_associations'
 
 # Jensen Lab TISSUES
 JENSEN_TISSUES_TISSUE_NODES = 'tissue_nodes'
-JENSEN_TISSUES_GENE_TISSUE = 'gene_tissue_associations'
+JENSEN_TISSUES_GENE_TISSUE = 'tissue_gene_associations'
 
 # HPO (Human Phenotype Ontology)
 HPO_PHENOTYPE_NODES = 'phenotype_nodes'
 HPO_GENE_PHENOTYPE = 'gene_phenotype_associations'
 
 # Reactome
-REACTOME_PATHWAY_NODES = 'pathway_nodes'
-REACTOME_GENE_PATHWAY = 'gene_pathway'
+REACTOME_PATHWAY_NODES = 'pathways'
+REACTOME_GENE_PATHWAY = 'ncbi_gene_pathway_relationships'
 
 # WikiPathways
 WIKIPATHWAYS_PATHWAY_NODES = 'pathway_nodes'
 WIKIPATHWAYS_GENE_PATHWAY = 'gene_pathway'
 
 # STRING
-STRING_GENE_INTERACTS = 'gene_interacts_gene'
+STRING_GENE_INTERACTS = 'gene_interactions'
 
 # OpenTargets
-OPENTARGETS_GENE_DISEASE = 'gene_disease'
+OPENTARGETS_GENE_DISEASE = 'target_disease_associations'
 
 # AOPDB table mapping for MySQL queries
 AOPDB_TABLE_MAPPING = {
@@ -269,8 +269,9 @@ ONTOLOGY_CONFIGS = {
             'data_property_map': {
                 'drugbank_id': 'xrefDrugbank',
                 'cas_number': 'xrefCasRN',
-                'mesh_id': 'xrefMeSH',
                 'drug_name': 'commonName',
+                'pubchem_cid': 'xrefPubChemCID',
+                'chembl_id': 'xrefChembl',
                 'source_database': 'sourceDatabase',
             },
             'merge_column': {
@@ -297,7 +298,7 @@ ONTOLOGY_CONFIGS = {
             'object_column_name': 'gene_symbol',
             'object_match_property': 'geneSymbol',
             'data_property_map': {
-                'actions': 'actions',
+                'interaction_type': 'interactionType',
             },
         },
         'merge': False,
@@ -423,14 +424,12 @@ ONTOLOGY_CONFIGS = {
         'source_filename': f'{CT_CLINICAL_TRIALS}.tsv',
         'parse_config': {
             'headers': True,
-            'iri_column_name': 'trial_id',
+            'iri_column_name': 'nct_id',
             'data_property_map': {
-                'trial_id': 'trialId',
-                'title': 'commonName',
+                'nct_id': 'trialId',
+                'brief_title': 'commonName',
                 'phase': 'phase',
                 'status': 'status',
-                'condition': 'condition',
-                'intervention_name': 'interventionName',
                 'source_database': 'sourceDatabase',
             },
         },
@@ -445,7 +444,7 @@ ONTOLOGY_CONFIGS = {
         'parse_config': {
             'headers': True,
             'subject_node_type': 'ClinicalTrial',
-            'subject_column_name': 'trial_id',
+            'subject_column_name': 'nct_id',
             'subject_match_property': 'trialId',
             'object_node_type': 'Disease',
             'object_column_name': 'condition',
@@ -462,7 +461,7 @@ ONTOLOGY_CONFIGS = {
         'parse_config': {
             'headers': True,
             'subject_node_type': 'ClinicalTrial',
-            'subject_column_name': 'trial_id',
+            'subject_column_name': 'nct_id',
             'subject_match_property': 'trialId',
             'object_node_type': 'Drug',
             'object_column_name': 'intervention_name',
@@ -493,7 +492,7 @@ ONTOLOGY_CONFIGS = {
             },
         },
         'merge': False,
-        'skip': False,
+        'skip': True,
     },
     f'clinpgx.{CLINPGX_DRUG_LABELS}': {
         'data_type': 'node',
@@ -501,16 +500,12 @@ ONTOLOGY_CONFIGS = {
         'source_filename': f'{CLINPGX_DRUG_LABELS}.tsv',
         'parse_config': {
             'headers': True,
-            'iri_column_name': 'label_id',
+            'iri_column_name': 'guideline_id',
             'data_property_map': {
-                'label_id': 'labelId',
-                'name': 'commonName',
-                'drug': 'drug',
-                'gene': 'gene',
-                'source': 'regulatorySource',
-                'biomarker_status': 'biomarkerStatus',
-                'testing': 'testing',
-                'alternate_drug_available': 'alternateDrugAvailable',
+                'guideline_id': 'labelId',
+                'guideline_name': 'commonName',
+                'url': 'url',
+                'version': 'version',
                 'source_database': 'sourceDatabase',
             },
         },
@@ -525,15 +520,14 @@ ONTOLOGY_CONFIGS = {
         'parse_config': {
             'headers': True,
             'subject_node_type': 'Gene',
-            'subject_column_name': 'gene',
+            'subject_column_name': 'gene_symbol',
             'subject_match_property': 'geneSymbol',
             'object_node_type': 'Drug',
-            'object_column_name': 'drug',
+            'object_column_name': 'drug_name',
             'object_match_property': 'commonName',
             'data_property_map': {
-                'evidence_level': 'evidenceLevel',
-                'annotation_id': 'annotationId',
-                'variant': 'variant',
+                'phenotype': 'phenotype',
+                'classification': 'classification',
             },
         },
         'merge': False,
@@ -554,7 +548,7 @@ ONTOLOGY_CONFIGS = {
             'object_match_property': 'geneSymbol',
         },
         'merge': False,
-        'skip': False,
+        'skip': True,
     },
     f'clinpgx.{CLINPGX_CLINICAL_ANNOTATIONS_PHARMA_CLASS}': {
         'data_type': 'relationship',
@@ -571,7 +565,7 @@ ONTOLOGY_CONFIGS = {
             'object_match_property': 'commonName',
         },
         'merge': False,
-        'skip': False,
+        'skip': True,
     },
     f'clinpgx.{CLINPGX_DRUG_LABEL_ANNOTATES_GENE}': {
         'data_type': 'relationship',
@@ -588,7 +582,7 @@ ONTOLOGY_CONFIGS = {
             'object_match_property': 'geneSymbol',
         },
         'merge': False,
-        'skip': False,
+        'skip': True,
     },
     f'clinpgx.{CLINPGX_DRUG_LABEL_DESCRIBES_DRUG}': {
         'data_type': 'relationship',
@@ -605,7 +599,7 @@ ONTOLOGY_CONFIGS = {
             'object_match_property': 'commonName',
         },
         'merge': False,
-        'skip': False,
+        'skip': True,
     },
 
     # =========================================================================
@@ -622,8 +616,9 @@ ONTOLOGY_CONFIGS = {
             'iri_column_name': 'doid',
             'data_property_map': {
                 'doid': 'xrefDiseaseOntology',
-                'name': 'commonName',
+                'disease_name': 'commonName',
                 'definition': 'definition',
+                'source_database': 'sourceDatabase',
             },
         },
         'merge': True,
@@ -676,7 +671,7 @@ ONTOLOGY_CONFIGS = {
             'object_match_property': 'xrefDiseaseOntology',
         },
         'merge': True,
-        'skip': False,
+        'skip': True,
     },
 
     # ---- Gene Ontology ----
@@ -790,8 +785,9 @@ ONTOLOGY_CONFIGS = {
             'iri_column_name': 'uberon_id',
             'data_property_map': {
                 'uberon_id': 'xrefUberon',
-                'name': 'commonName',
+                'uberon_name': 'commonName',
                 'definition': 'definition',
+                'source_database': 'sourceDatabase',
             },
         },
         'merge': False,
@@ -808,8 +804,8 @@ ONTOLOGY_CONFIGS = {
             'iri_column_name': 'mesh_id',
             'data_property_map': {
                 'mesh_id': 'xrefMeSH',
-                'name': 'commonName',
-                'tree_numbers': 'meshTreeNumber',
+                'mesh_name': 'commonName',
+                'sourceDatabase': 'sourceDatabase',
             },
         },
         'merge': False,
@@ -823,11 +819,11 @@ ONTOLOGY_CONFIGS = {
         'source_filename': f'{SIDER_SIDE_EFFECT_NODES}.tsv',
         'parse_config': {
             'headers': True,
-            'iri_column_name': 'umls_cui',
+            'iri_column_name': 'umls_id',
             'data_property_map': {
-                'umls_cui': 'xrefUmlsCUI',
-                'name': 'commonName',
-                'source': 'sourceDatabase',
+                'umls_id': 'xrefUmlsCUI',
+                'side_effect_name': 'commonName',
+                'source_database': 'sourceDatabase',
             },
         },
         'merge': False,
@@ -841,10 +837,10 @@ ONTOLOGY_CONFIGS = {
         'parse_config': {
             'headers': True,
             'subject_node_type': 'Drug',
-            'subject_column_name': 'drugbank_id',
-            'subject_match_property': 'xrefDrugbank',
+            'subject_column_name': 'pubchem_cid',
+            'subject_match_property': 'xrefPubChemCID',
             'object_node_type': 'SideEffect',
-            'object_column_name': 'umls_cui',
+            'object_column_name': 'umls_id',
             'object_match_property': 'xrefUmlsCUI',
         },
         'merge': False,
@@ -860,15 +856,11 @@ ONTOLOGY_CONFIGS = {
         'parse_config': {
             'headers': True,
             'subject_node_type': 'Drug',
-            'subject_column_name': 'drugbank_id',
-            'subject_match_property': 'xrefDrugbank',
+            'subject_column_name': 'compound_name',
+            'subject_match_property': 'commonName',
             'object_node_type': 'Gene',
-            'object_column_name': 'entrez_gene_id',
-            'object_match_property': 'xrefNcbiGene',
-            'object_match_type': 'integer',
-            'data_property_map': {
-                'z_score': 'zScore',
-            },
+            'object_column_name': 'gene_symbol',
+            'object_match_property': 'geneSymbol',
         },
         'merge': False,
         'skip': False,
@@ -881,15 +873,11 @@ ONTOLOGY_CONFIGS = {
         'parse_config': {
             'headers': True,
             'subject_node_type': 'Drug',
-            'subject_column_name': 'drugbank_id',
-            'subject_match_property': 'xrefDrugbank',
+            'subject_column_name': 'compound_name',
+            'subject_match_property': 'commonName',
             'object_node_type': 'Gene',
-            'object_column_name': 'entrez_gene_id',
-            'object_match_property': 'xrefNcbiGene',
-            'object_match_type': 'integer',
-            'data_property_map': {
-                'z_score': 'zScore',
-            },
+            'object_column_name': 'gene_symbol',
+            'object_match_property': 'geneSymbol',
         },
         'merge': False,
         'skip': False,
@@ -914,7 +902,7 @@ ONTOLOGY_CONFIGS = {
             },
         },
         'merge': False,
-        'skip': False,
+        'skip': True,
     },
 
     # ---- MEDLINE Co-occurrence ----
@@ -933,7 +921,7 @@ ONTOLOGY_CONFIGS = {
             'object_match_property': 'xrefMeSH',
         },
         'merge': False,
-        'skip': False,
+        'skip': True,
     },
     f'medline.{MEDLINE_DLA}': {
         'data_type': 'relationship',
@@ -950,7 +938,7 @@ ONTOLOGY_CONFIGS = {
             'object_match_property': 'xrefUberon',
         },
         'merge': False,
-        'skip': False,
+        'skip': True,
     },
     f'medline.{MEDLINE_DRD}': {
         'data_type': 'relationship',
@@ -967,22 +955,40 @@ ONTOLOGY_CONFIGS = {
             'object_match_property': 'xrefDiseaseOntology',
         },
         'merge': False,
-        'skip': False,
+        'skip': True,
     },
 
     # ---- DrugCentral ----
+    'drugcentral.drugs': {
+        'data_type': 'node',
+        'node_type': 'Drug',
+        'source_filename': 'drugs.tsv',
+        'parse_config': {
+            'headers': True,
+            'iri_column_name': 'drugbank_id',
+            'data_property_map': {
+                'drugbank_id': 'xrefDrugbank',
+                'struct_id': 'xrefDrugCentral',
+                'drug_name': 'commonName',
+                'pubchem_cid': 'xrefPubChemCID',
+                'source_database': 'sourceDatabase',
+            },
+        },
+        'merge': True,
+        'skip': False,
+    },
     f'drugcentral.{DC_PHARMACOLOGIC_CLASSES}': {
         'data_type': 'node',
         'node_type': 'PharmacologicClass',
         'source_filename': f'{DC_PHARMACOLOGIC_CLASSES}.tsv',
         'parse_config': {
             'headers': True,
-            'iri_column_name': 'class_id',
+            'iri_column_name': 'pharma_class_id',
             'data_property_map': {
-                'class_id': 'classId',
-                'class_name': 'commonName',
-                'class_type': 'classType',
-                'source': 'sourceDatabase',
+                'pharma_class_id': 'classId',
+                'pharma_class_name': 'commonName',
+                'pharma_class_code': 'classCode',
+                'source_database': 'sourceDatabase',
             },
         },
         'merge': False,
@@ -997,11 +1003,11 @@ ONTOLOGY_CONFIGS = {
         'parse_config': {
             'headers': True,
             'subject_node_type': 'PharmacologicClass',
-            'subject_column_name': 'class_id',
+            'subject_column_name': 'pharma_class_id',
             'subject_match_property': 'classId',
             'object_node_type': 'Drug',
-            'object_column_name': 'drugbank_id',
-            'object_match_property': 'xrefDrugbank',
+            'object_column_name': 'struct_id',
+            'object_match_property': 'xrefDrugCentral',
         },
         'merge': False,
         'skip': False,
@@ -1021,7 +1027,7 @@ ONTOLOGY_CONFIGS = {
             'object_match_property': 'xrefDiseaseOntology',
         },
         'merge': False,
-        'skip': False,
+        'skip': True,
     },
     f'drugcentral.{DC_DRUG_PALLIATES}': {
         'data_type': 'relationship',
@@ -1038,7 +1044,7 @@ ONTOLOGY_CONFIGS = {
             'object_match_property': 'xrefDiseaseOntology',
         },
         'merge': False,
-        'skip': False,
+        'skip': True,
     },
 
     # ---- GWAS Catalog — REMOVED (redundant with OpenTargets) ----
@@ -1076,7 +1082,7 @@ ONTOLOGY_CONFIGS = {
             'object_match_property': 'xrefDiseaseOntology',
         },
         'merge': False,
-        'skip': False,
+        'skip': True,
     },
     f'pubtator.{PUBTATOR_GD_LITERATURE}': {
         'data_type': 'relationship',
@@ -1092,6 +1098,9 @@ ONTOLOGY_CONFIGS = {
             'object_node_type': 'Disease',
             'object_column_name': 'disease_id',
             'object_match_property': 'xrefDiseaseOntology',
+            'data_property_map': {
+                'pmid': 'pmid',
+            },
         },
         'merge': False,
         'skip': False,
@@ -1109,9 +1118,8 @@ ONTOLOGY_CONFIGS = {
             'subject_column_name': 'drugbank_id',
             'subject_match_property': 'xrefDrugbank',
             'object_node_type': 'Gene',
-            'object_column_name': 'entrez_gene_id',
+            'object_column_name': 'target_name',
             'object_match_property': 'xrefNcbiGene',
-            'object_match_type': 'integer',
         },
         'merge': False,
         'skip': False,
@@ -1127,7 +1135,7 @@ ONTOLOGY_CONFIGS = {
             'iri_column_name': 'mesh_id',
             'data_property_map': {
                 'mesh_id': 'xrefMeSH',
-                'drug_name': 'commonName',
+                'chemical_name': 'commonName',
                 'source_database': 'sourceDatabase',
             },
         },
@@ -1145,8 +1153,9 @@ ONTOLOGY_CONFIGS = {
             'subject_column_name': 'chemical_id',
             'subject_match_property': 'xrefMeSH',
             'object_node_type': 'Gene',
-            'object_column_name': 'gene_symbol',
-            'object_match_property': 'geneSymbol',
+            'object_column_name': 'gene_id',
+            'object_match_property': 'xrefNcbiGene',
+            'object_match_type': 'integer',
         },
         'merge': False,
         'skip': False,
@@ -1162,8 +1171,9 @@ ONTOLOGY_CONFIGS = {
             'subject_column_name': 'chemical_id',
             'subject_match_property': 'xrefMeSH',
             'object_node_type': 'Gene',
-            'object_column_name': 'gene_symbol',
-            'object_match_property': 'geneSymbol',
+            'object_column_name': 'gene_id',
+            'object_match_property': 'xrefNcbiGene',
+            'object_match_type': 'integer',
         },
         'merge': False,
         'skip': False,
@@ -1172,16 +1182,16 @@ ONTOLOGY_CONFIGS = {
     # ---- Bgee ----
     f'bgee.{BGEE_OVEREXPRESSES}': {
         'data_type': 'relationship',
-        'relationship_type': 'bodyPartOverexpressesGene',
+        'relationship_type': 'bodyPartExpressesGene',
         'source_label': 'Bgee',
         'source_filename': f'{BGEE_OVEREXPRESSES}.tsv',
         'parse_config': {
             'headers': True,
             'subject_node_type': 'BodyPart',
-            'subject_column_name': 'anatomy_id',
+            'subject_column_name': 'uberon_id',
             'subject_match_property': 'xrefUberon',
             'object_node_type': 'Gene',
-            'object_column_name': 'gene_id',
+            'object_column_name': 'ensembl_gene_id',
             'object_match_property': 'xrefEnsembl',
             'data_property_map': {
                 'expression_score': 'expressionScore',
@@ -1192,23 +1202,23 @@ ONTOLOGY_CONFIGS = {
     },
     f'bgee.{BGEE_UNDEREXPRESSES}': {
         'data_type': 'relationship',
-        'relationship_type': 'bodyPartUnderexpressesGene',
+        'relationship_type': 'bodyPartExpressesGene',
         'source_label': 'Bgee',
         'source_filename': f'{BGEE_UNDEREXPRESSES}.tsv',
         'parse_config': {
             'headers': True,
             'subject_node_type': 'BodyPart',
-            'subject_column_name': 'anatomy_id',
+            'subject_column_name': 'uberon_id',
             'subject_match_property': 'xrefUberon',
             'object_node_type': 'Gene',
-            'object_column_name': 'gene_id',
+            'object_column_name': 'ensembl_gene_id',
             'object_match_property': 'xrefEnsembl',
             'data_property_map': {
                 'expression_score': 'expressionScore',
             },
         },
         'merge': False,
-        'skip': False,
+        'skip': True,  # Same file as BGEE_OVEREXPRESSES; skip to avoid duplicate edges
     },
 
     # ---- Hetionet Precomputed — REMOVED (redundant with STRING, LINCS, SIDER) ----
@@ -1310,7 +1320,7 @@ ONTOLOGY_CONFIGS = {
     # =========================================================================
     # Jensen Lab TISSUES — BTO Tissue Nodes (new BodyParts not in Uberon)
     # =========================================================================
-    f'jensentissues.{JENSEN_TISSUES_TISSUE_NODES}': {
+    f'jensen_tissues.{JENSEN_TISSUES_TISSUE_NODES}': {
         'data_type': 'node',
         'node_type': 'BodyPart',
         'source_filename': f'{JENSEN_TISSUES_TISSUE_NODES}.tsv',
@@ -1323,13 +1333,13 @@ ONTOLOGY_CONFIGS = {
             },
         },
         'merge': True,
-        'skip': False,
+        'skip': True,
     },
 
     # =========================================================================
     # Jensen Lab TISSUES — Gene-Tissue Expression Associations
     # =========================================================================
-    f'jensentissues.{JENSEN_TISSUES_GENE_TISSUE}': {
+    f'jensen_tissues.{JENSEN_TISSUES_GENE_TISSUE}': {
         'data_type': 'relationship',
         'relationship_type': 'geneExpressedInBodyPart',
         'source_label': 'Jensen TISSUES',
@@ -1343,8 +1353,8 @@ ONTOLOGY_CONFIGS = {
             'object_column_name': 'tissue_name',
             'object_match_property': 'commonName',
             'data_property_map': {
-                'confidence': 'confidence',
-                'channel': 'channel',
+                'evidence_type': 'evidenceType',
+                'score': 'score',
             },
         },
         'merge': False,
@@ -1360,12 +1370,13 @@ ONTOLOGY_CONFIGS = {
         'source_filename': f'{HPO_PHENOTYPE_NODES}.tsv',
         'parse_config': {
             'headers': True,
-            'iri_column_name': 'hpo_id',
+            'iri_column_name': 'hp_id',
             'data_property_map': {
-                'hpo_id': 'xrefHPO',
-                'name': 'commonName',
+                'hp_id': 'xrefHPO',
+                'hp_name': 'commonName',
                 'definition': 'definition',
                 'synonyms': 'synonyms',
+                'source_database': 'sourceDatabase',
             },
         },
         'merge': False,
@@ -1381,11 +1392,11 @@ ONTOLOGY_CONFIGS = {
         'parse_config': {
             'headers': True,
             'subject_node_type': 'Gene',
-            'subject_column_name': 'gene_id',
+            'subject_column_name': 'ncbi_gene_id',
             'subject_match_property': 'xrefNcbiGene',
             'subject_match_type': 'integer',
             'object_node_type': 'Phenotype',
-            'object_column_name': 'hpo_id',
+            'object_column_name': 'hp_id',
             'object_match_property': 'xrefHPO',
         },
         'merge': False,
@@ -1401,10 +1412,12 @@ ONTOLOGY_CONFIGS = {
         'source_filename': f'{REACTOME_PATHWAY_NODES}.tsv',
         'parse_config': {
             'headers': True,
-            'iri_column_name': 'pathwayName',
+            'iri_column_name': 'reactome_id',
             'data_property_map': {
-                'pathwayName': 'pathwayName',
-                'sourceDatabase': 'sourceDatabase',
+                'reactome_id': 'pathwayId',
+                'pathway_name': 'pathwayName',
+                'species': 'species',
+                'source_database': 'sourceDatabase',
             },
         },
         'merge': True,
@@ -1425,8 +1438,8 @@ ONTOLOGY_CONFIGS = {
             'subject_match_property': 'xrefNcbiGene',
             'subject_match_type': 'integer',
             'object_node_type': 'Pathway',
-            'object_column_name': 'pathway_name',
-            'object_match_property': 'pathwayName',
+            'object_column_name': 'reactome_id',
+            'object_match_property': 'pathwayId',
             'data_property_map': {
                 'evidence_code': 'evidenceCode',
             },
@@ -1483,11 +1496,13 @@ ONTOLOGY_CONFIGS = {
         'parse_config': {
             'headers': True,
             'subject_node_type': 'Gene',
-            'subject_column_name': 'gene_symbol_a',
-            'subject_match_property': 'geneSymbol',
+            'subject_column_name': 'gene_id_1',
+            'subject_match_property': 'xrefNcbiGene',
+            'subject_match_type': 'integer',
             'object_node_type': 'Gene',
-            'object_column_name': 'gene_symbol_b',
-            'object_match_property': 'geneSymbol',
+            'object_column_name': 'gene_id_2',
+            'object_match_property': 'xrefNcbiGene',
+            'object_match_type': 'integer',
             'data_property_map': {
                 'combined_score': 'combinedScore',
             },
@@ -1507,14 +1522,13 @@ ONTOLOGY_CONFIGS = {
         'parse_config': {
             'headers': True,
             'subject_node_type': 'Gene',
-            'subject_column_name': 'ensembl_id',
-            'subject_match_property': 'xrefEnsembl',
+            'subject_column_name': 'gene_symbol',
+            'subject_match_property': 'geneSymbol',
             'object_node_type': 'Disease',
             'object_column_name': 'disease_id',
             'object_match_property': 'xrefDiseaseOntology',
             'data_property_map': {
-                'score': 'score',
-                'evidenceCount': 'evidenceCount',
+                'overall_score': 'score',
             },
         },
         'merge': False,
@@ -1524,35 +1538,35 @@ ONTOLOGY_CONFIGS = {
     # =========================================================================
     # HGNC Gene Families
     # =========================================================================
-    'hgncfamilies.gene_family_nodes': {
+    'hgnc.gene_family_nodes': {
         'data_type': 'node',
         'node_type': 'GeneFamily',
         'source_filename': 'gene_family_nodes.tsv',
         'parse_config': {
             'headers': True,
-            'iri_column_name': 'familyId',
+            'iri_column_name': 'family_id',
             'data_property_map': {
-                'familyId': 'familyId',
-                'familyName': 'familyName',
-                'sourceDatabase': 'sourceDatabase',
+                'family_id': 'familyId',
+                'family_name': 'familyName',
+                'source_database': 'sourceDatabase',
             },
         },
         'merge': False,
         'skip': False,
     },
-    'hgncfamilies.gene_family_edges': {
+    'hgnc.gene_family_edges': {
         'data_type': 'relationship',
         'relationship_type': 'geneInFamily',
         'inverse_relationship_type': 'familyContainsGene',
         'source_label': 'HGNC',
-        'source_filename': 'gene_family_edges.tsv',
+        'source_filename': 'gene_family_associations.tsv',
         'parse_config': {
             'headers': True,
             'subject_node_type': 'Gene',
-            'subject_column_name': 'geneSymbol',
+            'subject_column_name': 'gene_symbol',
             'subject_match_property': 'geneSymbol',
             'object_node_type': 'GeneFamily',
-            'object_column_name': 'familyId',
+            'object_column_name': 'family_id',
             'object_match_property': 'familyId',
         },
         'merge': False,
@@ -1592,8 +1606,22 @@ ONTOLOGY_CONFIGS = {
         'source_filename': 'variant_nodes.tsv',
         'parse_config': {
             'headers': True,
-            'iri_column_name': 'variantId',
-            'data_property_map': {'variantId': 'variantId', 'variantType': 'variantType', 'hgvsNomenclature': 'hgvsNomenclature', 'chromosome': 'chromosome', 'positionStart': 'positionStart', 'positionStop': 'positionStop', 'referenceAllele': 'referenceAllele', 'alternateAllele': 'alternateAllele', 'clinicalSignificance': 'clinicalSignificance', 'clinicalSignificanceSimple': 'clinicalSignificanceSimple', 'genomeAssembly': 'genomeAssembly', 'genomicPosition': 'genomicPosition', 'reviewStatus': 'reviewStatus', 'numberSubmitters': 'numberSubmitters', 'sourceDatabase': 'sourceDatabase'},
+            'iri_column_name': 'allele_id',
+            'data_property_map': {
+                'allele_id': 'variantId',
+                'variant_name': 'commonName',
+                'variant_type': 'variantType',
+                'clinical_significance': 'clinicalSignificance',
+                'review_status': 'reviewStatus',
+                'assembly': 'genomeAssembly',
+                'chromosome': 'chromosome',
+                'start_pos': 'positionStart',
+                'stop_pos': 'positionStop',
+                'ref_allele': 'referenceAllele',
+                'alt_allele': 'alternateAllele',
+                'dbsnp_id': 'dbSnpId',
+                'source_database': 'sourceDatabase',
+            },
         },
         'merge': False,
         'skip': False,
@@ -1603,7 +1631,7 @@ ONTOLOGY_CONFIGS = {
         'relationship_type': 'hasVariant',
         'inverse_relationship_type': 'variantInGene',
         'source_label': 'ClinVar',
-        'source_filename': 'gene_variant.tsv',
+        'source_filename': 'variant_gene_associations.tsv',
         'parse_config': {
             'headers': True,
             'subject_node_type': 'Gene',
@@ -1611,9 +1639,9 @@ ONTOLOGY_CONFIGS = {
             'subject_match_property': 'xrefNcbiGene',
             'subject_match_type': 'integer',
             'object_node_type': 'Variant',
-            'object_column_name': 'variant_id',
+            'object_column_name': 'allele_id',
             'object_match_property': 'variantId',
-            'data_property_map': {'gene_symbol': 'geneSymbol', 'clinicalSignificance': 'clinicalSignificance'},
+            'data_property_map': {'gene_symbol': 'geneSymbol'},
         },
         'merge': False,
         'skip': False,
@@ -1635,7 +1663,7 @@ ONTOLOGY_CONFIGS = {
             'data_property_map': {'phenotype_name': 'phenotypeName', 'source_ontology': 'sourceOntology'},
         },
         'merge': False,
-        'skip': False,
+        'skip': True,
     },
     'clinvar.disease_variant_mondo': {
         'data_type': 'relationship',
@@ -1680,14 +1708,17 @@ ONTOLOGY_CONFIGS = {
     'clinvar.variant_properties': {
         'data_type': 'node',
         'node_type': 'Variant',
-        'source_filename': 'variant_properties.tsv',
+        'source_filename': 'variant_nodes.tsv',
         'parse_config': {
             'headers': True,
-            'iri_column_name': 'variantId',
-            'data_property_map': {'dbSnpId': 'dbSnpId', 'dbVarId': 'dbVarId', 'rcvAccession': 'rcvAccession', 'lastEvaluated': 'lastEvaluated', 'origin': 'origin', 'originSimple': 'originSimple', 'guidelines': 'guidelines', 'somaticClinicalImpact': 'somaticClinicalImpact', 'somaticLastEvaluated': 'somaticLastEvaluated', 'oncogenicity': 'oncogenicity', 'oncogenicityLastEvaluated': 'oncogenicityLastEvaluated'},
+            'iri_column_name': 'allele_id',
+            'data_property_map': {
+                'variation_id': 'variationId',
+                'dbsnp_id': 'dbSnpId',
+            },
         },
         'merge': True,
-        'skip': False,
+        'skip': True,  # Properties already loaded in clinvar.variant_nodes
     },
 
     # =========================================================================
