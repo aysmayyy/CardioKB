@@ -207,7 +207,7 @@ class Neo4jLoader:
             tsv_path = processed_dir / source_name / config['source_filename']
             if tsv_path.exists():
                 try:
-                    return pd.read_csv(tsv_path, sep='\t')
+                    return pd.read_csv(tsv_path, sep='\t', dtype=str, keep_default_na=False, na_values=[''])
                 except Exception as e:
                     logger.warning(f"Failed to read {tsv_path}: {e}")
 
@@ -235,6 +235,24 @@ class Neo4jLoader:
 
         # Filter if needed
         df = self._apply_filter(df, pc)
+
+        # Filter out rows where IRI column is null (can't MERGE on null)
+        if iri_col and iri_col in df.columns:
+            before_count = len(df)
+            df = df[df[iri_col].notna() & (df[iri_col] != '')]
+            dropped = before_count - len(df)
+            if dropped > 0:
+                logger.info(f"    Dropped {dropped} rows with null IRI ({iri_col})")
+
+        # Deduplicate by IRI column, keeping row with most non-null values
+        if iri_col and iri_col in df.columns:
+            before_count = len(df)
+            df['_completeness'] = df.notna().sum(axis=1)
+            df = df.sort_values('_completeness', ascending=False).drop_duplicates(subset=[iri_col], keep='first')
+            df = df.drop(columns=['_completeness'])
+            deduped = before_count - len(df)
+            if deduped > 0:
+                logger.info(f"    Deduplicated {deduped} rows by {iri_col}")
 
         # Map IRI column to Neo4j property
         iri_prop = prop_map.get(iri_col, iri_col)
