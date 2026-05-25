@@ -1175,6 +1175,7 @@ ONTOLOGY_CONFIGS = {
             'object_match_type': 'integer',
         },
         'merge': False,
+        'use_create': True,  # CTD chemical-gene interactions are unique
         'skip': False,
     },
     f'ctd.{CTD_CHEM_DECREASES_EXPR}': {
@@ -1193,6 +1194,7 @@ ONTOLOGY_CONFIGS = {
             'object_match_type': 'integer',
         },
         'merge': False,
+        'use_create': True,  # CTD chemical-gene interactions are unique
         'skip': False,
     },
 
@@ -1215,6 +1217,7 @@ ONTOLOGY_CONFIGS = {
             },
         },
         'merge': False,
+        'use_create': True,  # Bgee expression data is unique per anatomy-gene pair
         'skip': False,
     },
     f'bgee.{BGEE_UNDEREXPRESSES}': {
@@ -1662,6 +1665,7 @@ ONTOLOGY_CONFIGS = {
             'data_property_map': {'gene_symbol': 'geneSymbol'},
         },
         'merge': False,
+        'use_create': True,  # ClinVar gene-variant associations are unique
         'skip': False,
     },
     'clinvar.disease_variant_omim': {
