@@ -230,6 +230,7 @@ class Neo4jLoader:
         node_type = config['node_type']
         pc = config['parse_config']
         merge = config.get('merge', False)
+        use_create = config.get('use_create', False)  # Use CREATE instead of MERGE for unique datasets
         iri_col = pc.get('iri_column_name', '')
         prop_map = pc.get('data_property_map', {})
 
@@ -267,7 +268,25 @@ class Neo4jLoader:
 
         set_str = ', '.join(set_clauses) if set_clauses else ''
 
-        if merge:
+        if use_create:
+            # CREATE directly — faster for large unique datasets (e.g., ClinVar variants)
+            if iri_col not in df.columns:
+                logger.warning(f"IRI column '{iri_col}' not in DataFrame for {config_key}")
+                return
+
+            # Build property assignments for CREATE
+            create_props = [f"{iri_prop}: row.{iri_col}"]
+            for src_col, neo4j_prop in prop_map.items():
+                if src_col in df.columns and src_col != iri_col:
+                    create_props.append(f"{neo4j_prop}: row.{src_col}")
+            props_str = ', '.join(create_props)
+
+            query = (
+                f"UNWIND $rows AS row "
+                f"CREATE (n:{node_type} {{{props_str}}})"
+            )
+            logger.info(f"    Using CREATE (fast path) for {node_type}")
+        elif merge:
             # MERGE on IRI property, then SET all other properties
             if iri_col not in df.columns:
                 logger.warning(f"IRI column '{iri_col}' not in DataFrame for {config_key}")

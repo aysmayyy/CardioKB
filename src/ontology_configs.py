@@ -70,6 +70,7 @@ MESH_SYMPTOM_NODES = 'symptom_nodes'
 # Hetionet Components — SIDER
 SIDER_SIDE_EFFECT_NODES = 'side_effect_nodes'
 SIDER_COMPOUND_CAUSES_SE = 'drug_side_effect_associations'
+SIDER_DRUG_NODES = 'sider_drug_nodes'
 # Hetionet Components — LINCS
 LINCS_CUG = 'compound_gene_up'
 LINCS_CDG = 'compound_gene_down'
@@ -846,6 +847,22 @@ ONTOLOGY_CONFIGS = {
         'merge': False,
         'skip': False,
     },
+    f'sider.{SIDER_DRUG_NODES}': {
+        'data_type': 'node',
+        'node_type': 'Drug',
+        'source_filename': f'{SIDER_DRUG_NODES}.tsv',
+        'parse_config': {
+            'headers': True,
+            'iri_column_name': 'pubchem_cid',
+            'data_property_map': {
+                'pubchem_cid': 'xrefPubChemCID',
+                'stitch_id': 'xrefStitch',
+                'source_database': 'sourceDatabase',
+            },
+        },
+        'merge': True,
+        'skip': False,
+    },
 
     # ---- LINCS L1000 ----
     f'lincs.{LINCS_CUG}': {
@@ -1118,8 +1135,8 @@ ONTOLOGY_CONFIGS = {
             'subject_column_name': 'drugbank_id',
             'subject_match_property': 'xrefDrugbank',
             'object_node_type': 'Gene',
-            'object_column_name': 'target_name',
-            'object_match_property': 'xrefNcbiGene',
+            'object_column_name': 'gene_symbol',
+            'object_match_property': 'geneSymbol',
         },
         'merge': False,
         'skip': False,
@@ -1624,6 +1641,7 @@ ONTOLOGY_CONFIGS = {
             },
         },
         'merge': False,
+        'use_create': True,  # ClinVar allele_ids are unique — use CREATE for speed
         'skip': False,
     },
     'clinvar.gene_variant': {
