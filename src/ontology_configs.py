@@ -1378,6 +1378,7 @@ ONTOLOGY_CONFIGS = {
             },
         },
         'merge': False,
+        'use_create': True,  # Jensen TISSUES gene-tissue pairs are unique
         'skip': False,
     },
 
@@ -1528,6 +1529,7 @@ ONTOLOGY_CONFIGS = {
             },
         },
         'merge': False,
+        'use_create': True,  # STRING gene-gene interactions are unique
         'skip': False,
     },
 
