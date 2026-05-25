@@ -18,7 +18,7 @@ except ImportError:
 
 logger = logging.getLogger(__name__)
 
-BATCH_SIZE = 1000
+BATCH_SIZE = 5000
 
 
 class Neo4jLoader:
@@ -588,9 +588,9 @@ class Neo4jLoader:
         if source_label:
             params['source_label'] = source_label
 
-        with self.driver.session() as session:
-            for i in range(0, len(rows), BATCH_SIZE):
-                batch = rows[i:i + BATCH_SIZE]
+        for i in range(0, len(rows), BATCH_SIZE):
+            batch = rows[i:i + BATCH_SIZE]
+            with self.driver.session() as session:
                 try:
                     result = session.run(query, rows=batch, **params)
                     summary = result.consume()
