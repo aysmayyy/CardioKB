@@ -240,7 +240,7 @@ class Neo4jLoader:
         # Filter out rows where IRI column is null (can't MERGE on null)
         if iri_col and iri_col in df.columns:
             before_count = len(df)
-            df = df[df[iri_col].notna() & (df[iri_col] != '')]
+            df = df[df[iri_col].notna() & (df[iri_col] != '')].copy()
             dropped = before_count - len(df)
             if dropped > 0:
                 logger.info(f"    Dropped {dropped} rows with null IRI ({iri_col})")
@@ -370,6 +370,7 @@ class Neo4jLoader:
         pc = config['parse_config']
         rel_type = config['relationship_type']
         inverse_rel_type = config.get('inverse_relationship_type')
+        use_create = config.get('use_create', False)
 
         subj_node_type = pc['subject_node_type']
         subj_col = pc['subject_column_name']
@@ -423,11 +424,12 @@ class Neo4jLoader:
         obj_expr = _match_expr(obj_col, obj_match_type)
 
         # Forward relationship query
+        rel_verb = "CREATE" if use_create else "MERGE"
         query = (
             f"UNWIND $rows AS row "
             f"MATCH (s:{subj_node_type} {{{subj_match_prop}: {subj_expr}}}) "
             f"MATCH (o:{obj_node_type} {{{obj_match_prop}: {obj_expr}}}) "
-            f"MERGE (s)-[r:{rel_type}]->(o) "
+            f"{rel_verb} (s)-[r:{rel_type}]->(o) "
         )
         # Build SET clause: source label + any data properties
         set_parts = []
@@ -488,7 +490,7 @@ class Neo4jLoader:
                 f"UNWIND $rows AS row "
                 f"MATCH (s:{subj_node_type} {{{subj_match_prop}: {subj_expr}}}) "
                 f"MATCH (o:{obj_node_type} {{{obj_match_prop}: {obj_expr}}}) "
-                f"MERGE (o)-[r:{inverse_rel_type}]->(s) "
+                f"{rel_verb} (o)-[r:{inverse_rel_type}]->(s) "
             )
             inv_set_parts = []
             if source_label:
