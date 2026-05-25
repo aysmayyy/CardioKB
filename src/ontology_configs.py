@@ -159,6 +159,7 @@ ONTOLOGY_CONFIGS = {
             },
         },
         'merge': True,
+        'use_create': True,
         'skip': True,
     },
     f'aopdb.{AOPDB_PATHWAYS}': {
@@ -176,6 +177,7 @@ ONTOLOGY_CONFIGS = {
             },
         },
         'merge': False,
+        'use_create': True,
         'skip': True,
     },
     f'aopdb.{AOPDB_GENE_PATHWAY_RELATIONSHIPS}': {
@@ -194,6 +196,7 @@ ONTOLOGY_CONFIGS = {
             'object_match_property': 'pathwayName',
         },
         'merge': False,
+        'use_create': True,
         'skip': True,
     },
 
@@ -214,6 +217,7 @@ ONTOLOGY_CONFIGS = {
             },
         },
         'merge': False,
+        'use_create': True,
         'skip': True,
     },
     f'disgenet.{DISGENET_DISEASE_MAPPINGS}': {
@@ -235,6 +239,7 @@ ONTOLOGY_CONFIGS = {
             },
         },
         'merge': True,
+        'use_create': True,
         'skip': True,
     },
     f'disgenet.{DISGENET_GENE_DISEASE_ASSOCIATIONS}': {
@@ -254,6 +259,7 @@ ONTOLOGY_CONFIGS = {
             'filter_value': 'disease',
         },
         'merge': False,
+        'use_create': True,
         'skip': True,
     },
 
@@ -281,6 +287,7 @@ ONTOLOGY_CONFIGS = {
             },
         },
         'merge': True,
+        'use_create': True,
         'skip': False,
     },
 
@@ -303,6 +310,7 @@ ONTOLOGY_CONFIGS = {
             },
         },
         'merge': False,
+        'use_create': True,
         'skip': False,
     },
 
@@ -323,6 +331,7 @@ ONTOLOGY_CONFIGS = {
             },
         },
         'merge': True,
+        'use_create': True,
         'skip': True,
     },
     f'omim.{OMIM_GENE_DISEASE}': {
@@ -344,6 +353,7 @@ ONTOLOGY_CONFIGS = {
             },
         },
         'merge': False,
+        'use_create': True,
         'skip': True,
     },
 
@@ -373,6 +383,7 @@ ONTOLOGY_CONFIGS = {
             },
         },
         'merge': False,
+        'use_create': True,
         'skip': False,
     },
 
@@ -392,6 +403,7 @@ ONTOLOGY_CONFIGS = {
             },
         },
         'merge': True,
+        'use_create': True,
         'skip': False,
     },
     f'dorothea.{DOROTHEA_TF_GENE_INTERACTIONS}': {
@@ -413,6 +425,7 @@ ONTOLOGY_CONFIGS = {
             },
         },
         'merge': False,
+        'use_create': True,
         'skip': False,
     },
 
@@ -435,6 +448,7 @@ ONTOLOGY_CONFIGS = {
             },
         },
         'merge': False,
+        'use_create': True,
         'skip': False,
     },
     f'clinicaltrials.{CT_TRIAL_STUDIES_CONDITION}': {
@@ -452,6 +466,7 @@ ONTOLOGY_CONFIGS = {
             'object_match_property': 'commonName',
         },
         'merge': False,
+        'use_create': True,
         'skip': False,
     },
     f'clinicaltrials.{CT_TRIAL_TESTS_INTERVENTION}': {
@@ -469,6 +484,7 @@ ONTOLOGY_CONFIGS = {
             'object_match_property': 'commonName',
         },
         'merge': False,
+        'use_create': True,
         'skip': False,
     },
 
@@ -493,6 +509,7 @@ ONTOLOGY_CONFIGS = {
             },
         },
         'merge': False,
+        'use_create': True,
         'skip': True,
     },
     f'clinpgx.{CLINPGX_DRUG_LABELS}': {
@@ -511,6 +528,7 @@ ONTOLOGY_CONFIGS = {
             },
         },
         'merge': False,
+        'use_create': True,
         'skip': False,
     },
     f'clinpgx.{CLINPGX_CLINICAL_ANNOTATIONS}': {
@@ -532,6 +550,7 @@ ONTOLOGY_CONFIGS = {
             },
         },
         'merge': False,
+        'use_create': True,
         'skip': False,
     },
     f'clinpgx.{CLINPGX_VARIANT_IN_GENE}': {
@@ -549,6 +568,7 @@ ONTOLOGY_CONFIGS = {
             'object_match_property': 'geneSymbol',
         },
         'merge': False,
+        'use_create': True,
         'skip': True,
     },
     f'clinpgx.{CLINPGX_CLINICAL_ANNOTATIONS_PHARMA_CLASS}': {
@@ -566,6 +586,7 @@ ONTOLOGY_CONFIGS = {
             'object_match_property': 'commonName',
         },
         'merge': False,
+        'use_create': True,
         'skip': True,
     },
     f'clinpgx.{CLINPGX_DRUG_LABEL_ANNOTATES_GENE}': {
@@ -583,6 +604,7 @@ ONTOLOGY_CONFIGS = {
             'object_match_property': 'geneSymbol',
         },
         'merge': False,
+        'use_create': True,
         'skip': True,
     },
     f'clinpgx.{CLINPGX_DRUG_LABEL_DESCRIBES_DRUG}': {
@@ -600,6 +622,7 @@ ONTOLOGY_CONFIGS = {
             'object_match_property': 'commonName',
         },
         'merge': False,
+        'use_create': True,
         'skip': True,
     },
 
@@ -623,6 +646,7 @@ ONTOLOGY_CONFIGS = {
             },
         },
         'merge': True,
+        'use_create': True,
         'skip': False,
     },
     f'disease_ontology.{DO_DISEASE_ANATOMY}': {
@@ -640,6 +664,7 @@ ONTOLOGY_CONFIGS = {
             'object_match_property': 'xrefUberon',
         },
         'merge': False,
+        'use_create': True,
         'skip': True,  # No TSV produced; MEDLINE covers diseaseLocalizesToAnatomy
     },
     f'disease_ontology.{DO_DISEASE_XREFS}': {
@@ -655,6 +680,7 @@ ONTOLOGY_CONFIGS = {
             },
         },
         'merge': True,
+        'use_create': True,
         'skip': True,  # One-to-many xrefs (MESH, ICD10, OMIM per disease); row-by-row loader would overwrite. Xref IDs already mapped via id_mapping.py.
     },
     f'disease_ontology.{DO_DISEASE_HIERARCHY}': {
@@ -672,6 +698,7 @@ ONTOLOGY_CONFIGS = {
             'object_match_property': 'xrefDiseaseOntology',
         },
         'merge': True,
+        'use_create': True,
         'skip': True,
     },
 
@@ -690,6 +717,7 @@ ONTOLOGY_CONFIGS = {
             },
         },
         'merge': False,
+        'use_create': True,
         'skip': False,
     },
     f'gene_ontology.{GO_MF_NODES}': {
@@ -706,6 +734,7 @@ ONTOLOGY_CONFIGS = {
             },
         },
         'merge': False,
+        'use_create': True,
         'skip': False,
     },
     f'gene_ontology.{GO_CC_NODES}': {
@@ -722,6 +751,7 @@ ONTOLOGY_CONFIGS = {
             },
         },
         'merge': False,
+        'use_create': True,
         'skip': False,
     },
     f'gene_ontology.{GO_GENE_BP}': {
@@ -739,6 +769,7 @@ ONTOLOGY_CONFIGS = {
             'object_match_property': 'geneOntologyId',
         },
         'merge': False,
+        'use_create': True,
         'skip': False,
     },
     f'gene_ontology.{GO_GENE_MF}': {
@@ -756,6 +787,7 @@ ONTOLOGY_CONFIGS = {
             'object_match_property': 'geneOntologyId',
         },
         'merge': False,
+        'use_create': True,
         'skip': False,
     },
     f'gene_ontology.{GO_GENE_CC}': {
@@ -773,6 +805,7 @@ ONTOLOGY_CONFIGS = {
             'object_match_property': 'geneOntologyId',
         },
         'merge': False,
+        'use_create': True,
         'skip': False,
     },
 
@@ -792,6 +825,7 @@ ONTOLOGY_CONFIGS = {
             },
         },
         'merge': False,
+        'use_create': True,
         'skip': False,
     },
 
@@ -810,6 +844,7 @@ ONTOLOGY_CONFIGS = {
             },
         },
         'merge': False,
+        'use_create': True,
         'skip': False,
     },
 
@@ -828,6 +863,7 @@ ONTOLOGY_CONFIGS = {
             },
         },
         'merge': False,
+        'use_create': True,
         'skip': False,
     },
     f'sider.{SIDER_COMPOUND_CAUSES_SE}': {
@@ -845,6 +881,7 @@ ONTOLOGY_CONFIGS = {
             'object_match_property': 'xrefUmlsCUI',
         },
         'merge': False,
+        'use_create': True,
         'skip': False,
     },
     f'sider.{SIDER_DRUG_NODES}': {
@@ -861,6 +898,7 @@ ONTOLOGY_CONFIGS = {
             },
         },
         'merge': True,
+        'use_create': True,
         'skip': False,
     },
 
@@ -880,6 +918,7 @@ ONTOLOGY_CONFIGS = {
             'object_match_property': 'geneSymbol',
         },
         'merge': False,
+        'use_create': True,
         'skip': False,
     },
     f'lincs.{LINCS_CDG}': {
@@ -897,6 +936,7 @@ ONTOLOGY_CONFIGS = {
             'object_match_property': 'geneSymbol',
         },
         'merge': False,
+        'use_create': True,
         'skip': False,
     },
     f'lincs.{LINCS_GRG}': {
@@ -919,6 +959,7 @@ ONTOLOGY_CONFIGS = {
             },
         },
         'merge': False,
+        'use_create': True,
         'skip': True,
     },
 
@@ -938,6 +979,7 @@ ONTOLOGY_CONFIGS = {
             'object_match_property': 'xrefMeSH',
         },
         'merge': False,
+        'use_create': True,
         'skip': True,
     },
     f'medline.{MEDLINE_DLA}': {
@@ -955,6 +997,7 @@ ONTOLOGY_CONFIGS = {
             'object_match_property': 'xrefUberon',
         },
         'merge': False,
+        'use_create': True,
         'skip': True,
     },
     f'medline.{MEDLINE_DRD}': {
@@ -972,6 +1015,7 @@ ONTOLOGY_CONFIGS = {
             'object_match_property': 'xrefDiseaseOntology',
         },
         'merge': False,
+        'use_create': True,
         'skip': True,
     },
 
@@ -992,6 +1036,7 @@ ONTOLOGY_CONFIGS = {
             },
         },
         'merge': True,
+        'use_create': True,
         'skip': False,
     },
     f'drugcentral.{DC_PHARMACOLOGIC_CLASSES}': {
@@ -1009,6 +1054,7 @@ ONTOLOGY_CONFIGS = {
             },
         },
         'merge': False,
+        'use_create': True,
         'skip': False,
     },
     f'drugcentral.{DC_PCIC}': {
@@ -1027,6 +1073,7 @@ ONTOLOGY_CONFIGS = {
             'object_match_property': 'xrefDrugCentral',
         },
         'merge': False,
+        'use_create': True,
         'skip': False,
     },
     f'drugcentral.{DC_DRUG_TREATS}': {
@@ -1044,6 +1091,7 @@ ONTOLOGY_CONFIGS = {
             'object_match_property': 'xrefDiseaseOntology',
         },
         'merge': False,
+        'use_create': True,
         'skip': True,
     },
     f'drugcentral.{DC_DRUG_PALLIATES}': {
@@ -1061,6 +1109,7 @@ ONTOLOGY_CONFIGS = {
             'object_match_property': 'xrefDiseaseOntology',
         },
         'merge': False,
+        'use_create': True,
         'skip': True,
     },
 
@@ -1080,6 +1129,7 @@ ONTOLOGY_CONFIGS = {
             'object_match_property': 'xrefDiseaseOntology',
         },
         'merge': False,
+        'use_create': True,
         'skip': True,
     },
 
@@ -1099,6 +1149,7 @@ ONTOLOGY_CONFIGS = {
             'object_match_property': 'xrefDiseaseOntology',
         },
         'merge': False,
+        'use_create': True,
         'skip': True,
     },
     f'pubtator.{PUBTATOR_GD_LITERATURE}': {
@@ -1120,6 +1171,7 @@ ONTOLOGY_CONFIGS = {
             },
         },
         'merge': False,
+        'use_create': True,
         'skip': False,
     },
 
@@ -1139,6 +1191,7 @@ ONTOLOGY_CONFIGS = {
             'object_match_property': 'geneSymbol',
         },
         'merge': False,
+        'use_create': True,
         'skip': False,
     },
 
@@ -1157,6 +1210,7 @@ ONTOLOGY_CONFIGS = {
             },
         },
         'merge': True,
+        'use_create': True,
         'skip': False,
     },
     f'ctd.{CTD_CHEM_INCREASES_EXPR}': {
@@ -1238,6 +1292,7 @@ ONTOLOGY_CONFIGS = {
             },
         },
         'merge': False,
+        'use_create': True,
         'skip': True,  # Same file as BGEE_OVEREXPRESSES; skip to avoid duplicate edges
     },
 
@@ -1257,6 +1312,7 @@ ONTOLOGY_CONFIGS = {
             'object_match_property': 'xrefNcbiGene',
         },
         'merge': False,
+        'use_create': True,
         'skip': True,
     },
     f'hetionet_precomputed.{HETIO_GENE_COVARIES}': {
@@ -1274,6 +1330,7 @@ ONTOLOGY_CONFIGS = {
             'object_match_property': 'xrefNcbiGene',
         },
         'merge': False,
+        'use_create': True,
         'skip': True,
     },
     f'hetionet_precomputed.{HETIO_GENE_REGULATES}': {
@@ -1291,6 +1348,7 @@ ONTOLOGY_CONFIGS = {
             'object_match_property': 'xrefNcbiGene',
         },
         'merge': False,
+        'use_create': True,
         'skip': True,  # Subset of LINCS L1000 geneRegulatesGene; LINCS overwrites r.source
     },
 
@@ -1309,6 +1367,7 @@ ONTOLOGY_CONFIGS = {
             'object_match_property': 'xrefUmlsCUI',
         },
         'merge': False,
+        'use_create': True,
         'skip': True,
     },
 
@@ -1334,6 +1393,7 @@ ONTOLOGY_CONFIGS = {
             },
         },
         'merge': False,
+        'use_create': True,
         'skip': True,
     },
 
@@ -1353,6 +1413,7 @@ ONTOLOGY_CONFIGS = {
             },
         },
         'merge': True,
+        'use_create': True,
         'skip': True,
     },
 
@@ -1401,6 +1462,7 @@ ONTOLOGY_CONFIGS = {
             },
         },
         'merge': False,
+        'use_create': True,
         'skip': False,
     },
 
@@ -1421,6 +1483,7 @@ ONTOLOGY_CONFIGS = {
             'object_match_property': 'xrefHPO',
         },
         'merge': False,
+        'use_create': True,
         'skip': False,
     },
 
@@ -1442,6 +1505,7 @@ ONTOLOGY_CONFIGS = {
             },
         },
         'merge': True,
+        'use_create': True,
         'skip': False,
     },
 
@@ -1466,6 +1530,7 @@ ONTOLOGY_CONFIGS = {
             },
         },
         'merge': False,
+        'use_create': True,
         'skip': False,
     },
 
@@ -1485,6 +1550,7 @@ ONTOLOGY_CONFIGS = {
             },
         },
         'merge': True,
+        'use_create': True,
         'skip': True,
     },
     f'wikipathways.{WIKIPATHWAYS_GENE_PATHWAY}': {
@@ -1503,6 +1569,7 @@ ONTOLOGY_CONFIGS = {
             'object_match_property': 'pathwayName',
         },
         'merge': False,
+        'use_create': True,
         'skip': True,
     },
 
@@ -1554,6 +1621,7 @@ ONTOLOGY_CONFIGS = {
             },
         },
         'merge': False,
+        'use_create': True,
         'skip': False,
     },
 
@@ -1574,6 +1642,7 @@ ONTOLOGY_CONFIGS = {
             },
         },
         'merge': False,
+        'use_create': True,
         'skip': False,
     },
     'hgnc.gene_family_edges': {
@@ -1592,6 +1661,7 @@ ONTOLOGY_CONFIGS = {
             'object_match_property': 'familyId',
         },
         'merge': False,
+        'use_create': True,
         'skip': False,
     },
 
@@ -1616,6 +1686,7 @@ ONTOLOGY_CONFIGS = {
             },
         },
         'merge': True,
+        'use_create': True,
         'skip': True,
     },
 
@@ -1687,6 +1758,7 @@ ONTOLOGY_CONFIGS = {
             'data_property_map': {'phenotype_name': 'phenotypeName', 'source_ontology': 'sourceOntology'},
         },
         'merge': False,
+        'use_create': True,
         'skip': True,
     },
     'clinvar.disease_variant_mondo': {
@@ -1707,6 +1779,7 @@ ONTOLOGY_CONFIGS = {
             'data_property_map': {'phenotype_name': 'phenotypeName', 'source_ontology': 'sourceOntology'},
         },
         'merge': False,
+        'use_create': True,
         'skip': True,
     },
     'clinvar.disease_variant_orphanet': {
@@ -1727,6 +1800,7 @@ ONTOLOGY_CONFIGS = {
             'data_property_map': {'phenotype_name': 'phenotypeName', 'source_ontology': 'sourceOntology'},
         },
         'merge': False,
+        'use_create': True,
         'skip': True,
     },
     'clinvar.variant_properties': {
@@ -1742,6 +1816,7 @@ ONTOLOGY_CONFIGS = {
             },
         },
         'merge': True,
+        'use_create': True,
         'skip': True,  # Properties already loaded in clinvar.variant_nodes
     },
 
@@ -1761,6 +1836,7 @@ ONTOLOGY_CONFIGS = {
             'data_property_map': {'geneId': 'xrefNcbiGene', 'geneName': 'geneName', 'sourceDatabase': 'sourceDatabase'},
         },
         'merge': True,
+        'use_create': True,
         'skip': True,
     },
     'drugage.aging_property_nodes': {
@@ -1773,6 +1849,7 @@ ONTOLOGY_CONFIGS = {
             'data_property_map': {'propertyName': 'propertyName', 'sourceDatabase': 'sourceDatabase'},
         },
         'merge': False,
+        'use_create': True,
         'skip': True,
     },
     'drugage.gene_aging_association': {
@@ -1792,6 +1869,7 @@ ONTOLOGY_CONFIGS = {
             'data_property_map': {'agingProperty': 'agingProperty'},
         },
         'merge': False,
+        'use_create': True,
         'skip': True,
     },
 
@@ -1809,6 +1887,7 @@ ONTOLOGY_CONFIGS = {
             'data_property_map': {'geneSymbol': 'geneSymbol', 'sourceDatabase': 'sourceDatabase'},
         },
         'merge': True,
+        'use_create': True,
         'skip': True,
     },
     'cellage.gene_properties': {
@@ -1821,6 +1900,7 @@ ONTOLOGY_CONFIGS = {
             'data_property_map': {'geneSymbol': 'geneSymbol', 'sourceDatabase': 'sourceDatabase'},
         },
         'merge': True,
+        'use_create': True,
         'skip': True,
     },
 
@@ -1845,6 +1925,7 @@ ONTOLOGY_CONFIGS = {
             },
         },
         'merge': False,
+        'use_create': True,
         'skip': True,
     },
 
@@ -1861,6 +1942,7 @@ ONTOLOGY_CONFIGS = {
             'data_property_map': {'geneSymbol': 'geneSymbol', 'xrefNcbiGene': 'xrefNcbiGene', 'sourceDatabase': 'sourceDatabase'},
         },
         'merge': True,
+        'use_create': True,
         'skip': True,
     },
 }
