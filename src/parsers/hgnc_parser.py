@@ -1,15 +1,15 @@
 """
-HGNCParser: Parser for HUGO Gene Nomenclature Committee database.
+HGNC Gene Families Parser for the knowledge graph.
 
-Downloads the complete HGNC gene dataset and produces Gene nodes,
-GeneFamily nodes, and geneInFamily relationship edges.
+Downloads gene family data from HGNC and produces:
+  - gene_family_nodes.tsv       : GeneFamily nodes
+  - gene_family_associations.tsv: geneInFamily edges (Gene → GeneFamily)
 
-Source: https://storage.googleapis.com/public-download-files/hgnc/tsv/tsv/hgnc_complete_set.txt
-Access: Public (no credentials required)
-License: Creative Commons Attribution 4.0
+Data Source: https://www.genenames.org/cgi-bin/genegroup/download-all
 """
 
 import logging
+from pathlib import Path
 from typing import Dict, Optional
 
 import pandas as pd
@@ -18,136 +18,138 @@ from .base_parser import BaseParser
 
 logger = logging.getLogger(__name__)
 
+_DEFAULT_URL = "https://storage.googleapis.com/public-download-files/hgnc/tsv/tsv/hgnc_complete_set.txt"
+_FILENAME = "hgnc_gene_families.tsv"
 
-class HGNCParser(BaseParser):
-    """Parser for HGNC gene nomenclature data."""
+FAMILY_NODES = "gene_family_nodes"
+FAMILY_ASSOC = "gene_family_associations"
 
-    DOWNLOAD_URL = "https://storage.googleapis.com/public-download-files/hgnc/tsv/tsv/hgnc_complete_set.txt"
-    FILENAME = "hgnc_complete_set.txt"
 
-    def __init__(self, data_dir: Optional[str] = None):
+class HGNCFamiliesParser(BaseParser):
+    """
+    Parser for HGNC Gene Families.
+
+    Downloads the HGNC gene group/family TSV and extracts GeneFamily nodes
+    and geneInFamily edges.
+
+    Constructor args (injected from databases.yaml):
+        data_dir   – base directory for raw/cached files
+        source_url – URL of the HGNC gene families download
+    """
+
+    def __init__(self, data_dir: str, source_url: Optional[str] = None):
         super().__init__(data_dir)
+        self.source_name = "hgnc"
+        self.source_dir = self.data_dir / self.source_name
+        self.source_dir.mkdir(parents=True, exist_ok=True)
+        # Use the HGNC complete set TSV (the custom download URL requires JS)
+        self.source_url = _DEFAULT_URL
+
+    # ------------------------------------------------------------------
+    # Download
+    # ------------------------------------------------------------------
 
     def download_data(self) -> bool:
-        """Download HGNC complete gene set."""
-        logger.info("Downloading HGNC data...")
-        result = self.download_file(self.DOWNLOAD_URL, self.FILENAME)
-        return result is not None
+        logger.info("Downloading HGNC gene families from %s ...", self.source_url)
+        result = self.download_file(self.source_url, _FILENAME)
+        if not result:
+            logger.error("Failed to download HGNC gene families.")
+            return False
+        return True
+
+    # ------------------------------------------------------------------
+    # Parse
+    # ------------------------------------------------------------------
 
     def parse_data(self) -> Dict[str, pd.DataFrame]:
-        """Parse HGNC data into gene nodes, family nodes, and relationships."""
-        filepath = self.source_dir / self.FILENAME
+        filepath = self.source_dir / _FILENAME
         if not filepath.exists():
-            logger.error(f"HGNC file not found: {filepath}")
+            logger.error("HGNC gene families file not found: %s", filepath)
             return {}
 
-        # Read HGNC TSV
-        df = self.read_tsv(str(filepath))
-        if df is None or len(df) == 0:
-            logger.error("Failed to read HGNC file or file is empty")
+        logger.info("Parsing HGNC gene families from %s ...", filepath)
+
+        try:
+            df = pd.read_csv(filepath, sep="\t", dtype=str, low_memory=False)
+        except Exception as exc:
+            logger.error("Failed to read HGNC file: %s", exc)
             return {}
 
-        logger.info(f"HGNC raw: {len(df)} rows")
+        logger.info("HGNC raw: %d rows, columns: %s", len(df), list(df.columns))
 
-        # Build gene nodes
-        gene_nodes = pd.DataFrame()
-        gene_nodes['hgnc_id'] = df['hgnc_id'].fillna('').astype(str)
-        gene_nodes['geneSymbol'] = df['symbol'].fillna('').astype(str)
-        gene_nodes['geneName'] = df['name'].fillna('').astype(str)
-        gene_nodes['sourceDatabase'] = 'HGNC'
+        # HGNC complete set TSV columns include:
+        # hgnc_id, symbol, name, gene_group, gene_group_id, entrez_id, etc.
+        df.columns = [c.strip() for c in df.columns]
 
-        # Add cross-references (clean float→int for numeric IDs)
-        def _clean_numeric_id(val):
-            if pd.isna(val) or str(val).strip() in ('', 'nan'):
-                return None
-            try:
-                return str(int(float(val)))
-            except (ValueError, OverflowError):
-                return str(val).strip() or None
+        # Identify key columns flexibly
+        col_map = {}
+        for col in df.columns:
+            cl = col.lower()
+            if cl == "gene_group_id":
+                col_map[col] = "family_id"
+            elif cl == "gene_group":
+                col_map[col] = "family_name"
+            elif cl == "hgnc_id":
+                col_map[col] = "hgnc_id"
+            elif cl == "symbol":
+                col_map[col] = "gene_symbol"
+            elif cl == "name":
+                col_map[col] = "gene_name"
+            elif cl == "entrez_id":
+                col_map[col] = "ncbi_gene_id"
 
-        gene_nodes['xrefNcbiGene'] = df['entrez_id'].apply(_clean_numeric_id)
-        gene_nodes['xrefEnsembl'] = df['ensembl_gene_id'].fillna('').astype(str).replace('', None)
-        gene_nodes['xrefUcsc'] = df['ucsc_id'].fillna('').astype(str).replace('', None)
-        gene_nodes['xrefRefseq'] = df['refseq_accession'].fillna('').astype(str).replace('', None)
+        df = df.rename(columns=col_map)
+        # Filter out rows with no family assignment
+        if "family_id" in df.columns:
+            df = df[df["family_id"].notna() & (df["family_id"].astype(str).str.strip() != "")]
 
-        # Add gene location if available
-        if 'location' in df.columns:
-            gene_nodes['chromosomeLocation'] = df['location'].fillna('').astype(str).replace('', None)
+        # ---- GeneFamily nodes ----
+        family_cols = [c for c in ["family_id", "family_name"] if c in df.columns]
+        if not family_cols:
+            logger.warning("Could not identify family columns in HGNC file.")
+            family_df = pd.DataFrame(columns=["family_id", "family_name", "source_database"])
+        else:
+            family_df = (
+                df[family_cols]
+                .drop_duplicates(subset=["family_id"])
+                .reset_index(drop=True)
+            )
+            family_df["source_database"] = "HGNC"
+            logger.info("HGNC: %d gene families", len(family_df))
 
-        # Filter to rows with valid HGNC IDs and gene symbols
-        gene_nodes = gene_nodes[
-            (gene_nodes['hgnc_id'] != '') & 
-            (gene_nodes['geneSymbol'] != '')
-        ].drop_duplicates(subset=['hgnc_id'])
+        # ---- geneInFamily edges ----
+        assoc_cols = [c for c in ["family_id", "family_name", "hgnc_id", "gene_symbol", "ncbi_gene_id"]
+                      if c in df.columns]
+        if not assoc_cols or "family_id" not in assoc_cols:
+            logger.warning("Could not build gene-family associations from HGNC file.")
+            assoc_df = pd.DataFrame(columns=["family_id", "gene_symbol", "hgnc_id", "source_database"])
+        else:
+            assoc_df = df[assoc_cols].dropna(subset=["family_id"]).drop_duplicates().reset_index(drop=True)
+            assoc_df["source_database"] = "HGNC"
+            logger.info("HGNC: %d gene-family associations", len(assoc_df))
 
-        logger.info(f"HGNC: {len(gene_nodes)} unique genes")
-
-        # Build gene family nodes (if available)
-        gene_family_nodes = pd.DataFrame()
-        family_edges = pd.DataFrame()
-
-        if 'gene_family' in df.columns:
-            # Extract unique gene families
-            family_df = df[
-                (df['gene_family'].notna()) & 
-                (df['gene_family'] != '')
-            ][['gene_family']].drop_duplicates()
-            
-            if len(family_df) > 0:
-                gene_family_nodes['familyName'] = family_df['gene_family'].astype(str)
-                gene_family_nodes['sourceDatabase'] = 'HGNC'
-                logger.info(f"HGNC: {len(gene_family_nodes)} unique gene families")
-
-                # Build gene-family edges
-                family_map_df = df[
-                    (df['gene_family'].notna()) & 
-                    (df['gene_family'] != '') &
-                    (df['hgnc_id'].notna()) &
-                    (df['hgnc_id'] != '')
-                ][['hgnc_id', 'gene_family']].drop_duplicates()
-
-                family_edges['hgnc_id'] = family_map_df['hgnc_id'].astype(str)
-                family_edges['family_name'] = family_map_df['gene_family'].astype(str)
-                family_edges['source_database'] = 'HGNC'
-                
-                logger.info(
-                    f"HGNC: {len(family_edges)} gene-family edges "
-                    f"({family_edges['hgnc_id'].nunique()} genes, "
-                    f"{family_edges['family_name'].nunique()} families)"
-                )
-
-        result = {
-            'gene_nodes': gene_nodes,
+        return {
+            FAMILY_NODES: family_df,
+            FAMILY_ASSOC: assoc_df,
         }
 
-        if len(gene_family_nodes) > 0:
-            result['gene_family_nodes'] = gene_family_nodes
-
-        if len(family_edges) > 0:
-            result['gene_family_edges'] = family_edges
-
-        return result
+    # ------------------------------------------------------------------
+    # Schema
+    # ------------------------------------------------------------------
 
     def get_schema(self) -> Dict[str, Dict[str, str]]:
         return {
-            'gene_nodes': {
-                'hgnc_id': 'HGNC ID (e.g., HGNC:1234)',
-                'geneSymbol': 'Gene symbol (approved)',
-                'geneName': 'Gene name (full)',
-                'sourceDatabase': 'Source database identifier',
-                'xrefNcbiGene': 'NCBI Entrez Gene ID',
-                'xrefEnsembl': 'Ensembl Gene ID',
-                'xrefUcsc': 'UCSC ID',
-                'xrefRefseq': 'RefSeq accession',
-                'chromosomeLocation': 'Chromosome location',
+            FAMILY_NODES: {
+                "family_id":       "HGNC gene family/group ID",
+                "family_name":     "HGNC gene family/group name",
+                "source_database": "Source database (HGNC)",
             },
-            'gene_family_nodes': {
-                'familyName': 'Gene family name',
-                'sourceDatabase': 'Source database identifier',
-            },
-            'gene_family_edges': {
-                'hgnc_id': 'HGNC ID',
-                'family_name': 'Gene family name',
-                'source_database': 'Source database identifier',
+            FAMILY_ASSOC: {
+                "family_id":       "HGNC gene family/group ID",
+                "family_name":     "HGNC gene family/group name",
+                "hgnc_id":         "HGNC ID of the gene",
+                "gene_symbol":     "Approved gene symbol",
+                "ncbi_gene_id":    "NCBI Gene ID (Entrez)",
+                "source_database": "Source database (HGNC)",
             },
         }

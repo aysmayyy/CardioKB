@@ -328,6 +328,8 @@ Examples:
   python src/main.py --step export           run only the graph export step
   python src/main.py --step populate         run only the ontology populate step
   python src/main.py --step extract          run only the extract + TSV export step
+  python src/main.py --skip-download         use existing TSVs, load into Memgraph only
+  python src/main.py --skip-neo4j            extract + export only, no Memgraph load
   python src/main.py --log-level DEBUG       verbose output
         """,
     )
@@ -350,6 +352,16 @@ Examples:
         "--force-download",
         action="store_true",
         help="Re-download source files even if they already exist.",
+    )
+    parser.add_argument(
+        "--skip-download",
+        action="store_true",
+        help="Skip downloading and parsing; use existing TSVs in data/processed/ and run only the load step.",
+    )
+    parser.add_argument(
+        "--skip-neo4j",
+        action="store_true",
+        help="Skip Memgraph loading; run only extract and TSV export.",
     )
     args = parser.parse_args()
 
@@ -406,14 +418,25 @@ Examples:
         logger.info("Load step complete.")
         return
 
+    # --skip-download: use existing TSVs, skip to load
+    if args.skip_download:
+        logger.info("Skipping download/parse; using existing TSVs in data/processed/")
+        if not args.skip_neo4j:
+            load_to_memgraph(processed_dir)
+            logger.info("Computing specificity scores...")
+            compute_specificity()
+        logger.info("Pipeline complete (skip-download mode).")
+        return
+
     logger.info(f"Starting {project_config.get('display_name', 'KG')} pipeline")
     parsed_data = extract(enabled_databases, project_config, raw_dir, force_download=args.force_download)
     export_tsv(parsed_data, processed_dir)
     populate(project_config, enabled_databases, ontology_mappings, processed_dir)
     export_graph(project_config, output_dir, processed_dir)
-    load_to_memgraph(processed_dir)
-    logger.info("Computing specificity scores...")
-    compute_specificity()
+    if not args.skip_neo4j:
+        load_to_memgraph(processed_dir)
+        logger.info("Computing specificity scores...")
+        compute_specificity()
     logger.info("Pipeline complete.")
 
 

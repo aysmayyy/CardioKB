@@ -1020,6 +1020,8 @@ ONTOLOGY_CONFIGS = {
     },
 
     # ---- DrugCentral ----
+    # Uses drugbank_id for merging with DrugBank drugs when available;
+    # drugs without drugbank_id use struct_id as unique identifier.
     'drugcentral.drugs': {
         'data_type': 'node',
         'node_type': 'Drug',
@@ -1027,6 +1029,8 @@ ONTOLOGY_CONFIGS = {
         'parse_config': {
             'headers': True,
             'iri_column_name': 'drugbank_id',
+            'iri_fallback_column': 'struct_id',  # Use struct_id when drugbank_id is empty
+            'iri_fallback_prefix': 'DC:',  # Prefix for struct_id-based IDs
             'data_property_map': {
                 'drugbank_id': 'xrefDrugbank',
                 'struct_id': 'xrefDrugCentral',
@@ -1419,6 +1423,8 @@ ONTOLOGY_CONFIGS = {
 
     # =========================================================================
     # Jensen Lab TISSUES — Gene-Tissue Expression Associations
+    # SKIPPED: BTO tissue names have zero overlap with Uberon body part names.
+    # The bgee source already provides 2.7M body part-gene expression edges.
     # =========================================================================
     f'jensen_tissues.{JENSEN_TISSUES_GENE_TISSUE}': {
         'data_type': 'relationship',
@@ -1432,7 +1438,7 @@ ONTOLOGY_CONFIGS = {
             'subject_match_property': 'geneSymbol',
             'object_node_type': 'BodyPart',
             'object_column_name': 'tissue_name',
-            'object_match_property': 'commonName',
+            'object_match_property': 'bodyPartName',
             'data_property_map': {
                 'evidence_type': 'evidenceType',
                 'score': 'score',
@@ -1440,7 +1446,7 @@ ONTOLOGY_CONFIGS = {
         },
         'merge': False,
         'use_create': True,  # Jensen TISSUES gene-tissue pairs are unique
-        'skip': False,
+        'skip': True,  # BTO names don't match Uberon names; bgee provides expression data
     },
 
     # =========================================================================
@@ -1781,6 +1787,30 @@ ONTOLOGY_CONFIGS = {
         'merge': False,
         'use_create': True,
         'skip': True,
+    },
+    # ---- ClinVar Variant-Disease via UMLS CUI ----
+    # Matches variant-disease associations using UMLS CUI extracted from MedGen IDs
+    'clinvar.variant_disease_associations': {
+        'data_type': 'relationship',
+        'relationship_type': 'associatedWithVariant',
+        'inverse_relationship_type': 'variantAssociatedWithDisease',
+        'source_label': 'ClinVar',
+        'source_filename': 'variant_disease_associations.tsv',
+        'parse_config': {
+            'headers': True,
+            'subject_node_type': 'Disease',
+            'subject_column_name': 'umls_cui',
+            'subject_match_property': 'xrefUmlsCUI',
+            'object_node_type': 'Variant',
+            'object_column_name': 'variant_id',
+            'object_match_property': 'variantId',
+            'data_property_map': {
+                'clinical_significance': 'clinicalSignificance',
+            },
+        },
+        'merge': False,
+        'use_create': True,  # ClinVar variant-disease associations are unique
+        'skip': False,
     },
     'clinvar.disease_variant_orphanet': {
         'data_type': 'relationship',

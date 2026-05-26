@@ -1,0 +1,1344 @@
+{
+  "run_timestamp": "2026-05-19T19:16:56.249914+00:00",
+  "entity_counts": {
+    "nodes_BiologicalProcess": 24428,
+    "nodes_BodyPart": 1400,
+    "nodes_CellularComponent": 4076,
+    "nodes_ClinicalTrial": 21578,
+    "nodes_Disease": 3442,
+    "nodes_Drug": 16628,
+    "nodes_DrugLabel": 29,
+    "nodes_Gene": 193795,
+    "nodes_GeneFamily": 4257,
+    "nodes_MolecularFunction": 10056,
+    "nodes_Pathway": 2870,
+    "nodes_PharmacologicClass": 2359,
+    "nodes_Phenotype": 19389,
+    "nodes_SideEffect": 4251,
+    "nodes_Symptom": 415,
+    "nodes_TranscriptionFactor": 1201,
+    "nodes_Variant": 2100938,
+    "edges_AFFECTS_RESPONSE_TO": 109,
+    "edges_STUDIES_CONDITION": 46692,
+    "edges_TESTS_INTERVENTION": 30106,
+    "edges_bodyPartOverexpressesGene": 6616463,
+    "edges_chemicalBindsGene": 25217,
+    "edges_chemicalDecreasesExpression": 1001149,
+    "edges_chemicalIncreasesExpression": 1288204,
+    "edges_compoundCausesSideEffect": 145321,
+    "edges_compoundDownregulatesGene": 217664,
+    "edges_compoundInPharmacologicClass": 25687,
+    "edges_compoundUpregulatesGene": 247173,
+    "edges_drugBindsGene": 33749,
+    "edges_drugTreatsDisease": 204,
+    "edges_geneAssociatedWithCellularComponent": 90507,
+    "edges_geneAssociatesWithDisease": 1749,
+    "edges_geneAssociatesWithPhenotype": 314250,
+    "edges_geneExpressedInBodyPart": 398361,
+    "edges_geneHasMolecularFunction": 76863,
+    "edges_geneInFamily": 27027,
+    "edges_geneInPathway": 156329,
+    "edges_geneInteractsWithGene": 468977,
+    "edges_geneParticipatesInBiologicalProcess": 122437,
+    "edges_transcriptionFactorInteractsWithGene": 64516,
+    "edges_variantAssociatedWithDisease": 204386,
+    "edges_variantInGene": 22133
+  },
+  "merge_rate_analysis": {
+    "clinicaltrials": {
+      "raw_records": 21578,
+      "unique_ids": 21578,
+      "merge_rate_pct": 100.0,
+      "node_types": [
+        "ClinicalTrial"
+      ],
+      "graph_nodes": 21578,
+      "files": [
+        {
+          "file": "trial_nodes.tsv",
+          "raw": 21578,
+          "unique": 21578,
+          "id_column": "nct_id"
+        }
+      ]
+    },
+    "clinpgx": {
+      "raw_records": 29,
+      "unique_ids": 29,
+      "merge_rate_pct": 100.0,
+      "node_types": [
+        "DrugLabel"
+      ],
+      "graph_nodes": 29,
+      "files": [
+        {
+          "file": "drug_label_nodes.tsv",
+          "raw": 29,
+          "unique": 29,
+          "id_column": "guideline_id"
+        }
+      ]
+    },
+    "clinvar": {
+      "raw_records": 2100938,
+      "unique_ids": 2100938,
+      "merge_rate_pct": 100.0,
+      "node_types": [
+        "Variant"
+      ],
+      "graph_nodes": 2100938,
+      "files": [
+        {
+          "file": "variant_nodes.tsv",
+          "raw": 2100938,
+          "unique": 2100938,
+          "id_column": "variation_id"
+        }
+      ]
+    },
+    "collectri": {
+      "raw_records": 1201,
+      "unique_ids": 1201,
+      "merge_rate_pct": 100.0,
+      "node_types": [
+        "TranscriptionFactor"
+      ],
+      "graph_nodes": 1201,
+      "files": [
+        {
+          "file": "transcription_factors.tsv",
+          "raw": 1201,
+          "unique": 1201,
+          "id_column": "tf_symbol"
+        }
+      ]
+    },
+    "ctd": {
+      "raw_records": 9465,
+      "unique_ids": 9465,
+      "merge_rate_pct": 100.0,
+      "node_types": [
+        "Drug"
+      ],
+      "graph_nodes": 16628,
+      "files": [
+        {
+          "file": "chemical_nodes.tsv",
+          "raw": 9465,
+          "unique": 9465,
+          "id_column": "chemical_id"
+        }
+      ]
+    },
+    "disease_ontology": {
+      "raw_records": 3442,
+      "unique_ids": 3442,
+      "merge_rate_pct": 100.0,
+      "node_types": [
+        "Disease"
+      ],
+      "graph_nodes": 3442,
+      "files": [
+        {
+          "file": "slim_terms.tsv",
+          "raw": 3442,
+          "unique": 3442,
+          "id_column": "doid"
+        }
+      ]
+    },
+    "dorothea": {
+      "raw_records": 367,
+      "unique_ids": 367,
+      "merge_rate_pct": 100.0,
+      "node_types": [
+        "TranscriptionFactor"
+      ],
+      "graph_nodes": 1201,
+      "files": [
+        {
+          "file": "transcription_factors.tsv",
+          "raw": 367,
+          "unique": 367,
+          "id_column": "tf_symbol"
+        }
+      ]
+    },
+    "drugbank": {
+      "raw_records": 16628,
+      "unique_ids": 16628,
+      "merge_rate_pct": 100.0,
+      "node_types": [
+        "Drug"
+      ],
+      "graph_nodes": 16628,
+      "files": [
+        {
+          "file": "drugs.tsv",
+          "raw": 16628,
+          "unique": 16628,
+          "id_column": "drugbank_id"
+        }
+      ]
+    },
+    "drugcentral": {
+      "raw_records": 7354,
+      "unique_ids": 7354,
+      "merge_rate_pct": 100.0,
+      "node_types": [
+        "Drug",
+        "PharmacologicClass"
+      ],
+      "graph_nodes": 18987,
+      "files": [
+        {
+          "file": "drugs.tsv",
+          "raw": 4995,
+          "unique": 4995,
+          "id_column": "struct_id"
+        },
+        {
+          "file": "pharmacologic_classes.tsv",
+          "raw": 2359,
+          "unique": 2359,
+          "id_column": "pharma_class_id"
+        }
+      ]
+    },
+    "gene_ontology": {
+      "raw_records": 38560,
+      "unique_ids": 38560,
+      "merge_rate_pct": 100.0,
+      "node_types": [
+        "BiologicalProcess",
+        "CellularComponent",
+        "MolecularFunction"
+      ],
+      "graph_nodes": 38560,
+      "files": [
+        {
+          "file": "biological_process_nodes.tsv",
+          "raw": 24428,
+          "unique": 24428,
+          "id_column": "go_id"
+        },
+        {
+          "file": "molecular_function_nodes.tsv",
+          "raw": 10056,
+          "unique": 10056,
+          "id_column": "go_id"
+        },
+        {
+          "file": "cellular_component_nodes.tsv",
+          "raw": 4076,
+          "unique": 4076,
+          "id_column": "go_id"
+        }
+      ]
+    },
+    "hgnc": {
+      "raw_records": 4257,
+      "unique_ids": 4257,
+      "merge_rate_pct": 100.0,
+      "node_types": [
+        "GeneFamily"
+      ],
+      "graph_nodes": 4257,
+      "files": [
+        {
+          "file": "gene_family_nodes.tsv",
+          "raw": 4257,
+          "unique": 4257,
+          "id_column": "family_id"
+        }
+      ]
+    },
+    "hpo": {
+      "raw_records": 19389,
+      "unique_ids": 19389,
+      "merge_rate_pct": 100.0,
+      "node_types": [
+        "Phenotype"
+      ],
+      "graph_nodes": 19389,
+      "files": [
+        {
+          "file": "phenotype_nodes.tsv",
+          "raw": 19389,
+          "unique": 19389,
+          "id_column": "hp_id"
+        }
+      ]
+    },
+    "mesh": {
+      "raw_records": 415,
+      "unique_ids": 415,
+      "merge_rate_pct": 100.0,
+      "node_types": [
+        "Symptom"
+      ],
+      "graph_nodes": 415,
+      "files": [
+        {
+          "file": "symptom_nodes.tsv",
+          "raw": 415,
+          "unique": 415,
+          "id_column": "mesh_id"
+        }
+      ]
+    },
+    "ncbigene": {
+      "raw_records": 193795,
+      "unique_ids": 193795,
+      "merge_rate_pct": 100.0,
+      "node_types": [
+        "Gene"
+      ],
+      "graph_nodes": 193795,
+      "files": [
+        {
+          "file": "genes.tsv",
+          "raw": 193795,
+          "unique": 193795,
+          "id_column": "GeneID"
+        }
+      ]
+    },
+    "reactome": {
+      "raw_records": 2870,
+      "unique_ids": 2870,
+      "merge_rate_pct": 100.0,
+      "node_types": [
+        "Pathway"
+      ],
+      "graph_nodes": 2870,
+      "files": [
+        {
+          "file": "pathways.tsv",
+          "raw": 2870,
+          "unique": 2870,
+          "id_column": "reactome_id"
+        }
+      ]
+    },
+    "sider": {
+      "raw_records": 4251,
+      "unique_ids": 4251,
+      "merge_rate_pct": 100.0,
+      "node_types": [
+        "SideEffect"
+      ],
+      "graph_nodes": 4251,
+      "files": [
+        {
+          "file": "side_effect_nodes.tsv",
+          "raw": 4251,
+          "unique": 4251,
+          "id_column": "umls_id"
+        }
+      ]
+    },
+    "uberon": {
+      "raw_records": 1400,
+      "unique_ids": 1400,
+      "merge_rate_pct": 100.0,
+      "node_types": [
+        "BodyPart"
+      ],
+      "graph_nodes": 1400,
+      "files": [
+        {
+          "file": "uberon_nodes.tsv",
+          "raw": 1400,
+          "unique": 1400,
+          "id_column": "uberon_id"
+        }
+      ]
+    }
+  },
+  "cross_source_merge_analysis": {
+    "Drug": {
+      "sources": [
+        "drugcentral",
+        "ctd",
+        "drugbank"
+      ],
+      "source_details": [
+        {
+          "source": "drugcentral",
+          "mapping": "drugcentral.drugs",
+          "raw_records": 4995,
+          "unique_ids": 4995,
+          "id_column": "struct_id",
+          "xref_columns": [
+            "xrefMeSH",
+            "drugbank_id",
+            "mesh_id"
+          ]
+        },
+        {
+          "source": "ctd",
+          "mapping": "ctd.chemical_nodes",
+          "raw_records": 9465,
+          "unique_ids": 9465,
+          "id_column": "chemical_id",
+          "xref_columns": [
+            "xrefMeSH",
+            "mesh_id"
+          ]
+        },
+        {
+          "source": "drugbank",
+          "mapping": "drugbank.drugs",
+          "raw_records": 16628,
+          "unique_ids": 16628,
+          "id_column": "drugbank_id",
+          "xref_columns": [
+            "drugbank_id"
+          ]
+        }
+      ],
+      "sum_unique_per_source": 31088,
+      "union_all_ids": 31088,
+      "final_graph_nodes": 16628,
+      "potential_duplicates": 4010,
+      "estimated_xref_overlap": 4010,
+      "cross_merge_rate_pct": 100.0,
+      "overlaps_by_primary_id": [],
+      "overlaps_by_xref": [
+        {
+          "sources": [
+            "drugcentral",
+            "drugbank"
+          ],
+          "xref_column": "drugbank_id",
+          "overlap_count": 4010,
+          "pct_of_smaller": 99.73
+        }
+      ],
+      "flagged": false
+    },
+    "TranscriptionFactor": {
+      "sources": [
+        "dorothea",
+        "collectri"
+      ],
+      "source_details": [
+        {
+          "source": "dorothea",
+          "mapping": "dorothea.transcription_factors",
+          "raw_records": 367,
+          "unique_ids": 367,
+          "id_column": "tf_symbol",
+          "xref_columns": []
+        },
+        {
+          "source": "collectri",
+          "mapping": "collectri.transcription_factors",
+          "raw_records": 1201,
+          "unique_ids": 1201,
+          "id_column": "tf_symbol",
+          "xref_columns": []
+        }
+      ],
+      "sum_unique_per_source": 1568,
+      "union_all_ids": 1203,
+      "final_graph_nodes": 1201,
+      "potential_duplicates": 365,
+      "estimated_xref_overlap": 0,
+      "cross_merge_rate_pct": 100.0,
+      "overlaps_by_primary_id": [
+        {
+          "sources": [
+            "dorothea",
+            "collectri"
+          ],
+          "overlap_count": 365,
+          "overlap_type": "primary_id",
+          "pct_of_smaller": 99.46
+        }
+      ],
+      "overlaps_by_xref": [],
+      "flagged": []
+    }
+  },
+  "metrics": [
+    {
+      "name": "Total node count per OWL class",
+      "data_type": "integer",
+      "tier": 1,
+      "result": 24428,
+      "node_type": "BiologicalProcess"
+    },
+    {
+      "name": "Total node count per OWL class",
+      "data_type": "integer",
+      "tier": 1,
+      "result": 1400,
+      "node_type": "BodyPart"
+    },
+    {
+      "name": "Total node count per OWL class",
+      "data_type": "integer",
+      "tier": 1,
+      "result": 4076,
+      "node_type": "CellularComponent"
+    },
+    {
+      "name": "Total node count per OWL class",
+      "data_type": "integer",
+      "tier": 1,
+      "result": 21578,
+      "node_type": "ClinicalTrial"
+    },
+    {
+      "name": "Total node count per OWL class",
+      "data_type": "integer",
+      "tier": 1,
+      "result": 3442,
+      "node_type": "Disease"
+    },
+    {
+      "name": "Total node count per OWL class",
+      "data_type": "integer",
+      "tier": 1,
+      "result": 16628,
+      "node_type": "Drug"
+    },
+    {
+      "name": "Total node count per OWL class",
+      "data_type": "integer",
+      "tier": 1,
+      "result": 29,
+      "node_type": "DrugLabel"
+    },
+    {
+      "name": "Total node count per OWL class",
+      "data_type": "integer",
+      "tier": 1,
+      "result": 193795,
+      "node_type": "Gene"
+    },
+    {
+      "name": "Total node count per OWL class",
+      "data_type": "integer",
+      "tier": 1,
+      "result": 4257,
+      "node_type": "GeneFamily"
+    },
+    {
+      "name": "Total node count per OWL class",
+      "data_type": "integer",
+      "tier": 1,
+      "result": 10056,
+      "node_type": "MolecularFunction"
+    },
+    {
+      "name": "Total node count per OWL class",
+      "data_type": "integer",
+      "tier": 1,
+      "result": 2870,
+      "node_type": "Pathway"
+    },
+    {
+      "name": "Total node count per OWL class",
+      "data_type": "integer",
+      "tier": 1,
+      "result": 2359,
+      "node_type": "PharmacologicClass"
+    },
+    {
+      "name": "Total node count per OWL class",
+      "data_type": "integer",
+      "tier": 1,
+      "result": 19389,
+      "node_type": "Phenotype"
+    },
+    {
+      "name": "Total node count per OWL class",
+      "data_type": "integer",
+      "tier": 1,
+      "result": 4251,
+      "node_type": "SideEffect"
+    },
+    {
+      "name": "Total node count per OWL class",
+      "data_type": "integer",
+      "tier": 1,
+      "result": 415,
+      "node_type": "Symptom"
+    },
+    {
+      "name": "Total node count per OWL class",
+      "data_type": "integer",
+      "tier": 1,
+      "result": 1201,
+      "node_type": "TranscriptionFactor"
+    },
+    {
+      "name": "Total node count per OWL class",
+      "data_type": "integer",
+      "tier": 1,
+      "result": 2100938,
+      "node_type": "Variant"
+    },
+    {
+      "name": "Total edge count per OWL ObjectProperty",
+      "data_type": "integer",
+      "tier": 1,
+      "result": 109,
+      "edge_type": "AFFECTS_RESPONSE_TO"
+    },
+    {
+      "name": "Total edge count per OWL ObjectProperty",
+      "data_type": "integer",
+      "tier": 1,
+      "result": 46692,
+      "edge_type": "STUDIES_CONDITION"
+    },
+    {
+      "name": "Total edge count per OWL ObjectProperty",
+      "data_type": "integer",
+      "tier": 1,
+      "result": 30106,
+      "edge_type": "TESTS_INTERVENTION"
+    },
+    {
+      "name": "Total edge count per OWL ObjectProperty",
+      "data_type": "integer",
+      "tier": 1,
+      "result": 6616463,
+      "edge_type": "bodyPartOverexpressesGene"
+    },
+    {
+      "name": "Total edge count per OWL ObjectProperty",
+      "data_type": "integer",
+      "tier": 1,
+      "result": 25217,
+      "edge_type": "chemicalBindsGene"
+    },
+    {
+      "name": "Total edge count per OWL ObjectProperty",
+      "data_type": "integer",
+      "tier": 1,
+      "result": 1001149,
+      "edge_type": "chemicalDecreasesExpression"
+    },
+    {
+      "name": "Total edge count per OWL ObjectProperty",
+      "data_type": "integer",
+      "tier": 1,
+      "result": 1288204,
+      "edge_type": "chemicalIncreasesExpression"
+    },
+    {
+      "name": "Total edge count per OWL ObjectProperty",
+      "data_type": "integer",
+      "tier": 1,
+      "result": 145321,
+      "edge_type": "compoundCausesSideEffect"
+    },
+    {
+      "name": "Total edge count per OWL ObjectProperty",
+      "data_type": "integer",
+      "tier": 1,
+      "result": 217664,
+      "edge_type": "compoundDownregulatesGene"
+    },
+    {
+      "name": "Total edge count per OWL ObjectProperty",
+      "data_type": "integer",
+      "tier": 1,
+      "result": 25687,
+      "edge_type": "compoundInPharmacologicClass"
+    },
+    {
+      "name": "Total edge count per OWL ObjectProperty",
+      "data_type": "integer",
+      "tier": 1,
+      "result": 247173,
+      "edge_type": "compoundUpregulatesGene"
+    },
+    {
+      "name": "Total edge count per OWL ObjectProperty",
+      "data_type": "integer",
+      "tier": 1,
+      "result": 33749,
+      "edge_type": "drugBindsGene"
+    },
+    {
+      "name": "Total edge count per OWL ObjectProperty",
+      "data_type": "integer",
+      "tier": 1,
+      "result": 204,
+      "edge_type": "drugTreatsDisease"
+    },
+    {
+      "name": "Total edge count per OWL ObjectProperty",
+      "data_type": "integer",
+      "tier": 1,
+      "result": 90507,
+      "edge_type": "geneAssociatedWithCellularComponent"
+    },
+    {
+      "name": "Total edge count per OWL ObjectProperty",
+      "data_type": "integer",
+      "tier": 1,
+      "result": 1749,
+      "edge_type": "geneAssociatesWithDisease"
+    },
+    {
+      "name": "Total edge count per OWL ObjectProperty",
+      "data_type": "integer",
+      "tier": 1,
+      "result": 314250,
+      "edge_type": "geneAssociatesWithPhenotype"
+    },
+    {
+      "name": "Total edge count per OWL ObjectProperty",
+      "data_type": "integer",
+      "tier": 1,
+      "result": 398361,
+      "edge_type": "geneExpressedInBodyPart"
+    },
+    {
+      "name": "Total edge count per OWL ObjectProperty",
+      "data_type": "integer",
+      "tier": 1,
+      "result": 76863,
+      "edge_type": "geneHasMolecularFunction"
+    },
+    {
+      "name": "Total edge count per OWL ObjectProperty",
+      "data_type": "integer",
+      "tier": 1,
+      "result": 27027,
+      "edge_type": "geneInFamily"
+    },
+    {
+      "name": "Total edge count per OWL ObjectProperty",
+      "data_type": "integer",
+      "tier": 1,
+      "result": 156329,
+      "edge_type": "geneInPathway"
+    },
+    {
+      "name": "Total edge count per OWL ObjectProperty",
+      "data_type": "integer",
+      "tier": 1,
+      "result": 468977,
+      "edge_type": "geneInteractsWithGene"
+    },
+    {
+      "name": "Total edge count per OWL ObjectProperty",
+      "data_type": "integer",
+      "tier": 1,
+      "result": 122437,
+      "edge_type": "geneParticipatesInBiologicalProcess"
+    },
+    {
+      "name": "Total edge count per OWL ObjectProperty",
+      "data_type": "integer",
+      "tier": 1,
+      "result": 64516,
+      "edge_type": "transcriptionFactorInteractsWithGene"
+    },
+    {
+      "name": "Total edge count per OWL ObjectProperty",
+      "data_type": "integer",
+      "tier": 1,
+      "result": 204386,
+      "edge_type": "variantAssociatedWithDisease"
+    },
+    {
+      "name": "Total edge count per OWL ObjectProperty",
+      "data_type": "integer",
+      "tier": 1,
+      "result": 22133,
+      "edge_type": "variantInGene"
+    },
+    {
+      "name": "Orphan node rate",
+      "data_type": "float",
+      "tier": 2,
+      "result": 1.0,
+      "node_type": "BiologicalProcess",
+      "orphan_count": 24428,
+      "total_nodes": 24428
+    },
+    {
+      "name": "Orphan node rate",
+      "data_type": "float",
+      "tier": 2,
+      "result": 1.0,
+      "node_type": "BodyPart",
+      "orphan_count": 1400,
+      "total_nodes": 1400
+    },
+    {
+      "name": "Orphan node rate",
+      "data_type": "float",
+      "tier": 2,
+      "result": 1.0,
+      "node_type": "CellularComponent",
+      "orphan_count": 4076,
+      "total_nodes": 4076
+    },
+    {
+      "name": "Orphan node rate",
+      "data_type": "float",
+      "tier": 2,
+      "result": 1.0,
+      "node_type": "ClinicalTrial",
+      "orphan_count": 21578,
+      "total_nodes": 21578
+    },
+    {
+      "name": "Orphan node rate",
+      "data_type": "float",
+      "tier": 2,
+      "result": 1.0,
+      "node_type": "Disease",
+      "orphan_count": 3442,
+      "total_nodes": 3442
+    },
+    {
+      "name": "Orphan node rate",
+      "data_type": "float",
+      "tier": 2,
+      "result": 1.0,
+      "node_type": "Drug",
+      "orphan_count": 16628,
+      "total_nodes": 16628
+    },
+    {
+      "name": "Orphan node rate",
+      "data_type": "float",
+      "tier": 2,
+      "result": 1.0,
+      "node_type": "DrugLabel",
+      "orphan_count": 29,
+      "total_nodes": 29
+    },
+    {
+      "name": "Orphan node rate",
+      "data_type": "float",
+      "tier": 2,
+      "result": 1.0,
+      "node_type": "Gene",
+      "orphan_count": 193795,
+      "total_nodes": 193795
+    },
+    {
+      "name": "Orphan node rate",
+      "data_type": "float",
+      "tier": 2,
+      "result": 1.0,
+      "node_type": "GeneFamily",
+      "orphan_count": 4257,
+      "total_nodes": 4257
+    },
+    {
+      "name": "Orphan node rate",
+      "data_type": "float",
+      "tier": 2,
+      "result": 1.0,
+      "node_type": "MolecularFunction",
+      "orphan_count": 10056,
+      "total_nodes": 10056
+    },
+    {
+      "name": "Orphan node rate",
+      "data_type": "float",
+      "tier": 2,
+      "result": 1.0,
+      "node_type": "Pathway",
+      "orphan_count": 2870,
+      "total_nodes": 2870
+    },
+    {
+      "name": "Orphan node rate",
+      "data_type": "float",
+      "tier": 2,
+      "result": 1.0,
+      "node_type": "PharmacologicClass",
+      "orphan_count": 2359,
+      "total_nodes": 2359
+    },
+    {
+      "name": "Orphan node rate",
+      "data_type": "float",
+      "tier": 2,
+      "result": 1.0,
+      "node_type": "Phenotype",
+      "orphan_count": 19389,
+      "total_nodes": 19389
+    },
+    {
+      "name": "Orphan node rate",
+      "data_type": "float",
+      "tier": 2,
+      "result": 1.0,
+      "node_type": "SideEffect",
+      "orphan_count": 4251,
+      "total_nodes": 4251
+    },
+    {
+      "name": "Orphan node rate",
+      "data_type": "float",
+      "tier": 2,
+      "result": 1.0,
+      "node_type": "Symptom",
+      "orphan_count": 415,
+      "total_nodes": 415
+    },
+    {
+      "name": "Orphan node rate",
+      "data_type": "float",
+      "tier": 2,
+      "result": 1.0,
+      "node_type": "TranscriptionFactor",
+      "orphan_count": 1201,
+      "total_nodes": 1201
+    },
+    {
+      "name": "Orphan node rate",
+      "data_type": "float",
+      "tier": 2,
+      "result": 1.0,
+      "node_type": "Variant",
+      "orphan_count": 2100938,
+      "total_nodes": 2100938
+    },
+    {
+      "name": "Internal cross-reference resolution rate",
+      "data_type": "float",
+      "tier": 2,
+      "result": null,
+      "total_xref_entries": 0
+    },
+    {
+      "name": "Exact-IRI duplicate count",
+      "data_type": "integer",
+      "tier": 2,
+      "result": 0
+    },
+    {
+      "name": "Cross-reference duplicate count",
+      "data_type": "integer",
+      "tier": 2,
+      "result": 0,
+      "note": "lower-bound estimate of unresolved duplicates"
+    },
+    {
+      "name": "Duplicate edge rate",
+      "data_type": "float",
+      "tier": 2,
+      "result": null,
+      "duplicate_edge_count": 0,
+      "total_edge_count": 0
+    },
+    {
+      "name": "Largest connected component fraction",
+      "data_type": "float",
+      "tier": 2,
+      "result": 0.0,
+      "total_nodes": 2411112,
+      "disconnected_component_count": 2411112
+    },
+    {
+      "name": "Average node degree per OWL class",
+      "data_type": "float",
+      "tier": 2,
+      "result": 0.0,
+      "node_type": "BiologicalProcess"
+    },
+    {
+      "name": "Average node degree per OWL class",
+      "data_type": "float",
+      "tier": 2,
+      "result": 0.0,
+      "node_type": "BodyPart"
+    },
+    {
+      "name": "Average node degree per OWL class",
+      "data_type": "float",
+      "tier": 2,
+      "result": 0.0,
+      "node_type": "CellularComponent"
+    },
+    {
+      "name": "Average node degree per OWL class",
+      "data_type": "float",
+      "tier": 2,
+      "result": 0.0,
+      "node_type": "ClinicalTrial"
+    },
+    {
+      "name": "Average node degree per OWL class",
+      "data_type": "float",
+      "tier": 2,
+      "result": 0.0,
+      "node_type": "Disease"
+    },
+    {
+      "name": "Average node degree per OWL class",
+      "data_type": "float",
+      "tier": 2,
+      "result": 0.0,
+      "node_type": "Drug"
+    },
+    {
+      "name": "Average node degree per OWL class",
+      "data_type": "float",
+      "tier": 2,
+      "result": 0.0,
+      "node_type": "DrugLabel"
+    },
+    {
+      "name": "Average node degree per OWL class",
+      "data_type": "float",
+      "tier": 2,
+      "result": 0.0,
+      "node_type": "Gene"
+    },
+    {
+      "name": "Average node degree per OWL class",
+      "data_type": "float",
+      "tier": 2,
+      "result": 0.0,
+      "node_type": "GeneFamily"
+    },
+    {
+      "name": "Average node degree per OWL class",
+      "data_type": "float",
+      "tier": 2,
+      "result": 0.0,
+      "node_type": "MolecularFunction"
+    },
+    {
+      "name": "Average node degree per OWL class",
+      "data_type": "float",
+      "tier": 2,
+      "result": 0.0,
+      "node_type": "Pathway"
+    },
+    {
+      "name": "Average node degree per OWL class",
+      "data_type": "float",
+      "tier": 2,
+      "result": 0.0,
+      "node_type": "PharmacologicClass"
+    },
+    {
+      "name": "Average node degree per OWL class",
+      "data_type": "float",
+      "tier": 2,
+      "result": 0.0,
+      "node_type": "Phenotype"
+    },
+    {
+      "name": "Average node degree per OWL class",
+      "data_type": "float",
+      "tier": 2,
+      "result": 0.0,
+      "node_type": "SideEffect"
+    },
+    {
+      "name": "Average node degree per OWL class",
+      "data_type": "float",
+      "tier": 2,
+      "result": 0.0,
+      "node_type": "Symptom"
+    },
+    {
+      "name": "Average node degree per OWL class",
+      "data_type": "float",
+      "tier": 2,
+      "result": 0.0,
+      "node_type": "TranscriptionFactor"
+    },
+    {
+      "name": "Average node degree per OWL class",
+      "data_type": "float",
+      "tier": 2,
+      "result": 0.0,
+      "node_type": "Variant"
+    },
+    {
+      "name": "Run-to-run entity count delta",
+      "data_type": "object",
+      "tier": 2,
+      "result": null,
+      "note": "no baseline provided; pass --baseline to compare runs"
+    },
+    {
+      "name": "Known disease-gene recall rate",
+      "data_type": "float",
+      "tier": 3,
+      "result": null,
+      "note": "provide --omim-genemap to compute"
+    },
+    {
+      "name": "Drug-target coverage",
+      "data_type": "float",
+      "tier": 3,
+      "result": null,
+      "note": "provide --drugbank-tsv to compute"
+    },
+    {
+      "name": "Merge rate per source",
+      "data_type": "float",
+      "tier": 1,
+      "result": 100.0,
+      "source": "clinicaltrials",
+      "raw_records": 21578,
+      "unique_ids": 21578,
+      "node_types": [
+        "ClinicalTrial"
+      ]
+    },
+    {
+      "name": "Merge rate per source",
+      "data_type": "float",
+      "tier": 1,
+      "result": 100.0,
+      "source": "clinpgx",
+      "raw_records": 29,
+      "unique_ids": 29,
+      "node_types": [
+        "DrugLabel"
+      ]
+    },
+    {
+      "name": "Merge rate per source",
+      "data_type": "float",
+      "tier": 1,
+      "result": 100.0,
+      "source": "clinvar",
+      "raw_records": 2100938,
+      "unique_ids": 2100938,
+      "node_types": [
+        "Variant"
+      ]
+    },
+    {
+      "name": "Merge rate per source",
+      "data_type": "float",
+      "tier": 1,
+      "result": 100.0,
+      "source": "collectri",
+      "raw_records": 1201,
+      "unique_ids": 1201,
+      "node_types": [
+        "TranscriptionFactor"
+      ]
+    },
+    {
+      "name": "Merge rate per source",
+      "data_type": "float",
+      "tier": 1,
+      "result": 100.0,
+      "source": "ctd",
+      "raw_records": 9465,
+      "unique_ids": 9465,
+      "node_types": [
+        "Drug"
+      ]
+    },
+    {
+      "name": "Merge rate per source",
+      "data_type": "float",
+      "tier": 1,
+      "result": 100.0,
+      "source": "disease_ontology",
+      "raw_records": 3442,
+      "unique_ids": 3442,
+      "node_types": [
+        "Disease"
+      ]
+    },
+    {
+      "name": "Merge rate per source",
+      "data_type": "float",
+      "tier": 1,
+      "result": 100.0,
+      "source": "dorothea",
+      "raw_records": 367,
+      "unique_ids": 367,
+      "node_types": [
+        "TranscriptionFactor"
+      ]
+    },
+    {
+      "name": "Merge rate per source",
+      "data_type": "float",
+      "tier": 1,
+      "result": 100.0,
+      "source": "drugbank",
+      "raw_records": 16628,
+      "unique_ids": 16628,
+      "node_types": [
+        "Drug"
+      ]
+    },
+    {
+      "name": "Merge rate per source",
+      "data_type": "float",
+      "tier": 1,
+      "result": 100.0,
+      "source": "drugcentral",
+      "raw_records": 7354,
+      "unique_ids": 7354,
+      "node_types": [
+        "Drug",
+        "PharmacologicClass"
+      ]
+    },
+    {
+      "name": "Merge rate per source",
+      "data_type": "float",
+      "tier": 1,
+      "result": 100.0,
+      "source": "gene_ontology",
+      "raw_records": 38560,
+      "unique_ids": 38560,
+      "node_types": [
+        "BiologicalProcess",
+        "CellularComponent",
+        "MolecularFunction"
+      ]
+    },
+    {
+      "name": "Merge rate per source",
+      "data_type": "float",
+      "tier": 1,
+      "result": 100.0,
+      "source": "hgnc",
+      "raw_records": 4257,
+      "unique_ids": 4257,
+      "node_types": [
+        "GeneFamily"
+      ]
+    },
+    {
+      "name": "Merge rate per source",
+      "data_type": "float",
+      "tier": 1,
+      "result": 100.0,
+      "source": "hpo",
+      "raw_records": 19389,
+      "unique_ids": 19389,
+      "node_types": [
+        "Phenotype"
+      ]
+    },
+    {
+      "name": "Merge rate per source",
+      "data_type": "float",
+      "tier": 1,
+      "result": 100.0,
+      "source": "mesh",
+      "raw_records": 415,
+      "unique_ids": 415,
+      "node_types": [
+        "Symptom"
+      ]
+    },
+    {
+      "name": "Merge rate per source",
+      "data_type": "float",
+      "tier": 1,
+      "result": 100.0,
+      "source": "ncbigene",
+      "raw_records": 193795,
+      "unique_ids": 193795,
+      "node_types": [
+        "Gene"
+      ]
+    },
+    {
+      "name": "Merge rate per source",
+      "data_type": "float",
+      "tier": 1,
+      "result": 100.0,
+      "source": "reactome",
+      "raw_records": 2870,
+      "unique_ids": 2870,
+      "node_types": [
+        "Pathway"
+      ]
+    },
+    {
+      "name": "Merge rate per source",
+      "data_type": "float",
+      "tier": 1,
+      "result": 100.0,
+      "source": "sider",
+      "raw_records": 4251,
+      "unique_ids": 4251,
+      "node_types": [
+        "SideEffect"
+      ]
+    },
+    {
+      "name": "Merge rate per source",
+      "data_type": "float",
+      "tier": 1,
+      "result": 100.0,
+      "source": "uberon",
+      "raw_records": 1400,
+      "unique_ids": 1400,
+      "node_types": [
+        "BodyPart"
+      ]
+    },
+    {
+      "name": "Low merge rate sources",
+      "data_type": "list",
+      "tier": 2,
+      "result": [],
+      "threshold_pct": 50.0,
+      "median_rate_pct": 100.0,
+      "note": "no issues detected"
+    },
+    {
+      "name": "Cross-source merge rate",
+      "data_type": "float",
+      "tier": 1,
+      "result": 100.0,
+      "node_type": "Drug",
+      "sources": [
+        "drugcentral",
+        "ctd",
+        "drugbank"
+      ],
+      "sum_unique_per_source": 31088,
+      "final_graph_nodes": 16628,
+      "potential_duplicates": 4010,
+      "xref_overlaps": 1
+    },
+    {
+      "name": "Cross-source merge rate",
+      "data_type": "float",
+      "tier": 1,
+      "result": 100.0,
+      "node_type": "TranscriptionFactor",
+      "sources": [
+        "dorothea",
+        "collectri"
+      ],
+      "sum_unique_per_source": 1568,
+      "final_graph_nodes": 1201,
+      "potential_duplicates": 365,
+      "xref_overlaps": 0
+    },
+    {
+      "name": "Cross-source merge issues",
+      "data_type": "list",
+      "tier": 2,
+      "result": [],
+      "note": "all multi-source node types merged correctly"
+    }
+  ]
+}

@@ -1,0 +1,505 @@
+# CardioKB Biomedical Data Sources Configuration
+# =====================================================
+# This configuration file defines all 24 biomedical data sources
+# integrated into the CardioKB pipeline for cardiovascular disease research.
+#
+# Project Scope:
+#   - 184 CVD disease terms
+#   - 28 UMLS CUIs
+#   - 15 DOID IDs
+#   - 28 MeSH IDs
+#
+# Each source entry includes:
+#   - enabled: Boolean flag to enable/disable the source
+#   - description: Human-readable description
+#   - args: Parser-specific configuration (credentials, URLs, parameters)
+#   - notes: Implementation details and output files produced
+
+databases:
+
+  # =========================================================================
+  # PHASE 1: CORE SOURCES (14 sources with existing template parsers)
+  # =========================================================================
+
+  ncbigene:
+    enabled: true
+    description: NCBI Gene - Gene information and identifiers
+    args:
+      source_url: https://ftp.ncbi.nlm.nih.gov/gene/DATA/GENE_INFO/Mammalia/Homo_sapiens.gene_info.gz
+    version: latest
+    notes: >
+      Gene nodes from NCBI FTP. Disease-agnostic; provides the base Gene node
+      set with NCBI Gene ID, HGNC symbol, and gene metadata.
+      Public source — no credentials required.
+      Produces: gene_nodes.tsv
+
+  dorothea:
+    enabled: true
+    description: DoRothEA - Transcription factor regulatory networks
+    args:
+      source_url: https://saezlab.github.io/dorothea/
+    version: latest
+    notes: >
+      Transcription factor (TF) regulatory network from DoRothEA database.
+      Provides TranscriptionFactor nodes and transcriptionFactorRegulatesGene
+      edges with confidence levels (A/B/C/D/E).
+      Public source — no credentials required.
+      Produces: transcription_factor_nodes.tsv, tf_gene_regulations.tsv
+
+  drugbank:
+    enabled: true
+    description: DrugBank - Drug information and drug-gene interactions
+    args:
+      source_url: https://go.drugbank.com/releases/{version}/downloads/all-drug-links
+      version: latest
+      username_env: DRUGBANK_USERNAME
+      password_env: DRUGBANK_PASSWORD
+    notes: >
+      Drug information and drug-gene binding interactions. Provides Drug nodes
+      with rich data properties (ID, name, description, indication, CAS number,
+      drug type, SMILES, InChI, ChEMBL, PubChem, ChEBI, KEGG identifiers) and
+      chemicalBindsGene edges (filtered to genes with UniProt accession or
+      HGNC symbol). Only drugs with at least one external cross-reference
+      identifier are included. Drug indication stored as data property.
+      Requires free academic account (HTTP Basic Auth).
+      Version can be 'latest' or specific version (e.g., '5-1-14').
+      Produces: drug_nodes.tsv, drug_gene_bindings.tsv
+
+  disease_ontology:
+    enabled: true
+    description: Disease Ontology (DO) - Standardized disease representation
+    args: {}
+    version: latest
+    urls:
+      - https://raw.githubusercontent.com/DiseaseOntology/HumanDiseaseOntology/main/src/ontology/doid.obo
+    format: OBO
+    notes: >
+      Disease Ontology - Comprehensive ontology of human diseases. Provides
+      standardized Disease nodes with disease identifiers, names, and hierarchical
+      relationships. Primary source is the OBO format file (doid.obo).
+      Also generates slim-terms.tsv (curated diseases from Hetionet/GWAS integration).
+      Public source — no credentials required.
+      Produces: disease_nodes.tsv, slim_terms.tsv
+
+  gene_ontology:
+    enabled: true
+    description: Gene Ontology - Biological processes, molecular functions, cellular components
+    args: {}
+    version: latest
+    notes: >
+      GO terms and gene annotations. Provides BiologicalProcess, MolecularFunction,
+      CellularComponent nodes and geneParticipatesInBiologicalProcess,
+      geneHasMolecularFunction, geneAssociatedWithCellularComponent edges.
+      Uses GO OBO and GAF annotation files.
+      Public source — no credentials required.
+      Produces: biological_process_nodes.tsv, molecular_function_nodes.tsv,
+                cellular_component_nodes.tsv, gene_go_annotations.tsv
+
+  uberon:
+    enabled: true
+    description: Uberon - Cross-species anatomy ontology
+    args: {}
+    version: latest
+    urls:
+      - http://purl.obolibrary.org/obo/uberon/basic.obo
+      - http://purl.obolibrary.org/obo/uberon/subsets/human-view.obo
+    notes: >
+      Uberon anatomy ontology - cross-species anatomical structure integration.
+      Provides BodyPart nodes from both uberon-basic and human-view subsets.
+      No edges extracted. Integrates with expression and phenotype data.
+      Public source — no credentials required.
+      Produces: body_part_nodes.tsv
+
+  mesh:
+    enabled: true
+    description: MeSH - Medical Subject Headings
+    args:
+      base_url: https://nlmpubs.nlm.nih.gov/projects/mesh/MESH_FILES/xmlmesh/
+    version: latest
+    notes: >
+      MeSH (Medical Subject Headings) descriptor XML from NLM.
+      Extracts Symptom nodes from the Signs and Symptoms subtree (C23.888).
+      Public source — no credentials required.
+      Produces: symptom_nodes.tsv
+
+  drugcentral:
+    enabled: true
+    description: DrugCentral - Drug-disease and pharmacologic class associations
+    args:
+      pg_config:
+        host: unmtid-dbs.net
+        port: 5433
+        dbname: drugcentral
+        user_env: DC_USER
+        password_env: DC_PASSWORD
+      llr_threshold: 0.0
+    version: '54 (2023-11-01)'
+    notes: >
+      Drug-disease, pharmacologic class, and adverse-effect data from DrugCentral
+      PostgreSQL. Public read-only instance at unmtid-dbs.net:5433.
+      Set DC_USER and DC_PASSWORD env vars (public credentials: drugman / dosage).
+      Alternatively load the dump locally: createdb drugcentral && gunzip -c
+      drugcentral.sql.gz | psql drugcentral.
+      Produces: drug_nodes.tsv, pharmacologic_class_nodes.tsv, disease_nodes.tsv,
+                drug_treats_disease.tsv, drug_in_class.tsv,
+                chemical_causes_adverse_effect.tsv
+
+  bindingdb:
+    enabled: true
+    description: BindingDB - Measured binding affinities for drugs and chemicals
+    args: {}
+    version: latest
+    notes: >
+      BindingDB - Database of measured binding affinities. Provides chemicalBindsGene
+      edges for drugs/chemicals with measured binding affinity to protein targets.
+      Includes binding affinity values (IC50, Kd, Ki, EC50) and experimental methods.
+      Public source — no credentials required.
+      Produces: chemical_nodes.tsv, gene_nodes.tsv, chemical_binds_gene.tsv
+
+  ctd:
+    enabled: true
+    description: CTD - Comparative Toxicogenomics Database
+    args: {}
+    version: latest
+    notes: >
+      CTD (Comparative Toxicogenomics Database) chemical-gene interactions.
+      Extracts chemicalIncreasesExpression and chemicalDecreasesExpression edges
+      from the bulk CTD_chem_gene_ixns.tsv.gz file.
+      Includes interaction types, organ specificity, and evidence counts.
+      Public source — no credentials required.
+      Produces: chemical_nodes.tsv, gene_nodes.tsv,
+                chemical_increases_expression.tsv,
+                chemical_decreases_expression.tsv
+
+  bgee:
+    enabled: true
+    description: Bgee - Gene expression in anatomy
+    args:
+      source_url: https://www.bgee.org/ftp/current/download/calls/expr_calls/Homo_sapiens_expr_simple.tsv.gz
+      tissue_filter: null
+    version: latest
+    notes: >
+      Gene expression presence/absence calls by anatomy. Provides anatomyExpressesGene
+      edges with expression quality metrics (call quality, FDR, expression score, rank).
+      Integrates with Uberon anatomy ontology.
+      Public source — no credentials required.
+      Produces: gene_nodes.tsv, anatomy_nodes.tsv, anatomy_expresses_gene.tsv
+
+  reactome:
+    enabled: true
+    description: Reactome - Curated biological pathways
+    args: {}
+    version: latest
+    urls:
+      - https://reactome.org/download/current/UniProt2Reactome_All_Levels.txt
+      - https://reactome.org/download/current/ReactomePathways.txt
+      - https://reactome.org/download/current/ReactomePathwaysRelation.txt
+    notes: >
+      Reactome - Curated pathway database. Provides Pathway nodes and
+      proteinParticipatesInPathway edges. UniProt2Reactome_All_Levels.txt maps
+      UniProt IDs to Reactome pathways; ReactomePathways.txt provides pathway
+      names and species; ReactomePathwaysRelation.txt defines pathway hierarchy.
+      Public source — no credentials required.
+      Produces: pathway_nodes.tsv, protein_pathway_associations.tsv
+
+  medline:
+    enabled: true
+    description: MEDLINE - PubMed co-occurrence literature analysis
+    args:
+      api_key_env: NCBI_EUTILS_API_KEY
+    version: latest
+    notes: >
+      MEDLINE co-occurrence parser. Queries PubMed via NCBI E-utilities for
+      disease, symptom, and anatomy terms, then computes pairwise Fisher exact
+      test co-occurrence statistics. Produces disease_symptom_cooccurrence,
+      disease_anatomy_cooccurrence, and disease_disease_cooccurrence TSVs.
+      Depends on disease_ontology, mesh, and uberon parsers having run first.
+      Optional: set NCBI_EUTILS_API_KEY in .env for 10 req/sec (default: 3 req/sec).
+      Public source.
+      Produces: disease_symptom_cooccurrence.tsv,
+                disease_anatomy_cooccurrence.tsv,
+                disease_disease_cooccurrence.tsv
+
+  string:
+    enabled: true
+    description: STRING - Protein-protein interactions
+    args:
+      min_combined_score: 700
+    version: '12.0'
+    notes: >
+      STRING protein-protein interaction database (human, taxon 9606).
+      Downloads protein.links, protein.info, and protein.aliases files directly
+      from stringdb-downloads.org. Maps Ensembl protein IDs to NCBI Gene IDs
+      via the aliases file (Ensembl_EntrezGene source). Filters interactions
+      by combined_score >= min_combined_score (default: 700).
+      Produces genes.tsv (Gene nodes) and gene_interactions.tsv
+      (geneInteractsWithGene edges with confidence scores).
+      Public source — no credentials required.
+      Produces: gene_nodes.tsv, gene_interactions.tsv
+
+  # =========================================================================
+  # PHASE 2: CLINICAL AND GENOMIC SOURCES (10 new sources without templates)
+  # =========================================================================
+
+  clinicaltrials:
+    enabled: true
+    description: ClinicalTrials.gov - Cardiovascular clinical trials
+    args:
+      base_url: https://clinicaltrials.gov/api/v2/studies
+      max_pages: 10
+      page_size: 1000
+      call_delay: 0.3
+    version: v2 API
+    notes: >
+      ClinicalTrials.gov REST API v2. Queries for studies related to cardiovascular
+      diseases using disease terms from config/project.yaml. Filters to active and
+      recruiting studies. Includes trial phase, status, enrollment, and intervention data.
+      Produces trial nodes with trial IDs, titles, conditions, and status.
+      Public API — no credentials required.
+      Produces: trial_nodes.tsv, trial_disease_associations.tsv,
+                trial_intervention_associations.tsv
+
+  clinpgx:
+    enabled: true
+    description: ClinPGx - Clinical pharmacogenomics associations
+    args:
+      source_url: https://api.cpicpgx.org/v1
+      api_key_env: CLINPGX_API_KEY
+    version: v1 API
+    notes: >
+      ClinPGx - Clinical pharmacogenomics database. Provides gene-drug associations
+      with clinical phenotypes and evidence levels. Includes pharmacogenomic variants,
+      drug responses, and clinical recommendations for cardiovascular medications.
+      Produces gene_drug_phenotype associations with evidence levels.
+      Requires API key (set CLINPGX_API_KEY in .env).
+      Produces: gene_drug_phenotype_associations.tsv,
+                pharmacogenomic_variant_nodes.tsv
+
+  sider:
+    enabled: true
+    description: SIDER - Side effects database
+    args:
+      source_url: http://sideeffects.embl.de/media/download/meddra_all_se.tsv.gz
+    version: latest
+    notes: >
+      SIDER Side Effects database. Downloads meddra_all_se.tsv.gz and produces
+      SideEffect nodes (MedDRA terms) and compoundCausesSideEffect edges.
+      Maps STITCH compound IDs to drugs and links to side effects with
+      frequency information. Useful for identifying adverse effects of
+      cardiovascular medications.
+      Public source — no credentials required.
+      Produces: side_effect_nodes.tsv, drug_side_effect_associations.tsv
+
+  lincs:
+    enabled: true
+    description: LINCS L1000 - Gene expression signatures
+    args:
+      source_url: https://www.ncbi.nlm.nih.gov/geo/query/acc.cgi?acc=GSE70138
+      max_files: 100
+    version: L1000 Phase 2
+    notes: >
+      LINCS L1000 gene expression signature library. Provides gene expression
+      perturbation data for drugs and genetic perturbations. Includes
+      expression fold-changes and statistical significance. Filters to
+      cardiovascular-relevant cell types and perturbations.
+      Public source — no credentials required.
+      Produces: perturbation_nodes.tsv, gene_expression_signatures.tsv
+
+  jensen_tissues:
+    enabled: true
+    description: Jensen TISSUES - Tissue-specific gene expression
+    args:
+      source_url: https://download.jensenlab.org/human_tissue_experiments.tsv
+    version: latest
+    notes: >
+      Jensen TISSUES - Tissue-specific gene expression database.
+      Provides tissue-specific expression data for genes with confidence scores.
+      Includes cardiac tissue, vascular tissue, and blood vessel data relevant
+      to cardiovascular research.
+      Public source — no credentials required.
+      Produces: tissue_nodes.tsv, tissue_expresses_gene.tsv
+
+  pubtator:
+    enabled: true
+    description: PubTator Central - Literature mining for bioentity mentions
+    args:
+      source_url: https://ftp.ncbi.nlm.nih.gov/pub/lu/PubTator/
+      entity_types:
+        - Gene
+        - Disease
+        - Chemical
+        - Species
+        - Mutation
+    version: latest
+    notes: >
+      PubTator Central - Text mining of PubMed for bioentity mentions and relations.
+      Downloads pre-computed annotations for genes, diseases, chemicals, species,
+      and mutations. Filters to cardiovascular disease literature.
+      Produces gene-disease, drug-disease, and other entity co-occurrence edges
+      with PubMed evidence.
+      Public source — no credentials required.
+      Produces: pubtator_gene_disease_cooccurrence.tsv,
+                pubtator_drug_disease_cooccurrence.tsv,
+                pubtator_entity_mentions.tsv
+
+  opentargets:
+    enabled: true
+    description: OpenTargets Platform - Target-disease associations
+    args:
+      source_url: https://ftp.ebi.ac.uk/pub/databases/opentargets/platform/latest/output/etl/parquet/
+      min_score: 0.1
+      max_parquet_files: 5
+    version: latest
+    notes: >
+      OpenTargets Platform - Target-disease associations from multiple evidence sources.
+      Downloads association parquet files and filters to cardiovascular diseases
+      from project.yaml disease_scope. Provides geneAssociatesWithDisease edges
+      with overall association scores and source databases (genetics, somatic mutations,
+      drugs, pathways, etc.).
+      Public source — no credentials required.
+      Produces: target_disease_associations.tsv
+
+  hpo:
+    enabled: true
+    description: HPO - Human Phenotype Ontology
+    args:
+      source_url: http://purl.obolibrary.org/obo/hp.obo
+    version: latest
+    notes: >
+      Human Phenotype Ontology (HPO) - Standardized phenotype descriptions.
+      Provides Phenotype nodes with HPO identifiers and hierarchical relationships.
+      Includes cardiac phenotypes (arrhythmias, cardiomyopathy, heart failure, etc.)
+      relevant to cardiovascular disease research.
+      Public source — no credentials required.
+      Produces: phenotype_nodes.tsv, phenotype_hierarchy.tsv
+
+  hgnc:
+    enabled: true
+    description: HGNC Gene Families - Gene family classifications
+    args:
+      source_url: https://www.genenames.org/download/custom/
+    version: latest
+    notes: >
+      HGNC Gene Families - Curated gene family classifications from HGNC.
+      Provides gene family nodes and geneInFamily edges. Includes families
+      relevant to cardiovascular biology (ion channels, kinases, G-protein coupled
+      receptors, transcription factors, etc.).
+      Public source — no credentials required.
+      Produces: gene_family_nodes.tsv, gene_family_associations.tsv
+
+  clinvar:
+    enabled: true
+    description: ClinVar - Genetic variants and clinical significance
+    args:
+      source_url: https://ftp.ncbi.nlm.nih.gov/pub/clinvar/vcf_GRCh38/
+      filter_pathogenic: true
+    version: latest
+    notes: >
+      ClinVar - Curated collection of genetic variants and their clinical significance.
+      Downloads VCF files from NCBI FTP and extracts pathogenic/likely pathogenic
+      variants associated with cardiovascular diseases. Provides Variant nodes
+      and geneHasVariant edges with clinical significance and evidence levels.
+      Public source — no credentials required.
+      Produces: variant_nodes.tsv, gene_variant_associations.tsv,
+                variant_disease_associations.tsv
+
+  # =========================================================================
+  # ADDITIONAL INTEGRATED SOURCES
+  # =========================================================================
+
+  disgenet:
+    enabled: true
+    description: DisGeNET - Gene-disease associations
+    args:
+      api_key_env: DISGENET_API_KEY
+    version: latest
+    notes: >
+      Gene-disease associations via REST API. Provides geneAssociatesWithDisease
+      edges. Queries disease terms from project.yaml. Includes association scores,
+      evidence types (text-mining, curated databases, GWAS), and disease prevalence.
+      Public API with optional authentication for higher rate limits.
+      Set DISGENET_API_KEY in .env for better performance.
+      Produces: gene_disease_associations.tsv
+
+  collectri:
+    enabled: true
+    description: CollectTRI - Transcription factor regulatory network
+    args: {}
+    version: latest
+    notes: >
+      CollectTRI transcription factor regulatory network from OmniPath API.
+      Provides TranscriptionFactor nodes and transcriptionFactorInteractsWithGene
+      edges with stimulation/inhibition annotations and confidence levels.
+      Public source — no credentials required.
+      Produces: transcription_factor_nodes.tsv, tf_gene_interactions.tsv
+
+  evolutionary_rate_covariation:
+    enabled: true
+    description: Evolutionary Rate Covariation - Mammalian gene covariation
+    args:
+      url: https://datadryad.org/downloads/file_stream/3949673
+      file_path: ERC_matrices/mammal_ftERC.RDS
+    version: latest
+    notes: >
+      Evolutionary Rate Covariation (ERC) - mammal functional evolutionary rate
+      covariation matrices from Dryad. Provides gene-gene covariation edges
+      (geneCoevolvesWithGene) using Fisher-transformed ERC scores. Identifies
+      genes with coordinated evolutionary rates, suggesting functional relationships.
+      Public dataset — no credentials required.
+      Produces: gene_covariation.tsv
+
+  aopdb:
+    enabled: false
+    description: AOPDB - Adverse Outcome Pathway Database
+    args:
+      mysql_config:
+        host: localhost
+        user_env: MYSQL_USERNAME
+        password_env: MYSQL_PASSWORD
+        database_env: MYSQL_DB_NAME
+    version: latest
+    notes: >
+      Adverse Outcome Pathway Database. Provides Pathway nodes and
+      geneInPathway/pathwayContainsGene edges. Requires local MySQL setup.
+      Currently disabled — requires local database configuration.
+      Produces: pathway_nodes.tsv, gene_pathway_associations.tsv
+
+# =========================================================================
+# CONFIGURATION SUMMARY
+# =========================================================================
+# Total Sources: 24 (all enabled)
+# Categories:
+#   - Core Gene/Disease Ontologies: 6 sources (NCBI Gene, DO, GO, Uberon, MeSH, HPO)
+#   - Drug/Chemical Databases: 5 sources (DrugBank, DrugCentral, BindingDB, SIDER, CTD)
+#   - Regulatory Networks: 3 sources (DoRothEA, CollectTRI, Reactome)
+#   - Expression/Phenotype: 3 sources (Bgee, Jensen TISSUES, LINCS L1000)
+#   - Clinical/Genomic: 4 sources (ClinicalTrials.gov, ClinPGx, ClinVar, HPO)
+#   - Literature/Text-Mining: 2 sources (PubTator Central, MEDLINE)
+#   - Association Databases: 2 sources (OpenTargets, DisGeNET)
+#   - Protein Interactions: 1 source (STRING)
+#   - Evolutionary: 1 source (Evolutionary Rate Covariation)
+#   - Gene Classification: 1 source (HGNC Gene Families)
+#
+# Credentials Required (.env):
+#   - DRUGBANK_USERNAME, DRUGBANK_PASSWORD (DrugBank - free academic account)
+#   - DC_USER, DC_PASSWORD (DrugCentral - public: drugman/dosage)
+#   - CLINPGX_API_KEY (ClinPGx - optional)
+#   - DISGENET_API_KEY (DisGeNET - optional)
+#   - NCBI_EUTILS_API_KEY (MEDLINE - optional, for rate limiting)
+#   - MYSQL_USERNAME, MYSQL_PASSWORD, MYSQL_DB_NAME (AOPDB - only if enabled)
+#
+# CVD Disease Scope:
+#   Primary terms from config/project.yaml (184 terms total):
+#   - Arrhythmias (AF, SVT, VT, Long QT, Brugada, CPVT, etc.)
+#   - Coronary artery disease (CAD, MI, Angina, ACS, etc.)
+#   - Heart failure (HF, HFrEF, HFpEF, cardiogenic shock, etc.)
+#   - Cardiomyopathy (HCM, DCM, ARVC, Takotsubo, etc.)
+#   - Hypertension and hypertensive heart disease
+#   - Cerebrovascular disease and stroke
+#   - Peripheral arterial disease and vascular disease
+#   - Aortic disease (aneurysm, dissection)
+#   - Valvular heart disease
+#   - Congenital heart disease
+#   - Thromboembolism and thrombosis
+#   - Dyslipidemia and hypercholesterolemia
+#   - Pulmonary hypertension and pulmonary vascular disease

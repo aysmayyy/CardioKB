@@ -1,77 +1,54 @@
 """
-Data parsers for CardioKB.
+Data parsers for the knowledge graph.
 
-This module contains parsers for various data sources used to populate CardioKB.
+This module contains parsers for various data sources used to populate the knowledge graph.
 Each parser is responsible for downloading, parsing, and formatting data from
-a specific source. Built using BaseAgent multi-agent orchestration with parser
-templates adapted for CardioKB's schema.
-
-Custom parsers (CardioKB-specific):
-  - ClinicalTrialsParser: ClinicalTrials.gov API v2
-  - ClinPGxParser: ClinPGx pharmacogenomics
-
-Base KB parsers (adapted from BaseAgent templates):
-  - NCBIGeneParser: NCBI Gene (disease-agnostic)
-  - DrugBankParser: DrugBank (disease-agnostic)
-  - DoRothEAParser: DoRothEA TF network (disease-agnostic)
-  - DisGeNETParser: DisGeNET gene-disease associations (CVD-scoped)
-
-Hetionet component parsers (disease-agnostic):
-  - DiseaseOntologyParser: Disease Ontology (DOID) nodes
-  - GeneOntologyParser: GO BP/MF/CC nodes + gene-GO edges
-  - UberonParser: Anatomy/BodyPart nodes (UBERON)
-  - MeSHParser: Symptom nodes (MeSH)
-  - SIDERParser: SideEffect nodes + compound-causes-sideEffect edges
-  - LINCS1000Parser: LINCS L1000 expression edges (CuG, CdG, GrG)
-  - MEDLINECooccurrenceParser: MEDLINE co-occurrence edges (DpS, DlA, DrD)
-  - DrugCentralParser: Drug-treats/palliates, PharmClass nodes, PCiC edges
-  - PubTatorParser: Literature-mined co-occurrences
-  - BindingDBParser: chemicalBindsGene edges
-  - CTDParser: chemicalIncreases/DecreasesExpression edges
-  - BgeeParser: bodyPartOver/UnderexpressesGene edges
+a specific source.
 """
 
 from .base_parser import BaseParser
-from .clinicaltrials_parser import ClinicalTrialsParser
-from .clinpgx_parser import ClinPGxParser
+
+# ---- Phase 1: Template-based parsers ----
 from .ncbigene_parser import NCBIGeneParser
 from .drugbank_parser import DrugBankParser
-from .dorothea_parser import DoRothEAParser
 from .disgenet_parser import DisGeNETParser
-from .jensen_tissues_parser import JensenTissuesParser
-from .hpo_parser import HPOParser
+from .aopdb_parser import AOPDBParser
+from .dorothea_parser import DoRothEAParser
+from .collecttri_parser import CollectTRIParser
+from .disease_ontology_parser import DiseaseOntologyParser
+from .gene_ontology_parser import GeneOntologyParser
+from .uberon_parser import UberonParser
+from .mesh_parser import MeSHParser
+from .drugcentral_parser import DrugCentralParser
+from .bindingdb_parser import BindingDBParser
+from .bgee_parser import BgeeParser
+from .ctd_parser import CTDParser
+from .medline_parser import MEDLINEParser
+from .evolutionary_rate_covariation import EvolutionaryRateCovariationParser
 from .reactome_parser import ReactomeParser
-from .string_parser import STRINGParser
-from .opentargets_parser import OpenTargetsParser
-from .hetionet_components import (
-    DiseaseOntologyParser,
-    GeneOntologyParser,
-    UberonParser,
-    MeSHParser,
-    DrugCentralParser,
-    BindingDBParser,
-    BgeeParser,
-    CTDParser,
-    PubTatorParser,
-    SIDERParser,
-    LINCS1000Parser,
-    MEDLINECooccurrenceParser,
-)
-from .hgncfamilies_parser import HGNCFamiliesParser
-from .hgnc_parser import HGNCParser
+from .string_parser import StringParser
+
+# ---- Phase 2: New parsers (written from scratch for CardioKB) ----
 from .clinvar_parser import ClinVarParser
+from .hpo_parser import HPOParser
+from .hgnc_parser import HGNCFamiliesParser
+from .pubtator_parser import PubTatorParser
+from .jensen_tissues_parser import JensenTissuesParser
+from .sider_parser import SIDERParser
+from .clinicaltrials_parser import ClinicalTrialsParser
+from .clinpgx_parser import ClinPGxParser
+from .lincs_parser import LINCSParser
+from .opentargets_parser import OpenTargetsParser
 
 __all__ = [
     'BaseParser',
-    # Custom parsers (from scratch)
-    'ClinicalTrialsParser',
-    'ClinPGxParser',
-    # Base KB parsers (from BaseAgent templates)
+    # Phase 1
     'NCBIGeneParser',
     'DrugBankParser',
-    'DoRothEAParser',
     'DisGeNETParser',
-    # Hetionet component parsers
+    'AOPDBParser',
+    'DoRothEAParser',
+    'CollectTRIParser',
     'DiseaseOntologyParser',
     'GeneOntologyParser',
     'UberonParser',
@@ -80,16 +57,19 @@ __all__ = [
     'BindingDBParser',
     'BgeeParser',
     'CTDParser',
-    'PubTatorParser',
-    'SIDERParser',
-    'LINCS1000Parser',
-    'MEDLINECooccurrenceParser',
-    'JensenTissuesParser',
-    'HPOParser',
+    'MEDLINEParser',
+    'EvolutionaryRateCovariationParser',
     'ReactomeParser',
-    'STRINGParser',
-    'OpenTargetsParser',
-    'HGNCFamiliesParser',
-    'HGNCParser',
+    'StringParser',
+    # Phase 2
     'ClinVarParser',
+    'HPOParser',
+    'HGNCFamiliesParser',
+    'PubTatorParser',
+    'JensenTissuesParser',
+    'SIDERParser',
+    'ClinicalTrialsParser',
+    'ClinPGxParser',
+    'LINCSParser',
+    'OpenTargetsParser',
 ]

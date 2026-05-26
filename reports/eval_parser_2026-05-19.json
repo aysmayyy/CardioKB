@@ -1,0 +1,2275 @@
+{
+  "run_timestamp": "2026-05-19T19:16:24.584277+00:00",
+  "metrics": [
+    {
+      "name": "Direct source download",
+      "data_type": "binary",
+      "tier": 1,
+      "result": true,
+      "source": "bgee"
+    },
+    {
+      "name": "Source database extraction",
+      "data_type": "binary",
+      "tier": 1,
+      "result": true,
+      "source": "bgee",
+      "mapping": "bgee.anatomy_expresses_gene"
+    },
+    {
+      "name": "TSV structural integrity",
+      "data_type": "binary",
+      "tier": 1,
+      "result": true,
+      "source": "bgee",
+      "mapping": "bgee.anatomy_expresses_gene"
+    },
+    {
+      "name": "Extracted record counts",
+      "data_type": "integer",
+      "tier": 1,
+      "result": 6616463,
+      "source": "bgee",
+      "mapping": "bgee.anatomy_expresses_gene"
+    },
+    {
+      "name": "Property value constraint violations",
+      "data_type": "integer",
+      "tier": 2,
+      "result": 0,
+      "source": "bgee",
+      "mapping": "bgee.anatomy_expresses_gene"
+    },
+    {
+      "name": "Source schema conformance",
+      "data_type": "binary",
+      "tier": 2,
+      "result": true,
+      "source": "bgee",
+      "mapping": "bgee.anatomy_expresses_gene"
+    },
+    {
+      "name": "Extraction timestamp per source",
+      "data_type": "date",
+      "tier": 3,
+      "result": "2026-05-19",
+      "source": "bgee"
+    },
+    {
+      "name": "Direct source download",
+      "data_type": "binary",
+      "tier": 1,
+      "result": true,
+      "source": "bindingdb"
+    },
+    {
+      "name": "Source database extraction",
+      "data_type": "binary",
+      "tier": 1,
+      "result": true,
+      "source": "bindingdb",
+      "mapping": "bindingdb.drug_binds_gene"
+    },
+    {
+      "name": "TSV structural integrity",
+      "data_type": "binary",
+      "tier": 1,
+      "result": true,
+      "source": "bindingdb",
+      "mapping": "bindingdb.drug_binds_gene"
+    },
+    {
+      "name": "Extracted record counts",
+      "data_type": "integer",
+      "tier": 1,
+      "result": 25217,
+      "source": "bindingdb",
+      "mapping": "bindingdb.drug_binds_gene"
+    },
+    {
+      "name": "Property value constraint violations",
+      "data_type": "integer",
+      "tier": 2,
+      "result": 0,
+      "source": "bindingdb",
+      "mapping": "bindingdb.drug_binds_gene"
+    },
+    {
+      "name": "Source schema conformance",
+      "data_type": "binary",
+      "tier": 2,
+      "result": true,
+      "source": "bindingdb",
+      "mapping": "bindingdb.drug_binds_gene"
+    },
+    {
+      "name": "Extraction timestamp per source",
+      "data_type": "date",
+      "tier": 3,
+      "result": "2026-05-19",
+      "source": "bindingdb"
+    },
+    {
+      "name": "Direct source download",
+      "data_type": "binary",
+      "tier": 1,
+      "result": true,
+      "source": "clinicaltrials"
+    },
+    {
+      "name": "Source database extraction",
+      "data_type": "binary",
+      "tier": 1,
+      "result": true,
+      "source": "clinicaltrials",
+      "mapping": "clinicaltrials.trial_nodes"
+    },
+    {
+      "name": "TSV structural integrity",
+      "data_type": "binary",
+      "tier": 1,
+      "result": true,
+      "source": "clinicaltrials",
+      "mapping": "clinicaltrials.trial_nodes"
+    },
+    {
+      "name": "Extracted record counts",
+      "data_type": "integer",
+      "tier": 1,
+      "result": 21578,
+      "source": "clinicaltrials",
+      "mapping": "clinicaltrials.trial_nodes"
+    },
+    {
+      "name": "Property value constraint violations",
+      "data_type": "integer",
+      "tier": 2,
+      "result": 0,
+      "source": "clinicaltrials",
+      "mapping": "clinicaltrials.trial_nodes"
+    },
+    {
+      "name": "Source schema conformance",
+      "data_type": "binary",
+      "tier": 2,
+      "result": true,
+      "source": "clinicaltrials",
+      "mapping": "clinicaltrials.trial_nodes"
+    },
+    {
+      "name": "Source database extraction",
+      "data_type": "binary",
+      "tier": 1,
+      "result": true,
+      "source": "clinicaltrials",
+      "mapping": "clinicaltrials.trial_disease_associations"
+    },
+    {
+      "name": "TSV structural integrity",
+      "data_type": "binary",
+      "tier": 1,
+      "result": true,
+      "source": "clinicaltrials",
+      "mapping": "clinicaltrials.trial_disease_associations"
+    },
+    {
+      "name": "Extracted record counts",
+      "data_type": "integer",
+      "tier": 1,
+      "result": 46692,
+      "source": "clinicaltrials",
+      "mapping": "clinicaltrials.trial_disease_associations"
+    },
+    {
+      "name": "Property value constraint violations",
+      "data_type": "integer",
+      "tier": 2,
+      "result": 0,
+      "source": "clinicaltrials",
+      "mapping": "clinicaltrials.trial_disease_associations"
+    },
+    {
+      "name": "Source schema conformance",
+      "data_type": "binary",
+      "tier": 2,
+      "result": true,
+      "source": "clinicaltrials",
+      "mapping": "clinicaltrials.trial_disease_associations"
+    },
+    {
+      "name": "Source database extraction",
+      "data_type": "binary",
+      "tier": 1,
+      "result": true,
+      "source": "clinicaltrials",
+      "mapping": "clinicaltrials.trial_intervention_associations"
+    },
+    {
+      "name": "TSV structural integrity",
+      "data_type": "binary",
+      "tier": 1,
+      "result": true,
+      "source": "clinicaltrials",
+      "mapping": "clinicaltrials.trial_intervention_associations"
+    },
+    {
+      "name": "Extracted record counts",
+      "data_type": "integer",
+      "tier": 1,
+      "result": 30113,
+      "source": "clinicaltrials",
+      "mapping": "clinicaltrials.trial_intervention_associations"
+    },
+    {
+      "name": "Property value constraint violations",
+      "data_type": "integer",
+      "tier": 2,
+      "result": 0,
+      "source": "clinicaltrials",
+      "mapping": "clinicaltrials.trial_intervention_associations"
+    },
+    {
+      "name": "Source schema conformance",
+      "data_type": "binary",
+      "tier": 2,
+      "result": true,
+      "source": "clinicaltrials",
+      "mapping": "clinicaltrials.trial_intervention_associations"
+    },
+    {
+      "name": "Extraction timestamp per source",
+      "data_type": "date",
+      "tier": 3,
+      "result": "2026-05-19",
+      "source": "clinicaltrials"
+    },
+    {
+      "name": "Direct source download",
+      "data_type": "binary",
+      "tier": 1,
+      "result": true,
+      "source": "clinpgx"
+    },
+    {
+      "name": "Source database extraction",
+      "data_type": "binary",
+      "tier": 1,
+      "result": true,
+      "source": "clinpgx",
+      "mapping": "clinpgx.drug_label_nodes"
+    },
+    {
+      "name": "TSV structural integrity",
+      "data_type": "binary",
+      "tier": 1,
+      "result": true,
+      "source": "clinpgx",
+      "mapping": "clinpgx.drug_label_nodes"
+    },
+    {
+      "name": "Extracted record counts",
+      "data_type": "integer",
+      "tier": 1,
+      "result": 29,
+      "source": "clinpgx",
+      "mapping": "clinpgx.drug_label_nodes"
+    },
+    {
+      "name": "Property value constraint violations",
+      "data_type": "integer",
+      "tier": 2,
+      "result": 0,
+      "source": "clinpgx",
+      "mapping": "clinpgx.drug_label_nodes"
+    },
+    {
+      "name": "Source schema conformance",
+      "data_type": "binary",
+      "tier": 2,
+      "result": true,
+      "source": "clinpgx",
+      "mapping": "clinpgx.drug_label_nodes"
+    },
+    {
+      "name": "Source database extraction",
+      "data_type": "binary",
+      "tier": 1,
+      "result": true,
+      "source": "clinpgx",
+      "mapping": "clinpgx.gene_drug_interactions"
+    },
+    {
+      "name": "TSV structural integrity",
+      "data_type": "binary",
+      "tier": 1,
+      "result": true,
+      "source": "clinpgx",
+      "mapping": "clinpgx.gene_drug_interactions"
+    },
+    {
+      "name": "Extracted record counts",
+      "data_type": "integer",
+      "tier": 1,
+      "result": 109,
+      "source": "clinpgx",
+      "mapping": "clinpgx.gene_drug_interactions"
+    },
+    {
+      "name": "Property value constraint violations",
+      "data_type": "integer",
+      "tier": 2,
+      "result": 1,
+      "source": "clinpgx",
+      "mapping": "clinpgx.gene_drug_interactions"
+    },
+    {
+      "name": "Source schema conformance",
+      "data_type": "binary",
+      "tier": 2,
+      "result": true,
+      "source": "clinpgx",
+      "mapping": "clinpgx.gene_drug_interactions"
+    },
+    {
+      "name": "Extraction timestamp per source",
+      "data_type": "date",
+      "tier": 3,
+      "result": "2026-05-19",
+      "source": "clinpgx"
+    },
+    {
+      "name": "Direct source download",
+      "data_type": "binary",
+      "tier": 1,
+      "result": true,
+      "source": "clinvar"
+    },
+    {
+      "name": "Source database extraction",
+      "data_type": "binary",
+      "tier": 1,
+      "result": true,
+      "source": "clinvar",
+      "mapping": "clinvar.variant_nodes"
+    },
+    {
+      "name": "TSV structural integrity",
+      "data_type": "binary",
+      "tier": 1,
+      "result": true,
+      "source": "clinvar",
+      "mapping": "clinvar.variant_nodes"
+    },
+    {
+      "name": "Extracted record counts",
+      "data_type": "integer",
+      "tier": 1,
+      "result": 2100938,
+      "source": "clinvar",
+      "mapping": "clinvar.variant_nodes"
+    },
+    {
+      "name": "Property value constraint violations",
+      "data_type": "integer",
+      "tier": 2,
+      "result": 64599,
+      "source": "clinvar",
+      "mapping": "clinvar.variant_nodes"
+    },
+    {
+      "name": "Source schema conformance",
+      "data_type": "binary",
+      "tier": 2,
+      "result": true,
+      "source": "clinvar",
+      "mapping": "clinvar.variant_nodes"
+    },
+    {
+      "name": "Source database extraction",
+      "data_type": "binary",
+      "tier": 1,
+      "result": true,
+      "source": "clinvar",
+      "mapping": "clinvar.variant_gene_associations"
+    },
+    {
+      "name": "TSV structural integrity",
+      "data_type": "binary",
+      "tier": 1,
+      "result": true,
+      "source": "clinvar",
+      "mapping": "clinvar.variant_gene_associations"
+    },
+    {
+      "name": "Extracted record counts",
+      "data_type": "integer",
+      "tier": 1,
+      "result": 22133,
+      "source": "clinvar",
+      "mapping": "clinvar.variant_gene_associations"
+    },
+    {
+      "name": "Property value constraint violations",
+      "data_type": "integer",
+      "tier": 2,
+      "result": 0,
+      "source": "clinvar",
+      "mapping": "clinvar.variant_gene_associations"
+    },
+    {
+      "name": "Source schema conformance",
+      "data_type": "binary",
+      "tier": 2,
+      "result": true,
+      "source": "clinvar",
+      "mapping": "clinvar.variant_gene_associations"
+    },
+    {
+      "name": "Source database extraction",
+      "data_type": "binary",
+      "tier": 1,
+      "result": true,
+      "source": "clinvar",
+      "mapping": "clinvar.variant_disease_associations"
+    },
+    {
+      "name": "TSV structural integrity",
+      "data_type": "binary",
+      "tier": 1,
+      "result": true,
+      "source": "clinvar",
+      "mapping": "clinvar.variant_disease_associations"
+    },
+    {
+      "name": "Extracted record counts",
+      "data_type": "integer",
+      "tier": 1,
+      "result": 204386,
+      "source": "clinvar",
+      "mapping": "clinvar.variant_disease_associations"
+    },
+    {
+      "name": "Property value constraint violations",
+      "data_type": "integer",
+      "tier": 2,
+      "result": 0,
+      "source": "clinvar",
+      "mapping": "clinvar.variant_disease_associations"
+    },
+    {
+      "name": "Source schema conformance",
+      "data_type": "binary",
+      "tier": 2,
+      "result": true,
+      "source": "clinvar",
+      "mapping": "clinvar.variant_disease_associations"
+    },
+    {
+      "name": "Extraction timestamp per source",
+      "data_type": "date",
+      "tier": 3,
+      "result": "2026-05-19",
+      "source": "clinvar"
+    },
+    {
+      "name": "Direct source download",
+      "data_type": "binary",
+      "tier": 1,
+      "result": true,
+      "source": "collectri"
+    },
+    {
+      "name": "Source database extraction",
+      "data_type": "binary",
+      "tier": 1,
+      "result": true,
+      "source": "collectri",
+      "mapping": "collectri.transcription_factors"
+    },
+    {
+      "name": "TSV structural integrity",
+      "data_type": "binary",
+      "tier": 1,
+      "result": true,
+      "source": "collectri",
+      "mapping": "collectri.transcription_factors"
+    },
+    {
+      "name": "Extracted record counts",
+      "data_type": "integer",
+      "tier": 1,
+      "result": 1201,
+      "source": "collectri",
+      "mapping": "collectri.transcription_factors"
+    },
+    {
+      "name": "Property value constraint violations",
+      "data_type": "integer",
+      "tier": 2,
+      "result": 0,
+      "source": "collectri",
+      "mapping": "collectri.transcription_factors"
+    },
+    {
+      "name": "Source schema conformance",
+      "data_type": "binary",
+      "tier": 2,
+      "result": true,
+      "source": "collectri",
+      "mapping": "collectri.transcription_factors"
+    },
+    {
+      "name": "Source database extraction",
+      "data_type": "binary",
+      "tier": 1,
+      "result": true,
+      "source": "collectri",
+      "mapping": "collectri.tf_gene_interactions"
+    },
+    {
+      "name": "TSV structural integrity",
+      "data_type": "binary",
+      "tier": 1,
+      "result": true,
+      "source": "collectri",
+      "mapping": "collectri.tf_gene_interactions"
+    },
+    {
+      "name": "Extracted record counts",
+      "data_type": "integer",
+      "tier": 1,
+      "result": 64516,
+      "source": "collectri",
+      "mapping": "collectri.tf_gene_interactions"
+    },
+    {
+      "name": "Property value constraint violations",
+      "data_type": "integer",
+      "tier": 2,
+      "result": 0,
+      "source": "collectri",
+      "mapping": "collectri.tf_gene_interactions"
+    },
+    {
+      "name": "Source schema conformance",
+      "data_type": "binary",
+      "tier": 2,
+      "result": true,
+      "source": "collectri",
+      "mapping": "collectri.tf_gene_interactions"
+    },
+    {
+      "name": "Extraction timestamp per source",
+      "data_type": "date",
+      "tier": 3,
+      "result": "2026-05-19",
+      "source": "collectri"
+    },
+    {
+      "name": "Direct source download",
+      "data_type": "binary",
+      "tier": 1,
+      "result": true,
+      "source": "cross_references"
+    },
+    {
+      "name": "Direct source download",
+      "data_type": "binary",
+      "tier": 1,
+      "result": true,
+      "source": "ctd"
+    },
+    {
+      "name": "Source database extraction",
+      "data_type": "binary",
+      "tier": 1,
+      "result": true,
+      "source": "ctd",
+      "mapping": "ctd.chemical_nodes"
+    },
+    {
+      "name": "TSV structural integrity",
+      "data_type": "binary",
+      "tier": 1,
+      "result": true,
+      "source": "ctd",
+      "mapping": "ctd.chemical_nodes"
+    },
+    {
+      "name": "Extracted record counts",
+      "data_type": "integer",
+      "tier": 1,
+      "result": 9465,
+      "source": "ctd",
+      "mapping": "ctd.chemical_nodes"
+    },
+    {
+      "name": "Property value constraint violations",
+      "data_type": "integer",
+      "tier": 2,
+      "result": 0,
+      "source": "ctd",
+      "mapping": "ctd.chemical_nodes"
+    },
+    {
+      "name": "Source schema conformance",
+      "data_type": "binary",
+      "tier": 2,
+      "result": true,
+      "source": "ctd",
+      "mapping": "ctd.chemical_nodes"
+    },
+    {
+      "name": "Source database extraction",
+      "data_type": "binary",
+      "tier": 1,
+      "result": true,
+      "source": "ctd",
+      "mapping": "ctd.chemical_increases_expression"
+    },
+    {
+      "name": "TSV structural integrity",
+      "data_type": "binary",
+      "tier": 1,
+      "result": true,
+      "source": "ctd",
+      "mapping": "ctd.chemical_increases_expression"
+    },
+    {
+      "name": "Extracted record counts",
+      "data_type": "integer",
+      "tier": 1,
+      "result": 1288204,
+      "source": "ctd",
+      "mapping": "ctd.chemical_increases_expression"
+    },
+    {
+      "name": "Property value constraint violations",
+      "data_type": "integer",
+      "tier": 2,
+      "result": 68130,
+      "source": "ctd",
+      "mapping": "ctd.chemical_increases_expression"
+    },
+    {
+      "name": "Source schema conformance",
+      "data_type": "binary",
+      "tier": 2,
+      "result": true,
+      "source": "ctd",
+      "mapping": "ctd.chemical_increases_expression"
+    },
+    {
+      "name": "Source database extraction",
+      "data_type": "binary",
+      "tier": 1,
+      "result": true,
+      "source": "ctd",
+      "mapping": "ctd.chemical_decreases_expression"
+    },
+    {
+      "name": "TSV structural integrity",
+      "data_type": "binary",
+      "tier": 1,
+      "result": true,
+      "source": "ctd",
+      "mapping": "ctd.chemical_decreases_expression"
+    },
+    {
+      "name": "Extracted record counts",
+      "data_type": "integer",
+      "tier": 1,
+      "result": 1001149,
+      "source": "ctd",
+      "mapping": "ctd.chemical_decreases_expression"
+    },
+    {
+      "name": "Property value constraint violations",
+      "data_type": "integer",
+      "tier": 2,
+      "result": 45340,
+      "source": "ctd",
+      "mapping": "ctd.chemical_decreases_expression"
+    },
+    {
+      "name": "Source schema conformance",
+      "data_type": "binary",
+      "tier": 2,
+      "result": true,
+      "source": "ctd",
+      "mapping": "ctd.chemical_decreases_expression"
+    },
+    {
+      "name": "Extraction timestamp per source",
+      "data_type": "date",
+      "tier": 3,
+      "result": "2026-05-19",
+      "source": "ctd"
+    },
+    {
+      "name": "Direct source download",
+      "data_type": "binary",
+      "tier": 1,
+      "result": true,
+      "source": "disease_ontology"
+    },
+    {
+      "name": "Source database extraction",
+      "data_type": "binary",
+      "tier": 1,
+      "result": true,
+      "source": "disease_ontology",
+      "mapping": "disease_ontology.slim_terms"
+    },
+    {
+      "name": "TSV structural integrity",
+      "data_type": "binary",
+      "tier": 1,
+      "result": true,
+      "source": "disease_ontology",
+      "mapping": "disease_ontology.slim_terms"
+    },
+    {
+      "name": "Extracted record counts",
+      "data_type": "integer",
+      "tier": 1,
+      "result": 3442,
+      "source": "disease_ontology",
+      "mapping": "disease_ontology.slim_terms"
+    },
+    {
+      "name": "Property value constraint violations",
+      "data_type": "integer",
+      "tier": 2,
+      "result": 0,
+      "source": "disease_ontology",
+      "mapping": "disease_ontology.slim_terms"
+    },
+    {
+      "name": "Source schema conformance",
+      "data_type": "binary",
+      "tier": 2,
+      "result": true,
+      "source": "disease_ontology",
+      "mapping": "disease_ontology.slim_terms"
+    },
+    {
+      "name": "Extraction timestamp per source",
+      "data_type": "date",
+      "tier": 3,
+      "result": "2026-05-19",
+      "source": "disease_ontology"
+    },
+    {
+      "name": "Direct source download",
+      "data_type": "binary",
+      "tier": 1,
+      "result": true,
+      "source": "dorothea"
+    },
+    {
+      "name": "Source database extraction",
+      "data_type": "binary",
+      "tier": 1,
+      "result": true,
+      "source": "dorothea",
+      "mapping": "dorothea.transcription_factors"
+    },
+    {
+      "name": "TSV structural integrity",
+      "data_type": "binary",
+      "tier": 1,
+      "result": true,
+      "source": "dorothea",
+      "mapping": "dorothea.transcription_factors"
+    },
+    {
+      "name": "Extracted record counts",
+      "data_type": "integer",
+      "tier": 1,
+      "result": 367,
+      "source": "dorothea",
+      "mapping": "dorothea.transcription_factors"
+    },
+    {
+      "name": "Property value constraint violations",
+      "data_type": "integer",
+      "tier": 2,
+      "result": 0,
+      "source": "dorothea",
+      "mapping": "dorothea.transcription_factors"
+    },
+    {
+      "name": "Source schema conformance",
+      "data_type": "binary",
+      "tier": 2,
+      "result": true,
+      "source": "dorothea",
+      "mapping": "dorothea.transcription_factors"
+    },
+    {
+      "name": "Source database extraction",
+      "data_type": "binary",
+      "tier": 1,
+      "result": true,
+      "source": "dorothea",
+      "mapping": "dorothea.tf_gene_interactions"
+    },
+    {
+      "name": "TSV structural integrity",
+      "data_type": "binary",
+      "tier": 1,
+      "result": true,
+      "source": "dorothea",
+      "mapping": "dorothea.tf_gene_interactions"
+    },
+    {
+      "name": "Extracted record counts",
+      "data_type": "integer",
+      "tier": 1,
+      "result": 15267,
+      "source": "dorothea",
+      "mapping": "dorothea.tf_gene_interactions"
+    },
+    {
+      "name": "Property value constraint violations",
+      "data_type": "integer",
+      "tier": 2,
+      "result": 0,
+      "source": "dorothea",
+      "mapping": "dorothea.tf_gene_interactions"
+    },
+    {
+      "name": "Source schema conformance",
+      "data_type": "binary",
+      "tier": 2,
+      "result": true,
+      "source": "dorothea",
+      "mapping": "dorothea.tf_gene_interactions"
+    },
+    {
+      "name": "Extraction timestamp per source",
+      "data_type": "date",
+      "tier": 3,
+      "result": "2026-05-19",
+      "source": "dorothea"
+    },
+    {
+      "name": "Direct source download",
+      "data_type": "binary",
+      "tier": 1,
+      "result": true,
+      "source": "drugbank"
+    },
+    {
+      "name": "Source database extraction",
+      "data_type": "binary",
+      "tier": 1,
+      "result": true,
+      "source": "drugbank",
+      "mapping": "drugbank.drugs"
+    },
+    {
+      "name": "TSV structural integrity",
+      "data_type": "binary",
+      "tier": 1,
+      "result": true,
+      "source": "drugbank",
+      "mapping": "drugbank.drugs"
+    },
+    {
+      "name": "Extracted record counts",
+      "data_type": "integer",
+      "tier": 1,
+      "result": 16628,
+      "source": "drugbank",
+      "mapping": "drugbank.drugs"
+    },
+    {
+      "name": "Property value constraint violations",
+      "data_type": "integer",
+      "tier": 2,
+      "result": 0,
+      "source": "drugbank",
+      "mapping": "drugbank.drugs"
+    },
+    {
+      "name": "Source schema conformance",
+      "data_type": "binary",
+      "tier": 2,
+      "result": true,
+      "source": "drugbank",
+      "mapping": "drugbank.drugs"
+    },
+    {
+      "name": "Source database extraction",
+      "data_type": "binary",
+      "tier": 1,
+      "result": true,
+      "source": "drugbank",
+      "mapping": "drugbank.drug_gene_edges"
+    },
+    {
+      "name": "TSV structural integrity",
+      "data_type": "binary",
+      "tier": 1,
+      "result": true,
+      "source": "drugbank",
+      "mapping": "drugbank.drug_gene_edges"
+    },
+    {
+      "name": "Extracted record counts",
+      "data_type": "integer",
+      "tier": 1,
+      "result": 34439,
+      "source": "drugbank",
+      "mapping": "drugbank.drug_gene_edges"
+    },
+    {
+      "name": "Property value constraint violations",
+      "data_type": "integer",
+      "tier": 2,
+      "result": 0,
+      "source": "drugbank",
+      "mapping": "drugbank.drug_gene_edges"
+    },
+    {
+      "name": "Source schema conformance",
+      "data_type": "binary",
+      "tier": 2,
+      "result": true,
+      "source": "drugbank",
+      "mapping": "drugbank.drug_gene_edges"
+    },
+    {
+      "name": "Extraction timestamp per source",
+      "data_type": "date",
+      "tier": 3,
+      "result": "2026-05-19",
+      "source": "drugbank"
+    },
+    {
+      "name": "Direct source download",
+      "data_type": "binary",
+      "tier": 1,
+      "result": true,
+      "source": "drugcentral"
+    },
+    {
+      "name": "Source database extraction",
+      "data_type": "binary",
+      "tier": 1,
+      "result": true,
+      "source": "drugcentral",
+      "mapping": "drugcentral.drugs"
+    },
+    {
+      "name": "TSV structural integrity",
+      "data_type": "binary",
+      "tier": 1,
+      "result": true,
+      "source": "drugcentral",
+      "mapping": "drugcentral.drugs"
+    },
+    {
+      "name": "Extracted record counts",
+      "data_type": "integer",
+      "tier": 1,
+      "result": 4995,
+      "source": "drugcentral",
+      "mapping": "drugcentral.drugs"
+    },
+    {
+      "name": "Property value constraint violations",
+      "data_type": "integer",
+      "tier": 2,
+      "result": 0,
+      "source": "drugcentral",
+      "mapping": "drugcentral.drugs"
+    },
+    {
+      "name": "Source schema conformance",
+      "data_type": "binary",
+      "tier": 2,
+      "result": true,
+      "source": "drugcentral",
+      "mapping": "drugcentral.drugs"
+    },
+    {
+      "name": "Source database extraction",
+      "data_type": "binary",
+      "tier": 1,
+      "result": true,
+      "source": "drugcentral",
+      "mapping": "drugcentral.pharmacologic_classes"
+    },
+    {
+      "name": "TSV structural integrity",
+      "data_type": "binary",
+      "tier": 1,
+      "result": true,
+      "source": "drugcentral",
+      "mapping": "drugcentral.pharmacologic_classes"
+    },
+    {
+      "name": "Extracted record counts",
+      "data_type": "integer",
+      "tier": 1,
+      "result": 2359,
+      "source": "drugcentral",
+      "mapping": "drugcentral.pharmacologic_classes"
+    },
+    {
+      "name": "Property value constraint violations",
+      "data_type": "integer",
+      "tier": 2,
+      "result": 0,
+      "source": "drugcentral",
+      "mapping": "drugcentral.pharmacologic_classes"
+    },
+    {
+      "name": "Source schema conformance",
+      "data_type": "binary",
+      "tier": 2,
+      "result": true,
+      "source": "drugcentral",
+      "mapping": "drugcentral.pharmacologic_classes"
+    },
+    {
+      "name": "Source database extraction",
+      "data_type": "binary",
+      "tier": 1,
+      "result": true,
+      "source": "drugcentral",
+      "mapping": "drugcentral.drug_treats_disease"
+    },
+    {
+      "name": "TSV structural integrity",
+      "data_type": "binary",
+      "tier": 1,
+      "result": true,
+      "source": "drugcentral",
+      "mapping": "drugcentral.drug_treats_disease"
+    },
+    {
+      "name": "Extracted record counts",
+      "data_type": "integer",
+      "tier": 1,
+      "result": 204,
+      "source": "drugcentral",
+      "mapping": "drugcentral.drug_treats_disease"
+    },
+    {
+      "name": "Property value constraint violations",
+      "data_type": "integer",
+      "tier": 2,
+      "result": 0,
+      "source": "drugcentral",
+      "mapping": "drugcentral.drug_treats_disease"
+    },
+    {
+      "name": "Source schema conformance",
+      "data_type": "binary",
+      "tier": 2,
+      "result": true,
+      "source": "drugcentral",
+      "mapping": "drugcentral.drug_treats_disease"
+    },
+    {
+      "name": "Source database extraction",
+      "data_type": "binary",
+      "tier": 1,
+      "result": true,
+      "source": "drugcentral",
+      "mapping": "drugcentral.drug_in_class"
+    },
+    {
+      "name": "TSV structural integrity",
+      "data_type": "binary",
+      "tier": 1,
+      "result": true,
+      "source": "drugcentral",
+      "mapping": "drugcentral.drug_in_class"
+    },
+    {
+      "name": "Extracted record counts",
+      "data_type": "integer",
+      "tier": 1,
+      "result": 25687,
+      "source": "drugcentral",
+      "mapping": "drugcentral.drug_in_class"
+    },
+    {
+      "name": "Property value constraint violations",
+      "data_type": "integer",
+      "tier": 2,
+      "result": 0,
+      "source": "drugcentral",
+      "mapping": "drugcentral.drug_in_class"
+    },
+    {
+      "name": "Source schema conformance",
+      "data_type": "binary",
+      "tier": 2,
+      "result": true,
+      "source": "drugcentral",
+      "mapping": "drugcentral.drug_in_class"
+    },
+    {
+      "name": "Source database extraction",
+      "data_type": "binary",
+      "tier": 1,
+      "result": true,
+      "source": "drugcentral",
+      "mapping": "drugcentral.chemical_causes_effect"
+    },
+    {
+      "name": "TSV structural integrity",
+      "data_type": "binary",
+      "tier": 1,
+      "result": true,
+      "source": "drugcentral",
+      "mapping": "drugcentral.chemical_causes_effect"
+    },
+    {
+      "name": "Extracted record counts",
+      "data_type": "integer",
+      "tier": 1,
+      "result": 364921,
+      "source": "drugcentral",
+      "mapping": "drugcentral.chemical_causes_effect"
+    },
+    {
+      "name": "Property value constraint violations",
+      "data_type": "integer",
+      "tier": 2,
+      "result": 0,
+      "source": "drugcentral",
+      "mapping": "drugcentral.chemical_causes_effect"
+    },
+    {
+      "name": "Source schema conformance",
+      "data_type": "binary",
+      "tier": 2,
+      "result": true,
+      "source": "drugcentral",
+      "mapping": "drugcentral.chemical_causes_effect"
+    },
+    {
+      "name": "Extraction timestamp per source",
+      "data_type": "date",
+      "tier": 3,
+      "result": "2026-05-19",
+      "source": "drugcentral"
+    },
+    {
+      "name": "Direct source download",
+      "data_type": "binary",
+      "tier": 1,
+      "result": true,
+      "source": "gene_ontology"
+    },
+    {
+      "name": "Source database extraction",
+      "data_type": "binary",
+      "tier": 1,
+      "result": true,
+      "source": "gene_ontology",
+      "mapping": "gene_ontology.biological_process_nodes"
+    },
+    {
+      "name": "TSV structural integrity",
+      "data_type": "binary",
+      "tier": 1,
+      "result": true,
+      "source": "gene_ontology",
+      "mapping": "gene_ontology.biological_process_nodes"
+    },
+    {
+      "name": "Extracted record counts",
+      "data_type": "integer",
+      "tier": 1,
+      "result": 24428,
+      "source": "gene_ontology",
+      "mapping": "gene_ontology.biological_process_nodes"
+    },
+    {
+      "name": "Property value constraint violations",
+      "data_type": "integer",
+      "tier": 2,
+      "result": 0,
+      "source": "gene_ontology",
+      "mapping": "gene_ontology.biological_process_nodes"
+    },
+    {
+      "name": "Source schema conformance",
+      "data_type": "binary",
+      "tier": 2,
+      "result": true,
+      "source": "gene_ontology",
+      "mapping": "gene_ontology.biological_process_nodes"
+    },
+    {
+      "name": "Source database extraction",
+      "data_type": "binary",
+      "tier": 1,
+      "result": true,
+      "source": "gene_ontology",
+      "mapping": "gene_ontology.molecular_function_nodes"
+    },
+    {
+      "name": "TSV structural integrity",
+      "data_type": "binary",
+      "tier": 1,
+      "result": true,
+      "source": "gene_ontology",
+      "mapping": "gene_ontology.molecular_function_nodes"
+    },
+    {
+      "name": "Extracted record counts",
+      "data_type": "integer",
+      "tier": 1,
+      "result": 10056,
+      "source": "gene_ontology",
+      "mapping": "gene_ontology.molecular_function_nodes"
+    },
+    {
+      "name": "Property value constraint violations",
+      "data_type": "integer",
+      "tier": 2,
+      "result": 0,
+      "source": "gene_ontology",
+      "mapping": "gene_ontology.molecular_function_nodes"
+    },
+    {
+      "name": "Source schema conformance",
+      "data_type": "binary",
+      "tier": 2,
+      "result": true,
+      "source": "gene_ontology",
+      "mapping": "gene_ontology.molecular_function_nodes"
+    },
+    {
+      "name": "Source database extraction",
+      "data_type": "binary",
+      "tier": 1,
+      "result": true,
+      "source": "gene_ontology",
+      "mapping": "gene_ontology.cellular_component_nodes"
+    },
+    {
+      "name": "TSV structural integrity",
+      "data_type": "binary",
+      "tier": 1,
+      "result": true,
+      "source": "gene_ontology",
+      "mapping": "gene_ontology.cellular_component_nodes"
+    },
+    {
+      "name": "Extracted record counts",
+      "data_type": "integer",
+      "tier": 1,
+      "result": 4076,
+      "source": "gene_ontology",
+      "mapping": "gene_ontology.cellular_component_nodes"
+    },
+    {
+      "name": "Property value constraint violations",
+      "data_type": "integer",
+      "tier": 2,
+      "result": 0,
+      "source": "gene_ontology",
+      "mapping": "gene_ontology.cellular_component_nodes"
+    },
+    {
+      "name": "Source schema conformance",
+      "data_type": "binary",
+      "tier": 2,
+      "result": true,
+      "source": "gene_ontology",
+      "mapping": "gene_ontology.cellular_component_nodes"
+    },
+    {
+      "name": "Source database extraction",
+      "data_type": "binary",
+      "tier": 1,
+      "result": true,
+      "source": "gene_ontology",
+      "mapping": "gene_ontology.gene_bp_associations"
+    },
+    {
+      "name": "TSV structural integrity",
+      "data_type": "binary",
+      "tier": 1,
+      "result": true,
+      "source": "gene_ontology",
+      "mapping": "gene_ontology.gene_bp_associations"
+    },
+    {
+      "name": "Extracted record counts",
+      "data_type": "integer",
+      "tier": 1,
+      "result": 122437,
+      "source": "gene_ontology",
+      "mapping": "gene_ontology.gene_bp_associations"
+    },
+    {
+      "name": "Property value constraint violations",
+      "data_type": "integer",
+      "tier": 2,
+      "result": 0,
+      "source": "gene_ontology",
+      "mapping": "gene_ontology.gene_bp_associations"
+    },
+    {
+      "name": "Source schema conformance",
+      "data_type": "binary",
+      "tier": 2,
+      "result": true,
+      "source": "gene_ontology",
+      "mapping": "gene_ontology.gene_bp_associations"
+    },
+    {
+      "name": "Source database extraction",
+      "data_type": "binary",
+      "tier": 1,
+      "result": true,
+      "source": "gene_ontology",
+      "mapping": "gene_ontology.gene_mf_associations"
+    },
+    {
+      "name": "TSV structural integrity",
+      "data_type": "binary",
+      "tier": 1,
+      "result": true,
+      "source": "gene_ontology",
+      "mapping": "gene_ontology.gene_mf_associations"
+    },
+    {
+      "name": "Extracted record counts",
+      "data_type": "integer",
+      "tier": 1,
+      "result": 76863,
+      "source": "gene_ontology",
+      "mapping": "gene_ontology.gene_mf_associations"
+    },
+    {
+      "name": "Property value constraint violations",
+      "data_type": "integer",
+      "tier": 2,
+      "result": 0,
+      "source": "gene_ontology",
+      "mapping": "gene_ontology.gene_mf_associations"
+    },
+    {
+      "name": "Source schema conformance",
+      "data_type": "binary",
+      "tier": 2,
+      "result": true,
+      "source": "gene_ontology",
+      "mapping": "gene_ontology.gene_mf_associations"
+    },
+    {
+      "name": "Source database extraction",
+      "data_type": "binary",
+      "tier": 1,
+      "result": true,
+      "source": "gene_ontology",
+      "mapping": "gene_ontology.gene_cc_associations"
+    },
+    {
+      "name": "TSV structural integrity",
+      "data_type": "binary",
+      "tier": 1,
+      "result": true,
+      "source": "gene_ontology",
+      "mapping": "gene_ontology.gene_cc_associations"
+    },
+    {
+      "name": "Extracted record counts",
+      "data_type": "integer",
+      "tier": 1,
+      "result": 90507,
+      "source": "gene_ontology",
+      "mapping": "gene_ontology.gene_cc_associations"
+    },
+    {
+      "name": "Property value constraint violations",
+      "data_type": "integer",
+      "tier": 2,
+      "result": 0,
+      "source": "gene_ontology",
+      "mapping": "gene_ontology.gene_cc_associations"
+    },
+    {
+      "name": "Source schema conformance",
+      "data_type": "binary",
+      "tier": 2,
+      "result": true,
+      "source": "gene_ontology",
+      "mapping": "gene_ontology.gene_cc_associations"
+    },
+    {
+      "name": "Extraction timestamp per source",
+      "data_type": "date",
+      "tier": 3,
+      "result": "2026-05-19",
+      "source": "gene_ontology"
+    },
+    {
+      "name": "Direct source download",
+      "data_type": "binary",
+      "tier": 1,
+      "result": true,
+      "source": "hgnc"
+    },
+    {
+      "name": "Source database extraction",
+      "data_type": "binary",
+      "tier": 1,
+      "result": true,
+      "source": "hgnc",
+      "mapping": "hgnc.gene_family_nodes"
+    },
+    {
+      "name": "TSV structural integrity",
+      "data_type": "binary",
+      "tier": 1,
+      "result": true,
+      "source": "hgnc",
+      "mapping": "hgnc.gene_family_nodes"
+    },
+    {
+      "name": "Extracted record counts",
+      "data_type": "integer",
+      "tier": 1,
+      "result": 4257,
+      "source": "hgnc",
+      "mapping": "hgnc.gene_family_nodes"
+    },
+    {
+      "name": "Property value constraint violations",
+      "data_type": "integer",
+      "tier": 2,
+      "result": 0,
+      "source": "hgnc",
+      "mapping": "hgnc.gene_family_nodes"
+    },
+    {
+      "name": "Source schema conformance",
+      "data_type": "binary",
+      "tier": 2,
+      "result": true,
+      "source": "hgnc",
+      "mapping": "hgnc.gene_family_nodes"
+    },
+    {
+      "name": "Source database extraction",
+      "data_type": "binary",
+      "tier": 1,
+      "result": true,
+      "source": "hgnc",
+      "mapping": "hgnc.gene_family_associations"
+    },
+    {
+      "name": "TSV structural integrity",
+      "data_type": "binary",
+      "tier": 1,
+      "result": true,
+      "source": "hgnc",
+      "mapping": "hgnc.gene_family_associations"
+    },
+    {
+      "name": "Extracted record counts",
+      "data_type": "integer",
+      "tier": 1,
+      "result": 27600,
+      "source": "hgnc",
+      "mapping": "hgnc.gene_family_associations"
+    },
+    {
+      "name": "Property value constraint violations",
+      "data_type": "integer",
+      "tier": 2,
+      "result": 0,
+      "source": "hgnc",
+      "mapping": "hgnc.gene_family_associations"
+    },
+    {
+      "name": "Source schema conformance",
+      "data_type": "binary",
+      "tier": 2,
+      "result": true,
+      "source": "hgnc",
+      "mapping": "hgnc.gene_family_associations"
+    },
+    {
+      "name": "Extraction timestamp per source",
+      "data_type": "date",
+      "tier": 3,
+      "result": "2026-05-19",
+      "source": "hgnc"
+    },
+    {
+      "name": "Direct source download",
+      "data_type": "binary",
+      "tier": 1,
+      "result": true,
+      "source": "hpo"
+    },
+    {
+      "name": "Source database extraction",
+      "data_type": "binary",
+      "tier": 1,
+      "result": true,
+      "source": "hpo",
+      "mapping": "hpo.phenotype_nodes"
+    },
+    {
+      "name": "TSV structural integrity",
+      "data_type": "binary",
+      "tier": 1,
+      "result": true,
+      "source": "hpo",
+      "mapping": "hpo.phenotype_nodes"
+    },
+    {
+      "name": "Extracted record counts",
+      "data_type": "integer",
+      "tier": 1,
+      "result": 19389,
+      "source": "hpo",
+      "mapping": "hpo.phenotype_nodes"
+    },
+    {
+      "name": "Property value constraint violations",
+      "data_type": "integer",
+      "tier": 2,
+      "result": 0,
+      "source": "hpo",
+      "mapping": "hpo.phenotype_nodes"
+    },
+    {
+      "name": "Source schema conformance",
+      "data_type": "binary",
+      "tier": 2,
+      "result": true,
+      "source": "hpo",
+      "mapping": "hpo.phenotype_nodes"
+    },
+    {
+      "name": "Source database extraction",
+      "data_type": "binary",
+      "tier": 1,
+      "result": true,
+      "source": "hpo",
+      "mapping": "hpo.gene_phenotype_associations"
+    },
+    {
+      "name": "TSV structural integrity",
+      "data_type": "binary",
+      "tier": 1,
+      "result": true,
+      "source": "hpo",
+      "mapping": "hpo.gene_phenotype_associations"
+    },
+    {
+      "name": "Extracted record counts",
+      "data_type": "integer",
+      "tier": 1,
+      "result": 314250,
+      "source": "hpo",
+      "mapping": "hpo.gene_phenotype_associations"
+    },
+    {
+      "name": "Property value constraint violations",
+      "data_type": "integer",
+      "tier": 2,
+      "result": 0,
+      "source": "hpo",
+      "mapping": "hpo.gene_phenotype_associations"
+    },
+    {
+      "name": "Source schema conformance",
+      "data_type": "binary",
+      "tier": 2,
+      "result": true,
+      "source": "hpo",
+      "mapping": "hpo.gene_phenotype_associations"
+    },
+    {
+      "name": "Extraction timestamp per source",
+      "data_type": "date",
+      "tier": 3,
+      "result": "2026-05-19",
+      "source": "hpo"
+    },
+    {
+      "name": "Direct source download",
+      "data_type": "binary",
+      "tier": 1,
+      "result": true,
+      "source": "jensen_tissues"
+    },
+    {
+      "name": "Source database extraction",
+      "data_type": "binary",
+      "tier": 1,
+      "result": true,
+      "source": "jensen_tissues",
+      "mapping": "jensen_tissues.tissue_gene_associations"
+    },
+    {
+      "name": "TSV structural integrity",
+      "data_type": "binary",
+      "tier": 1,
+      "result": true,
+      "source": "jensen_tissues",
+      "mapping": "jensen_tissues.tissue_gene_associations"
+    },
+    {
+      "name": "Extracted record counts",
+      "data_type": "integer",
+      "tier": 1,
+      "result": 398361,
+      "source": "jensen_tissues",
+      "mapping": "jensen_tissues.tissue_gene_associations"
+    },
+    {
+      "name": "Property value constraint violations",
+      "data_type": "integer",
+      "tier": 2,
+      "result": 0,
+      "source": "jensen_tissues",
+      "mapping": "jensen_tissues.tissue_gene_associations"
+    },
+    {
+      "name": "Source schema conformance",
+      "data_type": "binary",
+      "tier": 2,
+      "result": true,
+      "source": "jensen_tissues",
+      "mapping": "jensen_tissues.tissue_gene_associations"
+    },
+    {
+      "name": "Extraction timestamp per source",
+      "data_type": "date",
+      "tier": 3,
+      "result": "2026-05-19",
+      "source": "jensen_tissues"
+    },
+    {
+      "name": "Direct source download",
+      "data_type": "binary",
+      "tier": 1,
+      "result": true,
+      "source": "lincs"
+    },
+    {
+      "name": "Source database extraction",
+      "data_type": "binary",
+      "tier": 1,
+      "result": true,
+      "source": "lincs",
+      "mapping": "lincs.compound_gene_up"
+    },
+    {
+      "name": "TSV structural integrity",
+      "data_type": "binary",
+      "tier": 1,
+      "result": true,
+      "source": "lincs",
+      "mapping": "lincs.compound_gene_up"
+    },
+    {
+      "name": "Extracted record counts",
+      "data_type": "integer",
+      "tier": 1,
+      "result": 247173,
+      "source": "lincs",
+      "mapping": "lincs.compound_gene_up"
+    },
+    {
+      "name": "Property value constraint violations",
+      "data_type": "integer",
+      "tier": 2,
+      "result": 0,
+      "source": "lincs",
+      "mapping": "lincs.compound_gene_up"
+    },
+    {
+      "name": "Source schema conformance",
+      "data_type": "binary",
+      "tier": 2,
+      "result": true,
+      "source": "lincs",
+      "mapping": "lincs.compound_gene_up"
+    },
+    {
+      "name": "Source database extraction",
+      "data_type": "binary",
+      "tier": 1,
+      "result": true,
+      "source": "lincs",
+      "mapping": "lincs.compound_gene_down"
+    },
+    {
+      "name": "TSV structural integrity",
+      "data_type": "binary",
+      "tier": 1,
+      "result": true,
+      "source": "lincs",
+      "mapping": "lincs.compound_gene_down"
+    },
+    {
+      "name": "Extracted record counts",
+      "data_type": "integer",
+      "tier": 1,
+      "result": 217664,
+      "source": "lincs",
+      "mapping": "lincs.compound_gene_down"
+    },
+    {
+      "name": "Property value constraint violations",
+      "data_type": "integer",
+      "tier": 2,
+      "result": 0,
+      "source": "lincs",
+      "mapping": "lincs.compound_gene_down"
+    },
+    {
+      "name": "Source schema conformance",
+      "data_type": "binary",
+      "tier": 2,
+      "result": true,
+      "source": "lincs",
+      "mapping": "lincs.compound_gene_down"
+    },
+    {
+      "name": "Extraction timestamp per source",
+      "data_type": "date",
+      "tier": 3,
+      "result": "2026-05-19",
+      "source": "lincs"
+    },
+    {
+      "name": "Direct source download",
+      "data_type": "binary",
+      "tier": 1,
+      "result": true,
+      "source": "mesh"
+    },
+    {
+      "name": "Source database extraction",
+      "data_type": "binary",
+      "tier": 1,
+      "result": true,
+      "source": "mesh",
+      "mapping": "mesh.symptom_nodes"
+    },
+    {
+      "name": "TSV structural integrity",
+      "data_type": "binary",
+      "tier": 1,
+      "result": true,
+      "source": "mesh",
+      "mapping": "mesh.symptom_nodes"
+    },
+    {
+      "name": "Extracted record counts",
+      "data_type": "integer",
+      "tier": 1,
+      "result": 415,
+      "source": "mesh",
+      "mapping": "mesh.symptom_nodes"
+    },
+    {
+      "name": "Property value constraint violations",
+      "data_type": "integer",
+      "tier": 2,
+      "result": 0,
+      "source": "mesh",
+      "mapping": "mesh.symptom_nodes"
+    },
+    {
+      "name": "Source schema conformance",
+      "data_type": "binary",
+      "tier": 2,
+      "result": true,
+      "source": "mesh",
+      "mapping": "mesh.symptom_nodes"
+    },
+    {
+      "name": "Extraction timestamp per source",
+      "data_type": "date",
+      "tier": 3,
+      "result": "2026-05-19",
+      "source": "mesh"
+    },
+    {
+      "name": "Direct source download",
+      "data_type": "binary",
+      "tier": 1,
+      "result": true,
+      "source": "ncbigene"
+    },
+    {
+      "name": "Source database extraction",
+      "data_type": "binary",
+      "tier": 1,
+      "result": true,
+      "source": "ncbigene",
+      "mapping": "ncbigene.genes"
+    },
+    {
+      "name": "TSV structural integrity",
+      "data_type": "binary",
+      "tier": 1,
+      "result": true,
+      "source": "ncbigene",
+      "mapping": "ncbigene.genes"
+    },
+    {
+      "name": "Extracted record counts",
+      "data_type": "integer",
+      "tier": 1,
+      "result": 193795,
+      "source": "ncbigene",
+      "mapping": "ncbigene.genes"
+    },
+    {
+      "name": "Property value constraint violations",
+      "data_type": "integer",
+      "tier": 2,
+      "result": 7342,
+      "source": "ncbigene",
+      "mapping": "ncbigene.genes"
+    },
+    {
+      "name": "Source schema conformance",
+      "data_type": "binary",
+      "tier": 2,
+      "result": true,
+      "source": "ncbigene",
+      "mapping": "ncbigene.genes"
+    },
+    {
+      "name": "Extraction timestamp per source",
+      "data_type": "date",
+      "tier": 3,
+      "result": "2026-05-19",
+      "source": "ncbigene"
+    },
+    {
+      "name": "Direct source download",
+      "data_type": "binary",
+      "tier": 1,
+      "result": true,
+      "source": "opentargets"
+    },
+    {
+      "name": "Source database extraction",
+      "data_type": "binary",
+      "tier": 1,
+      "result": true,
+      "source": "opentargets",
+      "mapping": "opentargets.target_disease_associations"
+    },
+    {
+      "name": "TSV structural integrity",
+      "data_type": "binary",
+      "tier": 1,
+      "result": true,
+      "source": "opentargets",
+      "mapping": "opentargets.target_disease_associations"
+    },
+    {
+      "name": "Extracted record counts",
+      "data_type": "integer",
+      "tier": 1,
+      "result": 6601,
+      "source": "opentargets",
+      "mapping": "opentargets.target_disease_associations"
+    },
+    {
+      "name": "Property value constraint violations",
+      "data_type": "integer",
+      "tier": 2,
+      "result": 0,
+      "source": "opentargets",
+      "mapping": "opentargets.target_disease_associations"
+    },
+    {
+      "name": "Source schema conformance",
+      "data_type": "binary",
+      "tier": 2,
+      "result": true,
+      "source": "opentargets",
+      "mapping": "opentargets.target_disease_associations"
+    },
+    {
+      "name": "Extraction timestamp per source",
+      "data_type": "date",
+      "tier": 3,
+      "result": "2026-05-19",
+      "source": "opentargets"
+    },
+    {
+      "name": "Direct source download",
+      "data_type": "binary",
+      "tier": 1,
+      "result": true,
+      "source": "pubtator"
+    },
+    {
+      "name": "Source database extraction",
+      "data_type": "binary",
+      "tier": 1,
+      "result": true,
+      "source": "pubtator",
+      "mapping": "pubtator.pubtator_gene_disease"
+    },
+    {
+      "name": "TSV structural integrity",
+      "data_type": "binary",
+      "tier": 1,
+      "result": true,
+      "source": "pubtator",
+      "mapping": "pubtator.pubtator_gene_disease"
+    },
+    {
+      "name": "Extracted record counts",
+      "data_type": "integer",
+      "tier": 1,
+      "result": 1749,
+      "source": "pubtator",
+      "mapping": "pubtator.pubtator_gene_disease"
+    },
+    {
+      "name": "Property value constraint violations",
+      "data_type": "integer",
+      "tier": 2,
+      "result": 13,
+      "source": "pubtator",
+      "mapping": "pubtator.pubtator_gene_disease"
+    },
+    {
+      "name": "Source schema conformance",
+      "data_type": "binary",
+      "tier": 2,
+      "result": true,
+      "source": "pubtator",
+      "mapping": "pubtator.pubtator_gene_disease"
+    },
+    {
+      "name": "Extraction timestamp per source",
+      "data_type": "date",
+      "tier": 3,
+      "result": "2026-05-19",
+      "source": "pubtator"
+    },
+    {
+      "name": "Direct source download",
+      "data_type": "binary",
+      "tier": 1,
+      "result": true,
+      "source": "reactome"
+    },
+    {
+      "name": "Source database extraction",
+      "data_type": "binary",
+      "tier": 1,
+      "result": true,
+      "source": "reactome",
+      "mapping": "reactome.pathways"
+    },
+    {
+      "name": "TSV structural integrity",
+      "data_type": "binary",
+      "tier": 1,
+      "result": true,
+      "source": "reactome",
+      "mapping": "reactome.pathways"
+    },
+    {
+      "name": "Extracted record counts",
+      "data_type": "integer",
+      "tier": 1,
+      "result": 2870,
+      "source": "reactome",
+      "mapping": "reactome.pathways"
+    },
+    {
+      "name": "Property value constraint violations",
+      "data_type": "integer",
+      "tier": 2,
+      "result": 0,
+      "source": "reactome",
+      "mapping": "reactome.pathways"
+    },
+    {
+      "name": "Source schema conformance",
+      "data_type": "binary",
+      "tier": 2,
+      "result": true,
+      "source": "reactome",
+      "mapping": "reactome.pathways"
+    },
+    {
+      "name": "Source database extraction",
+      "data_type": "binary",
+      "tier": 1,
+      "result": true,
+      "source": "reactome",
+      "mapping": "reactome.ncbi_gene_pathway_relationships"
+    },
+    {
+      "name": "TSV structural integrity",
+      "data_type": "binary",
+      "tier": 1,
+      "result": true,
+      "source": "reactome",
+      "mapping": "reactome.ncbi_gene_pathway_relationships"
+    },
+    {
+      "name": "Extracted record counts",
+      "data_type": "integer",
+      "tier": 1,
+      "result": 156329,
+      "source": "reactome",
+      "mapping": "reactome.ncbi_gene_pathway_relationships"
+    },
+    {
+      "name": "Property value constraint violations",
+      "data_type": "integer",
+      "tier": 2,
+      "result": 183,
+      "source": "reactome",
+      "mapping": "reactome.ncbi_gene_pathway_relationships"
+    },
+    {
+      "name": "Source schema conformance",
+      "data_type": "binary",
+      "tier": 2,
+      "result": true,
+      "source": "reactome",
+      "mapping": "reactome.ncbi_gene_pathway_relationships"
+    },
+    {
+      "name": "Extraction timestamp per source",
+      "data_type": "date",
+      "tier": 3,
+      "result": "2026-05-19",
+      "source": "reactome"
+    },
+    {
+      "name": "Direct source download",
+      "data_type": "binary",
+      "tier": 1,
+      "result": true,
+      "source": "sider"
+    },
+    {
+      "name": "Source database extraction",
+      "data_type": "binary",
+      "tier": 1,
+      "result": true,
+      "source": "sider",
+      "mapping": "sider.side_effect_nodes"
+    },
+    {
+      "name": "TSV structural integrity",
+      "data_type": "binary",
+      "tier": 1,
+      "result": true,
+      "source": "sider",
+      "mapping": "sider.side_effect_nodes"
+    },
+    {
+      "name": "Extracted record counts",
+      "data_type": "integer",
+      "tier": 1,
+      "result": 4251,
+      "source": "sider",
+      "mapping": "sider.side_effect_nodes"
+    },
+    {
+      "name": "Property value constraint violations",
+      "data_type": "integer",
+      "tier": 2,
+      "result": 0,
+      "source": "sider",
+      "mapping": "sider.side_effect_nodes"
+    },
+    {
+      "name": "Source schema conformance",
+      "data_type": "binary",
+      "tier": 2,
+      "result": true,
+      "source": "sider",
+      "mapping": "sider.side_effect_nodes"
+    },
+    {
+      "name": "Source database extraction",
+      "data_type": "binary",
+      "tier": 1,
+      "result": true,
+      "source": "sider",
+      "mapping": "sider.drug_side_effect_associations"
+    },
+    {
+      "name": "TSV structural integrity",
+      "data_type": "binary",
+      "tier": 1,
+      "result": true,
+      "source": "sider",
+      "mapping": "sider.drug_side_effect_associations"
+    },
+    {
+      "name": "Extracted record counts",
+      "data_type": "integer",
+      "tier": 1,
+      "result": 145321,
+      "source": "sider",
+      "mapping": "sider.drug_side_effect_associations"
+    },
+    {
+      "name": "Property value constraint violations",
+      "data_type": "integer",
+      "tier": 2,
+      "result": 0,
+      "source": "sider",
+      "mapping": "sider.drug_side_effect_associations"
+    },
+    {
+      "name": "Source schema conformance",
+      "data_type": "binary",
+      "tier": 2,
+      "result": true,
+      "source": "sider",
+      "mapping": "sider.drug_side_effect_associations"
+    },
+    {
+      "name": "Extraction timestamp per source",
+      "data_type": "date",
+      "tier": 3,
+      "result": "2026-05-19",
+      "source": "sider"
+    },
+    {
+      "name": "Direct source download",
+      "data_type": "binary",
+      "tier": 1,
+      "result": true,
+      "source": "sources"
+    },
+    {
+      "name": "Direct source download",
+      "data_type": "binary",
+      "tier": 1,
+      "result": true,
+      "source": "string"
+    },
+    {
+      "name": "Source database extraction",
+      "data_type": "binary",
+      "tier": 1,
+      "result": true,
+      "source": "string",
+      "mapping": "string.gene_interactions"
+    },
+    {
+      "name": "TSV structural integrity",
+      "data_type": "binary",
+      "tier": 1,
+      "result": true,
+      "source": "string",
+      "mapping": "string.gene_interactions"
+    },
+    {
+      "name": "Extracted record counts",
+      "data_type": "integer",
+      "tier": 1,
+      "result": 468977,
+      "source": "string",
+      "mapping": "string.gene_interactions"
+    },
+    {
+      "name": "Property value constraint violations",
+      "data_type": "integer",
+      "tier": 2,
+      "result": 0,
+      "source": "string",
+      "mapping": "string.gene_interactions"
+    },
+    {
+      "name": "Source schema conformance",
+      "data_type": "binary",
+      "tier": 2,
+      "result": true,
+      "source": "string",
+      "mapping": "string.gene_interactions"
+    },
+    {
+      "name": "Extraction timestamp per source",
+      "data_type": "date",
+      "tier": 3,
+      "result": "2026-05-19",
+      "source": "string"
+    },
+    {
+      "name": "Direct source download",
+      "data_type": "binary",
+      "tier": 1,
+      "result": true,
+      "source": "uberon"
+    },
+    {
+      "name": "Source database extraction",
+      "data_type": "binary",
+      "tier": 1,
+      "result": true,
+      "source": "uberon",
+      "mapping": "uberon.uberon_nodes"
+    },
+    {
+      "name": "TSV structural integrity",
+      "data_type": "binary",
+      "tier": 1,
+      "result": true,
+      "source": "uberon",
+      "mapping": "uberon.uberon_nodes"
+    },
+    {
+      "name": "Extracted record counts",
+      "data_type": "integer",
+      "tier": 1,
+      "result": 1400,
+      "source": "uberon",
+      "mapping": "uberon.uberon_nodes"
+    },
+    {
+      "name": "Property value constraint violations",
+      "data_type": "integer",
+      "tier": 2,
+      "result": 0,
+      "source": "uberon",
+      "mapping": "uberon.uberon_nodes"
+    },
+    {
+      "name": "Source schema conformance",
+      "data_type": "binary",
+      "tier": 2,
+      "result": true,
+      "source": "uberon",
+      "mapping": "uberon.uberon_nodes"
+    },
+    {
+      "name": "Extraction timestamp per source",
+      "data_type": "date",
+      "tier": 3,
+      "result": "2026-05-19",
+      "source": "uberon"
+    }
+  ]
+}

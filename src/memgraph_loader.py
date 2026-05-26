@@ -232,13 +232,32 @@ class Neo4jLoader:
         merge = config.get('merge', False)
         use_create = config.get('use_create', False)  # Use CREATE instead of MERGE for unique datasets
         iri_col = pc.get('iri_column_name', '')
+        iri_fallback_col = pc.get('iri_fallback_column', '')
+        iri_fallback_prefix = pc.get('iri_fallback_prefix', '')
         prop_map = pc.get('data_property_map', {})
 
         # Filter if needed
         df = self._apply_filter(df, pc)
 
-        # Filter out rows where IRI column is null (can't MERGE on null)
+        # Handle IRI fallback: when primary IRI column is null, use fallback column
         if iri_col and iri_col in df.columns:
+            # Create effective IRI column that combines primary and fallback
+            df = df.copy()
+            if iri_fallback_col and iri_fallback_col in df.columns:
+                # Use fallback when primary is null/empty
+                df['_effective_iri'] = df.apply(
+                    lambda row: row[iri_col] if pd.notna(row[iri_col]) and str(row[iri_col]).strip() != ''
+                    else f"{iri_fallback_prefix}{row[iri_fallback_col]}" if pd.notna(row[iri_fallback_col]) else '',
+                    axis=1
+                )
+                fallback_used = (df['_effective_iri'].str.startswith(iri_fallback_prefix)).sum()
+                if fallback_used > 0:
+                    logger.info(f"    Using fallback IRI ({iri_fallback_col}) for {fallback_used} rows")
+                # Replace original IRI column with effective IRI for processing
+                df[iri_col] = df['_effective_iri']
+                df = df.drop(columns=['_effective_iri'])
+
+            # Now filter out remaining nulls
             before_count = len(df)
             df = df[df[iri_col].notna() & (df[iri_col] != '')].copy()
             dropped = before_count - len(df)

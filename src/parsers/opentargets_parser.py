@@ -1,183 +1,322 @@
 """
-OpenTargetsParser: Parser for Open Targets gene-disease associations.
+OpenTargets Platform Parser for the knowledge graph.
 
-Downloads overall direct association scores (Parquet) and disease metadata
-to map EFO disease IDs to DOID, producing geneAssociatesWithDisease edges.
+Uses the OpenTargets GraphQL API to retrieve target-disease associations
+filtered to cardiovascular diseases from config/project.yaml.
 
-Source: https://platform.opentargets.org/
-Access: Public (no credentials required)
-License: CC BY-SA 4.0
+API: https://api.platform.opentargets.org/api/v4/graphql
+
+Output:
+  - target_disease_associations.tsv : geneAssociatesWithDisease edges
+    Columns: target_id, gene_symbol, gene_name, disease_id, disease_name,
+             overall_score, source_database
 """
 
 import logging
-import re
-from typing import Dict, Optional
+import time
+from pathlib import Path
+from typing import Dict, List, Optional
 
 import pandas as pd
 import requests
 
 from .base_parser import BaseParser
+from config_loader import get_disease_scope
+from id_mappings import IDMapper
 
 logger = logging.getLogger(__name__)
 
-OT_FTP_BASE = "https://ftp.ebi.ac.uk/pub/databases/opentargets/platform/"
-OT_FALLBACK_VERSION = "25.12"
+_GRAPHQL_URL = "https://api.platform.opentargets.org/api/v4/graphql"
 
+_DEFAULT_BASE_URL = (
+    "https://ftp.ebi.ac.uk/pub/databases/opentargets/platform/latest/output/etl/parquet/"
+)
 
-def _discover_latest_ot_version() -> str:
-    """Discover the latest Open Targets platform version from FTP listing."""
-    import re
-    try:
-        resp = requests.get(OT_FTP_BASE, timeout=30)
-        resp.raise_for_status()
-        versions = re.findall(r'href="(\d+\.\d+)/"', resp.text)
-        if versions:
-            latest = sorted(versions, key=lambda v: [int(x) for x in v.split('.')])[-1]
-            logger.info(f"OpenTargets: discovered latest version: {latest}")
-            return latest
-    except Exception as e:
-        logger.warning(f"Failed to discover latest OpenTargets version: {e}")
-    return OT_FALLBACK_VERSION
+TARGET_DISEASE_OUTPUT = "target_disease_associations"
 
-
-_OT_VERSION = _discover_latest_ot_version()
-ASSOC_BASE_URL = f"{OT_FTP_BASE}{_OT_VERSION}/output/association_overall_direct/"
-DISEASE_URL = f"{OT_FTP_BASE}{_OT_VERSION}/output/disease/disease.parquet"
+_MIN_SCORE_DEFAULT = 0.1
+_PAGE_SIZE = 500
+_CALL_DELAY = 0.25
+_MAX_PAGES_PER_DISEASE = 10   # cap at 5000 rows per disease
 
 
 class OpenTargetsParser(BaseParser):
-    """Parser for Open Targets gene-disease association data."""
+    """
+    Parser for OpenTargets Platform target-disease associations.
 
-    def __init__(self, data_dir: Optional[str] = None):
+    Queries the OpenTargets GraphQL API for cardiovascular disease associations,
+    filters by disease terms from project.yaml, and returns gene-disease edges.
+
+    Constructor args (injected from databases.yaml):
+        data_dir          – base directory for raw/cached files
+        base_url          – OpenTargets FTP base URL (kept for compat)
+        source_url        – OpenTargets FTP or API URL (kept for compat)
+        disease_scope     – disease scope dict (injected by main.py)
+        min_score         – minimum association score to include
+        max_parquet_files – kept for compat with databases.yaml
+    """
+
+    # Representative CVD search terms to discover EFO IDs
+    _SEARCH_TERMS = [
+        "heart failure",
+        "coronary artery disease",
+        "atrial fibrillation",
+        "cardiomyopathy",
+        "hypertension",
+        "myocardial infarction",
+        "stroke",
+        "arrhythmia",
+        "aortic aneurysm",
+        "valvular heart disease",
+        "congenital heart disease",
+        "pulmonary hypertension",
+        "peripheral arterial disease",
+        "ventricular tachycardia",
+        "heart block",
+    ]
+
+    def __init__(
+        self,
+        data_dir: str,
+        base_url: Optional[str] = None,
+        source_url: Optional[str] = None,
+        disease_scope: Optional[Dict] = None,
+        min_score: float = _MIN_SCORE_DEFAULT,
+        max_parquet_files: int = 5,
+    ):
         super().__init__(data_dir)
+        self.source_name = "opentargets"
+        self.source_dir = self.data_dir / self.source_name
+        self.source_dir.mkdir(parents=True, exist_ok=True)
+
+        # Accept either base_url or source_url from databases.yaml (both ignored;
+        # we always use the GraphQL API endpoint)
+        self._min_score = float(min_score)
+        self._max_parquet_files = max_parquet_files  # kept for compat
+
+        _scope = disease_scope if disease_scope else get_disease_scope()
+        self._primary_terms = [t.lower() for t in _scope.get("primary_terms", [])]
+
+    # ------------------------------------------------------------------
+    # Download
+    # ------------------------------------------------------------------
 
     def download_data(self) -> bool:
-        """Download association parquet files and disease metadata."""
-        logger.info("Downloading Open Targets data...")
-
-        # Download disease metadata for EFO->DOID mapping
-        disease_path = self.source_dir / 'disease.parquet'
-        if not disease_path.exists():
-            result = self.download_file(DISEASE_URL, 'disease.parquet')
-            if not result:
-                logger.error("Failed to download disease metadata")
-                return False
-
-        # Check if association files already downloaded
-        existing = list(self.source_dir.glob('part-*.parquet'))
-        if existing:
-            logger.info(f"Found {len(existing)} existing association parquet files")
-            return True
-
-        # Discover parquet file names from directory listing
-        try:
-            resp = requests.get(ASSOC_BASE_URL, timeout=30)
-            resp.raise_for_status()
-            filenames = re.findall(r'href="(part-\d+[^"]*\.parquet)"', resp.text)
-            if not filenames:
-                logger.error("No parquet files found in index")
-                return False
-            logger.info(f"Found {len(filenames)} parquet files to download")
-        except Exception as e:
-            logger.error(f"Failed to list parquet files: {e}")
-            return False
-
-        for i, fname in enumerate(filenames):
-            result = self.download_file(f"{ASSOC_BASE_URL}{fname}", fname)
-            if not result:
-                logger.error(f"Failed to download {fname}")
-                return False
-            if (i + 1) % 5 == 0:
-                logger.info(f"  Downloaded {i + 1}/{len(filenames)} files")
-
-        logger.info(f"Downloaded all {len(filenames)} parquet files")
+        """Data fetched via GraphQL API in parse_data(); no pre-download needed."""
         return True
 
-    def _build_efo_to_doid(self) -> Dict[str, str]:
-        """Build EFO ID -> DOID mapping from disease metadata."""
-        import pyarrow.parquet as pq
-
-        disease_path = self.source_dir / 'disease.parquet'
-        if not disease_path.exists():
-            return {}
-
-        df = pq.read_table(str(disease_path)).to_pandas()
-        mapping = {}
-
-        for _, row in df.iterrows():
-            ot_id = row['id']  # e.g., "EFO_0000378" or "DOID_10113"
-
-            # If it's already DOID, map directly
-            if isinstance(ot_id, str) and ot_id.startswith('DOID_'):
-                doid = ot_id.replace('_', ':', 1)
-                mapping[ot_id] = doid
-                continue
-
-            # Check dbXRefs for DOID cross-references
-            xrefs = row.get('dbXRefs')
-            if xrefs is not None:
-                for xref in xrefs:
-                    if isinstance(xref, str) and xref.startswith('DOID:'):
-                        mapping[ot_id] = xref
-                        break
-
-        logger.info(f"OpenTargets: mapped {len(mapping)} disease IDs to DOID")
-        return mapping
+    # ------------------------------------------------------------------
+    # Parse
+    # ------------------------------------------------------------------
 
     def parse_data(self) -> Dict[str, pd.DataFrame]:
-        """Parse parquet files into gene-disease association edges."""
-        import pyarrow.parquet as pq
-
-        # Build EFO->DOID mapping
-        efo_to_doid = self._build_efo_to_doid()
-        if not efo_to_doid:
-            logger.error("Failed to build EFO->DOID mapping")
+        """
+        Query OpenTargets GraphQL API for cardiovascular disease associations.
+        Searches for EFO IDs matching project disease terms, then fetches
+        target associations for each disease.
+        """
+        # Step 1: Discover EFO disease IDs for CVD terms
+        logger.info("Querying OpenTargets for cardiovascular disease IDs ...")
+        disease_ids = self._discover_disease_ids()
+        if not disease_ids:
+            logger.warning("No OpenTargets disease IDs found for disease scope.")
             return {}
 
-        # Read association files
-        parquet_files = sorted(self.source_dir.glob('part-*.parquet'))
-        if not parquet_files:
-            logger.error("No association parquet files found")
+        logger.info("OpenTargets: found %d matching disease IDs", len(disease_ids))
+
+        # Step 2: Fetch associations for each disease (cap at 30 diseases)
+        all_rows: List[dict] = []
+        seen_pairs = set()
+
+        for disease_id, disease_name in disease_ids[:30]:
+            rows = self._fetch_associations_for_disease(disease_id, disease_name)
+            new_rows = 0
+            for r in rows:
+                pair = (r["target_id"], r["disease_id"])
+                if pair not in seen_pairs:
+                    seen_pairs.add(pair)
+                    all_rows.append(r)
+                    new_rows += 1
+            logger.info("  %s (%s): %d associations (total: %d)",
+                        disease_name, disease_id, new_rows, len(all_rows))
+            time.sleep(_CALL_DELAY)
+
+        if not all_rows:
+            logger.warning("No OpenTargets associations returned.")
             return {}
 
-        frames = []
-        for pf in parquet_files:
-            table = pq.read_table(str(pf))
-            frames.append(table.to_pandas())
+        df = pd.DataFrame(all_rows)
+        df["source_database"] = "OpenTargets"
 
-        df = pd.concat(frames, ignore_index=True)
-        logger.info(f"Open Targets raw: {len(df)} associations")
+        # Map EFO disease IDs to DOID using IDMapper
+        logger.info("Mapping EFO disease IDs to DOID...")
+        mapper = IDMapper(str(self.data_dir))
+        processed_dir = self.data_dir / "processed"
+        if processed_dir.exists():
+            mapper.load_all_mappings(processed_dir)
 
-        # Map disease IDs to DOID
-        df['disease_id'] = df['diseaseId'].map(efo_to_doid)
-        before = len(df)
-        df = df.dropna(subset=['disease_id'])
-        logger.info(f"Open Targets DOID-mapped: {len(df)} associations ({before - len(df)} unmapped)")
+        original_count = len(df)
+        df["doid"] = df["disease_id"].apply(mapper.map_to_doid)
 
-        # Ensembl gene IDs
-        df['ensembl_id'] = df['targetId']
+        # Keep original EFO ID for reference, use DOID as primary
+        df["efo_id"] = df["disease_id"]
+        mapped_df = df[df["doid"].notna()].copy()
+        mapped_df["disease_id"] = mapped_df["doid"]
+        mapped_df = mapped_df.drop(columns=["doid"])
 
-        result = df[['ensembl_id', 'disease_id', 'score', 'evidenceCount']].copy()
-        result = result.drop_duplicates(subset=['ensembl_id', 'disease_id'])
-        result['source_database'] = 'OpenTargets'
+        mapped_count = len(mapped_df)
+        logger.info("OpenTargets EFO→DOID mapping: %d/%d (%.1f%%) successfully mapped",
+                    mapped_count, original_count, 100.0 * mapped_count / max(original_count, 1))
 
-        logger.info(
-            f"Open Targets: {len(result)} gene-disease associations "
-            f"({result['ensembl_id'].nunique()} genes, "
-            f"{result['disease_id'].nunique()} diseases)"
-        )
+        if mapped_df.empty:
+            logger.warning("No OpenTargets associations after DOID mapping.")
+            return {}
 
-        return {
-            'gene_disease': result,
+        mapped_df = mapped_df.sort_values("overall_score", ascending=False).reset_index(drop=True)
+
+        logger.info("OpenTargets: %d target-disease associations (score >= %.2f)",
+                    len(mapped_df), self._min_score)
+        return {TARGET_DISEASE_OUTPUT: mapped_df}
+
+    # ------------------------------------------------------------------
+    # GraphQL helpers
+    # ------------------------------------------------------------------
+
+    def _gql(self, query: str, variables: dict) -> Optional[dict]:
+        """Execute a GraphQL query and return the data dict."""
+        try:
+            resp = requests.post(
+                _GRAPHQL_URL,
+                json={"query": query, "variables": variables},
+                timeout=60,
+            )
+            resp.raise_for_status()
+            result = resp.json()
+            if "errors" in result:
+                logger.debug("GraphQL errors: %s", result["errors"])
+                return None
+            return result.get("data")
+        except Exception as exc:
+            logger.warning("OpenTargets GraphQL error: %s", exc)
+            return None
+
+    def _discover_disease_ids(self) -> List[tuple]:
+        """
+        Search OpenTargets for disease IDs matching project disease terms.
+        Returns list of (efo_id, disease_name) tuples.
+        """
+        search_query = """
+        query SearchDisease($term: String!) {
+          search(queryString: $term, entityNames: ["disease"], page: {index: 0, size: 10}) {
+            hits {
+              id
+              name
+            }
+          }
         }
+        """
+
+        seen_ids: set = set()
+        results: List[tuple] = []
+
+        for term in self._SEARCH_TERMS:
+            data = self._gql(search_query, {"term": term})
+            if not data:
+                continue
+            for hit in data.get("search", {}).get("hits", []):
+                eid = hit.get("id", "")
+                ename = hit.get("name", "")
+                if eid and eid not in seen_ids:
+                    # Include if the name loosely matches any primary term
+                    ename_lower = ename.lower()
+                    if any(pt in ename_lower or ename_lower in pt
+                           for pt in self._primary_terms):
+                        seen_ids.add(eid)
+                        results.append((eid, ename))
+            time.sleep(_CALL_DELAY)
+
+        return results
+
+    def _fetch_associations_for_disease(
+        self, disease_id: str, disease_name: str
+    ) -> List[dict]:
+        """
+        Fetch target-disease associations for a single disease using
+        page-based pagination.
+        """
+        assoc_query = """
+        query DiseaseAssociations($efoId: String!, $index: Int!, $size: Int!) {
+          disease(efoId: $efoId) {
+            associatedTargets(page: {index: $index, size: $size}) {
+              count
+              rows {
+                target {
+                  id
+                  approvedSymbol
+                  approvedName
+                }
+                score
+              }
+            }
+          }
+        }
+        """
+
+        rows: List[dict] = []
+        page_index = 0
+
+        while page_index < _MAX_PAGES_PER_DISEASE:
+            data = self._gql(assoc_query, {
+                "efoId": disease_id,
+                "index": page_index,
+                "size": _PAGE_SIZE,
+            })
+            if not data:
+                break
+
+            disease_data = (data.get("disease") or {})
+            assoc = disease_data.get("associatedTargets", {})
+            batch = assoc.get("rows", [])
+            if not batch:
+                break
+
+            for row in batch:
+                target = row.get("target", {})
+                score = float(row.get("score", 0.0))
+                if score < self._min_score:
+                    continue
+                target_id = target.get("id", "")
+                if target_id:
+                    rows.append({
+                        "target_id":    target_id,
+                        "gene_symbol":  target.get("approvedSymbol", ""),
+                        "gene_name":    target.get("approvedName", ""),
+                        "disease_id":   disease_id,
+                        "disease_name": disease_name,
+                        "overall_score": score,
+                    })
+
+            page_index += 1
+            if len(batch) < _PAGE_SIZE:
+                break
+            time.sleep(_CALL_DELAY)
+
+        return rows
+
+    # ------------------------------------------------------------------
+    # Schema
+    # ------------------------------------------------------------------
 
     def get_schema(self) -> Dict[str, Dict[str, str]]:
         return {
-            'gene_disease': {
-                'ensembl_id': 'Ensembl Gene ID',
-                'disease_id': 'Disease Ontology ID (DOID:nnnnnnn)',
-                'score': 'Overall association score (0-1)',
-                'evidenceCount': 'Number of supporting evidence items',
-                'source_database': 'Source database identifier',
+            TARGET_DISEASE_OUTPUT: {
+                "target_id":     "Ensembl gene ID (ENSG)",
+                "gene_symbol":   "HGNC gene symbol",
+                "gene_name":     "Gene full name",
+                "disease_id":    "DOID disease identifier (mapped from EFO)",
+                "efo_id":        "Original EFO disease identifier",
+                "disease_name":  "Disease name",
+                "overall_score": "OpenTargets overall association score (0-1)",
+                "source_database": "Source database (OpenTargets)",
             },
         }

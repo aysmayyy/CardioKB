@@ -1,31 +1,25 @@
-#!/usr/bin/env bash
-# CardioKB Web Interface Launcher
-#
-# Usage:
-#   ./run.sh              # Start on default port 5050
-#   ./run.sh 8080         # Start on custom port
-#
-# For remote access via ngrok:
-#   ngrok http 5050
+#!/bin/bash
+# Run the KG pipeline
 
-set -e
-
-PORT="${1:-5050}"
-DIR="$(cd "$(dirname "$0")" && pwd)"
-
-echo ""
-echo "  CardioKB Web Interface"
-echo "  ======================"
-echo ""
-echo "  Starting Flask on http://127.0.0.1:${PORT}"
-echo ""
-echo "  For remote access, run in another terminal:"
-echo "    ngrok http ${PORT}"
+echo "================================"
+echo "KG Pipeline"
+echo "================================"
 echo ""
 
-# Open browser after a short delay (background)
-(sleep 1.5 && open "http://127.0.0.1:${PORT}" 2>/dev/null || true) &
+# Activate virtual environment
+if [ -f ".venv/bin/activate" ]; then
+    source .venv/bin/activate
+elif [ -f "venv/bin/activate" ]; then
+    source venv/bin/activate
+else
+    echo "No virtual environment found. Run: python3 -m venv .venv && pip install -r requirements.txt"
+    exit 1
+fi
 
-# Activate conda and run
-cd "$DIR"
-conda run -n cardiokb python src/api.py --port "$PORT"
+# Run the pipeline
+python src/main.py "$@"
+
+echo ""
+echo "================================"
+echo "Done."
+echo "================================"

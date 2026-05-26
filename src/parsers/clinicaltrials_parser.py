@@ -1,261 +1,306 @@
 """
-ClinicalTrialsParser: Parser for ClinicalTrials.gov via the public API v2.
+ClinicalTrials.gov Parser for the knowledge graph.
 
-Queries the ClinicalTrials.gov API v2 for clinical trials matching a disease
-filter (defaults to CVD terms). Paginates through results and caches responses
-as JSON files. Produces the same output schema as the previous AACT-based
-parser so downstream pipeline code is unchanged.
+Queries the ClinicalTrials.gov REST API v2 for studies related to
+cardiovascular diseases (using disease terms from config/project.yaml)
+and produces:
+  - trial_nodes.tsv                  : ClinicalTrial nodes
+  - trial_disease_associations.tsv   : STUDIES_CONDITION edges
+  - trial_intervention_associations.tsv : TESTS_INTERVENTION edges
 
-Source: https://clinicaltrials.gov/api/v2/studies
-Access: Public (no credentials required)
-Rate limit: ~3 requests/second (no hard cap, but be polite)
+API: https://clinicaltrials.gov/api/v2/studies
 """
 
-import json
 import logging
 import time
-from pathlib import Path
-from typing import Dict, FrozenSet, List, Optional
+from typing import Dict, List, Optional
 
 import pandas as pd
 import requests
 
 from .base_parser import BaseParser
-from ..utils import load_disease_terms
+from config_loader import get_disease_scope
 
 logger = logging.getLogger(__name__)
 
-# ClinicalTrials.gov API v2 base URL
-_API_BASE = "https://clinicaltrials.gov/api/v2/studies"
+_DEFAULT_BASE_URL = "https://clinicaltrials.gov/api/v2/studies"
 
-# Fields to retrieve (minimises response size)
-_FIELDS = [
-    "protocolSection.identificationModule.nctId",
-    "protocolSection.identificationModule.briefTitle",
-    "protocolSection.statusModule.overallStatus",
-    "protocolSection.designModule.phases",
-    "protocolSection.conditionsModule.conditions",
-    "protocolSection.armsInterventionsModule.interventions",
-]
+TRIAL_NODES    = "trial_nodes"
+TRIAL_DISEASE  = "trial_disease_associations"
+TRIAL_INTERV   = "trial_intervention_associations"
 
-# Maximum page size allowed by the API
+# Max results per API page
 _PAGE_SIZE = 1000
-
-# Delay between API requests (seconds)
-_REQUEST_DELAY = 0.35
+# Max pages to fetch per search term (to avoid excessive API calls)
+_MAX_PAGES = 10
+# Delay between API calls (seconds) to be polite
+_CALL_DELAY = 0.3
 
 
 class ClinicalTrialsParser(BaseParser):
     """
-    Parser for ClinicalTrials.gov via the public REST API v2.
+    Parser for ClinicalTrials.gov REST API v2.
 
-    Queries for clinical trials matching disease terms from a filter file
-    (defaults to CVD). Results are cached as JSON so repeat runs skip the
-    network requests.
+    Queries for studies related to cardiovascular disease terms from
+    config/project.yaml and produces ClinicalTrial nodes plus
+    STUDIES_CONDITION and TESTS_INTERVENTION relationship edges.
+
+    Constructor args (injected from databases.yaml):
+        data_dir      – base directory for raw/cached files
+        base_url      – ClinicalTrials.gov API v2 base URL
+        disease_filter – whether to filter by disease scope (bool)
+        disease_scope  – disease scope dict (injected by main.py)
     """
 
-    def __init__(self, data_dir: Optional[str] = None,
-                 disease_filter: Optional[str] = None, **kwargs):
-        """
-        Args:
-            data_dir: Directory for storing cached data.
-            disease_filter: Path to disease terms file (one term per line).
-                Defaults to ontology/disease_filter.txt (CVD).
-        """
+    def __init__(
+        self,
+        data_dir: str,
+        base_url: Optional[str] = None,
+        disease_filter: bool = True,
+        disease_scope: Optional[Dict] = None,
+        max_pages: int = 10,
+        page_size: int = 1000,
+        call_delay: float = 0.3,
+    ):
         super().__init__(data_dir)
+        self.source_name = "clinicaltrials"
+        self.source_dir = self.data_dir / self.source_name
+        self.source_dir.mkdir(parents=True, exist_ok=True)
+
+        self.base_url = (base_url or _DEFAULT_BASE_URL).rstrip("/")
         self.disease_filter = disease_filter
-        self._cache_dir = Path(self.data_dir) / "clinicaltrials_cache"
+        self._max_pages = max_pages
+        self._page_size = page_size
+        self._call_delay = call_delay
+
+        _scope = disease_scope if disease_scope else get_disease_scope()
+        self._primary_terms: List[str] = _scope.get("primary_terms", [])
 
     # ------------------------------------------------------------------
-    # Download (= query API and cache)
+    # Download
     # ------------------------------------------------------------------
 
     def download_data(self) -> bool:
-        """Query ClinicalTrials.gov API v2 for each disease term and cache."""
-        self._cache_dir.mkdir(parents=True, exist_ok=True)
-
-        terms = load_disease_terms(self.disease_filter)
-        logger.info(
-            f"Querying ClinicalTrials.gov API v2 for {len(terms)} disease terms"
-        )
-
-        success = True
-        total_studies = 0
-
-        for term in sorted(terms):
-            cache_file = self._cache_file_for(term)
-            if cache_file.exists():
-                cached = json.loads(cache_file.read_text())
-                n = len(cached)
-                total_studies += n
-                logger.debug(f"  Cached: {term!r} ({n} studies)")
-                continue
-
-            studies = self._query_term(term)
-            if studies is None:
-                logger.warning(f"  Failed to query: {term!r}")
-                success = False
-                continue
-
-            cache_file.write_text(json.dumps(studies, separators=(",", ":")))
-            total_studies += len(studies)
-            logger.info(f"  Fetched: {term!r} ({len(studies)} studies)")
-
-        logger.info(
-            f"ClinicalTrials.gov: {total_studies} total studies across "
-            f"{len(terms)} disease terms"
-        )
-        return success
-
-    def _cache_file_for(self, term: str) -> Path:
-        """Return the cache file path for a disease term."""
-        safe = term.replace("/", "_").replace(" ", "_").replace(":", "_")
-        return self._cache_dir / f"{safe}.json"
-
-    def _query_term(self, term: str) -> Optional[List[dict]]:
-        """
-        Paginate through all API v2 results for a single condition query.
-
-        Returns list of raw study JSON objects, or None on failure.
-        """
-        all_studies: List[dict] = []
-        page_token: Optional[str] = None
-
-        while True:
-            params = {
-                "query.cond": term,
-                "fields": ",".join(_FIELDS),
-                "pageSize": _PAGE_SIZE,
-                "format": "json",
-            }
-            if page_token:
-                params["pageToken"] = page_token
-
-            try:
-                time.sleep(_REQUEST_DELAY)
-                resp = requests.get(_API_BASE, params=params, timeout=30)
-                resp.raise_for_status()
-                data = resp.json()
-            except Exception as e:
-                logger.error(f"API error for {term!r}: {e}")
-                return None
-
-            studies = data.get("studies", [])
-            all_studies.extend(studies)
-
-            page_token = data.get("nextPageToken")
-            if not page_token:
-                break
-
-        return all_studies
+        """Data is fetched via API in parse_data(); no pre-download needed."""
+        return True
 
     # ------------------------------------------------------------------
-    # Parse cached JSON into the standard DataFrame schema
+    # Parse
     # ------------------------------------------------------------------
 
     def parse_data(self) -> Dict[str, pd.DataFrame]:
         """
-        Parse cached API responses into a clinical_trials DataFrame.
-
-        Output schema matches the previous AACT parser:
-            trial_id, title, intervention_name, condition, phase, status,
-            source_database
+        Query ClinicalTrials.gov API v2 for each primary disease term,
+        collect unique studies, and return node/edge DataFrames.
         """
-        terms = load_disease_terms(self.disease_filter)
+        if not self._primary_terms:
+            logger.error("No primary_terms in disease_scope; cannot query ClinicalTrials.")
+            return {}
 
-        # Collect all studies, deduplicating by NCT ID
-        seen_nct: set = set()
-        records: List[dict] = []
+        # Use a representative subset of terms to avoid excessive API calls
+        # (many terms are synonymous; the API does substring matching)
+        search_terms = self._select_search_terms()
+        logger.info("ClinicalTrials: querying %d search terms ...", len(search_terms))
 
-        for term in sorted(terms):
-            cache_file = self._cache_file_for(term)
-            if not cache_file.exists():
-                continue
+        all_studies: Dict[str, dict] = {}  # nct_id -> study dict
 
-            studies = json.loads(cache_file.read_text())
-            for study in studies:
-                row = self._extract_study(study)
-                if row and row["trial_id"] not in seen_nct:
-                    seen_nct.add(row["trial_id"])
-                    records.append(row)
+        for term in search_terms:
+            studies = self._fetch_studies_for_term(term)
+            for s in studies:
+                nct_id = s.get("nct_id", "")
+                if nct_id and nct_id not in all_studies:
+                    all_studies[nct_id] = s
+            logger.info("  '%s': %d studies (total unique: %d)", term, len(studies), len(all_studies))
 
-        if not records:
-            logger.warning("No clinical trial records parsed")
-            return {"clinical_trials": pd.DataFrame(columns=[
-                "trial_id", "title", "intervention_name", "condition",
-                "phase", "status", "source_database",
-            ])}
+        if not all_studies:
+            logger.warning("No ClinicalTrials studies found.")
+            return {}
 
-        df = pd.DataFrame(records)
-        df = df[["trial_id", "title", "intervention_name", "condition",
-                 "phase", "status", "source_database"]]
+        studies_list = list(all_studies.values())
 
-        logger.info(f"Parsed {len(df):,} unique clinical trials (CVD-scoped)")
+        # ---- Trial nodes ----
+        trial_rows = []
+        disease_rows = []
+        interv_rows = []
 
-        if len(df) > 0:
-            logger.info("Status distribution:")
-            for status, count in df["status"].value_counts().head(5).items():
-                logger.info(f"  {status}: {count:,}")
-            logger.info("Phase distribution:")
-            for phase, count in df["phase"].value_counts().head(5).items():
-                logger.info(f"  {phase}: {count:,}")
+        for s in studies_list:
+            nct_id = s.get("nct_id", "")
+            trial_rows.append({
+                "nct_id":          nct_id,
+                "brief_title":     s.get("brief_title", ""),
+                "official_title":  s.get("official_title", ""),
+                "status":          s.get("status", ""),
+                "phase":           s.get("phase", ""),
+                "study_type":      s.get("study_type", ""),
+                "start_date":      s.get("start_date", ""),
+                "completion_date": s.get("completion_date", ""),
+                "sponsor":         s.get("sponsor", ""),
+                "enrollment":      s.get("enrollment", ""),
+                "source_database": "ClinicalTrials",
+            })
+            for cond in s.get("conditions", []):
+                disease_rows.append({
+                    "nct_id":          nct_id,
+                    "condition":       cond,
+                    "source_database": "ClinicalTrials",
+                })
+            for interv in s.get("interventions", []):
+                interv_rows.append({
+                    "nct_id":              nct_id,
+                    "intervention_name":   interv.get("name", ""),
+                    "intervention_type":   interv.get("type", ""),
+                    "source_database":     "ClinicalTrials",
+                })
 
-        return {"clinical_trials": df}
+        trial_df   = pd.DataFrame(trial_rows).drop_duplicates(subset=["nct_id"]).reset_index(drop=True)
+        disease_df = pd.DataFrame(disease_rows).drop_duplicates().reset_index(drop=True)
+        interv_df  = pd.DataFrame(interv_rows).drop_duplicates().reset_index(drop=True)
 
-    @staticmethod
-    def _extract_study(study: dict) -> Optional[dict]:
-        """Extract a flat record from an API v2 study JSON object."""
-        proto = study.get("protocolSection", {})
-        ident = proto.get("identificationModule", {})
-        status_mod = proto.get("statusModule", {})
-        design = proto.get("designModule", {})
-        cond_mod = proto.get("conditionsModule", {})
-        arms_mod = proto.get("armsInterventionsModule", {})
-
-        nct_id = ident.get("nctId")
-        if not nct_id:
-            return None
-
-        # Phases: list like ["PHASE1", "PHASE2"] → "Phase 1; Phase 2"
-        raw_phases = design.get("phases", [])
-        if raw_phases:
-            phase = "; ".join(
-                p.replace("PHASE", "Phase ").replace("NA", "Not Applicable")
-                for p in raw_phases
-            )
-        else:
-            phase = "Not specified"
-
-        # Conditions: list of strings
-        conditions = cond_mod.get("conditions", [])
-        condition_str = "; ".join(conditions) if conditions else "Not specified"
-
-        # Interventions: list of objects with "name" key
-        interventions = arms_mod.get("interventions", [])
-        intv_names = [i.get("name", "") for i in interventions if i.get("name")]
-        intervention_str = "; ".join(intv_names) if intv_names else "Not specified"
+        logger.info(
+            "ClinicalTrials: %d trials | %d disease edges | %d intervention edges",
+            len(trial_df), len(disease_df), len(interv_df),
+        )
 
         return {
-            "trial_id": nct_id,
-            "title": ident.get("briefTitle", ""),
-            "intervention_name": intervention_str,
-            "condition": condition_str,
-            "phase": phase,
-            "status": status_mod.get("overallStatus", "Unknown"),
-            "source_database": "ClinicalTrials.gov",
+            TRIAL_NODES:   trial_df,
+            TRIAL_DISEASE: disease_df,
+            TRIAL_INTERV:  interv_df,
         }
 
+    # ------------------------------------------------------------------
+    # Internal helpers
+    # ------------------------------------------------------------------
+
+    def _select_search_terms(self) -> List[str]:
+        """
+        Select a representative subset of primary terms to query.
+        Avoids redundant queries for very similar terms.
+        """
+        # Use up to 20 terms; prefer shorter/broader terms first
+        sorted_terms = sorted(self._primary_terms, key=len)
+        # Deduplicate terms that are substrings of shorter ones
+        selected = []
+        seen_lower = set()
+        for term in sorted_terms:
+            tl = term.lower()
+            if not any(tl in s for s in seen_lower):
+                selected.append(term)
+                seen_lower.add(tl)
+            if len(selected) >= 20:
+                break
+        return selected
+
+    def _fetch_studies_for_term(self, term: str) -> List[dict]:
+        """Fetch all studies for a single search term via paginated API."""
+        studies = []
+        next_page_token = None
+        page = 0
+
+        while page < _MAX_PAGES:
+            params = {
+                "query.cond": term,
+                "pageSize": _PAGE_SIZE,
+                "format": "json",
+                "fields": (
+                    "NCTId,BriefTitle,OfficialTitle,OverallStatus,Phase,"
+                    "StudyType,StartDate,CompletionDate,LeadSponsorName,"
+                    "EnrollmentCount,Condition,InterventionName,InterventionType"
+                ),
+            }
+            if next_page_token:
+                params["pageToken"] = next_page_token
+
+            try:
+                resp = requests.get(self.base_url, params=params, timeout=60)
+                resp.raise_for_status()
+                data = resp.json()
+            except Exception as exc:
+                logger.warning("ClinicalTrials API error for '%s': %s", term, exc)
+                break
+
+            for study in data.get("studies", []):
+                parsed = self._parse_study(study)
+                if parsed:
+                    studies.append(parsed)
+
+            next_page_token = data.get("nextPageToken")
+            if not next_page_token:
+                break
+
+            page += 1
+            time.sleep(_CALL_DELAY)
+
+        return studies
+
+    @staticmethod
+    def _parse_study(study: dict) -> Optional[dict]:
+        """Extract relevant fields from a ClinicalTrials API v2 study record."""
+        try:
+            proto = study.get("protocolSection", {})
+            id_mod  = proto.get("identificationModule", {})
+            stat_mod = proto.get("statusModule", {})
+            design_mod = proto.get("designModule", {})
+            cond_mod = proto.get("conditionsModule", {})
+            interv_mod = proto.get("armsInterventionsModule", {})
+            sponsor_mod = proto.get("sponsorCollaboratorsModule", {})
+
+            nct_id = id_mod.get("nctId", "")
+            if not nct_id:
+                return None
+
+            # Interventions
+            interventions = []
+            for interv in interv_mod.get("interventions", []):
+                interventions.append({
+                    "name": interv.get("name", ""),
+                    "type": interv.get("type", ""),
+                })
+
+            return {
+                "nct_id":          nct_id,
+                "brief_title":     id_mod.get("briefTitle", ""),
+                "official_title":  id_mod.get("officialTitle", ""),
+                "status":          stat_mod.get("overallStatus", ""),
+                "phase":           "|".join(design_mod.get("phases", [])),
+                "study_type":      design_mod.get("studyType", ""),
+                "start_date":      stat_mod.get("startDateStruct", {}).get("date", ""),
+                "completion_date": stat_mod.get("completionDateStruct", {}).get("date", ""),
+                "sponsor":         sponsor_mod.get("leadSponsor", {}).get("name", ""),
+                "enrollment":      str(design_mod.get("enrollmentInfo", {}).get("count", "")),
+                "conditions":      cond_mod.get("conditions", []),
+                "interventions":   interventions,
+            }
+        except Exception:
+            return None
+
+    # ------------------------------------------------------------------
+    # Schema
     # ------------------------------------------------------------------
 
     def get_schema(self) -> Dict[str, Dict[str, str]]:
         return {
-            "clinical_trials": {
-                "trial_id": "ClinicalTrials.gov NCT identifier",
-                "title": "Study title",
-                "intervention_name": "Drug/intervention name(s)",
-                "condition": "Disease/condition(s) being studied",
-                "phase": "Study phase",
-                "status": "Recruitment/overall status",
-                "source_database": "Source database (ClinicalTrials.gov)",
-            }
+            TRIAL_NODES: {
+                "nct_id":          "ClinicalTrials.gov NCT identifier",
+                "brief_title":     "Brief study title",
+                "official_title":  "Official study title",
+                "status":          "Overall recruitment status",
+                "phase":           "Study phase (I, II, III, IV)",
+                "study_type":      "Study type (Interventional, Observational)",
+                "start_date":      "Study start date",
+                "completion_date": "Study completion date",
+                "sponsor":         "Lead sponsor name",
+                "enrollment":      "Enrollment count",
+                "source_database": "Source database (ClinicalTrials)",
+            },
+            TRIAL_DISEASE: {
+                "nct_id":          "ClinicalTrials.gov NCT identifier",
+                "condition":       "Disease/condition studied",
+                "source_database": "Source database (ClinicalTrials)",
+            },
+            TRIAL_INTERV: {
+                "nct_id":              "ClinicalTrials.gov NCT identifier",
+                "intervention_name":   "Intervention name (drug, device, etc.)",
+                "intervention_type":   "Intervention type",
+                "source_database":     "Source database (ClinicalTrials)",
+            },
         }

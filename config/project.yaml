@@ -1,0 +1,503 @@
+project:
+  name: <project_name>
+  display_name: <Disease> Knowledge Base
+  version: 1.0.0
+  disease_scope:
+    primary_terms:
+    - Cardiovascular disease
+    - Heart disease
+    - Cardiac disease
+    - Arrhythmia
+    - Cardiac arrhythmia
+    - Atrial fibrillation
+    - Atrial flutter
+    - Ventricular tachycardia
+    - Ventricular fibrillation
+    - Long QT syndrome
+    - LQTS
+    - Brugada syndrome
+    - Short QT syndrome
+    - Catecholaminergic polymorphic ventricular tachycardia
+    - CPVT
+    - Sick sinus syndrome
+    - Heart block
+    - Atrioventricular block
+    - Wolff-Parkinson-White syndrome
+    - WPW
+    - Supraventricular tachycardia
+    - SVT
+    - Premature ventricular contraction
+    - Premature atrial contraction
+    - Torsades de pointes
+    - Bundle branch block
+    - Sinus bradycardia
+    - Sinus tachycardia
+    - Coronary artery disease
+    - CAD
+    - Myocardial infarction
+    - MI
+    - Heart attack
+    - STEMI
+    - NSTEMI
+    - Angina
+    - Stable angina
+    - Unstable angina
+    - Ischemic heart disease
+    - Atherosclerosis
+    - Coronary atherosclerosis
+    - Acute coronary syndrome
+    - Coronary artery spasm
+    - Prinzmetal angina
+    - Heart failure
+    - Cardiac failure
+    - Congestive heart failure
+    - CHF
+    - Systolic heart failure
+    - Diastolic heart failure
+    - HFrEF
+    - HFpEF
+    - Acute heart failure
+    - Chronic heart failure
+    - Right heart failure
+    - Left heart failure
+    - Cardiogenic shock
+    - Cardiomyopathy
+    - Hypertrophic cardiomyopathy
+    - HCM
+    - Dilated cardiomyopathy
+    - DCM
+    - Restrictive cardiomyopathy
+    - Arrhythmogenic right ventricular cardiomyopathy
+    - ARVC
+    - Takotsubo cardiomyopathy
+    - Left ventricular noncompaction
+    - LVNC
+    - Peripartum cardiomyopathy
+    - Ischemic cardiomyopathy
+    - Cardiac amyloidosis
+    - Cardiac sarcoidosis
+    - Noncompaction cardiomyopathy
+    - Hypertension
+    - High blood pressure
+    - Essential hypertension
+    - Secondary hypertension
+    - Pulmonary hypertension
+    - Resistant hypertension
+    - Hypertensive heart disease
+    - Hypertensive crisis
+    - Malignant hypertension
+    - Portal hypertension
+    - Stroke
+    - Cerebrovascular disease
+    - Ischemic stroke
+    - Hemorrhagic stroke
+    - Thrombotic stroke
+    - Embolic stroke
+    - Intracerebral hemorrhage
+    - Subarachnoid hemorrhage
+    - Transient ischemic attack
+    - TIA
+    - Cerebrovascular accident
+    - Cerebral infarction
+    - Peripheral arterial disease
+    - Peripheral artery disease
+    - Peripheral vascular disease
+    - Vascular disease
+    - Thromboembolism
+    - Venous thromboembolism
+    - PAD
+    - Aortic aneurysm
+    - Aortic dissection
+    - Abdominal aortic aneurysm
+    - Thoracic aortic aneurysm
+    - Carotid artery disease
+    - Carotid artery stenosis
+    - Vasculitis
+    - Kawasaki disease
+    - Thrombosis
+    - Arterial thrombosis
+    - Venous thrombosis
+    - Arteriosclerosis
+    - Fibromuscular dysplasia
+    - Raynaud phenomenon
+    - Giant cell arteritis
+    - Takayasu arteritis
+    - Polyarteritis nodosa
+    - Mesenteric ischemia
+    - Pulmonary embolism
+    - PE
+    - Deep vein thrombosis
+    - DVT
+    - Pulmonary arterial hypertension
+    - Chronic thromboembolic pulmonary hypertension
+    - Pulmonary vascular disease
+    - Hypercholesterolemia
+    - Dyslipidemia
+    - Familial hypercholesterolemia
+    - Hypertriglyceridemia
+    - Hyperlipidemia
+    - Valvular heart disease
+    - Valve disease
+    - Aortic stenosis
+    - Aortic regurgitation
+    - Mitral stenosis
+    - Mitral regurgitation
+    - Mitral valve prolapse
+    - Tricuspid regurgitation
+    - Tricuspid stenosis
+    - Pulmonary valve stenosis
+    - Infective endocarditis
+    - Rheumatic heart disease
+    - Rheumatic fever
+    - Bicuspid aortic valve
+    - Congenital heart disease
+    - Congenital heart defect
+    - Tetralogy of Fallot
+    - Atrial septal defect
+    - ASD
+    - Ventricular septal defect
+    - VSD
+    - Patent ductus arteriosus
+    - PDA
+    - Coarctation of the aorta
+    - Transposition of the great arteries
+    - Ebstein anomaly
+    - Truncus arteriosus
+    - Patent foramen ovale
+    - Hypoplastic left heart syndrome
+    - Atrioventricular septal defect
+    - Double outlet right ventricle
+    - Total anomalous pulmonary venous return
+    - Tricuspid atresia
+    - Pulmonary atresia
+    - Interrupted aortic arch
+    - Cardiac arrest
+    - Sudden cardiac death
+    - Sudden cardiac arrest
+    - Pericarditis
+    - Myocarditis
+    - Endocarditis
+    - Cardiac transplant
+    - Heart transplant
+    - Cardiac tamponade
+    - Cor pulmonale
+    - Cardiac fibrosis
+    - Left ventricular hypertrophy
+    - Right ventricular hypertrophy
+    - Pericardial effusion
+    - Constrictive pericarditis
+    - Cardiac tumor
+    - Cardiac myxoma
+    umls_cuis:
+    - C0002962
+    - C0003504
+    - C0003507
+    - C0003811
+    - C0004153
+    - C0004238
+    - C0004301
+    - C0004368
+    - C0007193
+    - C0007222
+    - C0010068
+    - C0018799
+    - C0018802
+    - C0018817
+    - C0020473
+    - C0020538
+    - C0023976
+    - C0026266
+    - C0026269
+    - C0027051
+    - C0037046
+    - C0042509
+    - C0042514
+    - C0043202
+    - C0948089
+    - C1142166
+    - C1535926
+    - C1837898
+    doid_ids:
+    - DOID:0050417
+    - DOID:0060320
+    - DOID:10681
+    - DOID:10682
+    - DOID:10683
+    - DOID:10684
+    - DOID:10763
+    - DOID:1287
+    - DOID:1936
+    - DOID:2843
+    - DOID:2844
+    - DOID:3393
+    - DOID:5844
+    - DOID:6000
+    - DOID:9408
+    mesh_ids:
+    - D000787
+    - D001022
+    - D001024
+    - D001145
+    - D001260
+    - D001281
+    - D001282
+    - D002318
+    - D003327
+    - D006327
+    - D006331
+    - D006332
+    - D006333
+    - D006973
+    - D008125
+    - D008944
+    - D008946
+    - D009202
+    - D009203
+    - D012980
+    - D014693
+    - D017180
+    - D045263
+    - D050197
+    - D053840
+    - D053841
+    - D053842
+    - D054058
+  data_filtering:
+    tissue_filter: null
+  ontology:
+    base_file: data/ontology/ontology.rdf
+    namespace: http://<your-domain>/ontologies/<project_name>.owl
+    populated_output: data/output/ontology_populated.rdf
+  graph_indexes:
+    Gene:
+    - geneSymbol
+    - xrefNcbiGene
+    Drug:
+    - commonName
+    - xrefDrugbank
+    - xrefDTXSID
+    Disease:
+    - commonName
+    - xrefUmlsCUI
+    - xrefDiseaseOntology
+    Pathway:
+    - pathwayName
+    - xrefReactomePathway
+    BodyPart:
+    - commonName
+    - xrefUberon
+    Symptom:
+    - commonName
+    - xrefMeSH
+    - sourceDatabase
+    TranscriptionFactor:
+    - TF
+    DrugClass:
+    - pharma_class_name
+    ChemicalEffect:
+    - commonName
+    - xrefMeSH
+  node_types:
+  - Gene | geneSymbol | NCBI Gene | Human genes (194,553 nodes)
+  - Disease | xrefDiseaseOntology | Disease Ontology | Diseases from Disease Ontology
+    (12,012 nodes)
+  - 'Drug | commonName | DrugBank + CTD | Drugs and chemicals (24,414 nodes: 19,842
+    DrugBank + 4,572 CTD unique)'
+  - Variant | variantId | ClinVar | Genetic variants (4,488,042 nodes)
+  - ClinicalTrial | trialId | ClinicalTrials.gov | Clinical trials (85,677 nodes)
+  - Pathway | pathwayName | Reactome | Biological pathways (2,806 nodes)
+  - BiologicalProcess | geneOntologyId | Gene Ontology | GO biological processes (24,547
+    nodes)
+  - MolecularFunction | geneOntologyId | Gene Ontology | GO molecular functions (10,123
+    nodes)
+  - CellularComponent | geneOntologyId | Gene Ontology | GO cellular components (4,069
+    nodes)
+  - BodyPart | xrefUberon | Uberon | Anatomical structures (14,937 nodes)
+  - Phenotype | xrefHPO | HPO | Human phenotypes (19,389 nodes)
+  - Symptom | xrefMeSH | NCBI MeSH | Disease symptoms (966 nodes)
+  - SideEffect | xrefUmlsCUI | SIDER | Drug side effects (5,734 nodes)
+  - TranscriptionFactor | TF | DoRothEA | Transcription factors (367 nodes)
+  - PharmacologicClass | classId | DrugCentral | Drug pharmacologic classes (1,646
+    nodes)
+  - GeneFamily | familyId | HGNC Families | Gene families (1,934 nodes)
+  - DrugLabel | labelId | ClinPGx | FDA drug labels (378 nodes)
+  edge_types:
+  - geneAssociatesWithDisease | Gene -> Disease | OpenTargets | 7,564,685
+  - geneInteractsWithGene | Gene -> Gene | STRING | 121,170
+  - geneRegulatesGene | Gene -> Gene | LINCS L1000 | 150,540
+  - geneParticipatesInBiologicalProcess | Gene -> BiologicalProcess | Gene Ontology
+    | 50,350
+  - geneHasMolecularFunction | Gene -> MolecularFunction | Gene Ontology | 26,935
+  - geneAssociatedWithCellularComponent | Gene -> CellularComponent | Gene Ontology
+    | 25,794
+  - geneInPathway | Gene -> Pathway | Reactome | 44,979
+  - pathwayContainsGene | Pathway -> Gene | Reactome | 44,979
+  - geneAssociatesWithPhenotype | Gene -> Phenotype | HPO | 162,994
+  - geneExpressedInBodyPart | Gene -> BodyPart | Jensen TISSUES | 271,657
+  - bodyPartOverexpressesGene | BodyPart -> Gene | Bgee | 1,872
+  - bodyPartUnderexpressesGene | BodyPart -> Gene | Bgee | 784,026
+  - geneInFamily | Gene -> GeneFamily | HGNC Families | 5,123
+  - familyContainsGene | GeneFamily -> Gene | HGNC Families | 5,123
+  - hasVariant | Gene -> Variant | ClinVar | 2,267,095
+  - variantInGene | Variant -> Gene | ClinVar | 2,267,095
+  - associatedWithVariant | Disease -> Variant | ClinVar | 594,101
+  - variantAssociatedWithDisease | Variant -> Disease | ClinVar | 594,101
+  - transcriptionFactorInteractsWithGene | TranscriptionFactor -> Gene | DoRothEA
+    | 12,985
+  - drugBindsGene | Drug -> Gene | DrugBank | 12,089
+  - chemicalBindsGene | Drug -> Gene | BindingDB | 12,250
+  - chemicalIncreasesExpression | Drug -> Gene | CTD | 116,451
+  - chemicalDecreasesExpression | Drug -> Gene | CTD | 97,951
+  - compoundUpregulatesGene | Drug -> Gene | LINCS L1000 | 10,278
+  - compoundDownregulatesGene | Drug -> Gene | LINCS L1000 | 10,218
+  - drugTreatsDisease | Drug -> Disease | DrugCentral | 779
+  - drugPalliatesDisease | Drug -> Disease | DrugCentral | 189
+  - compoundCausesSideEffect | Drug -> SideEffect | SIDER | 148,518
+  - pharmacologicClassIncludesCompound | PharmacologicClass -> Drug | DrugCentral
+    | 16,403
+  - compoundInPharmacologicClass | Drug -> PharmacologicClass | DrugCentral | 16,403
+  - diseaseIsSubtypeOf | Disease -> Disease | Disease Ontology | 6,447
+  - diseaseAssociatesWithDisease | Disease -> Disease | PubTator | 806,900
+  - diseaseResemblesDisease | Disease -> Disease | MEDLINE | 4
+  - diseasePresentsSymptom | Disease -> Symptom | MEDLINE | 117
+  - diseaseLocalizesToAnatomy | Disease -> BodyPart | MEDLINE | 244
+  - STUDIES_CONDITION | ClinicalTrial -> Disease | ClinicalTrials.gov | 33,219
+  - TESTS_INTERVENTION | ClinicalTrial -> Drug | ClinicalTrials.gov | 3,135
+  - VARIANT_IN | Variant -> Gene | ClinPGx | 1,091
+  - AFFECTS_RESPONSE_TO | Gene -> Drug | ClinPGx | 243
+  - AFFECTS_RESPONSE_TO_CLASS | Gene -> PharmacologicClass | ClinPGx | (from pharma
+    class annotations)
+  - drugLabelAnnotatesGene | DrugLabel -> Gene | ClinPGx | 503
+  - drugLabelDescribesDrug | DrugLabel -> Drug | ClinPGx | 50
+  node_properties:
+    Drug:
+    - commonName
+    - xrefDrugbank
+    - xrefDTXSID
+    - drugDescription
+    - drugType
+    - drugGroups
+    - drugCategories
+    - drugIndication
+    - drugPharmacology
+    - drugMechanism
+    - drugToxicity
+    - drugHalfLife
+    - drugState
+    - molecularFormula
+    - molecularWeight
+    Disease:
+    - commonName
+    - xrefUmlsCUI
+    - xrefDiseaseOntology
+    - diseaseDescription
+    - diseaseSymptoms
+    Gene:
+    - geneSymbol
+    - xrefNcbiGene
+    - geneName
+    - xrefUniProtId
+    - geneExpression
+    - geneExpressionCallQuality
+    - geneExpressionFDR
+    - geneExpressionScore
+    - geneExpressionRank
+    - chromosome
+    - typeOfGene
+    Pathway:
+    - pathwayName
+    - pathwayId
+    - xrefReactomePathway
+    - species
+    BodyPart:
+    - xrefUberon
+    - commonName
+    - synonym
+    - definition
+    - xrefMeSH
+    - xrefFMA
+    DrugClass:
+    - pharma_class_name
+    - pharma_class_code
+    - xrefDrugCentralPharmClass
+    ChemicalEffect:
+    - commonName
+    - xrefMeSH
+    Symptom:
+    - commonName
+    - xrefMeSH
+    - sourceDatabase
+  edge_properties:
+    geneAssociatesWithDisease:
+    - gdaScore
+    - evidenceIndex
+    - numberOfPublications
+    - numberOfSnps
+    - sourceDatabase
+    anatomyExpressesGene:
+    - expressionCall
+    - callQuality
+    - fdr
+    - expressionScore
+    - expressionRank
+    - unbiased
+    - sourceDatabase
+    chemicalBindsGene:
+    - interactionType
+    - sourceDatabase
+    drugTreatsDisease:
+    - indication
+    - sourceDatabase
+    chemicalCausesEffect:
+    - support
+    - sourceDatabase
+    geneParticipatesInBiologicalProcess:
+    - evidenceCode
+    - sourceDatabase
+    geneHasMolecularFunction:
+    - evidenceCode
+    - sourceDatabase
+    geneAssociatedWithCellularComponent:
+    - evidenceCode
+    - sourceDatabase
+    geneCovariesWithGene:
+    - ercScore
+    - sourceDatabase
+    chemicalIncreasesExpression:
+    - interactionText
+    - organism
+    - pubmedIds
+    - sourceDatabase
+    chemicalDecreasesExpression:
+    - interactionText
+    - organism
+    - pubmedIds
+    - sourceDatabase
+    geneInPathway:
+    - evidenceCode
+    - sourceDatabase
+    symptomManifestationOfDisease:
+    - cooccurrence
+    - pFisher
+    - enrichment
+    - oddsRatio
+    - sourceDatabase
+    diseaseLocalizesToAnatomy:
+    - cooccurrence
+    - pFisher
+    - enrichment
+    - oddsRatio
+    - sourceDatabase
+    diseaseAssociatesWithDisease:
+    - cooccurrence
+    - pFisher
+    - enrichment
+    - oddsRatio
+    - sourceDatabase
+    geneInteractsWithGene:
+    - combinedScore
+    - sourceDatabase
+    transcriptionFactorInteractsWithGene:
+    - sourceDatabase
+    drugInClass:
+    - sourceDatabase
