@@ -1,1422 +1,1043 @@
-#!/usr/bin/env python3
 """
-eval_after_memgraph.py — CardioKB Post-Memgraph Evaluation Script
+eval_after_memgraph.py — Tier 1/2/3 metrics computed from exported graph CSVs.
 
-Connects to a live Memgraph instance via bolt protocol and computes all
-implementable "After Memgraph Export" metrics from eval_metrics.md.
+Metrics implemented (see docs/eval_metrics.md):
+  Tier 1: Total node count per OWL class,
+          Total edge count per OWL ObjectProperty,
+          Domain/range constraint violation count,
+          Relationship resolution rate per mapping,
+          Merge match rate per source
+  Tier 2: Orphan node rate,
+          Internal cross-reference resolution rate,
+          Exact-IRI duplicate count, Cross-reference duplicate count,
+          Duplicate edge rate, Largest connected component fraction,
+          Average node degree per OWL class,
+          Run-to-run entity count delta (requires --baseline),
+          High-degree outlier count per ObjectProperty
+  Tier 3: Known disease-gene recall rate (requires --omim-genemap),
+          Drug-target coverage (requires --drugbank-tsv)
 
-Tier 1 (Block Release):
-    - Total node count per label            (integer per label)
-    - Total edge count per type             (integer per relationship type)
-    - Relationship resolution rate          (float per mapping, cross-checked
-                                             against TSV files)
-
-Tier 2 (Monitor Trends):
-    - Orphan node rate                      (float per label)
-    - Duplicate edge rate                   (float per relationship type)
-    - Largest connected component fraction  (float; requires Memgraph MAGE)
-    - Average node degree per label         (float per label)
-    - Run-to-run entity count delta         (object; requires --baseline)
-
-Tier 3 (Periodic Audit):
-    - High-degree outlier count per relationship type  (integer per type)
-
-Environment variables:
-    MEMGRAPH_URI        bolt URI  (default: bolt://localhost:7687)
-    MEMGRAPH_USERNAME   username  (default: empty string)
-    MEMGRAPH_PASSWORD   password  (default: empty string)
+Output JSON schema (one object per metric):
+  name         — metric name from eval_metrics.md
+  data_type    — integer | float | list[str]
+  tier         — 1, 2, or 3
+  result       — the computed value
+  (extra keys) — node_type, edge_type, note, etc.
 
 Usage:
     python eval/eval_after_memgraph.py
-    python eval/eval_after_memgraph.py --output eval/reports/memgraph_report.json
-    python eval/eval_after_memgraph.py --baseline prev_report.json --output report.json
+    python eval/eval_after_memgraph.py --output report.json
+    python eval/eval_after_memgraph.py --baseline baseline.json --output report.json
+    python eval/eval_after_memgraph.py --omim-genemap genemap2.txt
 """
 
 import argparse
-import datetime
 import json
-import os
+import re
 import sys
+import xml.etree.ElementTree as ET
+from collections import Counter, defaultdict
+from datetime import datetime, timezone
 from pathlib import Path
-from typing import Any, Dict, List, Optional, Tuple
 
+import networkx as nx
+import numpy as np
 import pandas as pd
+import yaml
 
-# ---------------------------------------------------------------------------
-# Path setup
-# ---------------------------------------------------------------------------
-SCRIPT_DIR = Path(__file__).resolve().parent
-PROJECT_ROOT = SCRIPT_DIR.parent
-DATA_PROCESSED = PROJECT_ROOT / "data" / "processed"
+ROOT = Path(__file__).resolve().parent.parent
+CONFIG_DIR = ROOT / "config"
+OUTPUT_DIR = ROOT / "data" / "output"
+PROCESSED_DIR = ROOT / "data" / "processed"
 
-sys.path.insert(0, str(PROJECT_ROOT / "src"))
-try:
-    from ontology_configs import ONTOLOGY_CONFIGS
-except ImportError as exc:
-    print(f"ERROR: Cannot import ONTOLOGY_CONFIGS: {exc}", file=sys.stderr)
-    sys.exit(1)
-
-# ---------------------------------------------------------------------------
-# Neo4j / Memgraph driver
-# ---------------------------------------------------------------------------
-try:
-    from neo4j import GraphDatabase
-except ImportError:
-    print("ERROR: neo4j Python driver not installed. Run: pip install neo4j",
-          file=sys.stderr)
-    sys.exit(1)
+RDF_NS  = "http://www.w3.org/1999/02/22-rdf-syntax-ns#"
+OWL_NS  = "http://www.w3.org/2002/07/owl#"
+RDFS_NS = "http://www.w3.org/2000/01/rdf-schema#"
+RDF_RESOURCE = f"{{{RDF_NS}}}resource"
+RDF_ABOUT    = f"{{{RDF_NS}}}about"
 
 
-# ---------------------------------------------------------------------------
-# Metric builder — matches eval_metrics.md JSON schema
-# ---------------------------------------------------------------------------
-
-def make_metric(name, data_type, tier, result,
-                source=None, mapping=None, note=None, **extra):
-    m = {"name": name, "data_type": data_type, "tier": tier, "result": result}
-    if source is not None:
-        m["source"] = source
-    if mapping is not None:
-        m["mapping"] = mapping
-    if note is not None:
-        m["note"] = note
-    m.update(extra)
-    return m
+def load_configs() -> tuple[dict, dict]:
+    project = yaml.safe_load((CONFIG_DIR / "project.yaml").read_text())["project"]
+    mappings_raw = yaml.safe_load((CONFIG_DIR / "ontology_mappings.yaml").read_text())
+    mappings = mappings_raw.get("mappings", mappings_raw)
+    mappings = {k: v for k, v in mappings.items() if v is not None}
+    return project, mappings
 
 
-# ---------------------------------------------------------------------------
-# Memgraph connection helpers
-# ---------------------------------------------------------------------------
-
-def connect_memgraph():
-    uri      = os.environ.get("MEMGRAPH_URI", "bolt://localhost:7687")
-    username = os.environ.get("MEMGRAPH_USERNAME", "")
-    password = os.environ.get("MEMGRAPH_PASSWORD", "")
-    auth     = (username, password) if (username or password) else None
-    driver   = GraphDatabase.driver(uri, auth=auth)
-    with driver.session() as s:
-        s.run("RETURN 1").consume()
-    return driver
+def _local_name(iri: str) -> str:
+    if "#" in iri:
+        return iri.split("#")[-1]
+    return iri.lstrip("#")
 
 
-def run_query(driver, cypher, **params):
-    with driver.session() as s:
-        return [dict(r) for r in s.run(cypher, **params)]
-
-
-# ---------------------------------------------------------------------------
-# Tier 1 — node and edge counts
-# ---------------------------------------------------------------------------
-
-def get_node_counts(driver):
-    """
-    Return {label: count} using labels(n)[0].
-    Memgraph does not support UNWIND inside MATCH, so we use labels(n)[0]
-    which returns the first (primary) label for each node.
-    """
-    rows = run_query(
-        driver,
-        "MATCH (n) RETURN labels(n)[0] AS label, count(*) AS cnt ORDER BY label",
-    )
-    return {r["label"]: int(r["cnt"]) for r in rows if r["label"] is not None}
-
-
-def get_edge_counts(driver):
-    """Return {rel_type: count} for every relationship type."""
-    rows = run_query(
-        driver,
-        "MATCH ()-[r]->() RETURN type(r) AS rel_type, count(*) AS cnt ORDER BY rel_type",
-    )
-    return {r["rel_type"]: int(r["cnt"]) for r in rows}
-
-
-# ---------------------------------------------------------------------------
-# Tier 1 — relationship resolution rate
-# ---------------------------------------------------------------------------
-
-def _cast_ids(values, match_type):
-    """Cast string IDs from TSV to the type stored in Memgraph."""
-    if match_type == "integer":
-        result = []
-        for v in values:
-            try:
-                result.append(int(v))
-            except (ValueError, TypeError):
-                pass
-        return result
-    return list(values)
-
-
-def _lookup_ids(driver, node_type, prop, ids, chunk_size=5000):
-    """Batch-query Memgraph for which IDs exist as nodes of a given type."""
-    found = set()
-    for i in range(0, len(ids), chunk_size):
-        chunk = ids[i: i + chunk_size]
-        try:
-            rows = run_query(
-                driver,
-                f"UNWIND $ids AS id MATCH (n:{node_type} {{{prop}: id}}) RETURN id AS matched_id",
-                ids=chunk,
-            )
-            found.update(r["matched_id"] for r in rows)
-        except Exception:
-            pass
-    return found
-
-
-def compute_resolution_rate(driver, config_key, config):
-    """
-    For a relationship config, load the TSV and compute the fraction of rows
-    where both subject and object identifiers resolve to existing graph nodes.
-    Respects subject_match_type / object_match_type for integer-stored properties.
-    Returns None when the TSV is missing or config is not a relationship.
-    """
-    if config.get("data_type") != "relationship":
-        return None
-
-    source_name    = config_key.split(".")[0]
-    source_filename = config.get("source_filename", "")
-    tsv_path       = DATA_PROCESSED / source_name / source_filename
-    if not tsv_path.exists():
-        return None
-
-    pc = config.get("parse_config", {})
-    subj_col   = pc.get("subject_column_name")
-    subj_prop  = pc.get("subject_match_property")
-    subj_type  = pc.get("subject_node_type")
-    subj_mtype = pc.get("subject_match_type")
-    obj_col    = pc.get("object_column_name")
-    obj_prop   = pc.get("object_match_property")
-    obj_type   = pc.get("object_node_type")
-    obj_mtype  = pc.get("object_match_type")
-
-    if not all([subj_col, subj_prop, subj_type, obj_col, obj_prop, obj_type]):
-        return None
-
-    try:
-        df = pd.read_csv(tsv_path, sep="\t", dtype=str,
-                         keep_default_na=False, low_memory=False)
-    except Exception:
-        return None
-
-    if subj_col not in df.columns or obj_col not in df.columns:
-        return None
-
-    total_rows = len(df)
-    if total_rows == 0:
-        return 0.0
-
-    raw_subj = df[subj_col].astype(str).str.strip().unique().tolist()
-    raw_obj  = df[obj_col].astype(str).str.strip().unique().tolist()
-
-    subj_ids = _cast_ids(raw_subj, subj_mtype)
-    obj_ids  = _cast_ids(raw_obj,  obj_mtype)
-
-    found_subj = _lookup_ids(driver, subj_type, subj_prop, subj_ids)
-    found_obj  = _lookup_ids(driver, obj_type,  obj_prop,  obj_ids)
-
-    if not found_subj and not found_obj:
-        return 0.0
-
-    # Build string sets for comparison against TSV values
-    found_subj_str = {str(x) for x in found_subj}
-    found_obj_str  = {str(x) for x in found_obj}
-
-    resolved = 0
-    for _, row in df.iterrows():
-        s = str(row[subj_col]).strip()
-        o = str(row[obj_col]).strip()
-        s_ok = (s in found_subj_str) or (s in found_subj)
-        o_ok = (o in found_obj_str)  or (o in found_obj)
-        if s_ok and o_ok:
-            resolved += 1
-
-    return round(resolved / total_rows, 6)
-
-
-# ---------------------------------------------------------------------------
-# Tier 2 — orphan node rate
-# ---------------------------------------------------------------------------
-
-def get_orphan_rates(driver, node_counts):
-    """
-    Fraction of nodes with zero edges per label.
-    Uses labels(n)[0] — Memgraph-compatible.
-    """
-    rows = run_query(
-        driver,
-        "MATCH (n) WHERE NOT (n)--() "
-        "RETURN labels(n)[0] AS label, count(*) AS orphan_count ORDER BY label",
-    )
-    orphan_map = {r["label"]: int(r["orphan_count"]) for r in rows if r["label"]}
-    return {
-        label: round(orphan_map.get(label, 0) / total, 6) if total > 0 else 0.0
-        for label, total in node_counts.items()
-    }
-
-
-# ---------------------------------------------------------------------------
-# Tier 2 — duplicate edge rate (per-type to avoid memory overflow)
-# ---------------------------------------------------------------------------
-
-def get_duplicate_edge_info(driver, edge_counts):
-    """
-    Count duplicate (subject_id, object_id) pairs per relationship type.
-    Runs one query per type to stay within Memgraph memory limits.
-    Returns (total_edges, total_known_duplicates, {rel_type: dup_count}).
-    dup_count == -1 means the query failed (memory limit / timeout).
-    """
-    total_edges = sum(edge_counts.values())
-    dup_by_type = {}
-
-    for rel_type, cnt in edge_counts.items():
-        if cnt == 0:
-            dup_by_type[rel_type] = 0
+def parse_domain_range(base_rdf: Path) -> dict[str, dict]:
+    """Return {prop_local_name: {"domain": str|None, "range": str|None}} from the ontology."""
+    tree = ET.parse(base_rdf)
+    domain_range: dict[str, dict] = {}
+    for child in tree.getroot():
+        if child.tag != f"{{{OWL_NS}}}ObjectProperty":
             continue
-        try:
-            rows = run_query(
-                driver,
-                f"MATCH (a)-[r:{rel_type}]->(b) "
-                f"WITH id(a) AS a_id, id(b) AS b_id, count(*) AS cnt "
-                f"WHERE cnt > 1 "
-                f"RETURN sum(cnt - 1) AS dup_count",
-            )
-            val = rows[0]["dup_count"] if rows else 0
-            dup_by_type[rel_type] = int(val) if val is not None else 0
-        except Exception:
-            dup_by_type[rel_type] = -1
-
-    total_dups = sum(v for v in dup_by_type.values() if v >= 0)
-    return total_edges, total_dups, dup_by_type
-
-
-# ---------------------------------------------------------------------------
-# Tier 2 — largest connected component
-# ---------------------------------------------------------------------------
-
-def get_largest_component_fraction(driver, total_nodes):
-    """
-    Compute LCC fraction via Memgraph MAGE weakly_connected_components.
-    Returns (fraction, component_count) or (None, None) if MAGE unavailable.
-    """
-    if total_nodes == 0:
-        return 0.0, 0
-    try:
-        rows = run_query(
-            driver,
-            "CALL weakly_connected_components.get() "
-            "YIELD node, component_id "
-            "RETURN component_id, count(*) AS size "
-            "ORDER BY size DESC",
-        )
-        if rows:
-            largest = int(rows[0]["size"])
-            return round(largest / total_nodes, 6), len(rows)
-    except Exception:
-        pass
-    return None, None
-
-
-# ---------------------------------------------------------------------------
-# Tier 2 — average node degree per label
-# ---------------------------------------------------------------------------
-
-def get_average_degree_per_label(driver, node_counts):
-    """Mean number of edges (in + out) per node, one query per label."""
-    results = {}
-    for label, total in node_counts.items():
-        if total == 0:
-            results[label] = 0.0
+        about = child.get(RDF_ABOUT, "")
+        local = _local_name(about)
+        if not local:
             continue
-        try:
-            rows = run_query(
-                driver,
-                f"MATCH (n:{label}) "
-                f"OPTIONAL MATCH (n)-[r]-() "
-                f"WITH n, count(r) AS deg "
-                f"RETURN avg(deg) AS avg_degree",
-            )
-            val = rows[0]["avg_degree"] if rows else None
-            results[label] = round(float(val), 4) if val is not None else 0.0
-        except Exception:
-            results[label] = None
-    return results
-
-
-# ---------------------------------------------------------------------------
-# Tier 2 — run-to-run entity count delta
-# ---------------------------------------------------------------------------
-
-def compute_run_to_run_delta(current_counts, baseline_path):
-    """Compare current entity counts against a previous report. Returns None if no baseline."""
-    if not baseline_path:
-        return None
-    try:
-        with open(baseline_path, "r", encoding="utf-8") as fh:
-            baseline = json.load(fh)
-        prev = baseline.get("entity_counts", {})
-        all_labels = sorted(set(current_counts) | set(prev))
-        return {lbl: current_counts.get(lbl, 0) - prev.get(lbl, 0) for lbl in all_labels}
-    except Exception as exc:
-        return {"_error": str(exc)}
-
-
-# ---------------------------------------------------------------------------
-# Tier 2 — merge rate checking per source database
-# ---------------------------------------------------------------------------
-
-def get_source_labels_from_graph(driver):
-    """Get all unique source labels from relationships in the graph."""
-    rows = run_query(
-        driver,
-        "MATCH ()-[r]->() WHERE r.source IS NOT NULL "
-        "RETURN DISTINCT r.source AS source ORDER BY source",
-    )
-    return [r["source"] for r in rows]
-
-
-def get_merge_rate_per_source(driver):
-    """
-    For each source database, analyze potential duplicate node creation.
-
-    Checks for nodes connected by relationships from each source that share
-    the same primary identifier property (e.g., same gene symbol, drug name),
-    which would indicate failed merges (duplicate nodes created instead of merged).
-
-    Returns {source: {
-        'total_unique_nodes': int,
-        'potential_duplicates': int,
-        'merge_rate': float,
-        'duplicate_examples': list,
-        'node_types_affected': dict
-    }}
-    """
-    results = {}
-    sources = get_source_labels_from_graph(driver)
-
-    # Common identifier properties to check for duplicates
-    id_props = ['identifier', 'name', 'symbol', 'drugbank_id', 'mesh_id',
-                'doid', 'hgnc_id', 'entrez_id', 'ensembl_id', 'uniprot_id',
-                'nct_id', 'pubchem_cid', 'chembl_id', 'rxcui', 'cui']
-
-    for source in sources:
-        try:
-            # Get all nodes connected by relationships from this source
-            node_rows = run_query(
-                driver,
-                "MATCH (n)-[r]-() WHERE r.source = $source "
-                "RETURN DISTINCT labels(n)[0] AS label, n AS node",
-                source=source,
-            )
-
-            if not node_rows:
-                results[source] = {
-                    'total_unique_nodes': 0,
-                    'potential_duplicates': 0,
-                    'merge_rate': 1.0,
-                    'duplicate_examples': [],
-                    'node_types_affected': {},
-                }
-                continue
-
-            # Group nodes by label and check for duplicates
-            nodes_by_label = {}
-            for row in node_rows:
-                label = row['label']
-                node = row['node']
-                if label not in nodes_by_label:
-                    nodes_by_label[label] = []
-                nodes_by_label[label].append(dict(node))
-
-            total_unique = len(node_rows)
-            potential_dups = 0
-            dup_examples = []
-            types_affected = {}
-
-            for label, nodes in nodes_by_label.items():
-                if len(nodes) < 2:
-                    continue
-
-                # Check each identifier property for duplicates
-                for prop in id_props:
-                    id_values = {}
-                    for n in nodes:
-                        if prop in n and n[prop]:
-                            val = str(n[prop]).lower().strip()
-                            if val:
-                                if val not in id_values:
-                                    id_values[val] = []
-                                id_values[val].append(n)
-
-                    # Count duplicates (same identifier, different nodes)
-                    for val, dup_nodes in id_values.items():
-                        if len(dup_nodes) > 1:
-                            dup_count = len(dup_nodes) - 1  # -1 because one is the "correct" node
-                            potential_dups += dup_count
-                            if label not in types_affected:
-                                types_affected[label] = 0
-                            types_affected[label] += dup_count
-                            if len(dup_examples) < 5:
-                                dup_examples.append({
-                                    'label': label,
-                                    'property': prop,
-                                    'value': val,
-                                    'count': len(dup_nodes),
-                                })
-                    break  # Only check the first matching property per label
-
-            merge_rate = 1.0 if total_unique == 0 else round(
-                (total_unique - potential_dups) / total_unique, 4
-            )
-
-            results[source] = {
-                'total_unique_nodes': total_unique,
-                'potential_duplicates': potential_dups,
-                'merge_rate': merge_rate,
-                'duplicate_examples': dup_examples,
-                'node_types_affected': types_affected,
-            }
-
-        except Exception as exc:
-            results[source] = {
-                'total_unique_nodes': None,
-                'potential_duplicates': None,
-                'merge_rate': None,
-                'error': str(exc),
-                'duplicate_examples': [],
-                'node_types_affected': {},
-            }
-
-    return results
-
-
-def get_node_creation_stats_per_source(driver):
-    """
-    Get statistics about nodes created/touched by each source.
-    Uses relationship source property to attribute nodes to sources.
-
-    Returns {source: {label: count}} showing which node types each source contributes to.
-    """
-    rows = run_query(
-        driver,
-        "MATCH (n)-[r]-() WHERE r.source IS NOT NULL "
-        "RETURN r.source AS source, labels(n)[0] AS label, count(DISTINCT n) AS cnt "
-        "ORDER BY source, label",
-    )
-
-    stats = {}
-    for row in rows:
-        source = row['source']
-        label = row['label']
-        cnt = int(row['cnt'])
-        if source not in stats:
-            stats[source] = {}
-        stats[source][label] = cnt
-
-    return stats
-
-
-# ---------------------------------------------------------------------------
-# Tier 2 — Cross-source merge analysis
-# ---------------------------------------------------------------------------
-
-def get_cross_source_node_analysis(driver):
-    """
-    Analyze which node types are touched by multiple sources and compute
-    merge statistics for each.
-
-    Returns {
-        'node_type_sources': {node_type: {source: count, ...}, ...},
-        'multi_source_summary': {node_type: {
-            'total_nodes': int,
-            'multi_source_nodes': int,
-            'single_source_nodes': int,
-            'merge_rate': float,
-            'source_distribution': {num_sources: count, ...}
-        }, ...}
-    }
-    """
-    # Get which sources touch each node type
-    rows = run_query(
-        driver,
-        """
-        MATCH (n)-[r]-()
-        WHERE r.source IS NOT NULL
-        WITH labels(n)[0] AS node_type, r.source AS source, count(DISTINCT n) AS node_count
-        RETURN node_type, source, node_count
-        ORDER BY node_type, node_count DESC
-        """,
-    )
-
-    node_type_sources = {}
-    for row in rows:
-        nt = row['node_type']
-        src = row['source']
-        cnt = int(row['node_count'])
-        if nt not in node_type_sources:
-            node_type_sources[nt] = {}
-        node_type_sources[nt][src] = cnt
-
-    # For multi-source node types, compute detailed merge stats
-    multi_source_summary = {}
-    multi_source_types = [nt for nt, sources in node_type_sources.items() if len(sources) > 1]
-
-    for nt in multi_source_types:
-        try:
-            # Get actual unique node count
-            actual = run_query(driver, f"MATCH (n:{nt}) RETURN count(n) AS cnt")[0]['cnt']
-
-            # Get source distribution per node
-            dist_rows = run_query(
-                driver,
-                f"""
-                MATCH (n:{nt})-[r]-()
-                WHERE r.source IS NOT NULL
-                WITH n, collect(DISTINCT r.source) AS sources
-                RETURN size(sources) AS source_count, count(n) AS node_count
-                ORDER BY source_count DESC
-                """,
-            )
-
-            source_distribution = {}
-            multi_source_nodes = 0
-            single_source_nodes = 0
-
-            for row in dist_rows:
-                sc = int(row['source_count'])
-                nc = int(row['node_count'])
-                source_distribution[sc] = nc
-                if sc > 1:
-                    multi_source_nodes += nc
-                else:
-                    single_source_nodes += nc
-
-            total_with_rels = multi_source_nodes + single_source_nodes
-            merge_rate = multi_source_nodes / total_with_rels if total_with_rels > 0 else 0
-
-            multi_source_summary[nt] = {
-                'total_nodes': actual,
-                'nodes_with_relationships': total_with_rels,
-                'multi_source_nodes': multi_source_nodes,
-                'single_source_nodes': single_source_nodes,
-                'merge_rate': round(merge_rate, 4),
-                'source_distribution': source_distribution,
-                'num_sources': len(node_type_sources[nt]),
-            }
-        except Exception as exc:
-            multi_source_summary[nt] = {'error': str(exc)}
-
-    return {
-        'node_type_sources': node_type_sources,
-        'multi_source_summary': multi_source_summary,
-    }
-
-
-def get_drug_merge_detail(driver):
-    """
-    Detailed analysis of drug merging between CTD and DrugBank.
-
-    Returns {
-        'ctd_total': int,
-        'drugbank_total': int,
-        'merged_both': int,
-        'ctd_only': int,
-        'drugbank_only': int,
-        'merge_rate': float
-    }
-    """
-    try:
-        ctd_drugs = run_query(
-            driver,
-            """
-            MATCH (d:Drug)-[r]-()
-            WHERE r.source = "CTD"
-            RETURN count(DISTINCT d) AS cnt
-            """,
-        )[0]['cnt']
-
-        db_drugs = run_query(
-            driver,
-            """
-            MATCH (d:Drug)-[r]-()
-            WHERE r.source = "DrugBank"
-            RETURN count(DISTINCT d) AS cnt
-            """,
-        )[0]['cnt']
-
-        both = run_query(
-            driver,
-            """
-            MATCH (d:Drug)-[r1]-(), (d)-[r2]-()
-            WHERE r1.source = "CTD" AND r2.source = "DrugBank"
-            RETURN count(DISTINCT d) AS cnt
-            """,
-        )[0]['cnt']
-
-        ctd_only = ctd_drugs - both
-        drugbank_only = db_drugs - both
-        merge_rate = both / ctd_drugs if ctd_drugs > 0 else 0
-
-        return {
-            'ctd_total': int(ctd_drugs),
-            'drugbank_total': int(db_drugs),
-            'merged_both': int(both),
-            'ctd_only': int(ctd_only),
-            'drugbank_only': int(drugbank_only),
-            'merge_rate': round(merge_rate, 4),
-        }
-    except Exception as exc:
-        return {'error': str(exc)}
-
-
-def get_gene_integration_depth(driver):
-    """
-    Analyze how deeply genes are integrated across sources.
-
-    Returns {
-        'high_integration': int (10+ sources),
-        'medium_integration': int (5-9 sources),
-        'low_integration': int (2-4 sources),
-        'single_source': int (1 source),
-        'total': int
-    }
-    """
-    try:
-        rows = run_query(
-            driver,
-            """
-            MATCH (g:Gene)-[r]-()
-            WHERE r.source IS NOT NULL
-            WITH g, count(DISTINCT r.source) AS source_count
-            RETURN
-                sum(CASE WHEN source_count >= 10 THEN 1 ELSE 0 END) AS high_integration,
-                sum(CASE WHEN source_count >= 5 AND source_count < 10 THEN 1 ELSE 0 END) AS medium_integration,
-                sum(CASE WHEN source_count >= 2 AND source_count < 5 THEN 1 ELSE 0 END) AS low_integration,
-                sum(CASE WHEN source_count = 1 THEN 1 ELSE 0 END) AS single_source,
-                count(g) AS total
-            """,
-        )[0]
-
-        return {
-            'high_integration': int(rows['high_integration']),
-            'medium_integration': int(rows['medium_integration']),
-            'low_integration': int(rows['low_integration']),
-            'single_source': int(rows['single_source']),
-            'total': int(rows['total']),
-        }
-    except Exception as exc:
-        return {'error': str(exc)}
-
-
-def get_id_duplicate_check(driver):
-    """
-    Check for duplicate IDs across all major entity types.
-    Zero duplicates = perfect ID-based merging.
-
-    Returns {node_type: {'duplicate_count': int, 'id_property': str}, ...}
-    """
-    checks = [
-        ('Gene', 'geneId'),
-        ('Drug', 'drugId'),
-        ('Disease', 'diseaseId'),
-        ('Variant', 'variantId'),
-        ('ClinicalTrial', 'trialId'),
-        ('Phenotype', 'phenotypeId'),
-        ('Pathway', 'pathwayId'),
-    ]
-
-    results = {}
-    for node_type, id_prop in checks:
-        try:
-            rows = run_query(
-                driver,
-                f"""
-                MATCH (n:{node_type})
-                WHERE n.{id_prop} IS NOT NULL
-                WITH n.{id_prop} AS id, count(*) AS cnt
-                WHERE cnt > 1
-                RETURN count(*) AS dup_count
-                """,
-            )
-            dup_count = int(rows[0]['dup_count']) if rows else 0
-            results[node_type] = {
-                'duplicate_count': dup_count,
-                'id_property': id_prop,
-                'status': 'PASS' if dup_count == 0 else 'FAIL',
-            }
-        except Exception:
-            results[node_type] = {
-                'duplicate_count': None,
-                'id_property': id_prop,
-                'status': 'SKIPPED',
-            }
-
-    return results
-
-
-# ---------------------------------------------------------------------------
-# Tier 3 — high-degree outlier count per relationship type
-# ---------------------------------------------------------------------------
-
-def get_high_degree_outliers(driver, edge_counts, percentile=99.0):
-    """
-    For each relationship type, count nodes whose degree exceeds the
-    99th-percentile threshold. One query per type.
-    Returns {rel_type: count} where count is None on query failure.
-    """
-    results = {}
-    for rel_type, cnt in edge_counts.items():
-        if cnt == 0:
-            results[rel_type] = 0
-            continue
-        try:
-            rows = run_query(
-                driver,
-                f"MATCH (n)-[r:{rel_type}]-() "
-                f"WITH n, count(r) AS deg "
-                f"RETURN deg ORDER BY deg",
-            )
-            if not rows:
-                results[rel_type] = 0
-                continue
-            degrees = [int(r["deg"]) for r in rows]
-            n = len(degrees)
-            idx = max(0, int(n * percentile / 100) - 1)
-            threshold = degrees[idx]
-            results[rel_type] = sum(1 for d in degrees if d > threshold)
-        except Exception:
-            results[rel_type] = None
-    return results
-
-
-# ---------------------------------------------------------------------------
-# Main evaluation
-# ---------------------------------------------------------------------------
-
-def run_eval(baseline_path=None):
-    metrics = []
-
-    # Connect
-    try:
-        driver = connect_memgraph()
-        uri = os.environ.get("MEMGRAPH_URI", "bolt://localhost:7687")
-        print(f"Connected to Memgraph at {uri}", file=sys.stderr)
-    except Exception as exc:
-        print(f"ERROR: Cannot connect to Memgraph: {exc}", file=sys.stderr)
-        sys.exit(1)
-
-    # ── Tier 1: Node counts per label ────────────────────────────────────────
-    print("Computing node counts...", file=sys.stderr)
-    node_counts = get_node_counts(driver)
-    total_nodes = sum(node_counts.values())
-
-    for label, cnt in sorted(node_counts.items()):
-        metrics.append(make_metric(
-            name="Total node count per label",
-            data_type="integer", tier=1, result=cnt,
-            label=label, note=f"Label: {label}",
+        domain = None
+        range_ = None
+        for sub in child:
+            if sub.tag == f"{{{RDFS_NS}}}domain":
+                domain = _local_name(sub.get(RDF_RESOURCE, ""))
+            elif sub.tag == f"{{{RDFS_NS}}}range":
+                range_ = _local_name(sub.get(RDF_RESOURCE, ""))
+        domain_range[local] = {"domain": domain or None, "range": range_ or None}
+    return domain_range
+
+
+def load_graph_csvs() -> tuple[dict[str, pd.DataFrame], dict[str, pd.DataFrame]]:
+    """Return (nodes_by_type, edges_by_type) from nodes_*.csv and edges_*.csv."""
+    nodes: dict[str, pd.DataFrame] = {}
+    for p in sorted(OUTPUT_DIR.glob("nodes_*.csv")):
+        node_type = p.stem[len("nodes_"):]
+        nodes[node_type] = pd.read_csv(p, low_memory=False)
+
+    edges: dict[str, pd.DataFrame] = {}
+    for p in sorted(OUTPUT_DIR.glob("edges_*.csv")):
+        edge_type = p.stem[len("edges_"):]
+        edges[edge_type] = pd.read_csv(p, low_memory=False)
+
+    return nodes, edges
+
+
+def _metric(name: str, data_type: str, result, tier: int, **kwargs) -> dict:
+    entry = {"name": name, "data_type": data_type, "tier": tier, "result": result}
+    entry.update({k: v for k, v in kwargs.items() if v is not None})
+    return entry
+
+
+def compute_tier1_metrics(
+    nodes: dict[str, pd.DataFrame],
+    edges: dict[str, pd.DataFrame],
+    domain_range: dict[str, dict],
+    mappings: dict,
+    min_yield_threshold: float = 0.10,
+) -> tuple[list[dict], list[dict]]:
+    metrics: list[dict] = []
+
+    # Build property → value index for relationship resolution checks.
+    prop_to_values: dict[str, set[str]] = defaultdict(set)
+    for ntype, ndf in nodes.items():
+        for col in ndf.columns:
+            valid = ndf[col].dropna().astype(str).str.strip()
+            prop_to_values[col].update(v for v in valid if v != "nan")
+
+    # --- Total node count per OWL class ---
+    for node_type, df in nodes.items():
+        metrics.append(_metric(
+            "Total node count per OWL class", 
+            "integer", 
+            len(df),
+            tier=1,
+            node_type=node_type,
+            note="zero — blocking failure" if len(df) == 0 else None,
         ))
 
-    # ── Tier 1: Edge counts per type ─────────────────────────────────────────
-    print("Computing edge counts...", file=sys.stderr)
-    edge_counts = get_edge_counts(driver)
-
-    for rel_type, cnt in sorted(edge_counts.items()):
-        metrics.append(make_metric(
-            name="Total edge count per type",
-            data_type="integer", tier=1, result=cnt,
-            relationship_type=rel_type, note=f"Relationship type: {rel_type}",
+    # --- Total edge count per OWL ObjectProperty ---
+    for edge_type, df in edges.items():
+        metrics.append(_metric(
+            "Total edge count per OWL ObjectProperty", "integer", len(df),
+            tier=1, edge_type=edge_type,
+            note="zero — blocking failure" if len(df) == 0 else None,
         ))
 
-    # ── Tier 1: Relationship resolution rate ─────────────────────────────────
-    print("Computing relationship resolution rates...", file=sys.stderr)
-    for config_key, config in ONTOLOGY_CONFIGS.items():
-        if config.get("data_type") != "relationship" or config.get("skip", False):
+    # --- Domain/range constraint violation count ---
+    # Build node_id → node_type index from all node CSVs.
+    # Exact-type check only; subclass relationships are not resolved.
+    node_id_to_type: dict[str, str] = {}
+    for node_type, df in nodes.items():
+        if "id" in df.columns:
+            for nid in df["id"].dropna().astype(str):
+                node_id_to_type[nid] = node_type
+
+    for edge_type, edf in edges.items():
+        dr = domain_range.get(edge_type, {})
+        expected_domain = dr.get("domain")
+        expected_range  = dr.get("range")
+        if not expected_domain and not expected_range:
+            continue
+        if "start_id" not in edf.columns or "end_id" not in edf.columns:
             continue
 
-        source_name     = config_key.split(".")[0]
-        source_filename = config.get("source_filename", "")
-        tsv_path        = DATA_PROCESSED / source_name / source_filename
+        violations = 0
+        if expected_domain:
+            actual_domains = edf["start_id"].dropna().astype(str).map(node_id_to_type)
+            violations += int((actual_domains.notna() & (actual_domains != expected_domain)).sum())
+        if expected_range:
+            actual_ranges = edf["end_id"].dropna().astype(str).map(node_id_to_type)
+            violations += int((actual_ranges.notna() & (actual_ranges != expected_range)).sum())
 
+        metrics.append(_metric(
+            "Domain/range constraint violation count", "integer", violations,
+            tier=1, edge_type=edge_type,
+            expected_domain=expected_domain, expected_range=expected_range,
+            note="exact-type check only; subclass relationships not resolved",
+        ))
+
+    # --- Relationship resolution rate per mapping ---
+    processed_dir = ROOT / "data" / "processed"
+    for mapping_key, mapping in mappings.items():
+        if mapping.get("data_type") != "relationship" or mapping.get("skip"):
+            continue
+        rel_type = mapping.get("relationship_type") or mapping.get("owl_relationship")
+        source_name = mapping_key.split(".")[0]
+        tsv_path = processed_dir / source_name / mapping.get("source_filename", "")
+        if not tsv_path.exists() or rel_type not in edges:
+            continue
+
+        try:
+            src_df = pd.read_csv(tsv_path, sep="\t", low_memory=False, on_bad_lines="skip")
+        except Exception:
+            continue
+
+        parse_config = mapping.get("parse_config", {})
+        filter_col = parse_config.get("filter_column")
+        filter_val = parse_config.get("filter_value")
+        if filter_col and filter_val is not None and filter_col in src_df.columns:
+            src_df = src_df[src_df[filter_col].astype(str) == str(filter_val)]
+
+        n_source = len(src_df)
+        if n_source == 0:
+            continue
+
+        subj_col = parse_config.get("subject_column_name")
+        subj_prop = parse_config.get("subject_match_property") or "id"
+        obj_col = parse_config.get("object_column_name")
+        obj_prop = parse_config.get("object_match_property") or "id"
+
+        if (not subj_col or not obj_col
+                or subj_col not in src_df.columns or obj_col not in src_df.columns):
+            continue
+
+        subj_series = src_df[subj_col].fillna("").astype(str).str.strip()
+        obj_series = src_df[obj_col].fillna("").astype(str).str.strip()
+        subj_match = subj_series.isin(prop_to_values.get(subj_prop, set())) & (subj_series != "")
+        obj_match = obj_series.isin(prop_to_values.get(obj_prop, set())) & (obj_series != "")
+        resolved_count = int((subj_match & obj_match).sum())
+        rate = round(resolved_count / n_source, 4)
+
+        metrics.append(_metric(
+            "Relationship resolution rate per mapping", "float", rate,
+            tier=1, mapping=mapping_key, edge_type=rel_type,
+            source_rows=n_source, resolved_rows=resolved_count,
+        ))
+
+    # --- Edge yield vs source TSV (minimum threshold check) ---
+    # Compare actual edge counts against source TSV row counts.
+    # Flags as failure if yield drops below threshold.
+    edge_yield_threshold = min_yield_threshold
+    edge_yield_failures: list[dict] = []
+
+    for mapping_key, mapping in mappings.items():
+        if mapping.get("data_type") != "relationship" or mapping.get("skip"):
+            continue
+        rel_type = mapping.get("relationship_type") or mapping.get("owl_relationship")
+        source_name = mapping_key.split(".")[0]
+        tsv_path = processed_dir / source_name / mapping.get("source_filename", "")
         if not tsv_path.exists():
-            metrics.append(make_metric(
-                name="Relationship resolution rate per mapping",
-                data_type="float", tier=1, result=None,
-                source=source_name, mapping=config_key,
-                note="TSV file not found; cannot compute resolution rate",
-            ))
             continue
 
-        print(f"  Resolving {config_key}...", file=sys.stderr)
-        rate = compute_resolution_rate(driver, config_key, config)
-        metrics.append(make_metric(
-            name="Relationship resolution rate per mapping",
-            data_type="float", tier=1, result=rate,
-            source=source_name, mapping=config_key,
-            note=("Fraction of TSV rows where both subject and object "
-                  "identifiers match existing graph nodes"),
+        try:
+            src_df = pd.read_csv(tsv_path, sep="\t", low_memory=False, on_bad_lines="skip")
+        except Exception:
+            continue
+
+        parse_config = mapping.get("parse_config", {})
+        filter_col = parse_config.get("filter_column")
+        filter_val = parse_config.get("filter_value")
+        if filter_col and filter_val is not None and filter_col in src_df.columns:
+            src_df = src_df[src_df[filter_col].astype(str) == str(filter_val)]
+
+        n_source = len(src_df)
+        if n_source == 0:
+            continue
+
+        # Get actual edge count from graph
+        edge_df = edges.get(rel_type, pd.DataFrame())
+        # Filter by source label if available
+        source_label = mapping.get("source_label")
+        if source_label and "source" in edge_df.columns:
+            edge_count = len(edge_df[edge_df["source"] == source_label])
+        else:
+            edge_count = len(edge_df)
+
+        yield_rate = edge_count / n_source if n_source > 0 else 0
+        is_failure = yield_rate < edge_yield_threshold and n_source >= 100
+
+        if is_failure:
+            edge_yield_failures.append({
+                "mapping": mapping_key,
+                "edge_type": rel_type,
+                "source_rows": n_source,
+                "edge_count": edge_count,
+                "yield_pct": round(yield_rate * 100, 2),
+                "threshold_pct": round(edge_yield_threshold * 100, 2),
+            })
+
+        metrics.append(_metric(
+            "Edge yield vs source TSV", "float", round(yield_rate, 4),
+            tier=1, mapping=mapping_key, edge_type=rel_type,
+            source_rows=n_source, edge_count=edge_count,
+            threshold=edge_yield_threshold,
+            note="FAILURE — below minimum threshold" if is_failure else None,
         ))
 
-    # ── Tier 2: Orphan node rate ──────────────────────────────────────────────
-    print("Computing orphan node rates...", file=sys.stderr)
-    orphan_rates = get_orphan_rates(driver, node_counts)
-    for label, rate in sorted(orphan_rates.items()):
-        metrics.append(make_metric(
-            name="Orphan node rate",
-            data_type="float", tier=2, result=rate,
-            label=label, note=f"Label: {label} — fraction of nodes with zero edges",
+    # Summary metric for edge yield failures
+    if edge_yield_failures:
+        metrics.append(_metric(
+            "Edge yield failures", "list",
+            [f["mapping"] for f in edge_yield_failures],
+            tier=1,
+            threshold_pct=round(edge_yield_threshold * 100, 2),
+            failure_details=edge_yield_failures,
+            note=f"BLOCKING — {len(edge_yield_failures)} mappings below {edge_yield_threshold*100:.0f}% yield",
         ))
 
-    # ── Tier 2: Duplicate edge rate ───────────────────────────────────────────
-    print("Computing duplicate edge rates...", file=sys.stderr)
-    total_edges, total_dups, dup_by_type = get_duplicate_edge_info(driver, edge_counts)
-    known_edges = sum(edge_counts[rt] for rt, v in dup_by_type.items() if v >= 0)
-    known_dups  = sum(v for v in dup_by_type.values() if v >= 0)
-    dup_rate    = round(known_dups / known_edges, 6) if known_edges > 0 else 0.0
-    errored     = [rt for rt, v in dup_by_type.items() if v is not None and v < 0]
+    # --- Merge match rate per source ---
+    for mapping_key, mapping in mappings.items():
+        if mapping.get("data_type") != "node" or not mapping.get("merge") or mapping.get("skip"):
+            continue
+        node_type = mapping.get("node_type")
+        source_name = mapping_key.split(".")[0]
+        parse_config = mapping.get("parse_config", {})
+        merge_cfg = parse_config.get("merge_column") or {}
+        merge_src_col = merge_cfg.get("source_column_name")
+        merge_data_prop = merge_cfg.get("data_property")
 
-    metrics.append(make_metric(
-        name="Duplicate edge rate",
-        data_type="float", tier=2, result=dup_rate,
-        duplicate_edge_count=known_dups,
-        duplicate_by_type={rt: v for rt, v in dup_by_type.items() if v >= 0},
-        note=(
-            f"{known_dups} duplicate (subject, rel_type, object) triples "
-            f"of {known_edges:,} computable edges"
-            + (f"; {len(errored)} type(s) skipped due to memory limits" if errored else "")
-        ),
+        tsv_path = processed_dir / source_name / mapping["source_filename"]
+        if not tsv_path.exists() or not merge_src_col:
+            continue
+
+        try:
+            src_df = pd.read_csv(tsv_path, sep="\t", low_memory=False, on_bad_lines="skip")
+        except Exception:
+            continue
+
+        if merge_src_col not in src_df.columns:
+            continue
+
+        valid_merge = src_df[merge_src_col].notna() & (
+            src_df[merge_src_col].astype(str).str.strip() != ""
+        )
+        n_eligible = int(valid_merge.sum())
+        if n_eligible == 0:
+            continue
+
+        node_df = nodes.get(node_type)
+        if node_df is not None and merge_data_prop and merge_data_prop in node_df.columns:
+            existing_keys = set(
+                node_df[merge_data_prop].dropna().astype(str).str.strip()
+            )
+            matched = src_df.loc[valid_merge, merge_src_col].astype(str).str.strip().isin(existing_keys)
+            match_rate = round(float(matched.mean()), 4)
+        else:
+            match_rate = None
+
+        metrics.append(_metric(
+            "Merge match rate per source", "float", match_rate,
+            tier=1, mapping=mapping_key, node_type=node_type,
+            merge_eligible_count=n_eligible,
+            note="output CSV missing merge property column" if match_rate is None else None,
+        ))
+
+    return metrics, edge_yield_failures
+
+
+def compute_tier2_metrics(
+    nodes: dict[str, pd.DataFrame],
+    edges: dict[str, pd.DataFrame],
+    baseline: dict | None,
+    current_counts: dict,
+) -> list[dict]:
+    metrics: list[dict] = []
+
+    # Build node connectivity: node_id → degree count (across all edge types).
+    all_endpoints = []
+    for edge_type, edf in edges.items():
+        for col in ("start_id", "end_id"):
+            if col in edf.columns:
+                all_endpoints.append(edf[col].dropna().astype(str))
+    node_edges: dict[str, int] = (
+        pd.concat(all_endpoints).value_counts().to_dict() if all_endpoints else {}
+    )
+
+    # --- Orphan node rate ---
+    for node_type, df in nodes.items():
+        if "id" not in df.columns or len(df) == 0:
+            continue
+        orphan_count = sum(
+            1 for nid in df["id"].dropna().astype(str)
+            if node_edges.get(nid, 0) == 0
+        )
+        metrics.append(_metric(
+            "Orphan node rate", "float",
+            round(orphan_count / len(df), 4),
+            tier=2, node_type=node_type,
+            orphan_count=orphan_count, total_nodes=len(df),
+        ))
+
+    # Build xref_value → set(node_uris) index; shared by two cross-reference metrics.
+    xref_to_uris: dict[str, set[str]] = defaultdict(set)
+    for node_type, df in nodes.items():
+        xref_cols = [c for c in df.columns if c.startswith("xref")]
+        if "uri" not in df.columns or not xref_cols:
+            continue
+        for col in xref_cols:
+            mask = (
+                df[col].notna()
+                & (df[col].astype(str).str.strip() != "")
+                & (df[col].astype(str) != "nan")
+            )
+            sub = df.loc[mask, [col, "uri"]]
+            for val, grp in sub.groupby(col):
+                xref_to_uris[str(val).strip()].update(grp["uri"].astype(str))
+
+    # --- Internal cross-reference resolution rate ---
+    # An xref "resolves" if its value appears on at least two distinct nodes (different URIs).
+    total_xref_entries = sum(len(uris) for uris in xref_to_uris.values())
+    resolved_xref = sum(len(uris) for uris in xref_to_uris.values() if len(uris) > 1)
+    xref_resolution_rate = round(resolved_xref / total_xref_entries, 4) if total_xref_entries > 0 else None
+    metrics.append(_metric(
+        "Internal cross-reference resolution rate", "float", xref_resolution_rate,
+        tier=2, total_xref_entries=total_xref_entries,
     ))
 
-    # ── Tier 2: Largest connected component fraction ──────────────────────────
-    print("Computing largest connected component...", file=sys.stderr)
-    lcc_fraction, num_components = get_largest_component_fraction(driver, total_nodes)
-    metrics.append(make_metric(
-        name="Largest connected component fraction",
-        data_type="float", tier=2, result=lcc_fraction,
-        component_count=num_components,
-        note=(
-            (f"Fraction of {total_nodes:,} nodes in the largest weakly connected "
-             f"component; {num_components} components total")
-            if lcc_fraction is not None else
-            ("Memgraph MAGE weakly_connected_components procedure not available. "
-             "Install MAGE: https://github.com/memgraph/mage")
-        ),
+    # --- Exact-IRI duplicate count ---
+    total_iri_dups = 0
+    for node_type, df in nodes.items():
+        if "uri" in df.columns:
+            dup_count = int(df["uri"].dropna().duplicated().sum())
+            total_iri_dups += dup_count
+    metrics.append(_metric(
+        "Exact-IRI duplicate count", "integer", total_iri_dups, tier=2,
     ))
 
-    # ── Tier 2: Average node degree per label ─────────────────────────────────
-    print("Computing average node degree per label...", file=sys.stderr)
-    avg_degrees = get_average_degree_per_label(driver, node_counts)
-    for label, avg_deg in sorted(avg_degrees.items()):
-        metrics.append(make_metric(
-            name="Average node degree per label",
-            data_type="float", tier=2, result=avg_deg,
-            label=label, note=f"Label: {label} — mean edge count (in + out) per node",
-        ))
-
-    # ── Tier 2: Run-to-run entity count delta ─────────────────────────────────
-    delta = compute_run_to_run_delta(node_counts, baseline_path)
-    metrics.append(make_metric(
-        name="Run-to-run entity count delta",
-        data_type="object", tier=2, result=delta,
-        note=("Per-label node count delta vs baseline report"
-              if delta is not None
-              else "No --baseline provided; pass a previous JSON report to enable"),
+    # --- Cross-reference duplicate count ---
+    # Node pairs sharing at least one xref value but having different IRIs.
+    # Uses the xref_to_uris index already built above.
+    xref_dup_pairs = sum(
+        len(uris) * (len(uris) - 1) // 2
+        for uris in xref_to_uris.values()
+        if len(uris) > 1
+    )
+    metrics.append(_metric(
+        "Cross-reference duplicate count", "integer", xref_dup_pairs, tier=2,
+        note="lower-bound estimate of unresolved duplicates",
     ))
 
-    # ── Tier 2: Merge rate per source database ────────────────────────────────
-    print("Computing merge rates per source database...", file=sys.stderr)
-    merge_rates = get_merge_rate_per_source(driver)
-    source_node_stats = get_node_creation_stats_per_source(driver)
+    # --- Duplicate edge rate ---
+    total_edges = 0
+    total_dup_edges = 0
+    for edge_type, edf in edges.items():
+        if "start_id" in edf.columns and "end_id" in edf.columns:
+            n = len(edf)
+            dup = int(edf.duplicated(subset=["start_id", "end_id"]).sum())
+            total_edges += n
+            total_dup_edges += dup
+    dup_edge_rate = (
+        round(total_dup_edges / total_edges, 4) if total_edges > 0 else None
+    )
+    metrics.append(_metric(
+        "Duplicate edge rate", "float", dup_edge_rate,
+        tier=2, duplicate_edge_count=total_dup_edges, total_edge_count=total_edges,
+    ))
 
-    LOW_MERGE_THRESHOLD = 0.95  # Flag sources with merge rate below 95%
+    # --- Largest connected component fraction ---
+    # Build undirected graph from all edges.
+    G = nx.Graph()
+    for df in nodes.values():
+        if "id" in df.columns:
+            G.add_nodes_from(df["id"].dropna().astype(str))
+    for edge_type, edf in edges.items():
+        if "start_id" in edf.columns and "end_id" in edf.columns:
+            G.add_edges_from(
+                zip(edf["start_id"].dropna().astype(str), edf["end_id"].dropna().astype(str))
+            )
 
-    for source, stats in sorted(merge_rates.items()):
-        merge_rate = stats.get('merge_rate')
-        is_low = merge_rate is not None and merge_rate < LOW_MERGE_THRESHOLD
-        metrics.append(make_metric(
-            name="Merge rate per source database",
-            data_type="float", tier=2, result=merge_rate,
-            source=source,
-            total_unique_nodes=stats.get('total_unique_nodes'),
-            potential_duplicates=stats.get('potential_duplicates'),
-            node_types_affected=stats.get('node_types_affected'),
-            duplicate_examples=stats.get('duplicate_examples'),
-            is_flagged=is_low,
-            note=(
-                f"Source: {source} — "
-                f"{stats.get('total_unique_nodes', 0):,} nodes touched, "
-                f"{stats.get('potential_duplicates', 0):,} potential duplicates"
-                + (" *** LOW MERGE RATE ***" if is_low else "")
-                + (f" Error: {stats.get('error')}" if stats.get('error') else "")
-            ),
+    total_nodes = G.number_of_nodes()
+    if total_nodes > 0:
+        components = list(nx.connected_components(G))
+        largest_cc = max(len(c) for c in components)
+        lcc_fraction = round(largest_cc / total_nodes, 4)
+        n_components = len(components)
+    else:
+        lcc_fraction = None
+        n_components = None
+
+    metrics.append(_metric(
+        "Largest connected component fraction", "float", lcc_fraction,
+        tier=2, total_nodes=total_nodes, disconnected_component_count=n_components,
+    ))
+
+    # --- Average node degree per OWL class ---
+    for node_type, df in nodes.items():
+        if "id" not in df.columns or len(df) == 0:
+            continue
+        degrees = [node_edges.get(str(nid), 0) for nid in df["id"].dropna().astype(str)]
+        avg_degree = round(float(np.mean(degrees)), 4) if degrees else None
+        metrics.append(_metric(
+            "Average node degree per OWL class", "float", avg_degree,
+            tier=2, node_type=node_type,
         ))
 
-    # Store merge rate summary in report for easy access
-    merge_rate_summary = {
-        source: {
-            'merge_rate': stats.get('merge_rate'),
-            'total_nodes': stats.get('total_unique_nodes'),
-            'duplicates': stats.get('potential_duplicates'),
-            'flagged': stats.get('merge_rate') is not None and stats.get('merge_rate') < LOW_MERGE_THRESHOLD,
+    # --- Run-to-run entity count delta ---
+    if baseline:
+        prev_counts = baseline.get("entity_counts", {})
+        per_type_deltas = {k: current_counts[k] - prev_counts.get(k, 0) for k in current_counts}
+        max_abs_delta = max(abs(v) for v in per_type_deltas.values()) if per_type_deltas else 0
+        metrics.append(_metric(
+            "Run-to-run entity count delta", "object", per_type_deltas,
+            tier=2, max_abs_delta=max_abs_delta,
+        ))
+    else:
+        metrics.append(_metric(
+            "Run-to-run entity count delta", "object", None,
+            tier=2, note="no baseline provided; pass --baseline to compare runs",
+        ))
+
+    # --- High-degree outlier count per ObjectProperty (Tier 3) ---
+    for edge_type, edf in edges.items():
+        if "start_id" not in edf.columns and "end_id" not in edf.columns:
+            continue
+        degree_counter: Counter = Counter()
+        for col in ("start_id", "end_id"):
+            if col in edf.columns:
+                degree_counter.update(edf[col].dropna().astype(str))
+        if not degree_counter:
+            continue
+        degrees_arr = np.array(list(degree_counter.values()))
+        threshold = float(np.percentile(degrees_arr, 99))
+        outlier_count = int((degrees_arr > threshold).sum())
+        metrics.append(_metric(
+            "High-degree outlier count per ObjectProperty", "integer", outlier_count,
+            tier=3, edge_type=edge_type,
+            p99_degree_threshold=round(threshold, 2),
+        ))
+
+    return metrics
+
+
+def compute_merge_rate_analysis(
+    nodes: dict[str, pd.DataFrame],
+    mappings: dict,
+) -> tuple[list[dict], dict]:
+    """
+    Compute merge rate analysis: raw records parsed vs unique IDs after deduplication.
+
+    For each source, compares:
+    - raw_records: total rows in the TSV
+    - unique_ids: unique values in the ID column (after internal deduplication)
+    - merge_rate: unique_ids / raw_records * 100 (100% = no duplicates)
+
+    Low merge rates indicate duplicate records that got merged.
+
+    Returns:
+        metrics: list of metric dicts
+        summary: dict with per-source breakdown for the report
+    """
+    metrics: list[dict] = []
+    summary: dict[str, dict] = {}
+
+    # Group node mappings by source
+    source_node_mappings: dict[str, list[tuple[str, dict]]] = defaultdict(list)
+    for mapping_key, mapping in mappings.items():
+        if mapping.get("data_type") != "node" or mapping.get("skip"):
+            continue
+        source_name = mapping_key.split(".")[0]
+        source_node_mappings[source_name].append((mapping_key, mapping))
+
+    merge_rates: list[float] = []
+
+    for source_name, source_mappings in sorted(source_node_mappings.items()):
+        source_raw_count = 0
+        source_unique_ids = 0
+        source_node_types: set[str] = set()
+        per_file_stats: list[dict] = []
+
+        for mapping_key, mapping in source_mappings:
+            tsv_path = PROCESSED_DIR / source_name / mapping.get("source_filename", "")
+            if not tsv_path.exists():
+                continue
+
+            try:
+                df = pd.read_csv(tsv_path, sep="\t", low_memory=False, on_bad_lines="skip")
+                raw_count = len(df)
+                source_raw_count += raw_count
+
+                node_type = mapping.get("owl_class") or mapping.get("node_type")
+                if node_type:
+                    source_node_types.add(node_type)
+
+                # Get ID column from mapping
+                id_col = mapping.get("id_column")
+                if not id_col and "parse_config" in mapping:
+                    id_col = mapping["parse_config"].get("iri_column_name")
+
+                unique_count = raw_count  # default if no ID column
+                if id_col and id_col in df.columns:
+                    unique_ids = df[id_col].dropna().astype(str).str.strip()
+                    unique_ids = unique_ids[unique_ids != ""]
+                    unique_count = unique_ids.nunique()
+
+                source_unique_ids += unique_count
+
+                per_file_stats.append({
+                    "file": mapping.get("source_filename", ""),
+                    "raw": raw_count,
+                    "unique": unique_count,
+                    "id_column": id_col,
+                })
+            except Exception:
+                continue
+
+        if source_raw_count == 0:
+            continue
+
+        # Merge rate: unique / raw * 100 (100% = no duplicates, lower = more duplicates merged)
+        merge_rate = round((source_unique_ids / source_raw_count) * 100, 2)
+        merge_rates.append(merge_rate)
+
+        # Also get final graph node count for this source's node types
+        graph_node_count = sum(len(nodes.get(nt, pd.DataFrame())) for nt in source_node_types)
+
+        summary[source_name] = {
+            "raw_records": source_raw_count,
+            "unique_ids": source_unique_ids,
+            "merge_rate_pct": merge_rate,
+            "node_types": sorted(source_node_types),
+            "graph_nodes": graph_node_count,
+            "files": per_file_stats,
         }
-        for source, stats in merge_rates.items()
-    }
 
-    # ── Tier 2: Cross-source merge analysis ─────────────────────────────────────
-    print("Computing cross-source merge analysis...", file=sys.stderr)
-    cross_source_analysis = get_cross_source_node_analysis(driver)
-    drug_merge_detail = get_drug_merge_detail(driver)
-    gene_integration = get_gene_integration_depth(driver)
-    id_duplicates = get_id_duplicate_check(driver)
+        metrics.append(_metric(
+            "Merge rate per source", "float", merge_rate,
+            tier=1, source=source_name,
+            raw_records=source_raw_count,
+            unique_ids=source_unique_ids,
+            node_types=sorted(source_node_types),
+        ))
 
-    # Add cross-source metrics
-    for nt, stats in cross_source_analysis.get('multi_source_summary', {}).items():
-        if 'error' not in stats:
-            metrics.append(make_metric(
-                name="Cross-source node integration",
-                data_type="float", tier=2,
-                result=stats.get('merge_rate'),
-                node_type=nt,
-                num_sources=stats.get('num_sources'),
-                multi_source_nodes=stats.get('multi_source_nodes'),
-                single_source_nodes=stats.get('single_source_nodes'),
-                note=f"{nt}: {stats.get('multi_source_nodes', 0):,} nodes from {stats.get('num_sources', 0)} sources",
+    # Flag sources with unusually low merge rates (below 50% = high duplication)
+    if merge_rates:
+        median_rate = float(np.median(merge_rates))
+        low_threshold = min(median_rate * 0.5, 50.0)
+
+        flagged_sources = []
+        for source_name, data in summary.items():
+            rate = data.get("merge_rate_pct")
+            if rate is not None and rate < low_threshold:
+                flagged_sources.append({
+                    "source": source_name,
+                    "merge_rate_pct": rate,
+                    "raw_records": data["raw_records"],
+                    "unique_ids": data["unique_ids"],
+                    "duplicates": data["raw_records"] - data["unique_ids"],
+                })
+
+        metrics.append(_metric(
+            "Low merge rate sources", "list",
+            [f["source"] for f in flagged_sources],
+            tier=2,
+            threshold_pct=round(low_threshold, 2),
+            median_rate_pct=round(median_rate, 2),
+            flagged_details=flagged_sources if flagged_sources else None,
+            note="potential duplicate node issues - high internal duplication" if flagged_sources else "no issues detected",
+        ))
+
+    return metrics, summary
+
+
+def compute_cross_source_merge_analysis(
+    nodes: dict[str, pd.DataFrame],
+    mappings: dict,
+) -> tuple[list[dict], dict]:
+    """
+    Analyze cross-source merging for node types with multiple contributing sources.
+
+    For each node type contributed by multiple sources, compares:
+    - sum_unique_per_source: total unique IDs if sources were loaded separately
+    - final_graph_nodes: actual unique nodes in graph after merging
+    - cross_merge_rate: % of potential duplicates that were successfully merged
+
+    Also checks for overlap using cross-reference columns (xrefMeSH, xrefDrugbank, etc.)
+    when sources use different primary ID schemes.
+
+    Returns:
+        metrics: list of metric dicts
+        summary: dict with per-node-type breakdown
+    """
+    metrics: list[dict] = []
+    summary: dict[str, dict] = {}
+
+    # Common cross-reference columns to check for overlap
+    XREF_COLUMNS = ["xrefMeSH", "xrefDrugbank", "drugbank_id", "mesh_id", "xrefNcbiGene", "symbol", "gene_symbol"]
+
+    # Group node mappings by node type
+    node_type_sources: dict[str, list[tuple[str, str, dict]]] = defaultdict(list)
+    for mapping_key, mapping in mappings.items():
+        if mapping.get("data_type") != "node" or mapping.get("skip"):
+            continue
+        node_type = mapping.get("owl_class") or mapping.get("node_type")
+        source_name = mapping_key.split(".")[0]
+        if node_type:
+            node_type_sources[node_type].append((source_name, mapping_key, mapping))
+
+    # Only analyze node types with multiple sources
+    multi_source_types = {nt: sources for nt, sources in node_type_sources.items() if len(sources) > 1}
+
+    for node_type, sources in sorted(multi_source_types.items()):
+        source_data: list[dict] = []
+        all_ids_per_source: dict[str, set[str]] = {}
+        all_xrefs_per_source: dict[str, dict[str, set[str]]] = {}  # source -> {xref_col -> set of values}
+        source_dfs: dict[str, pd.DataFrame] = {}
+
+        for source_name, mapping_key, mapping in sources:
+            tsv_path = PROCESSED_DIR / source_name / mapping.get("source_filename", "")
+            if not tsv_path.exists():
+                continue
+
+            try:
+                df = pd.read_csv(tsv_path, sep="\t", low_memory=False, on_bad_lines="skip")
+                source_dfs[source_name] = df
+
+                # Get ID column
+                id_col = mapping.get("id_column")
+                if not id_col and "parse_config" in mapping:
+                    id_col = mapping["parse_config"].get("iri_column_name")
+
+                if id_col and id_col in df.columns:
+                    ids = set(df[id_col].dropna().astype(str).str.strip())
+                    ids = {i for i in ids if i and i != "nan"}
+                else:
+                    ids = set()
+
+                all_ids_per_source[source_name] = ids
+
+                # Collect cross-reference values
+                xrefs: dict[str, set[str]] = {}
+                for xref_col in XREF_COLUMNS:
+                    # Check both exact and mapped column names
+                    prop_map = mapping.get("property_map", {})
+                    actual_col = None
+                    for src_col, mapped_prop in prop_map.items():
+                        if mapped_prop == xref_col or src_col == xref_col:
+                            actual_col = src_col
+                            break
+                    if actual_col is None and xref_col in df.columns:
+                        actual_col = xref_col
+
+                    if actual_col and actual_col in df.columns:
+                        vals = set(df[actual_col].dropna().astype(str).str.strip())
+                        vals = {v for v in vals if v and v != "nan"}
+                        if vals:
+                            xrefs[xref_col] = vals
+                all_xrefs_per_source[source_name] = xrefs
+
+                source_data.append({
+                    "source": source_name,
+                    "mapping": mapping_key,
+                    "raw_records": len(df),
+                    "unique_ids": len(ids),
+                    "id_column": id_col,
+                    "xref_columns": list(xrefs.keys()),
+                })
+            except Exception:
+                continue
+
+        if len(source_data) < 2:
+            continue
+
+        # Calculate overlap between sources using primary IDs
+        source_names = list(all_ids_per_source.keys())
+        overlaps: list[dict] = []
+        total_overlap_ids: set[str] = set()
+
+        for i, src1 in enumerate(source_names):
+            for src2 in source_names[i + 1:]:
+                ids1 = all_ids_per_source[src1]
+                ids2 = all_ids_per_source[src2]
+                overlap = ids1 & ids2
+                if overlap:
+                    overlaps.append({
+                        "sources": [src1, src2],
+                        "overlap_count": len(overlap),
+                        "overlap_type": "primary_id",
+                        "pct_of_smaller": round(len(overlap) / min(len(ids1), len(ids2)) * 100, 2) if min(len(ids1), len(ids2)) > 0 else 0,
+                    })
+                    total_overlap_ids.update(overlap)
+
+        # Also check overlap via cross-reference columns
+        xref_overlaps: list[dict] = []
+        for i, src1 in enumerate(source_names):
+            for src2 in source_names[i + 1:]:
+                xrefs1 = all_xrefs_per_source.get(src1, {})
+                xrefs2 = all_xrefs_per_source.get(src2, {})
+                # Find common xref columns
+                common_xref_cols = set(xrefs1.keys()) & set(xrefs2.keys())
+                for xref_col in common_xref_cols:
+                    vals1 = xrefs1[xref_col]
+                    vals2 = xrefs2[xref_col]
+                    xref_overlap = vals1 & vals2
+                    if xref_overlap:
+                        xref_overlaps.append({
+                            "sources": [src1, src2],
+                            "xref_column": xref_col,
+                            "overlap_count": len(xref_overlap),
+                            "pct_of_smaller": round(len(xref_overlap) / min(len(vals1), len(vals2)) * 100, 2) if min(len(vals1), len(vals2)) > 0 else 0,
+                        })
+
+        # Calculate metrics
+        sum_unique_per_source = sum(len(ids) for ids in all_ids_per_source.values())
+        final_graph_nodes = len(nodes.get(node_type, pd.DataFrame()))
+
+        # Union of all IDs (what we'd expect if IDs were standardized)
+        union_all_ids = set()
+        for ids in all_ids_per_source.values():
+            union_all_ids.update(ids)
+
+        # Estimate potential duplicates from xref overlaps if no primary ID overlap
+        estimated_xref_overlap = 0
+        if not overlaps and xref_overlaps:
+            # Use max xref overlap as estimate
+            estimated_xref_overlap = max(o["overlap_count"] for o in xref_overlaps) if xref_overlaps else 0
+
+        # Cross-source merge rate: how much deduplication happened
+        potential_duplicates = sum_unique_per_source - len(union_all_ids)
+        if potential_duplicates == 0 and estimated_xref_overlap > 0:
+            # Sources use different IDs but have xref overlap
+            potential_duplicates = estimated_xref_overlap
+
+        # Check how many nodes remain vs expected
+        expected_if_merged = sum_unique_per_source - potential_duplicates
+        actual_duplicates_remaining = max(0, final_graph_nodes - expected_if_merged)
+
+        if potential_duplicates > 0:
+            merged_count = potential_duplicates - actual_duplicates_remaining
+            cross_merge_rate = round((merged_count / potential_duplicates) * 100, 2)
+        else:
+            cross_merge_rate = 100.0
+
+        # Flag if merge rate is low OR if there are xref overlaps but graph has more nodes than expected
+        is_flagged = (cross_merge_rate < 90.0 and potential_duplicates > 10) or \
+                     (xref_overlaps and final_graph_nodes > expected_if_merged + 10)
+
+        summary[node_type] = {
+            "sources": [s["source"] for s in source_data],
+            "source_details": source_data,
+            "sum_unique_per_source": sum_unique_per_source,
+            "union_all_ids": len(union_all_ids),
+            "final_graph_nodes": final_graph_nodes,
+            "potential_duplicates": potential_duplicates,
+            "estimated_xref_overlap": estimated_xref_overlap,
+            "cross_merge_rate_pct": cross_merge_rate,
+            "overlaps_by_primary_id": overlaps,
+            "overlaps_by_xref": xref_overlaps,
+            "flagged": is_flagged,
+        }
+
+        metrics.append(_metric(
+            "Cross-source merge rate", "float", cross_merge_rate,
+            tier=1, node_type=node_type,
+            sources=[s["source"] for s in source_data],
+            sum_unique_per_source=sum_unique_per_source,
+            final_graph_nodes=final_graph_nodes,
+            potential_duplicates=potential_duplicates,
+            xref_overlaps=len(xref_overlaps),
+            note="potential duplicate nodes" if is_flagged else None,
+        ))
+
+    # Summary metric for flagged types
+    flagged_types = [nt for nt, data in summary.items() if data.get("flagged")]
+    metrics.append(_metric(
+        "Cross-source merge issues", "list", flagged_types,
+        tier=2,
+        note="node types with low cross-source merge rates (<90%)" if flagged_types else "all multi-source node types merged correctly",
+    ))
+
+    return metrics, summary
+
+
+def compute_tier3_bio_metrics(
+    nodes: dict[str, pd.DataFrame],
+    edges: dict[str, pd.DataFrame],
+    omim_genemap_path: Path | None,
+    drugbank_tsv_path: Path | None,
+) -> list[dict]:
+    metrics: list[dict] = []
+
+    # --- Known disease-gene recall rate ---
+    if omim_genemap_path and omim_genemap_path.exists():
+        # genemap2.txt: tab-separated, MIM type = 3 are phenotype entries with genes.
+        # Columns: Chromosome, Genomic Position Start, ..., MIM Number, Gene Symbols, ...
+        omim_df = pd.read_csv(
+            omim_genemap_path, sep="\t", comment="#",
+            header=None, low_memory=False,
+        )
+        # Column 12 = Phenotype, Column 5 = Gene Symbols (Entrez-based)
+        # Use OMIM's standard column layout; MIM type 3 = confirmed gene-phenotype entries.
+        gene_ids_in_graph: set[str] = set()
+        if "Gene" in nodes and "xrefNcbiGene" in nodes["Gene"].columns:
+            gene_ids_in_graph = set(
+                nodes["Gene"]["xrefNcbiGene"].dropna().astype(str).str.strip()
+            )
+        disease_ids_in_graph: set[str] = set()
+        if "Disease" in nodes and "xrefOMIM" in nodes["Disease"].columns:
+            disease_ids_in_graph = set(
+                nodes["Disease"]["xrefOMIM"].dropna().astype(str).str.strip()
+            )
+
+        _pheno_mim_re = re.compile(r"(\d{6})\s*\(\s*3\s*\)")
+        total = 0
+        recalled = 0
+        for _, row in omim_df.iterrows():
+            try:
+                pheno_field = str(row.iloc[12]) if len(row) > 12 else ""
+                disease_mims = _pheno_mim_re.findall(pheno_field)
+                if not disease_mims:
+                    continue
+                entrez_id = str(row.iloc[9]).strip() if len(row) > 9 else ""
+                if not entrez_id or entrez_id == "nan":
+                    continue
+                for mim in disease_mims:
+                    total += 1
+                    if entrez_id in gene_ids_in_graph and mim in disease_ids_in_graph:
+                        recalled += 1
+            except Exception:
+                continue
+        recall_rate = round(recalled / total, 4) if total > 0 else None
+        metrics.append(_metric(
+            "Known disease-gene recall rate", "float", recall_rate,
+            tier=3, total_omim_entries=total, recalled=recalled,
+            note="matched by Entrez Gene ID and OMIM phenotype MIM number (type 3)",
+        ))
+    else:
+        metrics.append(_metric(
+            "Known disease-gene recall rate", "float", None,
+            tier=3, note="provide --omim-genemap to compute",
+        ))
+
+    # --- Drug-target coverage ---
+    if drugbank_tsv_path and drugbank_tsv_path.exists():
+        db_df = pd.read_csv(drugbank_tsv_path, sep="\t", low_memory=False)
+        if "drugbank_id" in db_df.columns:
+            db_ids = set(db_df["drugbank_id"].dropna().astype(str).str.strip())
+            graph_db_ids: set[str] = set()
+            if "Drug" in nodes and "xrefDrugbank" in nodes["Drug"].columns:
+                graph_db_ids = set(
+                    nodes["Drug"]["xrefDrugbank"].dropna().astype(str).str.strip()
+                )
+            covered = len(db_ids & graph_db_ids)
+            coverage = round(covered / len(db_ids), 4) if db_ids else None
+            metrics.append(_metric(
+                "Drug-target coverage", "float", coverage,
+                tier=3, total_drugbank_drugs=len(db_ids), covered=covered,
             ))
-
-    # Add ID duplicate check metrics
-    for nt, stats in id_duplicates.items():
-        metrics.append(make_metric(
-            name="ID-based duplicate check",
-            data_type="integer", tier=2,
-            result=stats.get('duplicate_count'),
-            node_type=nt,
-            id_property=stats.get('id_property'),
-            status=stats.get('status'),
-            note=f"{nt}.{stats.get('id_property')}: {stats.get('duplicate_count', 'N/A')} duplicates",
+    else:
+        metrics.append(_metric(
+            "Drug-target coverage", "float", None,
+            tier=3, note="provide --drugbank-tsv to compute",
         ))
 
-    # ── Tier 3: High-degree outlier count per relationship type ───────────────
-    print("Computing high-degree outliers per relationship type...", file=sys.stderr)
-    outliers = get_high_degree_outliers(driver, edge_counts, percentile=99.0)
-    for rel_type, count in sorted(outliers.items()):
-        metrics.append(make_metric(
-            name="High-degree outlier count per relationship type",
-            data_type="integer", tier=3, result=count,
-            relationship_type=rel_type,
-            note=(f"Nodes exceeding 99th-percentile degree for :{rel_type} edges"
-                  if count is not None
-                  else f"Query failed for :{rel_type} (memory limit or timeout)"),
-        ))
-
-    driver.close()
-
-    return {
-        "run_timestamp": datetime.datetime.now(tz=datetime.timezone.utc).isoformat(),
-        "entity_counts": node_counts,
-        "merge_rate_summary": merge_rate_summary,
-        "source_node_stats": source_node_stats,
-        "cross_source_analysis": cross_source_analysis,
-        "drug_merge_detail": drug_merge_detail,
-        "gene_integration": gene_integration,
-        "id_duplicates": id_duplicates,
-        "metrics": metrics,
-    }
+    return metrics
 
 
-# ---------------------------------------------------------------------------
-# Pass/fail logic helpers
-# ---------------------------------------------------------------------------
-
-def is_metric_passing(metric):
-    """
-    Determine if a metric is passing based on its name and result.
-    Different metrics have different pass criteria:
-    - Counts (nodes, edges): > 0 is passing
-    - Duplicate checks: 0 is passing (no duplicates = good)
-    - Orphan rates: any value is passing (0 = excellent)
-    - Resolution rates: > 0 is passing
-    - ID-based duplicate: 0 is passing, or status == 'PASS'
-    - LCC/delta: None means not available, not failure
-    """
-    name = metric.get('name', '')
-    result = metric.get('result')
-    status = metric.get('status')
-
-    # If status is explicitly set, use it
-    if status == 'PASS':
-        return True
-    if status == 'FAIL':
-        return False
-
-    # None means "not available" for optional metrics, not failure
-    if result is None:
-        # These are optional/informational, not failures
-        if name in ['Largest connected component fraction',
-                    'Run-to-run entity count delta']:
-            return True  # Not available is OK
-        return False  # Other None results are failures
-
-    # For these metrics, 0 is the desired outcome (no duplicates/issues)
-    zero_is_good = [
-        'Duplicate edge rate',
-        'ID-based duplicate check',
-    ]
-    if any(z in name for z in zero_is_good):
-        return True  # 0 duplicates = passing
-
-    # Orphan rates: any computed value is "passing" (it's informational)
-    if 'Orphan node rate' in name:
-        return True  # Computed orphan rate is informational, not pass/fail
-
-    # Average degree: 0 can be valid for metadata nodes
-    if 'Average node degree' in name:
-        return True  # Informational metric
-
-    # Cross-source integration: 0% is valid for single-source node types
-    if 'Cross-source node integration' in name:
-        return True  # Informational metric
-
-    # For counts, > 0 is passing
-    if 'count' in name.lower():
-        return result > 0
-
-    # For rates/fractions, > 0 is generally passing
-    if isinstance(result, (int, float)):
-        return result > 0
-
-    # Default: non-None, non-zero, non-'Fail' is passing
-    return result not in [None, 'Fail']
-
-
-# ---------------------------------------------------------------------------
-# Markdown report generator
-# ---------------------------------------------------------------------------
-
-def generate_markdown_report(report):
-    """Generate a human-readable markdown report from the eval results."""
-    lines = []
-    timestamp = report.get('run_timestamp', '')[:10]
-    entity_counts = report.get('entity_counts', {})
-    metrics = report.get('metrics', [])
-
-    lines.append(f"# CardioKB Evaluation Report — {timestamp}")
-    lines.append("")
-    lines.append(f"**Generated:** {report.get('run_timestamp', 'N/A')}")
-    lines.append("")
-
-    # Test Results Summary
-    t1 = [m for m in metrics if m.get('tier') == 1]
-    t2 = [m for m in metrics if m.get('tier') == 2]
-    t1_pass = sum(1 for m in t1 if is_metric_passing(m))
-    t2_pass = sum(1 for m in t2 if is_metric_passing(m))
-
-    lines.append("## Test Results Summary")
-    lines.append("")
-    lines.append(f"- **Tier 1 (blocking):** {t1_pass}/{len(t1)} passing")
-    lines.append(f"- **Tier 2 (quality):** {t2_pass}/{len(t2)} passing")
-    lines.append("")
-
-    # Entity Counts
-    lines.append("## Entity Counts")
-    lines.append("")
-    lines.append("| Node Type | Count |")
-    lines.append("|-----------|-------|")
-    for label, cnt in sorted(entity_counts.items(), key=lambda x: -x[1]):
-        lines.append(f"| {label} | {cnt:,} |")
-    lines.append("")
-
-    # Cross-Source Integration
-    cross_source = report.get('cross_source_analysis', {})
-    multi_source_summary = cross_source.get('multi_source_summary', {})
-
-    if multi_source_summary:
-        lines.append("## Cross-Source Integration")
-        lines.append("")
-        lines.append("Node types touched by multiple sources:")
-        lines.append("")
-        lines.append("| Node Type | # Sources | Multi-Source Nodes | Single-Source | Integration Rate |")
-        lines.append("|-----------|-----------|-------------------|---------------|------------------|")
-
-        for nt, stats in sorted(multi_source_summary.items(), key=lambda x: -x[1].get('num_sources', 0)):
-            if 'error' not in stats:
-                num_src = stats.get('num_sources', 0)
-                multi = stats.get('multi_source_nodes', 0)
-                single = stats.get('single_source_nodes', 0)
-                rate = stats.get('merge_rate', 0) * 100
-                lines.append(f"| {nt} | {num_src} | {multi:,} | {single:,} | {rate:.1f}% |")
-        lines.append("")
-
-    # Drug Merge Detail
-    drug_merge = report.get('drug_merge_detail', {})
-    if drug_merge and 'error' not in drug_merge:
-        lines.append("### Drug Merging: CTD → DrugBank")
-        lines.append("")
-        lines.append(f"- **CTD drugs total:** {drug_merge.get('ctd_total', 0):,}")
-        lines.append(f"- **Merged with DrugBank:** {drug_merge.get('merged_both', 0):,} ({drug_merge.get('merge_rate', 0)*100:.1f}%)")
-        lines.append(f"- **CTD-only:** {drug_merge.get('ctd_only', 0):,} (environmental chemicals, research compounds)")
-        lines.append("")
-
-    # Gene Integration Depth
-    gene_int = report.get('gene_integration', {})
-    if gene_int and 'error' not in gene_int:
-        lines.append("### Gene Integration Depth")
-        lines.append("")
-        lines.append("| Integration Level | Genes |")
-        lines.append("|-------------------|-------|")
-        lines.append(f"| High (10+ sources) | {gene_int.get('high_integration', 0):,} |")
-        lines.append(f"| Medium (5-9 sources) | {gene_int.get('medium_integration', 0):,} |")
-        lines.append(f"| Low (2-4 sources) | {gene_int.get('low_integration', 0):,} |")
-        lines.append(f"| Single source | {gene_int.get('single_source', 0):,} |")
-        lines.append("")
-
-    # ID Duplicate Check
-    id_dups = report.get('id_duplicates', {})
-    if id_dups:
-        lines.append("## ID-Based Duplicate Check")
-        lines.append("")
-        lines.append("| Entity Type | ID Property | Duplicates | Status |")
-        lines.append("|-------------|-------------|------------|--------|")
-        for nt, stats in sorted(id_dups.items()):
-            dup_count = stats.get('duplicate_count')
-            dup_str = str(dup_count) if dup_count is not None else 'N/A'
-            status = stats.get('status', 'N/A')
-            status_icon = '✓' if status == 'PASS' else ('✗' if status == 'FAIL' else '—')
-            lines.append(f"| {nt} | {stats.get('id_property', '')} | {dup_str} | {status_icon} {status} |")
-        lines.append("")
-
-    # Merge Rate by Source
-    merge_summary = report.get('merge_rate_summary', {})
-    if merge_summary:
-        lines.append("## Merge Rate by Source Database")
-        lines.append("")
-        lines.append("| Source | Merge Rate | Nodes | Duplicates | Status |")
-        lines.append("|--------|------------|-------|------------|--------|")
-        for source, stats in sorted(merge_summary.items()):
-            rate = stats.get('merge_rate')
-            rate_str = f"{rate*100:.1f}%" if rate is not None else 'N/A'
-            total = stats.get('total_nodes', 0)
-            dups = stats.get('duplicates', 0)
-            flagged = stats.get('flagged', False)
-            status = '⚠️ LOW' if flagged else '✓'
-            lines.append(f"| {source} | {rate_str} | {total:,} | {dups} | {status} |")
-        lines.append("")
-
-    # Footer
-    lines.append("---")
-    lines.append("")
-    lines.append("*Generated by eval_after_memgraph.py*")
-
-    return "\n".join(lines)
-
-
-# ---------------------------------------------------------------------------
-# Summary printer
-# ---------------------------------------------------------------------------
-
-def print_summary(report):
-    metrics       = report["metrics"]
-    t1            = [m for m in metrics if m["tier"] == 1]
-    t2            = [m for m in metrics if m["tier"] == 2]
-    t3            = [m for m in metrics if m["tier"] == 3]
-    entity_counts = report.get("entity_counts", {})
-    total_nodes   = sum(entity_counts.values())
-
-    zero_nodes = [m for m in t1
-                  if m.get("name") == "Total node count per label" and m.get("result") == 0]
-    zero_edges = [m for m in t1
-                  if m.get("name") == "Total edge count per type" and m.get("result") == 0]
-    null_res   = [m for m in t1
-                  if m.get("name") == "Relationship resolution rate per mapping"
-                  and m.get("result") is None]
-    low_res    = [m for m in t1
-                  if m.get("name") == "Relationship resolution rate per mapping"
-                  and m.get("result") is not None
-                  and float(m["result"]) < 0.5]
-
-    # Extract merge rate metrics
-    merge_metrics = [m for m in t2 if m.get("name") == "Merge rate per source database"]
-    low_merge = [m for m in merge_metrics if m.get("is_flagged")]
-
-    print(f"\n{'='*60}")
-    print(f"CardioKB eval_after_memgraph  --  {report['run_timestamp']}")
-    print(f"{'='*60}")
-    print(f"  Total nodes in graph : {total_nodes:>12,}")
-    print(f"  Node labels          : {len(entity_counts):>12}")
-    print()
-    for label, cnt in sorted(entity_counts.items()):
-        flag = "  *** ZERO ***" if cnt == 0 else ""
-        print(f"    {label:<35} {cnt:>10,}{flag}")
-    print()
-    print(f"  Tier 1 metrics : {len(t1):>5}")
-    print(f"    Zero node counts      : {len(zero_nodes)}")
-    print(f"    Zero edge counts      : {len(zero_edges)}")
-    print(f"    Null resolution rates : {len(null_res)}")
-    print(f"    Low resolution (<50%) : {len(low_res)}")
-    print(f"  Tier 2 metrics : {len(t2):>5}")
-    print(f"  Tier 3 metrics : {len(t3):>5}")
-
-    # Cross-source integration summary
-    cross_source = report.get("cross_source_analysis", {})
-    multi_source_summary = cross_source.get("multi_source_summary", {})
-    if multi_source_summary:
-        print(f"\n  {'─'*56}")
-        print(f"  CROSS-SOURCE INTEGRATION")
-        print(f"  {'─'*56}")
-        for nt, stats in sorted(multi_source_summary.items(), key=lambda x: -x[1].get('num_sources', 0)):
-            if 'error' not in stats:
-                num_src = stats.get('num_sources', 0)
-                multi = stats.get('multi_source_nodes', 0)
-                rate = stats.get('merge_rate', 0) * 100
-                print(f"    {nt:<20} {num_src:>2} sources  {multi:>8,} multi-source nodes  ({rate:>5.1f}%)")
-
-    # Gene integration depth
-    gene_int = report.get("gene_integration", {})
-    if gene_int and 'error' not in gene_int:
-        print(f"\n  {'─'*56}")
-        print(f"  GENE INTEGRATION DEPTH")
-        print(f"  {'─'*56}")
-        print(f"    High (10+ sources)   : {gene_int.get('high_integration', 0):>8,}")
-        print(f"    Medium (5-9 sources) : {gene_int.get('medium_integration', 0):>8,}")
-        print(f"    Low (2-4 sources)    : {gene_int.get('low_integration', 0):>8,}")
-        print(f"    Single source        : {gene_int.get('single_source', 0):>8,}")
-
-    # Drug merge detail
-    drug_merge = report.get("drug_merge_detail", {})
-    if drug_merge and 'error' not in drug_merge:
-        print(f"\n  {'─'*56}")
-        print(f"  DRUG MERGING: CTD → DrugBank")
-        print(f"  {'─'*56}")
-        print(f"    CTD drugs total      : {drug_merge.get('ctd_total', 0):>8,}")
-        print(f"    Merged with DrugBank : {drug_merge.get('merged_both', 0):>8,} ({drug_merge.get('merge_rate', 0)*100:.1f}%)")
-        print(f"    CTD-only             : {drug_merge.get('ctd_only', 0):>8,}")
-
-    # ID duplicate check
-    id_dups = report.get("id_duplicates", {})
-    if id_dups:
-        all_pass = all(s.get('status') == 'PASS' for s in id_dups.values() if s.get('status') != 'SKIPPED')
-        print(f"\n  {'─'*56}")
-        print(f"  ID-BASED DUPLICATE CHECK {'✓ ALL PASS' if all_pass else '⚠️ ISSUES FOUND'}")
-        print(f"  {'─'*56}")
-        for nt, stats in sorted(id_dups.items()):
-            dup = stats.get('duplicate_count')
-            status = stats.get('status', 'N/A')
-            icon = '✓' if status == 'PASS' else ('✗' if status == 'FAIL' else '—')
-            dup_str = str(dup) if dup is not None else 'N/A'
-            print(f"    {nt:<20} {stats.get('id_property', ''):<15} {dup_str:>5} duplicates  {icon}")
-
-    # Merge rate summary
-    merge_summary = report.get("merge_rate_summary", {})
-    if merge_summary:
-        print(f"\n  {'─'*56}")
-        print(f"  MERGE RATE BY SOURCE DATABASE")
-        print(f"  {'─'*56}")
-        for source in sorted(merge_summary.keys()):
-            stats = merge_summary[source]
-            rate = stats.get('merge_rate')
-            total = stats.get('total_nodes', 0)
-            dups = stats.get('duplicates', 0)
-            flag = "  *** LOW ***" if stats.get('flagged') else ""
-            if rate is not None:
-                print(f"    {source:<25} {rate:>6.2%}  ({total:>8,} nodes, {dups:>6,} dups){flag}")
-            else:
-                print(f"    {source:<25}    N/A   (query failed)")
-
-    if zero_nodes:
-        print("\n  BLOCKING -- Zero node counts:")
-        for m in zero_nodes:
-            print(f"    {m.get('label', '?')} = 0")
-
-    if zero_edges:
-        print("\n  BLOCKING -- Zero edge counts:")
-        for m in zero_edges:
-            print(f"    {m.get('relationship_type', '?')} = 0")
-
-    if low_res:
-        print("\n  LOW resolution rates (<50%) -- investigate join failures:")
-        for m in sorted(low_res, key=lambda x: float(x["result"])):
-            print(f"    {m.get('mapping', '?')} = {float(m['result']):.4f}")
-            if m.get("note"):
-                print(f"      {m['note']}")
-
-    # Low merge rate warnings
-    if low_merge:
-        print("\n  WARNING -- Low merge rates (<95%) -- possible duplicate node creation:")
-        for m in sorted(low_merge, key=lambda x: x.get("result") or 0):
-            source = m.get('source', '?')
-            rate = m.get('result')
-            dups = m.get('potential_duplicates', 0)
-            types = m.get('node_types_affected', {})
-            print(f"    {source}: {rate:.2%} merge rate, {dups} potential duplicates")
-            if types:
-                for node_type, cnt in types.items():
-                    print(f"      - {node_type}: {cnt} duplicates")
-            examples = m.get('duplicate_examples', [])
-            if examples:
-                print(f"      Examples:")
-                for ex in examples[:3]:
-                    print(f"        {ex['label']}.{ex['property']} = '{ex['value']}' ({ex['count']} nodes)")
-
-    print()
-
-
-# ---------------------------------------------------------------------------
-# CLI entry point
-# ---------------------------------------------------------------------------
-
-def main():
-    parser = argparse.ArgumentParser(
-        description="CardioKB post-Memgraph evaluation -- computes graph quality metrics",
-        formatter_class=argparse.RawDescriptionHelpFormatter,
+def main() -> None:
+    ap = argparse.ArgumentParser(
+        description="Compute after-Memgraph-export metrics from nodes_*.csv and edges_*.csv."
     )
-    parser.add_argument(
-        "--output", metavar="FILE",
-        help="Write JSON report to FILE (default: auto-generated dated filename)",
-    )
-    parser.add_argument(
+    ap.add_argument("--output", metavar="FILE", help="Write JSON to FILE (default: stdout)")
+    ap.add_argument(
         "--baseline", metavar="FILE",
-        help=("Path to a previous eval_after_memgraph.py JSON report. "
-              "Enables run-to-run entity count delta (Tier 2)."),
+        help="Previous run JSON report for run-to-run delta comparison",
     )
-    parser.add_argument(
-        "--no-markdown", action="store_true",
-        help="Skip generating the markdown summary report",
+    ap.add_argument(
+        "--omim-genemap", metavar="FILE",
+        help="OMIM genemap2.txt for disease-gene recall rate (Tier 3)",
     )
-    parser.add_argument(
-        "--json-only", action="store_true",
-        help="Output JSON to stdout, skip file writing and summary",
+    ap.add_argument(
+        "--drugbank-tsv", metavar="FILE",
+        help="DrugBank drugs TSV for drug-target coverage (Tier 3)",
     )
-    args = parser.parse_args()
+    ap.add_argument(
+        "--min-yield", type=float, default=0.10, metavar="FRACTION",
+        help="Minimum edge yield threshold as fraction of source TSV rows (default: 0.10 = 10%%)",
+    )
+    ap.add_argument(
+        "--fail-on-low-yield", action="store_true",
+        help="Exit with error code 1 if any mapping falls below --min-yield threshold",
+    )
+    args = ap.parse_args()
 
-    print("Running CardioKB post-Memgraph evaluation...", file=sys.stderr)
-    report = run_eval(baseline_path=args.baseline)
+    project, mappings = load_configs()
+    base_rdf = ROOT / project["ontology"]["base_file"]
 
-    json_str = json.dumps(report, indent=2)
+    print(f"Loading graph CSVs from {OUTPUT_DIR}", flush=True)
+    nodes, edges = load_graph_csvs()
 
-    if args.json_only:
-        print(json_str)
-        return
+    print(f"Parsing domain/range from {base_rdf}", flush=True)
+    domain_range = parse_domain_range(base_rdf) if base_rdf.exists() else {}
 
-    # Auto-generate dated filename if not specified
-    timestamp = datetime.datetime.now().strftime("%Y%m%d_%H%M%S")
-    date_str = datetime.datetime.now().strftime("%Y-%m-%d")
+    baseline = None
+    if args.baseline and Path(args.baseline).exists():
+        baseline = json.loads(Path(args.baseline).read_text())
+
+    all_metrics: list[dict] = []
+    tier1_metrics, edge_yield_failures = compute_tier1_metrics(
+        nodes, edges, domain_range, mappings, min_yield_threshold=args.min_yield
+    )
+    all_metrics.extend(tier1_metrics)
+    current_counts = {
+        **{f"nodes_{t}": len(df) for t, df in nodes.items()},
+        **{f"edges_{t}": len(df) for t, df in edges.items()},
+    }
+    all_metrics.extend(compute_tier2_metrics(nodes, edges, baseline, current_counts))
+    all_metrics.extend(compute_tier3_bio_metrics(
+        nodes, edges,
+        Path(args.omim_genemap) if args.omim_genemap else None,
+        Path(args.drugbank_tsv) if args.drugbank_tsv else None,
+    ))
+
+    # Compute merge rate analysis (within-source)
+    print("Computing within-source merge rate analysis...", flush=True)
+    merge_metrics, merge_summary = compute_merge_rate_analysis(nodes, mappings)
+    all_metrics.extend(merge_metrics)
+
+    # Compute cross-source merge analysis
+    print("Computing cross-source merge analysis...", flush=True)
+    cross_merge_metrics, cross_merge_summary = compute_cross_source_merge_analysis(nodes, mappings)
+    all_metrics.extend(cross_merge_metrics)
+
+    report = {
+        "run_timestamp": datetime.now(tz=timezone.utc).isoformat(),
+        "entity_counts": current_counts,
+        "merge_rate_analysis": merge_summary,
+        "cross_source_merge_analysis": cross_merge_summary,
+        "metrics": all_metrics,
+    }
+    output = json.dumps(report, indent=2, default=str)
 
     if args.output:
-        out_path = Path(args.output)
+        Path(args.output).write_text(output)
+        print(f"Report written to {args.output}")
     else:
-        out_path = SCRIPT_DIR / "reports" / f"memgraph_report_{timestamp}.json"
+        print(output)
 
-    out_path.parent.mkdir(parents=True, exist_ok=True)
-    out_path.write_text(json_str, encoding="utf-8")
-    print(f"JSON report written to {out_path}", file=sys.stderr)
-
-    # Generate markdown report
-    if not args.no_markdown:
-        md_content = generate_markdown_report(report)
-        md_path = out_path.parent / f"eval_report_{date_str}.md"
-        md_path.write_text(md_content, encoding="utf-8")
-        print(f"Markdown report written to {md_path}", file=sys.stderr)
-
-    print_summary(report)
+    # Exit with error if there are edge yield failures and --fail-on-low-yield is set
+    if edge_yield_failures:
+        print(f"\nWARNING: {len(edge_yield_failures)} mapping(s) below {args.min_yield*100:.0f}% yield threshold:", file=sys.stderr)
+        for f in edge_yield_failures:
+            print(f"  - {f['mapping']}: {f['yield_pct']}% ({f['edge_count']}/{f['source_rows']} rows)", file=sys.stderr)
+        if args.fail_on_low_yield:
+            print("\nFAILED: --fail-on-low-yield is set. Exiting with error.", file=sys.stderr)
+            sys.exit(1)
 
 
 if __name__ == "__main__":
