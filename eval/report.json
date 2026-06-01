@@ -1,0 +1,5319 @@
+{
+  "run_timestamp": "2026-06-01T00:25:34.511707+00:00",
+  "pipeline_version": "1.0.0",
+  "stages_run": [
+    "download",
+    "parser",
+    "load",
+    "graph"
+  ],
+  "stages": {
+    "download": {
+      "status": "FAIL",
+      "duration_sec": 39.09,
+      "total_metrics": 123,
+      "tier1_failures": 8,
+      "summary": {
+        "sources_checked": 30,
+        "sources_with_files": 22,
+        "total_files": 333,
+        "total_size_gb": 20.88,
+        "api_sources_skipped": 4
+      }
+    },
+    "parser": {
+      "status": "PASS",
+      "duration_sec": 43.62,
+      "total_metrics": 245,
+      "tier1_failures": 0,
+      "summary": {
+        "sources_evaluated": 26,
+        "sources_with_data": 23,
+        "total_records": 18904660,
+        "total_mappings": 47
+      }
+    },
+    "load": {
+      "status": "PASS",
+      "duration_sec": 16.99,
+      "total_metrics": 59,
+      "tier1_failures": 0,
+      "summary": {
+        "node_types_checked": 17,
+        "edge_types_checked": 24,
+        "zero_node_types": 0,
+        "zero_edge_types": 0,
+        "low_yield_mappings": 1
+      }
+    },
+    "graph": {
+      "status": "PASS",
+      "duration_sec": 38.73,
+      "total_metrics": 85,
+      "tier1_failures": 0,
+      "summary": {
+        "total_nodes": 2425574,
+        "total_edges": 8169629,
+        "node_labels": 17,
+        "relationship_types": 24,
+        "source_labels": 19
+      }
+    }
+  },
+  "summary": {
+    "total_duration_sec": 138.43,
+    "stages_passed": 3,
+    "stages_failed": 1,
+    "stages_error": 0,
+    "total_metrics": 512,
+    "tier1_failures": 8
+  },
+  "metrics": [
+    {
+      "name": "Source files exist",
+      "data_type": "boolean",
+      "tier": 1,
+      "result": true,
+      "source": "bgee",
+      "file_count": 1,
+      "stage": "download"
+    },
+    {
+      "name": "File size sanity",
+      "data_type": "boolean",
+      "tier": 1,
+      "result": false,
+      "source": "bgee",
+      "total_bytes": 174033165,
+      "min_expected": 1000000000,
+      "largest_file": "expr_calls.tsv.gz",
+      "note": "BLOCKING \u2014 total size 174,033,165 bytes below minimum 1,000,000,000",
+      "stage": "download"
+    },
+    {
+      "name": "Download freshness",
+      "data_type": "boolean",
+      "tier": 1,
+      "result": true,
+      "source": "bgee",
+      "newest_file": "expr_calls.tsv.gz",
+      "newest_mtime": "2026-05-19T02:58:15.060762+00:00",
+      "max_age_days": 90,
+      "stage": "download"
+    },
+    {
+      "name": "File count",
+      "data_type": "integer",
+      "tier": 2,
+      "result": 1,
+      "source": "bgee",
+      "files": [
+        "expr_calls.tsv.gz"
+      ],
+      "stage": "download"
+    },
+    {
+      "name": "Compression ratio",
+      "data_type": "float",
+      "tier": 2,
+      "result": 5.96,
+      "source": "bgee",
+      "sample_file": "expr_calls.tsv.gz",
+      "compressed_bytes": 174033165,
+      "uncompressed_bytes": 1036561310,
+      "stage": "download"
+    },
+    {
+      "name": "File timestamps",
+      "data_type": "list",
+      "tier": 3,
+      "result": [
+        {
+          "file": "expr_calls.tsv.gz",
+          "mtime": "2026-05-19 02:58",
+          "size_mb": 174.03
+        }
+      ],
+      "source": "bgee",
+      "stage": "download"
+    },
+    {
+      "name": "Source files exist",
+      "data_type": "boolean",
+      "tier": 1,
+      "result": true,
+      "source": "bindingdb",
+      "file_count": 2,
+      "stage": "download"
+    },
+    {
+      "name": "File size sanity",
+      "data_type": "boolean",
+      "tier": 1,
+      "result": true,
+      "source": "bindingdb",
+      "total_bytes": 9392179537,
+      "min_expected": 1000,
+      "largest_file": "BindingDB_All.tsv",
+      "stage": "download"
+    },
+    {
+      "name": "Download freshness",
+      "data_type": "boolean",
+      "tier": 1,
+      "result": true,
+      "source": "bindingdb",
+      "newest_file": "BindingDB_All.tsv",
+      "newest_mtime": "2026-05-19T02:57:09.267690+00:00",
+      "max_age_days": 90,
+      "stage": "download"
+    },
+    {
+      "name": "File count",
+      "data_type": "integer",
+      "tier": 2,
+      "result": 2,
+      "source": "bindingdb",
+      "files": [
+        "BindingDB_All.tsv",
+        "BindingDB_All_202605_tsv.zip"
+      ],
+      "stage": "download"
+    },
+    {
+      "name": "File timestamps",
+      "data_type": "list",
+      "tier": 3,
+      "result": [
+        {
+          "file": "BindingDB_All.tsv",
+          "mtime": "2026-05-19 02:57",
+          "size_mb": 8811.17
+        },
+        {
+          "file": "BindingDB_All_202605_tsv.zip",
+          "mtime": "2026-05-19 02:57",
+          "size_mb": 581.01
+        }
+      ],
+      "source": "bindingdb",
+      "stage": "download"
+    },
+    {
+      "name": "Source files exist",
+      "data_type": "boolean",
+      "tier": 1,
+      "result": false,
+      "source": "clinicaltrials",
+      "file_count": 0,
+      "note": "BLOCKING \u2014 no files found",
+      "stage": "download"
+    },
+    {
+      "name": "Source type",
+      "data_type": "string",
+      "tier": 1,
+      "result": "API",
+      "source": "clinpgx",
+      "note": "API source - no persistent raw files expected",
+      "stage": "download"
+    },
+    {
+      "name": "Source files exist",
+      "data_type": "boolean",
+      "tier": 1,
+      "result": true,
+      "source": "clinvar",
+      "file_count": 2,
+      "stage": "download"
+    },
+    {
+      "name": "File size sanity",
+      "data_type": "boolean",
+      "tier": 1,
+      "result": true,
+      "source": "clinvar",
+      "total_bytes": 4369559067,
+      "min_expected": 500000000,
+      "largest_file": "variant_summary.txt",
+      "stage": "download"
+    },
+    {
+      "name": "Download freshness",
+      "data_type": "boolean",
+      "tier": 1,
+      "result": true,
+      "source": "clinvar",
+      "newest_file": "variant_summary.txt",
+      "newest_mtime": "2026-05-19T02:44:07.840251+00:00",
+      "max_age_days": 90,
+      "stage": "download"
+    },
+    {
+      "name": "File count",
+      "data_type": "integer",
+      "tier": 2,
+      "result": 2,
+      "source": "clinvar",
+      "files": [
+        "variant_summary.txt",
+        "variant_summary.txt.gz"
+      ],
+      "stage": "download"
+    },
+    {
+      "name": "Compression ratio",
+      "data_type": "float",
+      "tier": 2,
+      "result": 8.95,
+      "source": "clinvar",
+      "sample_file": "variant_summary.txt.gz",
+      "compressed_bytes": 439137019,
+      "uncompressed_bytes": 3930422048,
+      "stage": "download"
+    },
+    {
+      "name": "File timestamps",
+      "data_type": "list",
+      "tier": 3,
+      "result": [
+        {
+          "file": "variant_summary.txt",
+          "mtime": "2026-05-19 02:44",
+          "size_mb": 3930.42
+        },
+        {
+          "file": "variant_summary.txt.gz",
+          "mtime": "2026-05-19 02:44",
+          "size_mb": 439.14
+        }
+      ],
+      "source": "clinvar",
+      "stage": "download"
+    },
+    {
+      "name": "Source files exist",
+      "data_type": "boolean",
+      "tier": 1,
+      "result": true,
+      "source": "collecttri",
+      "file_count": 1,
+      "stage": "download"
+    },
+    {
+      "name": "File size sanity",
+      "data_type": "boolean",
+      "tier": 1,
+      "result": true,
+      "source": "collecttri",
+      "total_bytes": 4065251,
+      "min_expected": 1000,
+      "largest_file": "tf_gene_interactions.tsv",
+      "stage": "download"
+    },
+    {
+      "name": "Download freshness",
+      "data_type": "boolean",
+      "tier": 1,
+      "result": true,
+      "source": "collecttri",
+      "newest_file": "tf_gene_interactions.tsv",
+      "newest_mtime": "2026-05-19T03:50:29.322626+00:00",
+      "max_age_days": 90,
+      "stage": "download"
+    },
+    {
+      "name": "File count",
+      "data_type": "integer",
+      "tier": 2,
+      "result": 1,
+      "source": "collecttri",
+      "files": [
+        "tf_gene_interactions.tsv"
+      ],
+      "stage": "download"
+    },
+    {
+      "name": "File timestamps",
+      "data_type": "list",
+      "tier": 3,
+      "result": [
+        {
+          "file": "tf_gene_interactions.tsv",
+          "mtime": "2026-05-19 03:50",
+          "size_mb": 4.07
+        }
+      ],
+      "source": "collecttri",
+      "stage": "download"
+    },
+    {
+      "name": "Source files exist",
+      "data_type": "boolean",
+      "tier": 1,
+      "result": true,
+      "source": "ctd",
+      "file_count": 1,
+      "stage": "download"
+    },
+    {
+      "name": "File size sanity",
+      "data_type": "boolean",
+      "tier": 1,
+      "result": true,
+      "source": "ctd",
+      "total_bytes": 42065489,
+      "min_expected": 1000,
+      "largest_file": "CTD_chem_gene_ixns.tsv.gz",
+      "stage": "download"
+    },
+    {
+      "name": "Download freshness",
+      "data_type": "boolean",
+      "tier": 1,
+      "result": true,
+      "source": "ctd",
+      "newest_file": "CTD_chem_gene_ixns.tsv.gz",
+      "newest_mtime": "2026-05-19T02:57:45.040099+00:00",
+      "max_age_days": 90,
+      "stage": "download"
+    },
+    {
+      "name": "File count",
+      "data_type": "integer",
+      "tier": 2,
+      "result": 1,
+      "source": "ctd",
+      "files": [
+        "CTD_chem_gene_ixns.tsv.gz"
+      ],
+      "stage": "download"
+    },
+    {
+      "name": "Compression ratio",
+      "data_type": "float",
+      "tier": 2,
+      "result": 14.65,
+      "source": "ctd",
+      "sample_file": "CTD_chem_gene_ixns.tsv.gz",
+      "compressed_bytes": 42065489,
+      "uncompressed_bytes": 616359885,
+      "stage": "download"
+    },
+    {
+      "name": "File timestamps",
+      "data_type": "list",
+      "tier": 3,
+      "result": [
+        {
+          "file": "CTD_chem_gene_ixns.tsv.gz",
+          "mtime": "2026-05-19 02:57",
+          "size_mb": 42.07
+        }
+      ],
+      "source": "ctd",
+      "stage": "download"
+    },
+    {
+      "name": "Source files exist",
+      "data_type": "boolean",
+      "tier": 1,
+      "result": true,
+      "source": "diseaseontology",
+      "file_count": 1,
+      "stage": "download"
+    },
+    {
+      "name": "File size sanity",
+      "data_type": "boolean",
+      "tier": 1,
+      "result": true,
+      "source": "diseaseontology",
+      "total_bytes": 7076360,
+      "min_expected": 1000,
+      "largest_file": "doid.obo",
+      "stage": "download"
+    },
+    {
+      "name": "Download freshness",
+      "data_type": "boolean",
+      "tier": 1,
+      "result": true,
+      "source": "diseaseontology",
+      "newest_file": "doid.obo",
+      "newest_mtime": "2026-05-19T02:53:17.541418+00:00",
+      "max_age_days": 90,
+      "stage": "download"
+    },
+    {
+      "name": "File count",
+      "data_type": "integer",
+      "tier": 2,
+      "result": 1,
+      "source": "diseaseontology",
+      "files": [
+        "doid.obo"
+      ],
+      "stage": "download"
+    },
+    {
+      "name": "File timestamps",
+      "data_type": "list",
+      "tier": 3,
+      "result": [
+        {
+          "file": "doid.obo",
+          "mtime": "2026-05-19 02:53",
+          "size_mb": 7.08
+        }
+      ],
+      "source": "diseaseontology",
+      "stage": "download"
+    },
+    {
+      "name": "Source files exist",
+      "data_type": "boolean",
+      "tier": 1,
+      "result": true,
+      "source": "disgenet",
+      "file_count": 3,
+      "stage": "download"
+    },
+    {
+      "name": "File size sanity",
+      "data_type": "boolean",
+      "tier": 1,
+      "result": true,
+      "source": "disgenet",
+      "total_bytes": 16241104,
+      "min_expected": 1000,
+      "largest_file": "api_gene_disease_associations.tsv",
+      "stage": "download"
+    },
+    {
+      "name": "Download freshness",
+      "data_type": "boolean",
+      "tier": 1,
+      "result": true,
+      "source": "disgenet",
+      "newest_file": "api_disease_mappings.tsv",
+      "newest_mtime": "2026-05-19T05:12:59.192264+00:00",
+      "max_age_days": 90,
+      "stage": "download"
+    },
+    {
+      "name": "File count",
+      "data_type": "integer",
+      "tier": 2,
+      "result": 3,
+      "source": "disgenet",
+      "files": [
+        "api_disease_classifications.tsv",
+        "api_disease_mappings.tsv",
+        "api_gene_disease_associations.tsv"
+      ],
+      "stage": "download"
+    },
+    {
+      "name": "File timestamps",
+      "data_type": "list",
+      "tier": 3,
+      "result": [
+        {
+          "file": "api_disease_mappings.tsv",
+          "mtime": "2026-05-19 05:12",
+          "size_mb": 0.16
+        },
+        {
+          "file": "api_disease_classifications.tsv",
+          "mtime": "2026-05-19 05:12",
+          "size_mb": 0.41
+        },
+        {
+          "file": "api_gene_disease_associations.tsv",
+          "mtime": "2026-05-19 05:12",
+          "size_mb": 15.67
+        }
+      ],
+      "source": "disgenet",
+      "stage": "download"
+    },
+    {
+      "name": "Source type",
+      "data_type": "string",
+      "tier": 1,
+      "result": "API",
+      "source": "dorothea",
+      "note": "API source - no persistent raw files expected",
+      "stage": "download"
+    },
+    {
+      "name": "Source files exist",
+      "data_type": "boolean",
+      "tier": 1,
+      "result": true,
+      "source": "drugbank",
+      "file_count": 1,
+      "stage": "download"
+    },
+    {
+      "name": "File size sanity",
+      "data_type": "boolean",
+      "tier": 1,
+      "result": true,
+      "source": "drugbank",
+      "total_bytes": 1908516502,
+      "min_expected": 1000,
+      "largest_file": "full_database.xml",
+      "stage": "download"
+    },
+    {
+      "name": "Download freshness",
+      "data_type": "boolean",
+      "tier": 1,
+      "result": true,
+      "source": "drugbank",
+      "newest_file": "full_database.xml",
+      "newest_mtime": "2026-03-06T08:10:40+00:00",
+      "max_age_days": 90,
+      "stage": "download"
+    },
+    {
+      "name": "File count",
+      "data_type": "integer",
+      "tier": 2,
+      "result": 1,
+      "source": "drugbank",
+      "files": [
+        "full_database.xml"
+      ],
+      "stage": "download"
+    },
+    {
+      "name": "File timestamps",
+      "data_type": "list",
+      "tier": 3,
+      "result": [
+        {
+          "file": "full_database.xml",
+          "mtime": "2026-03-06 08:10",
+          "size_mb": 1908.52
+        }
+      ],
+      "source": "drugbank",
+      "stage": "download"
+    },
+    {
+      "name": "Source files exist",
+      "data_type": "boolean",
+      "tier": 1,
+      "result": false,
+      "source": "drugcentral",
+      "file_count": 0,
+      "note": "BLOCKING \u2014 no files found",
+      "stage": "download"
+    },
+    {
+      "name": "Source files exist",
+      "data_type": "boolean",
+      "tier": 1,
+      "result": false,
+      "source": "evolutionary_rate_covariation",
+      "file_count": 0,
+      "note": "BLOCKING \u2014 no files found",
+      "stage": "download"
+    },
+    {
+      "name": "Source files exist",
+      "data_type": "boolean",
+      "tier": 1,
+      "result": false,
+      "source": "evolutionaryratecovariation",
+      "file_count": 0,
+      "note": "BLOCKING \u2014 no files found",
+      "stage": "download"
+    },
+    {
+      "name": "Source files exist",
+      "data_type": "boolean",
+      "tier": 1,
+      "result": true,
+      "source": "geneontology",
+      "file_count": 2,
+      "stage": "download"
+    },
+    {
+      "name": "File size sanity",
+      "data_type": "boolean",
+      "tier": 1,
+      "result": true,
+      "source": "geneontology",
+      "total_bytes": 51331283,
+      "min_expected": 1000,
+      "largest_file": "go.obo",
+      "stage": "download"
+    },
+    {
+      "name": "Download freshness",
+      "data_type": "boolean",
+      "tier": 1,
+      "result": true,
+      "source": "geneontology",
+      "newest_file": "goa_human.gaf.gz",
+      "newest_mtime": "2026-05-19T02:53:49.967575+00:00",
+      "max_age_days": 90,
+      "stage": "download"
+    },
+    {
+      "name": "File count",
+      "data_type": "integer",
+      "tier": 2,
+      "result": 2,
+      "source": "geneontology",
+      "files": [
+        "go.obo",
+        "goa_human.gaf.gz"
+      ],
+      "stage": "download"
+    },
+    {
+      "name": "Compression ratio",
+      "data_type": "float",
+      "tier": 2,
+      "result": 11.59,
+      "source": "geneontology",
+      "sample_file": "goa_human.gaf.gz",
+      "compressed_bytes": 14775581,
+      "uncompressed_bytes": 171277508,
+      "stage": "download"
+    },
+    {
+      "name": "File timestamps",
+      "data_type": "list",
+      "tier": 3,
+      "result": [
+        {
+          "file": "goa_human.gaf.gz",
+          "mtime": "2026-05-19 02:53",
+          "size_mb": 14.78
+        },
+        {
+          "file": "go.obo",
+          "mtime": "2026-05-19 02:53",
+          "size_mb": 36.56
+        }
+      ],
+      "source": "geneontology",
+      "stage": "download"
+    },
+    {
+      "name": "Source files exist",
+      "data_type": "boolean",
+      "tier": 1,
+      "result": true,
+      "source": "hgnc",
+      "file_count": 1,
+      "stage": "download"
+    },
+    {
+      "name": "File size sanity",
+      "data_type": "boolean",
+      "tier": 1,
+      "result": true,
+      "source": "hgnc",
+      "total_bytes": 16724618,
+      "min_expected": 1000,
+      "largest_file": "hgnc_gene_families.tsv",
+      "stage": "download"
+    },
+    {
+      "name": "Download freshness",
+      "data_type": "boolean",
+      "tier": 1,
+      "result": true,
+      "source": "hgnc",
+      "newest_file": "hgnc_gene_families.tsv",
+      "newest_mtime": "2026-05-19T02:53:08.475306+00:00",
+      "max_age_days": 90,
+      "stage": "download"
+    },
+    {
+      "name": "File count",
+      "data_type": "integer",
+      "tier": 2,
+      "result": 1,
+      "source": "hgnc",
+      "files": [
+        "hgnc_gene_families.tsv"
+      ],
+      "stage": "download"
+    },
+    {
+      "name": "File timestamps",
+      "data_type": "list",
+      "tier": 3,
+      "result": [
+        {
+          "file": "hgnc_gene_families.tsv",
+          "mtime": "2026-05-19 02:53",
+          "size_mb": 16.72
+        }
+      ],
+      "source": "hgnc",
+      "stage": "download"
+    },
+    {
+      "name": "Source files exist",
+      "data_type": "boolean",
+      "tier": 1,
+      "result": false,
+      "source": "hgncfamilies",
+      "file_count": 0,
+      "note": "BLOCKING \u2014 no files found",
+      "stage": "download"
+    },
+    {
+      "name": "Source files exist",
+      "data_type": "boolean",
+      "tier": 1,
+      "result": true,
+      "source": "hpo",
+      "file_count": 3,
+      "stage": "download"
+    },
+    {
+      "name": "File size sanity",
+      "data_type": "boolean",
+      "tier": 1,
+      "result": true,
+      "source": "hpo",
+      "total_bytes": 66497967,
+      "min_expected": 1000,
+      "largest_file": "phenotype.hpoa",
+      "stage": "download"
+    },
+    {
+      "name": "Download freshness",
+      "data_type": "boolean",
+      "tier": 1,
+      "result": true,
+      "source": "hpo",
+      "newest_file": "phenotype.hpoa",
+      "newest_mtime": "2026-05-19T02:51:46.296458+00:00",
+      "max_age_days": 90,
+      "stage": "download"
+    },
+    {
+      "name": "File count",
+      "data_type": "integer",
+      "tier": 2,
+      "result": 3,
+      "source": "hpo",
+      "files": [
+        "genes_to_phenotype.txt",
+        "hp.obo",
+        "phenotype.hpoa"
+      ],
+      "stage": "download"
+    },
+    {
+      "name": "File timestamps",
+      "data_type": "list",
+      "tier": 3,
+      "result": [
+        {
+          "file": "phenotype.hpoa",
+          "mtime": "2026-05-19 02:51",
+          "size_mb": 35.26
+        },
+        {
+          "file": "genes_to_phenotype.txt",
+          "mtime": "2026-05-19 02:51",
+          "size_mb": 20.53
+        },
+        {
+          "file": "hp.obo",
+          "mtime": "2026-05-19 02:51",
+          "size_mb": 10.7
+        }
+      ],
+      "source": "hpo",
+      "stage": "download"
+    },
+    {
+      "name": "Source files exist",
+      "data_type": "boolean",
+      "tier": 1,
+      "result": true,
+      "source": "jensen_tissues",
+      "file_count": 1,
+      "stage": "download"
+    },
+    {
+      "name": "File size sanity",
+      "data_type": "boolean",
+      "tier": 1,
+      "result": true,
+      "source": "jensen_tissues",
+      "total_bytes": 435543594,
+      "min_expected": 1000,
+      "largest_file": "human_tissue_experiments_full.tsv",
+      "stage": "download"
+    },
+    {
+      "name": "Download freshness",
+      "data_type": "boolean",
+      "tier": 1,
+      "result": true,
+      "source": "jensen_tissues",
+      "newest_file": "human_tissue_experiments_full.tsv",
+      "newest_mtime": "2026-05-19T02:54:04.525166+00:00",
+      "max_age_days": 90,
+      "stage": "download"
+    },
+    {
+      "name": "File count",
+      "data_type": "integer",
+      "tier": 2,
+      "result": 1,
+      "source": "jensen_tissues",
+      "files": [
+        "human_tissue_experiments_full.tsv"
+      ],
+      "stage": "download"
+    },
+    {
+      "name": "File timestamps",
+      "data_type": "list",
+      "tier": 3,
+      "result": [
+        {
+          "file": "human_tissue_experiments_full.tsv",
+          "mtime": "2026-05-19 02:54",
+          "size_mb": 435.54
+        }
+      ],
+      "source": "jensen_tissues",
+      "stage": "download"
+    },
+    {
+      "name": "Source files exist",
+      "data_type": "boolean",
+      "tier": 1,
+      "result": false,
+      "source": "jensentissues",
+      "file_count": 0,
+      "note": "BLOCKING \u2014 no files found",
+      "stage": "download"
+    },
+    {
+      "name": "Source files exist",
+      "data_type": "boolean",
+      "tier": 1,
+      "result": true,
+      "source": "lincs",
+      "file_count": 2,
+      "stage": "download"
+    },
+    {
+      "name": "File size sanity",
+      "data_type": "boolean",
+      "tier": 1,
+      "result": true,
+      "source": "lincs",
+      "total_bytes": 30260496,
+      "min_expected": 1000,
+      "largest_file": "lincs_up.txt",
+      "stage": "download"
+    },
+    {
+      "name": "Download freshness",
+      "data_type": "boolean",
+      "tier": 1,
+      "result": true,
+      "source": "lincs",
+      "newest_file": "lincs_down.txt",
+      "newest_mtime": "2026-05-19T03:18:47.237916+00:00",
+      "max_age_days": 90,
+      "stage": "download"
+    },
+    {
+      "name": "File count",
+      "data_type": "integer",
+      "tier": 2,
+      "result": 2,
+      "source": "lincs",
+      "files": [
+        "lincs_down.txt",
+        "lincs_up.txt"
+      ],
+      "stage": "download"
+    },
+    {
+      "name": "File timestamps",
+      "data_type": "list",
+      "tier": 3,
+      "result": [
+        {
+          "file": "lincs_down.txt",
+          "mtime": "2026-05-19 03:18",
+          "size_mb": 14.05
+        },
+        {
+          "file": "lincs_up.txt",
+          "mtime": "2026-05-19 03:18",
+          "size_mb": 16.21
+        }
+      ],
+      "source": "lincs",
+      "stage": "download"
+    },
+    {
+      "name": "Source files exist",
+      "data_type": "boolean",
+      "tier": 1,
+      "result": true,
+      "source": "medline",
+      "file_count": 296,
+      "stage": "download"
+    },
+    {
+      "name": "File size sanity",
+      "data_type": "boolean",
+      "tier": 1,
+      "result": true,
+      "source": "medline",
+      "total_bytes": 17185438,
+      "min_expected": 1000,
+      "largest_file": "D006331.txt.gz",
+      "stage": "download"
+    },
+    {
+      "name": "Download freshness",
+      "data_type": "boolean",
+      "tier": 1,
+      "result": true,
+      "source": "medline",
+      "newest_file": "D018366.txt.gz",
+      "newest_mtime": "2026-05-21T22:02:42.182632+00:00",
+      "max_age_days": 90,
+      "stage": "download"
+    },
+    {
+      "name": "File count",
+      "data_type": "integer",
+      "tier": 2,
+      "result": 296,
+      "source": "medline",
+      "files": [
+        "D000012.txt.gz",
+        "D000067877.txt.gz",
+        "D000071017.txt.gz",
+        "D000071070.txt.gz",
+        "D000071071.txt.gz",
+        "D000072660.txt.gz",
+        "D000075222.txt.gz",
+        "D000079562.txt.gz",
+        "D000080203.txt.gz",
+        "D000082882.txt.gz"
+      ],
+      "stage": "download"
+    },
+    {
+      "name": "Compression ratio",
+      "data_type": "float",
+      "tier": 2,
+      "result": 3.54,
+      "source": "medline",
+      "sample_file": "D006331.txt.gz",
+      "compressed_bytes": 3202110,
+      "uncompressed_bytes": 11347499,
+      "stage": "download"
+    },
+    {
+      "name": "File timestamps",
+      "data_type": "list",
+      "tier": 3,
+      "result": [
+        {
+          "file": "D018366.txt.gz",
+          "mtime": "2026-05-21 22:02",
+          "size_mb": 0.0
+        },
+        {
+          "file": "D000746.txt.gz",
+          "mtime": "2026-05-19 04:43",
+          "size_mb": 0.0
+        },
+        {
+          "file": "D006981.txt.gz",
+          "mtime": "2026-05-19 04:43",
+          "size_mb": 0.0
+        },
+        {
+          "file": "D007943.txt.gz",
+          "mtime": "2026-05-19 04:43",
+          "size_mb": 0.02
+        },
+        {
+          "file": "D008133.txt.gz",
+          "mtime": "2026-05-19 04:43",
+          "size_mb": 0.04
+        }
+      ],
+      "source": "medline",
+      "stage": "download"
+    },
+    {
+      "name": "Source files exist",
+      "data_type": "boolean",
+      "tier": 1,
+      "result": true,
+      "source": "mesh",
+      "file_count": 1,
+      "stage": "download"
+    },
+    {
+      "name": "File size sanity",
+      "data_type": "boolean",
+      "tier": 1,
+      "result": true,
+      "source": "mesh",
+      "total_bytes": 312952703,
+      "min_expected": 1000,
+      "largest_file": "desc2026.xml",
+      "stage": "download"
+    },
+    {
+      "name": "Download freshness",
+      "data_type": "boolean",
+      "tier": 1,
+      "result": true,
+      "source": "mesh",
+      "newest_file": "desc2026.xml",
+      "newest_mtime": "2026-05-19T02:54:19.379674+00:00",
+      "max_age_days": 90,
+      "stage": "download"
+    },
+    {
+      "name": "File count",
+      "data_type": "integer",
+      "tier": 2,
+      "result": 1,
+      "source": "mesh",
+      "files": [
+        "desc2026.xml"
+      ],
+      "stage": "download"
+    },
+    {
+      "name": "File timestamps",
+      "data_type": "list",
+      "tier": 3,
+      "result": [
+        {
+          "file": "desc2026.xml",
+          "mtime": "2026-05-19 02:54",
+          "size_mb": 312.95
+        }
+      ],
+      "source": "mesh",
+      "stage": "download"
+    },
+    {
+      "name": "Source files exist",
+      "data_type": "boolean",
+      "tier": 1,
+      "result": true,
+      "source": "ncbigene",
+      "file_count": 2,
+      "stage": "download"
+    },
+    {
+      "name": "File size sanity",
+      "data_type": "boolean",
+      "tier": 1,
+      "result": false,
+      "source": "ncbigene",
+      "total_bytes": 40150693,
+      "min_expected": 50000000,
+      "largest_file": "Homo_sapiens.gene_info",
+      "note": "BLOCKING \u2014 total size 40,150,693 bytes below minimum 50,000,000",
+      "stage": "download"
+    },
+    {
+      "name": "Download freshness",
+      "data_type": "boolean",
+      "tier": 1,
+      "result": true,
+      "source": "ncbigene",
+      "newest_file": "Homo_sapiens.gene_info",
+      "newest_mtime": "2026-05-19T02:36:43.179158+00:00",
+      "max_age_days": 90,
+      "stage": "download"
+    },
+    {
+      "name": "File count",
+      "data_type": "integer",
+      "tier": 2,
+      "result": 2,
+      "source": "ncbigene",
+      "files": [
+        "Homo_sapiens.gene_info",
+        "Homo_sapiens.gene_info.gz"
+      ],
+      "stage": "download"
+    },
+    {
+      "name": "Compression ratio",
+      "data_type": "float",
+      "tier": 2,
+      "result": 6.78,
+      "source": "ncbigene",
+      "sample_file": "Homo_sapiens.gene_info.gz",
+      "compressed_bytes": 5161173,
+      "uncompressed_bytes": 34989520,
+      "stage": "download"
+    },
+    {
+      "name": "File timestamps",
+      "data_type": "list",
+      "tier": 3,
+      "result": [
+        {
+          "file": "Homo_sapiens.gene_info",
+          "mtime": "2026-05-19 02:36",
+          "size_mb": 34.99
+        },
+        {
+          "file": "Homo_sapiens.gene_info.gz",
+          "mtime": "2026-05-19 02:36",
+          "size_mb": 5.16
+        }
+      ],
+      "source": "ncbigene",
+      "stage": "download"
+    },
+    {
+      "name": "Source type",
+      "data_type": "string",
+      "tier": 1,
+      "result": "API",
+      "source": "opentargets",
+      "note": "API source - no persistent raw files expected",
+      "stage": "download"
+    },
+    {
+      "name": "Source files exist",
+      "data_type": "boolean",
+      "tier": 1,
+      "result": true,
+      "source": "pubtator",
+      "file_count": 2,
+      "stage": "download"
+    },
+    {
+      "name": "File size sanity",
+      "data_type": "boolean",
+      "tier": 1,
+      "result": true,
+      "source": "pubtator",
+      "total_bytes": 2914752240,
+      "min_expected": 1000,
+      "largest_file": "disease2pubtator3.gz",
+      "stage": "download"
+    },
+    {
+      "name": "Download freshness",
+      "data_type": "boolean",
+      "tier": 1,
+      "result": true,
+      "source": "pubtator",
+      "newest_file": "disease2pubtator3.gz",
+      "newest_mtime": "2026-05-19T03:20:59.379921+00:00",
+      "max_age_days": 90,
+      "stage": "download"
+    },
+    {
+      "name": "File count",
+      "data_type": "integer",
+      "tier": 2,
+      "result": 2,
+      "source": "pubtator",
+      "files": [
+        "disease2pubtator3.gz",
+        "gene2pubtator3.gz"
+      ],
+      "stage": "download"
+    },
+    {
+      "name": "Compression ratio",
+      "data_type": "float",
+      "tier": 2,
+      "result": 4.77,
+      "source": "pubtator",
+      "sample_file": "disease2pubtator3.gz",
+      "compressed_bytes": 2161283938,
+      "uncompressed_bytes": 10300819015,
+      "stage": "download"
+    },
+    {
+      "name": "File timestamps",
+      "data_type": "list",
+      "tier": 3,
+      "result": [
+        {
+          "file": "disease2pubtator3.gz",
+          "mtime": "2026-05-19 03:20",
+          "size_mb": 2161.28
+        },
+        {
+          "file": "gene2pubtator3.gz",
+          "mtime": "2026-05-19 03:20",
+          "size_mb": 753.47
+        }
+      ],
+      "source": "pubtator",
+      "stage": "download"
+    },
+    {
+      "name": "Source files exist",
+      "data_type": "boolean",
+      "tier": 1,
+      "result": true,
+      "source": "reactome",
+      "file_count": 2,
+      "stage": "download"
+    },
+    {
+      "name": "File size sanity",
+      "data_type": "boolean",
+      "tier": 1,
+      "result": true,
+      "source": "reactome",
+      "total_bytes": 98540438,
+      "min_expected": 1000,
+      "largest_file": "NCBI2Reactome_All_Levels.txt",
+      "stage": "download"
+    },
+    {
+      "name": "Download freshness",
+      "data_type": "boolean",
+      "tier": 1,
+      "result": true,
+      "source": "reactome",
+      "newest_file": "NCBI2Reactome_All_Levels.txt",
+      "newest_mtime": "2026-05-19T02:58:40.782431+00:00",
+      "max_age_days": 90,
+      "stage": "download"
+    },
+    {
+      "name": "File count",
+      "data_type": "integer",
+      "tier": 2,
+      "result": 2,
+      "source": "reactome",
+      "files": [
+        "NCBI2Reactome_All_Levels.txt",
+        "ReactomePathways.txt"
+      ],
+      "stage": "download"
+    },
+    {
+      "name": "File timestamps",
+      "data_type": "list",
+      "tier": 3,
+      "result": [
+        {
+          "file": "NCBI2Reactome_All_Levels.txt",
+          "mtime": "2026-05-19 02:58",
+          "size_mb": 96.96
+        },
+        {
+          "file": "ReactomePathways.txt",
+          "mtime": "2026-05-19 02:58",
+          "size_mb": 1.58
+        }
+      ],
+      "source": "reactome",
+      "stage": "download"
+    },
+    {
+      "name": "Source files exist",
+      "data_type": "boolean",
+      "tier": 1,
+      "result": true,
+      "source": "sider",
+      "file_count": 2,
+      "stage": "download"
+    },
+    {
+      "name": "File size sanity",
+      "data_type": "boolean",
+      "tier": 1,
+      "result": true,
+      "source": "sider",
+      "total_bytes": 21867815,
+      "min_expected": 1000,
+      "largest_file": "meddra_all_se.tsv",
+      "stage": "download"
+    },
+    {
+      "name": "Download freshness",
+      "data_type": "boolean",
+      "tier": 1,
+      "result": true,
+      "source": "sider",
+      "newest_file": "meddra_all_se.tsv",
+      "newest_mtime": "2026-05-19T03:09:51.613786+00:00",
+      "max_age_days": 90,
+      "stage": "download"
+    },
+    {
+      "name": "File count",
+      "data_type": "integer",
+      "tier": 2,
+      "result": 2,
+      "source": "sider",
+      "files": [
+        "meddra_all_se.tsv",
+        "meddra_all_se.tsv.gz"
+      ],
+      "stage": "download"
+    },
+    {
+      "name": "Compression ratio",
+      "data_type": "float",
+      "tier": 2,
+      "result": 8.18,
+      "source": "sider",
+      "sample_file": "meddra_all_se.tsv.gz",
+      "compressed_bytes": 2381171,
+      "uncompressed_bytes": 19486644,
+      "stage": "download"
+    },
+    {
+      "name": "File timestamps",
+      "data_type": "list",
+      "tier": 3,
+      "result": [
+        {
+          "file": "meddra_all_se.tsv",
+          "mtime": "2026-05-19 03:09",
+          "size_mb": 19.49
+        },
+        {
+          "file": "meddra_all_se.tsv.gz",
+          "mtime": "2026-05-19 03:09",
+          "size_mb": 2.38
+        }
+      ],
+      "source": "sider",
+      "stage": "download"
+    },
+    {
+      "name": "Source files exist",
+      "data_type": "boolean",
+      "tier": 1,
+      "result": true,
+      "source": "string",
+      "file_count": 4,
+      "stage": "download"
+    },
+    {
+      "name": "File size sanity",
+      "data_type": "boolean",
+      "tier": 1,
+      "result": true,
+      "source": "string",
+      "total_bytes": 933553478,
+      "min_expected": 100000000,
+      "largest_file": "9606.protein.links.v12.0.txt",
+      "stage": "download"
+    },
+    {
+      "name": "Download freshness",
+      "data_type": "boolean",
+      "tier": 1,
+      "result": true,
+      "source": "string",
+      "newest_file": "9606.protein.aliases.v12.0.txt",
+      "newest_mtime": "2026-05-19T03:09:01.108441+00:00",
+      "max_age_days": 90,
+      "stage": "download"
+    },
+    {
+      "name": "File count",
+      "data_type": "integer",
+      "tier": 2,
+      "result": 4,
+      "source": "string",
+      "files": [
+        "9606.protein.aliases.v12.0.txt",
+        "9606.protein.aliases.v12.0.txt.gz",
+        "9606.protein.links.v12.0.txt",
+        "9606.protein.links.v12.0.txt.gz"
+      ],
+      "stage": "download"
+    },
+    {
+      "name": "Compression ratio",
+      "data_type": "float",
+      "tier": 2,
+      "result": 7.59,
+      "source": "string",
+      "sample_file": "9606.protein.links.v12.0.txt.gz",
+      "compressed_bytes": 83164437,
+      "uncompressed_bytes": 630908617,
+      "stage": "download"
+    },
+    {
+      "name": "File timestamps",
+      "data_type": "list",
+      "tier": 3,
+      "result": [
+        {
+          "file": "9606.protein.aliases.v12.0.txt",
+          "mtime": "2026-05-19 03:09",
+          "size_mb": 199.7
+        },
+        {
+          "file": "9606.protein.aliases.v12.0.txt.gz",
+          "mtime": "2026-05-19 03:09",
+          "size_mb": 19.78
+        },
+        {
+          "file": "9606.protein.links.v12.0.txt",
+          "mtime": "2026-05-19 03:08",
+          "size_mb": 630.91
+        },
+        {
+          "file": "9606.protein.links.v12.0.txt.gz",
+          "mtime": "2026-05-19 03:08",
+          "size_mb": 83.16
+        }
+      ],
+      "source": "string",
+      "stage": "download"
+    },
+    {
+      "name": "Source files exist",
+      "data_type": "boolean",
+      "tier": 1,
+      "result": true,
+      "source": "uberon",
+      "file_count": 2,
+      "stage": "download"
+    },
+    {
+      "name": "File size sanity",
+      "data_type": "boolean",
+      "tier": 1,
+      "result": true,
+      "source": "uberon",
+      "total_bytes": 24823191,
+      "min_expected": 1000,
+      "largest_file": "human-view.obo",
+      "stage": "download"
+    },
+    {
+      "name": "Download freshness",
+      "data_type": "boolean",
+      "tier": 1,
+      "result": true,
+      "source": "uberon",
+      "newest_file": "human-view.obo",
+      "newest_mtime": "2026-05-19T02:54:05.052829+00:00",
+      "max_age_days": 90,
+      "stage": "download"
+    },
+    {
+      "name": "File count",
+      "data_type": "integer",
+      "tier": 2,
+      "result": 2,
+      "source": "uberon",
+      "files": [
+        "basic.obo",
+        "human-view.obo"
+      ],
+      "stage": "download"
+    },
+    {
+      "name": "File timestamps",
+      "data_type": "list",
+      "tier": 3,
+      "result": [
+        {
+          "file": "human-view.obo",
+          "mtime": "2026-05-19 02:54",
+          "size_mb": 12.68
+        },
+        {
+          "file": "basic.obo",
+          "mtime": "2026-05-19 02:54",
+          "size_mb": 12.15
+        }
+      ],
+      "source": "uberon",
+      "stage": "download"
+    },
+    {
+      "name": "Direct source download",
+      "data_type": "boolean",
+      "tier": 1,
+      "result": true,
+      "source": "bgee",
+      "stage": "parser"
+    },
+    {
+      "name": "Source database extraction",
+      "data_type": "boolean",
+      "tier": 1,
+      "result": true,
+      "source": "bgee",
+      "mapping": "bgee.anatomy_expresses_gene",
+      "stage": "parser"
+    },
+    {
+      "name": "TSV structural integrity",
+      "data_type": "boolean",
+      "tier": 1,
+      "result": true,
+      "source": "bgee",
+      "mapping": "bgee.anatomy_expresses_gene",
+      "stage": "parser"
+    },
+    {
+      "name": "Extracted record counts",
+      "data_type": "integer",
+      "tier": 1,
+      "result": 6616463,
+      "source": "bgee",
+      "mapping": "bgee.anatomy_expresses_gene",
+      "stage": "parser"
+    },
+    {
+      "name": "Schema conformance",
+      "data_type": "boolean",
+      "tier": 2,
+      "result": true,
+      "source": "bgee",
+      "mapping": "bgee.anatomy_expresses_gene",
+      "stage": "parser"
+    },
+    {
+      "name": "Extraction timestamp",
+      "data_type": "date",
+      "tier": 3,
+      "result": "2026-05-19",
+      "source": "bgee",
+      "stage": "parser"
+    },
+    {
+      "name": "Direct source download",
+      "data_type": "boolean",
+      "tier": 1,
+      "result": true,
+      "source": "bindingdb",
+      "stage": "parser"
+    },
+    {
+      "name": "Source database extraction",
+      "data_type": "boolean",
+      "tier": 1,
+      "result": true,
+      "source": "bindingdb",
+      "mapping": "bindingdb.drug_binds_gene",
+      "stage": "parser"
+    },
+    {
+      "name": "TSV structural integrity",
+      "data_type": "boolean",
+      "tier": 1,
+      "result": true,
+      "source": "bindingdb",
+      "mapping": "bindingdb.drug_binds_gene",
+      "stage": "parser"
+    },
+    {
+      "name": "Extracted record counts",
+      "data_type": "integer",
+      "tier": 1,
+      "result": 24430,
+      "source": "bindingdb",
+      "mapping": "bindingdb.drug_binds_gene",
+      "stage": "parser"
+    },
+    {
+      "name": "Schema conformance",
+      "data_type": "boolean",
+      "tier": 2,
+      "result": true,
+      "source": "bindingdb",
+      "mapping": "bindingdb.drug_binds_gene",
+      "stage": "parser"
+    },
+    {
+      "name": "Extraction timestamp",
+      "data_type": "date",
+      "tier": 3,
+      "result": "2026-05-29",
+      "source": "bindingdb",
+      "stage": "parser"
+    },
+    {
+      "name": "Direct source download",
+      "data_type": "boolean",
+      "tier": 1,
+      "result": true,
+      "source": "clinicaltrials",
+      "stage": "parser"
+    },
+    {
+      "name": "Source database extraction",
+      "data_type": "boolean",
+      "tier": 1,
+      "result": true,
+      "source": "clinicaltrials",
+      "mapping": "clinicaltrials.trial_nodes",
+      "stage": "parser"
+    },
+    {
+      "name": "TSV structural integrity",
+      "data_type": "boolean",
+      "tier": 1,
+      "result": true,
+      "source": "clinicaltrials",
+      "mapping": "clinicaltrials.trial_nodes",
+      "stage": "parser"
+    },
+    {
+      "name": "Extracted record counts",
+      "data_type": "integer",
+      "tier": 1,
+      "result": 21578,
+      "source": "clinicaltrials",
+      "mapping": "clinicaltrials.trial_nodes",
+      "stage": "parser"
+    },
+    {
+      "name": "Schema conformance",
+      "data_type": "boolean",
+      "tier": 2,
+      "result": true,
+      "source": "clinicaltrials",
+      "mapping": "clinicaltrials.trial_nodes",
+      "stage": "parser"
+    },
+    {
+      "name": "Source database extraction",
+      "data_type": "boolean",
+      "tier": 1,
+      "result": true,
+      "source": "clinicaltrials",
+      "mapping": "clinicaltrials.trial_disease_associations",
+      "stage": "parser"
+    },
+    {
+      "name": "TSV structural integrity",
+      "data_type": "boolean",
+      "tier": 1,
+      "result": true,
+      "source": "clinicaltrials",
+      "mapping": "clinicaltrials.trial_disease_associations",
+      "stage": "parser"
+    },
+    {
+      "name": "Extracted record counts",
+      "data_type": "integer",
+      "tier": 1,
+      "result": 46692,
+      "source": "clinicaltrials",
+      "mapping": "clinicaltrials.trial_disease_associations",
+      "stage": "parser"
+    },
+    {
+      "name": "Schema conformance",
+      "data_type": "boolean",
+      "tier": 2,
+      "result": true,
+      "source": "clinicaltrials",
+      "mapping": "clinicaltrials.trial_disease_associations",
+      "stage": "parser"
+    },
+    {
+      "name": "Source database extraction",
+      "data_type": "boolean",
+      "tier": 1,
+      "result": true,
+      "source": "clinicaltrials",
+      "mapping": "clinicaltrials.trial_intervention_associations",
+      "stage": "parser"
+    },
+    {
+      "name": "TSV structural integrity",
+      "data_type": "boolean",
+      "tier": 1,
+      "result": true,
+      "source": "clinicaltrials",
+      "mapping": "clinicaltrials.trial_intervention_associations",
+      "stage": "parser"
+    },
+    {
+      "name": "Extracted record counts",
+      "data_type": "integer",
+      "tier": 1,
+      "result": 30113,
+      "source": "clinicaltrials",
+      "mapping": "clinicaltrials.trial_intervention_associations",
+      "stage": "parser"
+    },
+    {
+      "name": "Schema conformance",
+      "data_type": "boolean",
+      "tier": 2,
+      "result": true,
+      "source": "clinicaltrials",
+      "mapping": "clinicaltrials.trial_intervention_associations",
+      "stage": "parser"
+    },
+    {
+      "name": "Extraction timestamp",
+      "data_type": "date",
+      "tier": 3,
+      "result": "2026-05-19",
+      "source": "clinicaltrials",
+      "stage": "parser"
+    },
+    {
+      "name": "Direct source download",
+      "data_type": "boolean",
+      "tier": 1,
+      "result": true,
+      "source": "clinpgx",
+      "stage": "parser"
+    },
+    {
+      "name": "Source database extraction",
+      "data_type": "boolean",
+      "tier": 1,
+      "result": true,
+      "source": "clinpgx",
+      "mapping": "clinpgx.drug_label_nodes",
+      "stage": "parser"
+    },
+    {
+      "name": "TSV structural integrity",
+      "data_type": "boolean",
+      "tier": 1,
+      "result": true,
+      "source": "clinpgx",
+      "mapping": "clinpgx.drug_label_nodes",
+      "stage": "parser"
+    },
+    {
+      "name": "Extracted record counts",
+      "data_type": "integer",
+      "tier": 1,
+      "result": 29,
+      "source": "clinpgx",
+      "mapping": "clinpgx.drug_label_nodes",
+      "stage": "parser"
+    },
+    {
+      "name": "Schema conformance",
+      "data_type": "boolean",
+      "tier": 2,
+      "result": true,
+      "source": "clinpgx",
+      "mapping": "clinpgx.drug_label_nodes",
+      "stage": "parser"
+    },
+    {
+      "name": "Source database extraction",
+      "data_type": "boolean",
+      "tier": 1,
+      "result": true,
+      "source": "clinpgx",
+      "mapping": "clinpgx.gene_drug_interactions",
+      "stage": "parser"
+    },
+    {
+      "name": "TSV structural integrity",
+      "data_type": "boolean",
+      "tier": 1,
+      "result": true,
+      "source": "clinpgx",
+      "mapping": "clinpgx.gene_drug_interactions",
+      "stage": "parser"
+    },
+    {
+      "name": "Extracted record counts",
+      "data_type": "integer",
+      "tier": 1,
+      "result": 109,
+      "source": "clinpgx",
+      "mapping": "clinpgx.gene_drug_interactions",
+      "stage": "parser"
+    },
+    {
+      "name": "Property value constraint violations",
+      "data_type": "integer",
+      "tier": 2,
+      "result": 1,
+      "source": "clinpgx",
+      "mapping": "clinpgx.gene_drug_interactions",
+      "stage": "parser"
+    },
+    {
+      "name": "Schema conformance",
+      "data_type": "boolean",
+      "tier": 2,
+      "result": true,
+      "source": "clinpgx",
+      "mapping": "clinpgx.gene_drug_interactions",
+      "stage": "parser"
+    },
+    {
+      "name": "Extraction timestamp",
+      "data_type": "date",
+      "tier": 3,
+      "result": "2026-05-19",
+      "source": "clinpgx",
+      "stage": "parser"
+    },
+    {
+      "name": "Direct source download",
+      "data_type": "boolean",
+      "tier": 1,
+      "result": true,
+      "source": "clinvar",
+      "stage": "parser"
+    },
+    {
+      "name": "Source database extraction",
+      "data_type": "boolean",
+      "tier": 1,
+      "result": true,
+      "source": "clinvar",
+      "mapping": "clinvar.variant_nodes",
+      "stage": "parser"
+    },
+    {
+      "name": "TSV structural integrity",
+      "data_type": "boolean",
+      "tier": 1,
+      "result": true,
+      "source": "clinvar",
+      "mapping": "clinvar.variant_nodes",
+      "stage": "parser"
+    },
+    {
+      "name": "Extracted record counts",
+      "data_type": "integer",
+      "tier": 1,
+      "result": 2100938,
+      "source": "clinvar",
+      "mapping": "clinvar.variant_nodes",
+      "stage": "parser"
+    },
+    {
+      "name": "Property value constraint violations",
+      "data_type": "integer",
+      "tier": 2,
+      "result": 64599,
+      "source": "clinvar",
+      "mapping": "clinvar.variant_nodes",
+      "stage": "parser"
+    },
+    {
+      "name": "Schema conformance",
+      "data_type": "boolean",
+      "tier": 2,
+      "result": true,
+      "source": "clinvar",
+      "mapping": "clinvar.variant_nodes",
+      "stage": "parser"
+    },
+    {
+      "name": "Source database extraction",
+      "data_type": "boolean",
+      "tier": 1,
+      "result": true,
+      "source": "clinvar",
+      "mapping": "clinvar.variant_gene_associations",
+      "stage": "parser"
+    },
+    {
+      "name": "TSV structural integrity",
+      "data_type": "boolean",
+      "tier": 1,
+      "result": true,
+      "source": "clinvar",
+      "mapping": "clinvar.variant_gene_associations",
+      "stage": "parser"
+    },
+    {
+      "name": "Extracted record counts",
+      "data_type": "integer",
+      "tier": 1,
+      "result": 2100938,
+      "source": "clinvar",
+      "mapping": "clinvar.variant_gene_associations",
+      "stage": "parser"
+    },
+    {
+      "name": "Schema conformance",
+      "data_type": "boolean",
+      "tier": 2,
+      "result": true,
+      "source": "clinvar",
+      "mapping": "clinvar.variant_gene_associations",
+      "stage": "parser"
+    },
+    {
+      "name": "Source database extraction",
+      "data_type": "boolean",
+      "tier": 1,
+      "result": true,
+      "source": "clinvar",
+      "mapping": "clinvar.variant_disease_associations",
+      "stage": "parser"
+    },
+    {
+      "name": "TSV structural integrity",
+      "data_type": "boolean",
+      "tier": 1,
+      "result": true,
+      "source": "clinvar",
+      "mapping": "clinvar.variant_disease_associations",
+      "stage": "parser"
+    },
+    {
+      "name": "Extracted record counts",
+      "data_type": "integer",
+      "tier": 1,
+      "result": 2990118,
+      "source": "clinvar",
+      "mapping": "clinvar.variant_disease_associations",
+      "stage": "parser"
+    },
+    {
+      "name": "Schema conformance",
+      "data_type": "boolean",
+      "tier": 2,
+      "result": true,
+      "source": "clinvar",
+      "mapping": "clinvar.variant_disease_associations",
+      "stage": "parser"
+    },
+    {
+      "name": "Extraction timestamp",
+      "data_type": "date",
+      "tier": 3,
+      "result": "2026-05-26",
+      "source": "clinvar",
+      "stage": "parser"
+    },
+    {
+      "name": "Direct source download",
+      "data_type": "boolean",
+      "tier": 1,
+      "result": true,
+      "source": "collectri",
+      "stage": "parser"
+    },
+    {
+      "name": "Source database extraction",
+      "data_type": "boolean",
+      "tier": 1,
+      "result": true,
+      "source": "collectri",
+      "mapping": "collectri.transcription_factors",
+      "stage": "parser"
+    },
+    {
+      "name": "TSV structural integrity",
+      "data_type": "boolean",
+      "tier": 1,
+      "result": true,
+      "source": "collectri",
+      "mapping": "collectri.transcription_factors",
+      "stage": "parser"
+    },
+    {
+      "name": "Extracted record counts",
+      "data_type": "integer",
+      "tier": 1,
+      "result": 1201,
+      "source": "collectri",
+      "mapping": "collectri.transcription_factors",
+      "stage": "parser"
+    },
+    {
+      "name": "Schema conformance",
+      "data_type": "boolean",
+      "tier": 2,
+      "result": true,
+      "source": "collectri",
+      "mapping": "collectri.transcription_factors",
+      "stage": "parser"
+    },
+    {
+      "name": "Source database extraction",
+      "data_type": "boolean",
+      "tier": 1,
+      "result": true,
+      "source": "collectri",
+      "mapping": "collectri.tf_gene_interactions",
+      "stage": "parser"
+    },
+    {
+      "name": "TSV structural integrity",
+      "data_type": "boolean",
+      "tier": 1,
+      "result": true,
+      "source": "collectri",
+      "mapping": "collectri.tf_gene_interactions",
+      "stage": "parser"
+    },
+    {
+      "name": "Extracted record counts",
+      "data_type": "integer",
+      "tier": 1,
+      "result": 64516,
+      "source": "collectri",
+      "mapping": "collectri.tf_gene_interactions",
+      "stage": "parser"
+    },
+    {
+      "name": "Schema conformance",
+      "data_type": "boolean",
+      "tier": 2,
+      "result": true,
+      "source": "collectri",
+      "mapping": "collectri.tf_gene_interactions",
+      "stage": "parser"
+    },
+    {
+      "name": "Extraction timestamp",
+      "data_type": "date",
+      "tier": 3,
+      "result": "2026-05-19",
+      "source": "collectri",
+      "stage": "parser"
+    },
+    {
+      "name": "Direct source download",
+      "data_type": "boolean",
+      "tier": 1,
+      "result": true,
+      "source": "cross_references",
+      "stage": "parser"
+    },
+    {
+      "name": "Direct source download",
+      "data_type": "boolean",
+      "tier": 1,
+      "result": true,
+      "source": "ctd",
+      "stage": "parser"
+    },
+    {
+      "name": "Source database extraction",
+      "data_type": "boolean",
+      "tier": 1,
+      "result": true,
+      "source": "ctd",
+      "mapping": "ctd.chemical_nodes",
+      "stage": "parser"
+    },
+    {
+      "name": "TSV structural integrity",
+      "data_type": "boolean",
+      "tier": 1,
+      "result": true,
+      "source": "ctd",
+      "mapping": "ctd.chemical_nodes",
+      "stage": "parser"
+    },
+    {
+      "name": "Extracted record counts",
+      "data_type": "integer",
+      "tier": 1,
+      "result": 9465,
+      "source": "ctd",
+      "mapping": "ctd.chemical_nodes",
+      "stage": "parser"
+    },
+    {
+      "name": "Schema conformance",
+      "data_type": "boolean",
+      "tier": 2,
+      "result": true,
+      "source": "ctd",
+      "mapping": "ctd.chemical_nodes",
+      "stage": "parser"
+    },
+    {
+      "name": "Source database extraction",
+      "data_type": "boolean",
+      "tier": 1,
+      "result": true,
+      "source": "ctd",
+      "mapping": "ctd.chemical_increases_expression",
+      "stage": "parser"
+    },
+    {
+      "name": "TSV structural integrity",
+      "data_type": "boolean",
+      "tier": 1,
+      "result": true,
+      "source": "ctd",
+      "mapping": "ctd.chemical_increases_expression",
+      "stage": "parser"
+    },
+    {
+      "name": "Extracted record counts",
+      "data_type": "integer",
+      "tier": 1,
+      "result": 1288204,
+      "source": "ctd",
+      "mapping": "ctd.chemical_increases_expression",
+      "stage": "parser"
+    },
+    {
+      "name": "Property value constraint violations",
+      "data_type": "integer",
+      "tier": 2,
+      "result": 68130,
+      "source": "ctd",
+      "mapping": "ctd.chemical_increases_expression",
+      "stage": "parser"
+    },
+    {
+      "name": "Schema conformance",
+      "data_type": "boolean",
+      "tier": 2,
+      "result": true,
+      "source": "ctd",
+      "mapping": "ctd.chemical_increases_expression",
+      "stage": "parser"
+    },
+    {
+      "name": "Source database extraction",
+      "data_type": "boolean",
+      "tier": 1,
+      "result": true,
+      "source": "ctd",
+      "mapping": "ctd.chemical_decreases_expression",
+      "stage": "parser"
+    },
+    {
+      "name": "TSV structural integrity",
+      "data_type": "boolean",
+      "tier": 1,
+      "result": true,
+      "source": "ctd",
+      "mapping": "ctd.chemical_decreases_expression",
+      "stage": "parser"
+    },
+    {
+      "name": "Extracted record counts",
+      "data_type": "integer",
+      "tier": 1,
+      "result": 1001149,
+      "source": "ctd",
+      "mapping": "ctd.chemical_decreases_expression",
+      "stage": "parser"
+    },
+    {
+      "name": "Property value constraint violations",
+      "data_type": "integer",
+      "tier": 2,
+      "result": 45340,
+      "source": "ctd",
+      "mapping": "ctd.chemical_decreases_expression",
+      "stage": "parser"
+    },
+    {
+      "name": "Schema conformance",
+      "data_type": "boolean",
+      "tier": 2,
+      "result": true,
+      "source": "ctd",
+      "mapping": "ctd.chemical_decreases_expression",
+      "stage": "parser"
+    },
+    {
+      "name": "Extraction timestamp",
+      "data_type": "date",
+      "tier": 3,
+      "result": "2026-05-19",
+      "source": "ctd",
+      "stage": "parser"
+    },
+    {
+      "name": "Direct source download",
+      "data_type": "boolean",
+      "tier": 1,
+      "result": true,
+      "source": "disease_ontology",
+      "stage": "parser"
+    },
+    {
+      "name": "Source database extraction",
+      "data_type": "boolean",
+      "tier": 1,
+      "result": true,
+      "source": "disease_ontology",
+      "mapping": "disease_ontology.slim_terms",
+      "stage": "parser"
+    },
+    {
+      "name": "TSV structural integrity",
+      "data_type": "boolean",
+      "tier": 1,
+      "result": true,
+      "source": "disease_ontology",
+      "mapping": "disease_ontology.slim_terms",
+      "stage": "parser"
+    },
+    {
+      "name": "Extracted record counts",
+      "data_type": "integer",
+      "tier": 1,
+      "result": 3442,
+      "source": "disease_ontology",
+      "mapping": "disease_ontology.slim_terms",
+      "stage": "parser"
+    },
+    {
+      "name": "Schema conformance",
+      "data_type": "boolean",
+      "tier": 2,
+      "result": true,
+      "source": "disease_ontology",
+      "mapping": "disease_ontology.slim_terms",
+      "stage": "parser"
+    },
+    {
+      "name": "Extraction timestamp",
+      "data_type": "date",
+      "tier": 3,
+      "result": "2026-05-19",
+      "source": "disease_ontology",
+      "stage": "parser"
+    },
+    {
+      "name": "Direct source download",
+      "data_type": "boolean",
+      "tier": 1,
+      "result": true,
+      "source": "dorothea",
+      "stage": "parser"
+    },
+    {
+      "name": "Source database extraction",
+      "data_type": "boolean",
+      "tier": 1,
+      "result": true,
+      "source": "dorothea",
+      "mapping": "dorothea.transcription_factors",
+      "stage": "parser"
+    },
+    {
+      "name": "TSV structural integrity",
+      "data_type": "boolean",
+      "tier": 1,
+      "result": true,
+      "source": "dorothea",
+      "mapping": "dorothea.transcription_factors",
+      "stage": "parser"
+    },
+    {
+      "name": "Extracted record counts",
+      "data_type": "integer",
+      "tier": 1,
+      "result": 367,
+      "source": "dorothea",
+      "mapping": "dorothea.transcription_factors",
+      "stage": "parser"
+    },
+    {
+      "name": "Schema conformance",
+      "data_type": "boolean",
+      "tier": 2,
+      "result": true,
+      "source": "dorothea",
+      "mapping": "dorothea.transcription_factors",
+      "stage": "parser"
+    },
+    {
+      "name": "Source database extraction",
+      "data_type": "boolean",
+      "tier": 1,
+      "result": true,
+      "source": "dorothea",
+      "mapping": "dorothea.tf_gene_interactions",
+      "stage": "parser"
+    },
+    {
+      "name": "TSV structural integrity",
+      "data_type": "boolean",
+      "tier": 1,
+      "result": true,
+      "source": "dorothea",
+      "mapping": "dorothea.tf_gene_interactions",
+      "stage": "parser"
+    },
+    {
+      "name": "Extracted record counts",
+      "data_type": "integer",
+      "tier": 1,
+      "result": 15267,
+      "source": "dorothea",
+      "mapping": "dorothea.tf_gene_interactions",
+      "stage": "parser"
+    },
+    {
+      "name": "Schema conformance",
+      "data_type": "boolean",
+      "tier": 2,
+      "result": true,
+      "source": "dorothea",
+      "mapping": "dorothea.tf_gene_interactions",
+      "stage": "parser"
+    },
+    {
+      "name": "Extraction timestamp",
+      "data_type": "date",
+      "tier": 3,
+      "result": "2026-05-19",
+      "source": "dorothea",
+      "stage": "parser"
+    },
+    {
+      "name": "Direct source download",
+      "data_type": "boolean",
+      "tier": 1,
+      "result": true,
+      "source": "drugbank",
+      "stage": "parser"
+    },
+    {
+      "name": "Source database extraction",
+      "data_type": "boolean",
+      "tier": 1,
+      "result": true,
+      "source": "drugbank",
+      "mapping": "drugbank.drugs",
+      "stage": "parser"
+    },
+    {
+      "name": "TSV structural integrity",
+      "data_type": "boolean",
+      "tier": 1,
+      "result": true,
+      "source": "drugbank",
+      "mapping": "drugbank.drugs",
+      "stage": "parser"
+    },
+    {
+      "name": "Extracted record counts",
+      "data_type": "integer",
+      "tier": 1,
+      "result": 16628,
+      "source": "drugbank",
+      "mapping": "drugbank.drugs",
+      "stage": "parser"
+    },
+    {
+      "name": "Schema conformance",
+      "data_type": "boolean",
+      "tier": 2,
+      "result": true,
+      "source": "drugbank",
+      "mapping": "drugbank.drugs",
+      "stage": "parser"
+    },
+    {
+      "name": "Source database extraction",
+      "data_type": "boolean",
+      "tier": 1,
+      "result": true,
+      "source": "drugbank",
+      "mapping": "drugbank.drug_gene_edges",
+      "stage": "parser"
+    },
+    {
+      "name": "TSV structural integrity",
+      "data_type": "boolean",
+      "tier": 1,
+      "result": true,
+      "source": "drugbank",
+      "mapping": "drugbank.drug_gene_edges",
+      "stage": "parser"
+    },
+    {
+      "name": "Extracted record counts",
+      "data_type": "integer",
+      "tier": 1,
+      "result": 34439,
+      "source": "drugbank",
+      "mapping": "drugbank.drug_gene_edges",
+      "stage": "parser"
+    },
+    {
+      "name": "Schema conformance",
+      "data_type": "boolean",
+      "tier": 2,
+      "result": true,
+      "source": "drugbank",
+      "mapping": "drugbank.drug_gene_edges",
+      "stage": "parser"
+    },
+    {
+      "name": "Extraction timestamp",
+      "data_type": "date",
+      "tier": 3,
+      "result": "2026-05-19",
+      "source": "drugbank",
+      "stage": "parser"
+    },
+    {
+      "name": "Direct source download",
+      "data_type": "boolean",
+      "tier": 1,
+      "result": true,
+      "source": "drugcentral",
+      "stage": "parser"
+    },
+    {
+      "name": "Source database extraction",
+      "data_type": "boolean",
+      "tier": 1,
+      "result": true,
+      "source": "drugcentral",
+      "mapping": "drugcentral.drugs",
+      "stage": "parser"
+    },
+    {
+      "name": "TSV structural integrity",
+      "data_type": "boolean",
+      "tier": 1,
+      "result": true,
+      "source": "drugcentral",
+      "mapping": "drugcentral.drugs",
+      "stage": "parser"
+    },
+    {
+      "name": "Extracted record counts",
+      "data_type": "integer",
+      "tier": 1,
+      "result": 4995,
+      "source": "drugcentral",
+      "mapping": "drugcentral.drugs",
+      "stage": "parser"
+    },
+    {
+      "name": "Schema conformance",
+      "data_type": "boolean",
+      "tier": 2,
+      "result": true,
+      "source": "drugcentral",
+      "mapping": "drugcentral.drugs",
+      "stage": "parser"
+    },
+    {
+      "name": "Source database extraction",
+      "data_type": "boolean",
+      "tier": 1,
+      "result": true,
+      "source": "drugcentral",
+      "mapping": "drugcentral.pharmacologic_classes",
+      "stage": "parser"
+    },
+    {
+      "name": "TSV structural integrity",
+      "data_type": "boolean",
+      "tier": 1,
+      "result": true,
+      "source": "drugcentral",
+      "mapping": "drugcentral.pharmacologic_classes",
+      "stage": "parser"
+    },
+    {
+      "name": "Extracted record counts",
+      "data_type": "integer",
+      "tier": 1,
+      "result": 2359,
+      "source": "drugcentral",
+      "mapping": "drugcentral.pharmacologic_classes",
+      "stage": "parser"
+    },
+    {
+      "name": "Schema conformance",
+      "data_type": "boolean",
+      "tier": 2,
+      "result": true,
+      "source": "drugcentral",
+      "mapping": "drugcentral.pharmacologic_classes",
+      "stage": "parser"
+    },
+    {
+      "name": "Source database extraction",
+      "data_type": "boolean",
+      "tier": 1,
+      "result": true,
+      "source": "drugcentral",
+      "mapping": "drugcentral.drug_treats_disease",
+      "stage": "parser"
+    },
+    {
+      "name": "TSV structural integrity",
+      "data_type": "boolean",
+      "tier": 1,
+      "result": true,
+      "source": "drugcentral",
+      "mapping": "drugcentral.drug_treats_disease",
+      "stage": "parser"
+    },
+    {
+      "name": "Extracted record counts",
+      "data_type": "integer",
+      "tier": 1,
+      "result": 204,
+      "source": "drugcentral",
+      "mapping": "drugcentral.drug_treats_disease",
+      "stage": "parser"
+    },
+    {
+      "name": "Schema conformance",
+      "data_type": "boolean",
+      "tier": 2,
+      "result": true,
+      "source": "drugcentral",
+      "mapping": "drugcentral.drug_treats_disease",
+      "stage": "parser"
+    },
+    {
+      "name": "Source database extraction",
+      "data_type": "boolean",
+      "tier": 1,
+      "result": true,
+      "source": "drugcentral",
+      "mapping": "drugcentral.drug_in_class",
+      "stage": "parser"
+    },
+    {
+      "name": "TSV structural integrity",
+      "data_type": "boolean",
+      "tier": 1,
+      "result": true,
+      "source": "drugcentral",
+      "mapping": "drugcentral.drug_in_class",
+      "stage": "parser"
+    },
+    {
+      "name": "Extracted record counts",
+      "data_type": "integer",
+      "tier": 1,
+      "result": 25687,
+      "source": "drugcentral",
+      "mapping": "drugcentral.drug_in_class",
+      "stage": "parser"
+    },
+    {
+      "name": "Schema conformance",
+      "data_type": "boolean",
+      "tier": 2,
+      "result": true,
+      "source": "drugcentral",
+      "mapping": "drugcentral.drug_in_class",
+      "stage": "parser"
+    },
+    {
+      "name": "Source database extraction",
+      "data_type": "boolean",
+      "tier": 1,
+      "result": true,
+      "source": "drugcentral",
+      "mapping": "drugcentral.chemical_causes_effect",
+      "stage": "parser"
+    },
+    {
+      "name": "TSV structural integrity",
+      "data_type": "boolean",
+      "tier": 1,
+      "result": true,
+      "source": "drugcentral",
+      "mapping": "drugcentral.chemical_causes_effect",
+      "stage": "parser"
+    },
+    {
+      "name": "Extracted record counts",
+      "data_type": "integer",
+      "tier": 1,
+      "result": 364921,
+      "source": "drugcentral",
+      "mapping": "drugcentral.chemical_causes_effect",
+      "stage": "parser"
+    },
+    {
+      "name": "Schema conformance",
+      "data_type": "boolean",
+      "tier": 2,
+      "result": true,
+      "source": "drugcentral",
+      "mapping": "drugcentral.chemical_causes_effect",
+      "stage": "parser"
+    },
+    {
+      "name": "Extraction timestamp",
+      "data_type": "date",
+      "tier": 3,
+      "result": "2026-05-19",
+      "source": "drugcentral",
+      "stage": "parser"
+    },
+    {
+      "name": "Direct source download",
+      "data_type": "boolean",
+      "tier": 1,
+      "result": true,
+      "source": "gene_ontology",
+      "stage": "parser"
+    },
+    {
+      "name": "Source database extraction",
+      "data_type": "boolean",
+      "tier": 1,
+      "result": true,
+      "source": "gene_ontology",
+      "mapping": "gene_ontology.biological_process_nodes",
+      "stage": "parser"
+    },
+    {
+      "name": "TSV structural integrity",
+      "data_type": "boolean",
+      "tier": 1,
+      "result": true,
+      "source": "gene_ontology",
+      "mapping": "gene_ontology.biological_process_nodes",
+      "stage": "parser"
+    },
+    {
+      "name": "Extracted record counts",
+      "data_type": "integer",
+      "tier": 1,
+      "result": 24428,
+      "source": "gene_ontology",
+      "mapping": "gene_ontology.biological_process_nodes",
+      "stage": "parser"
+    },
+    {
+      "name": "Schema conformance",
+      "data_type": "boolean",
+      "tier": 2,
+      "result": true,
+      "source": "gene_ontology",
+      "mapping": "gene_ontology.biological_process_nodes",
+      "stage": "parser"
+    },
+    {
+      "name": "Source database extraction",
+      "data_type": "boolean",
+      "tier": 1,
+      "result": true,
+      "source": "gene_ontology",
+      "mapping": "gene_ontology.molecular_function_nodes",
+      "stage": "parser"
+    },
+    {
+      "name": "TSV structural integrity",
+      "data_type": "boolean",
+      "tier": 1,
+      "result": true,
+      "source": "gene_ontology",
+      "mapping": "gene_ontology.molecular_function_nodes",
+      "stage": "parser"
+    },
+    {
+      "name": "Extracted record counts",
+      "data_type": "integer",
+      "tier": 1,
+      "result": 10056,
+      "source": "gene_ontology",
+      "mapping": "gene_ontology.molecular_function_nodes",
+      "stage": "parser"
+    },
+    {
+      "name": "Schema conformance",
+      "data_type": "boolean",
+      "tier": 2,
+      "result": true,
+      "source": "gene_ontology",
+      "mapping": "gene_ontology.molecular_function_nodes",
+      "stage": "parser"
+    },
+    {
+      "name": "Source database extraction",
+      "data_type": "boolean",
+      "tier": 1,
+      "result": true,
+      "source": "gene_ontology",
+      "mapping": "gene_ontology.cellular_component_nodes",
+      "stage": "parser"
+    },
+    {
+      "name": "TSV structural integrity",
+      "data_type": "boolean",
+      "tier": 1,
+      "result": true,
+      "source": "gene_ontology",
+      "mapping": "gene_ontology.cellular_component_nodes",
+      "stage": "parser"
+    },
+    {
+      "name": "Extracted record counts",
+      "data_type": "integer",
+      "tier": 1,
+      "result": 4076,
+      "source": "gene_ontology",
+      "mapping": "gene_ontology.cellular_component_nodes",
+      "stage": "parser"
+    },
+    {
+      "name": "Schema conformance",
+      "data_type": "boolean",
+      "tier": 2,
+      "result": true,
+      "source": "gene_ontology",
+      "mapping": "gene_ontology.cellular_component_nodes",
+      "stage": "parser"
+    },
+    {
+      "name": "Source database extraction",
+      "data_type": "boolean",
+      "tier": 1,
+      "result": true,
+      "source": "gene_ontology",
+      "mapping": "gene_ontology.gene_bp_associations",
+      "stage": "parser"
+    },
+    {
+      "name": "TSV structural integrity",
+      "data_type": "boolean",
+      "tier": 1,
+      "result": true,
+      "source": "gene_ontology",
+      "mapping": "gene_ontology.gene_bp_associations",
+      "stage": "parser"
+    },
+    {
+      "name": "Extracted record counts",
+      "data_type": "integer",
+      "tier": 1,
+      "result": 122437,
+      "source": "gene_ontology",
+      "mapping": "gene_ontology.gene_bp_associations",
+      "stage": "parser"
+    },
+    {
+      "name": "Schema conformance",
+      "data_type": "boolean",
+      "tier": 2,
+      "result": true,
+      "source": "gene_ontology",
+      "mapping": "gene_ontology.gene_bp_associations",
+      "stage": "parser"
+    },
+    {
+      "name": "Source database extraction",
+      "data_type": "boolean",
+      "tier": 1,
+      "result": true,
+      "source": "gene_ontology",
+      "mapping": "gene_ontology.gene_mf_associations",
+      "stage": "parser"
+    },
+    {
+      "name": "TSV structural integrity",
+      "data_type": "boolean",
+      "tier": 1,
+      "result": true,
+      "source": "gene_ontology",
+      "mapping": "gene_ontology.gene_mf_associations",
+      "stage": "parser"
+    },
+    {
+      "name": "Extracted record counts",
+      "data_type": "integer",
+      "tier": 1,
+      "result": 76863,
+      "source": "gene_ontology",
+      "mapping": "gene_ontology.gene_mf_associations",
+      "stage": "parser"
+    },
+    {
+      "name": "Schema conformance",
+      "data_type": "boolean",
+      "tier": 2,
+      "result": true,
+      "source": "gene_ontology",
+      "mapping": "gene_ontology.gene_mf_associations",
+      "stage": "parser"
+    },
+    {
+      "name": "Source database extraction",
+      "data_type": "boolean",
+      "tier": 1,
+      "result": true,
+      "source": "gene_ontology",
+      "mapping": "gene_ontology.gene_cc_associations",
+      "stage": "parser"
+    },
+    {
+      "name": "TSV structural integrity",
+      "data_type": "boolean",
+      "tier": 1,
+      "result": true,
+      "source": "gene_ontology",
+      "mapping": "gene_ontology.gene_cc_associations",
+      "stage": "parser"
+    },
+    {
+      "name": "Extracted record counts",
+      "data_type": "integer",
+      "tier": 1,
+      "result": 90507,
+      "source": "gene_ontology",
+      "mapping": "gene_ontology.gene_cc_associations",
+      "stage": "parser"
+    },
+    {
+      "name": "Schema conformance",
+      "data_type": "boolean",
+      "tier": 2,
+      "result": true,
+      "source": "gene_ontology",
+      "mapping": "gene_ontology.gene_cc_associations",
+      "stage": "parser"
+    },
+    {
+      "name": "Extraction timestamp",
+      "data_type": "date",
+      "tier": 3,
+      "result": "2026-05-19",
+      "source": "gene_ontology",
+      "stage": "parser"
+    },
+    {
+      "name": "Direct source download",
+      "data_type": "boolean",
+      "tier": 1,
+      "result": true,
+      "source": "hgnc",
+      "stage": "parser"
+    },
+    {
+      "name": "Source database extraction",
+      "data_type": "boolean",
+      "tier": 1,
+      "result": true,
+      "source": "hgnc",
+      "mapping": "hgnc.gene_family_nodes",
+      "stage": "parser"
+    },
+    {
+      "name": "TSV structural integrity",
+      "data_type": "boolean",
+      "tier": 1,
+      "result": true,
+      "source": "hgnc",
+      "mapping": "hgnc.gene_family_nodes",
+      "stage": "parser"
+    },
+    {
+      "name": "Extracted record counts",
+      "data_type": "integer",
+      "tier": 1,
+      "result": 4257,
+      "source": "hgnc",
+      "mapping": "hgnc.gene_family_nodes",
+      "stage": "parser"
+    },
+    {
+      "name": "Schema conformance",
+      "data_type": "boolean",
+      "tier": 2,
+      "result": true,
+      "source": "hgnc",
+      "mapping": "hgnc.gene_family_nodes",
+      "stage": "parser"
+    },
+    {
+      "name": "Source database extraction",
+      "data_type": "boolean",
+      "tier": 1,
+      "result": true,
+      "source": "hgnc",
+      "mapping": "hgnc.gene_family_associations",
+      "stage": "parser"
+    },
+    {
+      "name": "TSV structural integrity",
+      "data_type": "boolean",
+      "tier": 1,
+      "result": true,
+      "source": "hgnc",
+      "mapping": "hgnc.gene_family_associations",
+      "stage": "parser"
+    },
+    {
+      "name": "Extracted record counts",
+      "data_type": "integer",
+      "tier": 1,
+      "result": 27600,
+      "source": "hgnc",
+      "mapping": "hgnc.gene_family_associations",
+      "stage": "parser"
+    },
+    {
+      "name": "Schema conformance",
+      "data_type": "boolean",
+      "tier": 2,
+      "result": true,
+      "source": "hgnc",
+      "mapping": "hgnc.gene_family_associations",
+      "stage": "parser"
+    },
+    {
+      "name": "Extraction timestamp",
+      "data_type": "date",
+      "tier": 3,
+      "result": "2026-05-19",
+      "source": "hgnc",
+      "stage": "parser"
+    },
+    {
+      "name": "Direct source download",
+      "data_type": "boolean",
+      "tier": 1,
+      "result": true,
+      "source": "hpo",
+      "stage": "parser"
+    },
+    {
+      "name": "Source database extraction",
+      "data_type": "boolean",
+      "tier": 1,
+      "result": true,
+      "source": "hpo",
+      "mapping": "hpo.phenotype_nodes",
+      "stage": "parser"
+    },
+    {
+      "name": "TSV structural integrity",
+      "data_type": "boolean",
+      "tier": 1,
+      "result": true,
+      "source": "hpo",
+      "mapping": "hpo.phenotype_nodes",
+      "stage": "parser"
+    },
+    {
+      "name": "Extracted record counts",
+      "data_type": "integer",
+      "tier": 1,
+      "result": 19389,
+      "source": "hpo",
+      "mapping": "hpo.phenotype_nodes",
+      "stage": "parser"
+    },
+    {
+      "name": "Schema conformance",
+      "data_type": "boolean",
+      "tier": 2,
+      "result": true,
+      "source": "hpo",
+      "mapping": "hpo.phenotype_nodes",
+      "stage": "parser"
+    },
+    {
+      "name": "Source database extraction",
+      "data_type": "boolean",
+      "tier": 1,
+      "result": true,
+      "source": "hpo",
+      "mapping": "hpo.gene_phenotype_associations",
+      "stage": "parser"
+    },
+    {
+      "name": "TSV structural integrity",
+      "data_type": "boolean",
+      "tier": 1,
+      "result": true,
+      "source": "hpo",
+      "mapping": "hpo.gene_phenotype_associations",
+      "stage": "parser"
+    },
+    {
+      "name": "Extracted record counts",
+      "data_type": "integer",
+      "tier": 1,
+      "result": 314250,
+      "source": "hpo",
+      "mapping": "hpo.gene_phenotype_associations",
+      "stage": "parser"
+    },
+    {
+      "name": "Schema conformance",
+      "data_type": "boolean",
+      "tier": 2,
+      "result": true,
+      "source": "hpo",
+      "mapping": "hpo.gene_phenotype_associations",
+      "stage": "parser"
+    },
+    {
+      "name": "Extraction timestamp",
+      "data_type": "date",
+      "tier": 3,
+      "result": "2026-05-19",
+      "source": "hpo",
+      "stage": "parser"
+    },
+    {
+      "name": "Direct source download",
+      "data_type": "boolean",
+      "tier": 1,
+      "result": true,
+      "source": "jensen_tissues",
+      "stage": "parser"
+    },
+    {
+      "name": "Extraction timestamp",
+      "data_type": "date",
+      "tier": 3,
+      "result": "2026-05-19",
+      "source": "jensen_tissues",
+      "stage": "parser"
+    },
+    {
+      "name": "Direct source download",
+      "data_type": "boolean",
+      "tier": 1,
+      "result": true,
+      "source": "lincs",
+      "stage": "parser"
+    },
+    {
+      "name": "Source database extraction",
+      "data_type": "boolean",
+      "tier": 1,
+      "result": true,
+      "source": "lincs",
+      "mapping": "lincs.compound_gene_up",
+      "stage": "parser"
+    },
+    {
+      "name": "TSV structural integrity",
+      "data_type": "boolean",
+      "tier": 1,
+      "result": true,
+      "source": "lincs",
+      "mapping": "lincs.compound_gene_up",
+      "stage": "parser"
+    },
+    {
+      "name": "Extracted record counts",
+      "data_type": "integer",
+      "tier": 1,
+      "result": 247173,
+      "source": "lincs",
+      "mapping": "lincs.compound_gene_up",
+      "stage": "parser"
+    },
+    {
+      "name": "Schema conformance",
+      "data_type": "boolean",
+      "tier": 2,
+      "result": true,
+      "source": "lincs",
+      "mapping": "lincs.compound_gene_up",
+      "stage": "parser"
+    },
+    {
+      "name": "Source database extraction",
+      "data_type": "boolean",
+      "tier": 1,
+      "result": true,
+      "source": "lincs",
+      "mapping": "lincs.compound_gene_down",
+      "stage": "parser"
+    },
+    {
+      "name": "TSV structural integrity",
+      "data_type": "boolean",
+      "tier": 1,
+      "result": true,
+      "source": "lincs",
+      "mapping": "lincs.compound_gene_down",
+      "stage": "parser"
+    },
+    {
+      "name": "Extracted record counts",
+      "data_type": "integer",
+      "tier": 1,
+      "result": 217664,
+      "source": "lincs",
+      "mapping": "lincs.compound_gene_down",
+      "stage": "parser"
+    },
+    {
+      "name": "Schema conformance",
+      "data_type": "boolean",
+      "tier": 2,
+      "result": true,
+      "source": "lincs",
+      "mapping": "lincs.compound_gene_down",
+      "stage": "parser"
+    },
+    {
+      "name": "Extraction timestamp",
+      "data_type": "date",
+      "tier": 3,
+      "result": "2026-05-19",
+      "source": "lincs",
+      "stage": "parser"
+    },
+    {
+      "name": "Direct source download",
+      "data_type": "boolean",
+      "tier": 1,
+      "result": true,
+      "source": "mesh",
+      "stage": "parser"
+    },
+    {
+      "name": "Source database extraction",
+      "data_type": "boolean",
+      "tier": 1,
+      "result": true,
+      "source": "mesh",
+      "mapping": "mesh.symptom_nodes",
+      "stage": "parser"
+    },
+    {
+      "name": "TSV structural integrity",
+      "data_type": "boolean",
+      "tier": 1,
+      "result": true,
+      "source": "mesh",
+      "mapping": "mesh.symptom_nodes",
+      "stage": "parser"
+    },
+    {
+      "name": "Extracted record counts",
+      "data_type": "integer",
+      "tier": 1,
+      "result": 415,
+      "source": "mesh",
+      "mapping": "mesh.symptom_nodes",
+      "stage": "parser"
+    },
+    {
+      "name": "Schema conformance",
+      "data_type": "boolean",
+      "tier": 2,
+      "result": true,
+      "source": "mesh",
+      "mapping": "mesh.symptom_nodes",
+      "stage": "parser"
+    },
+    {
+      "name": "Extraction timestamp",
+      "data_type": "date",
+      "tier": 3,
+      "result": "2026-05-19",
+      "source": "mesh",
+      "stage": "parser"
+    },
+    {
+      "name": "Direct source download",
+      "data_type": "boolean",
+      "tier": 1,
+      "result": true,
+      "source": "ncbigene",
+      "stage": "parser"
+    },
+    {
+      "name": "Source database extraction",
+      "data_type": "boolean",
+      "tier": 1,
+      "result": true,
+      "source": "ncbigene",
+      "mapping": "ncbigene.genes",
+      "stage": "parser"
+    },
+    {
+      "name": "TSV structural integrity",
+      "data_type": "boolean",
+      "tier": 1,
+      "result": true,
+      "source": "ncbigene",
+      "mapping": "ncbigene.genes",
+      "stage": "parser"
+    },
+    {
+      "name": "Extracted record counts",
+      "data_type": "integer",
+      "tier": 1,
+      "result": 193795,
+      "source": "ncbigene",
+      "mapping": "ncbigene.genes",
+      "stage": "parser"
+    },
+    {
+      "name": "Property value constraint violations",
+      "data_type": "integer",
+      "tier": 2,
+      "result": 7342,
+      "source": "ncbigene",
+      "mapping": "ncbigene.genes",
+      "stage": "parser"
+    },
+    {
+      "name": "Schema conformance",
+      "data_type": "boolean",
+      "tier": 2,
+      "result": true,
+      "source": "ncbigene",
+      "mapping": "ncbigene.genes",
+      "stage": "parser"
+    },
+    {
+      "name": "Extraction timestamp",
+      "data_type": "date",
+      "tier": 3,
+      "result": "2026-05-19",
+      "source": "ncbigene",
+      "stage": "parser"
+    },
+    {
+      "name": "Direct source download",
+      "data_type": "boolean",
+      "tier": 1,
+      "result": true,
+      "source": "opentargets",
+      "stage": "parser"
+    },
+    {
+      "name": "Source database extraction",
+      "data_type": "boolean",
+      "tier": 1,
+      "result": true,
+      "source": "opentargets",
+      "mapping": "opentargets.target_disease_associations",
+      "stage": "parser"
+    },
+    {
+      "name": "TSV structural integrity",
+      "data_type": "boolean",
+      "tier": 1,
+      "result": true,
+      "source": "opentargets",
+      "mapping": "opentargets.target_disease_associations",
+      "stage": "parser"
+    },
+    {
+      "name": "Extracted record counts",
+      "data_type": "integer",
+      "tier": 1,
+      "result": 6601,
+      "source": "opentargets",
+      "mapping": "opentargets.target_disease_associations",
+      "stage": "parser"
+    },
+    {
+      "name": "Schema conformance",
+      "data_type": "boolean",
+      "tier": 2,
+      "result": true,
+      "source": "opentargets",
+      "mapping": "opentargets.target_disease_associations",
+      "stage": "parser"
+    },
+    {
+      "name": "Extraction timestamp",
+      "data_type": "date",
+      "tier": 3,
+      "result": "2026-05-19",
+      "source": "opentargets",
+      "stage": "parser"
+    },
+    {
+      "name": "Direct source download",
+      "data_type": "boolean",
+      "tier": 1,
+      "result": true,
+      "source": "pubtator",
+      "stage": "parser"
+    },
+    {
+      "name": "Source database extraction",
+      "data_type": "boolean",
+      "tier": 1,
+      "result": true,
+      "source": "pubtator",
+      "mapping": "pubtator.pubtator_gene_disease",
+      "stage": "parser"
+    },
+    {
+      "name": "TSV structural integrity",
+      "data_type": "boolean",
+      "tier": 1,
+      "result": true,
+      "source": "pubtator",
+      "mapping": "pubtator.pubtator_gene_disease",
+      "stage": "parser"
+    },
+    {
+      "name": "Extracted record counts",
+      "data_type": "integer",
+      "tier": 1,
+      "result": 1749,
+      "source": "pubtator",
+      "mapping": "pubtator.pubtator_gene_disease",
+      "stage": "parser"
+    },
+    {
+      "name": "Property value constraint violations",
+      "data_type": "integer",
+      "tier": 2,
+      "result": 13,
+      "source": "pubtator",
+      "mapping": "pubtator.pubtator_gene_disease",
+      "stage": "parser"
+    },
+    {
+      "name": "Schema conformance",
+      "data_type": "boolean",
+      "tier": 2,
+      "result": true,
+      "source": "pubtator",
+      "mapping": "pubtator.pubtator_gene_disease",
+      "stage": "parser"
+    },
+    {
+      "name": "Extraction timestamp",
+      "data_type": "date",
+      "tier": 3,
+      "result": "2026-05-19",
+      "source": "pubtator",
+      "stage": "parser"
+    },
+    {
+      "name": "Direct source download",
+      "data_type": "boolean",
+      "tier": 1,
+      "result": true,
+      "source": "reactome",
+      "stage": "parser"
+    },
+    {
+      "name": "Source database extraction",
+      "data_type": "boolean",
+      "tier": 1,
+      "result": true,
+      "source": "reactome",
+      "mapping": "reactome.pathways",
+      "stage": "parser"
+    },
+    {
+      "name": "TSV structural integrity",
+      "data_type": "boolean",
+      "tier": 1,
+      "result": true,
+      "source": "reactome",
+      "mapping": "reactome.pathways",
+      "stage": "parser"
+    },
+    {
+      "name": "Extracted record counts",
+      "data_type": "integer",
+      "tier": 1,
+      "result": 2870,
+      "source": "reactome",
+      "mapping": "reactome.pathways",
+      "stage": "parser"
+    },
+    {
+      "name": "Schema conformance",
+      "data_type": "boolean",
+      "tier": 2,
+      "result": true,
+      "source": "reactome",
+      "mapping": "reactome.pathways",
+      "stage": "parser"
+    },
+    {
+      "name": "Source database extraction",
+      "data_type": "boolean",
+      "tier": 1,
+      "result": true,
+      "source": "reactome",
+      "mapping": "reactome.ncbi_gene_pathway_relationships",
+      "stage": "parser"
+    },
+    {
+      "name": "TSV structural integrity",
+      "data_type": "boolean",
+      "tier": 1,
+      "result": true,
+      "source": "reactome",
+      "mapping": "reactome.ncbi_gene_pathway_relationships",
+      "stage": "parser"
+    },
+    {
+      "name": "Extracted record counts",
+      "data_type": "integer",
+      "tier": 1,
+      "result": 156329,
+      "source": "reactome",
+      "mapping": "reactome.ncbi_gene_pathway_relationships",
+      "stage": "parser"
+    },
+    {
+      "name": "Property value constraint violations",
+      "data_type": "integer",
+      "tier": 2,
+      "result": 183,
+      "source": "reactome",
+      "mapping": "reactome.ncbi_gene_pathway_relationships",
+      "stage": "parser"
+    },
+    {
+      "name": "Schema conformance",
+      "data_type": "boolean",
+      "tier": 2,
+      "result": true,
+      "source": "reactome",
+      "mapping": "reactome.ncbi_gene_pathway_relationships",
+      "stage": "parser"
+    },
+    {
+      "name": "Extraction timestamp",
+      "data_type": "date",
+      "tier": 3,
+      "result": "2026-05-19",
+      "source": "reactome",
+      "stage": "parser"
+    },
+    {
+      "name": "Direct source download",
+      "data_type": "boolean",
+      "tier": 1,
+      "result": true,
+      "source": "sider",
+      "stage": "parser"
+    },
+    {
+      "name": "Source database extraction",
+      "data_type": "boolean",
+      "tier": 1,
+      "result": true,
+      "source": "sider",
+      "mapping": "sider.side_effect_nodes",
+      "stage": "parser"
+    },
+    {
+      "name": "TSV structural integrity",
+      "data_type": "boolean",
+      "tier": 1,
+      "result": true,
+      "source": "sider",
+      "mapping": "sider.side_effect_nodes",
+      "stage": "parser"
+    },
+    {
+      "name": "Extracted record counts",
+      "data_type": "integer",
+      "tier": 1,
+      "result": 4251,
+      "source": "sider",
+      "mapping": "sider.side_effect_nodes",
+      "stage": "parser"
+    },
+    {
+      "name": "Schema conformance",
+      "data_type": "boolean",
+      "tier": 2,
+      "result": true,
+      "source": "sider",
+      "mapping": "sider.side_effect_nodes",
+      "stage": "parser"
+    },
+    {
+      "name": "Source database extraction",
+      "data_type": "boolean",
+      "tier": 1,
+      "result": true,
+      "source": "sider",
+      "mapping": "sider.drug_side_effect_associations",
+      "stage": "parser"
+    },
+    {
+      "name": "TSV structural integrity",
+      "data_type": "boolean",
+      "tier": 1,
+      "result": true,
+      "source": "sider",
+      "mapping": "sider.drug_side_effect_associations",
+      "stage": "parser"
+    },
+    {
+      "name": "Extracted record counts",
+      "data_type": "integer",
+      "tier": 1,
+      "result": 145321,
+      "source": "sider",
+      "mapping": "sider.drug_side_effect_associations",
+      "stage": "parser"
+    },
+    {
+      "name": "Schema conformance",
+      "data_type": "boolean",
+      "tier": 2,
+      "result": true,
+      "source": "sider",
+      "mapping": "sider.drug_side_effect_associations",
+      "stage": "parser"
+    },
+    {
+      "name": "Extraction timestamp",
+      "data_type": "date",
+      "tier": 3,
+      "result": "2026-05-19",
+      "source": "sider",
+      "stage": "parser"
+    },
+    {
+      "name": "Direct source download",
+      "data_type": "boolean",
+      "tier": 1,
+      "result": true,
+      "source": "sources",
+      "stage": "parser"
+    },
+    {
+      "name": "Direct source download",
+      "data_type": "boolean",
+      "tier": 1,
+      "result": true,
+      "source": "string",
+      "stage": "parser"
+    },
+    {
+      "name": "Source database extraction",
+      "data_type": "boolean",
+      "tier": 1,
+      "result": true,
+      "source": "string",
+      "mapping": "string.gene_interactions",
+      "stage": "parser"
+    },
+    {
+      "name": "TSV structural integrity",
+      "data_type": "boolean",
+      "tier": 1,
+      "result": true,
+      "source": "string",
+      "mapping": "string.gene_interactions",
+      "stage": "parser"
+    },
+    {
+      "name": "Extracted record counts",
+      "data_type": "integer",
+      "tier": 1,
+      "result": 468977,
+      "source": "string",
+      "mapping": "string.gene_interactions",
+      "stage": "parser"
+    },
+    {
+      "name": "Schema conformance",
+      "data_type": "boolean",
+      "tier": 2,
+      "result": true,
+      "source": "string",
+      "mapping": "string.gene_interactions",
+      "stage": "parser"
+    },
+    {
+      "name": "Extraction timestamp",
+      "data_type": "date",
+      "tier": 3,
+      "result": "2026-05-19",
+      "source": "string",
+      "stage": "parser"
+    },
+    {
+      "name": "Direct source download",
+      "data_type": "boolean",
+      "tier": 1,
+      "result": true,
+      "source": "uberon",
+      "stage": "parser"
+    },
+    {
+      "name": "Source database extraction",
+      "data_type": "boolean",
+      "tier": 1,
+      "result": true,
+      "source": "uberon",
+      "mapping": "uberon.uberon_nodes",
+      "stage": "parser"
+    },
+    {
+      "name": "TSV structural integrity",
+      "data_type": "boolean",
+      "tier": 1,
+      "result": true,
+      "source": "uberon",
+      "mapping": "uberon.uberon_nodes",
+      "stage": "parser"
+    },
+    {
+      "name": "Extracted record counts",
+      "data_type": "integer",
+      "tier": 1,
+      "result": 1400,
+      "source": "uberon",
+      "mapping": "uberon.uberon_nodes",
+      "stage": "parser"
+    },
+    {
+      "name": "Schema conformance",
+      "data_type": "boolean",
+      "tier": 2,
+      "result": true,
+      "source": "uberon",
+      "mapping": "uberon.uberon_nodes",
+      "stage": "parser"
+    },
+    {
+      "name": "Extraction timestamp",
+      "data_type": "date",
+      "tier": 3,
+      "result": "2026-05-19",
+      "source": "uberon",
+      "stage": "parser"
+    },
+    {
+      "name": "Node load count",
+      "data_type": "integer",
+      "tier": 1,
+      "result": 193795,
+      "node_type": "Gene",
+      "tsv_count": 193795,
+      "yield_rate": 1.0,
+      "mappings": 1,
+      "stage": "load"
+    },
+    {
+      "name": "Node load count",
+      "data_type": "integer",
+      "tier": 1,
+      "result": 3442,
+      "node_type": "Disease",
+      "tsv_count": 3442,
+      "yield_rate": 1.0,
+      "mappings": 1,
+      "stage": "load"
+    },
+    {
+      "name": "Node load count",
+      "data_type": "integer",
+      "tier": 1,
+      "result": 31088,
+      "node_type": "Drug",
+      "tsv_count": 31088,
+      "yield_rate": 1.0,
+      "mappings": 3,
+      "stage": "load"
+    },
+    {
+      "name": "Node load count",
+      "data_type": "integer",
+      "tier": 1,
+      "result": 2359,
+      "node_type": "PharmacologicClass",
+      "tsv_count": 2359,
+      "yield_rate": 1.0,
+      "mappings": 1,
+      "stage": "load"
+    },
+    {
+      "name": "Node load count",
+      "data_type": "integer",
+      "tier": 1,
+      "result": 24428,
+      "node_type": "BiologicalProcess",
+      "tsv_count": 24428,
+      "yield_rate": 1.0,
+      "mappings": 1,
+      "stage": "load"
+    },
+    {
+      "name": "Node load count",
+      "data_type": "integer",
+      "tier": 1,
+      "result": 10056,
+      "node_type": "MolecularFunction",
+      "tsv_count": 10056,
+      "yield_rate": 1.0,
+      "mappings": 1,
+      "stage": "load"
+    },
+    {
+      "name": "Node load count",
+      "data_type": "integer",
+      "tier": 1,
+      "result": 4076,
+      "node_type": "CellularComponent",
+      "tsv_count": 4076,
+      "yield_rate": 1.0,
+      "mappings": 1,
+      "stage": "load"
+    },
+    {
+      "name": "Node load count",
+      "data_type": "integer",
+      "tier": 1,
+      "result": 1400,
+      "node_type": "BodyPart",
+      "tsv_count": 1400,
+      "yield_rate": 1.0,
+      "mappings": 1,
+      "stage": "load"
+    },
+    {
+      "name": "Node load count",
+      "data_type": "integer",
+      "tier": 1,
+      "result": 415,
+      "node_type": "Symptom",
+      "tsv_count": 415,
+      "yield_rate": 1.0,
+      "mappings": 1,
+      "stage": "load"
+    },
+    {
+      "name": "Node load count",
+      "data_type": "integer",
+      "tier": 1,
+      "result": 19389,
+      "node_type": "Phenotype",
+      "tsv_count": 19389,
+      "yield_rate": 1.0,
+      "mappings": 1,
+      "stage": "load"
+    },
+    {
+      "name": "Node load count",
+      "data_type": "integer",
+      "tier": 1,
+      "result": 4251,
+      "node_type": "SideEffect",
+      "tsv_count": 4251,
+      "yield_rate": 1.0,
+      "mappings": 1,
+      "stage": "load"
+    },
+    {
+      "name": "Node load count",
+      "data_type": "integer",
+      "tier": 1,
+      "result": 2870,
+      "node_type": "Pathway",
+      "tsv_count": 2870,
+      "yield_rate": 1.0,
+      "mappings": 1,
+      "stage": "load"
+    },
+    {
+      "name": "Node load count",
+      "data_type": "integer",
+      "tier": 1,
+      "result": 1203,
+      "node_type": "TranscriptionFactor",
+      "tsv_count": 1568,
+      "yield_rate": 0.7672,
+      "mappings": 2,
+      "stage": "load"
+    },
+    {
+      "name": "Node load count",
+      "data_type": "integer",
+      "tier": 1,
+      "result": 4257,
+      "node_type": "GeneFamily",
+      "tsv_count": 4257,
+      "yield_rate": 1.0,
+      "mappings": 1,
+      "stage": "load"
+    },
+    {
+      "name": "Node load count",
+      "data_type": "integer",
+      "tier": 1,
+      "result": 2100938,
+      "node_type": "Variant",
+      "tsv_count": 2100938,
+      "yield_rate": 1.0,
+      "mappings": 1,
+      "stage": "load"
+    },
+    {
+      "name": "Node load count",
+      "data_type": "integer",
+      "tier": 1,
+      "result": 21578,
+      "node_type": "ClinicalTrial",
+      "tsv_count": 21578,
+      "yield_rate": 1.0,
+      "mappings": 1,
+      "stage": "load"
+    },
+    {
+      "name": "Node load count",
+      "data_type": "integer",
+      "tier": 1,
+      "result": 29,
+      "node_type": "DrugLabel",
+      "tsv_count": 29,
+      "yield_rate": 1.0,
+      "mappings": 1,
+      "stage": "load"
+    },
+    {
+      "name": "Edge load count",
+      "data_type": "integer",
+      "tier": 1,
+      "result": 1989,
+      "relationship_type": "geneAssociatesWithDisease",
+      "tsv_count": 8350,
+      "yield_rate": 0.2382,
+      "mappings": 2,
+      "stage": "load"
+    },
+    {
+      "name": "Edge load count",
+      "data_type": "integer",
+      "tier": 1,
+      "result": 468855,
+      "relationship_type": "geneInteractsWithGene",
+      "tsv_count": 468977,
+      "yield_rate": 0.9997,
+      "mappings": 1,
+      "stage": "load"
+    },
+    {
+      "name": "Edge load count",
+      "data_type": "integer",
+      "tier": 1,
+      "result": 104240,
+      "relationship_type": "compoundUpregulatesGene",
+      "tsv_count": 247173,
+      "yield_rate": 0.4217,
+      "mappings": 1,
+      "stage": "load"
+    },
+    {
+      "name": "Edge load count",
+      "data_type": "integer",
+      "tier": 1,
+      "result": 91957,
+      "relationship_type": "compoundDownregulatesGene",
+      "tsv_count": 217664,
+      "yield_rate": 0.4225,
+      "mappings": 1,
+      "stage": "load"
+    },
+    {
+      "name": "Edge load count",
+      "data_type": "integer",
+      "tier": 1,
+      "result": 122124,
+      "relationship_type": "geneParticipatesInBiologicalProcess",
+      "tsv_count": 122437,
+      "yield_rate": 0.9974,
+      "mappings": 1,
+      "stage": "load"
+    },
+    {
+      "name": "Edge load count",
+      "data_type": "integer",
+      "tier": 1,
+      "result": 76613,
+      "relationship_type": "geneHasMolecularFunction",
+      "tsv_count": 76863,
+      "yield_rate": 0.9967,
+      "mappings": 1,
+      "stage": "load"
+    },
+    {
+      "name": "Edge load count",
+      "data_type": "integer",
+      "tier": 1,
+      "result": 90147,
+      "relationship_type": "geneAssociatedWithCellularComponent",
+      "tsv_count": 90507,
+      "yield_rate": 0.996,
+      "mappings": 1,
+      "stage": "load"
+    },
+    {
+      "name": "Edge load count",
+      "data_type": "integer",
+      "tier": 1,
+      "result": 137116,
+      "relationship_type": "geneInPathway",
+      "tsv_count": 156329,
+      "yield_rate": 0.8771,
+      "mappings": 1,
+      "stage": "load"
+    },
+    {
+      "name": "Edge load count",
+      "data_type": "integer",
+      "tier": 1,
+      "result": 267693,
+      "relationship_type": "geneAssociatesWithPhenotype",
+      "tsv_count": 314250,
+      "yield_rate": 0.8518,
+      "mappings": 1,
+      "stage": "load"
+    },
+    {
+      "name": "Edge load count",
+      "data_type": "integer",
+      "tier": 1,
+      "result": 2749193,
+      "relationship_type": "bodyPartOverexpressesGene",
+      "tsv_count": 6616463,
+      "yield_rate": 0.4155,
+      "mappings": 1,
+      "stage": "load"
+    },
+    {
+      "name": "Edge load count",
+      "data_type": "integer",
+      "tier": 1,
+      "result": 27022,
+      "relationship_type": "geneInFamily",
+      "tsv_count": 27600,
+      "yield_rate": 0.9791,
+      "mappings": 1,
+      "stage": "load"
+    },
+    {
+      "name": "Edge load count",
+      "data_type": "integer",
+      "tier": 1,
+      "result": 2094305,
+      "relationship_type": "variantInGene",
+      "tsv_count": 2100938,
+      "yield_rate": 0.9968,
+      "mappings": 1,
+      "stage": "load"
+    },
+    {
+      "name": "Edge load count",
+      "data_type": "integer",
+      "tier": 1,
+      "result": 187819,
+      "relationship_type": "variantAssociatedWithDisease",
+      "tsv_count": 2990118,
+      "yield_rate": 0.0628,
+      "mappings": 1,
+      "note": "WARNING \u2014 low yield (6.3%)",
+      "stage": "load"
+    },
+    {
+      "name": "Edge load count",
+      "data_type": "integer",
+      "tier": 1,
+      "result": 72017,
+      "relationship_type": "transcriptionFactorInteractsWithGene",
+      "tsv_count": 79783,
+      "yield_rate": 0.9027,
+      "mappings": 2,
+      "stage": "load"
+    },
+    {
+      "name": "Edge load count",
+      "data_type": "integer",
+      "tier": 1,
+      "result": 22735,
+      "relationship_type": "chemicalBindsGene",
+      "tsv_count": 24430,
+      "yield_rate": 0.9306,
+      "mappings": 1,
+      "stage": "load"
+    },
+    {
+      "name": "Edge load count",
+      "data_type": "integer",
+      "tier": 1,
+      "result": 28847,
+      "relationship_type": "drugBindsGene",
+      "tsv_count": 34439,
+      "yield_rate": 0.8376,
+      "mappings": 1,
+      "stage": "load"
+    },
+    {
+      "name": "Edge load count",
+      "data_type": "integer",
+      "tier": 1,
+      "result": 776918,
+      "relationship_type": "chemicalIncreasesExpression",
+      "tsv_count": 1288204,
+      "yield_rate": 0.6031,
+      "mappings": 1,
+      "stage": "load"
+    },
+    {
+      "name": "Edge load count",
+      "data_type": "integer",
+      "tier": 1,
+      "result": 699086,
+      "relationship_type": "chemicalDecreasesExpression",
+      "tsv_count": 1001149,
+      "yield_rate": 0.6983,
+      "mappings": 1,
+      "stage": "load"
+    },
+    {
+      "name": "Edge load count",
+      "data_type": "integer",
+      "tier": 1,
+      "result": 165,
+      "relationship_type": "drugTreatsDisease",
+      "tsv_count": 204,
+      "yield_rate": 0.8088,
+      "mappings": 1,
+      "stage": "load"
+    },
+    {
+      "name": "Edge load count",
+      "data_type": "integer",
+      "tier": 1,
+      "result": 25682,
+      "relationship_type": "compoundInPharmacologicClass",
+      "tsv_count": 25687,
+      "yield_rate": 0.9998,
+      "mappings": 1,
+      "stage": "load"
+    },
+    {
+      "name": "Edge load count",
+      "data_type": "integer",
+      "tier": 1,
+      "result": 111045,
+      "relationship_type": "compoundCausesSideEffect",
+      "tsv_count": 510242,
+      "yield_rate": 0.2176,
+      "mappings": 2,
+      "stage": "load"
+    },
+    {
+      "name": "Edge load count",
+      "data_type": "integer",
+      "tier": 1,
+      "result": 10671,
+      "relationship_type": "STUDIES_CONDITION",
+      "tsv_count": 46692,
+      "yield_rate": 0.2285,
+      "mappings": 1,
+      "stage": "load"
+    },
+    {
+      "name": "Edge load count",
+      "data_type": "integer",
+      "tier": 1,
+      "result": 3361,
+      "relationship_type": "TESTS_INTERVENTION",
+      "tsv_count": 30113,
+      "yield_rate": 0.1116,
+      "mappings": 1,
+      "stage": "load"
+    },
+    {
+      "name": "Edge load count",
+      "data_type": "integer",
+      "tier": 1,
+      "result": 29,
+      "relationship_type": "AFFECTS_RESPONSE_TO",
+      "tsv_count": 109,
+      "yield_rate": 0.2661,
+      "mappings": 1,
+      "stage": "load"
+    },
+    {
+      "name": "Edge to node ratio",
+      "data_type": "float",
+      "tier": 2,
+      "result": 3.37,
+      "node_count": 2425574,
+      "edge_count": 8169629,
+      "stage": "load"
+    },
+    {
+      "name": "Property completeness",
+      "data_type": "object",
+      "tier": 2,
+      "result": {
+        "definition": 1.0,
+        "geneOntologyId": 1.0,
+        "id": 1.0,
+        "processName": 1.0
+      },
+      "label": "BiologicalProcess",
+      "sample_size": 100,
+      "stage": "load"
+    },
+    {
+      "name": "Property completeness",
+      "data_type": "object",
+      "tier": 2,
+      "result": {
+        "bodyPartName": 1.0,
+        "definition": 0.99,
+        "id": 1.0,
+        "isHuman": 1.0,
+        "synonyms": 0.97,
+        "xrefFMA": 0.89,
+        "xrefMeSH": 0.69,
+        "xrefUberon": 1.0
+      },
+      "label": "BodyPart",
+      "sample_size": 100,
+      "stage": "load"
+    },
+    {
+      "name": "Property completeness",
+      "data_type": "object",
+      "tier": 2,
+      "result": {
+        "componentName": 1.0,
+        "definition": 1.0,
+        "geneOntologyId": 1.0,
+        "id": 1.0
+      },
+      "label": "CellularComponent",
+      "sample_size": 100,
+      "stage": "load"
+    },
+    {
+      "name": "Property completeness",
+      "data_type": "object",
+      "tier": 2,
+      "result": {
+        "completionDate": 1.0,
+        "enrollment": 0.98,
+        "id": 1.0,
+        "officialTitle": 0.98,
+        "phase": 0.7,
+        "sponsor": 1.0,
+        "startDate": 1.0,
+        "status": 1.0,
+        "studyType": 1.0,
+        "title": 1.0,
+        "trialId": 1.0
+      },
+      "label": "ClinicalTrial",
+      "sample_size": 100,
+      "stage": "load"
+    },
+    {
+      "name": "Property completeness",
+      "data_type": "object",
+      "tier": 2,
+      "result": {
+        "definition": 1.0,
+        "diseaseName": 1.0,
+        "id": 1.0,
+        "xrefDiseaseOntology": 1.0,
+        "xrefUmlsCUI": 0.31
+      },
+      "label": "Disease",
+      "sample_size": 100,
+      "stage": "load"
+    },
+    {
+      "name": "Property completeness",
+      "data_type": "object",
+      "tier": 2,
+      "result": {
+        "commonName": 1.0,
+        "drugId": 1.0,
+        "id": 1.0,
+        "inchi": 1.0,
+        "inchiKey": 1.0,
+        "molecularFormula": 1.0,
+        "molecularWeight": 1.0,
+        "smiles": 1.0,
+        "xrefCAS": 1.0,
+        "xrefCheBI": 0.98,
+        "xrefDrugBank": 0.77,
+        "xrefMeSH": 0.41,
+        "xrefPubChem": 1.0,
+        "xrefUmlsCUI": 0.96
+      },
+      "label": "Drug",
+      "sample_size": 100,
+      "stage": "load"
+    },
+    {
+      "name": "Property completeness",
+      "data_type": "object",
+      "tier": 2,
+      "result": {
+        "id": 1.0,
+        "labelId": 1.0,
+        "labelName": 1.0,
+        "url": 1.0,
+        "version": 1.0
+      },
+      "label": "DrugLabel",
+      "sample_size": 29,
+      "stage": "load"
+    },
+    {
+      "name": "Property completeness",
+      "data_type": "object",
+      "tier": 2,
+      "result": {
+        "chromosome": 1.0,
+        "description": 1.0,
+        "geneId": 1.0,
+        "geneName": 1.0,
+        "geneSymbol": 1.0,
+        "geneType": 1.0,
+        "id": 1.0,
+        "synonyms": 1.0,
+        "xrefEnsembl": 0.82,
+        "xrefHGNC": 1.0,
+        "xrefOMIM": 0.83
+      },
+      "label": "Gene",
+      "sample_size": 100,
+      "stage": "load"
+    },
+    {
+      "name": "Property completeness",
+      "data_type": "object",
+      "tier": 2,
+      "result": {
+        "familyId": 1.0,
+        "familyName": 1.0,
+        "id": 1.0
+      },
+      "label": "GeneFamily",
+      "sample_size": 100,
+      "stage": "load"
+    },
+    {
+      "name": "Property completeness",
+      "data_type": "object",
+      "tier": 2,
+      "result": {
+        "definition": 1.0,
+        "functionName": 1.0,
+        "geneOntologyId": 1.0,
+        "id": 1.0
+      },
+      "label": "MolecularFunction",
+      "sample_size": 100,
+      "stage": "load"
+    },
+    {
+      "name": "Property completeness",
+      "data_type": "object",
+      "tier": 2,
+      "result": {
+        "id": 1.0,
+        "pathwayId": 1.0,
+        "pathwayName": 1.0,
+        "species": 1.0
+      },
+      "label": "Pathway",
+      "sample_size": 100,
+      "stage": "load"
+    },
+    {
+      "name": "Property completeness",
+      "data_type": "object",
+      "tier": 2,
+      "result": {
+        "classCode": 1.0,
+        "classId": 1.0,
+        "className": 1.0,
+        "id": 1.0
+      },
+      "label": "PharmacologicClass",
+      "sample_size": 100,
+      "stage": "load"
+    },
+    {
+      "name": "Property completeness",
+      "data_type": "object",
+      "tier": 2,
+      "result": {
+        "id": 1.0,
+        "phenotypeName": 1.0,
+        "xrefHPO": 1.0
+      },
+      "label": "Phenotype",
+      "sample_size": 100,
+      "stage": "load"
+    },
+    {
+      "name": "Property completeness",
+      "data_type": "object",
+      "tier": 2,
+      "result": {
+        "id": 1.0,
+        "sideEffectName": 1.0,
+        "xrefUmlsCUI": 1.0
+      },
+      "label": "SideEffect",
+      "sample_size": 100,
+      "stage": "load"
+    },
+    {
+      "name": "Property completeness",
+      "data_type": "object",
+      "tier": 2,
+      "result": {
+        "id": 1.0,
+        "symptomName": 1.0,
+        "xrefMeSH": 1.0
+      },
+      "label": "Symptom",
+      "sample_size": 100,
+      "stage": "load"
+    },
+    {
+      "name": "Property completeness",
+      "data_type": "object",
+      "tier": 2,
+      "result": {
+        "id": 1.0,
+        "tfSymbol": 1.0
+      },
+      "label": "TranscriptionFactor",
+      "sample_size": 100,
+      "stage": "load"
+    },
+    {
+      "name": "Property completeness",
+      "data_type": "object",
+      "tier": 2,
+      "result": {
+        "alleleId": 1.0,
+        "altAllele": 1.0,
+        "chromosome": 1.0,
+        "clinicalSignificance": 1.0,
+        "id": 1.0,
+        "refAllele": 1.0,
+        "reviewStatus": 1.0,
+        "startPosition": 1.0,
+        "stopPosition": 1.0,
+        "variantId": 1.0,
+        "variantName": 1.0,
+        "variantType": 1.0,
+        "xrefDbSNP": 1.0
+      },
+      "label": "Variant",
+      "sample_size": 100,
+      "stage": "load"
+    },
+    {
+      "name": "Total node count",
+      "data_type": "integer",
+      "tier": 1,
+      "result": 2425574,
+      "stage": "graph"
+    },
+    {
+      "name": "Node count per label",
+      "data_type": "integer",
+      "tier": 1,
+      "result": 2100938,
+      "label": "Variant",
+      "stage": "graph"
+    },
+    {
+      "name": "Node count per label",
+      "data_type": "integer",
+      "tier": 1,
+      "result": 193795,
+      "label": "Gene",
+      "stage": "graph"
+    },
+    {
+      "name": "Node count per label",
+      "data_type": "integer",
+      "tier": 1,
+      "result": 31088,
+      "label": "Drug",
+      "stage": "graph"
+    },
+    {
+      "name": "Node count per label",
+      "data_type": "integer",
+      "tier": 1,
+      "result": 24428,
+      "label": "BiologicalProcess",
+      "stage": "graph"
+    },
+    {
+      "name": "Node count per label",
+      "data_type": "integer",
+      "tier": 1,
+      "result": 21578,
+      "label": "ClinicalTrial",
+      "stage": "graph"
+    },
+    {
+      "name": "Node count per label",
+      "data_type": "integer",
+      "tier": 1,
+      "result": 19389,
+      "label": "Phenotype",
+      "stage": "graph"
+    },
+    {
+      "name": "Node count per label",
+      "data_type": "integer",
+      "tier": 1,
+      "result": 10056,
+      "label": "MolecularFunction",
+      "stage": "graph"
+    },
+    {
+      "name": "Node count per label",
+      "data_type": "integer",
+      "tier": 1,
+      "result": 4257,
+      "label": "GeneFamily",
+      "stage": "graph"
+    },
+    {
+      "name": "Node count per label",
+      "data_type": "integer",
+      "tier": 1,
+      "result": 4251,
+      "label": "SideEffect",
+      "stage": "graph"
+    },
+    {
+      "name": "Node count per label",
+      "data_type": "integer",
+      "tier": 1,
+      "result": 4076,
+      "label": "CellularComponent",
+      "stage": "graph"
+    },
+    {
+      "name": "Node count per label",
+      "data_type": "integer",
+      "tier": 1,
+      "result": 3442,
+      "label": "Disease",
+      "stage": "graph"
+    },
+    {
+      "name": "Node count per label",
+      "data_type": "integer",
+      "tier": 1,
+      "result": 2870,
+      "label": "Pathway",
+      "stage": "graph"
+    },
+    {
+      "name": "Node count per label",
+      "data_type": "integer",
+      "tier": 1,
+      "result": 2359,
+      "label": "PharmacologicClass",
+      "stage": "graph"
+    },
+    {
+      "name": "Node count per label",
+      "data_type": "integer",
+      "tier": 1,
+      "result": 1400,
+      "label": "BodyPart",
+      "stage": "graph"
+    },
+    {
+      "name": "Node count per label",
+      "data_type": "integer",
+      "tier": 1,
+      "result": 1203,
+      "label": "TranscriptionFactor",
+      "stage": "graph"
+    },
+    {
+      "name": "Node count per label",
+      "data_type": "integer",
+      "tier": 1,
+      "result": 415,
+      "label": "Symptom",
+      "stage": "graph"
+    },
+    {
+      "name": "Node count per label",
+      "data_type": "integer",
+      "tier": 1,
+      "result": 29,
+      "label": "DrugLabel",
+      "stage": "graph"
+    },
+    {
+      "name": "Total edge count",
+      "data_type": "integer",
+      "tier": 1,
+      "result": 8169629,
+      "stage": "graph"
+    },
+    {
+      "name": "Edge count per type",
+      "data_type": "integer",
+      "tier": 1,
+      "result": 2749193,
+      "relationship_type": "bodyPartOverexpressesGene",
+      "stage": "graph"
+    },
+    {
+      "name": "Edge count per type",
+      "data_type": "integer",
+      "tier": 1,
+      "result": 2094305,
+      "relationship_type": "variantInGene",
+      "stage": "graph"
+    },
+    {
+      "name": "Edge count per type",
+      "data_type": "integer",
+      "tier": 1,
+      "result": 776918,
+      "relationship_type": "chemicalIncreasesExpression",
+      "stage": "graph"
+    },
+    {
+      "name": "Edge count per type",
+      "data_type": "integer",
+      "tier": 1,
+      "result": 699086,
+      "relationship_type": "chemicalDecreasesExpression",
+      "stage": "graph"
+    },
+    {
+      "name": "Edge count per type",
+      "data_type": "integer",
+      "tier": 1,
+      "result": 468855,
+      "relationship_type": "geneInteractsWithGene",
+      "stage": "graph"
+    },
+    {
+      "name": "Edge count per type",
+      "data_type": "integer",
+      "tier": 1,
+      "result": 267693,
+      "relationship_type": "geneAssociatesWithPhenotype",
+      "stage": "graph"
+    },
+    {
+      "name": "Edge count per type",
+      "data_type": "integer",
+      "tier": 1,
+      "result": 187819,
+      "relationship_type": "variantAssociatedWithDisease",
+      "stage": "graph"
+    },
+    {
+      "name": "Edge count per type",
+      "data_type": "integer",
+      "tier": 1,
+      "result": 137116,
+      "relationship_type": "geneInPathway",
+      "stage": "graph"
+    },
+    {
+      "name": "Edge count per type",
+      "data_type": "integer",
+      "tier": 1,
+      "result": 122124,
+      "relationship_type": "geneParticipatesInBiologicalProcess",
+      "stage": "graph"
+    },
+    {
+      "name": "Edge count per type",
+      "data_type": "integer",
+      "tier": 1,
+      "result": 111045,
+      "relationship_type": "compoundCausesSideEffect",
+      "stage": "graph"
+    },
+    {
+      "name": "Edge count per type",
+      "data_type": "integer",
+      "tier": 1,
+      "result": 104240,
+      "relationship_type": "compoundUpregulatesGene",
+      "stage": "graph"
+    },
+    {
+      "name": "Edge count per type",
+      "data_type": "integer",
+      "tier": 1,
+      "result": 91957,
+      "relationship_type": "compoundDownregulatesGene",
+      "stage": "graph"
+    },
+    {
+      "name": "Edge count per type",
+      "data_type": "integer",
+      "tier": 1,
+      "result": 90147,
+      "relationship_type": "geneAssociatedWithCellularComponent",
+      "stage": "graph"
+    },
+    {
+      "name": "Edge count per type",
+      "data_type": "integer",
+      "tier": 1,
+      "result": 76613,
+      "relationship_type": "geneHasMolecularFunction",
+      "stage": "graph"
+    },
+    {
+      "name": "Edge count per type",
+      "data_type": "integer",
+      "tier": 1,
+      "result": 72017,
+      "relationship_type": "transcriptionFactorInteractsWithGene",
+      "stage": "graph"
+    },
+    {
+      "name": "Edge count per type",
+      "data_type": "integer",
+      "tier": 1,
+      "result": 28847,
+      "relationship_type": "drugBindsGene",
+      "stage": "graph"
+    },
+    {
+      "name": "Edge count per type",
+      "data_type": "integer",
+      "tier": 1,
+      "result": 27022,
+      "relationship_type": "geneInFamily",
+      "stage": "graph"
+    },
+    {
+      "name": "Edge count per type",
+      "data_type": "integer",
+      "tier": 1,
+      "result": 25682,
+      "relationship_type": "compoundInPharmacologicClass",
+      "stage": "graph"
+    },
+    {
+      "name": "Edge count per type",
+      "data_type": "integer",
+      "tier": 1,
+      "result": 22735,
+      "relationship_type": "chemicalBindsGene",
+      "stage": "graph"
+    },
+    {
+      "name": "Edge count per type",
+      "data_type": "integer",
+      "tier": 1,
+      "result": 10671,
+      "relationship_type": "STUDIES_CONDITION",
+      "stage": "graph"
+    },
+    {
+      "name": "Edge count per type",
+      "data_type": "integer",
+      "tier": 1,
+      "result": 3361,
+      "relationship_type": "TESTS_INTERVENTION",
+      "stage": "graph"
+    },
+    {
+      "name": "Edge count per type",
+      "data_type": "integer",
+      "tier": 1,
+      "result": 1989,
+      "relationship_type": "geneAssociatesWithDisease",
+      "stage": "graph"
+    },
+    {
+      "name": "Edge count per type",
+      "data_type": "integer",
+      "tier": 1,
+      "result": 165,
+      "relationship_type": "drugTreatsDisease",
+      "stage": "graph"
+    },
+    {
+      "name": "Edge count per type",
+      "data_type": "integer",
+      "tier": 1,
+      "result": 29,
+      "relationship_type": "AFFECTS_RESPONSE_TO",
+      "stage": "graph"
+    },
+    {
+      "name": "Connectivity computation",
+      "data_type": "string",
+      "tier": 1,
+      "result": "fallback",
+      "note": "weakly_connected_components unavailable: {neo4j_code: Memgraph.ClientError.MemgraphError.MemgraphError} {message: There is no procedure named 'weakly_connected_components.get'.} {gql_status: 50N42} {gql_status_description: error: general processing exception - unexpected error. There is no procedure named 'weakly_connected_components.get'.}",
+      "stage": "graph"
+    },
+    {
+      "name": "Largest connected component fraction",
+      "data_type": "float",
+      "tier": 1,
+      "result": 0.7782,
+      "lcc_size": 1887540,
+      "total_nodes": 2425574,
+      "stage": "graph"
+    },
+    {
+      "name": "Edge source label coverage",
+      "data_type": "float",
+      "tier": 1,
+      "result": 1.0,
+      "total_edges": 8169629,
+      "edges_with_source": 8169629,
+      "stage": "graph"
+    },
+    {
+      "name": "Edge source distribution",
+      "data_type": "object",
+      "tier": 1,
+      "result": {
+        "Bgee": 2749193,
+        "ClinVar": 2282124,
+        "CTD": 1476004,
+        "STRING": 468855,
+        "Gene Ontology": 288884,
+        "HPO": 267693,
+        "LINCS L1000": 196197,
+        "Reactome": 137116,
+        "SIDER": 111045,
+        "CollecTRI": 56936,
+        "DrugBank": 28847,
+        "HGNC": 27022,
+        "DrugCentral": 25847,
+        "BindingDB": 22735,
+        "DoRothEA": 15081,
+        "ClinicalTrials.gov": 14032,
+        "OpenTargets": 1673,
+        "PubTator": 316,
+        "ClinPGx": 29
+      },
+      "stage": "graph"
+    },
+    {
+      "name": "Orphan node rate",
+      "data_type": "float",
+      "tier": 2,
+      "result": 1.0,
+      "label": "Symptom",
+      "orphan_count": 415,
+      "total_nodes": 415,
+      "stage": "graph"
+    },
+    {
+      "name": "Orphan node rate",
+      "data_type": "float",
+      "tier": 2,
+      "result": 1.0,
+      "label": "DrugLabel",
+      "orphan_count": 29,
+      "total_nodes": 29,
+      "stage": "graph"
+    },
+    {
+      "name": "Orphan node rate",
+      "data_type": "float",
+      "tier": 2,
+      "result": 0.8693,
+      "label": "BodyPart",
+      "orphan_count": 1217,
+      "total_nodes": 1400,
+      "stage": "graph"
+    },
+    {
+      "name": "Orphan node rate",
+      "data_type": "float",
+      "tier": 2,
+      "result": 0.8405,
+      "label": "Disease",
+      "orphan_count": 2893,
+      "total_nodes": 3442,
+      "stage": "graph"
+    },
+    {
+      "name": "Orphan node rate",
+      "data_type": "float",
+      "tier": 2,
+      "result": 0.7832,
+      "label": "Gene",
+      "orphan_count": 151782,
+      "total_nodes": 193795,
+      "stage": "graph"
+    },
+    {
+      "name": "Orphan node rate",
+      "data_type": "float",
+      "tier": 2,
+      "result": 0.5496,
+      "label": "CellularComponent",
+      "orphan_count": 2240,
+      "total_nodes": 4076,
+      "stage": "graph"
+    },
+    {
+      "name": "Orphan node rate",
+      "data_type": "float",
+      "tier": 2,
+      "result": 0.5436,
+      "label": "BiologicalProcess",
+      "orphan_count": 13279,
+      "total_nodes": 24428,
+      "stage": "graph"
+    },
+    {
+      "name": "Orphan node rate",
+      "data_type": "float",
+      "tier": 2,
+      "result": 0.5245,
+      "label": "MolecularFunction",
+      "orphan_count": 5274,
+      "total_nodes": 10056,
+      "stage": "graph"
+    },
+    {
+      "name": "Orphan node rate",
+      "data_type": "float",
+      "tier": 2,
+      "result": 0.524,
+      "label": "Phenotype",
+      "orphan_count": 10160,
+      "total_nodes": 19389,
+      "stage": "graph"
+    },
+    {
+      "name": "Orphan node rate",
+      "data_type": "float",
+      "tier": 2,
+      "result": 0.518,
+      "label": "ClinicalTrial",
+      "orphan_count": 11178,
+      "total_nodes": 21578,
+      "stage": "graph"
+    },
+    {
+      "name": "Orphan node rate",
+      "data_type": "float",
+      "tier": 2,
+      "result": 0.3272,
+      "label": "Drug",
+      "orphan_count": 10173,
+      "total_nodes": 31088,
+      "stage": "graph"
+    },
+    {
+      "name": "Orphan node rate",
+      "data_type": "float",
+      "tier": 2,
+      "result": 0.1566,
+      "label": "Variant",
+      "orphan_count": 329067,
+      "total_nodes": 2100938,
+      "stage": "graph"
+    },
+    {
+      "name": "Orphan node rate",
+      "data_type": "float",
+      "tier": 2,
+      "result": 0.0645,
+      "label": "SideEffect",
+      "orphan_count": 274,
+      "total_nodes": 4251,
+      "stage": "graph"
+    },
+    {
+      "name": "Orphan node rate",
+      "data_type": "float",
+      "tier": 2,
+      "result": 0.0178,
+      "label": "Pathway",
+      "orphan_count": 51,
+      "total_nodes": 2870,
+      "stage": "graph"
+    },
+    {
+      "name": "Orphan node rate",
+      "data_type": "float",
+      "tier": 2,
+      "result": 0.0005,
+      "label": "GeneFamily",
+      "orphan_count": 2,
+      "total_nodes": 4257,
+      "stage": "graph"
+    },
+    {
+      "name": "Orphan node rate",
+      "data_type": "float",
+      "tier": 2,
+      "result": 0.0,
+      "label": "TranscriptionFactor",
+      "orphan_count": 0,
+      "total_nodes": 1203,
+      "stage": "graph"
+    },
+    {
+      "name": "Orphan node rate",
+      "data_type": "float",
+      "tier": 2,
+      "result": 0.0,
+      "label": "PharmacologicClass",
+      "orphan_count": 0,
+      "total_nodes": 2359,
+      "stage": "graph"
+    },
+    {
+      "name": "Duplicate node count",
+      "data_type": "integer",
+      "tier": 2,
+      "result": 0,
+      "stage": "graph"
+    },
+    {
+      "name": "Average node degree",
+      "data_type": "float",
+      "tier": 2,
+      "result": 1963.71,
+      "label": "BodyPart",
+      "node_count": 1400,
+      "stage": "graph"
+    },
+    {
+      "name": "Average node degree",
+      "data_type": "float",
+      "tier": 2,
+      "result": 59.96,
+      "label": "Drug",
+      "node_count": 31088,
+      "stage": "graph"
+    },
+    {
+      "name": "Average node degree",
+      "data_type": "float",
+      "tier": 2,
+      "result": 59.86,
+      "label": "TranscriptionFactor",
+      "node_count": 1203,
+      "stage": "graph"
+    },
+    {
+      "name": "Average node degree",
+      "data_type": "float",
+      "tier": 2,
+      "result": 58.29,
+      "label": "Disease",
+      "node_count": 3442,
+      "stage": "graph"
+    },
+    {
+      "name": "Average node degree",
+      "data_type": "float",
+      "tier": 2,
+      "result": 47.78,
+      "label": "Pathway",
+      "node_count": 2870,
+      "stage": "graph"
+    },
+    {
+      "name": "Average node degree",
+      "data_type": "float",
+      "tier": 2,
+      "result": 42.83,
+      "label": "Gene",
+      "node_count": 193795,
+      "stage": "graph"
+    },
+    {
+      "name": "Average node degree",
+      "data_type": "float",
+      "tier": 2,
+      "result": 26.12,
+      "label": "SideEffect",
+      "node_count": 4251,
+      "stage": "graph"
+    },
+    {
+      "name": "Average node degree",
+      "data_type": "float",
+      "tier": 2,
+      "result": 22.12,
+      "label": "CellularComponent",
+      "node_count": 4076,
+      "stage": "graph"
+    },
+    {
+      "name": "Average node degree",
+      "data_type": "float",
+      "tier": 2,
+      "result": 13.81,
+      "label": "Phenotype",
+      "node_count": 19389,
+      "stage": "graph"
+    },
+    {
+      "name": "Average node degree",
+      "data_type": "float",
+      "tier": 2,
+      "result": 10.89,
+      "label": "PharmacologicClass",
+      "node_count": 2359,
+      "stage": "graph"
+    },
+    {
+      "name": "Average node degree",
+      "data_type": "float",
+      "tier": 2,
+      "result": 7.62,
+      "label": "MolecularFunction",
+      "node_count": 10056,
+      "stage": "graph"
+    },
+    {
+      "name": "Average node degree",
+      "data_type": "float",
+      "tier": 2,
+      "result": 6.35,
+      "label": "GeneFamily",
+      "node_count": 4257,
+      "stage": "graph"
+    },
+    {
+      "name": "Average node degree",
+      "data_type": "float",
+      "tier": 2,
+      "result": 5.0,
+      "label": "BiologicalProcess",
+      "node_count": 24428,
+      "stage": "graph"
+    },
+    {
+      "name": "Average node degree",
+      "data_type": "float",
+      "tier": 2,
+      "result": 1.09,
+      "label": "Variant",
+      "node_count": 2100938,
+      "stage": "graph"
+    },
+    {
+      "name": "Average node degree",
+      "data_type": "float",
+      "tier": 2,
+      "result": 0.65,
+      "label": "ClinicalTrial",
+      "node_count": 21578,
+      "stage": "graph"
+    },
+    {
+      "name": "Average node degree",
+      "data_type": "float",
+      "tier": 2,
+      "result": 0,
+      "label": "DrugLabel",
+      "node_count": 29,
+      "stage": "graph"
+    },
+    {
+      "name": "Average node degree",
+      "data_type": "float",
+      "tier": 2,
+      "result": 0,
+      "label": "Symptom",
+      "node_count": 415,
+      "stage": "graph"
+    },
+    {
+      "name": "High-degree nodes",
+      "data_type": "list",
+      "tier": 2,
+      "result": [
+        {
+          "label": "Gene",
+          "id": "NCBIGene:7273",
+          "name": null,
+          "degree": 33912
+        },
+        {
+          "label": "BodyPart",
+          "id": "UBERON:UBERON:0000178",
+          "name": null,
+          "degree": 30029
+        },
+        {
+          "label": "BodyPart",
+          "id": "UBERON:UBERON:0001323",
+          "name": null,
+          "degree": 29595
+        },
+        {
+          "label": "BodyPart",
+          "id": "UBERON:UBERON:0001388",
+          "name": null,
+          "degree": 29514
+        },
+        {
+          "label": "BodyPart",
+          "id": "UBERON:UBERON:0001161",
+          "name": null,
+          "degree": 28945
+        },
+        {
+          "label": "BodyPart",
+          "id": "UBERON:UBERON:0000945",
+          "name": null,
+          "degree": 28908
+        },
+        {
+          "label": "Drug",
+          "id": "CTD:MESH:C006780",
+          "name": null,
+          "degree": 28626
+        },
+        {
+          "label": "BodyPart",
+          "id": "UBERON:UBERON:0000473",
+          "name": null,
+          "degree": 28620
+        },
+        {
+          "label": "BodyPart",
+          "id": "UBERON:UBERON:0001496",
+          "name": null,
+          "degree": 28560
+        },
+        {
+          "label": "BodyPart",
+          "id": "UBERON:UBERON:0001157",
+          "name": null,
+          "degree": 28560
+        },
+        {
+          "label": "BodyPart",
+          "id": "UBERON:UBERON:0002084",
+          "name": null,
+          "degree": 28432
+        },
+        {
+          "label": "BodyPart",
+          "id": "UBERON:UBERON:0000948",
+          "name": null,
+          "degree": 28387
+        },
+        {
+          "label": "BodyPart",
+          "id": "UBERON:UBERON:0001898",
+          "name": null,
+          "degree": 28301
+        },
+        {
+          "label": "BodyPart",
+          "id": "UBERON:UBERON:0002367",
+          "name": null,
+          "degree": 28259
+        },
+        {
+          "label": "BodyPart",
+          "id": "UBERON:UBERON:0001873",
+          "name": null,
+          "degree": 28132
+        },
+        {
+          "label": "BodyPart",
+          "id": "UBERON:UBERON:0001155",
+          "name": null,
+          "degree": 28129
+        },
+        {
+          "label": "BodyPart",
+          "id": "UBERON:UBERON:0002048",
+          "name": null,
+          "degree": 28055
+        },
+        {
+          "label": "BodyPart",
+          "id": "UBERON:UBERON:0001954",
+          "name": null,
+          "degree": 27892
+        },
+        {
+          "label": "BodyPart",
+          "id": "UBERON:UBERON:0000996",
+          "name": null,
+          "degree": 27670
+        },
+        {
+          "label": "BodyPart",
+          "id": "UBERON:UBERON:0002046",
+          "name": null,
+          "degree": 27612
+        }
+      ],
+      "max_degree": 33912,
+      "stage": "graph"
+    },
+    {
+      "name": "Known disease-gene recall",
+      "data_type": "float",
+      "tier": 3,
+      "result": null,
+      "note": "provide --omim-genemap to compute",
+      "stage": "graph"
+    },
+    {
+      "name": "Drug-target coverage",
+      "data_type": "float",
+      "tier": 3,
+      "result": null,
+      "note": "provide --drugbank-tsv to compute",
+      "stage": "graph"
+    }
+  ]
+}

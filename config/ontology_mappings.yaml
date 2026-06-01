@@ -328,8 +328,9 @@ opentargets.target_disease_associations:
   owl_relationship: geneAssociatesWithDisease
   source: opentargets
   source_filename: target_disease_associations.tsv
+  source_label: "OpenTargets"
   source_node_type: Gene
-  source_id_column: target_id
+  source_id_column: gene_symbol
   target_node_type: Disease
   target_id_column: disease_id
   property_map:
@@ -341,6 +342,7 @@ pubtator.pubtator_gene_disease:
   owl_relationship: geneAssociatesWithDisease
   source: pubtator
   source_filename: pubtator_gene_disease.tsv
+  source_label: "PubTator"
   source_node_type: Gene
   source_id_column: gene_id
   target_node_type: Disease
@@ -353,6 +355,7 @@ string.gene_interactions:
   owl_relationship: geneInteractsWithGene
   source: string
   source_filename: gene_interactions.tsv
+  source_label: "STRING"
   source_node_type: Gene
   source_id_column: gene_id_1
   target_node_type: Gene
@@ -366,6 +369,7 @@ lincs.compound_gene_up:
   owl_relationship: compoundUpregulatesGene
   source: lincs
   source_filename: compound_gene_up.tsv
+  source_label: "LINCS L1000"
   source_node_type: Drug
   source_id_column: compound_name
   target_node_type: Gene
@@ -380,6 +384,7 @@ lincs.compound_gene_down:
   owl_relationship: compoundDownregulatesGene
   source: lincs
   source_filename: compound_gene_down.tsv
+  source_label: "LINCS L1000"
   source_node_type: Drug
   source_id_column: compound_name
   target_node_type: Gene
@@ -394,6 +399,7 @@ gene_ontology.gene_bp_associations:
   owl_relationship: geneParticipatesInBiologicalProcess
   source: gene_ontology
   source_filename: gene_bp_associations.tsv
+  source_label: "Gene Ontology"
   source_node_type: Gene
   source_id_column: gene_symbol
   target_node_type: BiologicalProcess
@@ -407,6 +413,7 @@ gene_ontology.gene_mf_associations:
   owl_relationship: geneHasMolecularFunction
   source: gene_ontology
   source_filename: gene_mf_associations.tsv
+  source_label: "Gene Ontology"
   source_node_type: Gene
   source_id_column: gene_symbol
   target_node_type: MolecularFunction
@@ -420,6 +427,7 @@ gene_ontology.gene_cc_associations:
   owl_relationship: geneAssociatedWithCellularComponent
   source: gene_ontology
   source_filename: gene_cc_associations.tsv
+  source_label: "Gene Ontology"
   source_node_type: Gene
   source_id_column: gene_symbol
   target_node_type: CellularComponent
@@ -433,6 +441,7 @@ reactome.ncbi_gene_pathway_relationships:
   owl_relationship: geneInPathway
   source: reactome
   source_filename: ncbi_gene_pathway_relationships.tsv
+  source_label: "Reactome"
   source_node_type: Gene
   source_id_column: ncbi_gene_id
   target_node_type: Pathway
@@ -446,6 +455,7 @@ hpo.gene_phenotype_associations:
   owl_relationship: geneAssociatesWithPhenotype
   source: hpo
   source_filename: gene_phenotype_associations.tsv
+  source_label: "HPO"
   source_node_type: Gene
   source_id_column: ncbi_gene_id
   target_node_type: Phenotype
@@ -461,6 +471,7 @@ jensen_tissues.tissue_gene_associations:
   owl_relationship: geneExpressedInBodyPart
   source: jensen_tissues
   source_filename: tissue_gene_associations.tsv
+  source_label: "Jensen TISSUES"
   source_node_type: Gene
   source_id_column: gene_id
   target_node_type: BodyPart
@@ -477,6 +488,7 @@ bgee.anatomy_expresses_gene:
   owl_relationship: bodyPartOverexpressesGene
   source: bgee
   source_filename: anatomy_expresses_gene.tsv
+  source_label: "Bgee"
   source_node_type: BodyPart
   source_id_column: uberon_id
   target_node_type: Gene
@@ -493,6 +505,7 @@ hgnc.gene_family_associations:
   owl_relationship: geneInFamily
   source: hgnc
   source_filename: gene_family_associations.tsv
+  source_label: "HGNC"
   source_node_type: Gene
   source_id_column: ncbi_gene_id
   target_node_type: GeneFamily
@@ -505,6 +518,7 @@ clinvar.variant_gene_associations:
   owl_relationship: variantInGene
   source: clinvar
   source_filename: variant_gene_associations.tsv
+  source_label: "ClinVar"
   source_node_type: Variant
   source_id_column: allele_id
   target_node_type: Gene
@@ -518,6 +532,7 @@ clinvar.variant_disease_associations:
   owl_relationship: variantAssociatedWithDisease
   source: clinvar
   source_filename: variant_disease_associations.tsv
+  source_label: "ClinVar"
   source_node_type: Variant
   source_id_column: variant_id
   target_node_type: Disease
@@ -533,6 +548,7 @@ dorothea.tf_gene_interactions:
   owl_relationship: transcriptionFactorInteractsWithGene
   source: dorothea
   source_filename: tf_gene_interactions.tsv
+  source_label: "DoRothEA"
   source_node_type: TranscriptionFactor
   source_id_column: tf_symbol
   target_node_type: Gene
@@ -548,6 +564,7 @@ collectri.tf_gene_interactions:
   owl_relationship: transcriptionFactorInteractsWithGene
   source: collectri
   source_filename: tf_gene_interactions.tsv
+  source_label: "CollecTRI"
   source_node_type: TranscriptionFactor
   source_id_column: tf_symbol
   target_node_type: Gene
@@ -564,10 +581,11 @@ bindingdb.drug_binds_gene:
   owl_relationship: chemicalBindsGene
   source: bindingdb
   source_filename: drug_binds_gene.tsv
+  source_label: "BindingDB"
   source_node_type: Drug
   source_id_column: drugbank_id
   target_node_type: Gene
-  target_id_column: target_name
+  target_id_column: gene_symbol
   property_map: {}
 
 # DrugBank - Drug Binds Gene
@@ -576,6 +594,7 @@ drugbank.drug_gene_edges:
   owl_relationship: drugBindsGene
   source: drugbank
   source_filename: drug_gene_edges.tsv
+  source_label: "DrugBank"
   source_node_type: Drug
   source_id_column: drugbank_id
   target_node_type: Gene
@@ -590,6 +609,7 @@ ctd.chemical_increases_expression:
   owl_relationship: chemicalIncreasesExpression
   source: ctd
   source_filename: chemical_increases_expression.tsv
+  source_label: "CTD"
   source_node_type: Drug
   source_id_column: chemical_id
   target_node_type: Gene
@@ -605,6 +625,7 @@ ctd.chemical_decreases_expression:
   owl_relationship: chemicalDecreasesExpression
   source: ctd
   source_filename: chemical_decreases_expression.tsv
+  source_label: "CTD"
   source_node_type: Drug
   source_id_column: chemical_id
   target_node_type: Gene
@@ -620,6 +641,7 @@ drugcentral.drug_treats_disease:
   owl_relationship: drugTreatsDisease
   source: drugcentral
   source_filename: drug_treats_disease.tsv
+  source_label: "DrugCentral"
   source_node_type: Drug
   source_id_column: struct_id
   target_node_type: Disease
@@ -633,6 +655,7 @@ drugcentral.drug_in_class:
   owl_relationship: compoundInPharmacologicClass
   source: drugcentral
   source_filename: drug_in_class.tsv
+  source_label: "DrugCentral"
   source_node_type: Drug
   source_id_column: struct_id
   target_node_type: PharmacologicClass
@@ -645,6 +668,7 @@ drugcentral.chemical_causes_effect:
   owl_relationship: compoundCausesSideEffect
   source: drugcentral
   source_filename: chemical_causes_effect.tsv
+  source_label: "DrugCentral"
   source_node_type: Drug
   source_id_column: struct_id
   target_node_type: SideEffect
@@ -659,6 +683,7 @@ sider.drug_side_effect_associations:
   owl_relationship: compoundCausesSideEffect
   source: sider
   source_filename: drug_side_effect_associations.tsv
+  source_label: "SIDER"
   source_node_type: Drug
   source_id_column: pubchem_cid
   target_node_type: SideEffect
@@ -671,6 +696,7 @@ clinicaltrials.trial_disease_associations:
   owl_relationship: STUDIES_CONDITION
   source: clinicaltrials
   source_filename: trial_disease_associations.tsv
+  source_label: "ClinicalTrials.gov"
   source_node_type: ClinicalTrial
   source_id_column: nct_id
   target_node_type: Disease
@@ -683,6 +709,7 @@ clinicaltrials.trial_intervention_associations:
   owl_relationship: TESTS_INTERVENTION
   source: clinicaltrials
   source_filename: trial_intervention_associations.tsv
+  source_label: "ClinicalTrials.gov"
   source_node_type: ClinicalTrial
   source_id_column: nct_id
   target_node_type: Drug
@@ -696,6 +723,7 @@ clinpgx.gene_drug_interactions:
   owl_relationship: AFFECTS_RESPONSE_TO
   source: clinpgx
   source_filename: gene_drug_interactions.tsv
+  source_label: "ClinPGx"
   source_node_type: Gene
   source_id_column: gene_symbol
   target_node_type: Drug
