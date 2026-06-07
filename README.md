@@ -4,7 +4,7 @@ A biomedical knowledge graph integrating **24 deduplicated data sources** for ca
 
 ## Current Graph Stats
 
-- **459,092 nodes** | **5,424,652 relationships** | **17 node types** | **22 relationship types** | **16 source labels**
+- **459,092 nodes** | **5,424,652 relationships** | **17 node types** | **22 relationship types** | **22 data sources** (16 with edge source labels + 6 node-only)
 - All relationships carry a `source` property identifying the originating database
 - 7 edge types carry quantitative properties (combinedScore, expressionScore, morScore, etc.)
 

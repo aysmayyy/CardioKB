@@ -132,6 +132,26 @@ def graph_stats():
                 sources.append(r['source'])
                 source_counts[r['source']] = r['cnt']
 
+            # Total data sources = edge sources + node-only sources
+            # Node-only sources provide nodes but no edges with source labels:
+            #   NCBI Gene -> Gene, Disease Ontology -> Disease,
+            #   Uberon -> BodyPart, MeSH -> Symptom,
+            #   OpenTargets -> score property on edges, ClinPGx -> DrugLabel
+            NODE_ONLY_SOURCES = {
+                'NCBI Gene': 'Gene', 'Disease Ontology': 'Disease',
+                'Uberon': 'BodyPart', 'MeSH': 'Symptom',
+                'OpenTargets': None, 'ClinPGx': 'DrugLabel',
+            }
+            node_only_present = []
+            for src_name, node_type in NODE_ONLY_SOURCES.items():
+                if src_name in sources:
+                    continue
+                if node_type and node_counts.get(node_type, 0) > 0:
+                    node_only_present.append(src_name)
+                elif not node_type:
+                    node_only_present.append(src_name)
+            all_sources = sources + node_only_present
+
         return jsonify({
             'node_counts': node_counts,
             'rel_counts': rel_counts,
@@ -139,9 +159,10 @@ def graph_stats():
             'total_relationships': total_rels,
             'node_types': len(node_counts),
             'rel_types': len(rel_counts),
-            'source_count': len(sources),
+            'source_count': len(all_sources),
             'rel_source_count': len(sources),
             'sources': sources,
+            'node_only_sources': node_only_present,
             'source_edge_counts': source_counts,
         })
     except Exception as e:
