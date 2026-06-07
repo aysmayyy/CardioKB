@@ -529,7 +529,7 @@ ONTOLOGY_CONFIGS = {
         },
         'merge': False,
         'use_create': True,
-        'skip': False,
+        'skip': True,
     },
     f'clinpgx.{CLINPGX_CLINICAL_ANNOTATIONS}': {
         'data_type': 'relationship',
@@ -551,7 +551,7 @@ ONTOLOGY_CONFIGS = {
         },
         'merge': False,
         'use_create': True,
-        'skip': False,
+        'skip': True,
     },
     f'clinpgx.{CLINPGX_VARIANT_IN_GENE}': {
         'data_type': 'relationship',
@@ -1628,7 +1628,7 @@ ONTOLOGY_CONFIGS = {
         },
         'merge': False,
         'use_create': True,
-        'skip': False,
+        'skip': True,
     },
 
     # =========================================================================

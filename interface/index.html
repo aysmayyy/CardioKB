@@ -417,6 +417,31 @@ th { color: var(--text-muted); font-weight: 600; text-transform: uppercase; font
     width: 10px; height: 10px; border-radius: 50%; flex-shrink: 0;
 }
 
+/* Autocomplete dropdown */
+.autocomplete-wrap { position: relative; flex: 1; min-width: 200px; }
+.autocomplete-wrap input { width: 100%; }
+.autocomplete-list {
+    position: absolute; top: 100%; left: 0; right: 0; z-index: 20;
+    background: var(--surface); border: 1px solid var(--border); border-top: none;
+    border-radius: 0 0 6px 6px; max-height: 260px; overflow-y: auto;
+    box-shadow: 0 8px 24px rgba(0,0,0,0.3); display: none;
+}
+.autocomplete-list.visible { display: block; }
+.autocomplete-item {
+    padding: 0.45rem 0.75rem; cursor: pointer; display: flex;
+    align-items: center; gap: 0.5rem; font-size: 0.85rem;
+    border-bottom: 1px solid var(--surface2);
+}
+.autocomplete-item:last-child { border-bottom: none; }
+.autocomplete-item:hover, .autocomplete-item.selected {
+    background: var(--surface2);
+}
+.autocomplete-item .ac-type {
+    font-size: 0.68rem; font-weight: 600; padding: 0.1rem 0.4rem;
+    border-radius: 4px; flex-shrink: 0;
+}
+.autocomplete-item .ac-name { flex: 1; }
+
 /* Responsive sidebar */
 @media (max-width: 768px) {
     .sidebar { width: 100%; height: auto; position: relative; }
@@ -434,29 +459,38 @@ th { color: var(--text-muted); font-weight: 600; text-transform: uppercase; font
         A cardiovascular disease knowledge graph integrating <strong style="color:var(--text)"><span id="sidebarSourceCount">--</span> data sources</strong>. <strong style="color:var(--text)">Explore</strong> visualizes subgraphs. <strong style="color:var(--text)">Query</strong> runs Cypher. <strong style="color:var(--text)">Admin</strong> adds entirely new databases.
     </div>
 
-    <div style="display:flex;align-items:center;gap:0.4rem">
-        <button class="run-btn" id="runBtn" onclick="runHealthCheck()" data-tip="Check all parsers, database connectivity, and data integrity" style="flex:1">Run Health Check</button>
-        <button class="info-btn-sm" data-info="healthcheck">?</button>
+    <!-- Section: Admin -->
+    <div style="border-top:1px solid var(--border);padding-top:0.75rem">
+        <div style="font-size:0.65rem;font-weight:700;text-transform:uppercase;letter-spacing:0.1em;color:var(--text-muted);margin-bottom:0.5rem">Admin</div>
+        <div style="display:flex;align-items:center;gap:0.4rem">
+            <button class="run-btn" id="runBtn" onclick="runHealthCheck()" data-tip="Check all parsers, database connectivity, and data integrity" style="flex:1">Run Health Check</button>
+            <button class="info-btn-sm" data-info="healthcheck">?</button>
+        </div>
     </div>
 
-    <div style="background:var(--bg);border-radius:8px;border:1px solid var(--border);padding:0.75rem">
-        <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:0.4rem">
-            <h3 style="margin-bottom:0">Extract Disease Subgraph <span style="font-size:0.65rem;font-weight:600;background:rgba(34,197,94,0.15);color:#4ade80;padding:0.15rem 0.4rem;border-radius:4px;margin-left:0.3rem;vertical-align:middle">Instant</span></h3>
-            <button class="info-btn-sm" data-info="subgraph">?</button>
-        </div>
-        <input type="text" class="agent-input" id="subgraphDisease" placeholder="e.g. heart failure, atrial fibrillation, coronary artery disease..." data-tip="Search for a cardiovascular disease subtype (partial match)" />
-        <div style="display:flex;align-items:center;gap:0.5rem;margin:0.4rem 0">
-            <label style="font-size:0.75rem;color:var(--text-muted);white-space:nowrap">Hops:</label>
-            <input type="range" id="subgraphHops" min="1" max="3" value="1" style="flex:1;accent-color:var(--accent)" />
-            <span id="subgraphHopsVal" style="font-size:0.82rem;font-weight:600;min-width:1.2rem;text-align:center">1</span>
-            <button class="info-btn-sm" data-info="hops">?</button>
-        </div>
-        <button class="run-btn" id="subgraphBtn" onclick="buildDiseaseSubgraph()" style="font-size:0.82rem;padding:0.5rem;margin-bottom:0.4rem" data-tip="Query all nodes and relationships within N hops of the disease">Build Subgraph</button>
-        <div id="subgraphStats" style="display:none;font-size:0.75rem;color:var(--text-muted);line-height:1.6;margin-top:0.3rem">
-            <div id="subgraphStatsContent"></div>
-            <div style="display:flex;gap:0.4rem;margin-top:0.4rem">
-                <button class="run-btn" onclick="exportSubgraph('json')" style="font-size:0.72rem;padding:0.3rem 0.5rem;flex:1">Export JSON</button>
-                <button class="run-btn" onclick="exportSubgraph('csv')" style="font-size:0.72rem;padding:0.3rem 0.5rem;flex:1">Export CSV</button>
+    <!-- Section: Tools -->
+    <div style="border-top:1px solid var(--border);padding-top:0.75rem">
+        <div style="font-size:0.65rem;font-weight:700;text-transform:uppercase;letter-spacing:0.1em;color:var(--text-muted);margin-bottom:0.5rem">Tools</div>
+        <div style="background:var(--bg);border-radius:8px;border:1px solid var(--border);padding:0.75rem">
+            <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:0.25rem">
+                <h3 style="margin-bottom:0">Extract Disease Subgraph <span style="font-size:0.65rem;font-weight:600;background:rgba(34,197,94,0.15);color:#4ade80;padding:0.15rem 0.4rem;border-radius:4px;margin-left:0.3rem;vertical-align:middle">Instant</span></h3>
+                <button class="info-btn-sm" data-info="subgraph">?</button>
+            </div>
+            <div style="font-size:0.72rem;color:var(--text-muted);line-height:1.45;margin-bottom:0.5rem">Bulk export of all nodes and edges within N hops of a disease. For interactive visualization, use the Explore tab instead.</div>
+            <input type="text" class="agent-input" id="subgraphDisease" placeholder="e.g. heart failure, atrial fibrillation, coronary artery disease..." data-tip="Search for a cardiovascular disease subtype (partial match)" />
+            <div style="display:flex;align-items:center;gap:0.5rem;margin:0.4rem 0">
+                <label style="font-size:0.75rem;color:var(--text-muted);white-space:nowrap">Hops:</label>
+                <input type="range" id="subgraphHops" min="1" max="3" value="1" style="flex:1;accent-color:var(--accent)" />
+                <span id="subgraphHopsVal" style="font-size:0.82rem;font-weight:600;min-width:1.2rem;text-align:center">1</span>
+                <button class="info-btn-sm" data-info="hops">?</button>
+            </div>
+            <button class="run-btn" id="subgraphBtn" onclick="buildDiseaseSubgraph()" style="font-size:0.82rem;padding:0.5rem;margin-bottom:0.4rem" data-tip="Query all nodes and relationships within N hops of the disease">Build Subgraph</button>
+            <div id="subgraphStats" style="display:none;font-size:0.75rem;color:var(--text-muted);line-height:1.6;margin-top:0.3rem">
+                <div id="subgraphStatsContent"></div>
+                <div style="display:flex;gap:0.4rem;margin-top:0.4rem">
+                    <button class="run-btn" onclick="exportSubgraph('json')" style="font-size:0.72rem;padding:0.3rem 0.5rem;flex:1">Export JSON</button>
+                    <button class="run-btn" onclick="exportSubgraph('csv')" style="font-size:0.72rem;padding:0.3rem 0.5rem;flex:1">Export CSV</button>
+                </div>
             </div>
         </div>
     </div>
@@ -483,20 +517,46 @@ th { color: var(--text-muted); font-weight: 600; text-transform: uppercase; font
     <!-- Explore Tab -->
     <div class="tab-content active" id="tab-explore">
         <div class="explore-bar">
-            <input type="text" id="exploreSearch" data-tip="Search for a cardiovascular disease, gene, or drug to visualize its neighborhood" placeholder="Try: atrial fibrillation, heart failure, coronary artery disease, hypertension" />
+            <div class="autocomplete-wrap">
+                <input type="text" id="exploreSearch" data-tip="Search for a cardiovascular disease, gene, or drug to visualize its neighborhood" placeholder="Try: atrial fibrillation, heart failure, coronary artery disease, hypertension" autocomplete="off" />
+                <div class="autocomplete-list" id="autocompleteList"></div>
+            </div>
             <input type="number" id="exploreLimit" value="200" min="10" max="1000" style="width:80px;flex:none" data-tip="Maximum number of nodes to display (higher = more detail, slower)" />
             <button id="exploreBtn" onclick="loadExploreGraph()" data-tip="Load the subgraph for the searched disease, gene, or drug">Explore</button>
             <button class="info-btn" onclick="showMethodologyModal()" data-tip="How to read this graph">?</button>
         </div>
         <div style="font-size:.78rem;color:var(--text-muted);margin:-0.3rem 0 0.5rem 0.2rem;">Use specific disease or gene names for best results.</div>
 
-        <div style="display:flex;align-items:center;gap:1rem;margin-bottom:0.75rem;flex-wrap:wrap">
+        <!-- Shortest Path -->
+        <details style="margin-bottom:1rem;background:var(--surface);border:1px solid var(--border);border-radius:8px;padding:0.75rem 1rem">
+            <summary style="cursor:pointer;font-size:0.88rem;font-weight:600;color:var(--accent);user-select:none">Shortest Path Between Two Nodes</summary>
+            <div style="display:flex;gap:0.5rem;margin-top:0.75rem;align-items:center;flex-wrap:wrap">
+                <div class="autocomplete-wrap" style="min-width:160px">
+                    <input type="text" id="pathFrom" class="agent-input" placeholder="From (e.g. APOE)" autocomplete="off" style="margin-bottom:0" />
+                    <div class="autocomplete-list" id="acListFrom"></div>
+                </div>
+                <span style="color:var(--text-muted);font-size:0.85rem">&rarr;</span>
+                <div class="autocomplete-wrap" style="min-width:160px">
+                    <input type="text" id="pathTo" class="agent-input" placeholder="To (e.g. heart failure)" autocomplete="off" style="margin-bottom:0" />
+                    <div class="autocomplete-list" id="acListTo"></div>
+                </div>
+                <button class="run-btn" id="pathBtn" onclick="findShortestPath()" style="font-size:0.82rem;padding:0.5rem 1rem">Find Path</button>
+            </div>
+            <div id="pathResult" style="display:none;margin-top:0.75rem;font-size:0.82rem;color:var(--text-muted)"></div>
+            <div id="pathGraph" style="display:none;height:320px;background:var(--bg);border:1px solid var(--border);border-radius:6px;margin-top:0.5rem"></div>
+        </details>
+
+        <div style="display:flex;align-items:center;gap:1rem;margin-bottom:0.5rem;flex-wrap:wrap">
             <div class="filter-chips" id="filterChips" style="margin-bottom:0"></div>
             <label style="display:flex;align-items:center;gap:0.4rem;font-size:0.82rem;color:var(--text-muted);cursor:pointer;white-space:nowrap" data-tip="Toggle hypothesis-generating 2-hop connections on or off">
                 <input type="checkbox" id="discoveryToggle" checked onchange="toggleDiscoveryLayer()" style="accent-color:var(--accent)" />
                 Show discovery layer
             </label>
             <button class="info-btn-sm" data-info="discovery" data-tip="What are core vs discovery layers?">?</button>
+        </div>
+        <div style="display:flex;align-items:center;gap:0.5rem;margin-bottom:0.75rem;flex-wrap:wrap">
+            <span style="font-size:0.72rem;color:var(--text-muted);font-weight:600;text-transform:uppercase;letter-spacing:0.05em">Edge types:</span>
+            <div class="filter-chips" id="edgeFilterChips" style="margin-bottom:0"></div>
         </div>
 
         <div style="display:flex;gap:1.5rem;margin-bottom:0.75rem;font-size:0.78rem;color:var(--text-muted);align-items:center">
@@ -510,9 +570,21 @@ th { color: var(--text-muted); font-weight: 600; text-transform: uppercase; font
             </span>
         </div>
 
+        <div id="exploreBreadcrumb" style="display:none;font-size:0.82rem;color:var(--text-muted);margin-bottom:0.5rem;padding:0.4rem 0.75rem;background:var(--surface);border:1px solid var(--border);border-radius:6px;display:none">
+            Showing: <strong id="breadcrumbLabel" style="color:var(--text)"></strong>
+            <span id="breadcrumbStats" style="margin-left:0.5rem"></span>
+        </div>
         <div style="position:relative">
             <div class="graph-container" id="exploreGraph"></div>
-            <div class="graph-loading visible" id="exploreLoading"><span class="spinner"></span> Search a cardiovascular disease or gene and click Explore</div>
+            <div class="graph-loading visible" id="exploreLoading" style="flex-direction:column;gap:0.75rem;text-align:center">
+                <div>Search for a disease, gene, or drug to visualize its neighborhood</div>
+                <div style="display:flex;gap:0.4rem;flex-wrap:wrap;justify-content:center">
+                    <button class="template-btn" onclick="quickExplore('atrial fibrillation')">atrial fibrillation</button>
+                    <button class="template-btn" onclick="quickExplore('APOE')">APOE</button>
+                    <button class="template-btn" onclick="quickExplore('Metoprolol')">Metoprolol</button>
+                    <button class="template-btn" onclick="quickExplore('coronary artery disease')">coronary artery disease</button>
+                </div>
+            </div>
             <div class="detail-panel" id="detailPanel">
                 <button class="close-btn" onclick="closeDetailPanel()">&times;</button>
                 <h3 id="detailTitle">Node</h3>
@@ -522,6 +594,12 @@ th { color: var(--text-muted); font-weight: 600; text-transform: uppercase; font
                     <h4>Connected Nodes</h4>
                     <ul id="detailNeighborList"></ul>
                 </div>
+            </div>
+            <!-- Edge provenance panel -->
+            <div class="detail-panel" id="edgePanel" style="display:none">
+                <button class="close-btn" onclick="closeEdgePanel()">&times;</button>
+                <h3 style="font-size:0.88rem;color:var(--accent)">Why is this edge here?</h3>
+                <div id="edgePanelContent" style="font-size:0.82rem"></div>
             </div>
         </div>
 
@@ -538,6 +616,8 @@ th { color: var(--text-muted); font-weight: 600; text-transform: uppercase; font
         <div class="export-bar">
             <button onclick="exportGraph('csv')" data-tip="Download current subgraph as CSV for analysis in Excel, R, or Python">Export CSV</button>
             <button onclick="exportGraph('json')" data-tip="Download current subgraph as JSON for programmatic use or Cytoscape import">Export JSON</button>
+            <button onclick="exportGraphImage()" data-tip="Save current graph visualization as a PNG image">Export PNG</button>
+            <button onclick="exportGraphPDF()" data-tip="Print current view to PDF via browser print dialog">Export PDF</button>
         </div>
     </div>
 
@@ -551,12 +631,17 @@ th { color: var(--text-muted); font-weight: 600; text-transform: uppercase; font
             <h3>Query Templates</h3>
             <div class="template-list" id="templateList"></div>
         </div>
+        <div class="templates" id="savedQueriesSection" style="display:none">
+            <h3 style="display:flex;align-items:center;gap:0.5rem">Saved Queries <button class="clear-all-btn" onclick="clearSavedQueries()" style="font-size:0.7rem;padding:0.2rem 0.5rem">Clear All</button></h3>
+            <div class="template-list" id="savedQueryList"></div>
+        </div>
 
         <div class="query-input-wrap">
             <textarea id="cypherInput" placeholder="Enter a Cypher query... (read-only, no writes allowed)" onkeydown="if(event.ctrlKey&&event.key==='Enter'){runCypherQuery()}"></textarea>
         </div>
         <div class="query-actions">
             <button class="run-btn" id="queryBtn" onclick="runCypherQuery()" style="padding:0.5rem 1.5rem">Run Query</button>
+            <button class="run-btn" onclick="saveCurrentQuery()" style="padding:0.5rem 1rem;background:var(--surface2);color:var(--text);font-size:0.82rem">Save Query</button>
             <span style="font-size:0.72rem;color:var(--text-muted);align-self:center">Ctrl+Enter to run</span>
             <div style="flex:1"></div>
             <button class="clear-all-btn" id="clearAllBtn" onclick="clearAllResults()" style="display:none">Clear All</button>
@@ -1085,8 +1170,8 @@ function ensureExploreNetwork() {
                 stabilization: { enabled: true, iterations: 150, fit: true },
                 maxVelocity: 30,
             },
-            interaction: { hover: true, tooltipDelay: 100, dragNodes: true, dragView: true, zoomView: true },
-            edges: { smooth: { type: 'continuous' } },
+            interaction: { hover: true, tooltipDelay: 100, dragNodes: true, dragView: true, zoomView: true, selectConnectedEdges: false },
+            edges: { smooth: { type: 'continuous' }, selectionWidth: 3 },
         }
     );
     // Pin nodes in place when user drags them
@@ -1107,19 +1192,31 @@ function ensureExploreNetwork() {
         }
     });
     exploreNetwork.on('click', function(params) {
-        console.log('[CardioKB] Click event:', params.nodes.length, 'nodes at', params.pointer.canvas);
+        console.log('[CardioKB] Click event:', params.nodes.length, 'nodes,', params.edges.length, 'edges');
         if (params.nodes.length > 0) {
+            closeEdgePanel();
             const nodeId = params.nodes[0];
             const node = exploreVisNodes.get(nodeId);
             if (node && node._data) showDetailPanel(node._data, exploreVisEdges, exploreVisNodes);
+        } else if (params.edges.length > 0) {
+            closeDetailPanel();
+            const edgeId = params.edges[0];
+            const edge = exploreVisEdges.get(edgeId);
+            if (edge && edge._data) showEdgePanel(edge, exploreVisNodes);
         } else {
             closeDetailPanel();
+            closeEdgePanel();
         }
     });
     // After initial stabilization, turn off physics so layout stays still
     exploreNetwork.on('stabilizationIterationsDone', function() {
         exploreNetwork.setOptions({ physics: { enabled: false } });
     });
+}
+
+function quickExplore(term) {
+    document.getElementById('exploreSearch').value = term;
+    loadExploreGraph();
 }
 
 async function loadExploreGraph() {
@@ -1131,8 +1228,12 @@ async function loadExploreGraph() {
     // Clear previous data and state
     currentGraphData = { nodes: [], edges: [] };
     activeFilters.clear();
+    hiddenEdgeTypes.clear();
     document.getElementById('filterChips').innerHTML = '';
+    document.getElementById('edgeFilterChips').innerHTML = '';
+    document.getElementById('exploreBreadcrumb').style.display = 'none';
     closeDetailPanel();
+    closeEdgePanel();
     exploreVisNodes.clear();
     exploreVisEdges.clear();
 
@@ -1160,9 +1261,18 @@ async function loadExploreGraph() {
 
         currentGraphData = data;
         buildFilterChips(data.nodes);
+        buildEdgeFilterChips(data.edges);
         activeFilters.clear();
+        hiddenEdgeTypes.clear();
         renderExploreGraph(data);
         loading.classList.remove('visible');
+
+        // Show breadcrumb
+        const bc = document.getElementById('exploreBreadcrumb');
+        document.getElementById('breadcrumbLabel').textContent = displayLabel;
+        document.getElementById('breadcrumbStats').textContent =
+            data.nodes.length + ' nodes, ' + data.edges.length + ' edges';
+        bc.style.display = 'block';
     } catch (e) {
         loading.textContent = 'Error: ' + e.message;
         log('Explore error: ' + e.message, 'err');
@@ -1195,7 +1305,35 @@ function toggleFilter(type, chip) {
     renderExploreGraph(currentGraphData);
 }
 
+function buildEdgeFilterChips(edges) {
+    const types = new Set(edges.map(e => e.label));
+    const container = document.getElementById('edgeFilterChips');
+    container.innerHTML = '';
+    [...types].sort().forEach(t => {
+        const chip = document.createElement('span');
+        chip.className = 'chip active';
+        chip.style.background = 'rgba(56,189,248,0.15)';
+        chip.style.color = '#38bdf8';
+        chip.style.fontSize = '0.7rem';
+        chip.textContent = t;
+        chip.onclick = () => toggleEdgeFilter(t, chip);
+        container.appendChild(chip);
+    });
+}
+
+function toggleEdgeFilter(type, chip) {
+    if (hiddenEdgeTypes.has(type)) {
+        hiddenEdgeTypes.delete(type);
+        chip.classList.add('active');
+    } else {
+        hiddenEdgeTypes.add(type);
+        chip.classList.remove('active');
+    }
+    renderExploreGraph(currentGraphData);
+}
+
 let showDiscovery = true;
+let hiddenEdgeTypes = new Set();
 
 function toggleDiscoveryLayer() {
     showDiscovery = document.getElementById('discoveryToggle').checked;
@@ -1211,7 +1349,7 @@ function renderExploreGraph(data) {
         return true;
     });
     const nodeIds = new Set(filteredNodes.map(n => n.id));
-    const filteredEdges = data.edges.filter(e => nodeIds.has(e.from) && nodeIds.has(e.to));
+    const filteredEdges = data.edges.filter(e => nodeIds.has(e.from) && nodeIds.has(e.to) && !hiddenEdgeTypes.has(e.label));
 
     const newNodes = filteredNodes.map(n => {
         const isCore = n.layer !== 'discovery';
@@ -1373,24 +1511,201 @@ function showDetailPanel(node, visEdges, visNodes) {
 
     const list = document.getElementById('detailNeighborList');
     list.innerHTML = '';
-    neighbors.slice(0, 50).forEach(n => {
+    neighbors.slice(0, 20).forEach(n => {
         const li = document.createElement('li');
         li.innerHTML = '<span style="color:' + nodeColor(n.type) + '">' + (n.type || '') + '</span> ' +
             n.label + ' <span style="color:var(--text-muted);font-size:0.72rem">(' + n.rel + ')</span>';
         list.appendChild(li);
     });
-    if (neighbors.length > 50) {
+    if (neighbors.length > 20) {
         const li = document.createElement('li');
         li.style.color = 'var(--text-muted)';
-        li.textContent = '... and ' + (neighbors.length - 50) + ' more';
+        li.textContent = '... ' + (neighbors.length - 20) + ' more in current view';
         list.appendChild(li);
     }
+
+    // "View All Connections" button (loads from API, paginated)
+    const viewAllBtn = document.createElement('button');
+    viewAllBtn.className = 'run-btn';
+    viewAllBtn.style.cssText = 'font-size:0.75rem;padding:0.35rem 0.6rem;margin-top:0.5rem;width:100%';
+    viewAllBtn.textContent = 'View All Connections';
+    viewAllBtn.onclick = () => loadAllConnections(node.id, 1);
+    list.parentElement.appendChild(viewAllBtn);
 
     panel.classList.add('visible');
 }
 
 function closeDetailPanel() {
     document.getElementById('detailPanel').classList.remove('visible');
+}
+
+function showEdgePanel(edge, visNodes) {
+    const panel = document.getElementById('edgePanel');
+    const content = document.getElementById('edgePanelContent');
+    const d = edge._data || {};
+
+    const fromNode = visNodes.get(edge.from);
+    const toNode = visNodes.get(edge.to);
+    const fromLabel = fromNode ? (fromNode._data?.label || fromNode.label) : edge.from;
+    const toLabel = toNode ? (toNode._data?.label || toNode.label) : edge.to;
+    const fromType = fromNode?._data?.type || '';
+    const toType = toNode?._data?.type || '';
+
+    let html = '';
+
+    // Relationship type
+    html += '<div style="margin-bottom:0.75rem">';
+    html += '<div style="font-weight:600;color:var(--text);margin-bottom:0.3rem">' + escapeHtml(d.label || edge.label || 'Unknown') + '</div>';
+    html += '<div style="display:flex;align-items:center;gap:0.3rem;flex-wrap:wrap">';
+    html += '<span style="color:' + nodeColor(fromType) + ';font-weight:600">' + escapeHtml(fromLabel) + '</span>';
+    html += ' <span style="color:var(--text-muted)">&rarr;</span> ';
+    html += '<span style="color:' + nodeColor(toType) + ';font-weight:600">' + escapeHtml(toLabel) + '</span>';
+    html += '</div></div>';
+
+    // Source database
+    const source = d.source || '';
+    if (source) {
+        html += '<div style="margin-bottom:0.5rem">';
+        html += '<dt style="color:var(--text-muted);font-weight:600;font-size:0.78rem">Source Database</dt>';
+        html += '<dd style="font-weight:600;color:var(--green)">' + escapeHtml(source) + '</dd>';
+        html += '</div>';
+    }
+
+    // Layer
+    const layer = d.layer || '';
+    if (layer) {
+        html += '<div style="margin-bottom:0.5rem">';
+        html += '<dt style="color:var(--text-muted);font-weight:600;font-size:0.78rem">Layer</dt>';
+        html += '<dd style="color:' + (layer === 'core' ? 'var(--accent)' : 'var(--yellow)') + '">' +
+            (layer === 'core' ? 'Core (known association)' : 'Discovery (hypothesis-generating)') + '</dd>';
+        html += '</div>';
+    }
+
+    // Evidence properties
+    const evidenceKeys = ['combinedScore', 'expressionScore', 'morScore', 'confidence',
+        'evidenceCode', 'score', 'interactionType', 'clinicalSignificance', 'zScore'];
+    const edgeProps = d.properties || {};
+    const shownProps = {};
+
+    // Check both d-level properties and nested properties
+    evidenceKeys.forEach(k => {
+        const val = edgeProps[k] || d[k];
+        if (val !== undefined && val !== null && val !== '') shownProps[k] = val;
+    });
+
+    if (Object.keys(shownProps).length > 0) {
+        html += '<div style="margin-bottom:0.5rem">';
+        html += '<dt style="color:var(--text-muted);font-weight:600;font-size:0.78rem;margin-bottom:0.2rem">Evidence</dt>';
+        Object.entries(shownProps).forEach(([k, v]) => {
+            html += '<div style="display:flex;justify-content:space-between;padding:0.15rem 0;border-bottom:1px solid var(--surface2)">';
+            html += '<span style="color:var(--text-muted)">' + k + '</span>';
+            html += '<span style="font-weight:600">' + escapeHtml(String(v)) + '</span>';
+            html += '</div>';
+        });
+        html += '</div>';
+    }
+
+    // Interpretation hint
+    html += '<div style="margin-top:0.75rem;padding:0.5rem;background:var(--bg);border-radius:6px;font-size:0.75rem;color:var(--text-muted);line-height:1.5">';
+    html += '<strong style="color:var(--text)">Provenance:</strong> This relationship was extracted from ';
+    html += '<strong>' + escapeHtml(source || 'an integrated database') + '</strong>';
+    if (source === 'STRING') html += '. STRING combined scores range from 0-1000; higher = stronger evidence.';
+    else if (source === 'PubTator') html += '. PubTator mines PubMed abstracts for gene-disease co-occurrences.';
+    else if (source === 'DrugBank') html += '. DrugBank provides curated drug-target binding data.';
+    else if (source === 'ClinVar') html += '. ClinVar collects clinically interpreted genetic variants.';
+    else if (source === 'DoRothEA') html += '. DoRothEA provides transcription factor-gene regulatory interactions.';
+    else if (source === 'Bgee') html += '. Bgee provides gene expression data across anatomical structures.';
+    else if (source === 'Reactome') html += '. Reactome is a curated database of biological pathways.';
+    else if (source === 'Gene Ontology') html += '. Gene Ontology provides functional annotations for genes.';
+    else if (source === 'HPO') html += '. HPO (Human Phenotype Ontology) maps genes to clinical phenotypes.';
+    else if (source === 'SIDER') html += '. SIDER extracts drug side-effect data from drug labels.';
+    else if (source === 'CTD') html += '. CTD (Comparative Toxicogenomics Database) provides chemical-gene interactions.';
+    else if (source === 'BindingDB') html += '. BindingDB provides measured binding affinities of drug-target interactions.';
+    else if (source === 'LINCS L1000') html += '. LINCS L1000 measures gene expression changes in response to drug perturbations.';
+    else if (source === 'DrugCentral') html += '. DrugCentral provides drug indications and pharmacologic class data.';
+    else if (source === 'ClinicalTrials.gov') html += '. ClinicalTrials.gov tracks clinical study registrations.';
+    else if (source === 'HGNC') html += '. HGNC provides curated gene family classifications.';
+    else html += '.';
+    html += '</div>';
+
+    content.innerHTML = html;
+    panel.style.display = 'block';
+    panel.classList.add('visible');
+}
+
+function closeEdgePanel() {
+    const panel = document.getElementById('edgePanel');
+    panel.style.display = 'none';
+    panel.classList.remove('visible');
+}
+
+async function loadAllConnections(nodeId, page) {
+    const list = document.getElementById('detailNeighborList');
+    const neighborsDiv = document.getElementById('detailNeighbors');
+
+    // Remove old "View All" button if present
+    const oldBtn = neighborsDiv.querySelector('.run-btn');
+    if (oldBtn) oldBtn.remove();
+
+    list.innerHTML = '<li style="color:var(--text-muted)"><span class="spinner"></span> Loading...</li>';
+
+    try {
+        const res = await fetch('/api/node-detail?' + new URLSearchParams({ id: nodeId, page, per_page: 50 }));
+        const data = await res.json();
+        if (data.error) {
+            list.innerHTML = '<li style="color:var(--red)">' + escapeHtml(data.error) + '</li>';
+            return;
+        }
+
+        // Update header
+        const h4 = neighborsDiv.querySelector('h4');
+        h4.textContent = 'All Connections (' + data.total + ' total, page ' + data.page + '/' + data.total_pages + ')';
+
+        list.innerHTML = '';
+        list.style.maxHeight = '400px';
+
+        data.connections.forEach(c => {
+            const li = document.createElement('li');
+            const arrow = c.direction === 'outgoing' ? '&rarr;' : '&larr;';
+            li.innerHTML = '<span style="color:' + nodeColor(c.type) + ';font-weight:600">' + c.type + '</span> ' +
+                escapeHtml(c.label) +
+                ' <span style="color:var(--text-muted);font-size:0.72rem">' + arrow + ' ' + c.rel_type +
+                (c.source ? ' <span style="color:var(--green)">[' + c.source + ']</span>' : '') +
+                '</span>';
+            list.appendChild(li);
+        });
+
+        // Pagination controls
+        if (data.total_pages > 1) {
+            const pagDiv = document.createElement('div');
+            pagDiv.style.cssText = 'display:flex;gap:0.3rem;justify-content:center;margin-top:0.5rem';
+
+            if (data.page > 1) {
+                const prev = document.createElement('button');
+                prev.className = 'template-btn';
+                prev.textContent = '< Prev';
+                prev.onclick = () => loadAllConnections(nodeId, data.page - 1);
+                pagDiv.appendChild(prev);
+            }
+
+            const info = document.createElement('span');
+            info.style.cssText = 'font-size:0.75rem;color:var(--text-muted);align-self:center;padding:0 0.5rem';
+            info.textContent = data.page + ' / ' + data.total_pages;
+            pagDiv.appendChild(info);
+
+            if (data.page < data.total_pages) {
+                const next = document.createElement('button');
+                next.className = 'template-btn';
+                next.textContent = 'Next >';
+                next.onclick = () => loadAllConnections(nodeId, data.page + 1);
+                pagDiv.appendChild(next);
+            }
+
+            neighborsDiv.appendChild(pagDiv);
+        }
+    } catch (e) {
+        list.innerHTML = '<li style="color:var(--red)">Error: ' + escapeHtml(e.message) + '</li>';
+    }
 }
 
 // ---- Export ----
@@ -1424,6 +1739,20 @@ function exportGraph(format) {
     a.click();
 }
 
+function exportGraphImage() {
+    if (!exploreNetwork) return;
+    const canvas = document.getElementById('exploreGraph').querySelector('canvas');
+    if (!canvas) return;
+    const link = document.createElement('a');
+    link.download = 'cardiokb_graph.png';
+    link.href = canvas.toDataURL('image/png');
+    link.click();
+}
+
+function exportGraphPDF() {
+    window.print();
+}
+
 // ---- Query Tab ----
 const QUERY_TEMPLATES = [
     { name: 'Disease Subgraph', desc: 'All entities directly connected to heart failure', query: "MATCH (d:Disease)-[r]-(n)\nWHERE toLower(d.diseaseName) CONTAINS 'heart failure'\nRETURN d, r, n LIMIT 100" },
@@ -1434,6 +1763,8 @@ const QUERY_TEMPLATES = [
     { name: 'Top Connected Genes', desc: 'Most connected genes in the entire graph', query: "MATCH (g:Gene)-[r]-()\nRETURN g.geneSymbol AS gene, count(r) AS connections\nORDER BY connections DESC LIMIT 25" },
     { name: 'Gene Expression', desc: 'Where are heart failure genes most expressed?', query: "MATCH (g:Gene)-[:geneAssociatesWithDisease]->(d:Disease)\nWHERE toLower(d.diseaseName) = 'congestive heart failure'\nWITH g LIMIT 20\nMATCH (b:BodyPart)-[r:bodyPartOverexpressesGene]->(g)\nRETURN g.geneSymbol AS gene, b.bodyPartName AS tissue, r.expressionScore AS score\nORDER BY r.expressionScore DESC LIMIT 50" },
     { name: 'Drug-Side Effects', desc: 'Side effects reported for a specific drug', query: "MATCH (dr:Drug)-[:compoundCausesSideEffect]->(se:SideEffect)\nWHERE toLower(dr.commonName) CONTAINS 'metoprolol'\nRETURN dr.commonName AS drug, se.sideEffectName AS side_effect LIMIT 50" },
+    { name: 'Drug Repurposing', desc: 'Find drugs that bind genes associated with a target disease', query: "MATCH (d:Disease)<-[:geneAssociatesWithDisease]-(g:Gene)<-[:drugBindsGene|chemicalBindsGene]-(dr:Drug)\nWHERE toLower(d.diseaseName) CONTAINS 'heart failure'\nRETURN DISTINCT dr.commonName AS drug, g.geneSymbol AS target_gene,\n       d.diseaseName AS disease\nORDER BY drug\nLIMIT 50" },
+    { name: 'Shared Genes', desc: 'Genes shared between two diseases', query: "MATCH (d1:Disease)<-[:geneAssociatesWithDisease]-(g:Gene)-[:geneAssociatesWithDisease]->(d2:Disease)\nWHERE toLower(d1.diseaseName) CONTAINS 'atrial fibrillation'\n  AND toLower(d2.diseaseName) CONTAINS 'heart failure'\n  AND d1 <> d2\nRETURN g.geneSymbol AS gene, d1.diseaseName AS disease1, d2.diseaseName AS disease2\nLIMIT 50" },
 ];
 
 function initTemplates() {
@@ -1757,17 +2088,8 @@ document.addEventListener('DOMContentLoaded', () => {
 function renderParserTable(parsers) {
     const body = document.getElementById('parserBody');
     body.innerHTML = '';
-    const parserCount = Object.keys(parsers).length;
-    // Update dynamic source counts across the UI
-    const runBtn = document.getElementById('runBtn');
-    if (runBtn) runBtn.setAttribute('data-tip', 'Check all ' + parserCount + ' parsers, database connectivity, and data integrity');
-    const qsc = document.getElementById('querySourceCount');
-    if (qsc) qsc.textContent = parserCount;
-    const asc = document.getElementById('aboutSourceCount');
-    if (asc) asc.textContent = parserCount;
-    const ssc = document.getElementById('sidebarSourceCount');
-    if (ssc) ssc.textContent = parserCount;
-    document.querySelectorAll('.live-source-count').forEach(el => { el.textContent = parserCount; });
+    // Source counts come from /api/graph-stats (loadGraphStats), not from
+    // the parser list — parsers and data sources are different counts.
     Object.keys(parsers).sort().forEach(name => {
         const p = parsers[name];
         const status = p.status || 'skipped';
@@ -1969,9 +2291,325 @@ async function loadGraphStats() {
     }
 }
 
+// ---- Saved Queries ----
+function getSavedQueries() {
+    try { return JSON.parse(localStorage.getItem('cardiokb_saved_queries') || '[]'); }
+    catch (e) { return []; }
+}
+
+function setSavedQueries(queries) {
+    localStorage.setItem('cardiokb_saved_queries', JSON.stringify(queries));
+}
+
+function saveCurrentQuery() {
+    const cypher = document.getElementById('cypherInput').value.trim();
+    if (!cypher) return;
+    const name = prompt('Name this query:');
+    if (!name) return;
+    const saved = getSavedQueries();
+    saved.push({ name: name.trim(), query: cypher, savedAt: new Date().toISOString() });
+    setSavedQueries(saved);
+    renderSavedQueries();
+}
+
+function renderSavedQueries() {
+    const saved = getSavedQueries();
+    const section = document.getElementById('savedQueriesSection');
+    const list = document.getElementById('savedQueryList');
+    list.innerHTML = '';
+
+    if (saved.length === 0) { section.style.display = 'none'; return; }
+    section.style.display = 'block';
+
+    saved.forEach((sq, i) => {
+        const wrap = document.createElement('span');
+        wrap.style.display = 'inline-flex';
+        wrap.style.alignItems = 'center';
+        wrap.style.gap = '0.2rem';
+
+        const btn = document.createElement('button');
+        btn.className = 'template-btn';
+        btn.textContent = sq.name;
+        btn.title = sq.query;
+        btn.onclick = () => { document.getElementById('cypherInput').value = sq.query; };
+
+        const del = document.createElement('button');
+        del.style.cssText = 'background:none;border:none;color:var(--text-muted);cursor:pointer;font-size:0.9rem;padding:0 0.2rem;line-height:1';
+        del.innerHTML = '&times;';
+        del.title = 'Delete saved query';
+        del.onclick = (e) => { e.stopPropagation(); deleteSavedQuery(i); };
+
+        wrap.appendChild(btn);
+        wrap.appendChild(del);
+        list.appendChild(wrap);
+    });
+}
+
+function deleteSavedQuery(idx) {
+    const saved = getSavedQueries();
+    saved.splice(idx, 1);
+    setSavedQueries(saved);
+    renderSavedQueries();
+}
+
+function clearSavedQueries() {
+    if (!confirm('Delete all saved queries?')) return;
+    setSavedQueries([]);
+    renderSavedQueries();
+}
+
+// ---- Autocomplete ----
+(function() {
+    const input = document.getElementById('exploreSearch');
+    const list = document.getElementById('autocompleteList');
+    let debounceTimer = null;
+    let selectedIdx = -1;
+    let items = [];
+
+    input.addEventListener('input', function() {
+        clearTimeout(debounceTimer);
+        const q = this.value.trim();
+        if (q.length < 2) { hideAC(); return; }
+        debounceTimer = setTimeout(() => fetchSuggestions(q), 200);
+    });
+
+    input.addEventListener('keydown', function(e) {
+        if (!list.classList.contains('visible')) return;
+        if (e.key === 'ArrowDown') {
+            e.preventDefault();
+            selectedIdx = Math.min(selectedIdx + 1, items.length - 1);
+            highlightItem();
+        } else if (e.key === 'ArrowUp') {
+            e.preventDefault();
+            selectedIdx = Math.max(selectedIdx - 1, 0);
+            highlightItem();
+        } else if (e.key === 'Enter' && selectedIdx >= 0) {
+            e.preventDefault();
+            selectItem(selectedIdx);
+        } else if (e.key === 'Escape') {
+            hideAC();
+        }
+    });
+
+    input.addEventListener('blur', function() {
+        setTimeout(hideAC, 150);
+    });
+
+    async function fetchSuggestions(q) {
+        try {
+            const res = await fetch('/api/autocomplete?' + new URLSearchParams({ q, limit: 10 }));
+            const data = await res.json();
+            items = data;
+            renderList(data, q);
+        } catch (e) { hideAC(); }
+    }
+
+    function renderList(suggestions, q) {
+        list.innerHTML = '';
+        selectedIdx = -1;
+        if (!suggestions.length) { hideAC(); return; }
+
+        suggestions.forEach((s, i) => {
+            const div = document.createElement('div');
+            div.className = 'autocomplete-item';
+
+            const typeBadge = document.createElement('span');
+            typeBadge.className = 'ac-type';
+            typeBadge.textContent = s.type;
+            typeBadge.style.background = (nodeColor(s.type) || '#94a3b8') + '33';
+            typeBadge.style.color = nodeColor(s.type) || '#94a3b8';
+
+            const nameSpan = document.createElement('span');
+            nameSpan.className = 'ac-name';
+            const re = new RegExp('(' + q.replace(/[.*+?^${}()|[\]\\]/g, '\\$&') + ')', 'gi');
+            nameSpan.innerHTML = escapeHtml(s.name).replace(re, '<strong style="color:var(--accent)">$1</strong>');
+
+            div.appendChild(typeBadge);
+            div.appendChild(nameSpan);
+            div.addEventListener('mousedown', function(e) {
+                e.preventDefault();
+                selectItem(i);
+            });
+            list.appendChild(div);
+        });
+        list.classList.add('visible');
+    }
+
+    function highlightItem() {
+        list.querySelectorAll('.autocomplete-item').forEach((el, i) => {
+            el.classList.toggle('selected', i === selectedIdx);
+        });
+        const sel = list.querySelector('.autocomplete-item.selected');
+        if (sel) sel.scrollIntoView({ block: 'nearest' });
+    }
+
+    function selectItem(idx) {
+        if (items[idx]) {
+            input.value = items[idx].name;
+            hideAC();
+            loadExploreGraph();
+        }
+    }
+
+    function hideAC() {
+        list.classList.remove('visible');
+        selectedIdx = -1;
+    }
+})();
+
+// ---- Shortest Path ----
+function setupPathAutocomplete(inputId, listId) {
+    const input = document.getElementById(inputId);
+    const list = document.getElementById(listId);
+    let debounceTimer = null;
+    let selectedIdx = -1;
+    let items = [];
+
+    input.addEventListener('input', function() {
+        clearTimeout(debounceTimer);
+        const q = this.value.trim();
+        if (q.length < 2) { list.classList.remove('visible'); return; }
+        debounceTimer = setTimeout(async () => {
+            try {
+                const res = await fetch('/api/autocomplete?' + new URLSearchParams({ q, limit: 8 }));
+                items = await res.json();
+                renderPathAC(items, q);
+            } catch (e) { list.classList.remove('visible'); }
+        }, 200);
+    });
+
+    input.addEventListener('keydown', function(e) {
+        if (!list.classList.contains('visible')) return;
+        if (e.key === 'ArrowDown') { e.preventDefault(); selectedIdx = Math.min(selectedIdx + 1, items.length - 1); hlPath(); }
+        else if (e.key === 'ArrowUp') { e.preventDefault(); selectedIdx = Math.max(selectedIdx - 1, 0); hlPath(); }
+        else if (e.key === 'Enter' && selectedIdx >= 0) { e.preventDefault(); pickPath(selectedIdx); }
+        else if (e.key === 'Escape') { list.classList.remove('visible'); }
+    });
+
+    input.addEventListener('blur', function() { setTimeout(() => list.classList.remove('visible'), 150); });
+
+    function renderPathAC(suggestions, q) {
+        list.innerHTML = '';
+        selectedIdx = -1;
+        if (!suggestions.length) { list.classList.remove('visible'); return; }
+        suggestions.forEach((s, i) => {
+            const div = document.createElement('div');
+            div.className = 'autocomplete-item';
+            const badge = document.createElement('span');
+            badge.className = 'ac-type';
+            badge.textContent = s.type;
+            badge.style.background = (nodeColor(s.type) || '#94a3b8') + '33';
+            badge.style.color = nodeColor(s.type) || '#94a3b8';
+            const name = document.createElement('span');
+            name.className = 'ac-name';
+            const re = new RegExp('(' + q.replace(/[.*+?^${}()|[\]\\]/g, '\\$&') + ')', 'gi');
+            name.innerHTML = escapeHtml(s.name).replace(re, '<strong style="color:var(--accent)">$1</strong>');
+            div.appendChild(badge);
+            div.appendChild(name);
+            div.addEventListener('mousedown', function(e) { e.preventDefault(); pickPath(i); });
+            list.appendChild(div);
+        });
+        list.classList.add('visible');
+    }
+
+    function hlPath() {
+        list.querySelectorAll('.autocomplete-item').forEach((el, i) => el.classList.toggle('selected', i === selectedIdx));
+    }
+
+    function pickPath(idx) {
+        if (items[idx]) { input.value = items[idx].name; }
+        list.classList.remove('visible');
+    }
+}
+setupPathAutocomplete('pathFrom', 'acListFrom');
+setupPathAutocomplete('pathTo', 'acListTo');
+
+let pathNetwork = null;
+
+async function findShortestPath() {
+    const fromVal = document.getElementById('pathFrom').value.trim();
+    const toVal = document.getElementById('pathTo').value.trim();
+    if (!fromVal || !toVal) return;
+
+    const btn = document.getElementById('pathBtn');
+    const resultDiv = document.getElementById('pathResult');
+    const graphDiv = document.getElementById('pathGraph');
+
+    btn.disabled = true;
+    btn.innerHTML = '<span class="spinner"></span> Finding...';
+    resultDiv.style.display = 'block';
+    resultDiv.innerHTML = '<span class="spinner"></span> Searching for shortest path...';
+    graphDiv.style.display = 'none';
+
+    try {
+        const res = await fetch('/api/shortest-path', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ from: fromVal, to: toVal }),
+        });
+        const data = await res.json();
+
+        if (!res.ok || data.error) {
+            resultDiv.innerHTML = '<span style="color:var(--red)">' + escapeHtml(data.error) + '</span>';
+            return;
+        }
+
+        resultDiv.innerHTML = 'Path found: <strong style="color:var(--green)">' + data.path_length + ' hop' +
+            (data.path_length !== 1 ? 's' : '') + '</strong> between <strong>' + escapeHtml(data.from) +
+            '</strong> and <strong>' + escapeHtml(data.to) + '</strong>';
+
+        // Render path graph
+        graphDiv.style.display = 'block';
+        if (pathNetwork) { pathNetwork.destroy(); pathNetwork = null; }
+
+        const visNodes = new vis.DataSet(data.nodes.map((n, i) => ({
+            id: n.id, label: n.label,
+            color: { background: nodeColor(n.type), border: nodeColor(n.type),
+                highlight: { background: '#fff', border: nodeColor(n.type) } },
+            font: { color: '#e2e8f0', size: 12 },
+            shape: n.type === 'Disease' ? 'diamond' : 'dot',
+            size: 20,
+            title: n.type + ': ' + n.label,
+        })));
+
+        const visEdges = new vis.DataSet(data.edges.map((e, i) => ({
+            id: 'pe' + i, from: e.from, to: e.to,
+            label: e.label,
+            font: { size: 9, color: '#94a3b8', strokeWidth: 0, background: 'var(--surface)' },
+            color: { color: '#38bdf8', highlight: '#38bdf8' },
+            width: 2.5, arrows: { to: { scaleFactor: 0.6 } },
+            title: e.label + (e.source ? ' (source: ' + e.source + ')' : ''),
+        })));
+
+        pathNetwork = new vis.Network(graphDiv, { nodes: visNodes, edges: visEdges }, {
+            layout: { hierarchical: { direction: 'LR', sortMethod: 'directed', levelSeparation: 200, nodeSpacing: 100 } },
+            physics: false,
+            interaction: { hover: true, dragNodes: true, dragView: true, zoomView: true },
+            edges: { smooth: { type: 'cubicBezier' } },
+        });
+    } catch (e) {
+        resultDiv.innerHTML = '<span style="color:var(--red)">Error: ' + escapeHtml(e.message) + '</span>';
+    } finally {
+        btn.disabled = false;
+        btn.textContent = 'Find Path';
+    }
+}
+
+document.getElementById('pathFrom').addEventListener('keydown', function(e) {
+    if (e.key === 'Enter' && !document.getElementById('acListFrom').classList.contains('visible')) {
+        document.getElementById('pathTo').focus();
+    }
+});
+document.getElementById('pathTo').addEventListener('keydown', function(e) {
+    if (e.key === 'Enter' && !document.getElementById('acListTo').classList.contains('visible')) {
+        findShortestPath();
+    }
+});
+
 // ---- Init ----
 loadGraphStats();
 initTemplates();
+renderSavedQueries();
 renderNodeLegend();
 // Fetch specificity score timestamp
 fetch('/api/specificity-info').then(r => r.json()).then(data => {

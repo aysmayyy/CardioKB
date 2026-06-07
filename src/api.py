@@ -65,6 +65,92 @@ def index():
     return send_from_directory(app.static_folder, 'index.html')
 
 
+@app.route('/api/autocomplete')
+def autocomplete():
+    """Return matching node names for search autocomplete.
+
+    Query params:
+        q: Search prefix (min 2 chars)
+        limit: Max results (default 10, max 30)
+    """
+    q = (request.args.get('q') or '').strip().lower()
+    if len(q) < 2:
+        return jsonify([])
+
+    limit = min(int(request.args.get('limit', 10)), 30)
+
+    driver = _get_neo4j_driver()
+    if not driver:
+        return jsonify([])
+
+    try:
+        with driver.session() as session:
+            result = session.run(
+                "MATCH (n) "
+                "WHERE toLower(coalesce(n.geneSymbol, '')) STARTS WITH $q "
+                "   OR toLower(coalesce(n.commonName, '')) STARTS WITH $q "
+                "   OR toLower(coalesce(n.diseaseName, '')) STARTS WITH $q "
+                "   OR toLower(coalesce(n.pathwayName, '')) STARTS WITH $q "
+                "   OR toLower(coalesce(n.phenotypeName, '')) STARTS WITH $q "
+                "   OR toLower(coalesce(n.bodyPartName, '')) STARTS WITH $q "
+                "   OR toLower(coalesce(n.symptomName, '')) STARTS WITH $q "
+                "   OR toLower(coalesce(n.sideEffectName, '')) STARTS WITH $q "
+                "   OR toLower(coalesce(n.familyName, '')) STARTS WITH $q "
+                "   OR toLower(coalesce(n.tfSymbol, '')) STARTS WITH $q "
+                "RETURN labels(n)[0] AS type, properties(n) AS props "
+                "LIMIT $limit",
+                q=q, limit=limit,
+            )
+            suggestions = []
+            seen = set()
+            for rec in result:
+                props = dict(rec['props']) if rec['props'] else {}
+                name = _display_label(props, '')
+                if not name:
+                    continue
+                key = (name.lower(), rec['type'])
+                if key in seen:
+                    continue
+                seen.add(key)
+                suggestions.append({
+                    'name': name,
+                    'type': rec['type'],
+                })
+
+            if not suggestions:
+                result2 = session.run(
+                    "MATCH (n) "
+                    "WHERE toLower(coalesce(n.geneSymbol, '')) CONTAINS $q "
+                    "   OR toLower(coalesce(n.commonName, '')) CONTAINS $q "
+                    "   OR toLower(coalesce(n.diseaseName, '')) CONTAINS $q "
+                    "   OR toLower(coalesce(n.pathwayName, '')) CONTAINS $q "
+                    "   OR toLower(coalesce(n.phenotypeName, '')) CONTAINS $q "
+                    "   OR toLower(coalesce(n.bodyPartName, '')) CONTAINS $q "
+                    "RETURN labels(n)[0] AS type, properties(n) AS props "
+                    "LIMIT $limit",
+                    q=q, limit=limit,
+                )
+                for rec in result2:
+                    props = dict(rec['props']) if rec['props'] else {}
+                    name = _display_label(props, '')
+                    if not name:
+                        continue
+                    key = (name.lower(), rec['type'])
+                    if key in seen:
+                        continue
+                    seen.add(key)
+                    suggestions.append({
+                        'name': name,
+                        'type': rec['type'],
+                    })
+
+        return jsonify(suggestions)
+    except Exception:
+        return jsonify([])
+    finally:
+        driver.close()
+
+
 @app.route('/api/diseases')
 def list_diseases():
     """Return available disease filters."""
@@ -546,6 +632,7 @@ def graph_data():
                     "RETURN d.diseaseName AS d_name, "
                     "       d.xrefDiseaseOntology AS d_id, "
                     "       type(r) AS rel_type, r.source AS source, "
+                    "       properties(r) AS r_props, "
                     "       labels(n)[0] AS n_label, "
                     "       properties(n) AS n_props, "
                     "       id(d) AS did, id(n) AS nid, "
@@ -583,13 +670,22 @@ def graph_data():
                                            if v is not None},
                         }
 
-                    edges.append({
+                    r_props = dict(row['r_props']) if row['r_props'] else {}
+                    edge_entry = {
                         'from': did,
                         'to': nid,
                         'label': row['rel_type'],
                         'source': row['source'],
                         'layer': 'core',
-                    })
+                    }
+                    evidence_keys = ('combinedScore', 'expressionScore',
+                                     'morScore', 'confidence', 'evidenceCode',
+                                     'score', 'interactionType',
+                                     'clinicalSignificance', 'zScore')
+                    for ek in evidence_keys:
+                        if ek in r_props and r_props[ek] not in (None, ''):
+                            edge_entry.setdefault('properties', {})[ek] = str(r_props[ek])
+                    edges.append(edge_entry)
                     core_nids.add(nid)
 
             # --- Discovery layer: per-core-node, ranked by specificityScore ---
@@ -617,6 +713,7 @@ def graph_data():
                         "WITH b.n1 AS n1, b.r AS r, b.n2 AS n2, b.spec AS spec "
                         "RETURN id(n1) AS from_id, "
                         "       type(r) AS rel_type, r.source AS source, "
+                        "       properties(r) AS r_props, "
                         "       labels(n2)[0] AS n_label, "
                         "       properties(n2) AS n_props, "
                         "       id(n2) AS nid, "
@@ -640,13 +737,18 @@ def graph_data():
                                 'properties': {k: str(v)[:200] for k, v in props.items()
                                                if v is not None},
                             }
-                        edges.append({
+                        r_props = dict(row['r_props']) if row['r_props'] else {}
+                        disc_edge = {
                             'from': row['from_id'],
                             'to': nid,
                             'label': row['rel_type'],
                             'source': row['source'],
                             'layer': 'discovery',
-                        })
+                        }
+                        for ek in evidence_keys:
+                            if ek in r_props and r_props[ek] not in (None, ''):
+                                disc_edge.setdefault('properties', {})[ek] = str(r_props[ek])
+                        edges.append(disc_edge)
 
                     if len(nodes) >= limit:
                         break
@@ -654,6 +756,205 @@ def graph_data():
         return jsonify({
             'nodes': list(nodes.values()),
             'edges': edges,
+        })
+    except Exception as e:
+        return jsonify({'error': str(e)}), 500
+    finally:
+        driver.close()
+
+
+@app.route('/api/shortest-path', methods=['POST'])
+def shortest_path():
+    """Find and return the shortest path between two nodes.
+
+    Request body (JSON):
+        from: Name of the start node
+        to: Name of the end node
+    """
+    body = request.get_json(silent=True) or {}
+    from_name = (body.get('from') or '').strip()
+    to_name = (body.get('to') or '').strip()
+
+    if not from_name or not to_name:
+        return jsonify({'error': 'Both "from" and "to" fields are required'}), 400
+
+    driver = _get_neo4j_driver()
+    if not driver:
+        return jsonify({'error': 'Cannot connect to Memgraph'}), 503
+
+    def _name_filter(var, param):
+        """Return a Cypher WHERE clause that matches a node by name properties."""
+        return (
+            f"(toLower(coalesce({var}.geneSymbol, '')) = ${param} "
+            f"OR toLower(coalesce({var}.commonName, '')) = ${param} "
+            f"OR toLower(coalesce({var}.diseaseName, '')) = ${param} "
+            f"OR toLower(coalesce({var}.pathwayName, '')) = ${param} "
+            f"OR toLower(coalesce({var}.phenotypeName, '')) = ${param} "
+            f"OR toLower(coalesce({var}.bodyPartName, '')) = ${param} "
+            f"OR toLower(coalesce({var}.tfSymbol, '')) = ${param})"
+        )
+
+    def _name_filter_contains(var, param):
+        return (
+            f"(toLower(coalesce({var}.geneSymbol, '')) CONTAINS ${param} "
+            f"OR toLower(coalesce({var}.commonName, '')) CONTAINS ${param} "
+            f"OR toLower(coalesce({var}.diseaseName, '')) CONTAINS ${param} "
+            f"OR toLower(coalesce({var}.pathwayName, '')) CONTAINS ${param} "
+            f"OR toLower(coalesce({var}.phenotypeName, '')) CONTAINS ${param} "
+            f"OR toLower(coalesce({var}.bodyPartName, '')) CONTAINS ${param})"
+        )
+
+    try:
+        with driver.session() as session:
+            from_q = from_name.lower()
+            to_q = to_name.lower()
+
+            # Try exact match first, then CONTAINS fallback
+            path_result = None
+            for filter_fn in [_name_filter, _name_filter_contains]:
+                where_a = filter_fn('a', 'from_q')
+                where_b = filter_fn('b', 'to_q')
+                query = (
+                    f"MATCH p = (a)-[*BFS ..10]-(b) "
+                    f"WHERE {where_a} AND {where_b} "
+                    f"RETURN nodes(p) AS path_nodes, relationships(p) AS path_rels "
+                    f"LIMIT 1"
+                )
+                path_result = session.run(
+                    query, from_q=from_q, to_q=to_q,
+                ).single()
+                if path_result:
+                    break
+
+            if not path_result:
+                return jsonify({
+                    'error': f'No path found between "{from_name}" and "{to_name}" within 10 hops',
+                    'from': from_name,
+                    'to': to_name,
+                }), 404
+
+            nodes = {}
+            edges = []
+            for n in path_result['path_nodes']:
+                nid = n.id
+                props = dict(n)
+                label = _display_label(props, nid)
+                ntype = list(n.labels)[0] if n.labels else 'Unknown'
+                nodes[nid] = {
+                    'id': nid,
+                    'label': str(label)[:60],
+                    'type': ntype,
+                    'properties': {k: str(v)[:200] for k, v in props.items()
+                                   if v is not None},
+                }
+
+            for r in path_result['path_rels']:
+                rprops = dict(r)
+                edges.append({
+                    'from': r.start_node.id if hasattr(r, 'start_node') else r.nodes[0].id,
+                    'to': r.end_node.id if hasattr(r, 'end_node') else r.nodes[1].id,
+                    'label': r.type,
+                    'source': rprops.get('source', ''),
+                    'properties': {k: str(v)[:200] for k, v in rprops.items()
+                                   if v is not None},
+                })
+
+        return jsonify({
+            'from': from_name,
+            'to': to_name,
+            'path_length': len(edges),
+            'nodes': list(nodes.values()),
+            'edges': edges,
+        })
+    except Exception as e:
+        return jsonify({'error': str(e)}), 500
+    finally:
+        driver.close()
+
+
+@app.route('/api/node-detail')
+def node_detail():
+    """Return ALL connections for a node, paginated.
+
+    Query params:
+        id: Node internal ID
+        page: Page number (default 1)
+        per_page: Items per page (default 50, max 200)
+    """
+    node_id = request.args.get('id')
+    if node_id is None:
+        return jsonify({'error': 'Missing "id" parameter'}), 400
+    try:
+        node_id = int(node_id)
+    except ValueError:
+        return jsonify({'error': 'Invalid "id" parameter'}), 400
+
+    page = max(int(request.args.get('page', 1)), 1)
+    per_page = min(max(int(request.args.get('per_page', 50)), 1), 200)
+    skip = (page - 1) * per_page
+
+    driver = _get_neo4j_driver()
+    if not driver:
+        return jsonify({'error': 'Cannot connect to Memgraph'}), 503
+
+    try:
+        with driver.session() as session:
+            # Get the node itself
+            node_result = session.run(
+                "MATCH (n) WHERE id(n) = $nid "
+                "RETURN labels(n)[0] AS ntype, properties(n) AS props",
+                nid=node_id,
+            ).single()
+            if not node_result:
+                return jsonify({'error': 'Node not found'}), 404
+
+            props = dict(node_result['props']) if node_result['props'] else {}
+            node_info = {
+                'id': node_id,
+                'label': _display_label(props, node_id),
+                'type': node_result['ntype'],
+                'properties': {k: str(v)[:500] for k, v in props.items()
+                               if v is not None},
+            }
+
+            # Count total connections
+            total = session.run(
+                "MATCH (n)-[r]-(m) WHERE id(n) = $nid "
+                "RETURN count(r) AS total",
+                nid=node_id,
+            ).single()['total']
+
+            # Get paginated connections
+            connections = []
+            result = session.run(
+                "MATCH (n)-[r]-(m) WHERE id(n) = $nid "
+                "RETURN id(m) AS mid, labels(m)[0] AS mtype, "
+                "       properties(m) AS mprops, "
+                "       type(r) AS rtype, r.source AS rsource, "
+                "       id(startNode(r)) AS rstart "
+                "ORDER BY type(r), labels(m)[0] "
+                "SKIP $skip LIMIT $limit",
+                nid=node_id, skip=skip, limit=per_page,
+            )
+            for rec in result:
+                mprops = dict(rec['mprops']) if rec['mprops'] else {}
+                direction = 'outgoing' if rec['rstart'] == node_id else 'incoming'
+                connections.append({
+                    'id': rec['mid'],
+                    'label': _display_label(mprops, rec['mid']),
+                    'type': rec['mtype'],
+                    'rel_type': rec['rtype'],
+                    'source': rec['rsource'] or '',
+                    'direction': direction,
+                })
+
+        return jsonify({
+            'node': node_info,
+            'connections': connections,
+            'total': total,
+            'page': page,
+            'per_page': per_page,
+            'total_pages': (total + per_page - 1) // per_page,
         })
     except Exception as e:
         return jsonify({'error': str(e)}), 500
