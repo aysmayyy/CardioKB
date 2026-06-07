@@ -81,9 +81,9 @@ def main():
     logger.info("Switching to IN_MEMORY_ANALYTICAL storage mode...")
     run(driver, "STORAGE MODE IN_MEMORY_ANALYTICAL")
 
-    logger.info("Setting transaction timeout to 600s...")
+    logger.info("Setting transaction timeout to 3600s...")
     try:
-        run(driver, "SET GLOBAL TRANSACTION TIMEOUT 600")
+        run(driver, "SET GLOBAL TRANSACTION TIMEOUT 3600")
     except Exception:
         pass
 
