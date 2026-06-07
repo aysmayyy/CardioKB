@@ -134,7 +134,17 @@ section h2 {
 .chip-Pathway { background: rgba(251,191,36,0.2); color: #fbbf24; }
 .chip-Phenotype { background: rgba(192,132,252,0.2); color: #c084fc; }
 .chip-ClinicalTrial { background: rgba(251,146,60,0.2); color: #fb923c; }
-.chip-Anatomy { background: rgba(45,212,191,0.2); color: #2dd4bf; }
+.chip-BodyPart { background: rgba(45,212,191,0.2); color: #2dd4bf; }
+.chip-SideEffect { background: rgba(244,114,182,0.2); color: #f472b6; }
+.chip-BiologicalProcess { background: rgba(129,140,248,0.2); color: #818cf8; }
+.chip-MolecularFunction { background: rgba(167,139,250,0.2); color: #a78bfa; }
+.chip-CellularComponent { background: rgba(103,232,249,0.2); color: #67e8f9; }
+.chip-TranscriptionFactor { background: rgba(252,165,165,0.2); color: #fca5a5; }
+.chip-Variant { background: rgba(212,212,216,0.2); color: #d4d4d8; }
+.chip-GeneFamily { background: rgba(134,239,172,0.2); color: #86efac; }
+.chip-PharmacologicClass { background: rgba(163,230,53,0.2); color: #a3e635; }
+.chip-Symptom { background: rgba(245,158,11,0.2); color: #f59e0b; }
+.chip-DrugLabel { background: rgba(232,121,249,0.2); color: #e879f9; }
 .chip-Other { background: rgba(148,163,184,0.2); color: #94a3b8; }
 
 /* Node detail panel */
@@ -848,15 +858,21 @@ function showMethodologyModal() {
 const NODE_TYPE_DESCRIPTIONS = {
     Gene: 'Human protein-coding genes from NCBI',
     Disease: 'Disease entities from Disease Ontology (DOID)',
-    Drug: 'Approved and investigational compounds from DrugBank',
+    Drug: 'Approved and investigational compounds from DrugBank/CTD',
+    Variant: 'Genetic variants from ClinVar',
     Pathway: 'Biological pathways from Reactome',
     Phenotype: 'Clinical phenotypes from Human Phenotype Ontology',
     ClinicalTrial: 'Active and completed trials from ClinicalTrials.gov',
-    Anatomy: 'Anatomical structures from Uberon ontology',
+    BodyPart: 'Anatomical structures from Uberon ontology',
     SideEffect: 'Drug side effects from SIDER',
-    GeneOntology: 'Molecular functions and processes from GO',
-    Chemical: 'Environmental chemicals from CTD',
+    BiologicalProcess: 'Biological processes from Gene Ontology',
+    MolecularFunction: 'Molecular functions from Gene Ontology',
+    CellularComponent: 'Cellular components from Gene Ontology',
+    TranscriptionFactor: 'Transcription factors from DoRothEA',
+    GeneFamily: 'Gene families from HGNC',
+    PharmacologicClass: 'Drug classes from DrugCentral',
     Symptom: 'Disease symptoms from MeSH',
+    DrugLabel: 'Pharmacogenomic drug labels from ClinPGx',
 };
 
 function renderNodeLegend() {
@@ -882,9 +898,11 @@ let currentGraphData = { nodes: [], edges: [] };
 let activeFilters = new Set();
 const NODE_COLORS = {
     Gene: '#3b82f6', Disease: '#f87171', Drug: '#4ade80', Pathway: '#fbbf24',
-    Phenotype: '#c084fc', ClinicalTrial: '#fb923c', Anatomy: '#2dd4bf',
-    SideEffect: '#f472b6', GeneOntology: '#818cf8', Chemical: '#a3e635',
-    Symptom: '#f59e0b',
+    Phenotype: '#c084fc', ClinicalTrial: '#fb923c', BodyPart: '#2dd4bf',
+    SideEffect: '#f472b6', BiologicalProcess: '#818cf8', MolecularFunction: '#a78bfa',
+    CellularComponent: '#67e8f9', TranscriptionFactor: '#fca5a5', Variant: '#d4d4d8',
+    GeneFamily: '#86efac', PharmacologicClass: '#a3e635', Symptom: '#f59e0b',
+    DrugLabel: '#e879f9',
 };
 function nodeColor(type) { return NODE_COLORS[type] || '#94a3b8'; }
 function chipClass(type) { return NODE_COLORS[type] ? 'chip-' + type : 'chip-Other'; }
@@ -1408,14 +1426,14 @@ function exportGraph(format) {
 
 // ---- Query Tab ----
 const QUERY_TEMPLATES = [
-    { name: 'Disease Subgraph', desc: 'All entities directly connected to heart failure', query: "MATCH (d:Disease)-[r]-(n)\nWHERE toLower(d.commonName) CONTAINS 'heart failure'\nRETURN d, r, n LIMIT 100" },
+    { name: 'Disease Subgraph', desc: 'All entities directly connected to heart failure', query: "MATCH (d:Disease)-[r]-(n)\nWHERE toLower(d.diseaseName) CONTAINS 'heart failure'\nRETURN d, r, n LIMIT 100" },
     { name: 'Gene Neighbors', desc: 'Every relationship for a specific gene (e.g. APOE)', query: "MATCH (g:Gene)-[r]-(n)\nWHERE g.geneSymbol = 'APOE'\nRETURN g, r, n LIMIT 100" },
-    { name: 'Drug Targets', desc: 'Drugs binding genes associated with heart failure', query: "MATCH (d:Disease)<-[:geneAssociatesWithDisease]-(g:Gene)<-[:chemicalBindsGene]-(dr:Drug)\nWHERE toLower(d.commonName) CONTAINS 'heart failure'\nRETURN d.commonName AS disease, g.geneSymbol AS gene, dr.commonName AS drug LIMIT 50" },
-    { name: 'Clinical Trials', desc: 'Trials studying cardiovascular conditions', query: "MATCH (t:ClinicalTrial)-[:STUDIES_CONDITION]->(d:Disease)\nWHERE toLower(d.commonName) CONTAINS 'cardiovascular'\nOPTIONAL MATCH (t)-[:TESTS_INTERVENTION]->(dr:Drug)\nRETURN t.trialId AS trial, d.commonName AS condition, dr.commonName AS drug LIMIT 50" },
+    { name: 'Drug Targets', desc: 'Drugs binding genes associated with heart failure', query: "MATCH (d:Disease)<-[:geneAssociatesWithDisease]-(g:Gene)<-[:chemicalBindsGene]-(dr:Drug)\nWHERE toLower(d.diseaseName) CONTAINS 'heart failure'\nRETURN d.diseaseName AS disease, g.geneSymbol AS gene, dr.commonName AS drug LIMIT 50" },
+    { name: 'Clinical Trials', desc: 'Trials studying cardiovascular conditions', query: "MATCH (t:ClinicalTrial)-[:STUDIES_CONDITION]->(d:Disease)\nWHERE toLower(d.diseaseName) CONTAINS 'cardiovascular'\nOPTIONAL MATCH (t)-[:TESTS_INTERVENTION]->(dr:Drug)\nRETURN t.trialId AS trial, d.diseaseName AS condition, dr.commonName AS drug LIMIT 50" },
     { name: 'Pathway Genes', desc: 'Genes participating in cardiac-related pathways', query: "MATCH (g:Gene)-[:geneInPathway]->(p:Pathway)\nWHERE toLower(p.pathwayName) CONTAINS 'cardiac'\nRETURN p.pathwayName AS pathway, collect(g.geneSymbol)[..20] AS genes LIMIT 20" },
     { name: 'Top Connected Genes', desc: 'Most connected genes in the entire graph', query: "MATCH (g:Gene)-[r]-()\nRETURN g.geneSymbol AS gene, count(r) AS connections\nORDER BY connections DESC LIMIT 25" },
-    { name: 'Gene Expression', desc: 'Where are heart failure genes most expressed?', query: "MATCH (g:Gene)-[:geneAssociatesWithDisease]->(d:Disease)\nWHERE toLower(d.commonName) = 'congestive heart failure'\nWITH g, d LIMIT 20\nMATCH (g)-[r:geneExpressedInBodyPart]->(b:BodyPart)\nRETURN g.geneSymbol AS gene, b.commonName AS tissue, r.confidence AS confidence\nORDER BY r.confidence DESC LIMIT 50" },
-    { name: 'Drug-Side Effects', desc: 'Side effects reported for a specific drug', query: "MATCH (dr:Drug)-[:compoundCausesSideEffect]->(se:SideEffect)\nWHERE toLower(dr.commonName) CONTAINS 'metoprolol'\nRETURN dr.commonName AS drug, se.commonName AS side_effect LIMIT 50" },
+    { name: 'Gene Expression', desc: 'Where are heart failure genes most expressed?', query: "MATCH (g:Gene)-[:geneAssociatesWithDisease]->(d:Disease)\nWHERE toLower(d.diseaseName) = 'congestive heart failure'\nWITH g LIMIT 20\nMATCH (b:BodyPart)-[r:bodyPartOverexpressesGene]->(g)\nRETURN g.geneSymbol AS gene, b.bodyPartName AS tissue, r.expressionScore AS score\nORDER BY r.expressionScore DESC LIMIT 50" },
+    { name: 'Drug-Side Effects', desc: 'Side effects reported for a specific drug', query: "MATCH (dr:Drug)-[:compoundCausesSideEffect]->(se:SideEffect)\nWHERE toLower(dr.commonName) CONTAINS 'metoprolol'\nRETURN dr.commonName AS drug, se.sideEffectName AS side_effect LIMIT 50" },
 ];
 
 function initTemplates() {
