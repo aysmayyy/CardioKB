@@ -8,11 +8,12 @@
 - After every successful pipeline run or significant code change, automatically update `README.md` with current graph stats (node/relationship counts, source counts) and commit and push without being asked.
 
 ## Project Overview
-12-week rotation project (Jan-Apr 2026) building a CVD-focused biomedical knowledge graph. The graph integrates 24 deduplicated data sources (each node type and edge type served by exactly one authoritative database) into Memgraph for disease research, feature selection, and precision medicine. Built using **BaseAgent** multi-agent orchestration (`~/Desktop/BaseAgent/cardiokb.ipynb`) with parser templates adapted for CardioKB's schema. Three legacy sources (SIDER, LINCS L1000, MEDLINE) are retained as-is — no live API alternatives available.
+12-week rotation project (Jan-Apr 2026) building a CVD-focused biomedical knowledge graph. The graph integrates 24 deduplicated data sources (each node type and edge type served by exactly one authoritative database) into Memgraph for disease research, feature selection, and precision medicine. Built using **BaseAgent** multi-agent orchestration (`~/Desktop/BaseAgent/cardiokb.ipynb` on the `cardiokb` branch) with parser templates adapted for CardioKB's schema. The web UI is in this repo (`aysmayyy/CardioKB`, `baseagent-build` branch). Three legacy sources (SIDER, LINCS L1000, MEDLINE) are retained as-is — no live API alternatives available.
 
-## Current Graph Stats
-- **4,879,019 nodes** | **7,456,921 relationships** | **17 node types** | **40 relationship types** | **24 sources** | **21 source labels**
+## Current Graph Stats (BaseAgent build — 2026-06-07)
+- **459,092 nodes** | **5,424,652 relationships** | **17 node types** | **22 relationship types** | **16 source labels**
 - All relationships carry a `source` property identifying the originating database (e.g., `source: "OpenTargets"`)
+- 7 edge types carry quantitative properties: `combinedScore`, `expressionScore`, `morScore`, `confidence`, `evidenceCode`, `score`, `interactionType`, `clinicalSignificance`
 - *Stats are current as of last pipeline run; see Memgraph or `GET /api/graph-stats` for live counts.*
 
 ## Tech Stack
@@ -169,6 +170,24 @@ DisGeNET, GWAS Catalog, Jensen DISEASES, OMIM, WikiPathways, AOP-DB, HGNC (base)
 86 entries in `src/ontology_configs.py` mapping parsed TSV files to graph node/relationship types, properties, and loading strategies. Each relationship config includes a `source_label` field that the loader sets as `r.source` on every relationship.
 
 ## Relationship Source Labels
-All relationships carry a `source` property. Current labels (21 in graph):
-`Bgee`, `BindingDB`, `CTD`, `ClinPGx`, `ClinVar`, `ClinicalTrials.gov`, `Disease Ontology`, `DoRothEA`, `DrugBank`, `DrugCentral`, `Gene Ontology`, `HGNC`, `HPO`, `Jensen TISSUES`, `LINCS L1000`, `MEDLINE`, `OpenTargets`, `PubTator`, `Reactome`, `SIDER`, `STRING`
-Note: HGNC Families uses `HGNC` as its source label.
+All relationships carry a `source` property. Current labels (16 in graph):
+`Bgee`, `BindingDB`, `CTD`, `ClinVar`, `ClinicalTrials.gov`, `DoRothEA`, `DrugBank`, `DrugCentral`, `Gene Ontology`, `HGNC`, `HPO`, `LINCS L1000`, `PubTator`, `Reactome`, `SIDER`, `STRING`
+
+## Node Property Names (for Cypher queries and API)
+- **Gene**: `geneSymbol`, `geneId`, `description`, `xrefEnsembl`, `xrefHGNC`, `xrefOMIM`
+- **Disease**: `diseaseName`, `definition`, `xrefDiseaseOntology`, `xrefUmlsCUI`
+- **Drug**: `commonName`, `drugId`, `xrefDrugBank`, `xrefPubChem`, `xrefMeSH`
+- **Variant**: `variantId`, `variantName`, `clinicalSignificance`, `xrefDbSNP`
+- **ClinicalTrial**: `trialId`, `title`, `phase`, `status`, `sponsor`
+- **Pathway**: `pathwayId`, `pathwayName`
+- **BodyPart**: `bodyPartName`, `xrefUberon`
+- **Phenotype**: `phenotypeName`, `xrefHPO`
+- **SideEffect**: `sideEffectName`, `xrefUmlsCUI`
+- **TranscriptionFactor**: `tfSymbol`
+- **BiologicalProcess**: `processName`, `geneOntologyId`
+- **MolecularFunction**: `functionName`, `geneOntologyId`
+- **CellularComponent**: `componentName`, `geneOntologyId`
+- **GeneFamily**: `familyId`, `familyName`
+- **PharmacologicClass**: `classId`, `className`
+- **Symptom**: `symptomName`, `xrefMeSH`
+- **DrugLabel**: `labelId`, `labelName`

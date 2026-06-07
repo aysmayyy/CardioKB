@@ -1,245 +1,212 @@
-# Disease Knowledge Graph Pipeline
+# CardioKB — Cardiovascular Disease Knowledge Graph
 
-A pipeline for building a disease-specific knowledge graph — integrating data from biomedical databases, populating an OWL ontology, and exporting a Memgraph-compatible graph.
+A biomedical knowledge graph integrating **24 deduplicated data sources** for cardiovascular disease research, feature selection, and precision medicine.
 
-## Overview
+## Current Graph Stats
 
-The pipeline runs four steps in sequence:
+- **459,092 nodes** | **5,424,652 relationships** | **17 node types** | **22 relationship types** | **16 source labels**
+- All relationships carry a `source` property identifying the originating database
+- 7 edge types carry quantitative properties (combinedScore, expressionScore, morScore, etc.)
 
-```
-1. Extract   — download and parse data from biomedical databases
-2. Export TSV — save parsed DataFrames to data/processed/
-3. Populate  — populate the OWL ontology using ista
-4. Export graph — write Memgraph-compatible CSV files to data/output/
-```
+## Quick Start
 
-Configuration lives in `config/`:
-- `project.yaml` — disease scope (search terms, UMLS CUIs, MeSH IDs, ontology paths)
-- `databases.yaml` — which sources to enable and their access credentials
-- `ontology_mappings.yaml` — how parsed columns map to ontology properties
-
-## Installation
-
-**Prerequisites:** Python 3.8+, MySQL (for AOP-DB), Git
+### Deploy (Docker — recommended)
 
 ```bash
-git clone <your-repo-url>
-cd <project-name>
+git clone https://github.com/aysmayyy/CardioKB.git
+cd CardioKB
+git checkout baseagent-build
 
-python3 -m venv .venv
-source .venv/bin/activate
+cp .env.example .env           # Fill in MEMGRAPH_PASSWORD, ANTHROPIC_API_KEY, ADMIN_PASSWORD
 
-pip install -r requirements.txt
+# Import pre-built graph data (if available)
+./scripts/import_graph.sh data/export/memgraph-data.tar.gz
 
-# Install ista (bundled in .ista/)
-pip install -e .ista
-
-# Install NCBI EDirect (required by the MEDLINE parser)
-bash edirect/install-edirect.sh
-export PATH="$(pwd)/edirect:${PATH}"   # add to ~/.bashrc or ~/.zshrc to persist
+# Launch web app + Memgraph
+docker compose up -d           # UI at http://localhost:5050
 ```
 
-**Credentials** — create a `.env` file:
-```bash
-DISGENET_API_KEY=your_key_here
-DRUGBANK_USERNAME=your_username
-DRUGBANK_PASSWORD=your_password
-DC_USER=drugman                    # DrugCentral public read-only account
-DC_PASSWORD=dosage
-MYSQL_USERNAME=root                # Only needed if running AOP-DB
-MYSQL_PASSWORD=your_password
-MYSQL_DB_NAME=aopdb
-NCBI_EUTILS_API_KEY=your_key_here  # Optional; raises MEDLINE rate limit to 10 req/s
-```
-
-## Usage
+### Local Development
 
 ```bash
-# Full pipeline
-python src/main.py
+conda activate cardiokb        # Python 3.11
 
-# Run a single pipeline step
-python src/main.py --step extract   # download sources and write TSVs
-python src/main.py --step populate  # load TSVs into the OWL ontology
-python src/main.py --step export    # write Memgraph CSVs from the ontology
+# Start Memgraph (Docker)
+docker run -d --name memgraph -p 7687:7687 -p 3000:3000 \
+  -v $(pwd)/data/output:/import-data memgraph/memgraph-platform
 
-# Run and export a single source (useful for testing)
-python src/main.py --source disgenet
+# Import graph
+docker exec -i memgraph mgconsole < data/output/import.cypher
 
-# Verbose output
-python src/main.py --log-level DEBUG
-
-# Re-download source files even if they already exist
-python src/main.py --force-download
+# Start Flask UI
+python src/api.py --port 5050  # http://localhost:5050
 ```
 
-Output files appear in `data/output/`:
-- `ontology_populated.rdf` — populated OWL ontology
-- `nodes_{NodeType}.csv` — one CSV per node type (Gene, Drug, Disease, …)
-- `edges_{RelType}.csv` — one CSV per relationship type
-- `import.cypher` — Cypher LOAD CSV script; paste into Memgraph Lab to load the graph
+## Tech Stack
 
-Logs are written to `kg_build.log`.
+- **Language:** Python 3.11 (conda env: `cardiokb`)
+- **Database:** Memgraph (bolt protocol, Neo4j driver compatible)
+- **Web UI:** Flask + vis.js (single-page app)
+- **Deployment:** Docker Compose (Flask app + Memgraph)
+- **Pipeline:** [BaseAgent](https://github.com/BinglanLi/BaseAgent) multi-agent orchestration (`cardiokb` branch)
 
-## Interactive use (Jupyter)
+## Web Interface
 
-Open `run_individual_components.ipynb` to run parsers one at a time. This is useful for debugging a specific source without running the full pipeline.
+The UI at `http://localhost:5050` provides three main features:
 
-## Configuration
+- **Explore** — Search any gene, drug, or disease and visualize its neighborhood as an interactive graph. Nodes are ranked by disease-specificity score. Two layers: core (1-hop, evidence-backed) and discovery (2-hop, hypothesis-generating).
+- **Query** — Run custom Cypher queries with built-in templates (Disease Subgraph, Gene Neighbors, Drug Targets, Clinical Trials, Gene Expression, etc.). Results shown as tables and/or graph visualizations.
+- **Extract Disease Subgraph** — N-hop extraction around any CVD subtype with JSON/CSV export.
 
-### Set disease scope
+## Node Types (17)
 
-Edit `config/project.yaml`:
-```yaml
-project:
-  disease_scope:
-    primary_terms:
-      - "<disease_term>"
-    umls_cuis:
-      - "<UMLS_CUI>"
+| Type | Count | Description |
+|------|------:|-------------|
+| Gene | 193,795 | Human genes from NCBI Gene |
+| Variant | 135,555 | Genetic variants from ClinVar |
+| Drug | 32,849 | Compounds from DrugBank + CTD |
+| BiologicalProcess | 24,428 | GO biological processes |
+| ClinicalTrial | 21,578 | Trials from ClinicalTrials.gov |
+| Phenotype | 19,389 | Clinical phenotypes from HPO |
+| MolecularFunction | 10,056 | GO molecular functions |
+| GeneFamily | 4,257 | Gene families from HGNC |
+| CellularComponent | 4,076 | GO cellular components |
+| Disease | 3,442 | Diseases from Disease Ontology |
+| Pathway | 2,870 | Pathways from Reactome |
+| PharmacologicClass | 2,359 | Drug classes from DrugCentral |
+| SideEffect | 2,227 | Side effects from SIDER |
+| BodyPart | 1,400 | Anatomy from Uberon |
+| Symptom | 415 | Symptoms from MeSH |
+| TranscriptionFactor | 367 | TFs from DoRothEA |
+| DrugLabel | 29 | Pharmacogenomic labels from ClinPGx |
+
+## Relationship Types (22)
+
+| Relationship | Count | Source |
+|-------------|------:|--------|
+| bodyPartOverexpressesGene | 2,749,193 | Bgee |
+| geneAssociatesWithDisease | 539,964 | PubTator |
+| chemicalIncreasesExpression | 343,823 | CTD |
+| chemicalDecreasesExpression | 328,726 | CTD |
+| geneAssociatesWithPhenotype | 270,265 | HPO |
+| geneInteractsWithGene | 229,007 | STRING |
+| geneInPathway | 137,116 | Reactome |
+| variantInGene | 135,393 | ClinVar |
+| geneParticipatesInBiologicalProcess | 122,117 | Gene Ontology |
+| geneAssociatedWithCellularComponent | 90,141 | Gene Ontology |
+| geneHasMolecularFunction | 76,612 | Gene Ontology |
+| compoundUpregulatesGene | 74,854 | CTD |
+| compoundCausesSideEffect | 67,721 | SIDER |
+| compoundDownregulatesGene | 64,661 | CTD |
+| variantAssociatedWithDisease | 51,323 | ClinVar |
+| drugBindsGene | 29,363 | DrugBank |
+| geneInFamily | 27,022 | HGNC |
+| compoundInPharmacologicClass | 25,687 | DrugCentral |
+| chemicalBindsGene | 22,735 | BindingDB |
+| STUDIES_CONDITION | 20,667 | ClinicalTrials.gov |
+| transcriptionFactorInteractsWithGene | 15,082 | DoRothEA |
+| TESTS_INTERVENTION | 3,180 | ClinicalTrials.gov |
+
+## Edge Properties
+
+7 relationship types carry quantitative data properties beyond `source`:
+
+| Relationship | Properties |
+|-------------|-----------|
+| geneInteractsWithGene | `combinedScore` (STRING confidence, 0-1000) |
+| bodyPartOverexpressesGene | `expressionScore` (Bgee expression level) |
+| transcriptionFactorInteractsWithGene | `morScore`, `confidence` (DoRothEA A/B/C/D) |
+| geneInPathway | `evidenceCode` (Reactome evidence, e.g. TAS) |
+| geneAssociatesWithDisease | `score` (OpenTargets overall score, 0-1) |
+| drugBindsGene | `interactionType` (DrugBank action, e.g. inhibitor) |
+| variantAssociatedWithDisease | `clinicalSignificance` (ClinVar, e.g. Pathogenic) |
+
+## Project Structure
+
 ```
-
-### Enable a data source
-
-Edit `config/databases.yaml`:
-```yaml
-disgenet:
-  enabled: true          # change to false to skip
-  args:
-    api_key_env: DISGENET_API_KEY
-```
-
-## Adding a new data source
-
-1. Create a parser in `src/parsers/`:
-
-```python
-from .base_parser import BaseParser
-
-class MySourceParser(BaseParser):
-    def download_data(self) -> bool:
-        # download files to self.source_dir
-        return True
-
-    def parse_data(self) -> dict[str, pd.DataFrame]:
-        # return {"table_name": dataframe, ...}
-        return {}
-
-    def get_schema(self) -> dict:
-        return {}
-```
-
-2. Register it in `src/main.py`:
-
-```python
-PARSERS = {
-    ...
-    "mysource": MySourceParser,
-}
-```
-
-3. Add an entry to `config/databases.yaml`:
-
-```yaml
-mysource:
-  enabled: true
-  args:
-    api_key_env: MYSOURCE_API_KEY
-  notes: "Brief description."
-```
-
-4. Add ontology mappings to `config/ontology_mappings.yaml`.
-
-## Project structure
-
-```
-<project-name>/
-├── config/
-│   ├── project.yaml              # disease scope, ontology settings
-│   ├── databases.yaml            # source databases and credentials
-│   └── ontology_mappings.yaml    # column-to-ontology-property mappings
+CardioKB/
 ├── src/
-│   ├── main.py                   # pipeline entry point (read this first)
-│   ├── parsers/                  # source parsers
-│   │   ├── base_parser.py
-│   │   ├── aopdb_parser.py
-│   │   ├── bgee_parser.py
-│   │   ├── bindingdb_parser.py
-│   │   ├── collecttri_parser.py
-│   │   ├── ctd_parser.py
-│   │   ├── disease_ontology_parser.py
-│   │   ├── disgenet_parser.py
-│   │   ├── dorothea_parser.py
-│   │   ├── drugbank_parser.py
-│   │   ├── drugcentral_parser.py
-│   │   ├── evolutionary_rate_covariation.py
-│   │   ├── gene_ontology_parser.py
-│   │   ├── medline_parser.py
-│   │   ├── mesh_parser.py
-│   │   ├── ncbigene_parser.py
-│   │   ├── reactome_parser.py
-│   │   └── uberon_parser.py
-│   ├── ontology/
-│   │   └── populator.py          # OWL population via ista
-│   └── export/
-│       └── memgraph_exporter.py  # typed CSV export for Memgraph
+│   ├── api.py                    # Flask web API (5 endpoints)
+│   ├── admin_agent.py            # Pipeline health check agent
+│   ├── utils.py                  # Shared utilities
+│   ├── main.py                   # Pipeline orchestrator
+│   ├── memgraph_loader.py        # Cypher-based Memgraph loader
+│   ├── ontology_configs.py       # 86 ontology mappings
+│   ├── parsers/                  # 24 data source parsers
+│   └── export/                   # TSV and Memgraph exporters
+├── interface/
+│   └── index.html                # Single-page web dashboard
+├── eval/                         # 5 evaluation scripts
+│   ├── eval_pipeline.py          # Unified 4-stage runner
+│   ├── eval_download.py          # Raw data validation
+│   ├── eval_parser.py            # Parser output validation
+│   ├── eval_load.py              # TSV→Graph load validation
+│   └── eval_graph.py             # Live Memgraph validation
+├── scripts/
+│   ├── compute_specificity.py    # Pre-compute node specificity scores
+│   ├── export_graph.sh           # Export Memgraph data volume
+│   └── import_graph.sh           # Import Memgraph data volume
+├── ontology/
+│   ├── disease_filter.txt        # Active disease filter (symlink)
+│   └── diseases/                 # CVD, Alzheimer's, cancer, etc.
 ├── data/
-│   ├── raw/                      # downloaded source files
-│   ├── processed/                # parsed TSV files (one folder per source)
-│   ├── ontology/                 # base OWL ontology
-│   └── output/                   # final outputs
-├── eval/                            # eval_after_parser.py, eval_after_ontology.py, eval_after_memgraph.py
-├── docs/                            # overview.md, reference.md
-├── run_individual_components.ipynb  # run parsers interactively
-├── run.sh                           # convenience wrapper
-└── requirements.txt
+│   ├── raw/                      # Downloaded source data (~21 GB)
+│   ├── processed/                # Parsed TSV files
+│   └── output/                   # Memgraph CSV + import.cypher
+├── docker-compose.yml            # Full stack: Memgraph + Flask
+├── Dockerfile                    # Flask app container
+└── .env.example                  # Environment variable template
 ```
 
-## Data sources
+## Environment Variables
 
-| Source | Parser | Access | Enabled |
-|--------|--------|--------|---------|
-| AOP-DB | `AOPDBParser` | Local MySQL | No |
-| Bgee | `BgeeParser` | HTTP download | Yes |
-| BindingDB | `BindingDBParser` | HTTP download | Yes |
-| CollectTRI | `CollectTRIParser` | OmniPath API | Yes |
-| CTD | `CTDParser` | HTTP download | Yes |
-| Disease Ontology | `DiseaseOntologyParser` | OBO file | Yes |
-| DisGeNET | `DisGeNETParser` | REST API (key required) | Yes |
-| DrugBank | `DrugBankParser` | HTTP download (credentials required) | Yes |
-| DrugCentral | `DrugCentralParser` | Remote PostgreSQL (public credentials) | Yes |
-| Evolutionary Rate Covariation | `EvolutionaryRateCovariationParser` | HTTP download (Dryad) | Yes |
-| Gene Ontology | `GeneOntologyParser` | OBO file | Yes |
-| MEDLINE | `MEDLINEParser` | NCBI E-utilities (PubMed) | Yes |
-| MeSH | `MeSHParser` | XML download | Yes |
-| NCBI Gene | `NCBIGeneParser` | NCBI FTP | Yes |
-| Reactome | `ReactomeParser` | HTTP download | Yes |
-| Uberon | `UberonParser` | OBO file | Yes |
+See `.env.example` for the full list:
 
-## Troubleshooting
+| Variable | Purpose |
+|----------|---------|
+| `MEMGRAPH_URI` | Graph database connection (default: `bolt://localhost:7687`) |
+| `MEMGRAPH_USERNAME` / `MEMGRAPH_PASSWORD` | Graph auth (optional for local Docker) |
+| `ANTHROPIC_API_KEY` | AI features |
+| `ANTHROPIC_FOUNDRY_API_KEY` / `ANTHROPIC_FOUNDRY_BASE_URL` | Azure AI Foundry (preferred) |
+| `ADMIN_PASSWORD` | Admin UI features |
+| `DRUGBANK_USERNAME` / `DRUGBANK_PASSWORD` | Pipeline only (optional) |
 
-**`ista` not found:**
+## Pipeline
+
+The graph is built using [BaseAgent](https://github.com/BinglanLi/BaseAgent) on the `cardiokb` branch. The pipeline:
+
+1. **Downloads** raw data from 24 biomedical databases
+2. **Parses** each source into standardized TSV files
+3. **Populates** an OWL ontology via ista
+4. **Exports** Memgraph-compatible CSVs with typed `LOAD CSV` import script
+
 ```bash
-pip install -e .ista
+# Run from ~/Desktop/BaseAgent on the cardiokb branch
+python src/main.py                    # Full pipeline
+python src/main.py --skip-download    # Use cached data
+python src/main.py --skip-neo4j       # Parse + export only
 ```
 
-**MySQL connection failed:** verify MySQL is running and credentials in `.env` are correct.
+## Evaluation
 
-**DrugCentral connection failed:** the pipeline connects to a public read-only instance at `unmtid-dbs.net:5433`. Verify `DC_USER=drugman` and `DC_PASSWORD=dosage` are set in `.env`. To use a local dump instead, load it with `createdb drugcentral && gunzip -c drugcentral.sql.gz | psql drugcentral` and update `pg_config.host` in `databases.yaml`.
+```bash
+python eval/eval_pipeline.py          # Run all 4 stages
+python eval/eval_graph.py             # Live Memgraph validation only
+```
 
-**EDirect not found (MEDLINE parser):** run `bash edirect/install-edirect.sh` from the repo root and add `edirect/` to your PATH.
+## Data Export/Import
 
-**API authentication failed:** check API keys in `.env`.
+```bash
+# Export graph data for transfer
+./scripts/export_graph.sh             # -> data/export/memgraph-data.tar.gz
 
-**Download failed:** some sources need manual download — check the log for instructions.
+# Import on target host
+./scripts/import_graph.sh data/export/memgraph-data.tar.gz
+docker compose up -d
+```
 
-## Further reading
+## Sources (16 in graph)
 
-- [`docs/overview.md`](docs/overview.md) — pipeline step details, config file contracts, and cross-module invariants
-- [`docs/reference.md`](docs/reference.md) — full parser table, environment variables, and dependency list
+Bgee, BindingDB, CTD, ClinVar, ClinicalTrials.gov, DoRothEA, DrugBank, DrugCentral, Gene Ontology, HGNC, HPO, LINCS L1000 (legacy), PubTator, Reactome, SIDER (legacy), STRING
 
-## References
-
-- [ista](https://github.com/RomanoLab/ista)
-- [Hetionet](https://het.io/)
-- [OmniPath/DoRothEA](https://omnipathdb.org/)
+Additional parsers available but edges not in current build: MEDLINE (legacy), MeSH (nodes only), NCBI Gene (nodes only), Disease Ontology (nodes only), Uberon (nodes only).
