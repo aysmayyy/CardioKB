@@ -1,6 +1,6 @@
 # CardioKB — Cardiovascular Disease Knowledge Graph
 
-A biomedical knowledge graph integrating **24 deduplicated data sources** for cardiovascular disease research, feature selection, and precision medicine.
+A biomedical knowledge graph integrating **22 data sources** for cardiovascular disease research, feature selection, and precision medicine.
 
 ## Current Graph Stats
 
@@ -17,10 +17,11 @@ git clone https://github.com/aysmayyy/CardioKB.git
 cd CardioKB
 git checkout baseagent-build
 
-cp .env.example .env           # Fill in MEMGRAPH_PASSWORD, ANTHROPIC_API_KEY, ADMIN_PASSWORD
+cp .env.example .env           # Fill in MEMGRAPH_PASSWORD and ADMIN_PASSWORD
 
-# Import pre-built graph data (if available)
-./scripts/import_graph.sh data/export/memgraph-data.tar.gz
+# Download the pre-built graph data tar.gz from Google Drive,
+# then place it in data/export/ and import:
+./scripts/import_graph.sh data/export/memgraph-baseagent-2026-06-07.tar.gz
 
 # Launch web app + Memgraph
 docker compose up -d           # UI at http://localhost:5050
@@ -31,12 +32,11 @@ docker compose up -d           # UI at http://localhost:5050
 ```bash
 conda activate cardiokb        # Python 3.11
 
-# Start Memgraph (Docker)
-docker run -d --name memgraph -p 7687:7687 -p 3000:3000 \
-  -v $(pwd)/data/output:/import-data memgraph/memgraph-platform
+# Start Memgraph via Docker Compose (or standalone)
+docker compose up -d memgraph
 
-# Import graph
-docker exec -i memgraph mgconsole < data/output/import.cypher
+# Import graph data (volume backup)
+./scripts/import_graph.sh data/export/memgraph-baseagent-2026-06-07.tar.gz
 
 # Start Flask UI
 python src/api.py --port 5050  # http://localhost:5050
@@ -52,11 +52,16 @@ python src/api.py --port 5050  # http://localhost:5050
 
 ## Web Interface
 
-The UI at `http://localhost:5050` provides three main features:
+The UI at `http://localhost:5050` provides:
 
-- **Explore** — Search any gene, drug, or disease and visualize its neighborhood as an interactive graph. Nodes are ranked by disease-specificity score. Two layers: core (1-hop, evidence-backed) and discovery (2-hop, hypothesis-generating).
-- **Query** — Run custom Cypher queries with built-in templates (Disease Subgraph, Gene Neighbors, Drug Targets, Clinical Trials, Gene Expression, etc.). Results shown as tables and/or graph visualizations.
-- **Extract Disease Subgraph** — N-hop extraction around any CVD subtype with JSON/CSV export.
+- **Explore** — Search any gene, drug, or disease and visualize its neighborhood as an interactive graph. Nodes are ranked by disease-specificity score. Two layers: core (1-hop, evidence-backed) and discovery (2-hop, hypothesis-generating). Includes search autocomplete, clickable quick-search examples, and an active graph breadcrumb showing what's currently displayed.
+- **Shortest Path** — Find and visualize the shortest path between any two nodes in the graph (e.g. APOE to heart failure).
+- **Edge Provenance** — Click any edge in the graph to see its source database, evidence scores, and a description of the data source ("Why is this here?").
+- **Filters** — Toggle node types and edge types on/off to focus the visualization. Show/hide the discovery layer.
+- **Query** — Run custom Cypher queries with built-in templates (Disease Subgraph, Gene Neighbors, Drug Targets, Drug Repurposing, Clinical Trials, Shared Genes, etc.). Save and reuse queries. Results shown as tables and/or graph visualizations.
+- **Node Detail** — Click any node to see its properties, then "View All Connections" to browse every connection paginated from the database.
+- **Extract Disease Subgraph** — Bulk export of all nodes and edges within N hops of a disease as JSON or CSV. For interactive visualization, use Explore instead.
+- **Export** — Download the current graph view as CSV, JSON, or PNG image. Print to PDF via browser.
 
 ## Node Types (17)
 
@@ -126,17 +131,17 @@ The UI at `http://localhost:5050` provides three main features:
 ```
 CardioKB/
 ├── src/
-│   ├── api.py                    # Flask web API (5 endpoints)
+│   ├── api.py                    # Flask web API
 │   ├── admin_agent.py            # Pipeline health check agent
 │   ├── utils.py                  # Shared utilities
 │   ├── main.py                   # Pipeline orchestrator
 │   ├── memgraph_loader.py        # Cypher-based Memgraph loader
 │   ├── ontology_configs.py       # 86 ontology mappings
-│   ├── parsers/                  # 24 data source parsers
+│   ├── parsers/                  # Data source parsers
 │   └── export/                   # TSV and Memgraph exporters
 ├── interface/
 │   └── index.html                # Single-page web dashboard
-├── eval/                         # 5 evaluation scripts
+├── eval/                         # Evaluation scripts
 │   ├── eval_pipeline.py          # Unified 4-stage runner
 │   ├── eval_download.py          # Raw data validation
 │   ├── eval_parser.py            # Parser output validation
@@ -152,7 +157,7 @@ CardioKB/
 ├── data/
 │   ├── raw/                      # Downloaded source data (~21 GB)
 │   ├── processed/                # Parsed TSV files
-│   └── output/                   # Memgraph CSV + import.cypher
+│   └── export/                   # Graph data volume backups
 ├── docker-compose.yml            # Full stack: Memgraph + Flask
 ├── Dockerfile                    # Flask app container
 └── .env.example                  # Environment variable template
@@ -166,22 +171,21 @@ See `.env.example` for the full list:
 |----------|---------|
 | `MEMGRAPH_URI` | Graph database connection (default: `bolt://localhost:7687`) |
 | `MEMGRAPH_USERNAME` / `MEMGRAPH_PASSWORD` | Graph auth (optional for local Docker) |
-| `ANTHROPIC_API_KEY` | AI features |
-| `ANTHROPIC_FOUNDRY_API_KEY` / `ANTHROPIC_FOUNDRY_BASE_URL` | Azure AI Foundry (preferred) |
-| `ADMIN_PASSWORD` | Admin UI features |
+| `ADMIN_PASSWORD` | Admin UI features (health check, pipeline run) |
+| `ANTHROPIC_API_KEY` | AI features (optional, not needed for web UI) |
+| `ANTHROPIC_FOUNDRY_API_KEY` / `ANTHROPIC_FOUNDRY_BASE_URL` | Azure AI Foundry (optional) |
 | `DRUGBANK_USERNAME` / `DRUGBANK_PASSWORD` | Pipeline only (optional) |
 
 ## Pipeline
 
 The graph is built using [BaseAgent](https://github.com/BinglanLi/BaseAgent) on the `cardiokb` branch. The pipeline:
 
-1. **Downloads** raw data from 24 biomedical databases
+1. **Downloads** raw data from biomedical databases
 2. **Parses** each source into standardized TSV files
-3. **Populates** an OWL ontology via ista
-4. **Exports** Memgraph-compatible CSVs with typed `LOAD CSV` import script
+3. **Loads** into Memgraph via Cypher-based batch loader
 
 ```bash
-# Run from ~/Desktop/BaseAgent on the cardiokb branch
+# Run from ~/Desktop/CardioKB
 python src/main.py                    # Full pipeline
 python src/main.py --skip-download    # Use cached data
 python src/main.py --skip-neo4j       # Parse + export only
@@ -197,16 +201,18 @@ python eval/eval_graph.py             # Live Memgraph validation only
 ## Data Export/Import
 
 ```bash
-# Export graph data for transfer
-./scripts/export_graph.sh             # -> data/export/memgraph-data.tar.gz
+# Export graph data for transfer to another machine
+./scripts/export_graph.sh             # -> data/export/memgraph-data.tar.gz (~1.2 GB)
 
 # Import on target host
-./scripts/import_graph.sh data/export/memgraph-data.tar.gz
+./scripts/import_graph.sh data/export/memgraph-baseagent-2026-06-07.tar.gz
 docker compose up -d
 ```
 
-## Sources (16 in graph)
+## Data Sources
 
-Bgee, BindingDB, CTD, ClinVar, ClinicalTrials.gov, DoRothEA, DrugBank, DrugCentral, Gene Ontology, HGNC, HPO, LINCS L1000 (legacy), PubTator, Reactome, SIDER (legacy), STRING
+**19 active parsers** with data in the current graph build:
 
-Additional parsers available but edges not in current build: MEDLINE (legacy), MeSH (nodes only), NCBI Gene (nodes only), Disease Ontology (nodes only), Uberon (nodes only).
+Bgee, BindingDB, ClinicalTrials.gov, ClinVar, CTD, Disease Ontology (nodes only), DoRothEA, DrugBank, DrugCentral, Gene Ontology, HGNC, HPO, LINCS L1000 (legacy), MeSH (nodes only), NCBI Gene (nodes only), PubTator, Reactome, SIDER (legacy), STRING
+
+**Node-only sources** (provide nodes but no edges with source labels): NCBI Gene, Disease Ontology, Uberon, MeSH, OpenTargets, ClinPGx
