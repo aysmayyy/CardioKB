@@ -370,10 +370,12 @@ def query_neo4j_stats(uri: str, username: str, password: str,
                 stats['total_relationships'] += cnt
 
             for label in sorted(labels):
-                cnt = session.run(
-                    f"MATCH (n:`{label}`) WHERE NOT (n)--() "
-                    f"RETURN count(n) AS cnt"
+                total = stats['node_counts'].get(label, 0)
+                connected = session.run(
+                    f"MATCH (n:`{label}`)--() "
+                    f"RETURN count(DISTINCT n) AS cnt"
                 ).single()['cnt']
+                cnt = total - connected
                 if cnt > 0:
                     stats['orphan_nodes'][label] = cnt
 
