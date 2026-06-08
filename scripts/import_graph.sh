@@ -50,11 +50,23 @@ if [[ "$1" == "--cypher" ]]; then
     # Ensure Memgraph is running
     cd "$PROJECT_DIR"
     docker compose up -d "$SERVICE_NAME"
-    echo "Waiting for Memgraph to be ready..."
-    sleep 10
-
-    # Get the compose container name
     CONTAINER=$(docker compose ps -q "$SERVICE_NAME")
+    if [[ -z "$CONTAINER" ]]; then
+        echo "ERROR: Memgraph container not found. Run 'docker compose up -d memgraph' first."
+        exit 1
+    fi
+    echo "Waiting for Memgraph to be ready..."
+    for i in $(seq 1 30); do
+        if echo "RETURN 1;" | docker exec -i "$CONTAINER" mgconsole >/dev/null 2>&1; then
+            echo "Memgraph is ready."
+            break
+        fi
+        if [ "$i" -eq 30 ]; then
+            echo "ERROR: Memgraph did not become ready within 60 seconds."
+            exit 1
+        fi
+        sleep 2
+    done
     if [[ -z "$CONTAINER" ]]; then
         echo "ERROR: Memgraph container not found. Run 'docker compose up -d memgraph' first."
         exit 1
@@ -99,10 +111,23 @@ else
 
     echo "Volume restored. Starting Memgraph..."
     docker compose up -d "$SERVICE_NAME"
-    sleep 10
+
+    # Wait for Memgraph to finish loading the snapshot
+    CONTAINER=$(docker compose ps -q "$SERVICE_NAME")
+    echo "Waiting for Memgraph to be ready..."
+    for i in $(seq 1 30); do
+        if echo "RETURN 1;" | docker exec -i "$CONTAINER" mgconsole >/dev/null 2>&1; then
+            echo "Memgraph is ready."
+            break
+        fi
+        if [ "$i" -eq 30 ]; then
+            echo "ERROR: Memgraph did not become ready within 60 seconds."
+            exit 1
+        fi
+        sleep 2
+    done
 
     # Verify
-    CONTAINER=$(docker compose ps -q "$SERVICE_NAME")
     echo "Verifying graph..."
     echo "MATCH (n) RETURN count(n) AS nodes;" | docker exec -i "$CONTAINER" mgconsole
     echo "MATCH ()-[r]->() RETURN count(r) AS relationships;" | docker exec -i "$CONTAINER" mgconsole
