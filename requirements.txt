@@ -23,6 +23,12 @@ mysql-connector-python>=8.0.33
 # Configuration
 pyyaml>=6.0
 
+# Web framework
+flask>=3.0.0
+
+# Graph database driver (Memgraph via Bolt protocol)
+neo4j>=5.14.0
+
 # Environment variables
 python-dotenv>=1.0.0
 
