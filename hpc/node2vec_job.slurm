@@ -8,7 +8,7 @@
 #SBATCH -N 1
 #SBATCH --ntasks=1
 #SBATCH --cpus-per-task=8
-#SBATCH --mem=32G
+#SBATCH --mem=128G
 
 ## Time Config — SparseOTF walks are slower but memory-safe
 #SBATCH --time=06:00:00

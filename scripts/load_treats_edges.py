@@ -6,17 +6,20 @@ Load drugTreatsDisease edges from two sources:
 
 import csv
 import logging
+import os
 from collections import defaultdict
 from neo4j import GraphDatabase
 
 logging.basicConfig(level=logging.INFO, format="%(message)s")
 log = logging.getLogger()
 
-MEMGRAPH_URI = "bolt://localhost:7687"
+MEMGRAPH_URI = os.environ.get("MEMGRAPH_URI", "bolt://localhost:7687")
+MEMGRAPH_USER = os.environ.get("MEMGRAPH_USERNAME", "")
+MEMGRAPH_PASS = os.environ.get("MEMGRAPH_PASSWORD", "")
 
 
 def get_driver():
-    return GraphDatabase.driver(MEMGRAPH_URI, auth=("", ""))
+    return GraphDatabase.driver(MEMGRAPH_URI, auth=(MEMGRAPH_USER, MEMGRAPH_PASS))
 
 
 def build_cui_mapping(driver):
@@ -155,10 +158,13 @@ def load_clinical_trials_treats(driver):
     return total
 
 
-def main():
-    driver = get_driver()
+def load_treats(driver=None):
+    """Load all drugTreatsDisease edges. Callable from pipeline or standalone."""
+    own_driver = driver is None
+    if own_driver:
+        driver = get_driver()
+
     try:
-        # Clean slate
         with driver.session() as s:
             r = s.run("MATCH ()-[r:drugTreatsDisease]->() DELETE r RETURN count(r)")
             deleted = r.single()[0]
@@ -188,8 +194,14 @@ def main():
                 total += rec["c"]
             log.info(f"  TOTAL: {total} drugTreatsDisease edges")
 
+        return total
     finally:
-        driver.close()
+        if own_driver:
+            driver.close()
+
+
+def main():
+    load_treats()
 
 
 if __name__ == "__main__":

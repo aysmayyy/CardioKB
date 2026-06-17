@@ -9,6 +9,7 @@ Also un-skips these configs in ontology_configs.py for future pipeline runs.
 import csv
 import json
 import logging
+import os
 import requests
 from pathlib import Path
 
@@ -19,9 +20,9 @@ log = logging.getLogger(__name__)
 
 PROJECT_ROOT = Path(__file__).resolve().parents[1]
 
-MEMGRAPH_URI = "bolt://localhost:7687"
-MEMGRAPH_USER = ""
-MEMGRAPH_PASS = ""
+MEMGRAPH_URI = os.environ.get("MEMGRAPH_URI", "bolt://localhost:7687")
+MEMGRAPH_USER = os.environ.get("MEMGRAPH_USERNAME", "")
+MEMGRAPH_PASS = os.environ.get("MEMGRAPH_PASSWORD", "")
 BATCH_SIZE = 1000
 
 
@@ -242,6 +243,20 @@ def verify(driver):
             r = s.run(f"MATCH ()-[r:{rel}]->() RETURN count(r) AS c")
             count = r.single()["c"]
             log.info(f"  {rel}: {count:,} edges")
+
+
+def load_affects_response(driver=None):
+    """Load AFFECTS_RESPONSE_TO edges from ClinPGx. Callable from pipeline."""
+    own_driver = driver is None
+    if own_driver:
+        driver = get_driver()
+
+    try:
+        load_clinpgx_affects_response(driver)
+        verify(driver)
+    finally:
+        if own_driver:
+            driver.close()
 
 
 def main():

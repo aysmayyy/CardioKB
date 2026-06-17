@@ -33,6 +33,8 @@ from compute_specificity import compute_specificity
 from enrich_drug_mesh import enrich as enrich_drug_mesh
 from enrich_drug_drugbank import enrich as enrich_drug_drugbank
 from enrich_drug_pubchem import enrich as enrich_drug_pubchem
+from load_treats_edges import load_treats
+from load_missing_edges import load_affects_response
 
 from parsers import (
     AOPDBParser,
@@ -416,6 +418,10 @@ Examples:
     if args.step == "load":
         logger.info("Running load step only (loading into Memgraph)")
         load_to_memgraph(processed_dir)
+        logger.info("Loading drugTreatsDisease edges...")
+        load_treats()
+        logger.info("Loading AFFECTS_RESPONSE_TO edges...")
+        load_affects_response()
         logger.info("Computing specificity scores...")
         compute_specificity()
         logger.info("Enriching Drug cross-references...")
@@ -430,10 +436,16 @@ Examples:
         logger.info("Skipping download/parse; using existing TSVs in data/processed/")
         if not args.skip_neo4j:
             load_to_memgraph(processed_dir)
+            logger.info("Loading drugTreatsDisease edges...")
+            load_treats()
+            logger.info("Loading AFFECTS_RESPONSE_TO edges...")
+            load_affects_response()
             logger.info("Computing specificity scores...")
             compute_specificity()
-            logger.info("Enriching Drug MeSH cross-references...")
+            logger.info("Enriching Drug cross-references...")
             enrich_drug_mesh()
+            enrich_drug_drugbank()
+            enrich_drug_pubchem()
         logger.info("Pipeline complete (skip-download mode).")
         return
 
@@ -444,6 +456,10 @@ Examples:
     export_graph(project_config, output_dir, processed_dir)
     if not args.skip_neo4j:
         load_to_memgraph(processed_dir)
+        logger.info("Loading drugTreatsDisease edges...")
+        load_treats()
+        logger.info("Loading AFFECTS_RESPONSE_TO edges...")
+        load_affects_response()
         logger.info("Computing specificity scores...")
         compute_specificity()
         logger.info("Enriching Drug cross-references...")
