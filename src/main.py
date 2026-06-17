@@ -30,6 +30,9 @@ sys.path.insert(0, str(Path(__file__).parent.parent / "scripts"))
 from ontology_configs import ONTOLOGY_CONFIGS
 from memgraph_loader import Neo4jLoader
 from compute_specificity import compute_specificity
+from enrich_drug_mesh import enrich as enrich_drug_mesh
+from enrich_drug_drugbank import enrich as enrich_drug_drugbank
+from enrich_drug_pubchem import enrich as enrich_drug_pubchem
 
 from parsers import (
     AOPDBParser,
@@ -415,6 +418,10 @@ Examples:
         load_to_memgraph(processed_dir)
         logger.info("Computing specificity scores...")
         compute_specificity()
+        logger.info("Enriching Drug cross-references...")
+        enrich_drug_mesh()
+        enrich_drug_drugbank()
+        enrich_drug_pubchem()
         logger.info("Load step complete.")
         return
 
@@ -425,6 +432,8 @@ Examples:
             load_to_memgraph(processed_dir)
             logger.info("Computing specificity scores...")
             compute_specificity()
+            logger.info("Enriching Drug MeSH cross-references...")
+            enrich_drug_mesh()
         logger.info("Pipeline complete (skip-download mode).")
         return
 
@@ -437,6 +446,10 @@ Examples:
         load_to_memgraph(processed_dir)
         logger.info("Computing specificity scores...")
         compute_specificity()
+        logger.info("Enriching Drug cross-references...")
+        enrich_drug_mesh()
+        enrich_drug_drugbank()
+        enrich_drug_pubchem()
     logger.info("Pipeline complete.")
 
 
