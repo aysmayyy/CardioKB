@@ -1,15 +1,17 @@
 """
 CTD (Comparative Toxicogenomics Database) Parser for the knowledge graph.
 
-Downloads the CTD chemical-gene interactions bulk TSV and extracts two
-expression edge types plus the associated node tables:
+Downloads two CTD bulk TSV files and extracts:
 
   chemical_nodes.tsv                  — Chemical nodes (MeSH)
   gene_nodes.tsv                      — Gene nodes (NCBI Gene)
   chemical_increases_expression.tsv   — chemicalIncreasesExpression edges
   chemical_decreases_expression.tsv   — chemicalDecreasesExpression edges
+  chemical_treats_disease.tsv         — drugTreatsDisease edges (DirectEvidence=therapeutic)
 
-Data Source: http://ctdbase.org/reports/CTD_chem_gene_ixns.tsv.gz
+Data Sources:
+  http://ctdbase.org/reports/CTD_chem_gene_ixns.tsv.gz
+  http://ctdbase.org/reports/CTD_chemicals_diseases.tsv.gz
 """
 
 import logging
@@ -34,7 +36,9 @@ class CTDParser(BaseParser):
     """
 
     CTD_URL = "http://ctdbase.org/reports/CTD_chem_gene_ixns.tsv.gz"
+    CTD_CHEM_DISEASE_URL = "http://ctdbase.org/reports/CTD_chemicals_diseases.tsv.gz"
     _FILENAME = "CTD_chem_gene_ixns.tsv.gz"
+    _CHEM_DISEASE_FILENAME = "CTD_chemicals_diseases.tsv.gz"
 
     # Column names as they appear in the CTD file (after skipping # comment lines)
     _CTD_COLS = [
@@ -62,14 +66,25 @@ class CTDParser(BaseParser):
     # ------------------------------------------------------------------
 
     def download_data(self) -> bool:
-        """Download the CTD chemical-gene interactions file."""
+        """Download CTD chemical-gene interactions and chemical-disease files."""
         logger.info("Downloading CTD chemical-gene interactions …")
+        ok = True
         result = self.download_file(self.CTD_URL, self._FILENAME)
         if result:
-            logger.info("CTD file available at: %s", result)
-            return True
-        logger.error("Failed to download CTD chemical-gene interactions.")
-        return False
+            logger.info("CTD chem-gene file available at: %s", result)
+        else:
+            logger.error("Failed to download CTD chemical-gene interactions.")
+            ok = False
+
+        logger.info("Downloading CTD chemical-disease associations …")
+        result2 = self.download_file(self.CTD_CHEM_DISEASE_URL, self._CHEM_DISEASE_FILENAME)
+        if result2:
+            logger.info("CTD chem-disease file available at: %s", result2)
+        else:
+            logger.error("Failed to download CTD chemical-disease associations.")
+            ok = False
+
+        return ok
 
     # ------------------------------------------------------------------
     # Parse
@@ -209,7 +224,82 @@ class CTDParser(BaseParser):
         if not dec_edges.empty:
             result["chemical_decreases_expression"] = dec_edges
 
+        # ---- Chemical-Disease therapeutic edges ----
+        treats_df = self._parse_chemical_disease_therapeutic()
+        if treats_df is not None and not treats_df.empty:
+            result["chemical_treats_disease"] = treats_df
+
         return result
+
+    # ------------------------------------------------------------------
+    # Chemical-Disease therapeutic edges
+    # ------------------------------------------------------------------
+
+    _CHEM_DISEASE_COLS = [
+        "ChemicalName",
+        "ChemicalID",
+        "CasRN",
+        "DiseaseName",
+        "DiseaseID",
+        "DirectEvidence",
+        "InferenceGeneSymbol",
+        "InferenceScore",
+        "OmimIDs",
+        "PubMedIDs",
+    ]
+
+    def _parse_chemical_disease_therapeutic(self):
+        """
+        Parse CTD_chemicals_diseases.tsv.gz for DirectEvidence='therapeutic'.
+
+        Returns a DataFrame with columns:
+          chemical_id | disease_id | chemical_name | disease_name | pubmed_ids | source_database
+        """
+        tsv_path = self.source_dir / self._CHEM_DISEASE_FILENAME
+        if not tsv_path.exists():
+            logger.warning("CTD chemical-disease file not found: %s", tsv_path)
+            return None
+
+        logger.info("Parsing CTD chemical-disease therapeutic edges from %s …", tsv_path)
+
+        try:
+            df = pd.read_csv(
+                tsv_path,
+                sep="\t",
+                compression="gzip",
+                comment="#",
+                header=None,
+                names=self._CHEM_DISEASE_COLS,
+                low_memory=False,
+                dtype=str,
+            )
+        except Exception as exc:
+            logger.exception("Failed to read CTD chemical-disease file: %s", exc)
+            return None
+
+        logger.info("Loaded %d raw CTD chemical-disease rows.", len(df))
+
+        df_ther = df[df["DirectEvidence"] == "therapeutic"].copy()
+        logger.info("Therapeutic rows: %d", len(df_ther))
+
+        if df_ther.empty:
+            return None
+
+        df_ther["ChemicalID"] = df_ther["ChemicalID"].apply(self._normalize_mesh_id)
+        df_ther = df_ther.dropna(subset=["ChemicalID", "DiseaseID"])
+
+        out = pd.DataFrame({
+            "chemical_id": df_ther["ChemicalID"].str.strip(),
+            "disease_id": df_ther["DiseaseID"].str.strip(),
+            "chemical_name": df_ther["ChemicalName"].fillna("").str.strip(),
+            "disease_name": df_ther["DiseaseName"].fillna("").str.strip(),
+            "pubmed_ids": df_ther["PubMedIDs"].fillna(""),
+        })
+        out = out.drop_duplicates(subset=["chemical_id", "disease_id"]).reset_index(drop=True)
+        out["source_database"] = "CTD"
+
+        logger.info("CTD therapeutic edges (deduplicated): %d", len(out))
+        return out
 
     # ------------------------------------------------------------------
     # Helpers
@@ -255,5 +345,13 @@ class CTDParser(BaseParser):
                 "interaction_text": "Full interaction description from CTD",
                 "organism": "Organism taxon ID",
                 "pubmed_ids": "Pipe-separated PubMed IDs supporting the interaction",
+            },
+            "chemical_treats_disease": {
+                "chemical_id": "Source chemical MeSH ID",
+                "disease_id": "Target disease MeSH ID (MESH:DXXXXXX)",
+                "chemical_name": "Chemical name",
+                "disease_name": "Disease name",
+                "pubmed_ids": "Pipe-separated PubMed IDs",
+                "source_database": "Source database (CTD)",
             },
         }

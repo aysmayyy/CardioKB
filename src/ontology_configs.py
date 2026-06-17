@@ -95,6 +95,7 @@ BINDINGDB_DRUG_BINDS_GENE = 'drug_binds_gene'
 CTD_CHEMICAL_NODES = 'chemical_nodes'
 CTD_CHEM_INCREASES_EXPR = 'chemical_increases_expression'
 CTD_CHEM_DECREASES_EXPR = 'chemical_decreases_expression'
+CTD_CHEM_TREATS_DISEASE = 'chemical_treats_disease'
 # Hetionet Components — Bgee
 BGEE_OVEREXPRESSES = 'anatomy_expresses_gene'
 BGEE_UNDEREXPRESSES = 'anatomy_expresses_gene'
@@ -551,7 +552,7 @@ ONTOLOGY_CONFIGS = {
         },
         'merge': False,
         'use_create': True,
-        'skip': True,
+        'skip': False,
     },
     f'clinpgx.{CLINPGX_VARIANT_IN_GENE}': {
         'data_type': 'relationship',
@@ -1096,7 +1097,7 @@ ONTOLOGY_CONFIGS = {
         },
         'merge': False,
         'use_create': True,
-        'skip': True,
+        'skip': False,
     },
     f'drugcentral.{DC_DRUG_PALLIATES}': {
         'data_type': 'relationship',
@@ -1114,7 +1115,7 @@ ONTOLOGY_CONFIGS = {
         },
         'merge': False,
         'use_create': True,
-        'skip': True,
+        'skip': False,
     },
 
     # ---- GWAS Catalog — REMOVED (redundant with OpenTargets) ----
@@ -1253,6 +1254,25 @@ ONTOLOGY_CONFIGS = {
         },
         'merge': False,
         'use_create': True,  # CTD chemical-gene interactions are unique
+        'skip': False,
+    },
+    f'ctd.{CTD_CHEM_TREATS_DISEASE}': {
+        'data_type': 'relationship',
+        'relationship_type': 'drugTreatsDisease',
+        'source_label': 'CTD',
+        'source_filename': f'{CTD_CHEM_TREATS_DISEASE}.tsv',
+        'parse_config': {
+            'headers': True,
+            'subject_node_type': 'Drug',
+            'subject_column_name': 'chemical_id',
+            'subject_match_property': 'xrefMeSH',
+            'object_node_type': 'Disease',
+            'object_column_name': 'disease_name',
+            'object_match_property': 'diseaseName',
+            'case_insensitive_match': True,
+        },
+        'merge': False,
+        'use_create': True,
         'skip': False,
     },
 
