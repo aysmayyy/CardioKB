@@ -442,11 +442,29 @@ th { color: var(--text-muted); font-weight: 600; text-transform: uppercase; font
 }
 .autocomplete-item .ac-name { flex: 1; }
 
+/* About panel */
+.about-panel { transition: border-color 0.2s; }
+.about-panel:hover { border-color: var(--accent); }
+.about-panel summary { list-style: none; }
+.about-panel summary::-webkit-details-marker { display: none; }
+.about-panel[open] summary .about-chevron { transform: rotate(180deg); }
+.about-panel summary .about-pulse {
+    display: inline-block; width: 8px; height: 8px; border-radius: 50%;
+    background: var(--accent); margin-right: 0.3rem; animation: aboutPulse 2s ease-in-out 3;
+}
+@keyframes aboutPulse {
+    0%, 100% { opacity: 1; transform: scale(1); }
+    50% { opacity: 0.4; transform: scale(1.4); }
+}
+
 /* Responsive sidebar */
 @media (max-width: 768px) {
     .sidebar { width: 100%; height: auto; position: relative; }
     .main { margin-left: 0; padding: 1rem; }
     .detail-panel { width: 100%; position: relative; border-radius: 8px; border-left: none; border: 1px solid var(--border); margin-top: 0.5rem; }
+}
+@media (max-width: 900px) {
+    .visual-guide-grid { grid-template-columns: 1fr !important; }
 }
 </style>
 </head>
@@ -527,25 +545,6 @@ th { color: var(--text-muted); font-weight: 600; text-transform: uppercase; font
         </div>
         <div style="font-size:.78rem;color:var(--text-muted);margin:-0.3rem 0 0.5rem 0.2rem;">Use specific disease or gene names for best results.</div>
 
-        <!-- Shortest Path -->
-        <details style="margin-bottom:1rem;background:var(--surface);border:1px solid var(--border);border-radius:8px;padding:0.75rem 1rem">
-            <summary style="cursor:pointer;font-size:0.88rem;font-weight:600;color:var(--accent);user-select:none">Shortest Path Between Two Nodes</summary>
-            <div style="display:flex;gap:0.5rem;margin-top:0.75rem;align-items:center;flex-wrap:wrap">
-                <div class="autocomplete-wrap" style="min-width:160px">
-                    <input type="text" id="pathFrom" class="agent-input" placeholder="From (e.g. APOE)" autocomplete="off" style="margin-bottom:0" />
-                    <div class="autocomplete-list" id="acListFrom"></div>
-                </div>
-                <span style="color:var(--text-muted);font-size:0.85rem">&rarr;</span>
-                <div class="autocomplete-wrap" style="min-width:160px">
-                    <input type="text" id="pathTo" class="agent-input" placeholder="To (e.g. heart failure)" autocomplete="off" style="margin-bottom:0" />
-                    <div class="autocomplete-list" id="acListTo"></div>
-                </div>
-                <button class="run-btn" id="pathBtn" onclick="findShortestPath()" style="font-size:0.82rem;padding:0.5rem 1rem">Find Path</button>
-            </div>
-            <div id="pathResult" style="display:none;margin-top:0.75rem;font-size:0.82rem;color:var(--text-muted)"></div>
-            <div id="pathGraph" style="display:none;height:320px;background:var(--bg);border:1px solid var(--border);border-radius:6px;margin-top:0.5rem"></div>
-        </details>
-
         <div style="display:flex;align-items:center;gap:1rem;margin-bottom:0.5rem;flex-wrap:wrap">
             <div class="filter-chips" id="filterChips" style="margin-bottom:0"></div>
             <label style="display:flex;align-items:center;gap:0.4rem;font-size:0.82rem;color:var(--text-muted);cursor:pointer;white-space:nowrap" data-tip="Toggle hypothesis-generating 2-hop connections on or off">
@@ -553,21 +552,57 @@ th { color: var(--text-muted); font-weight: 600; text-transform: uppercase; font
                 Show discovery layer
             </label>
             <button class="info-btn-sm" data-info="discovery" data-tip="What are core vs discovery layers?">?</button>
+            <label style="display:flex;align-items:center;gap:0.4rem;font-size:0.82rem;color:#f97316;cursor:pointer;white-space:nowrap" data-tip="Toggle ML-predicted drug-disease edges (Node2Vec + XGBoost, not clinically validated)">
+                <input type="checkbox" id="predictedToggle" checked onchange="togglePredictedEdges()" style="accent-color:#f97316" />
+                Show predicted edges
+            </label>
         </div>
         <div style="display:flex;align-items:center;gap:0.5rem;margin-bottom:0.75rem;flex-wrap:wrap">
             <span style="font-size:0.72rem;color:var(--text-muted);font-weight:600;text-transform:uppercase;letter-spacing:0.05em">Edge types:</span>
             <div class="filter-chips" id="edgeFilterChips" style="margin-bottom:0"></div>
         </div>
 
-        <div style="display:flex;gap:1.5rem;margin-bottom:0.75rem;font-size:0.78rem;color:var(--text-muted);align-items:center">
-            <span style="display:flex;align-items:center;gap:0.35rem">
-                <span style="display:inline-block;width:12px;height:12px;border-radius:50%;background:var(--accent);border:2px solid var(--accent)"></span>
-                Core (known associations)
-            </span>
-            <span style="display:flex;align-items:center;gap:0.35rem">
-                <span style="display:inline-block;width:12px;height:12px;border-radius:50%;background:transparent;border:2px dashed var(--text-muted)"></span>
-                Discovery (hypothesis-generating)
-            </span>
+        <!-- Visual Guide -->
+        <div style="background:var(--surface);border:1px solid var(--border);border-radius:8px;padding:0.75rem 1rem;margin-bottom:0.75rem;font-size:0.78rem;color:var(--text-muted);line-height:1.7">
+            <div style="font-weight:700;font-size:0.72rem;text-transform:uppercase;letter-spacing:0.08em;color:var(--text-muted);margin-bottom:0.5rem">Visual Guide</div>
+            <div class="visual-guide-grid" style="display:grid;grid-template-columns:1fr 1fr;gap:0.4rem 2rem">
+                <!-- NODES column -->
+                <div>
+                    <div style="font-weight:700;color:var(--text);margin-bottom:0.25rem;font-size:0.76rem">Nodes (entities)</div>
+                    <div style="display:flex;align-items:center;gap:0.5rem;padding:0.2rem 0">
+                        <span style="display:inline-block;width:14px;height:14px;border-radius:50%;background:var(--accent);border:2px solid var(--accent);flex-shrink:0"></span>
+                        <span><strong style="color:var(--text)">Core</strong> &mdash; Direct neighbors of your search. Evidence-backed from curated databases.</span>
+                    </div>
+                    <div style="display:flex;align-items:center;gap:0.5rem;padding:0.2rem 0">
+                        <span style="display:inline-block;width:14px;height:14px;border-radius:50%;background:transparent;border:2px dashed var(--text-muted);flex-shrink:0"></span>
+                        <span><strong style="color:var(--text)">Discovery</strong> &mdash; 2-hop connections through core nodes. Hypothesis-generating, not directly linked.</span>
+                    </div>
+                    <div style="display:flex;align-items:center;gap:0.5rem;padding:0.2rem 0">
+                        <span style="display:inline-block;width:14px;height:14px;border-radius:3px;background:#f87171;flex-shrink:0;transform:rotate(45deg)"></span>
+                        <span><strong style="color:var(--text)">Diamond</strong> = Disease node. <strong style="color:var(--text)">Circle</strong> = all other types. Size = importance.</span>
+                    </div>
+                </div>
+                <!-- EDGES column -->
+                <div>
+                    <div style="font-weight:700;color:var(--text);margin-bottom:0.25rem;font-size:0.76rem">Edges (relationships)</div>
+                    <div style="display:flex;align-items:center;gap:0.5rem;padding:0.2rem 0">
+                        <svg width="28" height="8" style="flex-shrink:0"><line x1="0" y1="4" x2="28" y2="4" stroke="var(--text-muted)" stroke-width="2"/></svg>
+                        <span><strong style="color:var(--text)">Solid gray</strong> &mdash; Known relationship from a curated database. Click to see source.</span>
+                    </div>
+                    <div style="display:flex;align-items:center;gap:0.5rem;padding:0.2rem 0">
+                        <svg width="28" height="8" style="flex-shrink:0"><line x1="0" y1="4" x2="28" y2="4" stroke="var(--text-muted)" stroke-width="2" stroke-dasharray="5,4"/></svg>
+                        <span><strong style="color:var(--text)">Dashed gray</strong> &mdash; Discovery-layer connection (inferred via shared intermediate nodes).</span>
+                    </div>
+                    <div style="display:flex;align-items:center;gap:0.5rem;padding:0.2rem 0">
+                        <svg width="28" height="8" style="flex-shrink:0"><line x1="0" y1="4" x2="28" y2="4" stroke="#f97316" stroke-width="2.5" stroke-dasharray="7,4"/></svg>
+                        <span><strong style="color:#f97316">Dashed orange</strong> &mdash; ML-predicted drug&ndash;disease link (Node2Vec + XGBoost). <em>Not clinically validated.</em></span>
+                    </div>
+                    <div style="display:flex;align-items:center;gap:0.5rem;padding:0.2rem 0">
+                        <svg width="28" height="8" style="flex-shrink:0"><line x1="0" y1="4" x2="28" y2="4" stroke="#f59e0b" stroke-width="2.5"/></svg>
+                        <span><strong style="color:#f59e0b">Solid orange</strong> &mdash; Disease hierarchy (subtype-of relationship from Disease Ontology).</span>
+                    </div>
+                </div>
+            </div>
         </div>
 
         <div id="exploreBreadcrumb" style="display:none;font-size:0.82rem;color:var(--text-muted);margin-bottom:0.5rem;padding:0.4rem 0.75rem;background:var(--surface);border:1px solid var(--border);border-radius:6px;display:none">
@@ -605,13 +640,110 @@ th { color: var(--text-muted); font-weight: 600; text-transform: uppercase; font
 
         <div class="node-legend" id="nodeLegend"></div>
 
-        <div style="font-size:0.76rem;color:var(--text-muted);line-height:1.55;padding:0.6rem 0;border-top:1px solid var(--border);margin-top:0.25rem">
-            <strong style="color:var(--text)">How nodes are selected:</strong>
-            Nodes are ranked by disease-specificity score &mdash; calculated as 1 &divide; (number of diseases a node connects to).
-            Genes and other entities highly specific to your searched disease appear first, while broadly-connected nodes rank lower.
-            The top-scoring nodes per type are shown in the <em>core</em> layer; the <em>discovery</em> layer extends one hop further for hypothesis generation.
-            <span id="specificityTimestamp" style="display:block;margin-top:0.3rem;font-style:italic"></span>
-        </div>
+        <!-- Expandable "About this graph" panel -->
+        <details class="about-panel" style="background:var(--surface);border:1px solid var(--border);border-radius:8px;margin-top:0.5rem;margin-bottom:0.75rem">
+            <summary style="cursor:pointer;padding:0.7rem 1rem;font-size:0.85rem;font-weight:600;color:var(--accent);user-select:none;display:flex;align-items:center;gap:0.5rem">
+                <span style="font-size:0.7rem;transition:transform 0.2s;display:inline-block" class="about-chevron">&#9660;</span>
+                <span class="about-pulse"></span>
+                About: How to Interpret This Graph
+                <span style="font-size:0.72rem;font-weight:400;color:var(--text-muted);margin-left:0.4rem">(click to expand)</span>
+            </summary>
+            <div style="padding:0 1rem 1rem;font-size:0.82rem;color:var(--text-muted);line-height:1.7">
+
+                <!-- Section 1: What is this? -->
+                <div style="margin-bottom:1.25rem">
+                    <h4 style="color:var(--text);font-size:0.88rem;margin:0 0 0.4rem;padding-top:0.25rem;border-top:1px solid var(--border)">What is this graph?</h4>
+                    <p>CardioKB is a <strong style="color:var(--text)">knowledge graph</strong> &mdash; a structured map of known biological relationships relevant to cardiovascular disease. It connects <strong style="color:var(--text)">genes, drugs, diseases, pathways, clinical trials, phenotypes, genetic variants</strong>, and more into a single searchable network.</p>
+                    <p style="margin-top:0.4rem">Every connection you see comes from a specific, peer-reviewed data source (DrugBank, ClinVar, STRING, PubTator, etc.). When you click on any edge (line), the panel on the right tells you <em>exactly</em> which database it came from and what evidence supports it.</p>
+                </div>
+
+                <!-- Section 2: Core vs Discovery -->
+                <div style="margin-bottom:1.25rem">
+                    <h4 style="color:var(--text);font-size:0.88rem;margin:0 0 0.4rem;padding-top:0.25rem;border-top:1px solid var(--border)">Core vs. Discovery Layers</h4>
+                    <p><strong style="color:var(--accent)">Core layer</strong> (large nodes, solid borders): These are entities <em>directly</em> connected to what you searched for. If you search &ldquo;heart failure,&rdquo; core nodes are genes, drugs, and pathways that the scientific literature explicitly links to heart failure. These are the <strong style="color:var(--text)">established, evidence-backed</strong> connections.</p>
+                    <p style="margin-top:0.4rem"><strong style="color:var(--text-muted)">Discovery layer</strong> (small nodes, dashed borders): These are entities connected <em>through</em> core nodes &mdash; one additional step away. They are <strong style="color:var(--text)">hypothesis-generating</strong>: a gene that shares a pathway with a known heart failure gene, or a drug that targets a protein linked to a heart failure gene. These are not directly established in the literature for your disease, but they represent biologically plausible connections worth investigating.</p>
+                    <p style="margin-top:0.4rem">You can toggle the discovery layer on/off with the checkbox above the graph.</p>
+                </div>
+
+                <!-- Section 3: Specificity Score -->
+                <div style="margin-bottom:1.25rem">
+                    <h4 style="color:var(--text);font-size:0.88rem;margin:0 0 0.4rem;padding-top:0.25rem;border-top:1px solid var(--border)">Disease-Specificity Score</h4>
+                    <p>Not all gene&ndash;disease connections are equally meaningful. A gene linked to <strong style="color:var(--text)">only 1 disease</strong> is far more informative for that disease than a gene linked to hundreds. The <strong style="color:var(--text)">specificity score</strong> quantifies this:</p>
+                    <div style="background:var(--bg);border-radius:6px;padding:0.6rem 0.8rem;margin:0.5rem 0;font-family:'SF Mono','Fira Code',monospace;font-size:0.82rem;text-align:center">
+                        specificity = 1 &divide; (number of diseases a node connects to)
+                    </div>
+                    <ul style="padding-left:1.2rem;margin:0.4rem 0 0">
+                        <li>A gene linked to <strong style="color:var(--green)">1 disease</strong> scores <strong style="color:var(--green)">1.0</strong> (highly specific &mdash; likely biologically meaningful)</li>
+                        <li>A gene linked to <strong style="color:var(--yellow)">50 diseases</strong> scores <strong style="color:var(--yellow)">0.02</strong> (broadly connected &mdash; may be a housekeeping gene)</li>
+                        <li>Disease nodes themselves score <strong>0.0</strong>; nodes with no disease connections score <strong>1.0</strong></li>
+                    </ul>
+                    <p style="margin-top:0.4rem"><strong style="color:var(--text)">Why this matters:</strong> When investigating drug targets or biomarkers, high-specificity genes are more likely to represent a genuine disease mechanism rather than general cellular housekeeping. The graph prioritizes showing you the <em>most specific</em> nodes first.</p>
+                    <p style="margin-top:0.3rem;font-style:italic"><span id="specificityTimestamp"></span></p>
+                </div>
+
+                <!-- Section 4: ML Predictions -->
+                <div style="margin-bottom:1.25rem">
+                    <h4 style="color:#f97316;font-size:0.88rem;margin:0 0 0.4rem;padding-top:0.25rem;border-top:1px solid var(--border)">ML-Predicted Drug&ndash;Disease Links</h4>
+                    <p>The <strong style="color:#f97316">orange dashed edges</strong> are <em>not</em> from curated databases. They are <strong style="color:var(--text)">machine learning predictions</strong> of drugs that <em>might</em> treat a disease, based on patterns in the knowledge graph.</p>
+
+                    <div style="background:var(--bg);border-radius:8px;padding:0.75rem;margin:0.6rem 0">
+                        <div style="font-weight:700;color:var(--text);margin-bottom:0.4rem">How the model works</div>
+                        <ol style="padding-left:1.2rem;margin:0">
+                            <li><strong style="color:var(--text)">Graph embedding</strong> &mdash; An algorithm called <em>Node2Vec</em> &ldquo;walks&rdquo; through the knowledge graph and learns a numerical fingerprint (128 numbers) for every gene, drug, disease, and pathway. Entities that are close in the graph get similar fingerprints.</li>
+                            <li style="margin-top:0.3rem"><strong style="color:var(--text)">Feature engineering</strong> &mdash; For each possible drug&ndash;disease pair, we compute how similar their fingerprints are (cosine similarity), how far apart they are (L2 distance), and structural features like shared neighbors and degree.</li>
+                            <li style="margin-top:0.3rem"><strong style="color:var(--text)">Classification</strong> &mdash; An XGBoost model (a type of decision tree ensemble) was trained on known &ldquo;drug treats disease&rdquo; relationships to distinguish real therapeutic links from random pairs.</li>
+                            <li style="margin-top:0.3rem"><strong style="color:var(--text)">Prediction</strong> &mdash; The model scores every unknown drug&ndash;disease pair. The top 500 predictions (confidence &ge; 50%) are stored in the graph as candidates for further investigation.</li>
+                        </ol>
+                    </div>
+
+                    <div style="background:var(--bg);border-radius:8px;padding:0.75rem;margin:0.6rem 0">
+                        <div style="font-weight:700;color:var(--text);margin-bottom:0.4rem">Model performance</div>
+                        <p>The model was rigorously evaluated using an 80/10/10 train/validation/test split with <strong style="color:var(--text)">no data leakage</strong> (embeddings trained only on training edges):</p>
+                        <table style="width:100%;margin:0.4rem 0;font-size:0.78rem">
+                            <thead><tr>
+                                <th style="text-align:left;color:var(--text-muted);font-weight:600;padding:0.2rem 0.4rem">Metric</th>
+                                <th style="text-align:right;color:var(--text-muted);font-weight:600;padding:0.2rem 0.4rem">Score</th>
+                                <th style="text-align:left;color:var(--text-muted);font-weight:600;padding:0.2rem 0.4rem">What it means</th>
+                            </tr></thead>
+                            <tbody>
+                                <tr><td style="padding:0.2rem 0.4rem;color:var(--text)">Test AUROC</td><td style="text-align:right;padding:0.2rem 0.4rem"><strong style="color:var(--green)">0.950</strong></td><td style="padding:0.2rem 0.4rem">95% chance the model ranks a real treatment higher than a random pair</td></tr>
+                                <tr><td style="padding:0.2rem 0.4rem;color:var(--text)">Test AUPRC</td><td style="text-align:right;padding:0.2rem 0.4rem"><strong style="color:var(--green)">0.958</strong></td><td style="padding:0.2rem 0.4rem">High precision even at high recall &mdash; few false positives among top predictions</td></tr>
+                                <tr><td style="padding:0.2rem 0.4rem;color:var(--text)">Hits@100</td><td style="text-align:right;padding:0.2rem 0.4rem">0.311</td><td style="padding:0.2rem 0.4rem">31% of real treatments appear in the top 100 predictions per disease</td></tr>
+                            </tbody>
+                        </table>
+                        <p style="margin-top:0.3rem;font-size:0.76rem"><strong style="color:var(--text)">Dataset:</strong> 9,735 therapeutic drugs &times; 457 diseases. 3,026 training / 309 validation / 322 test known &ldquo;drug treats disease&rdquo; edges.</p>
+                    </div>
+
+                    <div style="background:rgba(248,113,113,0.08);border:1px solid rgba(248,113,113,0.2);border-radius:8px;padding:0.75rem;margin:0.6rem 0">
+                        <div style="font-weight:700;color:var(--red);margin-bottom:0.3rem">Important limitations</div>
+                        <ul style="padding-left:1.2rem;margin:0">
+                            <li>These are <strong style="color:var(--text)">computational predictions, not clinical evidence</strong>. They suggest drugs worth investigating, not drugs to prescribe.</li>
+                            <li>The model learns from graph <em>structure</em> (which entities are connected and how), not from clinical trial outcomes or patient data.</li>
+                            <li>Predictions should be treated as <strong style="color:var(--text)">hypothesis-generating leads</strong> for wet-lab validation, not as treatment recommendations.</li>
+                            <li>The <strong style="color:var(--text)">confidence score</strong> (shown when you click an orange edge) reflects the model&rsquo;s certainty, not clinical efficacy. A 95% confidence means the model strongly believes this drug-disease pair resembles known treatments &mdash; it does <em>not</em> mean there is a 95% chance the drug works.</li>
+                        </ul>
+                    </div>
+                </div>
+
+                <!-- Section 5: Data Sources -->
+                <div style="margin-bottom:0.5rem">
+                    <h4 style="color:var(--text);font-size:0.88rem;margin:0 0 0.4rem;padding-top:0.25rem;border-top:1px solid var(--border)">Where does the data come from?</h4>
+                    <p>CardioKB integrates <strong style="color:var(--text)"><span class="live-source-count">22</span> deduplicated data sources</strong>, each serving a specific purpose. Every edge carries a <code style="background:var(--bg);padding:0.1rem 0.35rem;border-radius:3px;font-size:0.76rem">source</code> property &mdash; click any edge to see exactly which database it came from. Key sources include:</p>
+                    <div style="display:grid;grid-template-columns:1fr 1fr;gap:0.2rem 1.5rem;margin-top:0.4rem;font-size:0.78rem" class="visual-guide-grid">
+                        <div><strong style="color:var(--text)">DrugBank</strong> &mdash; Drug-target binding interactions</div>
+                        <div><strong style="color:var(--text)">ClinVar</strong> &mdash; Clinically interpreted genetic variants</div>
+                        <div><strong style="color:var(--text)">STRING</strong> &mdash; Protein-protein interaction confidence</div>
+                        <div><strong style="color:var(--text)">PubTator</strong> &mdash; Gene-disease co-mentions in PubMed</div>
+                        <div><strong style="color:var(--text)">Reactome</strong> &mdash; Curated biological pathways</div>
+                        <div><strong style="color:var(--text)">ClinicalTrials.gov</strong> &mdash; Active and completed clinical trials</div>
+                        <div><strong style="color:var(--text)">HPO</strong> &mdash; Gene-to-clinical-phenotype mappings</div>
+                        <div><strong style="color:var(--text)">CTD</strong> &mdash; Chemical-gene expression interactions</div>
+                    </div>
+                    <p style="margin-top:0.4rem">Run a Health Check (sidebar) to see the full list of sources with their data counts and integrity status.</p>
+                </div>
+
+            </div>
+        </details>
 
         <div class="export-bar">
             <button onclick="exportGraph('csv')" data-tip="Download current subgraph as CSV for analysis in Excel, R, or Python">Export CSV</button>
@@ -768,10 +900,11 @@ th { color: var(--text-muted); font-weight: 600; text-transform: uppercase; font
         </ul>
         <p style="margin:0.75rem 0"><strong>Reading edges</strong></p>
         <ul>
-            <li>Solid edges = core (known) relationships</li>
-            <li>Dashed edges = discovery (inferred) connections</li>
-            <li>Edge labels show the relationship type (e.g., ASSOCIATES_WITH, TARGETS)</li>
-            <li>Each edge carries a <code>source</code> property identifying the originating database</li>
+            <li><strong>Solid edges</strong> = core (known) relationships from integrated databases</li>
+            <li><strong>Dashed gray edges</strong> = discovery (inferred) connections via 2-hop expansion</li>
+            <li><strong style="color:#f97316">Dashed orange edges</strong> = ML-predicted drug&ndash;disease links (Node2Vec + XGBoost). These are <em>not clinically validated</em> &mdash; click to see the confidence score</li>
+            <li><strong style="color:#f59e0b">Solid orange edges</strong> = disease hierarchy (subtype-of)</li>
+            <li>Each edge carries a <code>source</code> property identifying the originating database or model</li>
         </ul>
         <p style="margin:0.75rem 0"><strong>Thin results?</strong></p>
         <ul>
@@ -1333,10 +1466,16 @@ function toggleEdgeFilter(type, chip) {
 }
 
 let showDiscovery = true;
+let showPredicted = true;
 let hiddenEdgeTypes = new Set();
 
 function toggleDiscoveryLayer() {
     showDiscovery = document.getElementById('discoveryToggle').checked;
+    if (currentGraphData.nodes.length) renderExploreGraph(currentGraphData);
+}
+
+function togglePredictedEdges() {
+    showPredicted = document.getElementById('predictedToggle').checked;
     if (currentGraphData.nodes.length) renderExploreGraph(currentGraphData);
 }
 
@@ -1349,7 +1488,12 @@ function renderExploreGraph(data) {
         return true;
     });
     const nodeIds = new Set(filteredNodes.map(n => n.id));
-    const filteredEdges = data.edges.filter(e => nodeIds.has(e.from) && nodeIds.has(e.to) && !hiddenEdgeTypes.has(e.label));
+    const filteredEdges = data.edges.filter(e => {
+        if (!nodeIds.has(e.from) || !nodeIds.has(e.to)) return false;
+        if (hiddenEdgeTypes.has(e.label)) return false;
+        if (!showPredicted && e.label === 'predictedTreatsDisease') return false;
+        return true;
+    });
 
     const newNodes = filteredNodes.map(n => {
         const isCore = n.layer !== 'discovery';
@@ -1383,16 +1527,16 @@ function renderExploreGraph(data) {
     const newEdges = filteredEdges.map((e, i) => {
         const isCore = e.layer !== 'discovery';
         const isHierarchy = e.label === 'diseaseIsSubtypeOf';
+        const isPredicted = e.label === 'predictedTreatsDisease';
         return {
             id: 'e' + i, from: e.from, to: e.to,
-            // Only show labels on hierarchy edges; others show on hover
-            label: isHierarchy ? 'subtype of' : undefined,
-            title: e.label + (e.source ? ' (' + e.source + ')' : ''),
-            font: { size: 9, color: '#f59e0b', strokeWidth: 0 },
-            color: { color: isHierarchy ? '#f59e0b' : (isCore ? '#33415566' : '#33415522'), highlight: '#38bdf8' },
-            dashes: isHierarchy ? false : (isCore ? false : [5, 5]),
-            width: isHierarchy ? 2.5 : (isCore ? 0.6 : 0.3),
-            arrows: { to: { scaleFactor: isHierarchy ? 0.8 : 0.4 } },
+            label: isHierarchy ? 'subtype of' : (isPredicted ? 'Predicted' : undefined),
+            title: e.label + (e.source ? ' (' + e.source + ')' : '') + (isPredicted ? ' [ML prediction]' : ''),
+            font: { size: isPredicted ? 8 : 9, color: isPredicted ? '#f97316' : '#f59e0b', strokeWidth: 0 },
+            color: { color: isPredicted ? '#f9731699' : (isHierarchy ? '#f59e0b' : (isCore ? '#33415566' : '#33415522')), highlight: isPredicted ? '#f97316' : '#38bdf8' },
+            dashes: isPredicted ? [8, 4] : (isHierarchy ? false : (isCore ? false : [5, 5])),
+            width: isPredicted ? 2.5 : (isHierarchy ? 3 : (isCore ? 1.2 : 0.6)),
+            arrows: { to: { scaleFactor: isPredicted ? 0.6 : (isHierarchy ? 0.8 : 0.4) } },
             _data: e,
         };
     });
@@ -1605,27 +1749,54 @@ function showEdgePanel(edge, visNodes) {
         html += '</div>';
     }
 
+    // Predicted edge special display
+    const isPredicted = (d.label || '') === 'predictedTreatsDisease';
+    if (isPredicted) {
+        const conf = edgeProps['confidence'] || d['confidence'] || '';
+        html += '<div style="margin-bottom:0.5rem;padding:0.6rem;background:rgba(249,115,22,0.1);border:1px solid rgba(249,115,22,0.3);border-radius:6px">';
+        html += '<div style="font-weight:600;color:#f97316;margin-bottom:0.3rem">ML Prediction</div>';
+        if (conf) {
+            html += '<div style="display:flex;justify-content:space-between;padding:0.15rem 0;border-bottom:1px solid var(--surface2)">';
+            html += '<span style="color:var(--text-muted)">Confidence</span>';
+            html += '<span style="font-weight:600;color:#f97316">' + (parseFloat(conf) * 100).toFixed(1) + '%</span>';
+            html += '</div>';
+        }
+        html += '<div style="font-size:0.75rem;color:var(--text-muted);margin-top:0.3rem;line-height:1.5">';
+        html += 'Predicted by <strong style="color:var(--text)">Node2Vec + XGBoost link prediction</strong>';
+        html += '</div>';
+        html += '<div style="font-size:0.75rem;color:var(--red);margin-top:0.2rem;font-weight:600">';
+        html += 'Not clinically validated';
+        html += '</div>';
+        html += '</div>';
+    }
+
     // Interpretation hint
     html += '<div style="margin-top:0.75rem;padding:0.5rem;background:var(--bg);border-radius:6px;font-size:0.75rem;color:var(--text-muted);line-height:1.5">';
-    html += '<strong style="color:var(--text)">Provenance:</strong> This relationship was extracted from ';
-    html += '<strong>' + escapeHtml(source || 'an integrated database') + '</strong>';
-    if (source === 'STRING') html += '. STRING combined scores range from 0-1000; higher = stronger evidence.';
-    else if (source === 'PubTator') html += '. PubTator mines PubMed abstracts for gene-disease co-occurrences.';
-    else if (source === 'DrugBank') html += '. DrugBank provides curated drug-target binding data.';
-    else if (source === 'ClinVar') html += '. ClinVar collects clinically interpreted genetic variants.';
-    else if (source === 'DoRothEA') html += '. DoRothEA provides transcription factor-gene regulatory interactions.';
-    else if (source === 'Bgee') html += '. Bgee provides gene expression data across anatomical structures.';
-    else if (source === 'Reactome') html += '. Reactome is a curated database of biological pathways.';
-    else if (source === 'Gene Ontology') html += '. Gene Ontology provides functional annotations for genes.';
-    else if (source === 'HPO') html += '. HPO (Human Phenotype Ontology) maps genes to clinical phenotypes.';
-    else if (source === 'SIDER') html += '. SIDER extracts drug side-effect data from drug labels.';
-    else if (source === 'CTD') html += '. CTD (Comparative Toxicogenomics Database) provides chemical-gene interactions.';
-    else if (source === 'BindingDB') html += '. BindingDB provides measured binding affinities of drug-target interactions.';
-    else if (source === 'LINCS L1000') html += '. LINCS L1000 measures gene expression changes in response to drug perturbations.';
-    else if (source === 'DrugCentral') html += '. DrugCentral provides drug indications and pharmacologic class data.';
-    else if (source === 'ClinicalTrials.gov') html += '. ClinicalTrials.gov tracks clinical study registrations.';
-    else if (source === 'HGNC') html += '. HGNC provides curated gene family classifications.';
-    else html += '.';
+    if (isPredicted) {
+        html += '<strong style="color:var(--text)">Provenance:</strong> This is a machine learning prediction, not an established database relationship. ';
+        html += 'Node2Vec embeddings were trained on the knowledge graph (train split only, no data leakage), then XGBoost classified potential Drug&rarr;Disease links. ';
+        html += 'These predictions require experimental validation before clinical consideration.';
+    } else {
+        html += '<strong style="color:var(--text)">Provenance:</strong> This relationship was extracted from ';
+        html += '<strong>' + escapeHtml(source || 'an integrated database') + '</strong>';
+        if (source === 'STRING') html += '. STRING combined scores range from 0-1000; higher = stronger evidence.';
+        else if (source === 'PubTator') html += '. PubTator mines PubMed abstracts for gene-disease co-occurrences.';
+        else if (source === 'DrugBank') html += '. DrugBank provides curated drug-target binding data.';
+        else if (source === 'ClinVar') html += '. ClinVar collects clinically interpreted genetic variants.';
+        else if (source === 'DoRothEA') html += '. DoRothEA provides transcription factor-gene regulatory interactions.';
+        else if (source === 'Bgee') html += '. Bgee provides gene expression data across anatomical structures.';
+        else if (source === 'Reactome') html += '. Reactome is a curated database of biological pathways.';
+        else if (source === 'Gene Ontology') html += '. Gene Ontology provides functional annotations for genes.';
+        else if (source === 'HPO') html += '. HPO (Human Phenotype Ontology) maps genes to clinical phenotypes.';
+        else if (source === 'SIDER') html += '. SIDER extracts drug side-effect data from drug labels.';
+        else if (source === 'CTD') html += '. CTD (Comparative Toxicogenomics Database) provides chemical-gene interactions.';
+        else if (source === 'BindingDB') html += '. BindingDB provides measured binding affinities of drug-target interactions.';
+        else if (source === 'LINCS L1000') html += '. LINCS L1000 measures gene expression changes in response to drug perturbations.';
+        else if (source === 'DrugCentral') html += '. DrugCentral provides drug indications and pharmacologic class data.';
+        else if (source === 'ClinicalTrials.gov') html += '. ClinicalTrials.gov tracks clinical study registrations.';
+        else if (source === 'HGNC') html += '. HGNC provides curated gene family classifications.';
+        else html += '.';
+    }
     html += '</div>';
 
     content.innerHTML = html;
@@ -1763,7 +1934,7 @@ const QUERY_TEMPLATES = [
     { name: 'Top Connected Genes', desc: 'Most connected genes in the entire graph', query: "MATCH (g:Gene)-[r]-()\nRETURN g.geneSymbol AS gene, count(r) AS connections\nORDER BY connections DESC LIMIT 25" },
     { name: 'Gene Expression', desc: 'Where are heart failure genes most expressed?', query: "MATCH (g:Gene)-[:geneAssociatesWithDisease]->(d:Disease)\nWHERE toLower(d.diseaseName) = 'congestive heart failure'\nWITH g LIMIT 20\nMATCH (b:BodyPart)-[r:bodyPartOverexpressesGene]->(g)\nRETURN g.geneSymbol AS gene, b.bodyPartName AS tissue, r.expressionScore AS score\nORDER BY r.expressionScore DESC LIMIT 50" },
     { name: 'Drug-Side Effects', desc: 'Side effects reported for a specific drug', query: "MATCH (dr:Drug)-[:compoundCausesSideEffect]->(se:SideEffect)\nWHERE toLower(dr.commonName) CONTAINS 'metoprolol'\nRETURN dr.commonName AS drug, se.sideEffectName AS side_effect LIMIT 50" },
-    { name: 'Drug Repurposing', desc: 'Find drugs that bind genes associated with a target disease', query: "MATCH (d:Disease)<-[:geneAssociatesWithDisease]-(g:Gene)<-[:drugBindsGene|chemicalBindsGene]-(dr:Drug)\nWHERE toLower(d.diseaseName) CONTAINS 'heart failure'\nRETURN DISTINCT dr.commonName AS drug, g.geneSymbol AS target_gene,\n       d.diseaseName AS disease\nORDER BY drug\nLIMIT 50" },
+    { name: 'Drug Repurposing', desc: 'Find drugs that bind genes associated with a target disease, plus ML-predicted candidates', query: "MATCH (d:Disease)<-[:geneAssociatesWithDisease]-(g:Gene)<-[:drugBindsGene|chemicalBindsGene]-(dr:Drug)\nWHERE toLower(d.diseaseName) CONTAINS 'heart failure'\nRETURN DISTINCT dr.commonName AS drug, g.geneSymbol AS target_gene,\n       d.diseaseName AS disease, 'gene-mediated' AS evidence_type, null AS confidence\nORDER BY drug\nLIMIT 50\nUNION\nMATCH (dr:Drug)-[r:predictedTreatsDisease]->(d:Disease)\nWHERE toLower(d.diseaseName) CONTAINS 'heart failure'\nRETURN DISTINCT dr.commonName AS drug, null AS target_gene,\n       d.diseaseName AS disease, 'ML predicted' AS evidence_type, r.confidence AS confidence\nORDER BY confidence DESC\nLIMIT 50" },
     { name: 'Shared Genes', desc: 'Genes shared between two diseases', query: "MATCH (d1:Disease)<-[:geneAssociatesWithDisease]-(g:Gene)-[:geneAssociatesWithDisease]->(d2:Disease)\nWHERE toLower(d1.diseaseName) CONTAINS 'atrial fibrillation'\n  AND toLower(d2.diseaseName) CONTAINS 'heart failure'\n  AND d1 <> d2\nRETURN g.geneSymbol AS gene, d1.diseaseName AS disease1, d2.diseaseName AS disease2\nLIMIT 50" },
 ];
 
@@ -2456,155 +2627,6 @@ function clearSavedQueries() {
         selectedIdx = -1;
     }
 })();
-
-// ---- Shortest Path ----
-function setupPathAutocomplete(inputId, listId) {
-    const input = document.getElementById(inputId);
-    const list = document.getElementById(listId);
-    let debounceTimer = null;
-    let selectedIdx = -1;
-    let items = [];
-
-    input.addEventListener('input', function() {
-        clearTimeout(debounceTimer);
-        const q = this.value.trim();
-        if (q.length < 2) { list.classList.remove('visible'); return; }
-        debounceTimer = setTimeout(async () => {
-            try {
-                const res = await fetch('/api/autocomplete?' + new URLSearchParams({ q, limit: 8 }));
-                items = await res.json();
-                renderPathAC(items, q);
-            } catch (e) { list.classList.remove('visible'); }
-        }, 200);
-    });
-
-    input.addEventListener('keydown', function(e) {
-        if (!list.classList.contains('visible')) return;
-        if (e.key === 'ArrowDown') { e.preventDefault(); selectedIdx = Math.min(selectedIdx + 1, items.length - 1); hlPath(); }
-        else if (e.key === 'ArrowUp') { e.preventDefault(); selectedIdx = Math.max(selectedIdx - 1, 0); hlPath(); }
-        else if (e.key === 'Enter' && selectedIdx >= 0) { e.preventDefault(); pickPath(selectedIdx); }
-        else if (e.key === 'Escape') { list.classList.remove('visible'); }
-    });
-
-    input.addEventListener('blur', function() { setTimeout(() => list.classList.remove('visible'), 150); });
-
-    function renderPathAC(suggestions, q) {
-        list.innerHTML = '';
-        selectedIdx = -1;
-        if (!suggestions.length) { list.classList.remove('visible'); return; }
-        suggestions.forEach((s, i) => {
-            const div = document.createElement('div');
-            div.className = 'autocomplete-item';
-            const badge = document.createElement('span');
-            badge.className = 'ac-type';
-            badge.textContent = s.type;
-            badge.style.background = (nodeColor(s.type) || '#94a3b8') + '33';
-            badge.style.color = nodeColor(s.type) || '#94a3b8';
-            const name = document.createElement('span');
-            name.className = 'ac-name';
-            const re = new RegExp('(' + q.replace(/[.*+?^${}()|[\]\\]/g, '\\$&') + ')', 'gi');
-            name.innerHTML = escapeHtml(s.name).replace(re, '<strong style="color:var(--accent)">$1</strong>');
-            div.appendChild(badge);
-            div.appendChild(name);
-            div.addEventListener('mousedown', function(e) { e.preventDefault(); pickPath(i); });
-            list.appendChild(div);
-        });
-        list.classList.add('visible');
-    }
-
-    function hlPath() {
-        list.querySelectorAll('.autocomplete-item').forEach((el, i) => el.classList.toggle('selected', i === selectedIdx));
-    }
-
-    function pickPath(idx) {
-        if (items[idx]) { input.value = items[idx].name; }
-        list.classList.remove('visible');
-    }
-}
-setupPathAutocomplete('pathFrom', 'acListFrom');
-setupPathAutocomplete('pathTo', 'acListTo');
-
-let pathNetwork = null;
-
-async function findShortestPath() {
-    const fromVal = document.getElementById('pathFrom').value.trim();
-    const toVal = document.getElementById('pathTo').value.trim();
-    if (!fromVal || !toVal) return;
-
-    const btn = document.getElementById('pathBtn');
-    const resultDiv = document.getElementById('pathResult');
-    const graphDiv = document.getElementById('pathGraph');
-
-    btn.disabled = true;
-    btn.innerHTML = '<span class="spinner"></span> Finding...';
-    resultDiv.style.display = 'block';
-    resultDiv.innerHTML = '<span class="spinner"></span> Searching for shortest path...';
-    graphDiv.style.display = 'none';
-
-    try {
-        const res = await fetch('/api/shortest-path', {
-            method: 'POST',
-            headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify({ from: fromVal, to: toVal }),
-        });
-        const data = await res.json();
-
-        if (!res.ok || data.error) {
-            resultDiv.innerHTML = '<span style="color:var(--red)">' + escapeHtml(data.error) + '</span>';
-            return;
-        }
-
-        resultDiv.innerHTML = 'Path found: <strong style="color:var(--green)">' + data.path_length + ' hop' +
-            (data.path_length !== 1 ? 's' : '') + '</strong> between <strong>' + escapeHtml(data.from) +
-            '</strong> and <strong>' + escapeHtml(data.to) + '</strong>';
-
-        // Render path graph
-        graphDiv.style.display = 'block';
-        if (pathNetwork) { pathNetwork.destroy(); pathNetwork = null; }
-
-        const visNodes = new vis.DataSet(data.nodes.map((n, i) => ({
-            id: n.id, label: n.label,
-            color: { background: nodeColor(n.type), border: nodeColor(n.type),
-                highlight: { background: '#fff', border: nodeColor(n.type) } },
-            font: { color: '#e2e8f0', size: 12 },
-            shape: n.type === 'Disease' ? 'diamond' : 'dot',
-            size: 20,
-            title: n.type + ': ' + n.label,
-        })));
-
-        const visEdges = new vis.DataSet(data.edges.map((e, i) => ({
-            id: 'pe' + i, from: e.from, to: e.to,
-            label: e.label,
-            font: { size: 9, color: '#94a3b8', strokeWidth: 0, background: 'var(--surface)' },
-            color: { color: '#38bdf8', highlight: '#38bdf8' },
-            width: 2.5, arrows: { to: { scaleFactor: 0.6 } },
-            title: e.label + (e.source ? ' (source: ' + e.source + ')' : ''),
-        })));
-
-        pathNetwork = new vis.Network(graphDiv, { nodes: visNodes, edges: visEdges }, {
-            layout: { hierarchical: { direction: 'LR', sortMethod: 'directed', levelSeparation: 200, nodeSpacing: 100 } },
-            physics: false,
-            interaction: { hover: true, dragNodes: true, dragView: true, zoomView: true },
-            edges: { smooth: { type: 'cubicBezier' } },
-        });
-    } catch (e) {
-        resultDiv.innerHTML = '<span style="color:var(--red)">Error: ' + escapeHtml(e.message) + '</span>';
-    } finally {
-        btn.disabled = false;
-        btn.textContent = 'Find Path';
-    }
-}
-
-document.getElementById('pathFrom').addEventListener('keydown', function(e) {
-    if (e.key === 'Enter' && !document.getElementById('acListFrom').classList.contains('visible')) {
-        document.getElementById('pathTo').focus();
-    }
-});
-document.getElementById('pathTo').addEventListener('keydown', function(e) {
-    if (e.key === 'Enter' && !document.getElementById('acListTo').classList.contains('visible')) {
-        findShortestPath();
-    }
-});
 
 // ---- Init ----
 loadGraphStats();

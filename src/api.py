@@ -753,116 +753,54 @@ def graph_data():
                     if len(nodes) >= limit:
                         break
 
-        return jsonify({
-            'nodes': list(nodes.values()),
-            'edges': edges,
-        })
-    except Exception as e:
-        return jsonify({'error': str(e)}), 500
-    finally:
-        driver.close()
-
-
-@app.route('/api/shortest-path', methods=['POST'])
-def shortest_path():
-    """Find and return the shortest path between two nodes.
-
-    Request body (JSON):
-        from: Name of the start node
-        to: Name of the end node
-    """
-    body = request.get_json(silent=True) or {}
-    from_name = (body.get('from') or '').strip()
-    to_name = (body.get('to') or '').strip()
-
-    if not from_name or not to_name:
-        return jsonify({'error': 'Both "from" and "to" fields are required'}), 400
-
-    driver = _get_neo4j_driver()
-    if not driver:
-        return jsonify({'error': 'Cannot connect to Memgraph'}), 503
-
-    def _name_filter(var, param):
-        """Return a Cypher WHERE clause that matches a node by name properties."""
-        return (
-            f"(toLower(coalesce({var}.geneSymbol, '')) = ${param} "
-            f"OR toLower(coalesce({var}.commonName, '')) = ${param} "
-            f"OR toLower(coalesce({var}.diseaseName, '')) = ${param} "
-            f"OR toLower(coalesce({var}.pathwayName, '')) = ${param} "
-            f"OR toLower(coalesce({var}.phenotypeName, '')) = ${param} "
-            f"OR toLower(coalesce({var}.bodyPartName, '')) = ${param} "
-            f"OR toLower(coalesce({var}.tfSymbol, '')) = ${param})"
-        )
-
-    def _name_filter_contains(var, param):
-        return (
-            f"(toLower(coalesce({var}.geneSymbol, '')) CONTAINS ${param} "
-            f"OR toLower(coalesce({var}.commonName, '')) CONTAINS ${param} "
-            f"OR toLower(coalesce({var}.diseaseName, '')) CONTAINS ${param} "
-            f"OR toLower(coalesce({var}.pathwayName, '')) CONTAINS ${param} "
-            f"OR toLower(coalesce({var}.phenotypeName, '')) CONTAINS ${param} "
-            f"OR toLower(coalesce({var}.bodyPartName, '')) CONTAINS ${param})"
-        )
-
-    try:
-        with driver.session() as session:
-            from_q = from_name.lower()
-            to_q = to_name.lower()
-
-            # Try exact match first, then CONTAINS fallback
-            path_result = None
-            for filter_fn in [_name_filter, _name_filter_contains]:
-                where_a = filter_fn('a', 'from_q')
-                where_b = filter_fn('b', 'to_q')
-                query = (
-                    f"MATCH p = (a)-[*BFS ..10]-(b) "
-                    f"WHERE {where_a} AND {where_b} "
-                    f"RETURN nodes(p) AS path_nodes, relationships(p) AS path_rels "
-                    f"LIMIT 1"
+            # --- Predicted edges: predictedTreatsDisease for nodes in graph ---
+            all_node_ids = list(nodes.keys())
+            if all_node_ids:
+                pred_result = session.run(
+                    "MATCH (d:Drug)-[r:predictedTreatsDisease]->(dis:Disease) "
+                    "WHERE id(d) IN $nids OR id(dis) IN $nids "
+                    "RETURN id(d) AS did, id(dis) AS disid, "
+                    "       r.confidence AS confidence, r.source AS source, "
+                    "       labels(d)[0] AS d_label, properties(d) AS d_props, "
+                    "       labels(dis)[0] AS dis_label, properties(dis) AS dis_props "
+                    "LIMIT 200",
+                    nids=all_node_ids,
                 )
-                path_result = session.run(
-                    query, from_q=from_q, to_q=to_q,
-                ).single()
-                if path_result:
-                    break
-
-            if not path_result:
-                return jsonify({
-                    'error': f'No path found between "{from_name}" and "{to_name}" within 10 hops',
-                    'from': from_name,
-                    'to': to_name,
-                }), 404
-
-            nodes = {}
-            edges = []
-            for n in path_result['path_nodes']:
-                nid = n.id
-                props = dict(n)
-                label = _display_label(props, nid)
-                ntype = list(n.labels)[0] if n.labels else 'Unknown'
-                nodes[nid] = {
-                    'id': nid,
-                    'label': str(label)[:60],
-                    'type': ntype,
-                    'properties': {k: str(v)[:200] for k, v in props.items()
-                                   if v is not None},
-                }
-
-            for r in path_result['path_rels']:
-                rprops = dict(r)
-                edges.append({
-                    'from': r.start_node.id if hasattr(r, 'start_node') else r.nodes[0].id,
-                    'to': r.end_node.id if hasattr(r, 'end_node') else r.nodes[1].id,
-                    'label': r.type,
-                    'source': rprops.get('source', ''),
-                    'properties': {k: str(v)[:200] for k, v in rprops.items()
-                                   if v is not None},
-                })
+                for row in pred_result:
+                    did = row['did']
+                    disid = row['disid']
+                    if did not in nodes:
+                        d_props = dict(row['d_props']) if row['d_props'] else {}
+                        nodes[did] = {
+                            'id': did,
+                            'label': str(_display_label(d_props, did))[:60],
+                            'type': 'Drug',
+                            'layer': 'core',
+                            'properties': {k: str(v)[:200] for k, v in d_props.items()
+                                           if v is not None},
+                        }
+                    if disid not in nodes:
+                        dis_props = dict(row['dis_props']) if row['dis_props'] else {}
+                        nodes[disid] = {
+                            'id': disid,
+                            'label': str(_display_label(dis_props, disid))[:60],
+                            'type': 'Disease',
+                            'layer': 'core',
+                            'properties': {k: str(v)[:200] for k, v in dis_props.items()
+                                           if v is not None},
+                        }
+                    edges.append({
+                        'from': did,
+                        'to': disid,
+                        'label': 'predictedTreatsDisease',
+                        'source': row['source'] or 'Node2Vec_LinkPrediction',
+                        'layer': 'predicted',
+                        'properties': {
+                            'confidence': str(row['confidence']) if row['confidence'] else '',
+                        },
+                    })
 
         return jsonify({
-            'from': from_name,
-            'to': to_name,
-            'path_length': len(edges),
             'nodes': list(nodes.values()),
             'edges': edges,
         })

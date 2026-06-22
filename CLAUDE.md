@@ -24,6 +24,15 @@
 - **Testing**: pytest
 - **Notebooks**: Jupyter
 
+## ML Pipeline — Link Prediction for Drug Repurposing
+- **Pipeline**: `ml/graph_export.py` → `ml/train_node2vec.py` → `ml/link_prediction.py`
+- **Method**: Node2Vec (128-dim, train-only) + XGBoost classifier (best decoder: Test AUROC 0.9504, Test AUPRC 0.9579)
+- **Decoders compared**: Cosine (AUROC 0.7195), XGBoost (0.9504), MLP (0.9441) — XGBoost wins
+- **Data**: 9,735 therapeutic drugs × 457 diseases, 3,657 drugTreatsDisease edges (80/10/10 split)
+- **Predictions**: Top 500 stored in Memgraph as `predictedTreatsDisease` edges (confidence >= 0.5, source: `Node2Vec_LinkPrediction`)
+- **UI**: Orange dashed edges in Explore tab, separate toggle, provenance panel shows confidence + "not clinically validated" warning
+- **Data dir**: `ml/data/` — embeddings, splits, predictions TSV, evaluation report JSON
+
 ## Project Structure
 - `src/main.py` — Pipeline orchestrator (supports `--skip-neo4j`, `--skip-download`)
 - `src/parsers/` — Data source parsers (inherit from `BaseParser` in `base_parser.py`)
@@ -51,7 +60,8 @@
 - `scripts/` — Data processing and verification scripts
 - `reports/` — Generated pipeline health reports and cached ID mapping validation report (`id_mapping_report.json`)
 - `docs/` — Documentation, research plan, specific aims
-- `models/` — Future ML models
+- `ml/` — Link prediction pipeline: `graph_export.py`, `train_node2vec.py`, `link_prediction.py`
+- `ml/data/` — Embeddings, edge splits, predictions TSV, evaluation report JSON
 - `.claude/skills/` — Claude Code custom skills (see below)
 
 ## Claude Code Skills
