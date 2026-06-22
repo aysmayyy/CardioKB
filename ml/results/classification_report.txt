@@ -1,0 +1,14 @@
+XGBoost Link Prediction — Test Set Classification Report
+============================================================
+
+                    precision    recall  f1-score   support
+
+Negative (no edge)       0.81      0.95      0.88       322
+ Positive (treats)       0.94      0.78      0.85       322
+
+          accuracy                           0.87       644
+         macro avg       0.88      0.87      0.87       644
+      weighted avg       0.88      0.87      0.87       644
+
+AUROC: 0.9504
+AUPRC: 0.9579
