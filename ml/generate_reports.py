@@ -635,8 +635,399 @@ Both methods surface cardiovascularly relevant drug-disease pairs.</p>
     print(f"RotatE report saved to {out} ({out.stat().st_size / 1e6:.1f} MB)")
 
 
+def generate_compgcn_report():
+    COMPGCN_DIR = DATA_DIR / "compgcn"
+    compgcn_eval = load_json(COMPGCN_DIR / "evaluation_report.json")
+    compgcn_class = load_json(COMPGCN_DIR / "results" / "classification_report.json")
+    compgcn_feat = load_json(COMPGCN_DIR / "results" / "feature_importance.json")
+    compgcn_training = load_json(COMPGCN_DIR / "training_summary.json")
+
+    rotate_eval = load_json(ROTATE_DIR / "evaluation_report.json")
+    rotate_class = load_json(ROTATE_DIR / "results" / "classification_report.json")
+    n2v_eval = load_json(NODE2VEC_DIR / "evaluation_report.json")
+    n2v_class = load_json(NODE2VEC_DIR / "results" / "classification_report.json")
+
+    compgcn_preds = load_predictions(COMPGCN_DIR / "predictions.tsv")
+    rotate_preds = load_predictions(ROTATE_DIR / "predictions.tsv")
+    n2v_preds = load_predictions(NODE2VEC_DIR / "predictions.tsv")
+
+    roc = img_to_base64(COMPGCN_DIR / "results" / "roc_curve.png")
+    pr = img_to_base64(COMPGCN_DIR / "results" / "pr_curve.png")
+    cm = img_to_base64(COMPGCN_DIR / "results" / "confusion_matrix.png")
+    fi = img_to_base64(COMPGCN_DIR / "results" / "feature_importance.png")
+
+    rot_roc = img_to_base64(ROTATE_DIR / "results" / "roc_curve.png")
+    rot_cm = img_to_base64(ROTATE_DIR / "results" / "confusion_matrix.png")
+    rot_fi = img_to_base64(ROTATE_DIR / "results" / "feature_importance.png")
+    n2v_roc = img_to_base64(NODE2VEC_DIR / "results" / "roc_curve.png")
+
+    cd = compgcn_eval["decoders"]
+    rd = rotate_eval["decoders"]
+    nd = n2v_eval["decoders"]
+
+    html = f"""<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>CardioKB — CompGCN Link Prediction Evaluation Report</title>
+<style>
+    :root {{ --accent: #7c3aed; --best-bg: #ede9fe; --box-bg: #f5f3ff; }}
+    {css()}
+    .rot-box {{ background: #f0fdf4; border-color: #16a34a; }}
+    .rot-box .value {{ color: #16a34a; }}
+    .n2v-box {{ background: #eff6ff; border-color: #2563eb; }}
+    .n2v-box .value {{ color: #2563eb; }}
+    .comparison-header {{ display: flex; justify-content: center; gap: 30px; margin: 20px 0; flex-wrap: wrap; }}
+</style>
+</head>
+<body>
+
+<h1 style="color: #0f172a;">CardioKB — CompGCN Link Prediction Evaluation Report</h1>
+<p class="section-info">Generated: 2026-06-25 | CardioKB Knowledge Graph: 459,092 nodes, 5.4M+ relationships, 22 data sources</p>
+
+<div class="summary">
+<strong>Key Result:</strong> CompGCN + XGBoost achieves <strong>Test AUROC = {cd['XGBoost']['test_auroc']:.4f}</strong> and
+<strong>AUPRC = {cd['XGBoost']['test_auprc']:.4f}</strong> for drug-disease link prediction — the best of all three embedding methods.
+Improves over RotatE by <strong>+{cd['XGBoost']['test_auroc'] - rd['XGBoost']['test_auroc']:.4f}</strong> and
+Node2Vec by <strong>+{cd['XGBoost']['test_auroc'] - nd['XGBoost']['test_auroc']:.4f}</strong> AUROC.
+</div>
+
+<h2>1. Headline Metrics</h2>
+
+<div class="comparison-header">
+    <div>
+        <div style="text-align:center; font-weight:600; margin-bottom:8px; color:#7c3aed;">CompGCN (new)</div>
+        <div class="metric-box"><div class="value">{cd['XGBoost']['test_auroc']:.4f}</div><div class="label">Test AUROC</div></div>
+        <div class="metric-box"><div class="value">{cd['XGBoost']['test_auprc']:.4f}</div><div class="label">Test AUPRC</div></div>
+        <div class="metric-box"><div class="value">{compgcn_class['accuracy']*100:.1f}%</div><div class="label">Accuracy</div></div>
+    </div>
+    <div>
+        <div style="text-align:center; font-weight:600; margin-bottom:8px; color:#16a34a;">RotatE</div>
+        <div class="metric-box rot-box"><div class="value">{rd['XGBoost']['test_auroc']:.4f}</div><div class="label">Test AUROC</div></div>
+        <div class="metric-box rot-box"><div class="value">{rd['XGBoost']['test_auprc']:.4f}</div><div class="label">Test AUPRC</div></div>
+        <div class="metric-box rot-box"><div class="value">{rotate_class['accuracy']*100:.1f}%</div><div class="label">Accuracy</div></div>
+    </div>
+    <div>
+        <div style="text-align:center; font-weight:600; margin-bottom:8px; color:#2563eb;">Node2Vec</div>
+        <div class="metric-box n2v-box"><div class="value">{nd['XGBoost']['test_auroc']:.4f}</div><div class="label">Test AUROC</div></div>
+        <div class="metric-box n2v-box"><div class="value">{nd['XGBoost']['test_auprc']:.4f}</div><div class="label">Test AUPRC</div></div>
+        <div class="metric-box n2v-box"><div class="value">{n2v_class['accuracy']*100:.1f}%</div><div class="label">Accuracy</div></div>
+    </div>
+</div>
+
+<h2>2. Methodology</h2>
+
+<h3>2.1 Graph & Data</h3>
+<table>
+<tr><th>Parameter</th><th>Value</th></tr>
+<tr><td>Knowledge Graph</td><td>CardioKB — 459,092 nodes, 5,437,921 relationships, 17 node types, 25 relationship types</td></tr>
+<tr><td>Target edge type</td><td><code>drugTreatsDisease</code> (3,782 total edges)</td></tr>
+<tr><td>Therapeutic drugs (filtered)</td><td>{compgcn_eval['n_therapeutic_drugs']:,}</td></tr>
+<tr><td>Diseases</td><td>{compgcn_eval['n_diseases']}</td></tr>
+</table>
+
+<h4>drugTreatsDisease Edge Breakdown by Source</h4>
+<table>
+<tr><th>Source</th><th>Count</th><th>Description</th></tr>
+<tr><td>CTD</td><td>2,757</td><td>Curated chemical-disease therapeutic associations</td></tr>
+<tr><td>ClinicalTrials.gov</td><td>868</td><td>Phase 3/4 clinical trial drug-disease pairs</td></tr>
+<tr><td>DrugCentral</td><td>157</td><td>FDA-approved drug indications</td></tr>
+<tr style="font-weight:600; background-color: #f1f5f9;"><td>Total</td><td>3,782</td><td></td></tr>
+</table>
+
+<table>
+<tr><th>Parameter</th><th>Value</th></tr>
+<tr><td>Edge split</td><td>80/10/10 stratified by edge type (same random seed for all methods)</td></tr>
+<tr><td>Train / Val / Test positives</td><td>{compgcn_eval['n_train_positives']:,} / {compgcn_eval['n_val_positives']} / {compgcn_eval['n_test_positives']}</td></tr>
+<tr><td>Negative sampling</td><td>1:1 ratio, excluding all known Drug-Disease edges across all splits</td></tr>
+<tr><td>Data leakage prevention</td><td>Embeddings trained on train split only; val/test edges hidden during training</td></tr>
+</table>
+
+<h3>2.2 CompGCN Training Configuration</h3>
+<table>
+<tr><th>Parameter</th><th>Value</th></tr>
+<tr><td>Library</td><td>Pure PyTorch (custom implementation)</td></tr>
+<tr><td>Model</td><td>CompGCN — Composition-based Graph Convolutional Network (Vashishth et al., 2020)</td></tr>
+<tr><td>Composition operator</td><td>Subtraction (node_emb - rel_emb)</td></tr>
+<tr><td>GCN layers</td><td>{compgcn_training['num_layers']}</td></tr>
+<tr><td>Hidden dimension</td><td>{compgcn_training['hidden_dim']}</td></tr>
+<tr><td>Dropout</td><td>{compgcn_training['dropout']}</td></tr>
+<tr><td>Learning rate</td><td>{compgcn_training['learning_rate']}</td></tr>
+<tr><td>Total parameters</td><td>{compgcn_training['total_parameters']:,}</td></tr>
+<tr><td>Epochs</td><td>200 (early stopped at 140, best at {compgcn_training['best_epoch']})</td></tr>
+<tr><td>Best validation loss</td><td>{compgcn_training['best_val_loss']}</td></tr>
+<tr><td>Link predictor</td><td>DistMult-style (h * r * t scoring)</td></tr>
+<tr><td>Relation types</td><td>{compgcn_training['num_base_relations']} base ({compgcn_training['num_base_relations'] * 2} with inverse)</td></tr>
+<tr><td>Training time</td><td>{compgcn_training['training_time_seconds']/60:.0f} minutes on GPU (HPC)</td></tr>
+</table>
+
+<h3>2.3 Decoder Features</h3>
+<p>Same feature vector as Node2Vec and RotatE for fair comparison:</p>
+<table>
+<tr><th>Feature Group</th><th>Dimensions</th><th>Description</th></tr>
+<tr><td>Hadamard product</td><td>128</td><td>Element-wise product of drug and disease embeddings</td></tr>
+<tr><td>Absolute difference</td><td>128</td><td>Element-wise |emb_drug - emb_disease|</td></tr>
+<tr><td>Cosine similarity</td><td>1</td><td>Cosine similarity between embeddings</td></tr>
+<tr><td>L2 distance</td><td>1</td><td>Euclidean distance between embeddings</td></tr>
+<tr><td>Shared neighbors</td><td>1</td><td>Common neighbors in training graph</td></tr>
+<tr><td>Jaccard coefficient</td><td>1</td><td>|shared| / |union| of neighbor sets</td></tr>
+<tr><td>Adamic-Adar index</td><td>1</td><td>Sum of 1/log(degree) over shared neighbors</td></tr>
+<tr><td>Preferential attachment</td><td>1</td><td>log(1 + deg_drug * deg_disease)</td></tr>
+<tr><td>Drug degree</td><td>1</td><td>log(1 + degree of drug node)</td></tr>
+<tr><td>Disease degree</td><td>1</td><td>log(1 + degree of disease node)</td></tr>
+</table>
+
+<h2>3. Three-Method Decoder Comparison</h2>
+
+<table>
+<tr>
+    <th>Embedding</th><th>Decoder</th>
+    <th>Val AUROC</th><th>Val AUPRC</th>
+    <th>Test AUROC</th><th>Test AUPRC</th>
+    <th>MRR</th><th>Hits@10</th><th>Hits@100</th><th>Hits@200</th>
+</tr>
+<tr>
+    <td>Node2Vec</td><td>Cosine</td>
+    <td>{nd['Cosine']['val_auroc']:.4f}</td><td>{nd['Cosine']['val_auprc']:.4f}</td>
+    <td>{nd['Cosine']['test_auroc']:.4f}</td><td>{nd['Cosine']['test_auprc']:.4f}</td>
+    <td>{nd['Cosine']['ranking']['mrr']:.4f}</td>
+    <td>{nd['Cosine']['ranking']['hits@10']:.1%}</td>
+    <td>{nd['Cosine']['ranking']['hits@100']:.1%}</td>
+    <td>{nd['Cosine']['ranking']['hits@200']:.1%}</td>
+</tr>
+<tr>
+    <td>Node2Vec</td><td><strong>XGBoost</strong></td>
+    <td>{nd['XGBoost']['val_auroc']:.4f}</td><td>{nd['XGBoost']['val_auprc']:.4f}</td>
+    <td>{nd['XGBoost']['test_auroc']:.4f}</td><td>{nd['XGBoost']['test_auprc']:.4f}</td>
+    <td>{nd['XGBoost']['ranking']['mrr']:.4f}</td>
+    <td>{nd['XGBoost']['ranking']['hits@10']:.1%}</td>
+    <td>{nd['XGBoost']['ranking']['hits@100']:.1%}</td>
+    <td>{nd['XGBoost']['ranking']['hits@200']:.1%}</td>
+</tr>
+<tr>
+    <td>Node2Vec</td><td>MLP</td>
+    <td>{nd['MLP']['val_auroc']:.4f}</td><td>{nd['MLP']['val_auprc']:.4f}</td>
+    <td>{nd['MLP']['test_auroc']:.4f}</td><td>{nd['MLP']['test_auprc']:.4f}</td>
+    <td>{nd['MLP']['ranking']['mrr']:.4f}</td>
+    <td>{nd['MLP']['ranking']['hits@10']:.1%}</td>
+    <td>{nd['MLP']['ranking']['hits@100']:.1%}</td>
+    <td>{nd['MLP']['ranking']['hits@200']:.1%}</td>
+</tr>
+<tr style="border-top: 3px solid #16a34a;">
+    <td>RotatE</td><td>Cosine</td>
+    <td>{rd['Cosine']['val_auroc']:.4f}</td><td>{rd['Cosine']['val_auprc']:.4f}</td>
+    <td>{rd['Cosine']['test_auroc']:.4f}</td><td>{rd['Cosine']['test_auprc']:.4f}</td>
+    <td>{rd['Cosine']['ranking']['mrr']:.4f}</td>
+    <td>{rd['Cosine']['ranking']['hits@10']:.1%}</td>
+    <td>{rd['Cosine']['ranking']['hits@100']:.1%}</td>
+    <td>{rd['Cosine']['ranking']['hits@200']:.1%}</td>
+</tr>
+<tr>
+    <td>RotatE</td><td><strong>XGBoost</strong></td>
+    <td>{rd['XGBoost']['val_auroc']:.4f}</td><td>{rd['XGBoost']['val_auprc']:.4f}</td>
+    <td>{rd['XGBoost']['test_auroc']:.4f}</td><td>{rd['XGBoost']['test_auprc']:.4f}</td>
+    <td>{rd['XGBoost']['ranking']['mrr']:.4f}</td>
+    <td>{rd['XGBoost']['ranking']['hits@10']:.1%}</td>
+    <td>{rd['XGBoost']['ranking']['hits@100']:.1%}</td>
+    <td>{rd['XGBoost']['ranking']['hits@200']:.1%}</td>
+</tr>
+<tr>
+    <td>RotatE</td><td>MLP</td>
+    <td>{rd['MLP']['val_auroc']:.4f}</td><td>{rd['MLP']['val_auprc']:.4f}</td>
+    <td>{rd['MLP']['test_auroc']:.4f}</td><td>{rd['MLP']['test_auprc']:.4f}</td>
+    <td>{rd['MLP']['ranking']['mrr']:.4f}</td>
+    <td>{rd['MLP']['ranking']['hits@10']:.1%}</td>
+    <td>{rd['MLP']['ranking']['hits@100']:.1%}</td>
+    <td>{rd['MLP']['ranking']['hits@200']:.1%}</td>
+</tr>
+<tr style="border-top: 3px solid #7c3aed;">
+    <td>CompGCN</td><td>Cosine</td>
+    <td>{cd['Cosine']['val_auroc']:.4f}</td><td>{cd['Cosine']['val_auprc']:.4f}</td>
+    <td>{cd['Cosine']['test_auroc']:.4f}</td><td>{cd['Cosine']['test_auprc']:.4f}</td>
+    <td>{cd['Cosine']['ranking']['mrr']:.4f}</td>
+    <td>{cd['Cosine']['ranking']['hits@10']:.1%}</td>
+    <td>{cd['Cosine']['ranking']['hits@100']:.1%}</td>
+    <td>{cd['Cosine']['ranking']['hits@200']:.1%}</td>
+</tr>
+<tr class="best">
+    <td>CompGCN</td><td><strong>XGBoost</strong></td>
+    <td>{cd['XGBoost']['val_auroc']:.4f}</td><td>{cd['XGBoost']['val_auprc']:.4f}</td>
+    <td class="improved">{cd['XGBoost']['test_auroc']:.4f}</td><td class="improved">{cd['XGBoost']['test_auprc']:.4f}</td>
+    <td>{cd['XGBoost']['ranking']['mrr']:.4f}</td>
+    <td>{cd['XGBoost']['ranking']['hits@10']:.1%}</td>
+    <td>{cd['XGBoost']['ranking']['hits@100']:.1%}</td>
+    <td>{cd['XGBoost']['ranking']['hits@200']:.1%}</td>
+</tr>
+<tr>
+    <td>CompGCN</td><td>MLP</td>
+    <td>{cd['MLP']['val_auroc']:.4f}</td><td>{cd['MLP']['val_auprc']:.4f}</td>
+    <td>{cd['MLP']['test_auroc']:.4f}</td><td>{cd['MLP']['test_auprc']:.4f}</td>
+    <td>{cd['MLP']['ranking']['mrr']:.4f}</td>
+    <td>{cd['MLP']['ranking']['hits@10']:.1%}</td>
+    <td>{cd['MLP']['ranking']['hits@100']:.1%}</td>
+    <td>{cd['MLP']['ranking']['hits@200']:.1%}</td>
+</tr>
+</table>
+
+<h3>3.1 Best Decoder Comparison (XGBoost)</h3>
+<table>
+<tr><th>Metric</th><th>Node2Vec</th><th>RotatE</th><th>CompGCN</th><th>CompGCN vs RotatE</th></tr>
+<tr><td>Test AUROC</td><td>{nd['XGBoost']['test_auroc']:.4f}</td><td>{rd['XGBoost']['test_auroc']:.4f}</td><td class="improved">{cd['XGBoost']['test_auroc']:.4f}</td><td class="improved">+{cd['XGBoost']['test_auroc'] - rd['XGBoost']['test_auroc']:.4f}</td></tr>
+<tr><td>Test AUPRC</td><td>{nd['XGBoost']['test_auprc']:.4f}</td><td>{rd['XGBoost']['test_auprc']:.4f}</td><td class="improved">{cd['XGBoost']['test_auprc']:.4f}</td><td class="improved">+{cd['XGBoost']['test_auprc'] - rd['XGBoost']['test_auprc']:.4f}</td></tr>
+<tr><td>Precision (test)</td><td>{n2v_class['Positive']['precision']:.4f}</td><td>{rotate_class['Positive']['precision']:.4f}</td><td>{compgcn_class['Positive']['precision']:.4f}</td><td>{compgcn_class['Positive']['precision'] - rotate_class['Positive']['precision']:+.4f}</td></tr>
+<tr><td>Recall (test)</td><td>{n2v_class['Positive']['recall']:.4f}</td><td>{rotate_class['Positive']['recall']:.4f}</td><td>{compgcn_class['Positive']['recall']:.4f}</td><td>{compgcn_class['Positive']['recall'] - rotate_class['Positive']['recall']:+.4f}</td></tr>
+<tr><td>F1-score (test)</td><td>{n2v_class['Positive']['f1-score']:.4f}</td><td>{rotate_class['Positive']['f1-score']:.4f}</td><td>{compgcn_class['Positive']['f1-score']:.4f}</td><td>{compgcn_class['Positive']['f1-score'] - rotate_class['Positive']['f1-score']:+.4f}</td></tr>
+<tr><td>Accuracy (test)</td><td>{n2v_class['accuracy']:.4f}</td><td>{rotate_class['accuracy']:.4f}</td><td class="improved">{compgcn_class['accuracy']:.4f}</td><td class="improved">+{compgcn_class['accuracy'] - rotate_class['accuracy']:.4f}</td></tr>
+</table>
+
+<h3>3.2 Classification Report (CompGCN + XGBoost, test set)</h3>
+<table>
+<tr><th>Metric</th><th>Negative</th><th>Positive</th></tr>
+<tr><td>Precision</td><td>{compgcn_class['Negative']['precision']:.4f}</td><td>{compgcn_class['Positive']['precision']:.4f}</td></tr>
+<tr><td>Recall</td><td>{compgcn_class['Negative']['recall']:.4f}</td><td>{compgcn_class['Positive']['recall']:.4f}</td></tr>
+<tr><td>F1-score</td><td>{compgcn_class['Negative']['f1-score']:.4f}</td><td>{compgcn_class['Positive']['f1-score']:.4f}</td></tr>
+<tr><td>Support</td><td>{int(compgcn_class['Negative']['support'])}</td><td>{int(compgcn_class['Positive']['support'])}</td></tr>
+</table>
+<p><strong>Accuracy:</strong> {compgcn_class['accuracy']:.4f} | <strong>Test set size:</strong> {int(compgcn_class['Negative']['support'] + compgcn_class['Positive']['support'])} samples</p>
+
+<h2>4. CompGCN Evaluation Plots</h2>
+
+<div class="plot-grid">
+    <div>
+        <h3 style="text-align:center;">ROC Curve</h3>
+        <img src="data:image/png;base64,{roc}" alt="CompGCN ROC Curve">
+    </div>
+    <div>
+        <h3 style="text-align:center;">Precision-Recall Curve</h3>
+        <img src="data:image/png;base64,{pr}" alt="CompGCN PR Curve">
+    </div>
+</div>
+
+<div class="plot-grid">
+    <div>
+        <h3 style="text-align:center;">Confusion Matrix</h3>
+        <img src="data:image/png;base64,{cm}" alt="CompGCN Confusion Matrix">
+    </div>
+    <div>
+        <h3 style="text-align:center;">Feature Importance (Top 20)</h3>
+        <img src="data:image/png;base64,{fi}" alt="CompGCN Feature Importance">
+    </div>
+</div>
+
+<h2>5. Side-by-Side: CompGCN vs RotatE vs Node2Vec</h2>
+
+<h3>ROC Curves</h3>
+<div class="plot-grid">
+    <div>
+        <h3 style="text-align:center;">Node2Vec — ROC</h3>
+        <img src="data:image/png;base64,{n2v_roc}" alt="Node2Vec ROC">
+    </div>
+    <div>
+        <h3 style="text-align:center;">RotatE — ROC</h3>
+        <img src="data:image/png;base64,{rot_roc}" alt="RotatE ROC">
+    </div>
+</div>
+
+<h3>Confusion Matrices</h3>
+<div class="plot-grid">
+    <div>
+        <h3 style="text-align:center;">RotatE — Confusion Matrix</h3>
+        <img src="data:image/png;base64,{rot_cm}" alt="RotatE Confusion Matrix">
+    </div>
+    <div>
+        <h3 style="text-align:center;">CompGCN — Confusion Matrix</h3>
+        <img src="data:image/png;base64,{cm}" alt="CompGCN Confusion Matrix">
+    </div>
+</div>
+
+<h3>Feature Importance</h3>
+<div class="plot-grid">
+    <div>
+        <h3 style="text-align:center;">RotatE — Feature Importance</h3>
+        <img src="data:image/png;base64,{rot_fi}" alt="RotatE Feature Importance">
+    </div>
+    <div>
+        <h3 style="text-align:center;">CompGCN — Feature Importance</h3>
+        <img src="data:image/png;base64,{fi}" alt="CompGCN Feature Importance">
+    </div>
+</div>
+
+<h2>6. Feature Importance Analysis</h2>
+
+<table>
+<tr><th>Rank</th><th>Feature</th><th>Importance (gain)</th><th>Percentage</th></tr>
+{feature_table(compgcn_feat)}
+</table>
+
+<p><strong>Key observations:</strong></p>
+<ul>
+    <li><strong>hadamard_46</strong> dominates at 17.4% — over 2x more important than the next feature. This single CompGCN embedding dimension captures strong drug-disease treatment signal.</li>
+    <li><strong>log_deg_disease</strong> is the 4th most important feature (3.6%), confirming that disease node degree in the training graph provides predictive signal independent of embeddings.</li>
+    <li>CompGCN relies more heavily on embedding features vs structural heuristics compared to Node2Vec, but less so than RotatE — consistent with CompGCN's message-passing encoding some structural information directly.</li>
+</ul>
+
+<h2>7. Top 30 Predicted Drug Repurposing Candidates</h2>
+
+<h3>7.1 CompGCN Predictions</h3>
+<table class="pred-table">
+<tr><th>Rank</th><th>Drug</th><th>Disease</th><th>Confidence</th></tr>
+{prediction_table(compgcn_preds)}
+</table>
+
+<h3>7.2 RotatE Predictions (for comparison)</h3>
+<table class="pred-table">
+<tr><th>Rank</th><th>Drug</th><th>Disease</th><th>Confidence</th></tr>
+{prediction_table(rotate_preds)}
+</table>
+
+<h2>8. Training Efficiency Comparison</h2>
+<table>
+<tr><th>Method</th><th>Parameters</th><th>Training Time</th><th>Hardware</th><th>Embedding Dim</th></tr>
+<tr><td>Node2Vec</td><td>—</td><td>~15 min</td><td>CPU (HPC)</td><td>128</td></tr>
+<tr><td>RotatE</td><td>~57M</td><td>~10 hours</td><td>NVIDIA L40S GPU</td><td>256 (128 complex)</td></tr>
+<tr class="best"><td>CompGCN</td><td>{compgcn_training['total_parameters']/1e6:.1f}M</td><td>{compgcn_training['training_time_seconds']/60:.0f} min</td><td>GPU (HPC)</td><td>{compgcn_training['hidden_dim']}</td></tr>
+</table>
+<p>CompGCN offers the best AUROC with ~13x faster training than RotatE and ~1.8x fewer parameters.</p>
+
+<h2>9. Discussion</h2>
+
+<h3>Why CompGCN improves over RotatE and Node2Vec</h3>
+<ul>
+    <li><strong>Relation-aware message passing:</strong> CompGCN jointly embeds nodes and relations during graph convolution, composing relation embeddings with neighbor node embeddings at each layer. This captures multi-hop relational patterns that RotatE's per-triple scoring and Node2Vec's homogeneous walks miss.</li>
+    <li><strong>Efficient architecture:</strong> 2 GCN layers with 32M parameters vs RotatE's 57M — CompGCN achieves better performance with a more compact model.</li>
+    <li><strong>Best AUROC/AUPRC:</strong> CompGCN leads on classification metrics, though ranking metrics (Hits@K, MRR) are comparable across all methods — suggesting structural features in XGBoost dominate ranking behavior.</li>
+</ul>
+
+<h3>Cosine decoder failure</h3>
+<p>Like RotatE, CompGCN's cosine AUROC is near-random (0.5058). CompGCN embeddings are optimized for composition-based scoring (node - relation),
+not direct cosine similarity. Learned decoders (XGBoost, MLP) adapt to the embedding geometry effectively.</p>
+
+<h3>Limitations</h3>
+<ul>
+    <li><strong>Random negatives inflate AUROC:</strong> 1:1 random negative sampling makes the classification task easier. Disease-matched negatives would give more realistic estimates.</li>
+    <li><strong>MRR remains low</strong> (~0.019) due to extreme candidate space (9,735 drugs &times; 480 diseases = 4.7M pairs).</li>
+    <li><strong>Ranking metrics converge:</strong> All three methods achieve near-identical Hits@K and MRR with XGBoost, suggesting the decoder + structural features dominate ranking regardless of embedding method.</li>
+    <li><strong>No external validation</strong> against independent clinical data or literature.</li>
+    <li><strong>Single split</strong> — cross-validation would provide confidence intervals.</li>
+</ul>
+
+<div class="footer">
+    CardioKB — Cardiovascular Disease Knowledge Graph | CompGCN Link Prediction for Drug Repurposing<br>
+    Report generated from evaluation data in <code>ml/data/compgcn/</code>, <code>ml/data/rotate/</code>, and <code>ml/data/node2vec/</code>
+</div>
+
+</body>
+</html>"""
+
+    out = REPORTS_DIR / "compgcn_evaluation_report.html"
+    with open(out, "w") as f:
+        f.write(html)
+    print(f"CompGCN report saved to {out} ({out.stat().st_size / 1e6:.1f} MB)")
+
+
 if __name__ == "__main__":
     REPORTS_DIR.mkdir(exist_ok=True)
     generate_node2vec_report()
     generate_rotate_report()
-    print("\nDone! Both reports in ml/reports/")
+    generate_compgcn_report()
+    print("\nDone! All reports in ml/reports/")
