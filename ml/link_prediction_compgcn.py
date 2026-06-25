@@ -1,8 +1,8 @@
 """
-Link prediction for drug repurposing on CardioKB.
+Link prediction for drug repurposing using CompGCN embeddings.
 
-Proper methodology (no data leakage):
-  - Node2Vec trained on train edges only (80%)
+Same methodology as Node2Vec and RotatE link prediction for fair comparison:
+  - CompGCN trained on train edges only (80%)
   - Val set (10%) for hyperparameter tuning
   - Test set (10%) for final evaluation
   - Three decoders: Cosine similarity, XGBoost, MLP
@@ -30,6 +30,7 @@ load_dotenv(Path(__file__).resolve().parents[1] / ".env")
 
 DATA_DIR = Path(__file__).resolve().parent / "data"
 SPLIT_DIR = DATA_DIR / "splits"
+COMPGCN_DIR = DATA_DIR / "compgcn"
 MEMGRAPH_URI = os.getenv("MEMGRAPH_URI", "bolt://localhost:7687")
 MEMGRAPH_USER = os.getenv("MEMGRAPH_USERNAME", "")
 MEMGRAPH_PASS = os.getenv("MEMGRAPH_PASSWORD", "")
@@ -43,23 +44,18 @@ THERAPEUTIC_EDGE_TYPES = {
 }
 
 
-# ---------------------------------------------------------------------------
-# Data loading
-# ---------------------------------------------------------------------------
-
 def load_embeddings():
-    """Load Node2Vec embeddings trained on train edges only."""
-    path = DATA_DIR / "node2vec" / "train_embeddings.npz"
+    """Load CompGCN node embeddings."""
+    path = COMPGCN_DIR / "compgcn_embeddings.npz"
     data = np.load(path)
     node_ids = data["node_ids"]
     embeddings = data["embeddings"]
     emb_map = {int(nid): embeddings[i] for i, nid in enumerate(node_ids)}
-    log.info(f"Loaded train embeddings: {embeddings.shape} from {path.name}")
+    log.info(f"Loaded CompGCN embeddings: {embeddings.shape} from {path.name}")
     return emb_map
 
 
 def load_node_metadata():
-    """Load node metadata TSV."""
     meta = {}
     with open(DATA_DIR / "nodes.tsv") as f:
         reader = csv.DictReader(f, delimiter="\t")
@@ -75,7 +71,6 @@ def load_node_metadata():
 
 
 def load_split_edges(split_name, rel_type_filter=None):
-    """Load edges from a split file. Optionally filter by rel_type."""
     edges = []
     with open(SPLIT_DIR / f"{split_name}_edges.tsv") as f:
         reader = csv.DictReader(f, delimiter="\t")
@@ -87,7 +82,6 @@ def load_split_edges(split_name, rel_type_filter=None):
 
 
 def build_graph_structure_from_train():
-    """Build adjacency/degree from train edges only (no leakage)."""
     neighbors = defaultdict(set)
     degree = defaultdict(int)
     edge_types_per_node = defaultdict(set)
@@ -109,7 +103,6 @@ def build_graph_structure_from_train():
 
 
 def get_drug_disease_ids(meta):
-    """Get sets of integer IDs for Drug and Disease nodes."""
     drugs = {nid for nid, m in meta.items() if m["label"] == "Drug"}
     diseases = {nid for nid, m in meta.items() if m["label"] == "Disease"}
     log.info(f"Drug nodes: {len(drugs)}, Disease nodes: {len(diseases)}")
@@ -117,7 +110,6 @@ def get_drug_disease_ids(meta):
 
 
 def filter_therapeutic_drugs(drugs, edge_types_per_node):
-    """Keep only drugs with therapeutic signal edges."""
     therapeutic = set()
     for d in drugs:
         if edge_types_per_node.get(d, set()) & THERAPEUTIC_EDGE_TYPES:
@@ -128,7 +120,6 @@ def filter_therapeutic_drugs(drugs, edge_types_per_node):
 
 
 def get_all_existing_edges(drugs, diseases):
-    """Get all Drug->Disease edges across ALL splits (for filtering predictions)."""
     existing = set()
     for split in ["train", "val", "test"]:
         with open(SPLIT_DIR / f"{split}_edges.tsv") as f:
@@ -143,13 +134,8 @@ def get_all_existing_edges(drugs, diseases):
     return existing
 
 
-# ---------------------------------------------------------------------------
-# Negative sampling
-# ---------------------------------------------------------------------------
-
 def sample_negatives(positives, drugs_with_emb, diseases_with_emb,
                      all_existing, n_neg, seed):
-    """Sample negative Drug-Disease pairs not in the graph. Returns list of (d, dis)."""
     rng = np.random.RandomState(seed)
     drug_list = sorted(drugs_with_emb)
     disease_list = sorted(diseases_with_emb)
@@ -168,12 +154,7 @@ def sample_negatives(positives, drugs_with_emb, diseases_with_emb,
     return list(neg_set)
 
 
-# ---------------------------------------------------------------------------
-# Feature computation
-# ---------------------------------------------------------------------------
-
 def compute_structural_features(node_a, node_b, neighbors, degree):
-    """Graph-structural features for a node pair."""
     nbrs_a = neighbors.get(node_a, set())
     nbrs_b = neighbors.get(node_b, set())
     shared = nbrs_a & nbrs_b
@@ -194,7 +175,6 @@ def compute_structural_features(node_a, node_b, neighbors, degree):
 
 
 def compute_pair_features(emb_a, emb_b, node_a, node_b, neighbors, degree):
-    """Full feature vector: embedding + structural."""
     hadamard = emb_a * emb_b
     diff = np.abs(emb_a - emb_b)
     norm_a = np.linalg.norm(emb_a)
@@ -207,18 +187,12 @@ def compute_pair_features(emb_a, emb_b, node_a, node_b, neighbors, degree):
 
 
 def compute_cosine_score(emb_a, emb_b):
-    """Simple cosine similarity between two embeddings."""
     norm_a = np.linalg.norm(emb_a)
     norm_b = np.linalg.norm(emb_b)
     return float(np.dot(emb_a, emb_b) / (norm_a * norm_b + 1e-8))
 
 
-# ---------------------------------------------------------------------------
-# Build datasets
-# ---------------------------------------------------------------------------
-
 def build_dataset(pos_pairs, neg_pairs, emb_map, neighbors, degree):
-    """Build feature matrix and labels from positive and negative pairs."""
     all_pairs = [(d, dis, 1) for d, dis in pos_pairs] + \
                 [(d, dis, 0) for d, dis in neg_pairs]
 
@@ -231,13 +205,8 @@ def build_dataset(pos_pairs, neg_pairs, emb_map, neighbors, degree):
     return X, y, pairs
 
 
-# ---------------------------------------------------------------------------
-# Decoders
-# ---------------------------------------------------------------------------
-
 def evaluate_cosine_decoder(train_pos, train_neg, val_pos, val_neg,
                             test_pos, test_neg, emb_map):
-    """Decoder (a): cosine similarity — no learned parameters."""
     log.info("  Computing cosine scores...")
 
     def score_pairs(pos_pairs, neg_pairs):
@@ -253,7 +222,6 @@ def evaluate_cosine_decoder(train_pos, train_neg, val_pos, val_neg,
     val_scores, val_y = score_pairs(val_pos, val_neg)
     test_scores, test_y = score_pairs(test_pos, test_neg)
 
-    # Find best threshold on val set
     best_thresh, best_f1 = 0.5, 0
     for thresh in np.arange(0.0, 1.0, 0.01):
         preds = (val_scores >= thresh).astype(int)
@@ -286,8 +254,8 @@ def evaluate_cosine_decoder(train_pos, train_neg, val_pos, val_neg,
     }
 
 
-def evaluate_xgboost_decoder(X_train, y_train, X_val, y_val, X_test, y_test):
-    """Decoder (b): XGBoost classifier."""
+def evaluate_xgboost_decoder(X_train, y_train, X_val, y_val, X_test, y_test,
+                              emb_dim):
     from xgboost import XGBClassifier
 
     scaler = StandardScaler()
@@ -314,11 +282,10 @@ def evaluate_xgboost_decoder(X_train, y_train, X_val, y_val, X_test, y_test):
     test_preds = (test_probs >= 0.5).astype(int)
     report = classification_report(y_test, test_preds, target_names=["No Treat", "Treats"])
 
-    # Feature importance
     if hasattr(model, "feature_importances_"):
         feat_names = (
-            [f"hadamard_{i}" for i in range(128)]
-            + [f"diff_{i}" for i in range(128)]
+            [f"hadamard_{i}" for i in range(emb_dim)]
+            + [f"diff_{i}" for i in range(emb_dim)]
             + ["cosine", "l2"]
             + ["shared_neighbors", "jaccard", "adamic_adar",
                "log_pref_attach", "log_deg_drug", "log_deg_disease"]
@@ -327,7 +294,8 @@ def evaluate_xgboost_decoder(X_train, y_train, X_val, y_val, X_test, y_test):
         top_idx = np.argsort(importances)[-10:][::-1]
         log.info("  Top 10 features:")
         for idx in top_idx:
-            log.info(f"    {feat_names[idx]}: {importances[idx]:.4f}")
+            name = feat_names[idx] if idx < len(feat_names) else f"feat_{idx}"
+            log.info(f"    {name}: {importances[idx]:.4f}")
 
     return {
         "name": "XGBoost",
@@ -340,7 +308,6 @@ def evaluate_xgboost_decoder(X_train, y_train, X_val, y_val, X_test, y_test):
 
 
 def evaluate_mlp_decoder(X_train, y_train, X_val, y_val, X_test, y_test):
-    """Decoder (c): MLP with one hidden layer (sklearn)."""
     from sklearn.neural_network import MLPClassifier
 
     scaler = StandardScaler()
@@ -382,12 +349,7 @@ def evaluate_mlp_decoder(X_train, y_train, X_val, y_val, X_test, y_test):
     }
 
 
-# ---------------------------------------------------------------------------
-# Ranking metrics
-# ---------------------------------------------------------------------------
-
 def compute_ranking_metrics(test_pos, test_neg, scores_pos, scores_neg):
-    """Compute Hits@K and MRR."""
     all_scores = np.concatenate([scores_pos, scores_neg])
     sorted_indices = np.argsort(-all_scores)
 
@@ -409,13 +371,8 @@ def compute_ranking_metrics(test_pos, test_neg, scores_pos, scores_neg):
     return metrics
 
 
-# ---------------------------------------------------------------------------
-# Scoring & storage
-# ---------------------------------------------------------------------------
-
 def score_all_unknown_pairs(best_result, emb_map, meta, drugs, diseases,
                             all_existing, neighbors, degree):
-    """Score all unknown Drug-Disease pairs with the best decoder."""
     drug_list = sorted(drugs & set(emb_map.keys()))
     disease_list = sorted(diseases & set(emb_map.keys()))
     n_candidates = len(drug_list) * len(disease_list)
@@ -436,35 +393,7 @@ def score_all_unknown_pairs(best_result, emb_map, meta, drugs, diseases,
                 if score >= thresh:
                     predictions.append((d, dis, score))
 
-    elif decoder_name == "XGBoost":
-        model = best_result["model"]
-        scaler = best_result["scaler"]
-        batch_X, batch_pairs = [], []
-        batch_size = 10000
-
-        for d in drug_list:
-            emb_d = emb_map[d]
-            for dis in disease_list:
-                if (d, dis) in all_existing:
-                    continue
-                batch_X.append(compute_pair_features(
-                    emb_d, emb_map[dis], d, dis, neighbors, degree))
-                batch_pairs.append((d, dis))
-
-                if len(batch_X) >= batch_size:
-                    probs = model.predict_proba(scaler.transform(np.array(batch_X)))[:, 1]
-                    for pair, prob in zip(batch_pairs, probs):
-                        if prob >= MIN_CONFIDENCE:
-                            predictions.append((pair[0], pair[1], float(prob)))
-                    batch_X, batch_pairs = [], []
-
-        if batch_X:
-            probs = model.predict_proba(scaler.transform(np.array(batch_X)))[:, 1]
-            for pair, prob in zip(batch_pairs, probs):
-                if prob >= MIN_CONFIDENCE:
-                    predictions.append((pair[0], pair[1], float(prob)))
-
-    elif decoder_name == "MLP":
+    elif decoder_name in ("XGBoost", "MLP"):
         model = best_result["model"]
         scaler = best_result["scaler"]
         batch_X, batch_pairs = [], []
@@ -501,8 +430,7 @@ def score_all_unknown_pairs(best_result, emb_map, meta, drugs, diseases,
 
 
 def save_predictions_tsv(predictions, meta):
-    """Save predictions to TSV."""
-    out_path = DATA_DIR / "node2vec" / "predictions.tsv"
+    out_path = COMPGCN_DIR / "predictions.tsv"
     with open(out_path, "w", newline="") as f:
         writer = csv.writer(f, delimiter="\t")
         writer.writerow(["rank", "drug_int_id", "drug_name", "disease_int_id",
@@ -515,10 +443,10 @@ def save_predictions_tsv(predictions, meta):
 
 
 def save_evaluation_report(results, n_drugs, n_diseases, n_train_pos,
-                           n_val_pos, n_test_pos, best_name):
-    """Save full evaluation report."""
+                           n_val_pos, n_test_pos, best_name, baselines):
     report = {
-        "methodology": "80/10/10 stratified split, Node2Vec on train only, 1:1 neg ratio",
+        "embedding_method": "CompGCN",
+        "methodology": "80/10/10 stratified split, CompGCN on train only, 1:1 neg ratio",
         "n_therapeutic_drugs": n_drugs,
         "n_diseases": n_diseases,
         "n_train_positives": n_train_pos,
@@ -526,6 +454,7 @@ def save_evaluation_report(results, n_drugs, n_diseases, n_train_pos,
         "n_test_positives": n_test_pos,
         "best_decoder": best_name,
         "decoders": {},
+        "baselines": baselines,
     }
     for r in results:
         report["decoders"][r["name"]] = {
@@ -537,67 +466,21 @@ def save_evaluation_report(results, n_drugs, n_diseases, n_train_pos,
         if "ranking" in r:
             report["decoders"][r["name"]]["ranking"] = r["ranking"]
 
-    out_path = DATA_DIR / "node2vec" / "evaluation_report.json"
+    out_path = COMPGCN_DIR / "evaluation_report.json"
     with open(out_path, "w") as f:
         json.dump(report, f, indent=2)
     log.info(f"Saved evaluation report to {out_path}")
 
 
-def store_in_memgraph(predictions, meta):
-    """Store top predictions in Memgraph as predictedTreatsDisease edges."""
-    driver = GraphDatabase.driver(MEMGRAPH_URI, auth=(MEMGRAPH_USER, MEMGRAPH_PASS))
-    try:
-        with driver.session() as s:
-            r = s.run("MATCH ()-[r:predictedTreatsDisease]->() DELETE r RETURN count(r)")
-            deleted = r.single()[0]
-            if deleted:
-                log.info(f"Cleared {deleted} existing predictedTreatsDisease edges")
-
-        batch = []
-        for d, dis, prob in predictions:
-            if d in meta and dis in meta:
-                batch.append({
-                    "drug_mgid": meta[d]["memgraph_id"],
-                    "disease_mgid": meta[dis]["memgraph_id"],
-                    "confidence": prob,
-                })
-
-        total = 0
-        for i in range(0, len(batch), 500):
-            chunk = batch[i:i + 500]
-            with driver.session() as s:
-                result = s.run(
-                    """
-                    UNWIND $batch AS row
-                    MATCH (d:Drug) WHERE id(d) = row.drug_mgid
-                    MATCH (dis:Disease) WHERE id(dis) = row.disease_mgid
-                    CREATE (d)-[:predictedTreatsDisease {
-                        confidence: row.confidence,
-                        source: "Node2Vec_LinkPrediction"
-                    }]->(dis)
-                    RETURN count(*) AS created
-                    """,
-                    batch=chunk,
-                )
-                total += result.single()["created"]
-
-        log.info(f"Stored {total} predictedTreatsDisease edges in Memgraph")
-        return total
-    finally:
-        driver.close()
-
-
-# ---------------------------------------------------------------------------
-# Main
-# ---------------------------------------------------------------------------
-
 def main():
     log.info("=" * 60)
-    log.info("CardioKB Link Prediction v3 — Proper Methodology")
+    log.info("CardioKB Link Prediction — CompGCN Embeddings")
     log.info("=" * 60)
 
-    # Load data
     emb_map = load_embeddings()
+    emb_dim = len(next(iter(emb_map.values())))
+    log.info(f"Embedding dimension: {emb_dim}")
+
     meta = load_node_metadata()
     drugs_all, diseases = get_drug_disease_ids(meta)
 
@@ -611,12 +494,10 @@ def main():
     log.info(f"Drugs with embeddings: {len(drugs_with_emb)}, "
              f"Diseases with embeddings: {len(diseases_with_emb)}")
 
-    # Load split edges (drugTreatsDisease only for link prediction)
     train_pos_all = load_split_edges("train", "drugTreatsDisease")
     val_pos_all = load_split_edges("val", "drugTreatsDisease")
     test_pos_all = load_split_edges("test", "drugTreatsDisease")
 
-    # Filter to therapeutic drugs with embeddings
     train_pos = [(s, d) for s, d, _ in train_pos_all
                  if s in drugs_with_emb and d in diseases_with_emb]
     val_pos = [(s, d) for s, d, _ in val_pos_all
@@ -627,11 +508,9 @@ def main():
     log.info(f"\ndrugTreatsDisease splits (with embeddings):")
     log.info(f"  Train: {len(train_pos)}, Val: {len(val_pos)}, Test: {len(test_pos)}")
 
-    # Get all existing edges for negative sampling exclusion
     all_existing = get_all_existing_edges(drugs, diseases)
 
-    # Negative sampling (1:1 ratio)
-    log.info("\nSampling negatives (1:1 ratio)...")
+    log.info("\nSampling negatives (1:1 ratio, same seeds as other methods)...")
     train_neg = sample_negatives(train_pos, drugs_with_emb, diseases_with_emb,
                                  all_existing, len(train_pos), seed=42)
     val_neg = sample_negatives(val_pos, drugs_with_emb, diseases_with_emb,
@@ -641,14 +520,12 @@ def main():
     log.info(f"  Train neg: {len(train_neg)}, Val neg: {len(val_neg)}, "
              f"Test neg: {len(test_neg)}")
 
-    # Build feature matrices for XGBoost and MLP
     log.info("\nBuilding feature matrices...")
     X_train, y_train, _ = build_dataset(train_pos, train_neg, emb_map, neighbors, degree)
     X_val, y_val, _ = build_dataset(val_pos, val_neg, emb_map, neighbors, degree)
     X_test, y_test, _ = build_dataset(test_pos, test_neg, emb_map, neighbors, degree)
     log.info(f"  Train: {X_train.shape}, Val: {X_val.shape}, Test: {X_test.shape}")
 
-    # Evaluate all three decoders
     results = []
 
     log.info("\n" + "=" * 60)
@@ -656,7 +533,6 @@ def main():
     log.info("=" * 60)
     cosine_result = evaluate_cosine_decoder(
         train_pos, train_neg, val_pos, val_neg, test_pos, test_neg, emb_map)
-    # Ranking metrics for cosine
     cos_pos_scores = np.array([compute_cosine_score(emb_map[d], emb_map[dis])
                                 for d, dis in test_pos])
     cos_neg_scores = np.array([compute_cosine_score(emb_map[d], emb_map[dis])
@@ -675,8 +551,8 @@ def main():
     log.info("\n" + "=" * 60)
     log.info("DECODER (b): XGBoost")
     log.info("=" * 60)
-    xgb_result = evaluate_xgboost_decoder(X_train, y_train, X_val, y_val, X_test, y_test)
-    # Ranking metrics
+    xgb_result = evaluate_xgboost_decoder(X_train, y_train, X_val, y_val, X_test, y_test,
+                                          emb_dim)
     xgb_pos_scores = xgb_result["test_scores"][:len(test_pos)]
     xgb_neg_scores = xgb_result["test_scores"][len(test_pos):]
     xgb_result["ranking"] = compute_ranking_metrics(
@@ -707,24 +583,39 @@ def main():
     for k, v in mlp_result["ranking"].items():
         log.info(f"  {k}: {v:.4f}")
 
-    # Summary comparison
+    baselines = {
+        "Node2Vec": {
+            "Cosine": {"test_auroc": 0.7195, "test_auprc": 0.7195},
+            "XGBoost": {"test_auroc": 0.9504, "test_auprc": 0.9579},
+            "MLP": {"test_auroc": 0.9441, "test_auprc": 0.9441},
+        },
+        "RotatE": {
+            "Cosine": {"test_auroc": 0.5299, "test_auprc": 0.5401},
+            "XGBoost": {"test_auroc": 0.9652, "test_auprc": 0.9655},
+            "MLP": {"test_auroc": 0.9607, "test_auprc": 0.9588},
+        },
+    }
+
     log.info("\n" + "=" * 60)
-    log.info("DECODER COMPARISON")
+    log.info("COMPARISON: CompGCN vs Node2Vec vs RotatE (XGBoost decoder)")
     log.info("=" * 60)
-    log.info(f"{'Decoder':<12} {'Val AUROC':>10} {'Val AUPRC':>10} "
-             f"{'Test AUROC':>11} {'Test AUPRC':>11} {'MRR':>8} {'Hits@100':>9}")
-    log.info("-" * 75)
-    for r in results:
-        ranking = r.get("ranking", {})
-        log.info(f"{r['name']:<12} {r['val_auroc']:>10.4f} {r['val_auprc']:>10.4f} "
-                 f"{r['test_auroc']:>11.4f} {r['test_auprc']:>11.4f} "
-                 f"{ranking.get('mrr', 0):>8.4f} {ranking.get('hits@100', 0):>9.4f}")
+    log.info(f"{'Method':<12} {'AUROC':>8} {'AUPRC':>8} {'vs N2V':>8} {'vs RotatE':>10}")
+    log.info("-" * 50)
+    xgb = next(r for r in results if r["name"] == "XGBoost")
+    n2v_auroc = baselines["Node2Vec"]["XGBoost"]["test_auroc"]
+    rot_auroc = baselines["RotatE"]["XGBoost"]["test_auroc"]
+    d_n2v = xgb["test_auroc"] - n2v_auroc
+    d_rot = xgb["test_auroc"] - rot_auroc
+    log.info(f"{'Node2Vec':<12} {n2v_auroc:>8.4f} {baselines['Node2Vec']['XGBoost']['test_auprc']:>8.4f}")
+    log.info(f"{'RotatE':<12} {rot_auroc:>8.4f} {baselines['RotatE']['XGBoost']['test_auprc']:>8.4f}")
+    sign_n = "+" if d_n2v >= 0 else ""
+    sign_r = "+" if d_rot >= 0 else ""
+    log.info(f"{'CompGCN':<12} {xgb['test_auroc']:>8.4f} {xgb['test_auprc']:>8.4f} "
+             f"{sign_n}{d_n2v:>7.4f} {sign_r}{d_rot:>9.4f}")
 
-    # Pick best by test AUROC
     best = max(results, key=lambda r: r["test_auroc"])
-    log.info(f"\nBest decoder: {best['name']} (Test AUROC={best['test_auroc']:.4f})")
+    log.info(f"\nBest CompGCN decoder: {best['name']} (Test AUROC={best['test_auroc']:.4f})")
 
-    # Score unknown pairs and store predictions
     log.info("\n" + "=" * 60)
     log.info(f"SCORING UNKNOWN PAIRS with {best['name']}")
     log.info("=" * 60)
@@ -732,14 +623,13 @@ def main():
         best, emb_map, meta, drugs, diseases, all_existing, neighbors, degree)
 
     save_predictions_tsv(predictions, meta)
-    n_stored = store_in_memgraph(predictions, meta)
-
     save_evaluation_report(
         results, len(drugs_with_emb), len(diseases_with_emb),
-        len(train_pos), len(val_pos), len(test_pos), best["name"])
+        len(train_pos), len(val_pos), len(test_pos), best["name"],
+        baselines)
 
     if predictions:
-        log.info(f"\nTop 30 predicted drug repurposing candidates ({best['name']}):")
+        log.info(f"\nTop 30 predicted drug repurposing candidates (CompGCN + {best['name']}):")
         log.info(f"{'Rank':<6}{'Drug':<30}{'Disease':<35}{'Confidence'}")
         log.info("-" * 85)
         for rank, (d, dis, prob) in enumerate(predictions[:30], 1):

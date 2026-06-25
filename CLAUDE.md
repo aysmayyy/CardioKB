@@ -10,8 +10,8 @@
 ## Project Overview
 12-week rotation project (Jan-Apr 2026) building a CVD-focused biomedical knowledge graph. The graph integrates 24 deduplicated data sources (each node type and edge type served by exactly one authoritative database) into Memgraph for disease research, feature selection, and precision medicine. Built using **BaseAgent** multi-agent orchestration (`~/Desktop/BaseAgent/cardiokb.ipynb` on the `cardiokb` branch) with parser templates adapted for CardioKB's schema. The web UI is in this repo (`aysmayyy/CardioKB`, `baseagent-build` branch). Three legacy sources (SIDER, LINCS L1000, MEDLINE) are retained as-is — no live API alternatives available.
 
-## Current Graph Stats (BaseAgent build — 2026-06-07)
-- **459,092 nodes** | **5,424,652 relationships** | **17 node types** | **22 relationship types** | **22 data sources** (16 edge source labels + 6 node-only: NCBI Gene, Disease Ontology, Uberon, MeSH, OpenTargets, ClinPGx)
+## Current Graph Stats (BaseAgent build — 2026-06-24)
+- **459,092 nodes** | **5,437,921 relationships** | **17 node types** | **26 relationship types** | **22 data sources** (16 edge source labels + 6 node-only: NCBI Gene, Disease Ontology, Uberon, MeSH, OpenTargets, ClinPGx) + 2 ML prediction sources
 - All relationships carry a `source` property identifying the originating database (e.g., `source: "OpenTargets"`)
 - 7 edge types carry quantitative properties: `combinedScore`, `expressionScore`, `morScore`, `confidence`, `evidenceCode`, `score`, `interactionType`, `clinicalSignificance`
 - *Stats are current as of last pipeline run; see Memgraph or `GET /api/graph-stats` for live counts.*
@@ -25,13 +25,50 @@
 - **Notebooks**: Jupyter
 
 ## ML Pipeline — Link Prediction for Drug Repurposing
-- **Pipeline**: `ml/graph_export.py` → `ml/train_node2vec.py` → `ml/link_prediction.py`
-- **Method**: Node2Vec (128-dim, train-only) + XGBoost classifier (best decoder: Test AUROC 0.9504, Test AUPRC 0.9579)
-- **Decoders compared**: Cosine (AUROC 0.7195), XGBoost (0.9504), MLP (0.9441) — XGBoost wins
-- **Data**: 9,735 therapeutic drugs × 457 diseases, 3,657 drugTreatsDisease edges (80/10/10 split)
-- **Predictions**: Top 500 stored in Memgraph as `predictedTreatsDisease` edges (confidence >= 0.5, source: `Node2Vec_LinkPrediction`)
+- **Pipeline**: `ml/export_edges.py` → `ml/split_edges.py` → train embeddings (HPC) → `ml/link_prediction*.py`
+- **Data**: 9,735 therapeutic drugs × 457 diseases, 3,782 drugTreatsDisease edges (80/10/10 stratified split)
+- **Predictions**: Top 500 per method stored in Memgraph as `predictedTreatsDisease` edges (confidence >= 0.5)
 - **UI**: Orange dashed edges in Explore tab, separate toggle, provenance panel shows confidence + "not clinically validated" warning
-- **Data dir**: `ml/data/` — embeddings, splits, predictions TSV, evaluation report JSON
+
+### Embedding Methods Compared
+| Method | Decoder | Test AUROC | Test AUPRC | Hits@100 | Hits@200 |
+|--------|---------|-----------|-----------|---------|---------|
+| Node2Vec (128-dim) | Cosine | 0.7195 | 0.7195 | — | — |
+| Node2Vec (128-dim) | **XGBoost** | **0.9504** | **0.9579** | 31.1% | — |
+| Node2Vec (128-dim) | MLP | 0.9441 | 0.9441 | — | — |
+| RotatE (256-dim) | Cosine | 0.5299 | 0.5401 | 19.3% | 32.3% |
+| RotatE (256-dim) | **XGBoost** | **0.9652** | **0.9655** | 31.1% | 60.0% |
+| RotatE (256-dim) | MLP | 0.9607 | 0.9588 | 30.7% | 60.9% |
+| CompGCN (128-dim) | Cosine | 0.5058 | 0.5041 | 16.9% | 30.2% |
+| CompGCN (128-dim) | **XGBoost** | **0.9717** | **0.9709** | **30.5%** | **60.6%** |
+| CompGCN (128-dim) | MLP | 0.9625 | 0.9625 | 30.5% | 59.7% |
+
+- **Best overall**: CompGCN + XGBoost (AUROC 0.9717) — improves over RotatE by +0.0065, Node2Vec by +0.0213
+- **CompGCN training**: Pure PyTorch, 200 epochs (early stop at 140, best at 120), subtraction composition, 2 layers, 32M params, GPU on HPC (~46 min)
+- **RotatE training**: PyKEEN, 200 epochs, NSSALoss, L40S GPU on HPC (~10 hrs), MRR=0.1119
+- **Prediction sources in Memgraph**: `Node2Vec_LinkPrediction` (500 edges), `RotatE_LinkPrediction` (500 edges), `CompGCN_LinkPrediction` (500 edges pending storage)
+
+### ML Data Directory Structure
+```
+ml/data/
+  edges.tsv, nodes.tsv, export_summary.json   (shared graph export)
+  splits/                                       (shared 80/10/10 stratified)
+  node2vec/                                     (Node2Vec embeddings + results)
+    train_embeddings.npz, evaluation_report.json, predictions.tsv
+    models/    (xgboost_model.pkl, embeddings.pkl)
+    results/   (ROC, PR, confusion matrix, feature importance plots)
+  rotate/                                       (RotatE embeddings + results)
+    rotate_embeddings.npz, training_summary.json, predictions.tsv
+    entity_to_id.json, relation_to_id.json
+    models/    (xgboost_model.pkl)
+    results/   (ROC, PR, confusion matrix, feature importance plots)
+  compgcn/                                      (CompGCN embeddings + results)
+    compgcn_embeddings.npz, compgcn_relation_embeddings.npz
+    training_summary.json, evaluation_report.json, predictions.tsv
+    relation_to_id.json
+    models/    (xgboost_model.pkl)
+    results/   (ROC, PR, confusion matrix, feature importance plots)
+```
 
 ## Project Structure
 - `src/main.py` — Pipeline orchestrator (supports `--skip-neo4j`, `--skip-download`)
@@ -60,8 +97,8 @@
 - `scripts/` — Data processing and verification scripts
 - `reports/` — Generated pipeline health reports and cached ID mapping validation report (`id_mapping_report.json`)
 - `docs/` — Documentation, research plan, specific aims
-- `ml/` — Link prediction pipeline: `graph_export.py`, `train_node2vec.py`, `link_prediction.py`
-- `ml/data/` — Embeddings, edge splits, predictions TSV, evaluation report JSON
+- `ml/` — Link prediction pipeline: `export_edges.py`, `split_edges.py`, `link_prediction.py`, `link_prediction_rotate.py`, `evaluate_xgboost.py`, `evaluate_rotate.py`
+- `ml/data/` — Shared graph export, splits, and per-method subdirs (`node2vec/`, `rotate/`)
 - `.claude/skills/` — Claude Code custom skills (see below)
 
 ## Claude Code Skills

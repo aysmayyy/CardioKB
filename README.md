@@ -4,7 +4,7 @@ A biomedical knowledge graph integrating **22 data sources** for cardiovascular 
 
 ## Current Graph Stats
 
-- **459,092 nodes** | **5,424,652 relationships** | **17 node types** | **22 relationship types** | **22 data sources** (16 with edge source labels + 6 node-only)
+- **459,092 nodes** | **5,437,921 relationships** | **17 node types** | **26 relationship types** | **22 data sources** (16 with edge source labels + 6 node-only) + 2 ML prediction sources
 - All relationships carry a `source` property identifying the originating database
 - 7 edge types carry quantitative properties (combinedScore, expressionScore, morScore, etc.)
 
@@ -154,10 +154,14 @@ CardioKB/
 │   ├── disease_filter.txt        # Active disease filter (symlink)
 │   └── diseases/                 # CVD, Alzheimer's, cancer, etc.
 ├── ml/
-│   ├── graph_export.py           # Export graph to Node2Vec format
-│   ├── train_node2vec.py         # Train Node2Vec on train split
-│   ├── link_prediction.py        # Evaluate decoders + store predictions
-│   └── data/                     # Embeddings, splits, predictions
+│   ├── export_edges.py           # Export graph from Memgraph
+│   ├── split_edges.py            # Stratified train/val/test split
+│   ├── link_prediction.py        # Node2Vec decoder evaluation
+│   ├── link_prediction_rotate.py # RotatE decoder evaluation
+│   └── data/                     # Shared exports + per-method subdirs
+├── hpc/
+│   ├── train_node2vec.py         # Node2Vec training (SLURM)
+│   └── train_rotate.py           # RotatE training (SLURM + PyKEEN)
 ├── data/
 │   ├── raw/                      # Downloaded source data (~21 GB)
 │   ├── processed/                # Parsed TSV files
@@ -215,25 +219,37 @@ docker compose up -d
 
 ## Machine Learning: Drug Repurposing via Link Prediction
 
-CardioKB includes a Node2Vec-based link prediction pipeline for identifying potential drug-disease relationships not present in the curated knowledge graph.
+CardioKB uses graph embedding methods to predict potential drug-disease treatment relationships not present in the curated knowledge graph. Three embedding methods have been evaluated.
 
 ### Methodology
 
-- **Graph embedding**: Node2Vec (128-dim) trained on the training split only (no data leakage)
-- **Edge splits**: 80/10/10 stratified train/val/test on `drugTreatsDisease` edges
+- **Edge splits**: 80/10/10 stratified train/val/test on all edge types (3,782 `drugTreatsDisease` edges)
+- **Embeddings trained on train split only** — no data leakage from val/test edges
 - **Negative sampling**: 1:1 ratio, excluding all known Drug-Disease edges across all splits
 - **Features**: Hadamard product + absolute difference of embeddings + cosine similarity + L2 distance + structural features (shared neighbors, Jaccard, Adamic-Adar, preferential attachment, degree)
-- **Therapeutic drug filter**: Only drugs with therapeutic signal edges (drugBindsGene, drugTreatsDisease, AFFECTS_RESPONSE_TO, etc.) are considered
+- **Therapeutic drug filter**: Only drugs with therapeutic signal edges are considered
+- **Three decoders compared**: Cosine similarity, XGBoost, MLP
 
-### Decoder Comparison
+### Embedding Method Comparison
 
-| Decoder | Val AUROC | Val AUPRC | Test AUROC | Test AUPRC | MRR | Hits@100 |
-|---------|----------|----------|-----------|-----------|------|---------|
-| Cosine | 0.7358 | 0.7299 | 0.7195 | 0.7142 | 0.0170 | 0.2516 |
-| **XGBoost** | **0.9628** | **0.9670** | **0.9504** | **0.9579** | **0.0196** | **0.3106** |
-| MLP | 0.9650 | 0.9671 | 0.9441 | 0.9535 | 0.0196 | 0.3075 |
+| Method | Decoder | Test AUROC | Test AUPRC | Hits@100 | Hits@200 |
+|--------|---------|-----------|-----------|---------|---------|
+| Node2Vec (128-dim) | Cosine | 0.7195 | 0.7142 | 25.2% | — |
+| Node2Vec (128-dim) | **XGBoost** | **0.9504** | **0.9579** | **31.1%** | — |
+| Node2Vec (128-dim) | MLP | 0.9441 | 0.9535 | 30.8% | — |
+| RotatE (256-dim) | Cosine | 0.5299 | 0.5401 | 19.3% | 32.3% |
+| RotatE (256-dim) | **XGBoost** | **0.9652** | **0.9655** | **31.1%** | **60.0%** |
+| RotatE (256-dim) | MLP | 0.9607 | 0.9588 | 30.7% | 60.9% |
+| CompGCN (128-dim) | Cosine | 0.5058 | 0.5041 | 16.9% | 30.2% |
+| CompGCN (128-dim) | **XGBoost** | **0.9717** | **0.9709** | **30.5%** | **60.6%** |
+| CompGCN (128-dim) | MLP | 0.9625 | 0.9625 | 30.5% | 59.7% |
 
-**Best decoder**: XGBoost (Test AUROC = 0.9504, Test AUPRC = 0.9579)
+**Best overall**: CompGCN + XGBoost (Test AUROC = 0.9717, AUPRC = 0.9709)
+
+- CompGCN improves over RotatE by +0.0065 and Node2Vec by +0.0213 AUROC with XGBoost decoder
+- CompGCN uses relation-aware message passing (subtraction composition, 2 GCN layers, 32M params)
+- All three methods achieve similar Hits@200 (~60%) with learned decoders, suggesting structural features drive ranking
+- Cosine decoder near-random for RotatE/CompGCN — embeddings are not optimized for cosine similarity
 
 ### Dataset Scale
 
@@ -243,22 +259,58 @@ CardioKB includes a Node2Vec-based link prediction pipeline for identifying pote
 
 ### Predictions in the Graph
 
-The top 500 predictions (confidence >= 0.5) are stored in Memgraph as `predictedTreatsDisease` edges with a `confidence` property and `source: "Node2Vec_LinkPrediction"`. These are visible in the web UI with orange dashed lines and can be toggled on/off independently.
+Top 500 predictions per method (confidence >= 0.5) are stored in Memgraph as `predictedTreatsDisease` edges:
+- `source: "Node2Vec_LinkPrediction"` — 500 edges
+- `source: "RotatE_LinkPrediction"` — 500 edges
+- `source: "CompGCN_LinkPrediction"` — 500 edges (pending storage)
 
-### Pipeline
+These are visible in the web UI as orange dashed lines with a separate toggle. Edge provenance shows confidence score, method, and "not clinically validated" warning.
+
+### ML Pipeline Structure
 
 ```
 ml/
-├── graph_export.py       # Export graph to Node2Vec format
-├── train_node2vec.py     # Train Node2Vec on train split only
-├── link_prediction.py    # Evaluate decoders + store predictions
+├── export_edges.py            # Export graph from Memgraph
+├── split_edges.py             # 80/10/10 stratified split
+├── link_prediction.py         # Node2Vec decoder evaluation
+├── link_prediction_rotate.py  # RotatE decoder evaluation
+├── link_prediction_compgcn.py # CompGCN decoder evaluation
+├── evaluate_xgboost.py        # Node2Vec XGBoost plots/reports
+├── evaluate_rotate.py         # RotatE XGBoost plots/reports
+├── evaluate_compgcn.py        # CompGCN XGBoost plots/reports
+├── store_rotate_predictions.py
+├── store_compgcn_predictions.py
 └── data/
-    ├── evaluation_report.json   # Full evaluation metrics
-    ├── predictions.tsv          # Top 500 ranked predictions
-    ├── train_embeddings.npz     # 128-dim Node2Vec embeddings
-    ├── nodes.tsv                # Node metadata
-    ├── edges.tsv                # All edges
-    └── splits/                  # Train/val/test edge splits
+    ├── edges.tsv, nodes.tsv   # Shared graph export
+    ├── splits/                # Shared train/val/test splits
+    ├── node2vec/              # Node2Vec embeddings + results
+    │   ├── train_embeddings.npz
+    │   ├── evaluation_report.json
+    │   ├── predictions.tsv
+    │   ├── models/            # XGBoost model + embeddings
+    │   └── results/           # ROC, PR, confusion matrix plots
+    ├── rotate/                # RotatE embeddings + results
+    │   ├── rotate_embeddings.npz
+    │   ├── training_summary.json
+    │   ├── evaluation_report.json
+    │   ├── predictions.tsv
+    │   ├── models/            # XGBoost model
+    │   └── results/           # ROC, PR, confusion matrix plots
+    └── compgcn/               # CompGCN embeddings + results
+        ├── compgcn_embeddings.npz
+        ├── training_summary.json
+        ├── evaluation_report.json
+        ├── predictions.tsv
+        ├── models/            # XGBoost model
+        └── results/           # ROC, PR, confusion matrix plots
+
+hpc/
+├── train_node2vec.py          # Node2Vec training (HPC)
+├── node2vec_job.slurm
+├── train_compgcn.py           # CompGCN training (HPC)
+├── compgcn_job.slurm
+├── train_rotate.py            # RotatE training (HPC, PyKEEN)
+└── rotate_job.slurm
 ```
 
 ## Data Sources

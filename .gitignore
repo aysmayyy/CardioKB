@@ -261,3 +261,6 @@ ontology/diseases/agent_filter_*.txt
 Thumbs.db
 ~$*
 data/export/*
+
+# ML pipeline data (large embeddings, models, graph exports)
+ml/data/

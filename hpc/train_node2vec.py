@@ -14,7 +14,7 @@ from pecanpy import pecanpy
 
 DATA_DIR = Path(__file__).resolve().parent / "data"
 EDGELIST_PATH = DATA_DIR / "train_edgelist.txt"
-EMBEDDING_PATH = DATA_DIR / "train_embeddings.npz"
+EMBEDDING_PATH = DATA_DIR / "node2vec" / "train_embeddings.npz"
 
 DIMENSIONS = 128
 WALK_LENGTH = 80
