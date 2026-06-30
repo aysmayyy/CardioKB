@@ -377,6 +377,7 @@ def graph_data():
     if disease not in DISEASE_FILTERS:
         disease = 'cvd'
     search = request.args.get('search', '').strip()
+    search_type = request.args.get('searchType', '').strip()
     limit = min(int(request.args.get('limit', 200)), 1000)
 
     # If a search term is provided, use it directly; otherwise use the
@@ -400,16 +401,20 @@ def graph_data():
 
             nodes = {}
             edges = []
-            core_nids = set()
 
-            # --- Universal search: find any node by name/symbol/title ---
-            # Search order: exact Gene symbol match, then fuzzy search across
-            # all node types (Gene, Drug, Disease, Pathway, etc.)
+            # --- Universal search: find the node the user searched for ---
+            # When searchType is provided (from autocomplete), find that
+            # exact node type.  Otherwise fall back to: exact Gene symbol →
+            # universal name search → Disease name search.
             non_disease_seeds = []
-            if search:
-                # 1. Try exact Gene symbol match first (case-insensitive)
+            if search and search_type == 'Disease':
+                # User explicitly selected a Disease — skip straight to
+                # Disease seed path below (non_disease_seeds stays empty).
+                pass
+            elif search:
+                # 1. Try exact Gene symbol match first
                 gene_result = session.run(
-                    "MATCH (g:Gene)--() "
+                    "MATCH (g:Gene) "
                     "WHERE toLower(g.geneSymbol) = $term "
                     "RETURN DISTINCT id(g) AS nid, labels(g)[0] AS ntype, "
                     "       properties(g) AS props "
@@ -429,11 +434,17 @@ def graph_data():
                         'properties': {k: str(v)[:200] for k, v in props.items() if v is not None},
                     }
 
-                # 2. If no exact gene match, search all node types by name/symbol/title
+                # 2. If a specific non-Disease type was selected, search
+                #    only that type; otherwise search all types (including
+                #    Disease) so the user's search always finds the right node.
                 if not non_disease_seeds:
+                    if search_type and search_type != 'Disease':
+                        type_filter = "AND labels(n)[0] = $stype "
+                    else:
+                        type_filter = ""
                     universal_result = session.run(
-                        "MATCH (n)--() "
-                        "WHERE labels(n)[0] <> 'Disease' "
+                        "MATCH (n) "
+                        "WHERE TRUE " + type_filter +
                         "  AND (toLower(coalesce(n.geneSymbol, '')) CONTAINS $term "
                         "       OR toLower(coalesce(n.commonName, '')) CONTAINS $term "
                         "       OR toLower(coalesce(n.diseaseName, '')) CONTAINS $term "
@@ -446,27 +457,30 @@ def graph_data():
                         "       properties(n) AS props "
                         "LIMIT 10",
                         term=search.lower(),
+                        stype=search_type or '',
                     )
                     for rec in universal_result:
                         nid = rec['nid']
+                        ntype = rec['ntype']
                         props = dict(rec['props']) if rec['props'] else {}
-                        non_disease_seeds.append(nid)
                         label = _display_label(props, nid)
                         nodes[nid] = {
                             'id': nid,
                             'label': str(label)[:60],
-                            'type': rec['ntype'],
+                            'type': ntype,
                             'layer': 'core',
                             'properties': {k: str(v)[:200] for k, v in props.items() if v is not None},
                         }
+                        if ntype != 'Disease':
+                            non_disease_seeds.append(nid)
 
-            # If we found non-disease nodes, use them; otherwise search diseases
+            # If we found non-disease seeds, use them; otherwise search diseases
             if non_disease_seeds:
                 seed_ids = non_disease_seeds
             else:
                 # --- Seed diseases (layer=core) ---
                 seed_result = session.run(
-                    "MATCH (d:Disease)--() "
+                    "MATCH (d:Disease) "
                     "WHERE any(term IN $terms WHERE toLower(d.diseaseName) CONTAINS term) "
                     "RETURN DISTINCT id(d) AS did, d.diseaseName AS name, "
                     "       d.xrefDiseaseOntology AS doid "
@@ -686,72 +700,6 @@ def graph_data():
                         if ek in r_props and r_props[ek] not in (None, ''):
                             edge_entry.setdefault('properties', {})[ek] = str(r_props[ek])
                     edges.append(edge_entry)
-                    core_nids.add(nid)
-
-            # --- Discovery layer: per-core-node, ranked by specificityScore ---
-            # Process in small batches to stay within memory limits.
-            discovery_budget = limit - len(nodes)
-            if core_nids and discovery_budget > 0:
-                disc_per_type = max(discovery_budget // 8, 5)
-                exclude_ids = list(core_nids | set(nodes.keys()))
-
-                # Process core nodes in batches of 20
-                core_list = list(core_nids)
-                batch_size = 20
-                for i in range(0, len(core_list), batch_size):
-                    batch = core_list[i:i + batch_size]
-                    disc_result = session.run(
-                        "MATCH (n1)-[r]-(n2) "
-                        "WHERE id(n1) IN $nids "
-                        "AND NOT id(n2) IN $exclude "
-                        "WITH n1, r, n2, labels(n2)[0] AS n2type, "
-                        "     coalesce(n2.specificityScore, 0.0) AS spec "
-                        "ORDER BY spec DESC "
-                        "WITH n2type, collect({n1: n1, r: r, n2: n2, "
-                        "     spec: spec})[..$cap] AS bucket "
-                        "UNWIND bucket AS b "
-                        "WITH b.n1 AS n1, b.r AS r, b.n2 AS n2, b.spec AS spec "
-                        "RETURN id(n1) AS from_id, "
-                        "       type(r) AS rel_type, r.source AS source, "
-                        "       properties(r) AS r_props, "
-                        "       labels(n2)[0] AS n_label, "
-                        "       properties(n2) AS n_props, "
-                        "       id(n2) AS nid, "
-                        "       spec",
-                        nids=batch,
-                        exclude=exclude_ids,
-                        cap=disc_per_type,
-                    )
-
-                    for row in disc_result:
-                        nid = row['nid']
-                        if nid not in nodes:
-                            props = dict(row['n_props']) if row['n_props'] else {}
-                            display = _display_label(props, nid)
-                            nodes[nid] = {
-                                'id': nid,
-                                'label': str(display)[:60],
-                                'type': row['n_label'],
-                                'layer': 'discovery',
-                                'specificity': round(row['spec'], 6),
-                                'properties': {k: str(v)[:200] for k, v in props.items()
-                                               if v is not None},
-                            }
-                        r_props = dict(row['r_props']) if row['r_props'] else {}
-                        disc_edge = {
-                            'from': row['from_id'],
-                            'to': nid,
-                            'label': row['rel_type'],
-                            'source': row['source'],
-                            'layer': 'discovery',
-                        }
-                        for ek in evidence_keys:
-                            if ek in r_props and r_props[ek] not in (None, ''):
-                                disc_edge.setdefault('properties', {})[ek] = str(r_props[ek])
-                        edges.append(disc_edge)
-
-                    if len(nodes) >= limit:
-                        break
 
             # --- Predicted edges: predictedTreatsDisease for nodes in graph ---
             all_node_ids = list(nodes.keys())

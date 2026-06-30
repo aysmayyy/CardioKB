@@ -123,9 +123,11 @@ All three methods use XGBoost as the primary decoder for fair comparison:
 | RotatE | 256 (128 complex) | Cosine | 0.5299 | 0.5401 | 19.3% | 32.3% |
 | RotatE | 256 (128 complex) | **XGBoost** | **0.9652** | **0.9655** | 31.1% | 60.0% |
 | RotatE | 256 (128 complex) | MLP | 0.9607 | 0.9588 | 30.7% | 60.9% |
-| CompGCN | 128 | XGBoost | — | — | — | — |
+| CompGCN | 128 | Cosine | 0.5058 | 0.5041 | 16.9% | 30.2% |
+| CompGCN | 128 | **XGBoost** | **0.9717** | **0.9709** | 30.5% | 60.6% |
+| CompGCN | 128 | MLP | 0.9625 | 0.9625 | 30.5% | 59.7% |
 
-RotatE + XGBoost is the current best: +0.015 AUROC and +0.008 AUPRC over Node2Vec + XGBoost.
+CompGCN + XGBoost is the current best: +0.0065 AUROC over RotatE, +0.0213 over Node2Vec.
 
 RotatE's native MRR on the full test set is 0.1119 (PyKEEN filtered ranking). This is
 modest because ranking evaluates all 459K entities as candidates; the XGBoost decoder

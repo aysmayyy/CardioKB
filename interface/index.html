@@ -100,7 +100,7 @@ section h2 {
 
 /* Graph visualization */
 .graph-container {
-    width: 100%; height: 550px; background: var(--bg); border: 1px solid var(--border);
+    width: 100%; height: 70vh; min-height: 450px; background: var(--bg); border: 1px solid var(--border);
     border-radius: 8px; position: relative;
 }
 .graph-container-small { height: 380px; }
@@ -324,7 +324,7 @@ th { color: var(--text-muted); font-weight: 600; text-transform: uppercase; font
 .graph-loading {
     position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%);
     color: var(--text-muted); font-size: 0.9rem; display: none; align-items: center; gap: 0.5rem;
-    z-index: 6; pointer-events: none;
+    z-index: 6;
 }
 .graph-loading.visible { display: flex; }
 
@@ -448,6 +448,8 @@ th { color: var(--text-muted); font-weight: 600; text-transform: uppercase; font
 .about-panel summary { list-style: none; }
 .about-panel summary::-webkit-details-marker { display: none; }
 .about-panel[open] summary .about-chevron { transform: rotate(180deg); }
+details[open] .vg-chevron { transform: rotate(90deg); }
+details summary::-webkit-details-marker { display: none; }
 .about-panel summary .about-pulse {
     display: inline-block; width: 8px; height: 8px; border-radius: 50%;
     background: var(--accent); margin-right: 0.3rem; animation: aboutPulse 2s ease-in-out 3;
@@ -481,7 +483,7 @@ th { color: var(--text-muted); font-weight: 600; text-transform: uppercase; font
     <div style="border-top:1px solid var(--border);padding-top:0.75rem">
         <div style="font-size:0.65rem;font-weight:700;text-transform:uppercase;letter-spacing:0.1em;color:var(--text-muted);margin-bottom:0.5rem">Admin</div>
         <div style="display:flex;align-items:center;gap:0.4rem">
-            <button class="run-btn" id="runBtn" onclick="runHealthCheck()" data-tip="Check all parsers, database connectivity, and data integrity" style="flex:1">Run Health Check</button>
+            <button class="run-btn" id="runBtn" onclick="runHealthCheck()" data-tip="Verify all data sources, database connectivity, and data integrity" style="flex:1">System Check</button>
             <button class="info-btn-sm" data-info="healthcheck">?</button>
         </div>
     </div>
@@ -528,7 +530,7 @@ th { color: var(--text-muted); font-weight: 600; text-transform: uppercase; font
 
     <!-- Tabs -->
     <div class="tabs">
-        <button class="tab-btn active" data-tab="explore" data-tip="Visually browse cardiovascular disease subgraphs with core and discovery layers" onclick="switchTab('explore')">Explore</button>
+        <button class="tab-btn active" data-tab="explore" data-tip="Visually browse cardiovascular disease subgraphs" onclick="switchTab('explore')">Explore</button>
         <button class="tab-btn" data-tab="query" data-tip="Run custom Cypher queries against the knowledge graph" onclick="switchTab('query')">Query</button>
     </div>
 
@@ -539,22 +541,24 @@ th { color: var(--text-muted); font-weight: 600; text-transform: uppercase; font
                 <input type="text" id="exploreSearch" data-tip="Search for a cardiovascular disease, gene, or drug to visualize its neighborhood" placeholder="Try: atrial fibrillation, heart failure, coronary artery disease, hypertension" autocomplete="off" />
                 <div class="autocomplete-list" id="autocompleteList"></div>
             </div>
-            <input type="number" id="exploreLimit" value="200" min="10" max="1000" style="width:80px;flex:none" data-tip="Maximum number of nodes to display (higher = more detail, slower)" />
-            <button id="exploreBtn" onclick="loadExploreGraph()" data-tip="Load the subgraph for the searched disease, gene, or drug">Explore</button>
+            <div style="display:flex;align-items:center;gap:0.25rem;flex:none" data-tip="Maximum number of entities to display (higher = more detail, slower rendering)">
+                <label for="exploreLimit" style="font-size:0.72rem;color:var(--text-muted);white-space:nowrap">Max:</label>
+                <input type="number" id="exploreLimit" value="200" min="10" max="1000" style="width:65px" />
+            </div>
+            <button id="exploreBtn" onclick="loadExploreGraph()" data-tip="Search the knowledge graph for this entity and its connections">Search</button>
+            <button id="exploreClearBtn" onclick="clearExploreGraph()" style="display:none;padding:0.6rem 0.8rem;border-radius:6px;border:1px solid var(--border);background:var(--surface2);color:var(--text-muted);cursor:pointer;font-size:0.82rem" data-tip="Clear the graph and return to the start">Clear</button>
             <button class="info-btn" onclick="showMethodologyModal()" data-tip="How to read this graph">?</button>
         </div>
-        <div style="font-size:.78rem;color:var(--text-muted);margin:-0.3rem 0 0.5rem 0.2rem;">Use specific disease or gene names for best results.</div>
+        <div style="font-size:.78rem;color:var(--text-muted);margin:-0.3rem 0 0.5rem 0.2rem;display:flex;align-items:center;gap:0.75rem">
+            <span>Search for a disease, gene, or drug by name. Select from the dropdown for the most accurate results.</span>
+            <button class="info-btn-sm" data-info="graphbasics" data-tip="What is a knowledge graph?">?</button>
+        </div>
 
         <div style="display:flex;align-items:center;gap:1rem;margin-bottom:0.5rem;flex-wrap:wrap">
             <div class="filter-chips" id="filterChips" style="margin-bottom:0"></div>
-            <label style="display:flex;align-items:center;gap:0.4rem;font-size:0.82rem;color:var(--text-muted);cursor:pointer;white-space:nowrap" data-tip="Toggle hypothesis-generating 2-hop connections on or off">
-                <input type="checkbox" id="discoveryToggle" checked onchange="toggleDiscoveryLayer()" style="accent-color:var(--accent)" />
-                Show discovery layer
-            </label>
-            <button class="info-btn-sm" data-info="discovery" data-tip="What are core vs discovery layers?">?</button>
-            <label style="display:flex;align-items:center;gap:0.4rem;font-size:0.82rem;color:#f97316;cursor:pointer;white-space:nowrap" data-tip="Toggle ML-predicted drug-disease edges (Node2Vec + XGBoost, not clinically validated)">
-                <input type="checkbox" id="predictedToggle" checked onchange="togglePredictedEdges()" style="accent-color:#f97316" />
-                Show predicted edges
+            <label id="mlToggleBtn" style="display:inline-flex;align-items:center;gap:0.4rem;font-size:0.82rem;font-weight:600;color:#06b6d4;cursor:pointer;padding:0.3rem 0.75rem;border-radius:6px;border:1.5px solid rgba(6,182,212,0.4);background:transparent;white-space:nowrap;transition:all 0.2s" data-tip="Show or hide ML-predicted drug-disease edges (not clinically validated)">
+                <input type="checkbox" id="predictedToggle" onchange="togglePredictedEdges()" style="accent-color:#06b6d4;width:15px;height:15px;cursor:pointer" />
+                Show ML Predictions
             </label>
         </div>
         <div style="display:flex;align-items:center;gap:0.5rem;margin-bottom:0.75rem;flex-wrap:wrap">
@@ -562,9 +566,13 @@ th { color: var(--text-muted); font-weight: 600; text-transform: uppercase; font
             <div class="filter-chips" id="edgeFilterChips" style="margin-bottom:0"></div>
         </div>
 
-        <!-- Visual Guide -->
-        <div style="background:var(--surface);border:1px solid var(--border);border-radius:8px;padding:0.75rem 1rem;margin-bottom:0.75rem;font-size:0.78rem;color:var(--text-muted);line-height:1.7">
-            <div style="font-weight:700;font-size:0.72rem;text-transform:uppercase;letter-spacing:0.08em;color:var(--text-muted);margin-bottom:0.5rem">Visual Guide</div>
+        <!-- Visual Guide (collapsed by default) -->
+        <details style="background:var(--surface);border:1px solid var(--border);border-radius:8px;margin-bottom:0.75rem;font-size:0.78rem;color:var(--text-muted);line-height:1.7">
+            <summary style="cursor:pointer;padding:0.6rem 1rem;font-size:0.72rem;font-weight:700;text-transform:uppercase;letter-spacing:0.08em;color:var(--text-muted);user-select:none;display:flex;align-items:center;gap:0.5rem;list-style:none">
+                <span style="font-size:0.6rem;transition:transform 0.2s;display:inline-block" class="vg-chevron">&#9654;</span>
+                Visual Guide &mdash; how to read nodes &amp; edges
+            </summary>
+            <div style="padding:0 1rem 0.75rem" class="visual-guide-grid-wrap">
             <div class="visual-guide-grid" style="display:grid;grid-template-columns:1fr 1fr;gap:0.4rem 2rem">
                 <!-- NODES column -->
                 <div>
@@ -594,14 +602,59 @@ th { color: var(--text-muted); font-weight: 600; text-transform: uppercase; font
                         <span><strong style="color:var(--text)">Dashed gray</strong> &mdash; Discovery-layer connection (inferred via shared intermediate nodes).</span>
                     </div>
                     <div style="display:flex;align-items:center;gap:0.5rem;padding:0.2rem 0">
-                        <svg width="28" height="8" style="flex-shrink:0"><line x1="0" y1="4" x2="28" y2="4" stroke="#f97316" stroke-width="2.5" stroke-dasharray="7,4"/></svg>
-                        <span><strong style="color:#f97316">Dashed orange</strong> &mdash; ML-predicted drug&ndash;disease link (Node2Vec + XGBoost). <em>Not clinically validated.</em></span>
+                        <svg width="28" height="8" style="flex-shrink:0"><line x1="0" y1="4" x2="28" y2="4" stroke="#06b6d4" stroke-width="3" stroke-dasharray="10,5"/></svg>
+                        <span><strong style="color:#06b6d4">Dashed cyan</strong> &mdash; ML-predicted drug&ndash;disease link (RotatE / CompGCN + XGBoost). <em>Not clinically validated. Hidden by default.</em></span>
                     </div>
                     <div style="display:flex;align-items:center;gap:0.5rem;padding:0.2rem 0">
                         <svg width="28" height="8" style="flex-shrink:0"><line x1="0" y1="4" x2="28" y2="4" stroke="#f59e0b" stroke-width="2.5"/></svg>
                         <span><strong style="color:#f59e0b">Solid orange</strong> &mdash; Disease hierarchy (subtype-of relationship from Disease Ontology).</span>
                     </div>
                 </div>
+            </div>
+            </div>
+        </details>
+
+        <!-- Drug Repurposing Panel — shown when ML predictions toggle is on -->
+        <div id="mlPanel" style="display:none;background:var(--surface);border:1px solid rgba(6,182,212,0.3);border-radius:8px;padding:0.75rem 1rem;margin-bottom:0.75rem;font-size:0.8rem;color:var(--text-muted);line-height:1.6">
+            <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:0.5rem">
+                <div style="display:flex;align-items:center;gap:0.5rem">
+                    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#06b6d4" stroke-width="2"><path d="M12 2L2 7l10 5 10-5-10-5z"/><path d="M2 17l10 5 10-5"/><path d="M2 12l10 5 10-5"/></svg>
+                    <span style="font-weight:700;color:#06b6d4;font-size:0.85rem">Drug Repurposing Predictions</span>
+                </div>
+                <span style="font-size:0.7rem;background:rgba(6,182,212,0.15);color:#06b6d4;padding:0.15rem 0.5rem;border-radius:10px;font-weight:600">Experimental</span>
+            </div>
+            <p style="margin:0 0 0.5rem;font-size:0.78rem">Cyan dashed edges are <strong style="color:var(--text)">ML predictions</strong> of drugs that might treat a disease. They are <em>not</em> from curated databases and require experimental validation.</p>
+            <div style="display:flex;gap:0.5rem;flex-wrap:wrap;margin-bottom:0.4rem">
+                <label style="display:flex;align-items:center;gap:0.3rem;font-size:0.76rem;cursor:pointer">
+                    <input type="checkbox" class="ml-method-filter" value="RotatE" checked onchange="filterMLMethod()" style="accent-color:#06b6d4" />
+                    <span style="color:var(--text)">RotatE</span>
+                    <span style="font-size:0.68rem;color:var(--text-muted)">(AUROC 0.965)</span>
+                </label>
+                <label style="display:flex;align-items:center;gap:0.3rem;font-size:0.76rem;cursor:pointer">
+                    <input type="checkbox" class="ml-method-filter" value="CompGCN" checked onchange="filterMLMethod()" style="accent-color:#06b6d4" />
+                    <span style="color:var(--text)">CompGCN</span>
+                    <span style="font-size:0.68rem;color:var(--text-muted)">(AUROC 0.972)</span>
+                </label>
+            </div>
+            <div style="display:flex;align-items:center;gap:0.5rem;margin-top:0.5rem;flex-wrap:wrap">
+                <button onclick="showPredictionsList()" style="font-size:0.74rem;padding:0.3rem 0.6rem;border-radius:5px;border:1px solid rgba(6,182,212,0.4);background:rgba(6,182,212,0.1);color:#06b6d4;cursor:pointer;font-weight:600">View Predictions Table</button>
+                <button onclick="exportPredictions('csv')" style="font-size:0.74rem;padding:0.3rem 0.6rem;border-radius:5px;border:1px solid var(--border);background:var(--surface2);color:var(--text);cursor:pointer">Export CSV</button>
+                <button onclick="exportPredictions('json')" style="font-size:0.74rem;padding:0.3rem 0.6rem;border-radius:5px;border:1px solid var(--border);background:var(--surface2);color:var(--text);cursor:pointer">Export JSON</button>
+                <button onclick="document.querySelector('.about-panel').open=true;document.querySelector('.about-panel').scrollIntoView({behavior:'smooth'})" style="font-size:0.74rem;padding:0.3rem 0.6rem;border-radius:5px;border:1px solid var(--border);background:var(--surface2);color:var(--text);cursor:pointer" data-tip="View full ML methodology, model performance metrics, and evaluation details">Methodology &amp; Metrics</button>
+                <span id="mlPredCount" style="font-size:0.72rem;color:var(--text-muted);margin-left:auto"></span>
+            </div>
+            <div id="mlPredTable" style="display:none;margin-top:0.5rem;max-height:300px;overflow-y:auto;border:1px solid var(--border);border-radius:6px">
+                <table style="width:100%;font-size:0.74rem;border-collapse:collapse">
+                    <thead style="position:sticky;top:0;background:var(--surface2);z-index:1">
+                        <tr>
+                            <th style="text-align:left;padding:0.35rem 0.5rem;color:var(--text-muted);font-weight:600;border-bottom:1px solid var(--border)">Drug</th>
+                            <th style="text-align:left;padding:0.35rem 0.5rem;color:var(--text-muted);font-weight:600;border-bottom:1px solid var(--border)">Disease</th>
+                            <th style="text-align:left;padding:0.35rem 0.5rem;color:var(--text-muted);font-weight:600;border-bottom:1px solid var(--border)">Method</th>
+                            <th style="text-align:right;padding:0.35rem 0.5rem;color:var(--text-muted);font-weight:600;border-bottom:1px solid var(--border)">Confidence</th>
+                        </tr>
+                    </thead>
+                    <tbody id="mlPredBody"></tbody>
+                </table>
             </div>
         </div>
 
@@ -614,10 +667,10 @@ th { color: var(--text-muted); font-weight: 600; text-transform: uppercase; font
             <div class="graph-loading visible" id="exploreLoading" style="flex-direction:column;gap:0.75rem;text-align:center">
                 <div>Search for a disease, gene, or drug to visualize its neighborhood</div>
                 <div style="display:flex;gap:0.4rem;flex-wrap:wrap;justify-content:center">
-                    <button class="template-btn" onclick="quickExplore('atrial fibrillation')">atrial fibrillation</button>
-                    <button class="template-btn" onclick="quickExplore('APOE')">APOE</button>
-                    <button class="template-btn" onclick="quickExplore('Metoprolol')">Metoprolol</button>
-                    <button class="template-btn" onclick="quickExplore('coronary artery disease')">coronary artery disease</button>
+                    <button class="template-btn" onclick="quickExplore('atrial fibrillation','Disease')">atrial fibrillation</button>
+                    <button class="template-btn" onclick="quickExplore('APOE','Gene')">APOE</button>
+                    <button class="template-btn" onclick="quickExplore('Metoprolol','Drug')">Metoprolol</button>
+                    <button class="template-btn" onclick="quickExplore('coronary artery disease','Disease')">coronary artery disease</button>
                 </div>
             </div>
             <div class="detail-panel" id="detailPanel">
@@ -657,15 +710,7 @@ th { color: var(--text-muted); font-weight: 600; text-transform: uppercase; font
                     <p style="margin-top:0.4rem">Every connection you see comes from a specific, peer-reviewed data source (DrugBank, ClinVar, STRING, PubTator, etc.). When you click on any edge (line), the panel on the right tells you <em>exactly</em> which database it came from and what evidence supports it.</p>
                 </div>
 
-                <!-- Section 2: Core vs Discovery -->
-                <div style="margin-bottom:1.25rem">
-                    <h4 style="color:var(--text);font-size:0.88rem;margin:0 0 0.4rem;padding-top:0.25rem;border-top:1px solid var(--border)">Core vs. Discovery Layers</h4>
-                    <p><strong style="color:var(--accent)">Core layer</strong> (large nodes, solid borders): These are entities <em>directly</em> connected to what you searched for. If you search &ldquo;heart failure,&rdquo; core nodes are genes, drugs, and pathways that the scientific literature explicitly links to heart failure. These are the <strong style="color:var(--text)">established, evidence-backed</strong> connections.</p>
-                    <p style="margin-top:0.4rem"><strong style="color:var(--text-muted)">Discovery layer</strong> (small nodes, dashed borders): These are entities connected <em>through</em> core nodes &mdash; one additional step away. They are <strong style="color:var(--text)">hypothesis-generating</strong>: a gene that shares a pathway with a known heart failure gene, or a drug that targets a protein linked to a heart failure gene. These are not directly established in the literature for your disease, but they represent biologically plausible connections worth investigating.</p>
-                    <p style="margin-top:0.4rem">You can toggle the discovery layer on/off with the checkbox above the graph.</p>
-                </div>
-
-                <!-- Section 3: Specificity Score -->
+                <!-- Section 2: Specificity Score -->
                 <div style="margin-bottom:1.25rem">
                     <h4 style="color:var(--text);font-size:0.88rem;margin:0 0 0.4rem;padding-top:0.25rem;border-top:1px solid var(--border)">Disease-Specificity Score</h4>
                     <p>Not all gene&ndash;disease connections are equally meaningful. A gene linked to <strong style="color:var(--text)">only 1 disease</strong> is far more informative for that disease than a gene linked to hundreds. The <strong style="color:var(--text)">specificity score</strong> quantifies this:</p>
@@ -683,35 +728,42 @@ th { color: var(--text-muted); font-weight: 600; text-transform: uppercase; font
 
                 <!-- Section 4: ML Predictions -->
                 <div style="margin-bottom:1.25rem">
-                    <h4 style="color:#f97316;font-size:0.88rem;margin:0 0 0.4rem;padding-top:0.25rem;border-top:1px solid var(--border)">ML-Predicted Drug&ndash;Disease Links</h4>
-                    <p>The <strong style="color:#f97316">orange dashed edges</strong> are <em>not</em> from curated databases. They are <strong style="color:var(--text)">machine learning predictions</strong> of drugs that <em>might</em> treat a disease, based on patterns in the knowledge graph.</p>
+                    <h4 style="color:#06b6d4;font-size:0.88rem;margin:0 0 0.4rem;padding-top:0.25rem;border-top:1px solid var(--border)">ML-Predicted Drug&ndash;Disease Links</h4>
+                    <p>The <strong style="color:#06b6d4">cyan dashed edges</strong> are <em>not</em> from curated databases. They are <strong style="color:var(--text)">machine learning predictions</strong> of drugs that <em>might</em> treat a disease, based on patterns in the knowledge graph.</p>
 
                     <div style="background:var(--bg);border-radius:8px;padding:0.75rem;margin:0.6rem 0">
-                        <div style="font-weight:700;color:var(--text);margin-bottom:0.4rem">How the model works</div>
+                        <div style="font-weight:700;color:var(--text);margin-bottom:0.4rem">How the pipeline works</div>
                         <ol style="padding-left:1.2rem;margin:0">
-                            <li><strong style="color:var(--text)">Graph embedding</strong> &mdash; An algorithm called <em>Node2Vec</em> &ldquo;walks&rdquo; through the knowledge graph and learns a numerical fingerprint (128 numbers) for every gene, drug, disease, and pathway. Entities that are close in the graph get similar fingerprints.</li>
-                            <li style="margin-top:0.3rem"><strong style="color:var(--text)">Feature engineering</strong> &mdash; For each possible drug&ndash;disease pair, we compute how similar their fingerprints are (cosine similarity), how far apart they are (L2 distance), and structural features like shared neighbors and degree.</li>
-                            <li style="margin-top:0.3rem"><strong style="color:var(--text)">Classification</strong> &mdash; An XGBoost model (a type of decision tree ensemble) was trained on known &ldquo;drug treats disease&rdquo; relationships to distinguish real therapeutic links from random pairs.</li>
-                            <li style="margin-top:0.3rem"><strong style="color:var(--text)">Prediction</strong> &mdash; The model scores every unknown drug&ndash;disease pair. The top 500 predictions (confidence &ge; 50%) are stored in the graph as candidates for further investigation.</li>
+                            <li><strong style="color:var(--text)">Graph embedding</strong> &mdash; Two complementary methods learn numerical representations for every entity in the knowledge graph:
+                                <ul style="margin:0.3rem 0 0;padding-left:1rem;list-style:disc">
+                                    <li><strong>RotatE</strong> (256-dim) &mdash; Models relationships as rotations in complex vector space, capturing asymmetric and compositional relation patterns.</li>
+                                    <li><strong>CompGCN</strong> (128-dim) &mdash; A graph neural network that jointly embeds nodes <em>and</em> relation types, learning from the full neighbourhood structure.</li>
+                                </ul>
+                            </li>
+                            <li style="margin-top:0.3rem"><strong style="color:var(--text)">Feature engineering</strong> &mdash; For each candidate drug&ndash;disease pair, we combine embedding-derived features (element-wise interactions) with graph structure features (shared neighbors, Adamic-Adar index, node degree).</li>
+                            <li style="margin-top:0.3rem"><strong style="color:var(--text)">Classification</strong> &mdash; An XGBoost decoder (decision tree ensemble) was trained on known &ldquo;drug treats disease&rdquo; relationships to distinguish real therapeutic links from random pairs.</li>
+                            <li style="margin-top:0.3rem"><strong style="color:var(--text)">Prediction</strong> &mdash; Each method scores all unknown drug&ndash;disease pairs. The top 500 predictions per method (confidence &ge; 50%) are stored in the graph. Enable &ldquo;Show ML predictions&rdquo; in the toolbar, then click any cyan edge to see which method produced it and the confidence score.</li>
                         </ol>
                     </div>
 
                     <div style="background:var(--bg);border-radius:8px;padding:0.75rem;margin:0.6rem 0">
-                        <div style="font-weight:700;color:var(--text);margin-bottom:0.4rem">Model performance</div>
-                        <p>The model was rigorously evaluated using an 80/10/10 train/validation/test split with <strong style="color:var(--text)">no data leakage</strong> (embeddings trained only on training edges):</p>
+                        <div style="font-weight:700;color:var(--text);margin-bottom:0.4rem">Model performance (XGBoost decoder)</div>
+                        <p>Both methods were rigorously evaluated using an 80/10/10 stratified train/validation/test split with <strong style="color:var(--text)">no data leakage</strong> (embeddings trained only on training edges):</p>
                         <table style="width:100%;margin:0.4rem 0;font-size:0.78rem">
                             <thead><tr>
                                 <th style="text-align:left;color:var(--text-muted);font-weight:600;padding:0.2rem 0.4rem">Metric</th>
-                                <th style="text-align:right;color:var(--text-muted);font-weight:600;padding:0.2rem 0.4rem">Score</th>
+                                <th style="text-align:right;color:var(--text-muted);font-weight:600;padding:0.2rem 0.4rem">RotatE</th>
+                                <th style="text-align:right;color:var(--text-muted);font-weight:600;padding:0.2rem 0.4rem">CompGCN</th>
                                 <th style="text-align:left;color:var(--text-muted);font-weight:600;padding:0.2rem 0.4rem">What it means</th>
                             </tr></thead>
                             <tbody>
-                                <tr><td style="padding:0.2rem 0.4rem;color:var(--text)">Test AUROC</td><td style="text-align:right;padding:0.2rem 0.4rem"><strong style="color:var(--green)">0.950</strong></td><td style="padding:0.2rem 0.4rem">95% chance the model ranks a real treatment higher than a random pair</td></tr>
-                                <tr><td style="padding:0.2rem 0.4rem;color:var(--text)">Test AUPRC</td><td style="text-align:right;padding:0.2rem 0.4rem"><strong style="color:var(--green)">0.958</strong></td><td style="padding:0.2rem 0.4rem">High precision even at high recall &mdash; few false positives among top predictions</td></tr>
-                                <tr><td style="padding:0.2rem 0.4rem;color:var(--text)">Hits@100</td><td style="text-align:right;padding:0.2rem 0.4rem">0.311</td><td style="padding:0.2rem 0.4rem">31% of real treatments appear in the top 100 predictions per disease</td></tr>
+                                <tr><td style="padding:0.2rem 0.4rem;color:var(--text)">Test AUROC</td><td style="text-align:right;padding:0.2rem 0.4rem">0.965</td><td style="text-align:right;padding:0.2rem 0.4rem"><strong style="color:var(--green)">0.972</strong></td><td style="padding:0.2rem 0.4rem">Probability the model ranks a real treatment above a random pair</td></tr>
+                                <tr><td style="padding:0.2rem 0.4rem;color:var(--text)">Test AUPRC</td><td style="text-align:right;padding:0.2rem 0.4rem">0.966</td><td style="text-align:right;padding:0.2rem 0.4rem"><strong style="color:var(--green)">0.971</strong></td><td style="padding:0.2rem 0.4rem">Precision&ndash;recall balance &mdash; few false positives among top predictions</td></tr>
+                                <tr><td style="padding:0.2rem 0.4rem;color:var(--text)">Hits@100</td><td style="text-align:right;padding:0.2rem 0.4rem">0.311</td><td style="text-align:right;padding:0.2rem 0.4rem">0.305</td><td style="padding:0.2rem 0.4rem">Fraction of real treatments in the top 100 predictions per disease</td></tr>
+                                <tr><td style="padding:0.2rem 0.4rem;color:var(--text)">Hits@200</td><td style="text-align:right;padding:0.2rem 0.4rem">0.600</td><td style="text-align:right;padding:0.2rem 0.4rem">0.606</td><td style="padding:0.2rem 0.4rem">Fraction of real treatments in the top 200 predictions per disease</td></tr>
                             </tbody>
                         </table>
-                        <p style="margin-top:0.3rem;font-size:0.76rem"><strong style="color:var(--text)">Dataset:</strong> 9,735 therapeutic drugs &times; 457 diseases. 3,026 training / 309 validation / 322 test known &ldquo;drug treats disease&rdquo; edges.</p>
+                        <p style="margin-top:0.3rem;font-size:0.76rem"><strong style="color:var(--text)">Dataset:</strong> 9,735 therapeutic drugs &times; ~480 diseases. 3,026 training / ~310 validation / ~325 test known &ldquo;drug treats disease&rdquo; edges. CompGCN achieves the best AUROC; ranking metrics (Hits@K) are comparable across methods.</p>
                     </div>
 
                     <div style="background:rgba(248,113,113,0.08);border:1px solid rgba(248,113,113,0.2);border-radius:8px;padding:0.75rem;margin:0.6rem 0">
@@ -857,17 +909,29 @@ th { color: var(--text-muted); font-weight: 600; text-transform: uppercase; font
             <h2>Explore &amp; Query</h2>
             <p>The <strong>Explore tab</strong> visualizes cardiovascular disease subgraphs:</p>
             <ul>
-                <li><strong>Search a CVD subtype or gene</strong> &mdash; type a name and click Explore</li>
-                <li><strong>Core nodes</strong> (large, solid) are direct known associations</li>
+                <li><strong>Search any disease, gene, or drug</strong> &mdash; type a name, select from autocomplete, and click Search</li>
+                <li><strong>Core nodes</strong> (large, solid) are direct known associations from curated databases</li>
                 <li><strong>Discovery nodes</strong> (small, dashed) are 2-hop hypothesis-generating connections</li>
-                <li><strong>Click any node</strong> to see its properties, neighbors, and specificity score</li>
-                <li>Use <strong>filter chips</strong> to show/hide entity types</li>
+                <li><strong>Click any node or edge</strong> to see its properties, source database, and evidence</li>
+                <li>Use <strong>filter chips</strong> to show/hide entity types or edge types</li>
             </ul>
-            <p style="margin-top:0.5rem">The <strong>Query tab</strong> gives you direct Cypher access to the CVD graph &mdash; click a template or write your own (read-only, Cmd+Enter to run).</p>
+            <p style="margin-top:0.5rem">The <strong>Query tab</strong> gives you direct Cypher access to the CVD graph &mdash; click a template or write your own (Ctrl+Enter to run).</p>
+        </div>
+        <div class="modal-step" data-step="2">
+            <h2>ML Drug Repurposing Predictions</h2>
+            <p>CardioKB includes <strong>machine learning predictions</strong> of drugs that might treat cardiovascular diseases, generated using graph embedding methods:</p>
+            <ul>
+                <li><strong>RotatE</strong> and <strong>CompGCN</strong> embeddings trained on the knowledge graph, decoded with XGBoost (AUROC up to 0.972)</li>
+                <li>Toggle <strong style="color:#06b6d4">&ldquo;Show ML Predictions&rdquo;</strong> to overlay predicted drug&ndash;disease links as cyan dashed edges</li>
+                <li>Filter by method, view a sortable predictions table, and export results as CSV or JSON</li>
+                <li>Click any cyan edge to see the confidence score and which model produced it</li>
+            </ul>
+            <p style="margin-top:0.5rem;color:var(--red)"><strong>Important:</strong> These are computational predictions for research, not clinical recommendations. They identify drugs worth investigating, not drugs to prescribe.</p>
         </div>
         <div class="modal-dots">
             <span class="dot active" data-dot="0"></span>
             <span class="dot" data-dot="1"></span>
+            <span class="dot" data-dot="2"></span>
         </div>
         <div class="modal-actions">
             <button class="btn-secondary" onclick="closeWelcome()">Skip</button>
@@ -880,10 +944,9 @@ th { color: var(--text-muted); font-weight: 600; text-transform: uppercase; font
 <div class="modal-overlay hidden" id="methodologyModal" onclick="if(event.target===this)this.classList.add('hidden')">
     <div class="modal">
         <h2>How to Read the Graph</h2>
-        <p style="margin-bottom:0.75rem"><strong>Two-layer architecture</strong></p>
+        <p style="margin-bottom:0.75rem"><strong>Knowledge graph</strong></p>
         <ul>
-            <li><strong style="color:var(--accent)">Core layer</strong> &mdash; Direct (1-hop) neighbors of the searched entity. These are known, literature-backed associations from databases like OpenTargets, ClinVar, and DrugBank. Shown as <strong>large nodes with solid borders</strong>.</li>
-            <li><strong style="color:var(--text-muted)">Discovery layer</strong> &mdash; 2-hop neighbors reached through core nodes. These are hypothesis-generating connections not directly linked to the disease &mdash; useful for finding shared pathways, off-target drugs, or comorbidity bridges. Shown as <strong>small nodes with dashed borders and faded edges</strong>. Toggle this layer on/off with the checkbox above the graph.</li>
+            <li>All nodes are <strong style="color:var(--accent)">direct (1-hop) neighbors</strong> of the searched entity, representing known, literature-backed associations from databases like OpenTargets, ClinVar, and DrugBank.</li>
         </ul>
         <p style="margin:0.75rem 0"><strong>Disease-specificity scoring</strong></p>
         <ul>
@@ -895,14 +958,13 @@ th { color: var(--text-muted); font-weight: 600; text-transform: uppercase; font
         <p style="margin:0.75rem 0"><strong>Node sizing &amp; shapes</strong></p>
         <ul>
             <li>Diseases are <strong>diamonds</strong>; all other types are <strong>circles</strong></li>
-            <li>Core nodes are larger; discovery nodes are smaller</li>
+            <li>The searched entity is highlighted with a white border and glow</li>
             <li>Colors indicate entity type (see legend below graph)</li>
         </ul>
         <p style="margin:0.75rem 0"><strong>Reading edges</strong></p>
         <ul>
-            <li><strong>Solid edges</strong> = core (known) relationships from integrated databases</li>
-            <li><strong>Dashed gray edges</strong> = discovery (inferred) connections via 2-hop expansion</li>
-            <li><strong style="color:#f97316">Dashed orange edges</strong> = ML-predicted drug&ndash;disease links (Node2Vec + XGBoost). These are <em>not clinically validated</em> &mdash; click to see the confidence score</li>
+            <li><strong>Solid edges</strong> = known relationships from integrated databases</li>
+            <li><strong style="color:#06b6d4">Dashed cyan edges</strong> = ML-predicted drug&ndash;disease links (RotatE / CompGCN + XGBoost). Hidden by default &mdash; enable via the &ldquo;Show ML predictions&rdquo; toggle. Click any cyan edge to see method and confidence score. <em>Not clinically validated.</em></li>
             <li><strong style="color:#f59e0b">Solid orange edges</strong> = disease hierarchy (subtype-of)</li>
             <li>Each edge carries a <code>source</code> property identifying the originating database or model</li>
         </ul>
@@ -981,13 +1043,19 @@ th { color: var(--text-muted); font-weight: 600; text-transform: uppercase; font
             '<p>Verifies every data source parser in the pipeline: checks that raw data was downloaded, parsed into TSVs, and loaded into the graph with correct node/relationship counts.</p>' +
             '<p>Also tests database connectivity, relationship <code>source</code> tagging, and ID mapping integrity. Green = data present; red = missing or mismatched.</p>',
 
-        discovery:
-            '<h4>Core vs Discovery Layers</h4>' +
+        graphbasics:
+            '<h4>What is a Knowledge Graph?</h4>' +
+            '<p>Think of it as a <strong>map of biomedical relationships</strong>. Each circle or diamond is an entity (a gene, drug, disease, pathway, or clinical trial). Each line connecting them is a known relationship from a peer-reviewed database.</p>' +
+            '<p style="margin-top:0.4rem"><strong>How to use it:</strong></p>' +
             '<div class="info-tier"><div class="info-dot" style="background:var(--accent)"></div>' +
-            '<div><strong>Core layer (1-hop)</strong> &mdash; Entities directly connected to your search term in the literature. These are established, evidence-backed associations. Shown as large nodes with solid borders and solid edges.</div></div>' +
-            '<div class="info-tier"><div class="info-dot" style="background:var(--text-muted)"></div>' +
-            '<div><strong>Discovery layer (2-hop)</strong> &mdash; Entities reached <em>through</em> core nodes. Not directly linked to your disease, but connected via shared genes, pathways, or drugs. Useful for finding drug repurposing candidates, comorbidity bridges, and novel therapeutic targets. Shown as small, faded nodes with dashed edges.</div></div>' +
-            '<p style="margin-top:0.5rem"><strong>Specificity scoring</strong> helps separate signal from noise: <code>score = 1 / (# diseases connected)</code>. Genes unique to your disease score 1.0; broadly connected &ldquo;housekeeping&rdquo; genes score near 0.</p>',
+            '<div><strong>Search</strong> &mdash; Type a disease (e.g. &ldquo;atrial fibrillation&rdquo;), gene (e.g. &ldquo;APOE&rdquo;), or drug (e.g. &ldquo;Metoprolol&rdquo;) and select from the dropdown.</div></div>' +
+            '<div class="info-tier"><div class="info-dot" style="background:var(--green)"></div>' +
+            '<div><strong>Click any circle</strong> to see its details &mdash; what gene it is, what disease it&rsquo;s linked to, which database the information comes from.</div></div>' +
+            '<div class="info-tier"><div class="info-dot" style="background:var(--yellow)"></div>' +
+            '<div><strong>Click any line</strong> to see <em>why</em> two entities are connected &mdash; the source database, evidence type, and confidence score.</div></div>' +
+            '<div class="info-tier"><div class="info-dot" style="background:var(--red)"></div>' +
+            '<div><strong>Filter</strong> &mdash; Use the colored chips above the graph to show/hide specific entity types (e.g. hide all genes to focus on drugs).</div></div>' +
+            '<p style="margin-top:0.4rem">The graph integrates data from 22+ biomedical databases. Every connection is traceable to its source &mdash; nothing is inferred without evidence.</p>',
     };
 
     let activeBtn = null;
@@ -1109,6 +1177,8 @@ function renderNodeLegend() {
 
 // ---- State ----
 let selectedDisease = 'cvd';
+let selectedSearchType = null;
+let searchedNodeId = null;
 let nodeChart = null, relChart = null;
 let eventSource = null;
 let exploreNetwork = null;
@@ -1300,7 +1370,7 @@ function ensureExploreNetwork() {
                     springConstant: 0.02,
                     damping: 0.4,
                 },
-                stabilization: { enabled: true, iterations: 150, fit: true },
+                stabilization: { enabled: false },
                 maxVelocity: 30,
             },
             interaction: { hover: true, tooltipDelay: 100, dragNodes: true, dragView: true, zoomView: true, selectConnectedEdges: false },
@@ -1341,15 +1411,61 @@ function ensureExploreNetwork() {
             closeEdgePanel();
         }
     });
-    // After initial stabilization, turn off physics so layout stays still
+    // After stabilization, freeze layout and center on searched node
     exploreNetwork.on('stabilizationIterationsDone', function() {
         exploreNetwork.setOptions({ physics: { enabled: false } });
+        exploreNetwork.fit({ animation: false });
+        if (searchedNodeId && exploreVisNodes.get(searchedNodeId)) {
+            var pos = exploreNetwork.getPositions([searchedNodeId])[searchedNodeId];
+            if (pos) {
+                exploreNetwork.moveTo({
+                    position: { x: pos.x, y: pos.y },
+                    scale: Math.max(exploreNetwork.getScale(), 0.6),
+                    animation: { duration: 500, easingFunction: 'easeInOutQuad' }
+                });
+            }
+        }
     });
 }
 
-function quickExplore(term) {
+function quickExplore(term, type) {
     document.getElementById('exploreSearch').value = term;
+    selectedSearchType = type || null;
     loadExploreGraph();
+}
+
+function clearExploreGraph() {
+    currentGraphData = { nodes: [], edges: [] };
+    activeFilters.clear();
+    hiddenEdgeTypes.clear();
+    searchedNodeId = null;
+    selectedSearchType = null;
+    document.getElementById('exploreSearch').value = '';
+    document.getElementById('filterChips').innerHTML = '';
+    document.getElementById('edgeFilterChips').innerHTML = '';
+    document.getElementById('exploreBreadcrumb').style.display = 'none';
+    document.getElementById('exploreClearBtn').style.display = 'none';
+    closeDetailPanel();
+    closeEdgePanel();
+    exploreVisNodes.clear();
+    exploreVisEdges.clear();
+    // Show the landing prompt
+    const loading = document.getElementById('exploreLoading');
+    loading.innerHTML = '';
+    var d1 = document.createElement('div');
+    d1.textContent = 'Search for a disease, gene, or drug to visualize its neighborhood';
+    loading.appendChild(d1);
+    var d2 = document.createElement('div');
+    d2.style.cssText = 'display:flex;gap:0.4rem;flex-wrap:wrap;justify-content:center';
+    [['atrial fibrillation','Disease'], ['APOE','Gene'], ['Metoprolol','Drug'], ['coronary artery disease','Disease']].forEach(([t, tp]) => {
+        var b = document.createElement('button');
+        b.className = 'template-btn';
+        b.textContent = t;
+        b.onclick = () => quickExplore(t, tp);
+        d2.appendChild(b);
+    });
+    loading.appendChild(d2);
+    loading.classList.add('visible');
 }
 
 async function loadExploreGraph() {
@@ -1381,6 +1497,7 @@ async function loadExploreGraph() {
     const limit = document.getElementById('exploreLimit').value || 200;
     const params = new URLSearchParams({ disease: selectedDisease, limit: limit });
     if (searchTerm) params.set('search', searchTerm);
+    if (selectedSearchType) params.set('searchType', selectedSearchType);
     const url = '/api/graph?' + params.toString();
     console.log('[CardioKB] Fetching graph:', url);
 
@@ -1397,6 +1514,28 @@ async function loadExploreGraph() {
         buildEdgeFilterChips(data.edges);
         activeFilters.clear();
         hiddenEdgeTypes.clear();
+
+        // Find the searched node to center and highlight
+        searchedNodeId = null;
+        if (searchTerm && data.nodes.length) {
+            const termLower = searchTerm.toLowerCase();
+            // Prefer exact match on name + type from autocomplete selection
+            if (selectedSearchType) {
+                const match = data.nodes.find(n => n.type === selectedSearchType && n.label.toLowerCase() === termLower);
+                if (match) searchedNodeId = match.id;
+            }
+            // Fallback: exact name match on any node
+            if (!searchedNodeId) {
+                const match = data.nodes.find(n => n.label.toLowerCase() === termLower);
+                if (match) searchedNodeId = match.id;
+            }
+            // Fallback: contains match
+            if (!searchedNodeId) {
+                const match = data.nodes.find(n => n.label.toLowerCase().includes(termLower));
+                if (match) searchedNodeId = match.id;
+            }
+        }
+
         renderExploreGraph(data);
         loading.classList.remove('visible');
 
@@ -1406,6 +1545,7 @@ async function loadExploreGraph() {
         document.getElementById('breadcrumbStats').textContent =
             data.nodes.length + ' nodes, ' + data.edges.length + ' edges';
         bc.style.display = 'block';
+        document.getElementById('exploreClearBtn').style.display = '';
     } catch (e) {
         loading.textContent = 'Error: ' + e.message;
         log('Explore error: ' + e.message, 'err');
@@ -1435,8 +1575,40 @@ function toggleFilter(type, chip) {
         activeFilters.add(type);
         chip.classList.remove('active');
     }
+    searchedNodeId = null;
     renderExploreGraph(currentGraphData);
 }
+
+const EDGE_DISPLAY_NAMES = {
+    geneAssociatesWithDisease: 'Gene–Disease',
+    drugTreatsDisease: 'Drug Treats Disease',
+    predictedTreatsDisease: 'ML Predicted Treatment',
+    chemicalBindsGene: 'Drug–Gene Binding',
+    drugBindsGene: 'Drug–Gene Binding',
+    geneInteractsWithGene: 'Gene–Gene Interaction',
+    geneInPathway: 'Gene in Pathway',
+    geneParticipatesInBiologicalProcess: 'Gene–Biological Process',
+    geneAssociatedWithCellularComponent: 'Gene–Cell Component',
+    geneHasMolecularFunction: 'Gene–Molecular Function',
+    geneAssociatesWithPhenotype: 'Gene–Phenotype',
+    compoundCausesSideEffect: 'Drug Side Effect',
+    compoundUpregulatesGene: 'Drug Upregulates Gene',
+    compoundDownregulatesGene: 'Drug Downregulates Gene',
+    chemicalIncreasesExpression: 'Chemical ↑ Expression',
+    chemicalDecreasesExpression: 'Chemical ↓ Expression',
+    bodyPartOverexpressesGene: 'Tissue Expression',
+    diseaseIsSubtypeOf: 'Disease Hierarchy',
+    STUDIES_CONDITION: 'Trial Studies Condition',
+    TESTS_INTERVENTION: 'Trial Tests Drug',
+    AFFECTS_RESPONSE_TO: 'Pharmacogenomic',
+    transcriptionFactorInteractsWithGene: 'TF–Gene Regulation',
+    hasVariant: 'Has Variant',
+    variantInGene: 'Variant in Gene',
+    variantAssociatedWithDisease: 'Variant–Disease',
+    geneInFamily: 'Gene in Family',
+    compoundInPharmacologicClass: 'Drug Class',
+};
+function edgeDisplayName(raw) { return EDGE_DISPLAY_NAMES[raw] || raw; }
 
 function buildEdgeFilterChips(edges) {
     const types = new Set(edges.map(e => e.label));
@@ -1448,7 +1620,8 @@ function buildEdgeFilterChips(edges) {
         chip.style.background = 'rgba(56,189,248,0.15)';
         chip.style.color = '#38bdf8';
         chip.style.fontSize = '0.7rem';
-        chip.textContent = t;
+        chip.textContent = edgeDisplayName(t);
+        chip.setAttribute('data-tip', t);
         chip.onclick = () => toggleEdgeFilter(t, chip);
         container.appendChild(chip);
     });
@@ -1462,21 +1635,149 @@ function toggleEdgeFilter(type, chip) {
         hiddenEdgeTypes.add(type);
         chip.classList.remove('active');
     }
+    searchedNodeId = null;
     renderExploreGraph(currentGraphData);
 }
 
-let showDiscovery = true;
-let showPredicted = true;
+let showPredicted = false;
 let hiddenEdgeTypes = new Set();
-
-function toggleDiscoveryLayer() {
-    showDiscovery = document.getElementById('discoveryToggle').checked;
-    if (currentGraphData.nodes.length) renderExploreGraph(currentGraphData);
-}
 
 function togglePredictedEdges() {
     showPredicted = document.getElementById('predictedToggle').checked;
-    if (currentGraphData.nodes.length) renderExploreGraph(currentGraphData);
+    document.getElementById('mlPanel').style.display = showPredicted ? 'block' : 'none';
+    const btn = document.getElementById('mlToggleBtn');
+    if (showPredicted) {
+        btn.style.background = 'rgba(6,182,212,0.15)';
+        btn.style.borderColor = '#06b6d4';
+    } else {
+        btn.style.background = 'transparent';
+        btn.style.borderColor = 'rgba(6,182,212,0.4)';
+    }
+    if (currentGraphData.edges.length) updatePredictedEdges();
+}
+
+let hiddenMLMethods = new Set();
+function filterMLMethod() {
+    hiddenMLMethods.clear();
+    document.querySelectorAll('.ml-method-filter').forEach(cb => {
+        if (!cb.checked) hiddenMLMethods.add(cb.value);
+    });
+    if (currentGraphData.edges.length) updatePredictedEdges();
+}
+
+function updatePredictedEdges() {
+    const nodeIds = new Set(exploreVisNodes.getIds());
+    // Remove all existing predicted edges
+    const existingPredicted = exploreVisEdges.get({ filter: e => e._data && e._data.label === 'predictedTreatsDisease' });
+    if (existingPredicted.length) exploreVisEdges.remove(existingPredicted.map(e => e.id));
+    console.log('[CardioKB] updatePredictedEdges: showPredicted=' + showPredicted + ', visNodes=' + nodeIds.size + ', totalEdges=' + currentGraphData.edges.length);
+
+    if (!showPredicted) return;
+
+    // Add back the ones that pass filters
+    const predictedData = currentGraphData.edges.filter(e => {
+        if (e.label !== 'predictedTreatsDisease') return false;
+        if (!nodeIds.has(e.from) || !nodeIds.has(e.to)) return false;
+        const src = (e.source || '').toLowerCase();
+        if (src.includes('rotate') && hiddenMLMethods.has('RotatE')) return false;
+        if (src.includes('compgcn') && hiddenMLMethods.has('CompGCN')) return false;
+        return true;
+    });
+
+    console.log('[CardioKB] updatePredictedEdges: ' + predictedData.length + ' predicted edges pass filters, hiddenMLMethods:', [...hiddenMLMethods]);
+    const newEdges = predictedData.map((e, i) => ({
+        id: 'ep' + i, from: e.from, to: e.to,
+        label: 'ML prediction',
+        title: e.label + (e.source ? ' (' + e.source + ')' : '') + ' [ML prediction — click for details]',
+        font: { size: 9, color: '#06b6d4', strokeWidth: 2, strokeColor: '#0f172a' },
+        color: { color: '#06b6d4', highlight: '#22d3ee' },
+        dashes: [10, 5],
+        width: 3,
+        arrows: { to: { scaleFactor: 0.7 } },
+        _data: e,
+    }));
+    if (newEdges.length) exploreVisEdges.add(newEdges);
+    document.getElementById('mlPredCount').textContent = predictedData.length + ' predictions in current view';
+}
+
+function getPredictionRows() {
+    const nodeMap = {};
+    currentGraphData.nodes.forEach(n => { nodeMap[n.id] = n; });
+    return currentGraphData.edges
+        .filter(e => {
+            if (e.label !== 'predictedTreatsDisease') return false;
+            const src = (e.source || '').toLowerCase();
+            if (src.includes('rotate') && hiddenMLMethods.has('RotatE')) return false;
+            if (src.includes('compgcn') && hiddenMLMethods.has('CompGCN')) return false;
+            if (src.includes('node2vec')) return false;
+            return true;
+        })
+        .map(e => {
+            const drug = nodeMap[e.from] || nodeMap[e.to];
+            const disease = nodeMap[e.to] || nodeMap[e.from];
+            const drugNode = drug && drug.type === 'Drug' ? drug : disease;
+            const diseaseNode = disease && disease.type === 'Disease' ? disease : drug;
+            const conf = e.properties ? (e.properties.confidence || e.properties.score) : null;
+            const method = (e.source || '').replace('_LinkPrediction', '');
+            return {
+                drug: drugNode ? drugNode.label : e.from,
+                disease: diseaseNode ? diseaseNode.label : e.to,
+                method: method,
+                confidence: conf != null ? parseFloat(conf) : null,
+                source: e.source || '',
+            };
+        })
+        .sort((a, b) => (b.confidence || 0) - (a.confidence || 0));
+}
+
+function showPredictionsList() {
+    const tableDiv = document.getElementById('mlPredTable');
+    const isVisible = tableDiv.style.display !== 'none';
+    if (isVisible) { tableDiv.style.display = 'none'; return; }
+
+    const rows = getPredictionRows();
+    const tbody = document.getElementById('mlPredBody');
+    tbody.innerHTML = '';
+    if (!rows.length) {
+        tbody.innerHTML = '<tr><td colspan="4" style="padding:0.75rem;text-align:center;color:var(--text-muted)">No predictions in current graph view</td></tr>';
+    } else {
+        rows.forEach(r => {
+            const tr = document.createElement('tr');
+            tr.style.borderBottom = '1px solid var(--border)';
+            tr.innerHTML =
+                '<td style="padding:0.3rem 0.5rem;color:var(--green)">' + escapeHtml(r.drug) + '</td>' +
+                '<td style="padding:0.3rem 0.5rem;color:#f87171">' + escapeHtml(r.disease) + '</td>' +
+                '<td style="padding:0.3rem 0.5rem;color:#06b6d4">' + escapeHtml(r.method) + '</td>' +
+                '<td style="text-align:right;padding:0.3rem 0.5rem;color:var(--text)">' + (r.confidence != null ? r.confidence.toFixed(4) : '—') + '</td>';
+            tbody.appendChild(tr);
+        });
+    }
+    tableDiv.style.display = 'block';
+}
+
+function exportPredictions(format) {
+    const rows = getPredictionRows();
+    if (!rows.length) { alert('No predictions to export'); return; }
+    let content, mime, ext;
+    if (format === 'csv') {
+        const lines = ['Drug,Disease,Method,Confidence'];
+        rows.forEach(r => {
+            lines.push('"' + r.drug.replace(/"/g, '""') + '","' + r.disease.replace(/"/g, '""') + '","' + r.method + '",' + (r.confidence != null ? r.confidence : ''));
+        });
+        content = lines.join('\n');
+        mime = 'text/csv';
+        ext = 'csv';
+    } else {
+        content = JSON.stringify(rows, null, 2);
+        mime = 'application/json';
+        ext = 'json';
+    }
+    const blob = new Blob([content], { type: mime });
+    const a = document.createElement('a');
+    a.href = URL.createObjectURL(blob);
+    a.download = 'cardio_kb_predictions.' + ext;
+    a.click();
+    URL.revokeObjectURL(a.href);
 }
 
 function renderExploreGraph(data) {
@@ -1484,59 +1785,61 @@ function renderExploreGraph(data) {
 
     const filteredNodes = data.nodes.filter(n => {
         if (hiddenTypes.has(n.type)) return false;
-        if (!showDiscovery && n.layer === 'discovery') return false;
         return true;
     });
     const nodeIds = new Set(filteredNodes.map(n => n.id));
     const filteredEdges = data.edges.filter(e => {
         if (!nodeIds.has(e.from) || !nodeIds.has(e.to)) return false;
         if (hiddenEdgeTypes.has(e.label)) return false;
-        if (!showPredicted && e.label === 'predictedTreatsDisease') return false;
+        if (e.label === 'predictedTreatsDisease') {
+            if (!showPredicted) return false;
+            const src = (e.source || '').toLowerCase();
+            if (src.includes('rotate') && hiddenMLMethods.has('RotatE')) return false;
+            if (src.includes('compgcn') && hiddenMLMethods.has('CompGCN')) return false;
+        }
         return true;
     });
 
     const newNodes = filteredNodes.map(n => {
-        const isCore = n.layer !== 'discovery';
         const isParent = n.isParent === true;
         const isChild = n.isChild === true;
         const isDiseaseHub = isParent;
-        const baseSize = isDiseaseHub ? 30 : isChild ? 14 : (n.type === 'Disease' ? 20 : (isCore ? 14 : 6));
-        const fontSize = isDiseaseHub ? 14 : (n.type === 'Disease' ? 11 : (isCore ? 9 : 0));
+        const isSearched = n.id === searchedNodeId;
+        const baseSize = isSearched ? 35 : isDiseaseHub ? 30 : isChild ? 14 : (n.type === 'Disease' ? 20 : 14);
+        const fontSize = isSearched ? 16 : isDiseaseHub ? 14 : (n.type === 'Disease' ? 11 : 9);
         const bg = nodeColor(n.type);
-        const borderColor = isDiseaseHub ? '#f59e0b' : isChild ? '#14b8a6' : bg;
+        const borderColor = isSearched ? '#ffffff' : isDiseaseHub ? '#f59e0b' : isChild ? '#14b8a6' : bg;
         return {
             id: n.id,
-            label: isDiseaseHub || n.type === 'Disease' ? n.label : (isCore ? n.label : ''),
-            color: { background: isCore ? bg : bg + '44', border: borderColor,
+            label: n.label,
+            color: { background: bg, border: borderColor,
                 highlight: { background: '#fff', border: borderColor } },
-            borderWidth: isDiseaseHub ? 3 : (isCore ? 1.5 : 0.5),
+            borderWidth: isSearched ? 4 : isDiseaseHub ? 3 : 1.5,
             borderWidthSelected: 3,
-            shapeProperties: { borderDashes: isCore ? false : [4, 3] },
-            font: { color: isDiseaseHub ? '#fbbf24' : '#e2e8f0', size: fontSize,
-                    bold: isDiseaseHub, strokeWidth: isDiseaseHub ? 3 : 0, strokeColor: '#0f172a' },
+            font: { color: isSearched ? '#ffffff' : isDiseaseHub ? '#fbbf24' : '#e2e8f0', size: fontSize,
+                    bold: isDiseaseHub || isSearched, strokeWidth: isDiseaseHub || isSearched ? 3 : 0, strokeColor: '#0f172a' },
             shape: n.type === 'Disease' ? 'diamond' : 'dot',
             size: baseSize,
+            shadow: isSearched ? { enabled: true, color: nodeColor(n.type), size: 20, x: 0, y: 0 } : false,
             title: n.type + ': ' + n.label +
                 (isParent ? ' [parent category]' : isChild ? ' [subtype]' : '') +
-                ' [' + (isCore ? 'core' : 'discovery') + ']' +
                 (n.specificity != null ? '\nSpecificity: ' + n.specificity : ''),
             _data: n,
         };
     });
 
     const newEdges = filteredEdges.map((e, i) => {
-        const isCore = e.layer !== 'discovery';
         const isHierarchy = e.label === 'diseaseIsSubtypeOf';
         const isPredicted = e.label === 'predictedTreatsDisease';
         return {
             id: 'e' + i, from: e.from, to: e.to,
-            label: isHierarchy ? 'subtype of' : (isPredicted ? 'Predicted' : undefined),
-            title: e.label + (e.source ? ' (' + e.source + ')' : '') + (isPredicted ? ' [ML prediction]' : ''),
-            font: { size: isPredicted ? 8 : 9, color: isPredicted ? '#f97316' : '#f59e0b', strokeWidth: 0 },
-            color: { color: isPredicted ? '#f9731699' : (isHierarchy ? '#f59e0b' : (isCore ? '#33415566' : '#33415522')), highlight: isPredicted ? '#f97316' : '#38bdf8' },
-            dashes: isPredicted ? [8, 4] : (isHierarchy ? false : (isCore ? false : [5, 5])),
-            width: isPredicted ? 2.5 : (isHierarchy ? 3 : (isCore ? 1.2 : 0.6)),
-            arrows: { to: { scaleFactor: isPredicted ? 0.6 : (isHierarchy ? 0.8 : 0.4) } },
+            label: isHierarchy ? 'subtype of' : (isPredicted ? 'ML prediction' : undefined),
+            title: e.label + (e.source ? ' (' + e.source + ')' : '') + (isPredicted ? ' [ML prediction — click for details]' : ''),
+            font: { size: 9, color: isPredicted ? '#06b6d4' : '#f59e0b', strokeWidth: isPredicted ? 2 : 0, strokeColor: '#0f172a' },
+            color: { color: isPredicted ? '#06b6d4' : (isHierarchy ? '#f59e0b' : '#64748b'), highlight: isPredicted ? '#22d3ee' : '#38bdf8' },
+            dashes: isPredicted ? [10, 5] : false,
+            width: isPredicted ? 3 : (isHierarchy ? 3 : 2),
+            arrows: { to: { scaleFactor: isPredicted ? 0.7 : (isHierarchy ? 0.8 : 0.4) } },
             _data: e,
         };
     });
@@ -1550,8 +1853,16 @@ function renderExploreGraph(data) {
     // Create network on first use, reuse thereafter
     ensureExploreNetwork();
 
-    // Re-enable physics for layout, it auto-disables after stabilization
-    exploreNetwork.setOptions({ physics: { enabled: true, stabilization: { enabled: true, iterations: 150, fit: true } } });
+    // Re-enable physics for layout then stabilize
+    exploreNetwork.setOptions({
+        physics: {
+            enabled: true,
+            solver: 'forceAtlas2Based',
+            forceAtlas2Based: { gravitationalConstant: -60, centralGravity: 0.008, springLength: 140, springConstant: 0.02, damping: 0.4 },
+            stabilization: { enabled: false },
+            maxVelocity: 30,
+        },
+    });
     exploreNetwork.stabilize(150);
 }
 
@@ -1559,22 +1870,12 @@ function showDetailPanel(node, visEdges, visNodes) {
     const panel = document.getElementById('detailPanel');
     document.getElementById('detailTitle').textContent = node.label;
     const typeEl = document.getElementById('detailType');
-    const isCore = node.layer !== 'discovery';
-    const layerLabel = isCore ? 'Core' : 'Discovery';
-    typeEl.textContent = node.type + '  \u00B7  ' + layerLabel;
+    typeEl.textContent = node.type;
     typeEl.style.background = nodeColor(node.type) + '33';
     typeEl.style.color = nodeColor(node.type);
 
     const props = document.getElementById('detailProps');
     props.innerHTML = '';
-    // Show layer info first
-    const dtLayer = document.createElement('dt');
-    dtLayer.textContent = 'Layer';
-    const ddLayer = document.createElement('dd');
-    ddLayer.textContent = isCore ? 'Core (known association)' : 'Discovery (hypothesis-generating)';
-    ddLayer.style.color = isCore ? 'var(--accent)' : 'var(--yellow)';
-    props.appendChild(dtLayer);
-    props.appendChild(ddLayer);
 
     if (node.specificity != null && node.type !== 'Disease') {
         const dtSpec = document.createElement('dt');
@@ -1588,11 +1889,32 @@ function showDetailPanel(node, visEdges, visNodes) {
         props.appendChild(ddSpec);
     }
 
+    const PROP_LABELS = {
+        geneSymbol: 'Gene Symbol', geneId: 'NCBI Gene ID', description: 'Description',
+        xrefEnsembl: 'Ensembl ID', xrefHGNC: 'HGNC ID', xrefOMIM: 'OMIM ID',
+        diseaseName: 'Disease Name', definition: 'Definition',
+        xrefDiseaseOntology: 'Disease Ontology ID', xrefUmlsCUI: 'UMLS CUI',
+        commonName: 'Name', drugId: 'Drug ID',
+        xrefDrugBank: 'DrugBank ID', xrefPubChem: 'PubChem ID', xrefMeSH: 'MeSH ID',
+        variantId: 'Variant ID', variantName: 'Variant Name',
+        clinicalSignificance: 'Clinical Significance', xrefDbSNP: 'dbSNP ID',
+        trialId: 'Trial ID', title: 'Title', phase: 'Phase', status: 'Status', sponsor: 'Sponsor',
+        pathwayId: 'Pathway ID', pathwayName: 'Pathway Name',
+        bodyPartName: 'Anatomy', xrefUberon: 'Uberon ID',
+        phenotypeName: 'Phenotype', xrefHPO: 'HPO ID',
+        sideEffectName: 'Side Effect', tfSymbol: 'TF Symbol',
+        processName: 'Biological Process', geneOntologyId: 'GO ID',
+        functionName: 'Molecular Function', componentName: 'Cellular Component',
+        familyId: 'Family ID', familyName: 'Gene Family',
+        classId: 'Class ID', className: 'Pharmacologic Class',
+        symptomName: 'Symptom', labelId: 'Label ID', labelName: 'Drug Label',
+        specificityScore: 'Specificity Score',
+    };
     if (node.properties) {
         Object.entries(node.properties).forEach(([k, v]) => {
-            if (!v) return;
+            if (!v || k === 'specificityScore') return;
             const dt = document.createElement('dt');
-            dt.textContent = k;
+            dt.textContent = PROP_LABELS[k] || k.replace(/([A-Z])/g, ' $1').replace(/^./, s => s.toUpperCase());
             const dd = document.createElement('dd');
             dd.textContent = v;
             props.appendChild(dt);
@@ -1715,16 +2037,6 @@ function showEdgePanel(edge, visNodes) {
         html += '</div>';
     }
 
-    // Layer
-    const layer = d.layer || '';
-    if (layer) {
-        html += '<div style="margin-bottom:0.5rem">';
-        html += '<dt style="color:var(--text-muted);font-weight:600;font-size:0.78rem">Layer</dt>';
-        html += '<dd style="color:' + (layer === 'core' ? 'var(--accent)' : 'var(--yellow)') + '">' +
-            (layer === 'core' ? 'Core (known association)' : 'Discovery (hypothesis-generating)') + '</dd>';
-        html += '</div>';
-    }
-
     // Evidence properties
     const evidenceKeys = ['combinedScore', 'expressionScore', 'morScore', 'confidence',
         'evidenceCode', 'score', 'interactionType', 'clinicalSignificance', 'zScore'];
@@ -1753,18 +2065,24 @@ function showEdgePanel(edge, visNodes) {
     const isPredicted = (d.label || '') === 'predictedTreatsDisease';
     if (isPredicted) {
         const conf = edgeProps['confidence'] || d['confidence'] || '';
-        html += '<div style="margin-bottom:0.5rem;padding:0.6rem;background:rgba(249,115,22,0.1);border:1px solid rgba(249,115,22,0.3);border-radius:6px">';
-        html += '<div style="font-weight:600;color:#f97316;margin-bottom:0.3rem">ML Prediction</div>';
+        const predSource = source || edgeProps['source'] || '';
+        let methodName = 'XGBoost link prediction';
+        if (predSource.toLowerCase().includes('compgcn')) methodName = 'CompGCN + XGBoost';
+        else if (predSource.toLowerCase().includes('rotate')) methodName = 'RotatE + XGBoost';
+        else if (predSource.toLowerCase().includes('node2vec')) methodName = 'Node2Vec + XGBoost';
+        html += '<div style="margin-bottom:0.5rem;padding:0.6rem;background:rgba(6,182,212,0.1);border:1px solid rgba(6,182,212,0.3);border-radius:6px">';
+        html += '<div style="font-weight:600;color:#06b6d4;margin-bottom:0.3rem">ML Prediction</div>';
         if (conf) {
             html += '<div style="display:flex;justify-content:space-between;padding:0.15rem 0;border-bottom:1px solid var(--surface2)">';
             html += '<span style="color:var(--text-muted)">Confidence</span>';
-            html += '<span style="font-weight:600;color:#f97316">' + (parseFloat(conf) * 100).toFixed(1) + '%</span>';
+            html += '<span style="font-weight:600;color:#06b6d4">' + (parseFloat(conf) * 100).toFixed(1) + '%</span>';
             html += '</div>';
         }
-        html += '<div style="font-size:0.75rem;color:var(--text-muted);margin-top:0.3rem;line-height:1.5">';
-        html += 'Predicted by <strong style="color:var(--text)">Node2Vec + XGBoost link prediction</strong>';
+        html += '<div style="display:flex;justify-content:space-between;padding:0.15rem 0;border-bottom:1px solid var(--surface2)">';
+        html += '<span style="color:var(--text-muted)">Method</span>';
+        html += '<span style="font-weight:600;color:var(--text)">' + methodName + '</span>';
         html += '</div>';
-        html += '<div style="font-size:0.75rem;color:var(--red);margin-top:0.2rem;font-weight:600">';
+        html += '<div style="font-size:0.75rem;color:var(--red);margin-top:0.3rem;font-weight:600">';
         html += 'Not clinically validated';
         html += '</div>';
         html += '</div>';
@@ -1774,7 +2092,7 @@ function showEdgePanel(edge, visNodes) {
     html += '<div style="margin-top:0.75rem;padding:0.5rem;background:var(--bg);border-radius:6px;font-size:0.75rem;color:var(--text-muted);line-height:1.5">';
     if (isPredicted) {
         html += '<strong style="color:var(--text)">Provenance:</strong> This is a machine learning prediction, not an established database relationship. ';
-        html += 'Node2Vec embeddings were trained on the knowledge graph (train split only, no data leakage), then XGBoost classified potential Drug&rarr;Disease links. ';
+        html += 'Graph embeddings (RotatE or CompGCN) were trained on the knowledge graph (train split only, no data leakage), then an XGBoost decoder classified potential Drug&rarr;Disease links. ';
         html += 'These predictions require experimental validation before clinical consideration.';
     } else {
         html += '<strong style="color:var(--text)">Provenance:</strong> This relationship was extracted from ';
@@ -2539,6 +2857,7 @@ function clearSavedQueries() {
 
     input.addEventListener('input', function() {
         clearTimeout(debounceTimer);
+        selectedSearchType = null;
         const q = this.value.trim();
         if (q.length < 2) { hideAC(); return; }
         debounceTimer = setTimeout(() => fetchSuggestions(q), 200);
@@ -2617,6 +2936,7 @@ function clearSavedQueries() {
     function selectItem(idx) {
         if (items[idx]) {
             input.value = items[idx].name;
+            selectedSearchType = items[idx].type || null;
             hideAC();
             loadExploreGraph();
         }
