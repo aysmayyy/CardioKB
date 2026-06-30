@@ -45,6 +45,7 @@ logger = logging.getLogger(__name__)
 
 # Output name — must match source_filename in ontology_mappings.yaml
 OUTPUT_NAME = "slim_terms"
+HIERARCHY_OUTPUT = "disease_hierarchy"
 
 # Pattern to extract "has_symptom <text>" clauses from definition strings
 _SYMPTOM_RE = re.compile(r"has[_ ]symptom\s+([^,.\[]+)", re.IGNORECASE)
@@ -224,7 +225,29 @@ class DiseaseOntologyParser(BaseParser):
         )
         df["source_database"] = "Disease Ontology"
         logger.info(f"Disease Ontology slim_terms: {len(df)} rows")
-        return {OUTPUT_NAME: df}
+
+        # ---- Extract disease hierarchy (is_a relationships) ----------------
+        valid_doids = set(df["doid"].tolist())
+        hierarchy_rows = []
+        for node_id, data in graph.nodes(data=True):
+            if node_id not in valid_doids:
+                continue
+            for is_a_entry in data.get("is_a", []):
+                parent_id = is_a_entry.split(" !")[0].strip()
+                if parent_id in valid_doids:
+                    hierarchy_rows.append({
+                        "child_id": node_id,
+                        "parent_id": parent_id,
+                        "source_database": "Disease Ontology",
+                    })
+
+        hierarchy_df = pd.DataFrame(
+            hierarchy_rows,
+            columns=["child_id", "parent_id", "source_database"],
+        )
+        logger.info(f"Disease Ontology hierarchy: {len(hierarchy_df)} edges")
+
+        return {OUTPUT_NAME: df, HIERARCHY_OUTPUT: hierarchy_df}
 
     # ------------------------------------------------------------------
     # get_schema

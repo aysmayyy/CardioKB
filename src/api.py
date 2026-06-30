@@ -219,15 +219,15 @@ def graph_stats():
                 source_counts[r['source']] = r['cnt']
 
             # Data source count: non-ML edge sources + node-only sources
-            # with data. Reflects what's actually in the graph.
+            # with data (deduplicated). Reflects what's actually in the graph.
             ML_SOURCES = {'Node2Vec_LinkPrediction', 'RotatE_LinkPrediction',
                           'CompGCN_LinkPrediction'}
-            db_edge_sources = [s for s in sources if s not in ML_SOURCES]
-            NODE_ONLY_TYPES = {'Gene': 'NCBI Gene', 'Disease': 'Disease Ontology',
+            db_edge_sources = set(s for s in sources if s not in ML_SOURCES)
+            NODE_ONLY_TYPES = {'Gene': 'NCBI Gene',
                                'BodyPart': 'Uberon', 'Symptom': 'MeSH'}
-            node_only_present = [name for nt, name in NODE_ONLY_TYPES.items()
-                                 if node_counts.get(nt, 0) > 0]
-            data_source_count = len(db_edge_sources) + len(node_only_present)
+            node_only_present = {name for nt, name in NODE_ONLY_TYPES.items()
+                                 if node_counts.get(nt, 0) > 0}
+            data_source_count = len(db_edge_sources | node_only_present)
 
         return jsonify({
             'node_counts': node_counts,

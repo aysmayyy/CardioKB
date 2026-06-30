@@ -306,7 +306,7 @@ Total Size: ~2.6 GB
 
 ## 9. Quality Assurance Checklist
 
-- [x] All 24 data sources configured
+- [x] All 22 data sources configured
 - [x] All parsers implemented and tested
 - [x] Zero tier-1 blocking failures in evaluation
 - [x] All TSV files generated in data/processed/
@@ -360,7 +360,7 @@ Generated documentation:
 
 ## Conclusion
 
-The CardioKB knowledge graph pipeline has been successfully completed. All 24 data sources have been integrated into a comprehensive biomedical knowledge graph with 2.4 million nodes and 12 million edges. The graph is ready for import into Memgraph and deployment in production environments.
+The CardioKB knowledge graph pipeline has been successfully completed. All 22 data sources have been integrated into a comprehensive biomedical knowledge graph with 2.4 million nodes and 12 million edges. The graph is ready for import into Memgraph and deployment in production environments.
 
 The knowledge graph represents a significant advancement in integrating diverse biomedical data sources, enabling comprehensive analysis of gene-disease-drug relationships, pathways, phenotypes, and clinical trials in the context of cardiovascular biology and beyond.
 

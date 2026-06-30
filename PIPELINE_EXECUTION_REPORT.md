@@ -98,7 +98,7 @@ Node IDs are globally unique across all sources using prefix-based naming:
 - `ClinicalTrials:NCT00000102` - ClinicalTrials.gov ID
 - etc.
 
-No collisions detected across 24 data sources.
+No collisions detected across 22 data sources.
 
 ---
 
@@ -366,6 +366,6 @@ sed -i '' 's/  file:/  source_filename:/g' config/ontology_mappings.yaml
 
 ## Conclusion
 
-The CardioKB pipeline has been successfully executed with all 24 data sources processed, ontology populated, and Memgraph-compatible export generated. The knowledge graph contains **2.4M nodes** and **12M edges** representing biomedical relationships across cardiology and related domains.
+The CardioKB pipeline has been successfully executed with all 22 data sources processed, ontology populated, and Memgraph-compatible export generated. The knowledge graph contains **2.4M nodes** and **12M edges** representing biomedical relationships across cardiology and related domains.
 
 All files are ready for import into Memgraph using the provided Docker instructions.

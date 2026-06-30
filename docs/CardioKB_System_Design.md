@@ -2,7 +2,7 @@
 
 ## 1. System Overview
 
-CardioKB is a CVD-focused biomedical knowledge graph integrating 24 deduplicated data sources into Memgraph. The system consists of four main components:
+CardioKB is a CVD-focused biomedical knowledge graph integrating 22 deduplicated data sources into Memgraph. The system consists of four main components:
 
 1. **ETL Pipeline** — Downloads, parses, and loads biomedical data into the graph (runs locally)
 2. **Graph Database** — Memgraph instance storing 4.9M nodes and 7.7M relationships
@@ -76,8 +76,8 @@ See `.env.example` for the full list with descriptions.
 | Total relationships | 7,682,399 |
 | Node types | 17 |
 | Relationship types | 42 |
-| Data sources | 24 |
-| Source labels on edges | 21 |
+| Data sources | 22 |
+| Source labels on edges | 19 |
 | Ontology configs | 86 |
 
 ## 3. Source-to-Schema Mapping
@@ -350,13 +350,12 @@ On-demand disease enrichment via web interface:
 
 ## 8. Legacy Sources
 
-Three sources use archived/pinned data with no live API replacement:
+Two sources use archived/pinned data with no live API replacement:
 
 | Source | Data Vintage | Edges | Why Retained |
 |--------|-------------|------:|-------------|
 | SIDER | 2015 GitHub commit | 148,518 | Only source for drug → side effect relationships |
 | LINCS L1000 | 2020 GitHub commit | 171,036 | Gene regulation + drug expression effects; clue.io requires institutional access |
-| MEDLINE | Pinned GitHub commit | 365 | Unique disease → anatomy/symptom cooccurrence not in PubTator |
 
 ## 9. Deduplication Principles
 

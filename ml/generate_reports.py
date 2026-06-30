@@ -120,7 +120,7 @@ XGBoost outperforms both Cosine and MLP decoders.
 <h3>2.1 Knowledge Graph & Data</h3>
 <table>
 <tr><th>Parameter</th><th>Value</th></tr>
-<tr><td>Knowledge Graph</td><td>CardioKB — 459,092 nodes, 5,437,921 relationships, 17 node types, 25 relationship types</td></tr>
+<tr><td>Knowledge Graph</td><td>CardioKB — 459,092 nodes, 5,443,134 relationships, 17 node types, 27 relationship types</td></tr>
 <tr><td>Target edge type</td><td><code>drugTreatsDisease</code> (3,782 total edges)</td></tr>
 <tr><td>Therapeutic drugs (filtered)</td><td>{ev['n_therapeutic_drugs']:,}</td></tr>
 <tr><td>Diseases</td><td>{ev['n_diseases']}</td></tr>
@@ -364,7 +364,7 @@ improving over the Node2Vec baseline (AUROC = 0.9504) by <strong>+0.015</strong>
 <h3>2.1 Graph & Data</h3>
 <table>
 <tr><th>Parameter</th><th>Value</th></tr>
-<tr><td>Knowledge Graph</td><td>CardioKB — 459,092 nodes, 5,437,921 relationships, 17 node types, 25 relationship types</td></tr>
+<tr><td>Knowledge Graph</td><td>CardioKB — 459,092 nodes, 5,443,134 relationships, 17 node types, 27 relationship types</td></tr>
 <tr><td>Target edge type</td><td><code>drugTreatsDisease</code> (3,782 total edges)</td></tr>
 <tr><td>Therapeutic drugs (filtered)</td><td>{rotate_eval['n_therapeutic_drugs']:,}</td></tr>
 <tr><td>Diseases</td><td>{rotate_eval['n_diseases']}</td></tr>
@@ -720,7 +720,7 @@ Node2Vec by <strong>+{cd['XGBoost']['test_auroc'] - nd['XGBoost']['test_auroc']:
 <h3>2.1 Graph & Data</h3>
 <table>
 <tr><th>Parameter</th><th>Value</th></tr>
-<tr><td>Knowledge Graph</td><td>CardioKB — 459,092 nodes, 5,437,921 relationships, 17 node types, 25 relationship types</td></tr>
+<tr><td>Knowledge Graph</td><td>CardioKB — 459,092 nodes, 5,443,134 relationships, 17 node types, 27 relationship types</td></tr>
 <tr><td>Target edge type</td><td><code>drugTreatsDisease</code> (3,782 total edges)</td></tr>
 <tr><td>Therapeutic drugs (filtered)</td><td>{compgcn_eval['n_therapeutic_drugs']:,}</td></tr>
 <tr><td>Diseases</td><td>{compgcn_eval['n_diseases']}</td></tr>

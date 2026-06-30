@@ -1,8 +1,8 @@
 # Database Integration Decisions for CardioKB
 
-## Final State: 23 Active Sources
+## Final State: 22 Active Sources
 
-All integration decisions have been implemented. The graph currently contains 23 deduplicated data sources, each serving as the single authoritative provider for its node and/or edge types.
+All integration decisions have been implemented. The graph currently contains 22 deduplicated data sources, each serving as the single authoritative provider for its node and/or edge types.
 
 ## Databases Added (vs. Original AlzKB Baseline)
 

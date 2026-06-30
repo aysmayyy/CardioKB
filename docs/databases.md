@@ -2,7 +2,7 @@
 # CardioKB Data Sources
 
 ## Summary
-- **23 databases** — 23 parsers, all working, deduplicated (one authoritative source per node/edge type)
+- **22 databases** — 22 parsers, all working, deduplicated (one authoritative source per node/edge type)
 - **4,891,227 nodes** | **7,682,399 relationships** | **17 node types** | **40 relationship types** | **20 source labels**
 - **2 legacy sources** retained as-is: SIDER (2015), LINCS L1000 (2020) — no live API alternatives available
 

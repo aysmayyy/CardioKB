@@ -11,7 +11,7 @@
 ### Graph Statistics (Live Memgraph)
 - **2,563,082 nodes** across 17 node types
 - **7,966,293 relationships** across 24 relationship types
-- **24 data sources** integrated (vs. 18 in BaseAgent template)
+- **22 data sources** integrated (vs. 18 in BaseAgent template)
 - **72.6% LCC fraction** (largest connected component)
 
 ### Data Sources Implemented

@@ -700,7 +700,7 @@ ONTOLOGY_CONFIGS = {
         },
         'merge': True,
         'use_create': True,
-        'skip': True,
+        'skip': False,
     },
 
     # ---- Gene Ontology ----
@@ -1648,7 +1648,7 @@ ONTOLOGY_CONFIGS = {
         },
         'merge': False,
         'use_create': True,
-        'skip': True,
+        'skip': False,
     },
 
     # =========================================================================

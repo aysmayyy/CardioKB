@@ -3,7 +3,7 @@
 ## Executive Summary
 ✅ **PIPELINE SUCCESSFULLY COMPLETED**
 
-All 23 data sources have been successfully processed, configured, parsed, and exported. The knowledge graph has been populated with ~29 million RDF triples and exported to Memgraph-compatible CSV format.
+All 22 data sources have been successfully processed, configured, parsed, and exported. The knowledge graph has been populated with ~29 million RDF triples and exported to Memgraph-compatible CSV format.
 
 ---
 
@@ -11,7 +11,7 @@ All 23 data sources have been successfully processed, configured, parsed, and ex
 
 ### 1. Data Extraction & TSV Export
 - **Status**: ✅ Complete
-- **Sources Processed**: 23 enabled sources (DrugBank excluded due to expired credentials)
+- **Sources Processed**: 22 enabled sources (DrugBank excluded due to expired credentials)
 - **Total Records**: ~14.4M across 45 data mappings
 - **Output Location**: `/Users/nawaza/Desktop/Cardio-KB/data/processed/`
 
@@ -311,7 +311,7 @@ MATCH ()-[r]->() RETURN type(r) AS type, count(r) AS count ORDER BY count DESC;
 
 | Metric | Value |
 |--------|-------|
-| Data Sources | 23 |
+| Data Sources | 22 |
 | Total Records Parsed | ~14.4M |
 | RDF Triples | ~29.9M |
 | Node Types | 17 |
