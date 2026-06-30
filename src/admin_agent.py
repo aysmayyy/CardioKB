@@ -328,6 +328,24 @@ def _query_parser_status(session, project_root: str) -> Dict:
                 'node_count': 0,
             }
 
+    # Detect sources present in graph but not in the parser registry
+    # (e.g., Bgee data loaded in a prior build whose configs are now skipped)
+    ML_SOURCES = {'Node2Vec_LinkPrediction', 'RotatE_LinkPrediction',
+                  'CompGCN_LinkPrediction'}
+    registry_sources = set()
+    for pmeta in meta.values():
+        registry_sources.update(pmeta['source_labels'])
+    for src, cnt in source_counts.items():
+        if src not in registry_sources and src not in ML_SOURCES and cnt > 0:
+            slug = src.lower().replace(' ', '_')
+            statuses[slug] = {
+                'status': 'success',
+                'count': cnt,
+                'detail': f"{cnt:,} relationships",
+                'rel_count': cnt,
+                'node_count': 0,
+            }
+
     return statuses
 
 
@@ -583,7 +601,7 @@ def _build_health_checks(log_data: Dict, neo4j_stats: Optional[Dict]) -> Dict:
         checks.append({
             'name': 'Parser data (graph)',
             'ok': len(not_loaded) == 0,
-            'message': (f'{len(loaded)}/{len(ps)} parsers have data in graph'
+            'message': (f'{len(loaded)}/{len(ps)} data sources have data in graph'
                         + (f' | Not loaded: {", ".join(sorted(not_loaded))}'
                            if not_loaded else '')),
         })

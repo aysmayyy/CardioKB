@@ -579,11 +579,7 @@ details summary::-webkit-details-marker { display: none; }
                     <div style="font-weight:700;color:var(--text);margin-bottom:0.25rem;font-size:0.76rem">Nodes (entities)</div>
                     <div style="display:flex;align-items:center;gap:0.5rem;padding:0.2rem 0">
                         <span style="display:inline-block;width:14px;height:14px;border-radius:50%;background:var(--accent);border:2px solid var(--accent);flex-shrink:0"></span>
-                        <span><strong style="color:var(--text)">Core</strong> &mdash; Direct neighbors of your search. Evidence-backed from curated databases.</span>
-                    </div>
-                    <div style="display:flex;align-items:center;gap:0.5rem;padding:0.2rem 0">
-                        <span style="display:inline-block;width:14px;height:14px;border-radius:50%;background:transparent;border:2px dashed var(--text-muted);flex-shrink:0"></span>
-                        <span><strong style="color:var(--text)">Discovery</strong> &mdash; 2-hop connections through core nodes. Hypothesis-generating, not directly linked.</span>
+                        <span>Direct neighbors of your search. Evidence-backed from curated databases.</span>
                     </div>
                     <div style="display:flex;align-items:center;gap:0.5rem;padding:0.2rem 0">
                         <span style="display:inline-block;width:14px;height:14px;border-radius:3px;background:#f87171;flex-shrink:0;transform:rotate(45deg)"></span>
@@ -596,10 +592,6 @@ details summary::-webkit-details-marker { display: none; }
                     <div style="display:flex;align-items:center;gap:0.5rem;padding:0.2rem 0">
                         <svg width="28" height="8" style="flex-shrink:0"><line x1="0" y1="4" x2="28" y2="4" stroke="var(--text-muted)" stroke-width="2"/></svg>
                         <span><strong style="color:var(--text)">Solid gray</strong> &mdash; Known relationship from a curated database. Click to see source.</span>
-                    </div>
-                    <div style="display:flex;align-items:center;gap:0.5rem;padding:0.2rem 0">
-                        <svg width="28" height="8" style="flex-shrink:0"><line x1="0" y1="4" x2="28" y2="4" stroke="var(--text-muted)" stroke-width="2" stroke-dasharray="5,4"/></svg>
-                        <span><strong style="color:var(--text)">Dashed gray</strong> &mdash; Discovery-layer connection (inferred via shared intermediate nodes).</span>
                     </div>
                     <div style="display:flex;align-items:center;gap:0.5rem;padding:0.2rem 0">
                         <svg width="28" height="8" style="flex-shrink:0"><line x1="0" y1="4" x2="28" y2="4" stroke="#06b6d4" stroke-width="3" stroke-dasharray="10,5"/></svg>
@@ -780,7 +772,7 @@ details summary::-webkit-details-marker { display: none; }
                 <!-- Section 5: Data Sources -->
                 <div style="margin-bottom:0.5rem">
                     <h4 style="color:var(--text);font-size:0.88rem;margin:0 0 0.4rem;padding-top:0.25rem;border-top:1px solid var(--border)">Where does the data come from?</h4>
-                    <p>CardioKB integrates <strong style="color:var(--text)"><span class="live-source-count">22</span> deduplicated data sources</strong>, each serving a specific purpose. Every edge carries a <code style="background:var(--bg);padding:0.1rem 0.35rem;border-radius:3px;font-size:0.76rem">source</code> property &mdash; click any edge to see exactly which database it came from. Key sources include:</p>
+                    <p>CardioKB integrates <strong style="color:var(--text)"><span class="live-source-count">--</span> deduplicated data sources</strong>, each serving a specific purpose. Every edge carries a <code style="background:var(--bg);padding:0.1rem 0.35rem;border-radius:3px;font-size:0.76rem">source</code> property &mdash; click any edge to see exactly which database it came from. Key sources include:</p>
                     <div style="display:grid;grid-template-columns:1fr 1fr;gap:0.2rem 1.5rem;margin-top:0.4rem;font-size:0.78rem" class="visual-guide-grid">
                         <div><strong style="color:var(--text)">DrugBank</strong> &mdash; Drug-target binding interactions</div>
                         <div><strong style="color:var(--text)">ClinVar</strong> &mdash; Clinically interpreted genetic variants</div>
@@ -887,7 +879,7 @@ details summary::-webkit-details-marker { display: none; }
             <section style="margin-top:1rem;margin-bottom:0">
                 <h2>Pipeline Log</h2>
                 <div class="log-panel" id="logPanel">
-                    <div class="log-line log-info">Ready. Click "Run Health Check" to verify all data sources.</div>
+                    <div class="log-line log-info">Ready. Click "System Check" to verify all data sources.</div>
                 </div>
             </section>
         </div>
@@ -910,8 +902,7 @@ details summary::-webkit-details-marker { display: none; }
             <p>The <strong>Explore tab</strong> visualizes cardiovascular disease subgraphs:</p>
             <ul>
                 <li><strong>Search any disease, gene, or drug</strong> &mdash; type a name, select from autocomplete, and click Search</li>
-                <li><strong>Core nodes</strong> (large, solid) are direct known associations from curated databases</li>
-                <li><strong>Discovery nodes</strong> (small, dashed) are 2-hop hypothesis-generating connections</li>
+                <li>All nodes are <strong>direct known associations</strong> from curated databases (DrugBank, ClinVar, STRING, etc.)</li>
                 <li><strong>Click any node or edge</strong> to see its properties, source database, and evidence</li>
                 <li>Use <strong>filter chips</strong> to show/hide entity types or edge types</li>
             </ul>
@@ -1055,7 +1046,7 @@ details summary::-webkit-details-marker { display: none; }
             '<div><strong>Click any line</strong> to see <em>why</em> two entities are connected &mdash; the source database, evidence type, and confidence score.</div></div>' +
             '<div class="info-tier"><div class="info-dot" style="background:var(--red)"></div>' +
             '<div><strong>Filter</strong> &mdash; Use the colored chips above the graph to show/hide specific entity types (e.g. hide all genes to focus on drugs).</div></div>' +
-            '<p style="margin-top:0.4rem">The graph integrates data from 22+ biomedical databases. Every connection is traceable to its source &mdash; nothing is inferred without evidence.</p>',
+            '<p style="margin-top:0.4rem">The graph integrates data from 21 biomedical databases. Every connection is traceable to its source &mdash; nothing is inferred without evidence.</p>',
     };
 
     let activeBtn = null;
@@ -2562,7 +2553,7 @@ function runHealthCheck() {
     function finish() {
         if (eventSource) { eventSource.close(); eventSource = null; }
         btn.disabled = false;
-        btn.textContent = 'Run Health Check';
+        btn.textContent = 'System Check';
     }
 }
 

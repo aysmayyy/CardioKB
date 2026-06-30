@@ -218,25 +218,16 @@ def graph_stats():
                 sources.append(r['source'])
                 source_counts[r['source']] = r['cnt']
 
-            # Total data sources = edge sources + node-only sources
-            # Node-only sources provide nodes but no edges with source labels:
-            #   NCBI Gene -> Gene, Disease Ontology -> Disease,
-            #   Uberon -> BodyPart, MeSH -> Symptom,
-            #   OpenTargets -> score property on edges, ClinPGx -> DrugLabel
-            NODE_ONLY_SOURCES = {
-                'NCBI Gene': 'Gene', 'Disease Ontology': 'Disease',
-                'Uberon': 'BodyPart', 'MeSH': 'Symptom',
-                'OpenTargets': None, 'ClinPGx': 'DrugLabel',
-            }
-            node_only_present = []
-            for src_name, node_type in NODE_ONLY_SOURCES.items():
-                if src_name in sources:
-                    continue
-                if node_type and node_counts.get(node_type, 0) > 0:
-                    node_only_present.append(src_name)
-                elif not node_type:
-                    node_only_present.append(src_name)
-            all_sources = sources + node_only_present
+            # Data source count: non-ML edge sources + node-only sources
+            # with data. Reflects what's actually in the graph.
+            ML_SOURCES = {'Node2Vec_LinkPrediction', 'RotatE_LinkPrediction',
+                          'CompGCN_LinkPrediction'}
+            db_edge_sources = [s for s in sources if s not in ML_SOURCES]
+            NODE_ONLY_TYPES = {'Gene': 'NCBI Gene', 'Disease': 'Disease Ontology',
+                               'BodyPart': 'Uberon', 'Symptom': 'MeSH'}
+            node_only_present = [name for nt, name in NODE_ONLY_TYPES.items()
+                                 if node_counts.get(nt, 0) > 0]
+            data_source_count = len(db_edge_sources) + len(node_only_present)
 
         return jsonify({
             'node_counts': node_counts,
@@ -245,10 +236,9 @@ def graph_stats():
             'total_relationships': total_rels,
             'node_types': len(node_counts),
             'rel_types': len(rel_counts),
-            'source_count': len(all_sources),
+            'source_count': data_source_count,
             'rel_source_count': len(sources),
             'sources': sources,
-            'node_only_sources': node_only_present,
             'source_edge_counts': source_counts,
         })
     except Exception as e:
@@ -355,16 +345,11 @@ def agent_build_disease_graph():
 
 @app.route('/api/graph')
 def graph_data():
-    """Return a two-layer disease subgraph for vis.js visualization.
+    """Return a disease subgraph for vis.js visualization.
 
-    Core layer: direct neighbors of seed diseases, ranked by pre-computed
+    Direct neighbors of seed diseases, ranked by pre-computed
     specificityScore (top-N most disease-specific per type).
-
-    Discovery layer: 2-hop neighbors of core nodes, also ranked by
-    specificityScore, filling remaining budget.
-
-    Reads n.specificityScore (pre-computed by scripts/compute_specificity.py)
-    instead of counting Disease neighbors at query time.
+    Also includes ML-predicted drug-disease edges.
 
     Query params:
         disease: Disease key (default: cvd)

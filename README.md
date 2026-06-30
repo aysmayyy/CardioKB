@@ -1,10 +1,10 @@
 # CardioKB — Cardiovascular Disease Knowledge Graph
 
-A biomedical knowledge graph integrating **22 data sources** for cardiovascular disease research, feature selection, and precision medicine.
+A biomedical knowledge graph integrating **21 data sources** for cardiovascular disease research, feature selection, and precision medicine.
 
 ## Current Graph Stats
 
-- **459,092 nodes** | **5,437,921 relationships** | **17 node types** | **26 relationship types** | **22 data sources** (16 with edge source labels + 6 node-only) + 2 ML prediction sources
+- **459,092 nodes** | **5,437,921 relationships** | **17 node types** | **26 relationship types** | **21 data sources** + 3 ML prediction sources
 - All relationships carry a `source` property identifying the originating database
 - 7 edge types carry quantitative properties (combinedScore, expressionScore, morScore, etc.)
 
@@ -315,8 +315,6 @@ hpc/
 
 ## Data Sources
 
-**19 active parsers** with data in the current graph build:
+**21 active data sources** in the current graph build:
 
-Bgee, BindingDB, ClinicalTrials.gov, ClinVar, CTD, Disease Ontology (nodes only), DoRothEA, DrugBank, DrugCentral, Gene Ontology, HGNC, HPO, LINCS L1000 (legacy), MeSH (nodes only), NCBI Gene (nodes only), PubTator, Reactome, SIDER (legacy), STRING
-
-**Node-only sources** (provide nodes but no edges with source labels): NCBI Gene, Disease Ontology, Uberon, MeSH, OpenTargets, ClinPGx
+Bgee, BindingDB, ClinicalTrials.gov, ClinPGx, ClinVar, CTD, Disease Ontology (nodes only), DoRothEA, DrugBank, DrugCentral, Gene Ontology, HGNC, HPO, LINCS L1000 (legacy), MeSH (nodes only), NCBI Gene (nodes only), PubTator, Reactome, SIDER (legacy), STRING, Uberon (nodes only)
