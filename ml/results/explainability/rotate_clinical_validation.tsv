@@ -1,0 +1,31 @@
+rank	drug_name	disease_name	confidence	clinical_trial_support	trial_ids
+1	Clopidogrel	hypertension	0.996334	No	
+2	Melatonin	atherosclerosis	0.996327	No	
+3	Tacrolimus	thrombosis	0.996274	No	
+4	Angiotensin-Converting Enzyme Inhibitors	heart disease	0.99625	Yes	NCT00224809
+5	Clopidogrel	cardiomyopathy	0.996227	No	
+6	Resveratrol	heart disease	0.996175	No	
+7	Copper	atrial fibrillation	0.99617	No	
+8	paracetamol	coronary artery disease	0.996164	No	
+9	Hydroxymethylglutaryl-CoA Reductase Inhibitors	hypertension	0.996112	No	
+10	Adrenal Cortex Hormones	ischemia	0.99611	No	
+11	Atorvastatin	cardiomyopathy	0.996063	Yes	NCT00317967
+12	Atorvastatin	ischemia	0.996063	No	
+13	Morphine	heart disease	0.996031	No	
+14	Bosentan	atherosclerosis	0.996023	No	
+15	baicalin	hypertension	0.995973	No	
+16	Clopidogrel	cerebrovascular disease	0.995972	Yes	NCT01823185; NCT02121288
+17	Colchicine	hypertension	0.995967	Yes	NCT04916522
+18	Thyroxine	myocardial infarction	0.99595	No	
+19	Nifedipine	cardiomyopathy	0.995932	No	
+20	Vorapaxar	hypertension	0.995929	No	
+21	Carbon monoxide	atherosclerosis	0.995918	No	
+22	Mangifera indica extract	hypertension	0.995916	No	
+23	Eptifibatide	heart disease	0.995844	No	
+24	Edaravone	heart disease	0.99583	No	
+25	Clopidogrel	congestive heart failure	0.995828	No	
+26	Estrogens, Conjugated (USP)	hypertension	0.995825	No	
+27	Flecainide	hypertension	0.9958	No	
+28	Fluoxetine	cardiomyopathy	0.995795	No	
+29	Vorapaxar	heart disease	0.995793	No	
+30	Verapamil	vascular disease	0.995793	No	

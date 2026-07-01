@@ -1,0 +1,150 @@
+{
+  "RotatE": {
+    "top30_comparison": {
+      "method": "RotatE",
+      "overlap_count": 30,
+      "total_pairs": 30,
+      "overlap_fraction": 1.0,
+      "only_in_rank_top30": [],
+      "only_in_confidence_top30": [],
+      "observation": "Top 30 by rank and by confidence are identical. Since predictions are already ranked by XGBoost probability, rank ordering = confidence ordering for this decoder."
+    },
+    "feature_importance": {
+      "method": "RotatE",
+      "structural_features": [
+        [
+          "Disease Degree (log)",
+          0.006106898654252291
+        ],
+        [
+          "Shared Neighbors",
+          0.0
+        ],
+        [
+          "Jaccard Coefficient",
+          0.0
+        ],
+        [
+          "Adamic-Adar Index",
+          0.0
+        ],
+        [
+          "Preferential Attachment (log)",
+          0.0
+        ],
+        [
+          "Drug Degree (log)",
+          0.0
+        ]
+      ],
+      "structural_total_importance": 0.006106898654252291,
+      "embedding_total_importance": 0.2178276740014553,
+      "interpretation": {
+        "Disease Degree (log)": "Most important structural feature (0.0061)",
+        "summary": "Structural features account for 0.6% of total XGBoost importance. The remaining 21.8% comes from 514 embedding-derived features (hadamard, difference, cosine, L2). Among structural features, Disease Degree (log) is most predictive."
+      }
+    },
+    "clinical_validation": {
+      "method": "RotatE",
+      "total_top30": 30,
+      "with_trial_evidence": 4,
+      "fraction": 0.13333333333333333,
+      "validated_pairs": [
+        {
+          "drug": "Angiotensin-Converting Enzyme Inhibitors",
+          "disease": "heart disease",
+          "trials": "NCT00224809"
+        },
+        {
+          "drug": "Atorvastatin",
+          "disease": "cardiomyopathy",
+          "trials": "NCT00317967"
+        },
+        {
+          "drug": "Clopidogrel",
+          "disease": "cerebrovascular disease",
+          "trials": "NCT01823185; NCT02121288"
+        },
+        {
+          "drug": "Colchicine",
+          "disease": "hypertension",
+          "trials": "NCT04916522"
+        }
+      ]
+    }
+  },
+  "CompGCN": {
+    "top30_comparison": {
+      "method": "CompGCN",
+      "overlap_count": 30,
+      "total_pairs": 30,
+      "overlap_fraction": 1.0,
+      "only_in_rank_top30": [],
+      "only_in_confidence_top30": [],
+      "observation": "Top 30 by rank and by confidence are identical. Since predictions are already ranked by XGBoost probability, rank ordering = confidence ordering for this decoder."
+    },
+    "feature_importance": {
+      "method": "CompGCN",
+      "structural_features": [
+        [
+          "Disease Degree (log)",
+          0.03579453006386757
+        ],
+        [
+          "Preferential Attachment (log)",
+          0.0071580070070922375
+        ],
+        [
+          "Shared Neighbors",
+          0.0
+        ],
+        [
+          "Jaccard Coefficient",
+          0.0
+        ],
+        [
+          "Adamic-Adar Index",
+          0.0
+        ],
+        [
+          "Drug Degree (log)",
+          0.0
+        ]
+      ],
+      "structural_total_importance": 0.042952537070959806,
+      "embedding_total_importance": 0.5076351817697287,
+      "interpretation": {
+        "Disease Degree (log)": "Most important structural feature (0.0358)",
+        "summary": "Structural features account for 4.3% of total XGBoost importance. The remaining 50.8% comes from 258 embedding-derived features (hadamard, difference, cosine, L2). Among structural features, Disease Degree (log) is most predictive."
+      }
+    },
+    "clinical_validation": {
+      "method": "CompGCN",
+      "total_top30": 30,
+      "with_trial_evidence": 4,
+      "fraction": 0.13333333333333333,
+      "validated_pairs": [
+        {
+          "drug": "levosimendan",
+          "disease": "coronary artery disease",
+          "trials": "NCT00130871"
+        },
+        {
+          "drug": "Angiotensin-Converting Enzyme Inhibitors",
+          "disease": "heart disease",
+          "trials": "NCT00224809"
+        },
+        {
+          "drug": "Adenosine",
+          "disease": "myocardial infarction",
+          "trials": "NCT00781404"
+        },
+        {
+          "drug": "Methylprednisolone",
+          "disease": "coronary artery disease",
+          "trials": "NCT07101367"
+        }
+      ]
+    }
+  }
+}

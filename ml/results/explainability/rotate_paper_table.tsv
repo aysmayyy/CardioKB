@@ -1,0 +1,31 @@
+Rank	Drug	Disease	Confidence	Clinical Trial Support	Trial IDs	Known Treatment
+1	Clopidogrel	hypertension	0.9963	No		Novel
+2	Melatonin	atherosclerosis	0.9963	No		Novel
+3	Tacrolimus	thrombosis	0.9963	No		Novel
+4	Angiotensin-Converting Enzyme Inhibitors	heart disease	0.9962	Yes	NCT00224809	Novel
+5	Clopidogrel	cardiomyopathy	0.9962	No		Novel
+6	Resveratrol	heart disease	0.9962	No		Novel
+7	Copper	atrial fibrillation	0.9962	No		Novel
+8	paracetamol	coronary artery disease	0.9962	No		Novel
+9	Hydroxymethylglutaryl-CoA Reductase Inhibitors	hypertension	0.9961	No		Novel
+10	Adrenal Cortex Hormones	ischemia	0.9961	No		Novel
+11	Atorvastatin	cardiomyopathy	0.9961	Yes	NCT00317967	Novel
+12	Atorvastatin	ischemia	0.9961	No		Novel
+13	Morphine	heart disease	0.996	No		Novel
+14	Bosentan	atherosclerosis	0.996	No		Novel
+15	baicalin	hypertension	0.996	No		Novel
+16	Clopidogrel	cerebrovascular disease	0.996	Yes	NCT01823185; NCT02121288	Novel
+17	Colchicine	hypertension	0.996	Yes	NCT04916522	Novel
+18	Thyroxine	myocardial infarction	0.996	No		Novel
+19	Nifedipine	cardiomyopathy	0.9959	No		Novel
+20	Vorapaxar	hypertension	0.9959	No		Novel
+21	Carbon monoxide	atherosclerosis	0.9959	No		Novel
+22	Mangifera indica extract	hypertension	0.9959	No		Novel
+23	Eptifibatide	heart disease	0.9958	No		Novel
+24	Edaravone	heart disease	0.9958	No		Novel
+25	Clopidogrel	congestive heart failure	0.9958	No		Novel
+26	Estrogens, Conjugated (USP)	hypertension	0.9958	No		Novel
+27	Flecainide	hypertension	0.9958	No		Novel
+28	Fluoxetine	cardiomyopathy	0.9958	No		Novel
+29	Vorapaxar	heart disease	0.9958	No		Novel
+30	Verapamil	vascular disease	0.9958	No		Novel

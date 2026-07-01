@@ -1,0 +1,31 @@
+Rank	Drug	Disease	Confidence	Clinical Trial Support	Trial IDs	Known Treatment
+1	epinastine	coronary artery disease	0.9879	No		Novel
+2	pizotifen	coronary artery disease	0.9879	No		Novel
+3	hydroquinone	myocardial infarction	0.9879	No		Novel
+4	Acyclovir	coronary artery disease	0.9878	No		Novel
+5	Suprofen	coronary artery disease	0.9878	No		Novel
+6	levosimendan	coronary artery disease	0.9878	Yes	NCT00130871	Novel
+7	Adrenal Cortex Hormones	myocardial infarction	0.9877	No		Novel
+8	Adrenal Cortex Hormones	congestive heart failure	0.9877	No		Novel
+9	Adrenal Cortex Hormones	heart disease	0.9877	No		Novel
+10	Adrenal Cortex Hormones	hypertension	0.9877	No		Novel
+11	Adrenal Cortex Hormones	atherosclerosis	0.9877	No		Novel
+12	Angiotensin-Converting Enzyme Inhibitors	heart disease	0.9877	Yes	NCT00224809	Novel
+13	Niacin	congestive heart failure	0.9877	No		Novel
+14	Niacin	heart disease	0.9877	No		Novel
+15	Clopidogrel	congestive heart failure	0.9877	No		Novel
+16	Clopidogrel	hypertension	0.9877	No		Novel
+17	Adenosine	myocardial infarction	0.9877	Yes	NCT00781404	Novel
+18	Adenosine	congestive heart failure	0.9877	No		Novel
+19	Adenosine	heart disease	0.9877	No		Novel
+20	Dexmedetomidine	congestive heart failure	0.9877	No		Novel
+21	Dexmedetomidine	heart disease	0.9877	No		Novel
+22	Heparin	congestive heart failure	0.9877	No		Novel
+23	Methylprednisolone	coronary artery disease	0.9877	Yes	NCT07101367	Novel
+24	paricalcitol	myocardial infarction	0.9877	No		Novel
+25	paricalcitol	heart disease	0.9877	No		Novel
+26	paricalcitol	cardiomyopathy	0.9877	No		Novel
+27	Prednisone	myocardial infarction	0.9877	No		Novel
+28	Prednisone	heart disease	0.9877	No		Novel
+29	Prednisone	hypertension	0.9877	No		Novel
+30	Trimetazidine	myocardial infarction	0.9877	No		Novel

@@ -1,0 +1,35 @@
+{
+  "method": "CompGCN",
+  "structural_features": [
+    [
+      "Disease Degree (log)",
+      0.03579453006386757
+    ],
+    [
+      "Preferential Attachment (log)",
+      0.0071580070070922375
+    ],
+    [
+      "Shared Neighbors",
+      0.0
+    ],
+    [
+      "Jaccard Coefficient",
+      0.0
+    ],
+    [
+      "Adamic-Adar Index",
+      0.0
+    ],
+    [
+      "Drug Degree (log)",
+      0.0
+    ]
+  ],
+  "structural_total_importance": 0.042952537070959806,
+  "embedding_total_importance": 0.5076351817697287,
+  "interpretation": {
+    "Disease Degree (log)": "Most important structural feature (0.0358)",
+    "summary": "Structural features account for 4.3% of total XGBoost importance. The remaining 50.8% comes from 258 embedding-derived features (hadamard, difference, cosine, L2). Among structural features, Disease Degree (log) is most predictive."
+  }
+}

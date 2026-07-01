@@ -1,0 +1,31 @@
+Rank	Drug (by Rank)	Disease (by Rank)	Confidence (by Rank)	Drug (by Confidence)	Disease (by Confidence)	Confidence (by Conf)
+1	Clopidogrel	hypertension	0.996334	Clopidogrel	hypertension	0.996334
+2	Melatonin	atherosclerosis	0.996327	Melatonin	atherosclerosis	0.996327
+3	Tacrolimus	thrombosis	0.996274	Tacrolimus	thrombosis	0.996274
+4	Angiotensin-Converting Enzyme Inhibitors	heart disease	0.99625	Angiotensin-Converting Enzyme Inhibitors	heart disease	0.99625
+5	Clopidogrel	cardiomyopathy	0.996227	Clopidogrel	cardiomyopathy	0.996227
+6	Resveratrol	heart disease	0.996175	Resveratrol	heart disease	0.996175
+7	Copper	atrial fibrillation	0.99617	Copper	atrial fibrillation	0.99617
+8	paracetamol	coronary artery disease	0.996164	paracetamol	coronary artery disease	0.996164
+9	Hydroxymethylglutaryl-CoA Reductase Inhibitors	hypertension	0.996112	Hydroxymethylglutaryl-CoA Reductase Inhibitors	hypertension	0.996112
+10	Adrenal Cortex Hormones	ischemia	0.99611	Adrenal Cortex Hormones	ischemia	0.99611
+11	Atorvastatin	cardiomyopathy	0.996063	Atorvastatin	cardiomyopathy	0.996063
+12	Atorvastatin	ischemia	0.996063	Atorvastatin	ischemia	0.996063
+13	Morphine	heart disease	0.996031	Morphine	heart disease	0.996031
+14	Bosentan	atherosclerosis	0.996023	Bosentan	atherosclerosis	0.996023
+15	baicalin	hypertension	0.995973	baicalin	hypertension	0.995973
+16	Clopidogrel	cerebrovascular disease	0.995972	Clopidogrel	cerebrovascular disease	0.995972
+17	Colchicine	hypertension	0.995967	Colchicine	hypertension	0.995967
+18	Thyroxine	myocardial infarction	0.99595	Thyroxine	myocardial infarction	0.99595
+19	Nifedipine	cardiomyopathy	0.995932	Nifedipine	cardiomyopathy	0.995932
+20	Vorapaxar	hypertension	0.995929	Vorapaxar	hypertension	0.995929
+21	Carbon monoxide	atherosclerosis	0.995918	Carbon monoxide	atherosclerosis	0.995918
+22	Mangifera indica extract	hypertension	0.995916	Mangifera indica extract	hypertension	0.995916
+23	Eptifibatide	heart disease	0.995844	Eptifibatide	heart disease	0.995844
+24	Edaravone	heart disease	0.99583	Edaravone	heart disease	0.99583
+25	Clopidogrel	congestive heart failure	0.995828	Clopidogrel	congestive heart failure	0.995828
+26	Estrogens, Conjugated (USP)	hypertension	0.995825	Estrogens, Conjugated (USP)	hypertension	0.995825
+27	Flecainide	hypertension	0.9958	Flecainide	hypertension	0.9958
+28	Fluoxetine	cardiomyopathy	0.995795	Fluoxetine	cardiomyopathy	0.995795
+29	Vorapaxar	heart disease	0.995793	Vorapaxar	heart disease	0.995793
+30	Verapamil	vascular disease	0.995793	Verapamil	vascular disease	0.995793

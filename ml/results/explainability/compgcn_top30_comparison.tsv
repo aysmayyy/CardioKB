@@ -1,0 +1,31 @@
+Rank	Drug (by Rank)	Disease (by Rank)	Confidence (by Rank)	Drug (by Confidence)	Disease (by Confidence)	Confidence (by Conf)
+1	epinastine	coronary artery disease	0.987895	epinastine	coronary artery disease	0.987895
+2	pizotifen	coronary artery disease	0.987895	hydroquinone	myocardial infarction	0.987895
+3	hydroquinone	myocardial infarction	0.987895	pizotifen	coronary artery disease	0.987895
+4	Acyclovir	coronary artery disease	0.987834	Acyclovir	coronary artery disease	0.987834
+5	Suprofen	coronary artery disease	0.987821	Suprofen	coronary artery disease	0.987821
+6	levosimendan	coronary artery disease	0.987754	levosimendan	coronary artery disease	0.987754
+7	Adrenal Cortex Hormones	myocardial infarction	0.987716	Angiotensin-Converting Enzyme Inhibitors	heart disease	0.987716
+8	Adrenal Cortex Hormones	congestive heart failure	0.987716	Niacin	heart disease	0.987716
+9	Adrenal Cortex Hormones	heart disease	0.987716	Niacin	congestive heart failure	0.987716
+10	Adrenal Cortex Hormones	hypertension	0.987716	Adrenal Cortex Hormones	atherosclerosis	0.987716
+11	Adrenal Cortex Hormones	atherosclerosis	0.987716	Adrenal Cortex Hormones	hypertension	0.987716
+12	Angiotensin-Converting Enzyme Inhibitors	heart disease	0.987716	Adrenal Cortex Hormones	heart disease	0.987716
+13	Niacin	congestive heart failure	0.987716	Adrenal Cortex Hormones	congestive heart failure	0.987716
+14	Niacin	heart disease	0.987716	Adrenal Cortex Hormones	myocardial infarction	0.987716
+15	Clopidogrel	congestive heart failure	0.987673	Methylprednisolone	coronary artery disease	0.987673
+16	Clopidogrel	hypertension	0.987673	Prednisone	hypertension	0.987673
+17	Adenosine	myocardial infarction	0.987673	Prednisone	heart disease	0.987673
+18	Adenosine	congestive heart failure	0.987673	Prednisone	myocardial infarction	0.987673
+19	Adenosine	heart disease	0.987673	paricalcitol	cardiomyopathy	0.987673
+20	Dexmedetomidine	congestive heart failure	0.987673	paricalcitol	heart disease	0.987673
+21	Dexmedetomidine	heart disease	0.987673	paricalcitol	myocardial infarction	0.987673
+22	Heparin	congestive heart failure	0.987673	Clopidogrel	hypertension	0.987673
+23	Methylprednisolone	coronary artery disease	0.987673	Heparin	congestive heart failure	0.987673
+24	paricalcitol	myocardial infarction	0.987673	Dexmedetomidine	heart disease	0.987673
+25	paricalcitol	heart disease	0.987673	Dexmedetomidine	congestive heart failure	0.987673
+26	paricalcitol	cardiomyopathy	0.987673	Adenosine	heart disease	0.987673
+27	Prednisone	myocardial infarction	0.987673	Adenosine	congestive heart failure	0.987673
+28	Prednisone	heart disease	0.987673	Adenosine	myocardial infarction	0.987673
+29	Prednisone	hypertension	0.987673	Clopidogrel	congestive heart failure	0.987673
+30	Trimetazidine	myocardial infarction	0.987673	Trimetazidine	myocardial infarction	0.987673
