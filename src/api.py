@@ -29,7 +29,7 @@ from src.admin_agent import (
     run_health_check,
 )
 
-load_dotenv()
+load_dotenv(override=True)
 
 app = Flask(__name__,
             static_folder=str(Path(_project_root) / 'interface'),
@@ -945,6 +945,44 @@ def run_query():
             'edges': edges,
             'row_count': len(rows),
         })
+    except Exception as e:
+        return jsonify({'error': str(e)}), 500
+    finally:
+        driver.close()
+
+
+@app.route('/api/nl2cypher', methods=['POST'])
+def nl2cypher_endpoint():
+    """Translate natural language to Cypher using Claude API."""
+    body = request.get_json(silent=True) or {}
+    question = (body.get('question') or '').strip()
+    if not question:
+        return jsonify({'error': 'Missing "question" field'}), 400
+
+    driver = _get_neo4j_driver()
+    if not driver:
+        return jsonify({'error': 'Cannot connect to Memgraph'}), 503
+
+    try:
+        from nl2cypher import nl_to_cypher
+        result = nl_to_cypher(question, driver)
+        return jsonify(result)
+    except Exception as e:
+        return jsonify({'error': str(e)}), 500
+    finally:
+        driver.close()
+
+
+@app.route('/api/nl2cypher/refresh-schema', methods=['POST'])
+def nl2cypher_refresh():
+    """Force re-introspection of graph schema for NL2Cypher."""
+    driver = _get_neo4j_driver()
+    if not driver:
+        return jsonify({'error': 'Cannot connect to Memgraph'}), 503
+    try:
+        from nl2cypher import refresh_metadata
+        refresh_metadata(driver)
+        return jsonify({'status': 'ok'})
     except Exception as e:
         return jsonify({'error': str(e)}), 500
     finally:

@@ -57,7 +57,7 @@ The UI at `http://localhost:5050` provides:
 - **Explore** — Search any gene, drug, or disease and visualize its neighborhood as an interactive graph. Nodes are ranked by disease-specificity score. Two layers: core (1-hop, evidence-backed) and discovery (2-hop, hypothesis-generating). ML-predicted drug-disease edges shown as orange dashed lines with a separate toggle. Includes search autocomplete, clickable quick-search examples, and an active graph breadcrumb showing what's currently displayed.
 - **Edge Provenance** — Click any edge in the graph to see its source database, evidence scores, and a description of the data source ("Why is this here?"). Predicted edges show their confidence score, model details, and a "not clinically validated" warning.
 - **Filters** — Toggle node types and edge types on/off. Show/hide discovery layer and ML-predicted edges independently.
-- **Query** — Run custom Cypher queries with built-in templates (Disease Subgraph, Gene Neighbors, Drug Targets, Drug Repurposing with ML predictions, Clinical Trials, Shared Genes, etc.). Save and reuse queries. Results shown as tables and/or graph visualizations.
+- **Query** — Ask questions in plain English (powered by [CypherGPT/Eng2Cypher](https://github.com/CenterAIResearch/Eng2Cypher) by Jay Moran) or write Cypher directly. AI translates natural language to Cypher using graph schema introspection, with auto-validation and fuzzy correction. Built-in templates for common queries (Disease Subgraph, Gene Neighbors, Drug Targets, Drug Repurposing, Clinical Trials, etc.). Results shown as tables and/or graph visualizations.
 - **Node Detail** — Click any node to see its properties, then "View All Connections" to browse every connection paginated from the database.
 - **Extract Disease Subgraph** — Bulk export of all nodes and edges within N hops of a disease as JSON or CSV. For interactive visualization, use Explore instead.
 - **Export** — Download the current graph view as CSV, JSON, or PNG image. Print to PDF via browser.
@@ -315,6 +315,6 @@ hpc/
 
 ## Data Sources
 
-**21 active data sources** in the current graph build:
+**22 active data sources** in the current graph build:
 
-Bgee, BindingDB, ClinicalTrials.gov, ClinPGx, ClinVar, CTD, Disease Ontology (nodes only), DoRothEA, DrugBank, DrugCentral, Gene Ontology, HGNC, HPO, LINCS L1000 (legacy), MeSH (nodes only), NCBI Gene (nodes only), PubTator, Reactome, SIDER (legacy), STRING, Uberon (nodes only)
+Bgee, BindingDB, ClinicalTrials.gov, ClinPGx, ClinVar, CTD, Disease Ontology (nodes only), DoRothEA, DrugBank, DrugCentral, Gene Ontology, HGNC, HPO, LINCS L1000 (legacy), MeSH (nodes only), NCBI Gene (nodes only), OpenTargets, PubTator, Reactome, SIDER (legacy), STRING, Uberon (nodes only)

@@ -9,8 +9,8 @@ All integration decisions have been implemented. The graph currently contains 22
 ### High Priority — Implemented
 | Database | Decision | Rationale | Current Status |
 |----------|----------|-----------|----------------|
-| ClinicalTrials.gov | Added (API v2) | Investigational/emerging therapeutics beyond approved drugs in DrugBank | 85,691 trials, 45,358 edges |
-| ClinPGx (PharmGKB successor) | Added (API) | Pharmacogenomics gene-drug-disease relationships not covered elsewhere | 1,091 VARIANT_IN + 503 + 345 + 243 edges |
+| ClinicalTrials.gov | Added (API v2) | Investigational/emerging therapeutics beyond approved drugs in DrugBank | 21,578 trials, 23,847 edges |
+| ClinPGx (PharmGKB successor) | Added (API) | Pharmacogenomics gene-drug-disease relationships not covered elsewhere | 74 AFFECTS_RESPONSE_TO edges, 29 DrugLabel nodes |
 | HPO | Added (from Hetionet components) | Gene-phenotype associations (162,994 edges) — fills phenotype gap beyond MeSH symptoms | 19,389 phenotypes |
 | ClinVar | Added (agent-generated parser) | Clinical variant-disease associations — 4.5M variants, authoritative for variant data | 4,488,042 Variant nodes |
 | HGNC Gene Families | Added (agent-generated parser) | Gene family groupings for pathway-level analysis | 1,934 GeneFamily nodes |
@@ -51,9 +51,9 @@ These sources use pinned/archived data with no live API alternative:
 
 | Source | Data Age | Why Retained |
 |--------|----------|-------------|
-| SIDER | 2015 GitHub commit | Only source for drug side effects (148,518 edges); no public API replacement |
-| LINCS L1000 | 2020 GitHub commit | Gene regulation + drug expression effects (171,036 edges); clue.io requires institutional access |
-| MEDLINE | Pinned GitHub commit | Unique anatomy/symptom/disease cooccurrence (365 edges); not covered by PubTator |
+| SIDER | 2015 GitHub commit | Only source for drug side effects (67,721 edges); no public API replacement |
+| LINCS L1000 | 2020 GitHub commit | Gene regulation + drug expression effects (139,515 edges); clue.io requires institutional access |
+| MEDLINE | Pinned GitHub commit | Unique anatomy/symptom/disease cooccurrence (configs currently skipped); not covered by PubTator |
 
 ## Key Design Principles
 

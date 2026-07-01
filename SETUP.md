@@ -38,7 +38,7 @@ Edit `.env` and fill in the required values:
 
 #### 3. Import the Graph Data
 
-The pre-built graph (4.9M nodes, 7.7M relationships) is distributed as a compressed Memgraph volume backup (~1.2 GB):
+The pre-built graph (459K nodes, 5.4M relationships) is distributed as a compressed Memgraph volume backup (~1.2 GB):
 
 ```bash
 ./scripts/import_graph.sh data/export/memgraph-data.tar.gz
@@ -190,7 +190,7 @@ Cardio-KB/
 │   ├── ontology_configs.py      # 86 ontology configs (source -> graph schema)
 │   ├── id_mapping.py            # Cross-database ID remapping
 │   ├── utils.py                 # Shared utilities
-│   └── parsers/                 # 26 data source parsers
+│   └── parsers/                 # 28 data source parsers (24 active + 4 legacy/unused)
 ├── interface/
 │   └── index.html               # Web dashboard (Explore + Query tabs)
 ├── scripts/

@@ -5,7 +5,7 @@
 CardioKB is a CVD-focused biomedical knowledge graph integrating 22 deduplicated data sources into Memgraph. The system consists of four main components:
 
 1. **ETL Pipeline** — Downloads, parses, and loads biomedical data into the graph (runs locally)
-2. **Graph Database** — Memgraph instance storing 4.9M nodes and 7.7M relationships
+2. **Graph Database** — Memgraph instance storing 459K nodes and 5.4M relationships
 3. **Web Interface** — Flask backend + vis.js frontend for exploration and querying
 4. **AI Agents** — DatabaseAgent (parser generation) and DiseaseQueryAgent (on-demand enrichment)
 
@@ -16,7 +16,7 @@ The web app and Memgraph are fully Dockerized via `docker-compose.yml`. The ETL 
 │                     CardioKB Architecture                            │
 │                                                                      │
 │  ┌─────────────┐    ┌──────────────┐                                 │
-│  │ 24 Data     │───>│ ETL Pipeline │──┐  (runs locally, not in       │
+│  │ 22 Data     │───>│ ETL Pipeline │──┐  (runs locally, not in       │
 │  │ Sources     │    │ (main.py)    │  │   Docker — pipeline only)    │
 │  │ (APIs, FTP, │    └──────────────┘  │                              │
 │  │  XML, TSV)  │                      │                              │
@@ -28,10 +28,10 @@ The web app and Memgraph are fully Dockerized via `docker-compose.yml`. The ETL 
 │  │  ┌──────────────────┐  ┌─┴───────────────────────────┐  │   │     │
 │  │  │ Flask App (:5050)│  │ Memgraph (bolt://memgraph:  │  │   │     │
 │  │  │                  │──│          7687)               │  │   │     │
-│  │  │ /api/query       │  │ 4,891,227 nodes             │  │   │     │
-│  │  │ /api/graph-stats │  │ 7,682,399 relationships     │  │   │     │
+│  │  │ /api/query       │  │ 459,092 nodes               │  │   │     │
+│  │  │ /api/graph-stats │  │ 5,443,134 relationships     │  │   │     │
 │  │  │ /api/agent/*     │  │ 17 node types               │  │   │     │
-│  │  │ /api/subgraph    │  │ 42 relationship types       │  │   │     │
+│  │  │ /api/subgraph    │  │ 27 relationship types       │  │   │     │
 │  │  └────────┬─────────┘  └─────────────────────────────┘  │   │     │
 │  │           │             Volume: memgraph-data            │   │     │
 │  └───────────┼──────────────────────────────────────────────┘   │     │
@@ -72,12 +72,12 @@ See `.env.example` for the full list with descriptions.
 
 | Metric | Value |
 |--------|-------|
-| Total nodes | 4,891,227 |
-| Total relationships | 7,682,399 |
+| Total nodes | 459,092 |
+| Total relationships | 5,443,134 |
 | Node types | 17 |
-| Relationship types | 42 |
+| Relationship types | 27 |
 | Data sources | 22 |
-| Source labels on edges | 19 |
+| Source labels on edges | 22 (19 data + 3 ML prediction) |
 | Ontology configs | 86 |
 
 ## 3. Source-to-Schema Mapping
@@ -88,23 +88,23 @@ Each node type has exactly one authoritative source that creates/manages those n
 
 | Node Type | Count | Authoritative Source | Key Properties |
 |-----------|------:|---------------------|----------------|
-| Variant | 4,488,042 | ClinVar | `variantId`, `commonName`, `chromosome`, `position`, `changeClassification`, `gene` |
-| Gene | 194,553 | NCBI Gene | `xrefNcbiGene`, `geneSymbol`, `commonName`, `chromosome`, `typeOfGene`, `xrefEnsembl`, `xrefHGNC`, `xrefOMIM` |
-| ClinicalTrial | 85,691 | ClinicalTrials.gov | `trialId`, `commonName`, `condition`, `interventionName`, `phase`, `status` |
-| BiologicalProcess | 24,547 | Gene Ontology | `geneOntologyId`, `commonName`, `definition` |
-| Drug | 24,414 | DrugBank + CTD | `xrefDrugbank`, `commonName`, `xrefCasRN` |
-| Phenotype | 19,389 | HPO | `xrefHPO`, `commonName`, `definition`, `synonyms` |
-| BodyPart | 14,937 | Uberon | `xrefUberon`, `commonName`, `definition` |
-| Disease | 12,012 | Disease Ontology | `xrefDiseaseOntology`, `commonName`, `definition` |
-| MolecularFunction | 10,123 | Gene Ontology | `geneOntologyId`, `commonName`, `definition` |
-| SideEffect | 5,734 | SIDER | `xrefUmlsCUI`, `commonName` |
-| CellularComponent | 4,069 | Gene Ontology | `geneOntologyId`, `commonName`, `definition` |
-| Pathway | 2,806 | Reactome | `pathwayName` |
-| GeneFamily | 1,934 | HGNC Families | `familyId`, `familyName` |
-| PharmacologicClass | 1,646 | DrugCentral | `classId`, `classType`, `commonName` |
-| Symptom | 966 | NCBI MeSH | `xrefMeSH`, `commonName`, `meshTreeNumber` |
-| DrugLabel | 378 | ClinPGx | `labelId`, `commonName`, `drug`, `gene`, `regulatorySource`, `testing`, `biomarkerStatus`, `alternateDrugAvailable` |
-| TranscriptionFactor | 367 | DoRothEA | `TF` |
+| Gene | 193,795 | NCBI Gene | `geneId`, `geneSymbol`, `description`, `xrefEnsembl`, `xrefHGNC`, `xrefOMIM` |
+| Variant | 135,555 | ClinVar | `variantId`, `variantName`, `clinicalSignificance`, `xrefDbSNP` |
+| Drug | 32,849 | DrugBank + CTD | `drugId`, `commonName`, `xrefDrugBank`, `xrefPubChem`, `xrefMeSH` |
+| BiologicalProcess | 24,428 | Gene Ontology | `geneOntologyId`, `processName` |
+| ClinicalTrial | 21,578 | ClinicalTrials.gov | `trialId`, `title`, `phase`, `status`, `sponsor` |
+| Phenotype | 19,389 | HPO | `phenotypeName`, `xrefHPO` |
+| MolecularFunction | 10,056 | Gene Ontology | `functionName`, `geneOntologyId` |
+| GeneFamily | 4,257 | HGNC Families | `familyId`, `familyName` |
+| CellularComponent | 4,076 | Gene Ontology | `componentName`, `geneOntologyId` |
+| Disease | 3,442 | Disease Ontology | `diseaseName`, `definition`, `xrefDiseaseOntology`, `xrefUmlsCUI` |
+| Pathway | 2,870 | Reactome | `pathwayId`, `pathwayName` |
+| PharmacologicClass | 2,359 | DrugCentral | `classId`, `className` |
+| SideEffect | 2,227 | SIDER | `sideEffectName`, `xrefUmlsCUI` |
+| BodyPart | 1,400 | Uberon | `bodyPartName`, `xrefUberon` |
+| Symptom | 415 | NCBI MeSH | `symptomName`, `xrefMeSH` |
+| TranscriptionFactor | 367 | DoRothEA | `tfSymbol` |
+| DrugLabel | 29 | ClinPGx | `labelId`, `labelName` |
 
 All nodes carry `specificityScore` (pre-computed: `1.0 / count(Disease neighbors)`; Disease nodes get 0.0, unconnected nodes get 1.0).
 
@@ -114,74 +114,62 @@ Each row shows the source database, the edge it contributes, the node types it c
 
 | Source | Relationship | From → To | Count | Edge Properties |
 |--------|-------------|-----------|------:|-----------------|
-| **ClinVar** | `hasVariant` | Gene → Variant | 2,267,095 | — |
-| **ClinVar** | `variantInGene` | Variant → Gene | 2,267,095 | — |
-| **ClinVar** | `variantAssociatedWithDisease` | Variant → Disease | 99,707 | — |
-| **ClinVar** | `associatedWithVariant` | Disease → Variant | 99,707 | — |
-| **Bgee** | `bodyPartUnderexpressesGene` | BodyPart → Gene | 784,026 | `expressionScore` |
-| **Bgee** | `bodyPartOverexpressesGene` | BodyPart → Gene | 1,872 | `expressionScore` |
-| **OpenTargets** | `geneAssociatesWithDisease` | Gene → Disease | 103,879 | — |
-| **PubTator** | `geneAssociatesWithDisease` | Gene → Disease | 673,374 | — |
-| **PubTator** | `diseaseAssociatesWithDisease` | Disease → Disease | 4,320 | — |
-| **Jensen TISSUES** | `geneExpressedInBodyPart` | Gene → BodyPart | 215,235 | — |
-| **HPO** | `geneAssociatesWithPhenotype` | Gene → Phenotype | 162,994 | — |
-| **LINCS L1000** | `geneRegulatesGene` | Gene → Gene | 150,540 | `zScore` |
-| **LINCS L1000** | `compoundUpregulatesGene` | Drug → Gene | 10,278 | `zScore` |
-| **LINCS L1000** | `compoundDownregulatesGene` | Drug → Gene | 10,218 | `zScore` |
-| **SIDER** | `compoundCausesSideEffect` | Drug → SideEffect | 148,518 | — |
-| **STRING** | `geneInteractsWithGene` | Gene → Gene | 121,170 | `confidence` |
-| **CTD** | `chemicalIncreasesExpression` | Drug → Gene | 116,451 | — |
-| **CTD** | `chemicalDecreasesExpression` | Drug → Gene | 97,951 | — |
-| **Gene Ontology** | `geneParticipatesInBiologicalProcess` | Gene → BiologicalProcess | 50,350 | — |
-| **Gene Ontology** | `geneHasMolecularFunction` | Gene → MolecularFunction | 26,935 | — |
-| **Gene Ontology** | `geneAssociatedWithCellularComponent` | Gene → CellularComponent | 25,794 | — |
-| **Reactome** | `geneInPathway` | Gene → Pathway | 44,979 | — |
-| **Reactome** | `pathwayContainsGene` | Pathway → Gene | 44,979 | — |
-| **ClinicalTrials.gov** | `STUDIES_CONDITION` | ClinicalTrial → Disease | 33,219 | — |
-| **ClinicalTrials.gov** | `TESTS_INTERVENTION` | ClinicalTrial → Drug | 3,135 | — |
-| **DrugCentral** | `pharmacologicClassIncludesCompound` | PharmacologicClass → Drug | 16,403 | — |
-| **DrugCentral** | `compoundInPharmacologicClass` | Drug → PharmacologicClass | 16,403 | — |
-| **DrugCentral** | `drugTreatsDisease` | Drug → Disease | 245 | — |
-| **DrugCentral** | `drugPalliatesDisease` | Drug → Disease | 96 | — |
-| **DoRothEA** | `transcriptionFactorInteractsWithGene` | TranscriptionFactor → Gene | 12,985 | `morScore`, `confidence` |
-| **BindingDB** | `chemicalBindsGene` | Drug → Gene | 12,250 | — |
-| **DrugBank** | `drugBindsGene` | Drug → Gene | 12,089 | — |
-| **HGNC** | `geneInFamily` | Gene → GeneFamily | 5,123 | — |
-| **HGNC** | `familyContainsGene` | GeneFamily → Gene | 5,123 | — |
-| **ClinPGx** | `VARIANT_IN` | Variant → Gene | 1,091 | — |
-| **ClinPGx** | `drugLabelAnnotatesGene` | DrugLabel → Gene | 503 | — |
-| **ClinPGx** | `drugLabelDescribesDrug` | DrugLabel → Drug | 345 | — |
-| **ClinPGx** | `AFFECTS_RESPONSE_TO` | Gene → Drug / PharmacologicClass | 243 | — |
-| **Disease Ontology** | `diseaseIsSubtypeOf` | Disease → Disease | 6,447 | — |
+| **Bgee** | `bodyPartOverexpressesGene` | BodyPart → Gene | 2,749,193 | `expressionScore` |
+| **PubTator** | `geneAssociatesWithDisease` | Gene → Disease | 539,964 | — |
+| **CTD** | `chemicalIncreasesExpression` | Drug → Gene | 343,823 | — |
+| **CTD** | `chemicalDecreasesExpression` | Drug → Gene | 328,726 | — |
+| **HPO** | `geneAssociatesWithPhenotype` | Gene → Phenotype | 270,265 | — |
+| **STRING** | `geneInteractsWithGene` | Gene → Gene | 229,007 | `confidence` |
+| **Reactome** | `geneInPathway` | Gene → Pathway | 137,116 | — |
+| **ClinVar** | `variantInGene` | Variant → Gene | 135,393 | — |
+| **Gene Ontology** | `geneParticipatesInBiologicalProcess` | Gene → BiologicalProcess | 122,117 | — |
+| **Gene Ontology** | `geneAssociatedWithCellularComponent` | Gene → CellularComponent | 90,141 | — |
+| **Gene Ontology** | `geneHasMolecularFunction` | Gene → MolecularFunction | 76,612 | — |
+| **LINCS L1000** | `compoundUpregulatesGene` | Drug → Gene | 74,854 | `zScore` |
+| **SIDER** | `compoundCausesSideEffect` | Drug → SideEffect | 67,721 | — |
+| **LINCS L1000** | `compoundDownregulatesGene` | Drug → Gene | 64,661 | `zScore` |
+| **ClinVar** | `variantAssociatedWithDisease` | Variant → Disease | 51,323 | — |
+| **DrugBank** | `drugBindsGene` | Drug → Gene | 29,363 | — |
+| **HGNC** | `geneInFamily` | Gene → GeneFamily | 27,022 | — |
+| **DrugCentral** | `compoundInPharmacologicClass` | Drug → PharmacologicClass | 25,687 | — |
+| **BindingDB** | `chemicalBindsGene` | Drug → Gene | 22,735 | — |
+| **ClinicalTrials.gov** | `STUDIES_CONDITION` | ClinicalTrial → Disease | 20,667 | — |
+| **DoRothEA** | `transcriptionFactorInteractsWithGene` | TranscriptionFactor → Gene | 15,082 | `morScore`, `confidence` |
+| **ClinVar** | `hasVariant` | Gene → Variant | 8,413 | — |
+| **CTD + ClinicalTrials + DrugCentral** | `drugTreatsDisease` | Drug → Disease | 3,782 | — |
+| **ClinicalTrials.gov** | `TESTS_INTERVENTION` | ClinicalTrial → Drug | 3,180 | — |
+| **Disease Ontology** | `diseaseIsSubtypeOf` | Disease → Disease | 2,581 | — |
+| **OpenTargets** | `geneAssociatesWithDisease` | Gene → Disease | 2,132 | — |
+| **ML Predictions** | `predictedTreatsDisease` | Drug → Disease | 1,500 | `confidence` |
+| **ClinPGx** | `AFFECTS_RESPONSE_TO` | Gene → Drug | 74 | — |
 
 ### 3.3 Per-Source Summary
 
 | # | Source | Parser | Access | Nodes Contributed | Edges Contributed | Total Edges |
 |---|--------|--------|--------|-------------------|-------------------|------------:|
-| 1 | ClinicalTrials.gov | ClinicalTrialsParser | Public API v2 | ClinicalTrial (85,691) | STUDIES_CONDITION, TESTS_INTERVENTION | 45,358 |
-| 2 | ClinPGx | ClinPGxParser | Public API | DrugLabel (378) | VARIANT_IN, drugLabelAnnotatesGene, drugLabelDescribesDrug, AFFECTS_RESPONSE_TO | 2,182 |
-| 3 | NCBI Gene | NCBIGeneParser | Public FTP | Gene (194,553) | — | 0 |
-| 4 | DoRothEA | DoRothEAParser | Public API | TranscriptionFactor (367) | transcriptionFactorInteractsWithGene | 12,985 |
-| 5 | DrugBank | DrugBankParser | XML file | Drug (19,842) | drugBindsGene | 12,089 |
-| 6 | Disease Ontology | DiseaseOntologyParser | Public | Disease (12,012) | diseaseIsSubtypeOf | 258 |
-| 7 | Gene Ontology | GeneOntologyParser | Public | BiologicalProcess (24,547), MolecularFunction (10,123), CellularComponent (4,069) | 3 edge types | 103,079 |
-| 8 | Uberon | UberonParser | Public | BodyPart (14,937) | — | 0 |
-| 9 | NCBI MeSH | MeSHParser | Public | Symptom (966) | — | 0 |
-| 10 | SIDER | SIDERParser | Public | SideEffect (5,734) | compoundCausesSideEffect | 148,518 |
-| 11 | LINCS L1000 | LINCS1000Parser | Public | — | geneRegulatesGene, compoundUpregulatesGene, compoundDownregulatesGene | 171,036 |
-| 12 | DrugCentral | DrugCentralParser | Public | PharmacologicClass (1,646) | 4 edge types | 33,147 |
-| 14 | BindingDB | BindingDBParser | Public | — | chemicalBindsGene | 12,250 |
-| 15 | PubTator | PubTatorParser | Public FTP | — | geneAssociatesWithDisease, diseaseAssociatesWithDisease | 677,694 |
-| 16 | CTD | CTDParser | Public | Drug (4,572 unique) | chemicalIncreasesExpression, chemicalDecreasesExpression | 214,402 |
-| 17 | Bgee | BgeeParser | Public FTP | — | bodyPartUnderexpressesGene, bodyPartOverexpressesGene | 785,898 |
-| 18 | Jensen TISSUES | JensenTissuesParser | Public | — | geneExpressedInBodyPart | 215,235 |
-| 19 | HPO | HPOParser | Public | Phenotype (19,389) | geneAssociatesWithPhenotype | 162,994 |
-| 20 | Reactome | ReactomeParser | Public | Pathway (2,806) | geneInPathway, pathwayContainsGene | 89,958 |
-| 21 | STRING | STRINGParser | Public | — | geneInteractsWithGene | 121,170 |
-| 20 | OpenTargets | OpenTargetsParser | Public | — | geneAssociatesWithDisease | 103,879 |
-| 21 | HGNC Families | HGNCFamiliesParser | Public | GeneFamily (1,934) | geneInFamily, familyContainsGene | 10,246 |
-| 22 | ClinVar | ClinVarParser | Public FTP | Variant (4,488,042) | hasVariant, variantInGene, associatedWithVariant, variantAssociatedWithDisease | 4,733,604 |
-| 23 | ClinPGx | ClinPGxParser | Public API | DrugLabel (378) | VARIANT_IN, drugLabelAnnotatesGene, drugLabelDescribesDrug, AFFECTS_RESPONSE_TO | 2,182 |
+| 1 | ClinicalTrials.gov | ClinicalTrialsParser | Public API v2 | ClinicalTrial (21,578) | STUDIES_CONDITION, TESTS_INTERVENTION | 23,847 |
+| 2 | ClinPGx | ClinPGxParser | Public API | DrugLabel (29) | AFFECTS_RESPONSE_TO | 74 |
+| 3 | NCBI Gene | NCBIGeneParser | Public FTP | Gene (193,795) | — | 0 |
+| 4 | DoRothEA | DoRothEAParser | Public API | TranscriptionFactor (367) | transcriptionFactorInteractsWithGene | 15,082 |
+| 5 | DrugBank | DrugBankParser | XML file | Drug (19,842) | drugBindsGene | 29,363 |
+| 6 | Disease Ontology | DiseaseOntologyParser | Public | Disease (3,442) | diseaseIsSubtypeOf | 2,581 |
+| 7 | Gene Ontology | GeneOntologyParser | Public | BiologicalProcess (24,428), MolecularFunction (10,056), CellularComponent (4,076) | 3 edge types | 288,870 |
+| 8 | Uberon | UberonParser | Public | BodyPart (1,400) | — | 0 |
+| 9 | NCBI MeSH | MeSHParser | Public | Symptom (415) | — | 0 |
+| 10 | SIDER | SIDERParser | Public | SideEffect (2,227) | compoundCausesSideEffect | 67,721 |
+| 11 | LINCS L1000 | LINCS1000Parser | Public | — | compoundUpregulatesGene, compoundDownregulatesGene | 139,515 |
+| 12 | DrugCentral | DrugCentralParser | Public | PharmacologicClass (2,359) | compoundInPharmacologicClass, drugTreatsDisease | 25,844 |
+| 13 | BindingDB | BindingDBParser | Public | — | chemicalBindsGene | 22,735 |
+| 14 | PubTator | PubTatorParser | Public FTP | — | geneAssociatesWithDisease | 539,964 |
+| 15 | CTD | CTDParser | Public | Drug (4,572 unique) | chemicalIncreasesExpression, chemicalDecreasesExpression | 675,306 |
+| 16 | Bgee | BgeeParser | Public FTP | — | bodyPartOverexpressesGene | 2,749,193 |
+| 17 | Jensen TISSUES | JensenTissuesParser | Public | — | geneInteractsWithGene (tissue edges) | — |
+| 18 | HPO | HPOParser | Public | Phenotype (19,389) | geneAssociatesWithPhenotype | 270,265 |
+| 19 | Reactome | ReactomeParser | Public | Pathway (2,870) | geneInPathway | 137,116 |
+| 20 | STRING | STRINGParser | Public | — | geneInteractsWithGene | 229,007 |
+| 21 | OpenTargets | OpenTargetsParser | Public | — | geneAssociatesWithDisease | 2,132 |
+| 22 | HGNC Families | HGNCFamiliesParser | Public | GeneFamily (4,257) | geneInFamily | 27,022 |
+| 23 | ClinVar | ClinVarParser | Public FTP | Variant (135,555) | hasVariant, variantInGene, variantAssociatedWithDisease | 195,129 |
 
 ## 4. ETL Pipeline Architecture
 
@@ -211,7 +199,7 @@ main.py [--skip-download] [--skip-neo4j]
 
 ### 4.2 Parser Architecture
 
-All 24 parsers inherit from `BaseParser` (`src/parsers/base_parser.py`):
+All parsers inherit from `BaseParser` (`src/parsers/base_parser.py`):
 
 ```python
 class BaseParser:
@@ -273,10 +261,10 @@ Cross-database ID mapping (`src/id_mapping.py`) resolves identifier conflicts:
 `ontology/disease_filter.txt` → symlink to `ontology/diseases/cvd.txt` (184 CVD terms).
 
 The CVD AND-filter applies strict disease scoping with word-boundary matching to:
-- **OpenTargets**: EFO-to-DOID mapped, filtered to CVD diseases → 103,879 edges
-- **PubTator**: Literature-mined associations filtered to CVD scope → 677,694 edges
-- **ClinVar**: Variant-disease associations filtered to CVD diseases → 199,414 edges
-- **ClinicalTrials.gov**: Queries per CVD disease term → 45,358 edges
+- **OpenTargets**: EFO-to-DOID mapped, filtered to CVD diseases → 2,132 edges
+- **PubTator**: Literature-mined associations filtered to CVD scope → 539,964 edges
+- **ClinVar**: Variant-disease associations filtered to CVD diseases → 195,129 edges
+- **ClinicalTrials.gov**: Queries per CVD disease term → 23,847 edges
 
 ### 5.2 Available Disease Filters
 
@@ -305,11 +293,12 @@ The CVD AND-filter applies strict disease scoping with word-boundary matching to
 | `/api/agent/build` | POST | DiseaseQueryAgent: enrich graph for a disease |
 | `/api/agent/build-disease-graph` | POST | SSE-streamed disease graph building with progress |
 | `/api/specificity-info` | GET | Specificity score metadata (timestamp, total nodes) |
+| `/api/nl2cypher` | POST | Natural language to Cypher translation (CypherGPT by Jay Moran) |
 
 ### 6.2 Frontend (interface/index.html)
 
 - **Explore tab**: vis.js force-directed graph with DataSet-based rendering, node type filtering, specificity-ranked results, click-to-inspect detail panels, CSV/JSON export
-- **Query tab**: Neo4j Browser-style multi-panel results; each query appends a new panel with table/graph tabs
+- **Query tab**: AI-powered natural language querying (powered by [CypherGPT/Eng2Cypher](https://github.com/CenterAIResearch/Eng2Cypher) by Jay Moran) plus Neo4j Browser-style multi-panel results; each query appends a new panel with table/graph tabs
 - **Build Knowledge Graph** (sidebar): Claude API standardizes disease name → ClinicalTrials.gov API v2 fetch → Memgraph load → auto-explore
 - **Extract Disease Subgraph** (sidebar): 1-3 hop extraction with JSON/CSV export
 - **Dashboard**: Live stats from `/api/graph-stats`
@@ -354,8 +343,8 @@ Two sources use archived/pinned data with no live API replacement:
 
 | Source | Data Vintage | Edges | Why Retained |
 |--------|-------------|------:|-------------|
-| SIDER | 2015 GitHub commit | 148,518 | Only source for drug → side effect relationships |
-| LINCS L1000 | 2020 GitHub commit | 171,036 | Gene regulation + drug expression effects; clue.io requires institutional access |
+| SIDER | 2015 GitHub commit | 67,721 | Only source for drug → side effect relationships |
+| LINCS L1000 | 2020 GitHub commit | 139,515 | Drug expression effects (upreg/downreg); clue.io requires institutional access |
 
 ## 9. Deduplication Principles
 
@@ -389,7 +378,7 @@ The Flask app connects to Memgraph via `bolt://memgraph:7687` (Docker internal n
 
 ### 10.3 Graph Data Transfer
 
-The graph (4.9M nodes, 7.7M rels) is transferred between machines via Memgraph volume backups:
+The graph (459K nodes, 5.4M rels) is transferred between machines via Memgraph volume backups:
 
 ```
 Source machine                    Target machine
