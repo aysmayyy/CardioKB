@@ -10,6 +10,11 @@ A biomedical knowledge graph integrating **22 data sources** for cardiovascular 
 
 ## Quick Start
 
+### Prerequisites
+
+- **Docker** and **Docker Compose** (v2) — [Install Docker](https://docs.docker.com/get-docker/)
+- **Graph data archive** (`memgraph-baseagent-2026-06-08.tar.gz`, ~298 MB) — obtain from the project owner or shared storage
+
 ### Deploy (Docker — recommended)
 
 ```bash
@@ -17,15 +22,30 @@ git clone https://github.com/aysmayyy/CardioKB.git
 cd CardioKB
 git checkout baseagent-build
 
-cp .env.example .env           # Fill in MEMGRAPH_PASSWORD and ADMIN_PASSWORD
+# 1. Configure environment
+cp .env.example .env
+# Edit .env — set MEMGRAPH_PASSWORD and ADMIN_PASSWORD (see .env.example for docs)
+# Optionally set ANTHROPIC_API_KEY to enable the "Ask AI" natural language query feature
 
-# Download the pre-built graph data tar.gz from Google Drive,
-# then place it in data/export/ and import:
-./scripts/import_graph.sh data/export/memgraph-baseagent-2026-06-07.tar.gz
+# 2. Import the pre-built graph data
+mkdir -p data/export
+# Place the tar.gz in data/export/, then:
+./scripts/import_graph.sh data/export/memgraph-baseagent-2026-06-08.tar.gz
 
-# Launch web app + Memgraph
+# 3. Launch web app + Memgraph
 docker compose up -d           # UI at http://localhost:5050
 ```
+
+The import script will restore the graph into a Docker volume, start Memgraph, and verify the node/relationship counts. The full stack (Memgraph + Flask app) starts with `docker compose up -d`.
+
+### Verify It's Working
+
+```bash
+docker compose ps              # Both 'memgraph' and 'app' should be running
+curl http://localhost:5050/api/graph-stats   # Should return node/rel counts as JSON
+```
+
+Then open http://localhost:5050 in a browser.
 
 ### Local Development
 
@@ -35,8 +55,8 @@ conda activate cardiokb        # Python 3.11
 # Start Memgraph via Docker Compose (or standalone)
 docker compose up -d memgraph
 
-# Import graph data (volume backup)
-./scripts/import_graph.sh data/export/memgraph-baseagent-2026-06-07.tar.gz
+# Import graph data (volume backup) — only needed once
+./scripts/import_graph.sh data/export/memgraph-baseagent-2026-06-08.tar.gz
 
 # Start Flask UI
 python src/api.py --port 5050  # http://localhost:5050
@@ -210,10 +230,10 @@ python eval/eval_graph.py             # Live Memgraph validation only
 
 ```bash
 # Export graph data for transfer to another machine
-./scripts/export_graph.sh             # -> data/export/memgraph-data.tar.gz (~1.2 GB)
+./scripts/export_graph.sh             # -> data/export/memgraph-data.tar.gz (~300 MB)
 
 # Import on target host
-./scripts/import_graph.sh data/export/memgraph-baseagent-2026-06-07.tar.gz
+./scripts/import_graph.sh data/export/memgraph-baseagent-2026-06-08.tar.gz
 docker compose up -d
 ```
 
