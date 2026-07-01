@@ -13,7 +13,7 @@ A biomedical knowledge graph integrating **22 data sources** for cardiovascular 
 ### Prerequisites
 
 - **Docker** and **Docker Compose** (v2) — [Install Docker](https://docs.docker.com/get-docker/)
-- **Graph data archive** (`memgraph-baseagent-2026-06-08.tar.gz`, ~298 MB) — obtain from the project owner or shared storage
+- **Graph data archive** (`memgraph-baseagent-2026-07-01.tar.gz`, ~298 MB) — obtain from the project owner or shared storage
 
 ### Deploy (Docker — recommended)
 
@@ -30,7 +30,7 @@ cp .env.example .env
 # 2. Import the pre-built graph data
 mkdir -p data/export
 # Place the tar.gz in data/export/, then:
-./scripts/import_graph.sh data/export/memgraph-baseagent-2026-06-08.tar.gz
+./scripts/import_graph.sh data/export/memgraph-baseagent-2026-07-01.tar.gz
 
 # 3. Launch web app + Memgraph
 docker compose up -d           # UI at http://localhost:5050
@@ -56,7 +56,7 @@ conda activate cardiokb        # Python 3.11
 docker compose up -d memgraph
 
 # Import graph data (volume backup) — only needed once
-./scripts/import_graph.sh data/export/memgraph-baseagent-2026-06-08.tar.gz
+./scripts/import_graph.sh data/export/memgraph-baseagent-2026-07-01.tar.gz
 
 # Start Flask UI
 python src/api.py --port 5050  # http://localhost:5050
@@ -233,7 +233,7 @@ python eval/eval_graph.py             # Live Memgraph validation only
 ./scripts/export_graph.sh             # -> data/export/memgraph-data.tar.gz (~300 MB)
 
 # Import on target host
-./scripts/import_graph.sh data/export/memgraph-baseagent-2026-06-08.tar.gz
+./scripts/import_graph.sh data/export/memgraph-baseagent-2026-07-01.tar.gz
 docker compose up -d
 ```
 

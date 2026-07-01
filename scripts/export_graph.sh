@@ -19,8 +19,11 @@ set -euo pipefail
 SCRIPT_DIR="$(cd "$(dirname "$0")" && pwd)"
 PROJECT_DIR="$(dirname "$SCRIPT_DIR")"
 EXPORT_DIR="$PROJECT_DIR/data/export"
-CONTAINER_NAME="memgraph"
-VOLUME_NAME="memgraph-data"
+
+# Derive Docker Compose container and volume names from project directory
+COMPOSE_PROJECT=$(basename "$PROJECT_DIR" | tr '[:upper:]' '[:lower:]' | tr -cd '[:alnum:]-')
+CONTAINER_NAME="${COMPOSE_PROJECT}-memgraph-1"
+VOLUME_NAME="${COMPOSE_PROJECT}_memgraph-data"
 
 mkdir -p "$EXPORT_DIR"
 
