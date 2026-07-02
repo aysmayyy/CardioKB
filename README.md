@@ -8,44 +8,59 @@ A biomedical knowledge graph integrating **22 data sources** for cardiovascular 
 - All relationships carry a `source` property identifying the originating database
 - 7 edge types carry quantitative properties (combinedScore, expressionScore, morScore, etc.)
 
-## Quick Start
+## Quick Start — Deploy in 5 Minutes
 
-### Prerequisites
+### What You Need
 
-- **Docker** and **Docker Compose** (v2) — [Install Docker](https://docs.docker.com/get-docker/)
-- **Graph data archive** (`memgraph-baseagent-2026-07-01.tar.gz`, ~298 MB) — obtain from the project owner or shared storage
+1. **Docker** and **Docker Compose** (v2) — [Install Docker](https://docs.docker.com/get-docker/)
+2. **Graph data archive** — `memgraph-baseagent-2026-07-01.tar.gz` (~300 MB), provided separately
+3. **~16 GB RAM** on the server (Memgraph loads the full graph in memory)
 
-### Deploy (Docker — recommended)
+### Step 1: Clone the repo
 
 ```bash
-git clone https://github.com/aysmayyy/CardioKB.git
+git clone -b baseagent-build https://github.com/aysmayyy/CardioKB.git
 cd CardioKB
-git checkout baseagent-build
-
-# 1. Configure environment
-cp .env.example .env
-# Edit .env — set MEMGRAPH_PASSWORD and ADMIN_PASSWORD (see .env.example for docs)
-# Optionally set ANTHROPIC_API_KEY to enable the "Ask AI" natural language query feature
-
-# 2. Import the pre-built graph data
-mkdir -p data/export
-# Place the tar.gz in data/export/, then:
-./scripts/import_graph.sh data/export/memgraph-baseagent-2026-07-01.tar.gz
-
-# 3. Launch web app + Memgraph
-docker compose up -d           # UI at http://localhost:5050
 ```
 
-The import script will restore the graph into a Docker volume, start Memgraph, and verify the node/relationship counts. The full stack (Memgraph + Flask app) starts with `docker compose up -d`.
+### Step 2: Configure environment
+
+```bash
+cp .env.example .env
+```
+
+Open `.env` and set these three values:
+
+| Variable | What to put |
+|----------|------------|
+| `MEMGRAPH_PASSWORD` | Pick any password |
+| `ADMIN_PASSWORD` | Pick any password |
+| `ANTHROPIC_API_KEY` | Your Anthropic API key (enables "Ask AI" natural language querying) |
+
+### Step 3: Import the graph data
+
+Place the `memgraph-baseagent-2026-07-01.tar.gz` archive anywhere on the machine, then run:
+
+```bash
+./scripts/import_graph.sh /path/to/memgraph-baseagent-2026-07-01.tar.gz
+```
+
+This restores 459,092 nodes and 5,443,134 relationships into a Docker volume. Takes ~30 seconds.
+
+### Step 4: Launch
+
+```bash
+docker compose up -d
+```
+
+Open **http://localhost:5050** in a browser. Done.
 
 ### Verify It's Working
 
 ```bash
-docker compose ps              # Both 'memgraph' and 'app' should be running
-curl http://localhost:5050/api/graph-stats   # Should return node/rel counts as JSON
+docker compose ps                            # Both 'memgraph' and 'app' should show "running"
+curl http://localhost:5050/api/graph-stats    # Should return {"nodes": 459092, ...}
 ```
-
-Then open http://localhost:5050 in a browser.
 
 ### Local Development
 
