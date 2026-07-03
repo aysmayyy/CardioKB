@@ -346,8 +346,26 @@ def enforce_case_insensitive_partials(cypher):
     return _RX.sub(repl, cypher)
 
 
+def _strip_arrows(s):
+    """Remove directed arrows from MATCH clauses — graph has mixed directions."""
+    s = re.sub(r'\]->', ']-', s)
+    s = re.sub(r'<-\[', '-[', s)
+    return s
+
+
+def _normalize_phase(s):
+    """Fix 'phase 3' → 'phase3' etc. Phase values are stored without spaces."""
+    return re.sub(
+        r'(?i)(phase)\s+(\d)',
+        lambda m: m.group(1).lower() + m.group(2),
+        s,
+    )
+
+
 def sanitize_cypher(s):
     s = _CODEFENCE_LINE.sub("", s).strip()
+    s = _strip_arrows(s)
+    s = _normalize_phase(s)
     s = enforce_case_insensitive_equals(s)
     s = enforce_case_insensitive_partials(s)
     return s

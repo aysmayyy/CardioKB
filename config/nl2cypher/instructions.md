@@ -6,8 +6,9 @@ Instructions:
   - Use `toLower(property) CONTAINS toLower("text")` for partial matches.
   - Use `property = toLower("value")` for exact matches **only** when the user clearly asks for a specific identifier. But you must still use **all** preferred properties for that label. Join predicates with `OR`.
 - When a label lists multiple preferred properties (e.g., `prop1 or prop2`), include **all** of them in the WHERE clause joined with `OR` (both for partial and exact matches).
-- Always write relationships in the form of:
-  `MATCH (a:Label)-[:relationshipName]-(b:Label)` (undirected)
+- CRITICAL: Always write relationships as UNDIRECTED (no arrows):
+  `MATCH (a:Label)-[:relationshipName]-(b:Label)`
+  NEVER use `->` or `<-` arrows in any MATCH clause. The graph has mixed edge directions and directed queries will silently return empty results.
 - Avoid using internal IDs unless explicitly requested.
 - Avoid unnecessary filters like `IS NOT NULL`.
 - Use multiple MATCH clauses when querying through multiple relationships (multi-hop traversal).
@@ -21,3 +22,5 @@ Instructions:
 - IMPORTANT: Medical conditions may be stored as Disease, Phenotype, SideEffect, or Symptom nodes depending on the ontology source. When the user asks about a condition (e.g., "ventricular tachycardia", "headache", "edema"), first check TOPOLOGY_JSON to see which node types connect via the requested relationship. If the condition could plausibly be a Phenotype or SideEffect rather than a Disease, use UNION or multiple MATCH clauses to search across the relevant node types. For example, if asking "what genes are associated with ventricular tachycardia", try both Disease (via geneAssociatesWithDisease) and Phenotype (via geneAssociatesWithPhenotype).
 - When a query returns through one relationship type but not another, prefer using UNION ALL to combine results from different node types rather than returning empty results.
 - When using UNION or UNION ALL, all branches must return the **exact same column names** using AS aliases. For example: `RETURN g.geneSymbol AS gene, d.diseaseName AS condition` in both branches.
+- ClinicalTrial phase values are stored WITHOUT spaces: "PHASE1", "PHASE2", "PHASE3", "PHASE4", "PHASE1|PHASE2", "PHASE2|PHASE3", "EARLY_PHASE1", "NA". When the user says "Phase 3", filter with `toLower(ct.phase) CONTAINS "phase3"` (no space). Never use "phase 3" with a space.
+- ClinicalTrial status values: "RECRUITING", "COMPLETED", "TERMINATED", "NOT_YET_RECRUITING", "ACTIVE_NOT_RECRUITING", "WITHDRAWN", "UNKNOWN". Only filter on status if the user explicitly asks for it (e.g., "currently recruiting"). Do not assume "currently" means "recruiting" — it may just mean the trial exists.
