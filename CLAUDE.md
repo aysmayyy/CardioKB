@@ -10,8 +10,8 @@
 ## Project Overview
 12-week rotation project (Jan-Apr 2026) building a CVD-focused biomedical knowledge graph. The graph integrates 22 deduplicated data sources (each node type and edge type served by exactly one authoritative database) into Memgraph for disease research, feature selection, and precision medicine. Built using **BaseAgent** multi-agent orchestration (`~/Desktop/BaseAgent/cardiokb.ipynb` on the `cardiokb` branch) with parser templates adapted for CardioKB's schema. The web UI is in this repo (`aysmayyy/CardioKB`, `baseagent-build` branch). Two legacy sources (SIDER, LINCS L1000) are retained as-is — no live API alternatives available.
 
-## Current Graph Stats (BaseAgent build — 2026-06-24)
-- **459,092 nodes** | **5,443,134 relationships** | **17 node types** | **27 relationship types** | **22 data sources** + 3 ML prediction sources
+## Current Graph Stats (BaseAgent build — 2026-07-02)
+- **459,092 nodes** | **5,456,579 relationships** | **17 node types** | **28 relationship types** | **22 data sources** + 3 ML prediction sources
 - All relationships carry a `source` property identifying the originating database (e.g., `source: "OpenTargets"`)
 - 7 edge types carry quantitative properties: `combinedScore`, `expressionScore`, `morScore`, `confidence`, `evidenceCode`, `score`, `interactionType`, `clinicalSignificance`
 - *Stats are current as of last pipeline run; see Memgraph or `GET /api/graph-stats` for live counts.*
@@ -29,6 +29,9 @@
 - **Data**: 9,735 therapeutic drugs × 457 diseases, 3,782 drugTreatsDisease edges (80/10/10 stratified split)
 - **Predictions**: Top 500 per method stored in Memgraph as `predictedTreatsDisease` edges (confidence >= 0.5)
 - **UI**: Orange dashed edges in Explore tab, separate toggle, provenance panel shows confidence + "not clinically validated" warning
+- **drugTreatsDisease**: 6,272 edges from 4 sources (CTD: 2,757, DrugBank_Indications: 2,930, ClinicalTrials.gov: 868, DrugCentral: 157). DrugBank_Indications edges were text-mined from DrugBank XML indication fields via `scripts/drugbank_indications.py`.
+- **drugTreatsPhenotype**: 10,955 edges (source: DrugBank_Indications). Covers conditions like tachycardia, arrhythmia, edema that exist only as Phenotype (HPO) nodes. NL2Cypher uses UNION ALL across both drugTreatsDisease and drugTreatsPhenotype for treatment queries.
+- **ML note**: The ML pipeline trains on drugTreatsDisease only (Drug→Disease). drugTreatsPhenotype is a separate relationship type and does not affect ML training data or predictions.
 
 ### Embedding Methods Compared
 | Method | Decoder | Test AUROC | Test AUPRC | Hits@100 | Hits@200 |
@@ -217,8 +220,8 @@ DisGeNET, GWAS Catalog, Jensen DISEASES, OMIM, WikiPathways, AOP-DB, HGNC (base)
 86 entries in `src/ontology_configs.py` mapping parsed TSV files to graph node/relationship types, properties, and loading strategies. Each relationship config includes a `source_label` field that the loader sets as `r.source` on every relationship.
 
 ## Relationship Source Labels
-All relationships carry a `source` property. Current labels (19 in graph):
-`Bgee`, `BindingDB`, `CTD`, `ClinPGx`, `ClinVar`, `ClinicalTrials.gov`, `Disease Ontology`, `DoRothEA`, `DrugBank`, `DrugCentral`, `Gene Ontology`, `HGNC`, `HPO`, `LINCS L1000`, `OpenTargets`, `PubTator`, `Reactome`, `SIDER`, `STRING`
+All relationships carry a `source` property. Current labels (20 in graph):
+`Bgee`, `BindingDB`, `CTD`, `ClinPGx`, `ClinVar`, `ClinicalTrials.gov`, `Disease Ontology`, `DoRothEA`, `DrugBank`, `DrugBank_Indications`, `DrugCentral`, `Gene Ontology`, `HGNC`, `HPO`, `LINCS L1000`, `OpenTargets`, `PubTator`, `Reactome`, `SIDER`, `STRING`
 
 ## Node Property Names (for Cypher queries and API)
 - **Gene**: `geneSymbol`, `geneId`, `description`, `xrefEnsembl`, `xrefHGNC`, `xrefOMIM`

@@ -52,7 +52,8 @@ compoundUpregulatesGene | Drug -> Gene | LINCS L1000 | 10,278
 compoundDownregulatesGene | Drug -> Gene | LINCS L1000 | 10,218
 
 # Drug-Disease
-drugTreatsDisease | Drug -> Disease | DrugCentral | 779
+drugTreatsDisease | Drug -> Disease | CTD + ClinicalTrials.gov + DrugCentral + DrugBank_Indications | 6,272
+drugTreatsPhenotype | Drug -> Phenotype | DrugBank_Indications | 10,955
 drugPalliatesDisease | Drug -> Disease | DrugCentral | 189
 
 # Drug-SideEffect

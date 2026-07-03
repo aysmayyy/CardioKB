@@ -29,9 +29,9 @@ The web app and Memgraph are fully Dockerized via `docker-compose.yml`. The ETL 
 │  │  │ Flask App (:5050)│  │ Memgraph (bolt://memgraph:  │  │   │     │
 │  │  │                  │──│          7687)               │  │   │     │
 │  │  │ /api/query       │  │ 459,092 nodes               │  │   │     │
-│  │  │ /api/graph-stats │  │ 5,443,134 relationships     │  │   │     │
+│  │  │ /api/graph-stats │  │ 5,456,579 relationships     │  │   │     │
 │  │  │ /api/agent/*     │  │ 17 node types               │  │   │     │
-│  │  │ /api/subgraph    │  │ 27 relationship types       │  │   │     │
+│  │  │ /api/subgraph    │  │ 28 relationship types       │  │   │     │
 │  │  └────────┬─────────┘  └─────────────────────────────┘  │   │     │
 │  │           │             Volume: memgraph-data            │   │     │
 │  └───────────┼──────────────────────────────────────────────┘   │     │
@@ -73,11 +73,11 @@ See `.env.example` for the full list with descriptions.
 | Metric | Value |
 |--------|-------|
 | Total nodes | 459,092 |
-| Total relationships | 5,443,134 |
+| Total relationships | 5,456,579 |
 | Node types | 17 |
-| Relationship types | 27 |
+| Relationship types | 28 |
 | Data sources | 22 |
-| Source labels on edges | 22 (19 data + 3 ML prediction) |
+| Source labels on edges | 23 (20 data + 3 ML prediction) |
 | Ontology configs | 86 |
 
 ## 3. Source-to-Schema Mapping
@@ -136,10 +136,10 @@ Each row shows the source database, the edge it contributes, the node types it c
 | **ClinicalTrials.gov** | `STUDIES_CONDITION` | ClinicalTrial → Disease | 20,667 | — |
 | **DoRothEA** | `transcriptionFactorInteractsWithGene` | TranscriptionFactor → Gene | 15,082 | `morScore`, `confidence` |
 | **ClinVar** | `hasVariant` | Gene → Variant | 8,413 | — |
-| **CTD + ClinicalTrials + DrugCentral** | `drugTreatsDisease` | Drug → Disease | 3,782 | — |
+| **DrugBank_Indications** | `drugTreatsPhenotype` | Drug → Phenotype | 10,955 | — |
+| **CTD + CT + DC + DrugBank_Indications** | `drugTreatsDisease` | Drug → Disease | 6,272 | — |
 | **ClinicalTrials.gov** | `TESTS_INTERVENTION` | ClinicalTrial → Drug | 3,180 | — |
 | **Disease Ontology** | `diseaseIsSubtypeOf` | Disease → Disease | 2,581 | — |
-| **OpenTargets** | `geneAssociatesWithDisease` | Gene → Disease | 2,132 | — |
 | **ML Predictions** | `predictedTreatsDisease` | Drug → Disease | 1,500 | `confidence` |
 | **ClinPGx** | `AFFECTS_RESPONSE_TO` | Gene → Drug | 74 | — |
 

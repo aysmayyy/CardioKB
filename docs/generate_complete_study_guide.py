@@ -167,7 +167,7 @@ doc.add_paragraph(
     '(24 total parsers, 2 additional) into a single queryable graph database. The current graph contains:'
 )
 bullet('459,092 nodes across 17 distinct node types')
-bullet('5,443,134 relationships across 27 relationship types')
+bullet('5,456,579 relationships across 28 relationship types')
 bullet('22 data sources + 3 ML prediction sources (Node2Vec, RotatE, CompGCN)')
 bullet('Every relationship carries a source property identifying its originating database')
 doc.add_paragraph('It provides four core capabilities:')
@@ -358,9 +358,9 @@ doc.add_heading('3. Graph Structure', level=1)
 doc.add_heading('Scale', level=2)
 doc.add_paragraph(
     'The current CardioKB graph (as of July 2026) contains 459,092 nodes across 17 distinct node types '
-    'and 5,443,134 relationships across 27 relationship types. There are 22 data sources providing edges '
-    '(each tagged with a source property), plus 3 ML prediction sources. Every single relationship in the '
-    'graph carries a source property identifying which database or model produced it.'
+    'and 5,456,579 relationships across 28 relationship types. There are 22 data sources providing edges '
+    '(each tagged with a source property), plus 3 ML prediction sources and 1 text-mined source (DrugBank_Indications). '
+    'Every single relationship in the graph carries a source property identifying which database or model produced it.'
 )
 
 doc.add_heading('Node Types (17) — What Each Represents Biologically', level=2)
@@ -413,7 +413,8 @@ add_table(
         ['chemicalBindsGene', 'Drug→Gene', 'BindingDB', '22,735', '—', 'Experimentally measured binding between this chemical and this protein'],
         ['STUDIES_CONDITION', 'Trial→Disease', 'ClinicalTrials.gov', '20,667', '—', 'This clinical trial studies this disease condition'],
         ['tfInteractsWithGene', 'TF→Gene', 'DoRothEA', '15,082', 'morScore, confidence', 'This transcription factor regulates this gene (+1=activates, -1=represses)'],
-        ['drugTreatsDisease', 'Drug→Disease', 'CTD+CT+DC', '3,782', '—', 'This drug is used to treat this disease (curated + clinical trial + FDA evidence)'],
+        ['drugTreatsPhenotype', 'Drug→Phenotype', 'DrugBank_Indications', '10,955', '—', 'This drug treats this phenotype/condition (text-mined from DrugBank indication fields)'],
+        ['drugTreatsDisease', 'Drug→Disease', 'CTD+CT+DC+DBI', '6,272', '—', 'This drug is used to treat this disease (curated + clinical trial + FDA + text-mined evidence)'],
         ['TESTS_INTERVENTION', 'Trial→Drug', 'ClinicalTrials.gov', '3,180', '—', 'This clinical trial tests this drug as an intervention'],
         ['diseaseIsSubtypeOf', 'Disease→Disease', 'Disease Ontology', '2,581', '—', 'This disease is a subtype of this broader disease category'],
         ['predictedTreatsDisease', 'Drug→Disease', 'ML Predictions', '1,500', 'confidence', 'ML model predicts this drug might treat this disease (NOT clinically validated)'],
@@ -559,17 +560,29 @@ bold_para('How fixed: ', 'Implemented CUI-to-DOID mapping using Disease Ontology
 doc.add_heading('5.7 drugTreatsDisease Edge Aggregation', level=2)
 doc.add_paragraph(
     'The drugTreatsDisease relationship is the most important edge type for the ML drug repurposing pipeline. '
-    'It comes from three complementary sources, each providing a different type of evidence:'
+    'It comes from four complementary sources, each providing a different type of evidence:'
 )
 add_table(
     ['Source', 'Edges', 'Evidence Type', 'Why This Source'],
     [
-        ['CTD', '2,757', 'Curated chemical-disease therapeutic relationships from scientific literature', 'Largest contributor (73%). Literature-curated, high confidence.'],
-        ['ClinicalTrials.gov', '868', 'Extracted from Phase 3/4 trial intervention-condition pairs', 'Phase 3/4 trials are proxy evidence that a drug treats a disease (drugs have passed safety testing and shown efficacy signals).'],
-        ['DrugCentral', '157', 'FDA-approved indications mapped via CUI-to-DOID', 'Regulatory evidence — these are drugs the FDA has approved for these conditions.'],
-        ['Total (deduplicated)', '3,782', 'Combined, deduplicated by (Drug, Disease) pair', 'These 3,782 edges serve as positive training labels for the ML pipeline.'],
+        ['CTD', '2,757', 'Curated chemical-disease therapeutic relationships from scientific literature', 'Literature-curated, high confidence.'],
+        ['DrugBank_Indications', '2,930', 'Text-mined from DrugBank XML indication free-text fields', 'Whole-word disease name matching against existing Disease nodes. Significantly increased coverage.'],
+        ['ClinicalTrials.gov', '868', 'Extracted from Phase 3/4 trial intervention-condition pairs', 'Phase 3/4 trials are proxy evidence that a drug treats a disease.'],
+        ['DrugCentral', '157', 'FDA-approved indications mapped via CUI-to-DOID', 'Regulatory evidence — FDA-approved indications.'],
+        ['Total (deduplicated)', '6,272', 'Combined, deduplicated by (Drug, Disease) pair', 'The original 3,782 curated edges were used as ML training labels. The 2,930 DrugBank_Indications edges were added post-training.'],
     ],
     col_widths=[3, 1.5, 6, 5.5]
+)
+
+doc.add_heading('5.7.1 drugTreatsPhenotype — Phenotype Coverage Gap Fix', level=2)
+doc.add_paragraph(
+    'Many clinical conditions (e.g., tachycardia, edema, arrhythmia) exist only as Phenotype nodes (HPO), '
+    'not Disease nodes (Disease Ontology). Since drugTreatsDisease connects Drug→Disease, these conditions '
+    'had zero treatment edges. To fix this, the same DrugBank indication text-mining approach was applied '
+    'against Phenotype node names, creating 10,955 drugTreatsPhenotype edges (Drug→Phenotype) from 2,646 drugs '
+    'to 692 phenotypes. A blocklist filters out HPO modifier terms (Acute, Chronic, Severe, etc.) that would '
+    'produce false positive matches. The NL2Cypher instructions use UNION ALL across both relationship types '
+    'for treatment queries. Script: scripts/drugbank_indications.py.'
 )
 
 doc.add_heading('5.8 Named Docker Volume Persistence Issue', level=2)
@@ -594,7 +607,7 @@ doc.add_heading('6. ML Pipeline — Drug Repurposing Link Prediction', level=1)
 doc.add_heading('6.1 Why Link Prediction', level=2)
 bold_para('What link prediction is: ', 'Given a graph with known edges, link prediction asks: "Which edges are missing?" More precisely, given two nodes that are not currently connected by a specific relationship type, how likely is it that this relationship should exist? The model learns patterns from existing edges to score potential new ones.')
 bold_para('Why drug repurposing specifically: ', 'Drug repurposing (finding new therapeutic uses for existing drugs) is faster and cheaper than de novo drug development because repurposed drugs have already passed safety testing. Bringing a repurposed drug to market costs ~$300M and takes ~6.5 years, compared to ~$2.6B and ~13 years for a new drug.')
-bold_para('What the task is: ', 'Given the CardioKB graph with 3,782 known drugTreatsDisease edges, predict which of the remaining ~4.4 million possible Drug-Disease pairs are most likely to be genuine treatment relationships. The top predictions become hypotheses for experimental validation.')
+bold_para('What the task is: ', 'Given the CardioKB graph with 3,782 known drugTreatsDisease edges (at time of training — now 6,272 after DrugBank_Indications enrichment), predict which of the remaining ~4.4 million possible Drug-Disease pairs are most likely to be genuine treatment relationships. The top predictions become hypotheses for experimental validation. Note: the ML models were trained on the original 3,782 curated edges; the 2,930 DrugBank_Indications edges were added post-training and do not affect ML results.')
 
 doc.add_heading('6.2 Data Preparation', level=2)
 
@@ -885,8 +898,8 @@ doc.add_paragraph(
     'or run programmatically. The system checks:'
 )
 bullet('Node count validation: Each of the 17 node types has a non-zero count matching expected ranges')
-bullet('Edge count validation: Each of the 27 relationship types has expected counts')
-bullet('Source label coverage: All 19 expected edge source labels are present (plus 3 ML sources)')
+bullet('Edge count validation: Each of the 28 relationship types has expected counts')
+bullet('Source label coverage: All 20 expected edge source labels are present (plus 3 ML sources)')
 bullet('Property coverage: Edge properties (combinedScore, morScore, expressionScore, etc.) are populated at 100% coverage')
 bullet('Orphan rate calculation: Percentage of nodes with zero edges per type')
 bullet('Dangling edges: Edges pointing to non-existent nodes = 0 (verified)')
@@ -943,12 +956,17 @@ doc.add_paragraph(
     'medical condition queries via UNION ALL.'
 )
 
-doc.add_heading('drugTreatsDisease Enrichment (DrugBank NLP)', level=2)
+doc.add_heading('drugTreatsDisease Enrichment (DrugBank Indications) — Implemented', level=2)
 doc.add_paragraph(
-    'The current 3,782 drugTreatsDisease edges come from 3 sources (CTD, ClinicalTrials.gov, DrugCentral). '
-    'DrugBank XML files contain free-text drug descriptions with treatment indications that are not captured '
-    'as structured edges. NLP extraction from these descriptions could increase drugTreatsDisease edges by '
-    '2-5x, improve ML training data diversity, and add indication-level detail as edge properties.'
+    'The original 3,782 drugTreatsDisease edges came from 3 sources (CTD, ClinicalTrials.gov, DrugCentral). '
+    'DrugBank XML files contain free-text indication fields that were not captured as structured edges. '
+    'A text-mining script (scripts/drugbank_indications.py) was implemented to extract treatment relationships '
+    'by matching Disease and Phenotype node names against indication text using whole-word regex matching. '
+    'This added 2,930 new drugTreatsDisease edges (total: 6,272) and created a new drugTreatsPhenotype '
+    'relationship type with 10,955 edges from 2,646 drugs to 692 phenotypes. The phenotype edges address '
+    'conditions like tachycardia, arrhythmia, and edema that exist only as HPO Phenotype nodes. A blocklist '
+    'filters out HPO modifier terms (Acute, Chronic, Severe, etc.) to prevent false positives. These edges '
+    'were added post-ML-training and do not affect the ML pipeline results.'
 )
 
 doc.add_heading('diseaseIsSubtypeOf Hierarchy Edges', level=2)

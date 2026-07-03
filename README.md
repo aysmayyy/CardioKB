@@ -4,7 +4,7 @@ A biomedical knowledge graph integrating **22 data sources** for cardiovascular 
 
 ## Current Graph Stats
 
-- **459,092 nodes** | **5,443,134 relationships** | **17 node types** | **27 relationship types** | **22 data sources** + 3 ML prediction sources
+- **459,092 nodes** | **5,456,579 relationships** | **17 node types** | **28 relationship types** | **22 data sources** + 3 ML prediction sources
 - All relationships carry a `source` property identifying the originating database
 - 7 edge types carry quantitative properties (combinedScore, expressionScore, morScore, etc.)
 
@@ -13,7 +13,7 @@ A biomedical knowledge graph integrating **22 data sources** for cardiovascular 
 ### What You Need
 
 1. **Docker** and **Docker Compose** (v2) — [Install Docker](https://docs.docker.com/get-docker/)
-2. **Graph data archive** — `memgraph-baseagent-2026-07-01.tar.gz` (~300 MB), provided separately
+2. **Graph data archive** — `memgraph-data.tar.gz` (~305 MB), provided separately
 3. **~16 GB RAM** on the server (Memgraph loads the full graph in memory)
 
 ### Step 1: Clone the repo
@@ -39,13 +39,13 @@ Open `.env` and set these three values:
 
 ### Step 3: Import the graph data
 
-Place the `memgraph-baseagent-2026-07-01.tar.gz` archive anywhere on the machine, then run:
+Place the `memgraph-data.tar.gz` archive anywhere on the machine, then run:
 
 ```bash
-./scripts/import_graph.sh /path/to/memgraph-baseagent-2026-07-01.tar.gz
+./scripts/import_graph.sh /path/to/memgraph-data.tar.gz
 ```
 
-This restores 459,092 nodes and 5,443,134 relationships into a Docker volume. Takes ~30 seconds.
+This restores 459,092 nodes and 5,456,579 relationships into a Docker volume. Takes ~30 seconds.
 
 ### Step 4: Launch
 
@@ -71,7 +71,7 @@ conda activate cardiokb        # Python 3.11
 docker compose up -d memgraph
 
 # Import graph data (volume backup) — only needed once
-./scripts/import_graph.sh data/export/memgraph-baseagent-2026-07-01.tar.gz
+./scripts/import_graph.sh data/export/memgraph-data.tar.gz
 
 # Start Flask UI
 python src/api.py --port 5050  # http://localhost:5050
@@ -119,12 +119,12 @@ The UI at `http://localhost:5050` provides:
 | TranscriptionFactor | 367 | TFs from DoRothEA |
 | DrugLabel | 29 | Pharmacogenomic labels from ClinPGx |
 
-## Relationship Types (22)
+## Relationship Types (28)
 
 | Relationship | Count | Source |
 |-------------|------:|--------|
 | bodyPartOverexpressesGene | 2,749,193 | Bgee |
-| geneAssociatesWithDisease | 539,964 | PubTator |
+| geneAssociatesWithDisease | 542,096 | PubTator + OpenTargets |
 | chemicalIncreasesExpression | 343,823 | CTD |
 | chemicalDecreasesExpression | 328,726 | CTD |
 | geneAssociatesWithPhenotype | 270,265 | HPO |
@@ -144,7 +144,13 @@ The UI at `http://localhost:5050` provides:
 | chemicalBindsGene | 22,735 | BindingDB |
 | STUDIES_CONDITION | 20,667 | ClinicalTrials.gov |
 | transcriptionFactorInteractsWithGene | 15,082 | DoRothEA |
+| drugTreatsPhenotype | 10,955 | DrugBank_Indications |
+| hasVariant | 8,413 | ClinVar |
+| drugTreatsDisease | 6,272 | CTD + ClinicalTrials.gov + DrugCentral + DrugBank_Indications |
 | TESTS_INTERVENTION | 3,180 | ClinicalTrials.gov |
+| diseaseIsSubtypeOf | 2,581 | Disease Ontology |
+| predictedTreatsDisease | 1,500 | ML Link Prediction |
+| AFFECTS_RESPONSE_TO | 74 | ClinPGx |
 
 ## Edge Properties
 
@@ -248,7 +254,7 @@ python eval/eval_graph.py             # Live Memgraph validation only
 ./scripts/export_graph.sh             # -> data/export/memgraph-data.tar.gz (~300 MB)
 
 # Import on target host
-./scripts/import_graph.sh data/export/memgraph-baseagent-2026-07-01.tar.gz
+./scripts/import_graph.sh data/export/memgraph-data.tar.gz
 docker compose up -d
 ```
 
@@ -258,7 +264,7 @@ CardioKB uses graph embedding methods to predict potential drug-disease treatmen
 
 ### Methodology
 
-- **Edge splits**: 80/10/10 stratified train/val/test on all edge types (3,782 `drugTreatsDisease` edges)
+- **Edge splits**: 80/10/10 stratified train/val/test on all edge types (3,782 curated `drugTreatsDisease` edges at time of training)
 - **Embeddings trained on train split only** — no data leakage from val/test edges
 - **Negative sampling**: 1:1 ratio, excluding all known Drug-Disease edges across all splits
 - **Features**: Hadamard product + absolute difference of embeddings + cosine similarity + L2 distance + structural features (shared neighbors, Jaccard, Adamic-Adar, preferential attachment, degree)
