@@ -106,7 +106,7 @@ doc.add_page_break()
 doc.add_heading('Table of Contents', level=1)
 toc_items = [
     ('1. What is CardioKB and Why It Exists', 0),
-    ('2. Data Sources (All 24)', 0),
+    ('2. Data Sources (All 23)', 0),
     ('3. Graph Structure', 0),
     ('4. BaseAgent Pipeline — How the Graph Was Built', 0),
     ('5. Every Technical Challenge Solved', 0),
@@ -163,12 +163,12 @@ doc.add_paragraph(
 
 doc.add_heading('What CardioKB Does', level=2)
 doc.add_paragraph(
-    'CardioKB is a CVD-focused biomedical knowledge graph that integrates 22 deduplicated data sources '
-    '(24 total parsers, 2 additional) into a single queryable graph database. The current graph contains:'
+    'CardioKB is a CVD-focused biomedical knowledge graph that integrates 23 deduplicated data sources '
+    'into a single queryable graph database. The current graph contains:'
 )
 bullet('459,092 nodes across 17 distinct node types')
 bullet('5,456,579 relationships across 28 relationship types')
-bullet('22 data sources + 3 ML prediction sources (Node2Vec, RotatE, CompGCN)')
+bullet('23 data sources + 3 ML prediction sources (Node2Vec, RotatE, CompGCN)')
 bullet('Every relationship carries a source property identifying its originating database')
 doc.add_paragraph('It provides four core capabilities:')
 bullet('A unified graph where a single Cypher query can traverse from a drug to its gene targets to associated diseases to clinical trials testing those drugs')
@@ -224,9 +224,9 @@ doc.add_page_break()
 # ══════════════════════════════════════════════════════════
 # 2. DATA SOURCES
 # ══════════════════════════════════════════════════════════
-doc.add_heading('2. Data Sources (All 24)', level=1)
+doc.add_heading('2. Data Sources (All 23)', level=1)
 doc.add_paragraph(
-    'CardioKB integrates 24 data source parsers (22 core + 2 additional), each contributing unique node '
+    'CardioKB integrates 23 data sources, each contributing unique node '
     'types and/or relationship types. Sources were selected based on three criteria: (1) authoritative '
     'coverage of a specific biological entity type, (2) no redundancy with other included sources, and '
     '(3) public accessibility. During a systematic deduplication audit, 12 sources were removed '
@@ -285,7 +285,7 @@ doc.add_paragraph(
     'all pharmacological mechanisms.'
 )
 
-doc.add_heading('Hetionet-Derived Component Parsers (17 sources)', level=2)
+doc.add_heading('Hetionet-Derived Component Parsers (15 sources)', level=2)
 doc.add_paragraph(
     'These parsers were originally part of the Hetionet precomputed dataset but have been broken out into '
     'individual component parsers that each query their respective original data source directly.'
@@ -294,21 +294,19 @@ doc.add_paragraph(
 hetio_sources = [
     ['6', 'Disease Ontology (DOID)', '12,012 Disease nodes; 6,447 diseaseIsSubtypeOf edges', 'Authoritative disease taxonomy with hierarchical subtype relationships. Provides Disease node backbone and DOID identifiers used for cross-source mapping.', 'Not all diseases have UMLS CUI cross-references, creating mapping gaps.'],
     ['7', 'Gene Ontology (GO)', '50,350 BP + 26,935 MF + 25,794 CC edges across 3 ontology domains', 'Only source for functional gene annotations. Essential for understanding biological processes and molecular functions genes participate in.', 'Annotations vary in evidence quality (some electronically inferred).'],
-    ['8', 'Uberon (Anatomy)', '14,937 BodyPart nodes (node-only)', 'Provides anatomy identifiers that Bgee and Jensen TISSUES use to link gene expression to anatomical locations.', 'Node-only: depends on Bgee for actual anatomy-gene expression edges.'],
+    ['8', 'Uberon (Anatomy)', '14,937 BodyPart nodes (node-only)', 'Provides anatomy identifiers that Bgee uses to link gene expression to anatomical locations.', 'Node-only: depends on Bgee for actual anatomy-gene expression edges.'],
     ['9', 'MeSH (Symptoms)', '966 Symptom nodes (node-only)', 'Provides standardized symptom vocabulary from NCBI Medical Subject Headings.', '~100% orphan rate. No active source provides symptom-disease edges.'],
     ['10', 'SIDER (Side Effects)', '148,518 compoundCausesSideEffect edges', 'Only source for drug side effect data. Essential for safety profiling in drug repurposing.', 'Legacy dataset (2015 GitHub commit). Static, no live API alternative.'],
     ['11', 'LINCS L1000', '150,535 gene expression edges (geneRegulates + up/downreg) with zScore', 'Only source for drug-induced gene expression changes. zScore quantifies expression effect size.', 'Legacy (2020 GitHub commit). clue.io requires institutional access.'],
-    ['12', 'MEDLINE', '365 cooccurrence edges (244 anatomy + 117 symptom + 4 disease)', 'Literature cooccurrence from MEDLINE abstracts.', 'Very small dataset from pinned GitHub commit. Legacy source.'],
-    ['13', 'DrugCentral', '16,403 pharmacologic class + 245 treats + 96 palliates edges', 'Only source for pharmacologic class assignments and FDA-approved indications. CUI-to-DOID mapped.', 'Not all DrugCentral entries have DrugBank cross-references.'],
-    ['14', 'BindingDB', '12,250 chemicalBindsGene edges', 'Complements DrugBank with experimentally measured binding affinities from a different curation source.', 'No binding affinity values loaded as properties (only edge existence).'],
-    ['15', 'PubTator Central', '744,427 geneAssociatesWithDisease + 4,320 diseaseAssociatesWithDisease edges (CVD AND-filter)', 'Largest source of literature-mined gene-disease associations.', 'Cooccurrence is not causation. MeSH-to-DOID mapping introduces potential mismatches.'],
-    ['16', 'CTD', '4,572 unique Drug nodes; 116,451 chemIncreasesExp + 97,951 chemDecreasesExp edges; 2,757 drugTreatsDisease edges', 'Only source for directional chemical-gene expression effects (increases vs. decreases). Also contributes 73% of drugTreatsDisease edges.', 'Expression relationships curated from literature; may not reflect dose/tissue-specific effects.'],
-    ['17', 'Bgee (Gene Expression Atlas)', '784,026 underexpresses + 1,872 overexpresses edges with expressionScore', 'Only source for tissue-specific gene expression patterns with quantitative scores.', 'Heavily skewed toward underexpression (784K vs 1.9K).'],
-    ['18', 'Jensen TISSUES', '215,235 gene-tissue edges', 'Gene-tissue expression associations.', 'Uses BTO tissue ontology; mapping to Uberon required BTO-to-Uberon resolution.'],
-    ['19', 'HPO', '19,389 Phenotype nodes; 162,994 geneAssociatesWithPhenotype edges', 'Only source for gene-phenotype associations. Connects genetics to observable clinical features.', 'Annotations primarily from rare/Mendelian diseases; may underrepresent complex CVD phenotypes.'],
-    ['20', 'Reactome', '44,979 geneInPathway + 44,979 pathwayContainsGene edges', 'Authoritative curated biological pathway assignments.', 'Pathway boundaries are somewhat arbitrary; genes appear in many overlapping pathways.'],
-    ['21', 'STRING', '121,170 geneInteractsWithGene edges (confidence > 700, with combinedScore)', 'Largest source for protein-protein interaction data. Confidence > 700 filter ensures high quality.', 'Combined scores integrate heterogeneous evidence; not all are physical binding.'],
-    ['22', 'OpenTargets', '32,826 geneAssociatesWithDisease edges (CVD AND-filter, EFO-to-DOID mapped)', 'Curated gene-disease associations from genetic, somatic, literature, and drug evidence.', 'Uses EFO ontology requiring EFO-to-DOID mapping. Some EFO terms lack DOID equivalents.'],
+    ['12', 'DrugCentral', '16,403 pharmacologic class + 245 treats + 96 palliates edges', 'Only source for pharmacologic class assignments and FDA-approved indications. CUI-to-DOID mapped.', 'Not all DrugCentral entries have DrugBank cross-references.'],
+    ['13', 'BindingDB', '12,250 chemicalBindsGene edges', 'Complements DrugBank with experimentally measured binding affinities from a different curation source.', 'No binding affinity values loaded as properties (only edge existence).'],
+    ['14', 'PubTator Central', '744,427 geneAssociatesWithDisease + 4,320 diseaseAssociatesWithDisease edges (CVD AND-filter)', 'Largest source of literature-mined gene-disease associations.', 'Cooccurrence is not causation. MeSH-to-DOID mapping introduces potential mismatches.'],
+    ['15', 'CTD', '4,572 unique Drug nodes; 116,451 chemIncreasesExp + 97,951 chemDecreasesExp edges; 2,757 drugTreatsDisease edges', 'Only source for directional chemical-gene expression effects (increases vs. decreases). Also contributes 73% of drugTreatsDisease edges.', 'Expression relationships curated from literature; may not reflect dose/tissue-specific effects.'],
+    ['16', 'Bgee (Gene Expression Atlas)', '784,026 underexpresses + 1,872 overexpresses edges with expressionScore', 'Only source for tissue-specific gene expression patterns with quantitative scores.', 'Heavily skewed toward underexpression (784K vs 1.9K).'],
+    ['17', 'HPO', '19,389 Phenotype nodes; 162,994 geneAssociatesWithPhenotype edges', 'Only source for gene-phenotype associations. Connects genetics to observable clinical features.', 'Annotations primarily from rare/Mendelian diseases; may underrepresent complex CVD phenotypes.'],
+    ['18', 'Reactome', '44,979 geneInPathway + 44,979 pathwayContainsGene edges', 'Authoritative curated biological pathway assignments.', 'Pathway boundaries are somewhat arbitrary; genes appear in many overlapping pathways.'],
+    ['19', 'STRING', '121,170 geneInteractsWithGene edges (confidence > 700, with combinedScore)', 'Largest source for protein-protein interaction data. Confidence > 700 filter ensures high quality.', 'Combined scores integrate heterogeneous evidence; not all are physical binding.'],
+    ['20', 'OpenTargets', '32,826 geneAssociatesWithDisease edges (CVD AND-filter, EFO-to-DOID mapped)', 'Curated gene-disease associations from genetic, somatic, literature, and drug evidence.', 'Uses EFO ontology requiring EFO-to-DOID mapping. Some EFO terms lack DOID equivalents.'],
 ]
 for s in hetio_sources:
     bold_para(f'{s[0]}. {s[1]}', '')
@@ -316,16 +314,16 @@ for s in hetio_sources:
     doc.add_paragraph(f'Why included: {s[3]}')
     doc.add_paragraph(f'Limitation: {s[4]}')
 
-doc.add_heading('Additional Parsers (2 sources)', level=2)
+doc.add_heading('Additional Sources (3)', level=2)
 
-bold_para('23. HGNC Gene Families', '')
+bold_para('21. HGNC Gene Families', '')
 doc.add_paragraph(
     'Contribution: 1,934 GeneFamily nodes, 5,123 geneInFamily + 5,123 familyContainsGene edges. '
     'Why included: Only source for gene family membership. Useful for identifying related genes sharing '
     'drug targets or disease associations. Limitation: Not all genes belong to defined families.'
 )
 
-bold_para('24. ClinVar', '')
+bold_para('22. ClinVar', '')
 doc.add_paragraph(
     'Contribution: 4,488,042 Variant nodes, 2,267,095 hasVariant + 2,267,095 variantInGene edges with '
     'clinicalSignificance property. '
@@ -336,9 +334,18 @@ doc.add_paragraph(
     '212 CUIs. This is expected and documented.'
 )
 
+bold_para('23. DrugBank_Indications (text-mined)', '')
+doc.add_paragraph(
+    'Contribution: 2,930 drugTreatsDisease edges + 10,955 drugTreatsPhenotype edges. '
+    'Why included: Text-mined from DrugBank XML indication free-text fields via scripts/drugbank_indications.py. '
+    'Significantly increased treatment edge coverage by matching indication text against Disease and Phenotype node names. '
+    'Counted as a separate source because edges carry the distinct source label "DrugBank_Indications" in the graph. '
+    'Limitation: Text-mining approach uses whole-word matching, which may miss complex indication descriptions.'
+)
+
 doc.add_heading('How Sources Interconnect', level=2)
 doc.add_paragraph(
-    'The 24 sources form an interconnected web through shared node types. The Gene node (from NCBI Gene) is '
+    'The 23 sources form an interconnected web through shared node types. The Gene node (from NCBI Gene) is '
     'the central hub: STRING connects genes to genes, DrugBank/BindingDB connects drugs to genes, PubTator/'
     'OpenTargets connects genes to diseases, HPO connects genes to phenotypes, Reactome connects genes to '
     'pathways, CTD/LINCS L1000 connects drugs to genes via expression, and ClinVar connects variants to genes. '
@@ -358,8 +365,8 @@ doc.add_heading('3. Graph Structure', level=1)
 doc.add_heading('Scale', level=2)
 doc.add_paragraph(
     'The current CardioKB graph (as of July 2026) contains 459,092 nodes across 17 distinct node types '
-    'and 5,456,579 relationships across 28 relationship types. There are 22 data sources providing edges '
-    '(each tagged with a source property), plus 3 ML prediction sources and 1 text-mined source (DrugBank_Indications). '
+    'and 5,456,579 relationships across 28 relationship types. There are 23 data sources '
+    '(each tagged with a source property), plus 3 ML prediction sources. '
     'Every single relationship in the graph carries a source property identifying which database or model produced it.'
 )
 
@@ -499,7 +506,7 @@ doc.add_heading('Why It Matters: Automated Rebuild', level=2)
 doc.add_paragraph(
     'Before BaseAgent, building a knowledge graph of this scale required months of manual work: writing '
     'individual parsers, debugging ID mismatches, validating output, and loading data. With BaseAgent, the '
-    'entire CardioKB graph (459K nodes, 5.4M edges, 24 sources) can be rebuilt from scratch in approximately '
+    'entire CardioKB graph (459K nodes, 5.4M edges, 23 sources) can be rebuilt from scratch in approximately '
     '5 minutes. This makes the graph reproducible and updatable: when a source database releases new data, '
     're-running the pipeline incorporates the updates automatically.'
 )

@@ -1,10 +1,10 @@
 # CardioKB — Cardiovascular Disease Knowledge Graph
 
-A biomedical knowledge graph integrating **22 data sources** for cardiovascular disease research, feature selection, and precision medicine.
+A biomedical knowledge graph integrating **23 data sources** for cardiovascular disease research, feature selection, and precision medicine.
 
 ## Current Graph Stats
 
-- **459,092 nodes** | **5,456,579 relationships** | **17 node types** | **28 relationship types** | **22 data sources** + 3 ML prediction sources
+- **459,092 nodes** | **5,456,579 relationships** | **17 node types** | **28 relationship types** | **23 data sources** + 3 ML prediction sources
 - All relationships carry a `source` property identifying the originating database
 - 7 edge types carry quantitative properties (combinedScore, expressionScore, morScore, etc.)
 
