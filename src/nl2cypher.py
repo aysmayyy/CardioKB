@@ -440,7 +440,7 @@ def _get_anthropic_client():
 
 def ask_claude(system_prompt, user_input):
     client = _get_anthropic_client()
-    model = os.getenv("NL2CYPHER_MODEL", "claude-sonnet-4-6")
+    model = os.getenv("NL2CYPHER_MODEL") or os.getenv("ANTHROPIC_FOUNDRY_MODEL") or "claude-sonnet-4-6"
     response = client.messages.create(
         model=model,
         max_tokens=1024,

@@ -29,6 +29,9 @@ flask>=3.0.0
 # Graph database driver (Memgraph via Bolt protocol)
 neo4j>=5.14.0
 
+# Anthropic SDK (NL2Cypher / Ask AI feature)
+anthropic>=0.39.0
+
 # Environment variables
 python-dotenv>=1.0.0
 
