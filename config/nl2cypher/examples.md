@@ -29,8 +29,19 @@ LIMIT 100
 ## multihop_example
 MATCH (g:Gene)-[:geneAssociatesWithDisease]-(d:Disease)
 WHERE toLower(d.diseaseName) CONTAINS toLower("heart failure")
+WITH DISTINCT g
 MATCH (g)-[:geneHasMolecularFunction]-(mf:MolecularFunction)
 RETURN DISTINCT mf.functionName
+LIMIT 100
+
+## multihop_clinical_trial_example
+MATCH (g:Gene)-[:geneAssociatesWithDisease]-(d:Disease)
+WHERE toLower(d.diseaseName) CONTAINS toLower("atrial fibrillation")
+WITH DISTINCT g
+MATCH (d2:Drug)-[:drugBindsGene]-(g)
+WITH DISTINCT d2
+MATCH (ct:ClinicalTrial)-[:TESTS_INTERVENTION]-(d2)
+RETURN DISTINCT d2.commonName AS drug, ct.title AS trial, ct.phase AS phase, ct.status AS status
 LIMIT 100
 
 ## count_example

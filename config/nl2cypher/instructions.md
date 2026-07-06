@@ -25,7 +25,13 @@ Instructions:
   NEVER use `->` or `<-` arrows in any MATCH clause. The graph has mixed edge directions and directed queries will silently return empty results.
 - Avoid using internal IDs unless explicitly requested.
 - Avoid unnecessary filters like `IS NOT NULL`.
-- Use multiple MATCH clauses when querying through multiple relationships (multi-hop traversal).
+- Use multiple MATCH clauses when querying through multiple relationships (multi-hop traversal). CRITICAL: multi-hop queries create cartesian products (duplicate rows) when intermediate nodes fan out. To prevent this, use `WITH DISTINCT` between MATCH clauses to deduplicate intermediate results before the next hop. Example:
+  MATCH (g:Gene)-[:geneAssociatesWithDisease]-(d:Disease)
+  WHERE toLower(d.diseaseName) CONTAINS toLower("atrial fibrillation")
+  WITH DISTINCT g
+  MATCH (g)-[:geneInPathway]-(p:Pathway)
+  RETURN DISTINCT p.pathwayName
+  Without the `WITH DISTINCT g`, each gene appears once per disease match, multiplying all downstream results.
 - Use DISTINCT in the RETURN clause to avoid duplicates. When returning drug names, use `toLower(drug.commonName) AS drug` to deduplicate case variants (e.g., "Esmolol" and "esmolol" are the same drug from different sources).
 - Use COUNT(DISTINCT ...) when the question asks for "how many", "number of", or "count".
 - Always prefer the **preferred display property** listed in PREFERRED_PROPS_JSON in both WHERE and RETURN clauses.
