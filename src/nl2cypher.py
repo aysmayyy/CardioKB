@@ -455,6 +455,57 @@ def ask_claude(system_prompt, user_input):
 # Orchestrator
 # ---------------------------------------------------------------------------
 
+_CONDITION_FALLBACKS = [
+    {
+        "from_label": "Disease",
+        "from_prop": "diseaseName",
+        "to_label": "Phenotype",
+        "to_prop": "phenotypeName",
+        "rel_map": {
+            "geneAssociatesWithDisease": "geneAssociatesWithPhenotype",
+            "drugTreatsDisease": "drugTreatsPhenotype",
+            "variantAssociatedWithDisease": None,
+        },
+    },
+    {
+        "from_label": "Disease",
+        "from_prop": "diseaseName",
+        "to_label": "SideEffect",
+        "to_prop": "sideEffectName",
+        "rel_map": {
+            "geneAssociatesWithDisease": None,
+            "drugTreatsDisease": None,
+            "variantAssociatedWithDisease": None,
+        },
+    },
+]
+
+
+def _build_fallback_cypher(cypher, fallback):
+    """Swap Disease label/props/rels to an alternative node type."""
+    alt = cypher
+    alt = alt.replace(f":{fallback['from_label']}", f":{fallback['to_label']}")
+    alt = alt.replace(fallback["from_prop"], fallback["to_prop"])
+    for old_rel, new_rel in fallback["rel_map"].items():
+        if new_rel is None:
+            if old_rel in alt:
+                return None
+        else:
+            alt = alt.replace(old_rel, new_rel)
+    return alt
+
+
+def _try_query(driver, cypher):
+    """Run a Cypher query and return row count (0 on error)."""
+    try:
+        with driver.session() as session:
+            result = session.run(cypher)
+            rows = [r for r in result]
+            return len(rows)
+    except Exception:
+        return 0
+
+
 def nl_to_cypher(question, driver):
     metadata = get_metadata(driver)
     system_prompt = build_system_prompt(metadata)
@@ -477,6 +528,31 @@ def nl_to_cypher(question, driver):
             warnings.append(f"Unknown relationships: {', '.join(remaining_r)}")
         if remaining_p:
             warnings.append(f"Unknown properties: {', '.join(remaining_p)}")
+
+    if "UNION" not in cypher.upper():
+        row_count = _try_query(driver, cypher)
+        if row_count == 0:
+            for fb in _CONDITION_FALLBACKS:
+                if fb["from_label"] in cypher:
+                    alt_cypher = _build_fallback_cypher(cypher, fb)
+                    if alt_cypher and _try_query(driver, alt_cypher) > 0:
+                        original = cypher
+                        columns_match = True
+                        try:
+                            with driver.session() as s:
+                                orig_keys = list(s.run(original + " LIMIT 0").keys())
+                                alt_keys = list(s.run(alt_cypher + " LIMIT 0").keys())
+                                columns_match = orig_keys == alt_keys
+                        except Exception:
+                            columns_match = False
+                        if columns_match:
+                            cypher = f"{original}\nUNION ALL\n{alt_cypher}"
+                        else:
+                            cypher = alt_cypher
+                        warnings.append(
+                            f"No results for Disease — expanded to include {fb['to_label']}"
+                        )
+                        break
 
     return {
         "cypher": cypher,
