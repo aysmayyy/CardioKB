@@ -53,5 +53,20 @@ Instructions:
   OPTIONAL MATCH (drug)-[:drugTreatsPhenotype]-(p2:Phenotype) WHERE toLower(p2.phenotypeName) CONTAINS toLower("tachycardia")
   WITH drug WHERE d2 IS NOT NULL OR p2 IS NOT NULL
   RETURN DISTINCT toLower(drug.commonName) AS drug LIMIT 100
+- When asking about drug classes (e.g., "beta blockers", "blood thinners", "ACE inhibitors", "anticoagulants", "statins"), use the PharmacologicClass node to find drugs in that class, then traverse to the requested relationship. Example for "what anticoagulants treat atrial fibrillation":
+  MATCH (d:Drug)-[:compoundInPharmacologicClass]-(pc:PharmacologicClass)
+  WHERE toLower(pc.className) CONTAINS toLower("anticoagul")
+  WITH DISTINCT d
+  MATCH (d)-[:drugTreatsDisease]-(ds:Disease)
+  WHERE toLower(ds.diseaseName) CONTAINS toLower("atrial fibrillation")
+  RETURN DISTINCT toLower(d.commonName) AS drug, ds.diseaseName AS disease
+  LIMIT 100
+  Do NOT filter by drug name for class-based queries — always use PharmacologicClass.
+- Pharmacogenomics: When asking "what genes affect response to [drug]", use AFFECTS_RESPONSE_TO if it returns results. If empty, also try drugLabelAnnotatesGene via DrugLabel nodes — some drugs (e.g., warfarin) have PGx data stored as DrugLabel entries. Example:
+  MATCH (dl:DrugLabel)-[:drugLabelDescribesDrug]-(d:Drug)
+  WHERE toLower(d.commonName) CONTAINS toLower("warfarin")
+  MATCH (dl)-[:drugLabelAnnotatesGene]-(g:Gene)
+  RETURN DISTINCT g.geneSymbol AS gene, dl.labelName AS label
+  LIMIT 100
 - ClinicalTrial phase values are stored WITHOUT spaces: "PHASE1", "PHASE2", "PHASE3", "PHASE4", "PHASE1|PHASE2", "PHASE2|PHASE3", "EARLY_PHASE1", "NA". When the user says "Phase 3", filter with `toLower(ct.phase) CONTAINS "phase3"` (no space). Never use "phase 3" with a space.
 - ClinicalTrial status values: "RECRUITING", "COMPLETED", "TERMINATED", "NOT_YET_RECRUITING", "ACTIVE_NOT_RECRUITING", "WITHDRAWN", "UNKNOWN". Only filter on status if the user explicitly asks for it (e.g., "currently recruiting"). Do not assume "currently" means "recruiting" — it may just mean the trial exists.

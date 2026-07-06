@@ -86,6 +86,22 @@ WHERE toLower(d.diseaseName) CONTAINS toLower("atrial fibrillation")
 RETURN DISTINCT ct.title, ct.phase, ct.status
 LIMIT 100
 
+## drug_class_treats_disease_example
+MATCH (d:Drug)-[:compoundInPharmacologicClass]-(pc:PharmacologicClass)
+WHERE toLower(pc.className) CONTAINS toLower("anticoagul")
+WITH DISTINCT d
+MATCH (d)-[:drugTreatsDisease]-(ds:Disease)
+WHERE toLower(ds.diseaseName) CONTAINS toLower("atrial fibrillation")
+RETURN DISTINCT toLower(d.commonName) AS drug, ds.diseaseName AS disease
+LIMIT 100
+
+## pharmacogenomics_example
+MATCH (dl:DrugLabel)-[:drugLabelDescribesDrug]-(d:Drug)
+WHERE toLower(d.commonName) CONTAINS toLower("warfarin")
+MATCH (dl)-[:drugLabelAnnotatesGene]-(g:Gene)
+RETURN DISTINCT g.geneSymbol AS gene, dl.labelName AS label
+LIMIT 100
+
 ## cross_type_condition_example
 MATCH (g:Gene)-[:geneAssociatesWithDisease]-(d:Disease)
 WHERE toLower(d.diseaseName) CONTAINS toLower("ventricular tachycardia")
