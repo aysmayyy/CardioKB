@@ -10,6 +10,7 @@ RUN pip install --no-cache-dir -r requirements.txt
 COPY src/ src/
 COPY interface/ interface/
 COPY ontology/ ontology/
+COPY config/ config/
 COPY reports/ reports/
 COPY scripts/ scripts/
 
