@@ -33,7 +33,7 @@ body {
 }
 .sidebar h1 { font-size: 1.2rem; color: var(--accent); }
 .sidebar h1 span { font-size: 0.7rem; color: var(--text-muted); display: block; font-weight: 400; }
-.sidebar h3 { font-size: 0.75rem; text-transform: uppercase; letter-spacing: 0.08em; color: var(--text-muted); margin-bottom: 0.5rem; }
+.sidebar h3 { font-size: 0.85rem; text-transform: uppercase; letter-spacing: 0.08em; color: var(--text-muted); margin-bottom: 0.5rem; }
 .theme-toggle {
     margin-top: auto; padding: 0.5rem 0.75rem; border-radius: 6px;
     background: var(--surface2); border: none; color: var(--text); cursor: pointer;
@@ -124,7 +124,7 @@ section h2 {
 /* Filter chips */
 .filter-chips { display: flex; gap: 0.4rem; flex-wrap: wrap; margin-bottom: 1rem; }
 .chip {
-    padding: 0.3rem 0.7rem; border-radius: 20px; font-size: 0.78rem; font-weight: 600;
+    padding: 0.3rem 0.7rem; border-radius: 20px; font-size: 0.85rem; font-weight: 600;
     cursor: pointer; border: 2px solid transparent; transition: all 0.15s; opacity: 0.5;
 }
 .chip.active { opacity: 1; border-color: currentColor; }
@@ -164,12 +164,12 @@ section h2 {
     color: var(--text-muted); cursor: pointer; font-size: 1.1rem;
 }
 .detail-panel .close-btn:hover { color: var(--text); }
-.detail-props { font-size: 0.8rem; }
+.detail-props { font-size: 0.88rem; }
 .detail-props dt { color: var(--text-muted); font-weight: 600; margin-top: 0.4rem; }
 .detail-props dd { word-break: break-word; }
 .detail-neighbors { margin-top: 0.75rem; }
-.detail-neighbors h4 { font-size: 0.82rem; color: var(--text-muted); margin-bottom: 0.3rem; }
-.detail-neighbors ul { list-style: none; font-size: 0.8rem; max-height: 200px; overflow-y: auto; }
+.detail-neighbors h4 { font-size: 0.88rem; color: var(--text-muted); margin-bottom: 0.3rem; }
+.detail-neighbors ul { list-style: none; font-size: 0.88rem; max-height: 200px; overflow-y: auto; }
 .detail-neighbors li { padding: 0.2rem 0; border-bottom: 1px solid var(--surface2); }
 
 /* Export bar */
@@ -205,9 +205,9 @@ section h2 {
 
 /* Results table */
 .results-table-wrap { max-height: 360px; overflow: auto; margin-bottom: 1rem; }
-table { width: 100%; border-collapse: collapse; font-size: 0.82rem; }
+table { width: 100%; border-collapse: collapse; font-size: 0.92rem; }
 th, td { padding: 0.4rem 0.6rem; text-align: left; border-bottom: 1px solid var(--surface2); }
-th { color: var(--text-muted); font-weight: 600; text-transform: uppercase; font-size: 0.7rem;
+th { color: var(--text-muted); font-weight: 600; text-transform: uppercase; font-size: 0.8rem;
      letter-spacing: 0.05em; position: sticky; top: 0; background: var(--surface); }
 
 /* Query result panels (Neo4j Browser style) */
@@ -496,7 +496,7 @@ details summary::-webkit-details-marker { display: none; }
                 <h3 style="margin-bottom:0">Extract Disease Subgraph <span style="font-size:0.65rem;font-weight:600;background:rgba(34,197,94,0.15);color:#4ade80;padding:0.15rem 0.4rem;border-radius:4px;margin-left:0.3rem;vertical-align:middle">Instant</span></h3>
                 <button class="info-btn-sm" data-info="subgraph">?</button>
             </div>
-            <div style="font-size:0.72rem;color:var(--text-muted);line-height:1.45;margin-bottom:0.5rem">Bulk export of all nodes and edges within N hops of a disease. For interactive visualization, use the Explore tab instead.</div>
+            <div style="font-size:0.82rem;color:var(--text-muted);line-height:1.45;margin-bottom:0.5rem">Bulk export of all nodes and edges within N hops of a disease. For interactive visualization, use the Explore tab instead.</div>
             <input type="text" class="agent-input" id="subgraphDisease" placeholder="e.g. heart failure, atrial fibrillation, coronary artery disease..." data-tip="Search for a cardiovascular disease subtype (partial match)" />
             <div style="display:flex;align-items:center;gap:0.5rem;margin:0.4rem 0">
                 <label style="font-size:0.75rem;color:var(--text-muted);white-space:nowrap">Hops:</label>
@@ -562,7 +562,7 @@ details summary::-webkit-details-marker { display: none; }
             </label>
         </div>
         <div style="display:flex;align-items:center;gap:0.5rem;margin-bottom:0.75rem;flex-wrap:wrap">
-            <span style="font-size:0.72rem;color:var(--text-muted);font-weight:600;text-transform:uppercase;letter-spacing:0.05em">Edge types:</span>
+            <span style="font-size:0.8rem;color:var(--text-muted);font-weight:600;text-transform:uppercase;letter-spacing:0.05em">Edge types:</span>
             <div class="filter-chips" id="edgeFilterChips" style="margin-bottom:0"></div>
         </div>
 
@@ -635,7 +635,9 @@ details summary::-webkit-details-marker { display: none; }
                 <button onclick="document.querySelector('.about-panel').open=true;document.querySelector('.about-panel').scrollIntoView({behavior:'smooth'})" style="font-size:0.74rem;padding:0.3rem 0.6rem;border-radius:5px;border:1px solid var(--border);background:var(--surface2);color:var(--text);cursor:pointer" data-tip="View full ML methodology, model performance metrics, and evaluation details">Methodology &amp; Metrics</button>
                 <span id="mlPredCount" style="font-size:0.72rem;color:var(--text-muted);margin-left:auto"></span>
             </div>
-            <div id="mlPredTable" style="display:none;margin-top:0.5rem;max-height:300px;overflow-y:auto;border:1px solid var(--border);border-radius:6px">
+            <div id="mlPredTable" style="display:none;margin-top:0.5rem">
+                <div style="font-size:0.78rem;color:var(--red);font-style:italic;padding:0.4rem 0.5rem;background:rgba(248,113,113,0.08);border:1px solid rgba(248,113,113,0.2);border-radius:6px 6px 0 0;border-bottom:none">&#9888; These are computational ML predictions for research, not clinical evidence. Experimental validation is required before any clinical consideration.</div>
+                <div style="max-height:300px;overflow-y:auto;border:1px solid var(--border);border-radius:0 0 6px 6px">
                 <table style="width:100%;font-size:0.74rem;border-collapse:collapse">
                     <thead style="position:sticky;top:0;background:var(--surface2);z-index:1">
                         <tr>
@@ -647,6 +649,7 @@ details summary::-webkit-details-marker { display: none; }
                     </thead>
                     <tbody id="mlPredBody"></tbody>
                 </table>
+                </div>
             </div>
         </div>
 
@@ -1188,6 +1191,7 @@ let nodeChart = null, relChart = null;
 let eventSource = null;
 let exploreNetwork = null;
 let currentGraphData = { nodes: [], edges: [] };
+let currentTruncation = {};
 let activeFilters = new Set();
 const NODE_COLORS = {
     Gene: '#3b82f6', Disease: '#f87171', Drug: '#4ade80', Pathway: '#fbbf24',
@@ -1515,6 +1519,7 @@ async function loadExploreGraph() {
         console.log('[CardioKB] Graph loaded:', data.nodes.length, 'nodes,', data.edges.length, 'edges for', displayLabel);
 
         currentGraphData = data;
+        currentTruncation = data.truncation || {};
         buildFilterChips(data.nodes);
         buildEdgeFilterChips(data.edges);
         activeFilters.clear();
@@ -1547,8 +1552,12 @@ async function loadExploreGraph() {
         // Show breadcrumb
         const bc = document.getElementById('exploreBreadcrumb');
         document.getElementById('breadcrumbLabel').textContent = displayLabel;
+        const hierTrunc = (data.truncation && data.truncation.hierarchy_children) || {};
+        const hierNote = hierTrunc.total && hierTrunc.total > 30
+            ? ' (showing 30 of ' + hierTrunc.total + ' subtypes)'
+            : '';
         document.getElementById('breadcrumbStats').textContent =
-            data.nodes.length + ' nodes, ' + data.edges.length + ' edges';
+            data.nodes.length + ' nodes, ' + data.edges.length + ' edges' + hierNote;
         bc.style.display = 'block';
         document.getElementById('exploreClearBtn').style.display = '';
     } catch (e) {
@@ -1694,7 +1703,7 @@ function updatePredictedEdges() {
         id: 'ep' + i, from: e.from, to: e.to,
         label: 'ML prediction',
         title: e.label + (e.source ? ' (' + e.source + ')' : '') + ' [ML prediction — click for details]',
-        font: { size: 9, color: '#06b6d4', strokeWidth: 2, strokeColor: '#0f172a' },
+        font: { size: 11, color: '#06b6d4', strokeWidth: 2, strokeColor: '#0f172a' },
         color: { color: '#06b6d4', highlight: '#22d3ee' },
         dashes: [10, 5],
         width: 3,
@@ -1702,7 +1711,12 @@ function updatePredictedEdges() {
         _data: e,
     }));
     if (newEdges.length) exploreVisEdges.add(newEdges);
-    document.getElementById('mlPredCount').textContent = predictedData.length + ' predictions in current view';
+    const predTrunc = currentTruncation.predictions || {};
+    const predTotal = predTrunc.total || predictedData.length;
+    const truncNote = predTrunc.total && predTrunc.total > predTrunc.returned
+        ? ' (showing top ' + predTrunc.returned + ' of ' + predTotal + ' by confidence)'
+        : '';
+    document.getElementById('mlPredCount').textContent = predictedData.length + ' predictions in current view' + truncNote;
 }
 
 function getPredictionRows() {
@@ -1765,7 +1779,12 @@ function exportPredictions(format) {
     if (!rows.length) { alert('No predictions to export'); return; }
     let content, mime, ext;
     if (format === 'csv') {
-        const lines = ['Drug,Disease,Method,Confidence'];
+        const lines = [
+            '# CardioKB ML Predictions Export — NOT clinically validated',
+            '# These are computational predictions from graph embedding models (RotatE / CompGCN + XGBoost).',
+            '# They identify drugs worth investigating, not drugs to prescribe. Experimental validation required.',
+            'Drug,Disease,Method,Confidence',
+        ];
         rows.forEach(r => {
             lines.push('"' + r.drug.replace(/"/g, '""') + '","' + r.disease.replace(/"/g, '""') + '","' + r.method + '",' + (r.confidence != null ? r.confidence : ''));
         });
@@ -1773,7 +1792,11 @@ function exportPredictions(format) {
         mime = 'text/csv';
         ext = 'csv';
     } else {
-        content = JSON.stringify(rows, null, 2);
+        content = JSON.stringify({
+            warning: 'ML predictions — NOT clinically validated. These are computational predictions from graph embedding models (RotatE / CompGCN + XGBoost). They identify drugs worth investigating, not drugs to prescribe.',
+            count: rows.length,
+            predictions: rows,
+        }, null, 2);
         mime = 'application/json';
         ext = 'json';
     }
@@ -1811,7 +1834,7 @@ function renderExploreGraph(data) {
         const isDiseaseHub = isParent;
         const isSearched = n.id === searchedNodeId;
         const baseSize = isSearched ? 35 : isDiseaseHub ? 30 : isChild ? 14 : (n.type === 'Disease' ? 20 : 14);
-        const fontSize = isSearched ? 16 : isDiseaseHub ? 14 : (n.type === 'Disease' ? 11 : 9);
+        const fontSize = isSearched ? 18 : isDiseaseHub ? 16 : (n.type === 'Disease' ? 13 : 12);
         const bg = nodeColor(n.type);
         const borderColor = isSearched ? '#ffffff' : isDiseaseHub ? '#f59e0b' : isChild ? '#14b8a6' : bg;
         return {
@@ -1840,7 +1863,7 @@ function renderExploreGraph(data) {
             id: 'e' + i, from: e.from, to: e.to,
             label: isHierarchy ? 'subtype of' : (isPredicted ? 'ML prediction' : undefined),
             title: e.label + (e.source ? ' (' + e.source + ')' : '') + (isPredicted ? ' [ML prediction — click for details]' : ''),
-            font: { size: 9, color: isPredicted ? '#06b6d4' : '#f59e0b', strokeWidth: isPredicted ? 2 : 0, strokeColor: '#0f172a' },
+            font: { size: 11, color: isPredicted ? '#06b6d4' : '#f59e0b', strokeWidth: isPredicted ? 2 : 0, strokeColor: '#0f172a' },
             color: { color: isPredicted ? '#06b6d4' : (isHierarchy ? '#f59e0b' : '#64748b'), highlight: isPredicted ? '#22d3ee' : '#38bdf8' },
             dashes: isPredicted ? [10, 5] : false,
             width: isPredicted ? 3 : (isHierarchy ? 3 : 2),
@@ -2161,11 +2184,16 @@ async function loadAllConnections(nodeId, page) {
         data.connections.forEach(c => {
             const li = document.createElement('li');
             const arrow = c.direction === 'outgoing' ? '&rarr;' : '&larr;';
+            const isPred = c.rel_type === 'predictedTreatsDisease' || (c.source && c.source.includes('LinkPrediction'));
+            const predBadge = isPred
+                ? ' <span style="color:#06b6d4;font-size:0.7rem;font-weight:600;border:1px solid rgba(6,182,212,0.4);border-radius:3px;padding:0 0.25rem;margin-left:0.2rem">ML prediction</span>'
+                : '';
             li.innerHTML = '<span style="color:' + nodeColor(c.type) + ';font-weight:600">' + c.type + '</span> ' +
                 escapeHtml(c.label) +
                 ' <span style="color:var(--text-muted);font-size:0.72rem">' + arrow + ' ' + c.rel_type +
-                (c.source ? ' <span style="color:var(--green)">[' + c.source + ']</span>' : '') +
-                '</span>';
+                (c.source ? ' <span style="color:' + (isPred ? '#06b6d4' : 'var(--green)') + '">[' + c.source + ']</span>' : '') +
+                '</span>' + predBadge;
+            if (isPred) li.style.borderLeft = '2px solid #06b6d4';
             list.appendChild(li);
         });
 
@@ -2257,7 +2285,8 @@ const QUERY_TEMPLATES = [
     { name: 'Top Connected Genes', desc: 'Most connected genes in the entire graph', query: "MATCH (g:Gene)-[r]-()\nRETURN g.geneSymbol AS gene, count(r) AS connections\nORDER BY connections DESC LIMIT 25" },
     { name: 'Gene Expression', desc: 'Where are heart failure genes most expressed?', query: "MATCH (g:Gene)-[:geneAssociatesWithDisease]->(d:Disease)\nWHERE toLower(d.diseaseName) = 'congestive heart failure'\nWITH g LIMIT 20\nMATCH (b:BodyPart)-[r:bodyPartOverexpressesGene]->(g)\nRETURN g.geneSymbol AS gene, b.bodyPartName AS tissue, r.expressionScore AS score\nORDER BY r.expressionScore DESC LIMIT 50" },
     { name: 'Drug-Side Effects', desc: 'Side effects reported for a specific drug', query: "MATCH (dr:Drug)-[:compoundCausesSideEffect]->(se:SideEffect)\nWHERE toLower(dr.commonName) CONTAINS 'metoprolol'\nRETURN dr.commonName AS drug, se.sideEffectName AS side_effect LIMIT 50" },
-    { name: 'Drug Repurposing', desc: 'Find drugs that bind genes associated with a target disease, plus ML-predicted candidates', query: "MATCH (d:Disease)<-[:geneAssociatesWithDisease]-(g:Gene)<-[:drugBindsGene|chemicalBindsGene]-(dr:Drug)\nWHERE toLower(d.diseaseName) CONTAINS 'heart failure'\nRETURN DISTINCT dr.commonName AS drug, g.geneSymbol AS target_gene,\n       d.diseaseName AS disease, 'gene-mediated' AS evidence_type, null AS confidence\nORDER BY drug\nLIMIT 50\nUNION\nMATCH (dr:Drug)-[r:predictedTreatsDisease]->(d:Disease)\nWHERE toLower(d.diseaseName) CONTAINS 'heart failure'\nRETURN DISTINCT dr.commonName AS drug, null AS target_gene,\n       d.diseaseName AS disease, 'ML predicted' AS evidence_type, r.confidence AS confidence\nORDER BY confidence DESC\nLIMIT 50" },
+    { name: 'Drug Repurposing (gene-mediated)', desc: 'Find drugs that bind genes associated with a target disease', query: "MATCH (d:Disease)<-[:geneAssociatesWithDisease]-(g:Gene)<-[:drugBindsGene|chemicalBindsGene]-(dr:Drug)\nWHERE toLower(d.diseaseName) CONTAINS 'heart failure'\nRETURN DISTINCT dr.commonName AS drug, g.geneSymbol AS target_gene,\n       d.diseaseName AS disease\nORDER BY drug\nLIMIT 50" },
+    { name: 'Drug Repurposing (ML predicted)', desc: 'ML-predicted drug repurposing candidates for a target disease', query: "MATCH (dr:Drug)-[r:predictedTreatsDisease]->(d:Disease)\nWHERE toLower(d.diseaseName) CONTAINS 'heart failure'\nRETURN dr.commonName AS drug, d.diseaseName AS disease,\n       r.confidence AS confidence, r.source AS method\nORDER BY r.confidence DESC\nLIMIT 50" },
     { name: 'Shared Genes', desc: 'Genes shared between two diseases', query: "MATCH (d1:Disease)<-[:geneAssociatesWithDisease]-(g:Gene)-[:geneAssociatesWithDisease]->(d2:Disease)\nWHERE toLower(d1.diseaseName) CONTAINS 'atrial fibrillation'\n  AND toLower(d2.diseaseName) CONTAINS 'heart failure'\n  AND d1 <> d2\nRETURN g.geneSymbol AS gene, d1.diseaseName AS disease1, d2.diseaseName AS disease2\nLIMIT 50" },
 ];
 
@@ -2445,17 +2474,25 @@ function initQueryPanelGraph(panelId, data) {
         id: n.id, label: n.label,
         color: { background: nodeColor(n.type), border: nodeColor(n.type),
             highlight: { background: '#fff', border: nodeColor(n.type) } },
-        font: { color: '#e2e8f0', size: 10 },
+        font: { color: '#e2e8f0', size: 12 },
         shape: n.type === 'Disease' ? 'diamond' : 'dot',
         size: n.type === 'Disease' ? 18 : 10,
         title: n.type + ': ' + n.label,
     })));
 
-    const visEdges = new vis.DataSet((data.edges || []).map((e, i) => ({
-        id: panelId + 'e' + i, from: e.from, to: e.to, label: e.label,
-        font: { size: 7, color: '#64748b', strokeWidth: 0 },
-        color: { color: '#475569', highlight: '#38bdf8' }, arrows: 'to',
-    })));
+    const visEdges = new vis.DataSet((data.edges || []).map((e, i) => {
+        const isPred = e.label === 'predictedTreatsDisease' || (e.source && e.source.includes('LinkPrediction'));
+        return {
+            id: panelId + 'e' + i, from: e.from, to: e.to,
+            label: isPred ? 'ML prediction' : e.label,
+            title: e.label + (e.source ? ' (' + e.source + ')' : '') + (isPred ? ' [ML prediction — not clinically validated]' : ''),
+            font: { size: 9, color: isPred ? '#06b6d4' : '#64748b', strokeWidth: isPred ? 2 : 0, strokeColor: '#0f172a' },
+            color: { color: isPred ? '#06b6d4' : '#475569', highlight: isPred ? '#22d3ee' : '#38bdf8' },
+            dashes: isPred ? [10, 5] : false,
+            width: isPred ? 3 : 1,
+            arrows: 'to',
+        };
+    }));
 
     const network = new vis.Network(container, { nodes: visNodes, edges: visEdges }, {
         physics: { solver: 'forceAtlas2Based', forceAtlas2Based: { gravitationalConstant: -40, centralGravity: 0.005, springLength: 100 },

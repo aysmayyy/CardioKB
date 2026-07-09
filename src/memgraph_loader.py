@@ -433,6 +433,7 @@ class Neo4jLoader:
         # 'subject_match_type' / 'object_match_type' to 'integer'.
         subj_match_type = pc.get('subject_match_type')
         obj_match_type = pc.get('object_match_type')
+        case_insensitive = pc.get('case_insensitive_match', False)
 
         def _match_expr(col, match_type):
             if match_type == 'integer':
@@ -444,12 +445,20 @@ class Neo4jLoader:
 
         # Forward relationship query
         rel_verb = "CREATE" if use_create else "MERGE"
-        query = (
-            f"UNWIND $rows AS row "
-            f"MATCH (s:{subj_node_type} {{{subj_match_prop}: {subj_expr}}}) "
-            f"MATCH (o:{obj_node_type} {{{obj_match_prop}: {obj_expr}}}) "
-            f"{rel_verb} (s)-[r:{rel_type}]->(o) "
-        )
+        if case_insensitive:
+            query = (
+                f"UNWIND $rows AS row "
+                f"MATCH (s:{subj_node_type}) WHERE toLower(s.{subj_match_prop}) = toLower({subj_expr}) "
+                f"MATCH (o:{obj_node_type}) WHERE toLower(o.{obj_match_prop}) = toLower({obj_expr}) "
+                f"{rel_verb} (s)-[r:{rel_type}]->(o) "
+            )
+        else:
+            query = (
+                f"UNWIND $rows AS row "
+                f"MATCH (s:{subj_node_type} {{{subj_match_prop}: {subj_expr}}}) "
+                f"MATCH (o:{obj_node_type} {{{obj_match_prop}: {obj_expr}}}) "
+                f"{rel_verb} (s)-[r:{rel_type}]->(o) "
+            )
         # Build SET clause: source label + any data properties
         set_parts = []
         if source_label:

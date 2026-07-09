@@ -494,6 +494,7 @@ def graph_data():
             # renders as a connected star instead of disjoint clusters.
             hier_seen = set()
             hub_ids = []
+            hier_children_total = 0
             if not non_disease_seeds:
                 # 1. Find DOID hub nodes that match the search terms and
                 #    participate in the IS_A hierarchy.
@@ -576,6 +577,16 @@ def graph_data():
                             })
 
                     # 4. Fetch children (subtypes) of hub nodes.
+                    hier_count_result = session.run(
+                        "MATCH (child:Disease)-[:diseaseIsSubtypeOf]->(parent:Disease) "
+                        "WHERE id(parent) IN $hids "
+                        "  AND NOT id(child) IN $exclude "
+                        "RETURN count(child) AS total",
+                        hids=hub_ids,
+                        exclude=seed_ids + hub_ids,
+                    )
+                    hier_children_total = hier_count_result.single()["total"]
+
                     child_result = session.run(
                         "MATCH (child:Disease)-[r:diseaseIsSubtypeOf]->(parent:Disease) "
                         "WHERE id(parent) IN $hids "
@@ -621,7 +632,7 @@ def graph_data():
             for sid in seed_ids:
                 core_result = session.run(
                     "MATCH (d)-[r]-(n) "
-                    "WHERE id(d) = $did "
+                    "WHERE id(d) = $did AND NOT type(r) IN ['predictedTreatsDisease', 'diseaseIsSubtypeOf'] "
                     "WITH d, r, n, labels(n)[0] AS ntype, "
                     "     coalesce(n.specificityScore, 0.0) AS spec "
                     "ORDER BY spec DESC "
@@ -688,7 +699,16 @@ def graph_data():
 
             # --- Predicted edges: predictedTreatsDisease for nodes in graph ---
             all_node_ids = list(nodes.keys())
+            pred_total = 0
             if all_node_ids:
+                pred_count_result = session.run(
+                    "MATCH (d:Drug)-[r:predictedTreatsDisease]->(dis:Disease) "
+                    "WHERE id(d) IN $nids OR id(dis) IN $nids "
+                    "RETURN count(r) AS total",
+                    nids=all_node_ids,
+                )
+                pred_total = pred_count_result.single()["total"]
+
                 pred_result = session.run(
                     "MATCH (d:Drug)-[r:predictedTreatsDisease]->(dis:Disease) "
                     "WHERE id(d) IN $nids OR id(dis) IN $nids "
@@ -696,6 +716,7 @@ def graph_data():
                     "       r.confidence AS confidence, r.source AS source, "
                     "       labels(d)[0] AS d_label, properties(d) AS d_props, "
                     "       labels(dis)[0] AS dis_label, properties(dis) AS dis_props "
+                    "ORDER BY r.confidence DESC "
                     "LIMIT 200",
                     nids=all_node_ids,
                 )
@@ -733,9 +754,14 @@ def graph_data():
                         },
                     })
 
+        pred_returned = sum(1 for e in edges if e.get('label') == 'predictedTreatsDisease')
         return jsonify({
             'nodes': list(nodes.values()),
             'edges': edges,
+            'truncation': {
+                'predictions': {'returned': pred_returned, 'total': pred_total},
+                'hierarchy_children': {'returned': min(hier_children_total, 30), 'total': hier_children_total},
+            },
         })
     except Exception as e:
         return jsonify({'error': str(e)}), 500
