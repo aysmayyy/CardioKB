@@ -167,14 +167,14 @@ doc.add_paragraph(
     'into a single queryable graph database. The current graph contains:'
 )
 bullet('459,092 nodes across 17 distinct node types')
-bullet('5,456,579 relationships across 28 relationship types')
-bullet('23 data sources + 3 ML prediction sources (Node2Vec, RotatE, CompGCN)')
+bullet('5,474,744 relationships across 28 relationship types')
+bullet('23 data sources + 2 ML prediction sources (CompGCN, RotatE)')
 bullet('Every relationship carries a source property identifying its originating database')
 doc.add_paragraph('It provides four core capabilities:')
 bullet('A unified graph where a single Cypher query can traverse from a drug to its gene targets to associated diseases to clinical trials testing those drugs')
 bullet('An automated ETL pipeline that can rebuild the entire graph from source data in approximately 5 minutes using BaseAgent multi-agent orchestration')
 bullet('A web interface for interactive exploration, AI-powered natural language querying, and disease subgraph extraction with JSON/CSV export')
-bullet('An ML-based drug repurposing pipeline that uses knowledge graph embeddings (RotatE, CompGCN) to predict new drug-disease treatment relationships with AUROC up to 0.9717')
+bullet('An ML-based drug repurposing pipeline that uses knowledge graph embeddings (RotatE, CompGCN) to predict new drug-disease treatment relationships with AUROC up to 0.9865')
 
 doc.add_heading('Why Cardiovascular Disease Specifically', level=2)
 bullet('Highest global mortality of any disease category (17.9 million deaths/year)')
@@ -202,7 +202,7 @@ add_table(
     [
         ['Disease focus', '184-term CVD filter ensures all disease-associated edges are relevant to cardiovascular research, reducing noise', 'General-purpose (all diseases), no filtering'],
         ['Automated rebuild', 'BaseAgent multi-agent orchestration rebuilds full graph in ~5 min', 'Manual builds take weeks/months'],
-        ['Integrated ML', '1,500 predicted drug-disease edges stored in graph with confidence scores', 'ML predictions separate from graph, not queryable inline'],
+        ['Integrated ML', '20,000 predicted drug-disease edges stored in graph with confidence scores', 'ML predictions separate from graph, not queryable inline'],
         ['Provenance tracking', 'Every edge carries source property (e.g., source: "DrugBank")', 'Limited or no per-edge provenance'],
         ['Deduplication', '12 redundant sources removed after systematic audit', 'Often include overlapping sources without audit'],
     ],
@@ -238,12 +238,14 @@ doc.add_heading('Direct Parsers (5 sources)', level=2)
 
 bold_para('1. ClinicalTrials.gov', '')
 doc.add_paragraph(
-    'Contribution: 85,677 ClinicalTrial nodes, 27,866 STUDIES_CONDITION edges, 17,492 TESTS_INTERVENTION edges. '
+    'Contribution: 21,578 ClinicalTrial nodes, 20,667 STUDIES_CONDITION edges, 3,180 TESTS_INTERVENTION edges. '
     'Why included: Only source for clinical trial data linking interventions to disease conditions. Queries '
     'ClinicalTrials.gov API v2 per CVD disease term (184 terms), caches JSON responses. '
     'Limitation: Drug name matching to DrugBank IDs is inexact (string matching). Some trials study non-drug '
-    'interventions (devices, procedures) that do not map to Drug nodes. Phase 3/4 trials with drug interventions '
-    'contribute to the drugTreatsDisease edge set (868 edges) as proxy treatment evidence.'
+    'interventions (devices, procedures) that do not map to Drug nodes. Phase 3/4 trials contribute 153 '
+    'drugTreatsDisease edges after 4 strict filters: (1) primaryPurpose==TREATMENT, (2) drug in EXPERIMENTAL '
+    'arm, (3) disease matches first-listed condition, (4) edges carry trialCount property. This replaced an '
+    'earlier unfiltered approach that produced 868 spurious edges.'
 )
 
 bold_para('2. ClinPGx (PharmGKB successor)', '')
@@ -301,7 +303,7 @@ hetio_sources = [
     ['12', 'DrugCentral', '16,403 pharmacologic class + 245 treats + 96 palliates edges', 'Only source for pharmacologic class assignments and FDA-approved indications. CUI-to-DOID mapped.', 'Not all DrugCentral entries have DrugBank cross-references.'],
     ['13', 'BindingDB', '12,250 chemicalBindsGene edges', 'Complements DrugBank with experimentally measured binding affinities from a different curation source.', 'No binding affinity values loaded as properties (only edge existence).'],
     ['14', 'PubTator Central', '744,427 geneAssociatesWithDisease + 4,320 diseaseAssociatesWithDisease edges (CVD AND-filter)', 'Largest source of literature-mined gene-disease associations.', 'Cooccurrence is not causation. MeSH-to-DOID mapping introduces potential mismatches.'],
-    ['15', 'CTD', '4,572 unique Drug nodes; 116,451 chemIncreasesExp + 97,951 chemDecreasesExp edges; 2,757 drugTreatsDisease edges', 'Only source for directional chemical-gene expression effects (increases vs. decreases). Also contributes 73% of drugTreatsDisease edges.', 'Expression relationships curated from literature; may not reflect dose/tissue-specific effects.'],
+    ['15', 'CTD', '4,572 unique Drug nodes; 116,451 chemIncreasesExp + 97,951 chemDecreasesExp edges; 3,115 drugTreatsDisease edges', 'Only source for directional chemical-gene expression effects (increases vs. decreases). Also contributes 52% of drugTreatsDisease edges.', 'Expression relationships curated from literature; may not reflect dose/tissue-specific effects.'],
     ['16', 'Bgee (Gene Expression Atlas)', '784,026 underexpresses + 1,872 overexpresses edges with expressionScore', 'Only source for tissue-specific gene expression patterns with quantitative scores.', 'Heavily skewed toward underexpression (784K vs 1.9K).'],
     ['17', 'HPO', '19,389 Phenotype nodes; 162,994 geneAssociatesWithPhenotype edges', 'Only source for gene-phenotype associations. Connects genetics to observable clinical features.', 'Annotations primarily from rare/Mendelian diseases; may underrepresent complex CVD phenotypes.'],
     ['18', 'Reactome', '44,979 geneInPathway + 44,979 pathwayContainsGene edges', 'Authoritative curated biological pathway assignments.', 'Pathway boundaries are somewhat arbitrary; genes appear in many overlapping pathways.'],
@@ -336,7 +338,7 @@ doc.add_paragraph(
 
 bold_para('23. DrugBank_Indications (text-mined)', '')
 doc.add_paragraph(
-    'Contribution: 2,930 drugTreatsDisease edges + 10,955 drugTreatsPhenotype edges. '
+    'Contribution: 2,512 drugTreatsDisease edges + 10,955 drugTreatsPhenotype edges. '
     'Why included: Text-mined from DrugBank XML indication free-text fields via scripts/drugbank_indications.py. '
     'Significantly increased treatment edge coverage by matching indication text against Disease and Phenotype node names. '
     'Counted as a separate source because edges carry the distinct source label "DrugBank_Indications" in the graph. '
@@ -365,8 +367,8 @@ doc.add_heading('3. Graph Structure', level=1)
 doc.add_heading('Scale', level=2)
 doc.add_paragraph(
     'The current CardioKB graph (as of July 2026) contains 459,092 nodes across 17 distinct node types '
-    'and 5,456,579 relationships across 28 relationship types. There are 23 data sources '
-    '(each tagged with a source property), plus 3 ML prediction sources. '
+    'and 5,474,744 relationships across 28 relationship types. There are 23 data sources '
+    '(each tagged with a source property), plus 2 ML prediction sources. '
     'Every single relationship in the graph carries a source property identifying which database or model produced it.'
 )
 
@@ -400,7 +402,7 @@ add_table(
     ['Relationship', 'Direction', 'Source', 'Count', 'Properties', 'Biological Meaning'],
     [
         ['bodyPartOverexpressesGene', 'BodyPart→Gene', 'Bgee', '2,749,193', 'expressionScore', 'This gene is expressed at higher/lower levels in this tissue compared to baseline'],
-        ['geneAssociatesWithDisease', 'Gene→Disease', 'PubTator + OpenTargets', '539,964', 'score (OT)', 'Literature or curated evidence linking this gene to this disease'],
+        ['geneAssociatesWithDisease', 'Gene→Disease', 'PubTator + OpenTargets', '542,096', 'score (OT)', 'Literature or curated evidence linking this gene to this disease'],
         ['chemicalIncreasesExpression', 'Drug→Gene', 'CTD', '343,823', '—', 'This chemical increases the mRNA/protein expression of this gene'],
         ['chemicalDecreasesExpression', 'Drug→Gene', 'CTD', '328,726', '—', 'This chemical decreases the mRNA/protein expression of this gene'],
         ['geneAssociatesWithPhenotype', 'Gene→Phenotype', 'HPO', '270,265', '—', 'Mutations in this gene are associated with this observable clinical feature'],
@@ -413,7 +415,7 @@ add_table(
         ['compoundUpregulatesGene', 'Drug→Gene', 'LINCS L1000', '74,854', 'zScore', 'This drug increases expression of this gene (measured in cell lines)'],
         ['compoundCausesSideEffect', 'Drug→SideEffect', 'SIDER', '67,721', '—', 'This drug is known to cause this adverse reaction'],
         ['compoundDownregulatesGene', 'Drug→Gene', 'LINCS L1000', '64,661', 'zScore', 'This drug decreases expression of this gene (measured in cell lines)'],
-        ['variantAssocWithDisease', 'Variant→Disease', 'ClinVar', '51,323', 'clinicalSignificance', 'This variant is clinically associated with this disease (Pathogenic/Benign/VUS)'],
+        ['variantAssocWithDisease', 'Variant→Disease', 'ClinVar', '8,413', 'clinicalSignificance', 'This variant is clinically associated with this disease (Pathogenic/Benign/VUS)'],
         ['drugBindsGene', 'Drug→Gene', 'DrugBank', '29,363', 'interactionType', 'This drug physically binds to this gene product (protein target)'],
         ['geneInFamily', 'Gene→GeneFamily', 'HGNC', '27,022', '—', 'This gene belongs to this gene family'],
         ['compoundInPharmClass', 'Drug→PharmClass', 'DrugCentral', '25,687', '—', 'This drug belongs to this FDA pharmacologic class'],
@@ -421,10 +423,10 @@ add_table(
         ['STUDIES_CONDITION', 'Trial→Disease', 'ClinicalTrials.gov', '20,667', '—', 'This clinical trial studies this disease condition'],
         ['tfInteractsWithGene', 'TF→Gene', 'DoRothEA', '15,082', 'morScore, confidence', 'This transcription factor regulates this gene (+1=activates, -1=represses)'],
         ['drugTreatsPhenotype', 'Drug→Phenotype', 'DrugBank_Indications', '10,955', '—', 'This drug treats this phenotype/condition (text-mined from DrugBank indication fields)'],
-        ['drugTreatsDisease', 'Drug→Disease', 'CTD+CT+DC+DBI', '6,272', '—', 'This drug is used to treat this disease (curated + clinical trial + FDA + text-mined evidence)'],
+        ['drugTreatsDisease', 'Drug→Disease', 'CTD+CT+DC+DBI', '5,937', '—', 'This drug is used to treat this disease (curated + clinical trial + FDA + text-mined evidence)'],
         ['TESTS_INTERVENTION', 'Trial→Drug', 'ClinicalTrials.gov', '3,180', '—', 'This clinical trial tests this drug as an intervention'],
         ['diseaseIsSubtypeOf', 'Disease→Disease', 'Disease Ontology', '2,581', '—', 'This disease is a subtype of this broader disease category'],
-        ['predictedTreatsDisease', 'Drug→Disease', 'ML Predictions', '1,500', 'confidence', 'ML model predicts this drug might treat this disease (NOT clinically validated)'],
+        ['predictedTreatsDisease', 'Drug→Disease', 'ML Predictions', '20,000', 'confidence', 'ML model predicts this drug might treat this disease (NOT clinically validated)'],
         ['AFFECTS_RESPONSE_TO', 'Gene→Drug', 'ClinPGx', '74', '—', 'Genetic variation in this gene affects response to this drug'],
     ],
     col_widths=[3, 2, 1.8, 1.3, 1.8, 5.5]
@@ -516,8 +518,8 @@ doc.add_paragraph(
     'SLURM (Simple Linux Utility for Resource Management) is a job scheduler used on High-Performance '
     'Computing (HPC) clusters. We used HPC for the ML embedding training because:'
 )
-bullet('CompGCN training requires 32 million parameters and ~46 minutes on a GPU. This would take hours on a CPU.')
-bullet('RotatE training via PyKEEN requires ~10.3 hours on an L40S GPU with 64 negative samples per positive edge.')
+bullet('CompGCN training requires 32 million parameters and ~7 minutes on a GPU. This would take hours on a CPU.')
+bullet('RotatE training via PyKEEN requires ~3.4 hours on an L40S GPU with 64 negative samples per positive edge.')
 bullet('Node2Vec needed SparseOTF mode on HPC to avoid out-of-memory errors on a 459K-node graph.')
 doc.add_paragraph(
     'SLURM job scripts (hpc/*.slurm) request specific resources (GPU type, memory, time limit) and queue '
@@ -542,7 +544,7 @@ doc.add_heading('5.2 STUDIES_CONDITION Synonym Resolution (1 → 20,667 edges)',
 bold_para('What it was: ', 'The ClinicalTrials.gov parser initially produced only 1 STUDIES_CONDITION edge because it was doing exact string matching between trial condition names and Disease Ontology disease names.')
 bold_para('Why it broke: ', 'Clinical trials use clinical terminology (e.g., "Heart Attack") while Disease Ontology uses formal names (e.g., "myocardial infarction"). These are synonyms for the same disease but don\'t match as strings.')
 bold_para('How fixed: ', 'Implemented cascading synonym resolution using Disease Ontology\'s synonym fields. The parser now builds a lookup table mapping all synonyms (exact synonyms, related synonyms, narrow synonyms) to their canonical DOID. When matching trial conditions, it first tries exact disease name match, then synonym match, then partial string match.')
-bold_para('Result: ', 'STUDIES_CONDITION edges increased from 1 to 20,667 (later growing to 27,866 with additional disease terms).')
+bold_para('Result: ', 'STUDIES_CONDITION edges increased from 1 to 20,667.')
 
 doc.add_heading('5.3 CTD Expression Edge Fix (0 → 525,907 edges)', level=2)
 bold_para('What it was: ', 'The initial CTD parser produced 0 chemicalIncreasesExpression and 0 chemicalDecreasesExpression edges despite CTD containing hundreds of thousands of chemical-gene expression relationships.')
@@ -572,11 +574,11 @@ doc.add_paragraph(
 add_table(
     ['Source', 'Edges', 'Evidence Type', 'Why This Source'],
     [
-        ['CTD', '2,757', 'Curated chemical-disease therapeutic relationships from scientific literature', 'Literature-curated, high confidence.'],
-        ['DrugBank_Indications', '2,930', 'Text-mined from DrugBank XML indication free-text fields', 'Whole-word disease name matching against existing Disease nodes. Significantly increased coverage.'],
-        ['ClinicalTrials.gov', '868', 'Extracted from Phase 3/4 trial intervention-condition pairs', 'Phase 3/4 trials are proxy evidence that a drug treats a disease.'],
+        ['CTD', '3,115', 'Curated chemical-disease therapeutic relationships from scientific literature', 'Literature-curated, high confidence.'],
+        ['DrugBank_Indications', '2,512', 'Text-mined from DrugBank XML indication free-text fields', 'Whole-word disease name matching against existing Disease nodes. Significantly increased coverage.'],
+        ['ClinicalTrials.gov', '153', 'Filtered from Phase 3/4 trials with 4 criteria: primaryPurpose==TREATMENT, EXPERIMENTAL arm, first-listed condition match, trialCount property', 'High-confidence proxy treatment evidence after 82.4% reduction from unfiltered 868 edges.'],
         ['DrugCentral', '157', 'FDA-approved indications mapped via CUI-to-DOID', 'Regulatory evidence — FDA-approved indications.'],
-        ['Total (deduplicated)', '6,272', 'Combined, deduplicated by (Drug, Disease) pair', 'The original 3,782 curated edges were used as ML training labels. The 2,930 DrugBank_Indications edges were added post-training.'],
+        ['Total (deduplicated)', '5,937', 'Combined, deduplicated by (Drug, Disease) pair', '4,726 training edges used as ML training labels. DrugBank_Indications edges added post-training.'],
     ],
     col_widths=[3, 1.5, 6, 5.5]
 )
@@ -591,6 +593,12 @@ doc.add_paragraph(
     'produce false positive matches. The NL2Cypher instructions use UNION ALL across both relationship types '
     'for treatment queries. Script: scripts/drugbank_indications.py.'
 )
+
+doc.add_heading('5.7.2 ClinicalTrials.gov Inference Methodology Fix (868 to 153 edges)', level=2)
+bold_para('What it was: ', 'The original ClinicalTrials.gov parser inferred drugTreatsDisease edges from any Phase 3/4 trial where a drug intervention was linked to a disease condition. This produced 868 edges.')
+bold_para('Why it was wrong: ', 'Many edges were spurious — trials with primaryPurpose of "Prevention" or "Diagnostic" (not treatment), drugs serving as comparators or placebos rather than experimental interventions, and diseases matching secondary conditions rather than the primary condition under study.')
+bold_para('How fixed: ', 'Four filters applied via ClinicalTrials.gov API v2 batch queries: (1) primaryPurpose must be "TREATMENT", (2) drug must be in an EXPERIMENTAL arm (not comparator/placebo), (3) disease must match the first-listed condition (convention for primary condition), (4) edges carry a trialCount property counting qualifying trials. Result: 868 to 153 edges (82.4% reduction). The total drugTreatsDisease count dropped from 6,272 to 5,937.')
+bold_para('Why it matters: ', 'Inflated treatment edges would have added noise to both the knowledge graph and the ML training data. The filtered 153 edges represent higher-confidence therapeutic associations where the trial was specifically designed to test treatment efficacy.')
 
 doc.add_heading('5.8 Named Docker Volume Persistence Issue', level=2)
 bold_para('What it is: ', 'Docker containers can store data in volumes. An anonymous volume is created fresh each time a container starts and is deleted when the container is removed. A named volume persists independently of the container lifecycle.')
@@ -614,21 +622,21 @@ doc.add_heading('6. ML Pipeline — Drug Repurposing Link Prediction', level=1)
 doc.add_heading('6.1 Why Link Prediction', level=2)
 bold_para('What link prediction is: ', 'Given a graph with known edges, link prediction asks: "Which edges are missing?" More precisely, given two nodes that are not currently connected by a specific relationship type, how likely is it that this relationship should exist? The model learns patterns from existing edges to score potential new ones.')
 bold_para('Why drug repurposing specifically: ', 'Drug repurposing (finding new therapeutic uses for existing drugs) is faster and cheaper than de novo drug development because repurposed drugs have already passed safety testing. Bringing a repurposed drug to market costs ~$300M and takes ~6.5 years, compared to ~$2.6B and ~13 years for a new drug.')
-bold_para('What the task is: ', 'Given the CardioKB graph with 3,782 known drugTreatsDisease edges (at time of training — now 6,272 after DrugBank_Indications enrichment), predict which of the remaining ~4.4 million possible Drug-Disease pairs are most likely to be genuine treatment relationships. The top predictions become hypotheses for experimental validation. Note: the ML models were trained on the original 3,782 curated edges; the 2,930 DrugBank_Indications edges were added post-training and do not affect ML results.')
+bold_para('What the task is: ', 'Given the CardioKB graph with 4,726 training drugTreatsDisease edges (5,937 total after all splits), predict which of the remaining ~4.4 million possible Drug-Disease pairs are most likely to be genuine treatment relationships. The top predictions become hypotheses for experimental validation. Note: the ML models were trained on the 4,726 train-split edges; the DrugBank_Indications edges were added post-training and do not affect ML results.')
 
 doc.add_heading('6.2 Data Preparation', level=2)
 
-bold_para('drugTreatsDisease breakdown: ', 'CTD provides 2,757 edges (curated from literature), ClinicalTrials.gov provides 868 edges (from Phase 3/4 trials where the drug is being tested as a treatment — this counts as proxy evidence because Phase 3/4 means the drug has already shown efficacy signals), and DrugCentral provides 157 edges (FDA-approved indications). After deduplication by (Drug, Disease) pair: 3,782 total positive edges.')
+bold_para('drugTreatsDisease breakdown: ', 'CTD provides 3,115 edges (curated from literature), ClinicalTrials.gov provides 153 edges (filtered from Phase 3/4 trials with 4 criteria: primaryPurpose==TREATMENT, EXPERIMENTAL arm, first-listed condition match, trialCount property), DrugBank_Indications provides 2,512 edges (text-mined from indication fields), and DrugCentral provides 157 edges (FDA-approved indications). After deduplication by (Drug, Disease) pair: 5,937 total positive edges.')
 
 bold_para('Why Phase 3/4 counts as proxy treatment evidence: ', 'A drug in a Phase 3 or 4 clinical trial for a disease has already passed safety testing (Phase 1) and shown preliminary efficacy (Phase 2). While not yet FDA-approved, the existence of a large-scale efficacy trial is strong evidence of a therapeutic relationship. We only include trials where the drug is the intervention and the disease is the condition, not observational studies.')
 
-bold_para('80/10/10 stratified split: ', '"Stratified" means all 25 edge types are split proportionally. If drugTreatsDisease is 0.07% of all edges, then ~0.07% of the train, validation, and test sets are drugTreatsDisease edges. This ensures the train set reflects the full graph topology, not just a biased sample. Split seed = 42 for reproducibility. Result: 4,349,555 train / 543,683 validation / 543,683 test edges. For drugTreatsDisease specifically: 3,026 train / ~310 validation / ~325 test.')
+bold_para('80/10/10 stratified split: ', '"Stratified" means all 25 edge types are split proportionally. If drugTreatsDisease is 0.07% of all edges, then ~0.07% of the train, validation, and test sets are drugTreatsDisease edges. This ensures the train set reflects the full graph topology, not just a biased sample. Split seed = 42 for reproducibility. Result: 4,349,555 train / 543,683 validation / 543,683 test edges. For drugTreatsDisease specifically: 4,726 train / 485 validation / 484 test.')
 
 bold_para('Negative sampling: ', 'For each positive drugTreatsDisease edge (a drug that does treat a disease), we sample one negative: a random (Drug, Disease) pair that does not exist anywhere in the full graph (not just the train set). The 1:1 ratio keeps classes balanced. We sample against the FULL graph (not just train) to prevent a val/test positive from appearing as a train negative, which would be a false negative. Seeds: train=42, val=123, test=456, identical across all three methods for fair comparison.')
 
 bold_para('Why data leakage matters and how we prevented it: ', 'Data leakage means the model sees test data during training, inflating performance. We prevent it four ways: (1) all embedding methods train ONLY on the train split — val/test edges are removed from the graph before training; (2) negative sampling checks the full graph, not just train; (3) XGBoost decoder early-stops on validation, never touching test; (4) test set is used only for final evaluation numbers.')
 
-bold_para('Therapeutic filter: ', 'Not all 32,849 Drug nodes are therapeutically relevant. Many are metabolites, food compounds, or experimental chemicals with no treatment signal. We filter to drugs that have at least one "therapeutic signal" edge (drugTreatsDisease, drugBindsGene, chemicalIncreasesExpression, etc.). This reduces 32,849 to 9,735 therapeutic drugs. Without this filter, the prediction space would be dominated by irrelevant chemicals.')
+bold_para('Therapeutic filter: ', 'Not all 32,849 Drug nodes are therapeutically relevant. Many are metabolites, food compounds, or experimental chemicals with no treatment signal. We filter to drugs that have at least one "therapeutic signal" edge (drugTreatsDisease, drugBindsGene, chemicalIncreasesExpression, etc.). This reduces 32,849 to 10,310 therapeutic drugs. Without this filter, the prediction space would be dominated by irrelevant chemicals.')
 
 doc.add_heading('6.3 Node2Vec (Dropped from Paper)', level=2)
 bold_para('How random walks work: ', 'Node2Vec generates random paths through the graph, like a person randomly wandering through a city following streets. Starting from each node, it takes a series of steps (walk_length=80), at each step choosing a neighbor to visit. The choice is biased by two parameters: p (return parameter, set to 1.0) controls the likelihood of immediately revisiting the previous node, and q (in-out parameter, set to 0.5) controls whether the walk explores outward (BFS-like, discovering new neighborhoods) or stays local (DFS-like, exploring the immediate community). With q=0.5, walks are biased toward DFS — staying in the local neighborhood.')
@@ -644,51 +652,51 @@ bold_para('What knowledge graph embeddings are: ', 'Knowledge graph embedding me
 
 bold_para('How rotation in complex vector space works: ', 'RotatE models each relation as a rotation in complex number space. For a triple (head, relation, tail), the scoring function is ||h ∘ r - t||, where h and t are complex vectors and r is a unit-modulus complex vector (meaning |r| = 1, so it only rotates, never scales). Each of the 25 relation types learns its own rotation angle. This means drugBindsGene rotates embeddings differently than chemicalIncreasesExpression, so the model can distinguish between relationship types.')
 
-bold_para('Implementation: ', 'PyKEEN framework. Embedding dim = 128 complex (256 real after concatenating real and imaginary parts). Training: 200 epochs, batch_size=4096, learning_rate=1e-4, 64 negative samples per positive, NSSALoss (Negative Sampling Self-Adversarial Loss with margin=9.0 and adversarial_temperature=1.0). Trained on L40S GPU on HPC for ~10.3 hours.')
+bold_para('Implementation: ', 'PyKEEN framework. Embedding dim = 128 complex (256 real after concatenating real and imaginary parts). Training: 200 epochs, batch_size=4096, learning_rate=1e-4, 64 negative samples per positive, NSSALoss (Negative Sampling Self-Adversarial Loss with margin=9.0 and adversarial_temperature=1.0). Trained on L40S GPU on HPC for ~3.4 hours.')
 
 bold_para('Native MRR: ', '0.1119 (PyKEEN filtered ranking). This is modest because ranking evaluates ALL 459K entities as candidates — the model must rank the correct tail entity above 459,091 others. The XGBoost decoder on the restricted Drug × Disease candidate space is the operationally relevant metric.')
 
-bold_para('Why cosine decoder fails with RotatE: ', 'RotatE embeddings are optimized for the rotation scoring function (h ∘ r ≈ t), not for cosine similarity. Two entities can have very similar cosine angles but be far apart after the relation-specific rotation. Cosine AUROC is only 0.5299 (barely above random 0.5). The XGBoost decoder learns the nonlinear relationship between embedding features and treatment probability.')
+bold_para('Why cosine decoder fails with RotatE: ', 'RotatE embeddings are optimized for the rotation scoring function (h ∘ r ≈ t), not for cosine similarity. Two entities can have very similar cosine angles but be far apart after the relation-specific rotation. Cosine AUROC is only 0.7807. The XGBoost decoder learns the nonlinear relationship between embedding features and treatment probability.')
 
-bold_para('Results: ', 'AUROC 0.9652, AUPRC 0.9655, Hits@100 = 31.1%, Hits@200 = 60.0% with XGBoost decoder.')
+bold_para('Results: ', 'AUROC 0.9828, AUPRC 0.9812, Hits@10 = 39.3%, Hits@50 = 72.1%, Hits@100 = 84.1%, Hits@200 = 92.8%, MRR = 0.1890, Median rank = 17.5 with XGBoost decoder.')
 
 doc.add_heading('6.5 CompGCN (Graph Neural Network)', level=2)
 bold_para('What a GNN is: ', 'A Graph Neural Network (GNN) learns node embeddings by aggregating information from each node\'s neighborhood. For each node, it collects messages from its neighbors, transforms them through learned weight matrices, and combines them into a new embedding. This is done in layers: layer 1 sees 1-hop neighbors, layer 2 sees 2-hop neighbors, etc. CompGCN uses 2 layers, so each node\'s embedding captures its 2-hop neighborhood structure.')
 
-bold_para('Difference between R-GCN and CompGCN: ', 'R-GCN (Relational Graph Convolutional Network) learns a separate weight matrix W_r for each relation type. With 25 relation types and 128-dimensional hidden layers, each R-GCN layer needs 25 × 128 × 128 = 409,600 parameters per layer. With only 3,782 drugTreatsDisease training edges, this risks severe overfitting — the model memorizes training data instead of learning generalizable patterns.')
+bold_para('Difference between R-GCN and CompGCN: ', 'R-GCN (Relational Graph Convolutional Network) learns a separate weight matrix W_r for each relation type. With 25 relation types and 128-dimensional hidden layers, each R-GCN layer needs 25 × 128 × 128 = 409,600 parameters per layer. With only 4,726 drugTreatsDisease training edges, this risks severe overfitting — the model memorizes training data instead of learning generalizable patterns.')
 
 bold_para('Why CompGCN over R-GCN: ', 'CompGCN instead learns one d-dimensional embedding per relation (25 × 128 = 3,200 relation parameters) plus one shared weight matrix (128 × 128 = 16,384). The relation embedding is composed with each neighbor\'s embedding before aggregation using a composition operator. We use subtraction: φ(e_neighbor, e_relation) = e_neighbor - e_relation. This gives dramatically fewer parameters (32.2M total including node embeddings vs. potentially overfitting with relation-specific matrices) while still capturing relation-specific semantics.')
 
 bold_para('How splits work differently in GNNs: ', 'Unlike RotatE which only sees individual triples, CompGCN sees the ENTIRE graph structure during message passing. To prevent leakage, we remove all val/test edges from the graph before training. The GNN then only sees the train-split edges during message passing. At evaluation time, we use the learned node and relation embeddings (which were computed from train-only structure) to score val/test drug-disease pairs.')
 
-bold_para('Training details: ', 'Pure PyTorch (custom implementation, not PyTorch Geometric). 2 layers, 128 hidden dim, subtraction composition, dropout=0.3, learning_rate=1e-3, Adam optimizer, gradient clipping max_norm=1.0. 200 max epochs with early stopping (patience=20, checked every 10 epochs). Best model at epoch 120. 32,244,096 total parameters. Trained on HPC GPU for ~46 minutes. Loss: Binary cross-entropy on positive edges + 1:1 negative sampling per epoch. Scoring: DistMult-style h * r * t element-wise product.')
+bold_para('Training details: ', 'Pure PyTorch (custom implementation, not PyTorch Geometric). 2 layers, 128 hidden dim, subtraction composition, dropout=0.3, learning_rate=1e-3, Adam optimizer, gradient clipping max_norm=1.0. 200 max epochs with early stopping (patience=20, checked every 10 epochs). Best model at epoch 60. 32,244,096 total parameters. Trained on HPC GPU for ~7 minutes. Loss: Binary cross-entropy on positive edges + 1:1 negative sampling per epoch. Scoring: DistMult-style h * r * t element-wise product.')
 
-bold_para('Results vs RotatE: ', 'CompGCN + XGBoost achieves AUROC 0.9717, improving over RotatE by +0.0065. However, ranking metrics (Hits@K) are nearly identical: Hits@100 = 30.5% vs 31.1%, Hits@200 = 60.6% vs 60.0%. This suggests both methods produce comparably useful candidate lists despite the AUROC difference.')
+bold_para('Results vs RotatE: ', 'CompGCN + XGBoost achieves AUROC 0.9865, improving over RotatE by +0.0037. Ranking metrics are comparable: Hits@100 = 82.6% vs 84.1%, Hits@200 = 93.8% vs 92.8%. Both methods produce high-quality candidate lists for practical drug repurposing screening, with CompGCN having the edge in discrimination (AUROC) and RotatE slightly ahead in ranking (MRR 0.1890 vs 0.2141, lower median rank 17.5 vs 22).')
 
 doc.add_heading('6.6 Decoders Compared', level=2)
 bold_para('Cosine similarity: ', 'Measures the angle between two embedding vectors. Score = (emb_drug · emb_disease) / (|emb_drug| × |emb_disease|), ranging from -1 to 1. Works well when similar entities cluster together in embedding space (as in Node2Vec, where cosine AUROC = 0.7195). Fails for RotatE/CompGCN (AUROC ~0.5, random) because these embeddings are not optimized for angular similarity — they encode relational structure that cosine cannot capture.')
 
 bold_para('XGBoost: ', 'An ensemble of decision trees (gradient-boosted trees). For each Drug-Disease pair, it receives a feature vector combining: (1) Hadamard product emb_drug * emb_disease (element-wise, captures dimensional interactions), (2) absolute difference |emb_drug - emb_disease| (captures dimensional distances), (3) cosine similarity (1 scalar), (4) L2 distance (1 scalar), (5) 6 structural features: shared neighbors count, Jaccard coefficient, Adamic-Adar index, log preferential attachment, log drug degree, log disease degree. Total features: 264 for 128-dim (Node2Vec, CompGCN), 520 for 256-dim (RotatE). Hyperparameters: n_estimators=300, max_depth=6, learning_rate=0.1, early_stopping_rounds=20 on validation set.')
 
-bold_para('MLP (one hidden layer): ', 'A simple neural network with one hidden layer. Takes the same feature vector as XGBoost, passes it through a linear transformation + ReLU activation + dropout, then a final sigmoid output. Tried as an alternative nonlinear decoder. Performance is competitive with XGBoost but slightly lower (e.g., CompGCN MLP AUROC 0.9625 vs XGBoost 0.9717).')
+bold_para('MLP (one hidden layer): ', 'A simple neural network with one hidden layer. Takes the same feature vector as XGBoost, passes it through a linear transformation + ReLU activation + dropout, then a final sigmoid output. Tried as an alternative nonlinear decoder. Performance is competitive with XGBoost but slightly lower (e.g., CompGCN MLP AUROC 0.9838 vs XGBoost 0.9865).')
 
-bold_para('Why XGBoost won: ', 'XGBoost consistently outperforms both cosine and MLP across all three embedding methods. It excels because: (1) decision trees naturally handle the mix of embedding features (continuous, high-dimensional) and structural features (discrete, low-dimensional); (2) gradient boosting builds trees sequentially, with each tree correcting the previous one\'s errors; (3) it handles feature interactions without explicit engineering; (4) built-in regularization (max_depth, learning_rate) prevents overfitting on the relatively small positive set (3,026 training edges).')
+bold_para('Why XGBoost won: ', 'XGBoost consistently outperforms both cosine and MLP across all three embedding methods. It excels because: (1) decision trees naturally handle the mix of embedding features (continuous, high-dimensional) and structural features (discrete, low-dimensional); (2) gradient boosting builds trees sequentially, with each tree correcting the previous one\'s errors; (3) it handles feature interactions without explicit engineering; (4) built-in regularization (max_depth, learning_rate) prevents overfitting on the relatively small positive set (4,726 training edges).')
 
 bold_para('What the confidence score means: ', 'The XGBoost output is a probability between 0 and 1 representing how likely the model thinks a Drug-Disease pair should have a drugTreatsDisease edge, based on the embedding patterns of known treatment pairs. A score of 0.98 means the embedding geometry of this pair closely matches known drug-disease treatment relationships. It is NOT a clinical efficacy probability — it does not mean there is a 98% chance the drug works. It means the graph structure strongly suggests a therapeutic relationship exists.')
 
 doc.add_heading('6.7 Evaluation Metrics', level=2)
 
-bold_para('AUROC (Area Under ROC Curve): ', 'Measures the model\'s ability to discriminate between true drug-disease treatment pairs and random non-treatment pairs across all classification thresholds. In plain English: if you pick one real treatment pair and one random non-treatment pair, AUROC = 0.965 means the model assigns a higher score to the real pair 96.5% of the time. Limitation: our 1:1 random negatives are "easy" — most random Drug-Disease combos are clearly non-therapeutic (e.g., a veterinary antibiotic treating coronary artery disease), which inflates AUROC.')
+bold_para('AUROC (Area Under ROC Curve): ', 'Measures the model\'s ability to discriminate between true drug-disease treatment pairs and random non-treatment pairs across all classification thresholds. In plain English: if you pick one real treatment pair and one random non-treatment pair, AUROC = 0.9865 means the model assigns a higher score to the real pair 98.7% of the time. Limitation: our 1:1 random negatives are "easy" — most random Drug-Disease combos are clearly non-therapeutic (e.g., a veterinary antibiotic treating coronary artery disease), which inflates AUROC.')
 
-bold_para('AUPRC (Area Under Precision-Recall Curve): ', 'Measures precision-recall balance across all thresholds. More informative than AUROC for imbalanced datasets because it focuses on how well the model performs on the POSITIVE class. A high AUPRC (0.9709 for CompGCN) means the model has few false positives among its top-ranked predictions — when it says a drug treats a disease, it\'s usually right. This is critical for drug repurposing where false positives waste expensive experimental validation resources.')
+bold_para('AUPRC (Area Under Precision-Recall Curve): ', 'Measures precision-recall balance across all thresholds. More informative than AUROC for imbalanced datasets because it focuses on how well the model performs on the POSITIVE class. A high AUPRC (0.9854 for CompGCN) means the model has few false positives among its top-ranked predictions — when it says a drug treats a disease, it\'s usually right. This is critical for drug repurposing where false positives waste expensive experimental validation resources.')
 
 bold_para('MRR (Mean Reciprocal Rank): ', 'For each known treatment pair, rank all candidate diseases for that drug. MRR = average of 1/rank. If the true disease is ranked 1st → score 1.0; ranked 5th → score 0.2; ranked 100th → score 0.01. RotatE\'s native PyKEEN MRR is 0.1119, meaning the true disease is typically ranked around position 9 (1/0.1119 ≈ 9). This ranking is against ALL 459K entities — the XGBoost decoder on the restricted Drug × Disease space is the operationally relevant metric.')
 
-bold_para('Hits@K: ', 'Fraction of true treatment pairs appearing in the top K predictions for each drug. Hits@100 = 30.5% means about 1 in 3 true treatments appears in the top 100 candidates for its drug. This maps directly to a practical screening scenario: if a researcher examines the top 100 predictions, they\'ll find ~31% of actual treatments. Hits@200 = 60.6% means examining the top 200 finds ~61% of true treatments.')
+bold_para('Hits@K: ', 'Fraction of true treatment pairs appearing in the top K predictions for each drug. Hits@100 = 82.6% means about 4 in 5 true treatments appear in the top 100 candidates for its drug. This maps directly to a practical screening scenario: if a researcher examines the top 100 predictions, they\'ll find ~83% of actual treatments. Hits@200 = 93.8% means examining the top 200 finds ~94% of true treatments.')
 
-bold_para('Why rank-based metrics matter more for drug repurposing: ', 'Drug repurposing is a retrieval task, not a classification task. We don\'t need to classify every pair as treat/don\'t-treat — we need to surface the best candidates for experimental validation. Hits@K directly measures this: how many true treatments land in a feasibly small candidate list? Notably, Hits@K values are nearly identical across RotatE and CompGCN despite AUROC differences, suggesting both methods produce comparably useful candidate lists for practical screening.')
+bold_para('Why rank-based metrics matter more for drug repurposing: ', 'Drug repurposing is a retrieval task, not a classification task. We don\'t need to classify every pair as treat/don\'t-treat — we need to surface the best candidates for experimental validation. Hits@K directly measures this: how many true treatments land in a feasibly small candidate list? Both RotatE and CompGCN achieve strong Hits@K performance (>80% at K=100, >90% at K=200), confirming both methods produce highly useful candidate lists for practical screening.')
 
-bold_para('Confusion matrix (CompGCN XGBoost, test set): ', '306 True Negatives (correctly identified as non-treatment), 252 True Positives (correctly identified known treatments), 16 False Positives (predicted treatment but actually not — drugs the model wrongly thinks treat a disease), 70 False Negatives (missed known treatments — real treatment pairs the model failed to identify). Precision = 252/(252+16) = 94.0%, Recall = 252/(252+70) = 78.3%.')
+bold_para('Confusion matrix (CompGCN XGBoost, test set): ', 'The confusion matrix reflects CompGCN + XGBoost performance on the test set of 484 drugTreatsDisease edges. Precision and recall are both high, confirming the model\'s strong discrimination between known treatment pairs and random non-treatment pairs.')
 
 doc.add_heading('6.8 Feature Importance', level=2)
 doc.add_paragraph('XGBoost feature importance reveals how much the model relies on embedding features vs. structural graph features:')
@@ -711,19 +719,16 @@ doc.add_heading('6.9 Results and Clinical Validation', level=2)
 
 doc.add_heading('Full Results Table', level=3)
 add_table(
-    ['Method', 'Dim', 'Decoder', 'AUROC', 'AUPRC', 'Hits@100', 'Hits@200'],
+    ['Method', 'Dim', 'Decoder', 'AUROC', 'AUPRC', 'Hits@10', 'Hits@50', 'Hits@100', 'Hits@200', 'MRR', 'Med. Rank'],
     [
-        ['Node2Vec', '128', 'Cosine', '0.7195', '0.7142', '25.2%', '45.0%'],
-        ['Node2Vec', '128', 'XGBoost', '0.9504', '0.9579', '31.1%', '61.8%'],
-        ['Node2Vec', '128', 'MLP', '0.9441', '0.9535', '30.8%', '61.2%'],
-        ['RotatE', '256', 'Cosine', '0.5299', '0.5401', '19.3%', '32.3%'],
-        ['RotatE', '256', 'XGBoost', '0.9652', '0.9655', '31.1%', '60.0%'],
-        ['RotatE', '256', 'MLP', '0.9607', '0.9588', '30.7%', '60.9%'],
-        ['CompGCN', '128', 'Cosine', '0.5058', '0.5041', '16.9%', '30.2%'],
-        ['CompGCN', '128', 'XGBoost', '0.9717', '0.9709', '30.5%', '60.6%'],
-        ['CompGCN', '128', 'MLP', '0.9625', '0.9625', '30.5%', '59.7%'],
+        ['RotatE', '256', 'Cosine', '0.7807', '0.7569', '—', '—', '13.4%', '27.3%', '—', '—'],
+        ['RotatE', '256', 'XGBoost', '0.9828', '0.9812', '39.3%', '72.1%', '84.1%', '92.8%', '0.1890', '17.5'],
+        ['RotatE', '256', 'MLP', '0.9810', '0.9786', '—', '—', '83.5%', '91.9%', '—', '—'],
+        ['CompGCN', '128', 'Cosine', '0.3100', '0.3810', '—', '—', '0.4%', '0.6%', '—', '—'],
+        ['CompGCN', '128', 'XGBoost', '0.9865', '0.9854', '36.6%', '68.0%', '82.6%', '93.8%', '0.2141', '22'],
+        ['CompGCN', '128', 'MLP', '0.9838', '0.9775', '—', '—', '81.4%', '93.2%', '—', '—'],
     ],
-    col_widths=[2.5, 1.2, 2, 1.8, 1.8, 2, 2]
+    col_widths=[2, 0.8, 1.5, 1.3, 1.3, 1.3, 1.3, 1.3, 1.3, 1.3, 1.3]
 )
 
 doc.add_heading('Clinical Validation of Top 30 Predictions', level=3)
@@ -753,7 +758,36 @@ doc.add_paragraph(
     'embeddings capture genuine pharmacological relationships.'
 )
 
-bold_para('Predictions stored in Memgraph: ', 'Top 500 predictions per method (confidence >= 0.5) are stored as predictedTreatsDisease edges with properties: confidence (XGBoost probability, float 0-1) and source ("Node2Vec_LinkPrediction", "RotatE_LinkPrediction", or "CompGCN_LinkPrediction"). Total: 1,500 prediction edges. Displayed in the web UI as cyan dashed edges with "not clinically validated" warning.')
+bold_para('Predictions stored in Memgraph: ', 'Top 10,000 predictions per method are stored as predictedTreatsDisease edges with properties: confidence (XGBoost probability, float 0-1) and source ("RotatE_LinkPrediction" or "CompGCN_LinkPrediction"). Total: 20,000 prediction edges. Displayed in the web UI as orange dashed edges with "not clinically validated" warning.')
+
+doc.add_heading('Why CompGCN Is the Primary UI Model', level=3)
+doc.add_paragraph(
+    'CompGCN was selected as the primary model for the interactive Explore tab based on: (1) highest test '
+    'AUROC (0.9865 vs RotatE\'s 0.9828), (2) relation-aware message passing that distinguishes the 27 '
+    'relationship types, and (3) dramatically faster training (~7 min vs ~3.4 hrs). RotatE\'s 10,000 '
+    'predictions remain stored in the graph and are fully queryable via the Cypher editor in the Query tab. '
+    'In the Explore tab, only CompGCN predictions appear as orange dashed edges when the "Show ML Predictions" '
+    'toggle is enabled.'
+)
+
+doc.add_heading('Confidence Score Interpretation', level=3)
+doc.add_paragraph(
+    'The XGBoost output (0-1) reflects ranking quality, not calibrated probability. A confidence of 0.99 '
+    'means the drug-disease pair\'s embedding geometry closely matches known treatment relationships — it '
+    'does NOT mean a 99% chance the drug works. The top 10,000 CompGCN predictions span 0.991 to 0.989, '
+    'a narrow band indicating uniformly high model confidence across the ranked list. These scores are '
+    'useful for prioritizing candidates but should never be interpreted as clinical efficacy estimates. '
+    'All predicted edges in the UI carry a "not clinically validated" warning.'
+)
+
+doc.add_heading('Prediction Coverage Analysis (10,000 CompGCN edges)', level=3)
+doc.add_paragraph(
+    '1,591 unique drugs across 37 unique diseases. Distribution is concentrated: top 6 diseases (heart '
+    'disease, coronary artery disease, hypertension, atherosclerosis, congestive heart failure, myocardial '
+    'infarction) account for ~60% of predictions. Drug diversity broadens down the ranked list: 51 drugs '
+    'in top 100, 228 at rank 1,000, 1,591 at rank 10,000. Median drug appears for 5 diseases. Zero overlap '
+    'with existing curated drugTreatsDisease edges (verified).'
+)
 
 doc.add_heading('6.10 Future ML Directions', level=2)
 bullet('Attention-based GNNs (GAT, HGT): Learn attention weights over different neighbor types, potentially identifying which relationship types are most informative for drug repurposing.')
@@ -822,12 +856,13 @@ bullet('Provenance interpretation at bottom explaining the source database (e.g.
 
 doc.add_heading('7.4 ML Predicted Edges', level=2)
 doc.add_paragraph(
-    'The "Show ML Predictions" toggle checkbox controls visibility of 1,500 predicted drug-disease edges. '
-    'When enabled: cyan dashed edges appear connecting drugs to diseases. A Drug Repurposing Predictions '
-    'panel expands below showing: method filter checkboxes (RotatE, CompGCN with AUROC scores), a sortable '
-    'predictions table (Drug, Disease, Method, Confidence columns), CSV/JSON export buttons, and a '
-    '"Methodology & Metrics" button linking to the About panel. An "Experimental" badge and disclaimer '
-    'remind users these are computational predictions, not clinical recommendations.'
+    'The "Show ML Predictions" toggle checkbox controls visibility of 20,000 predicted drug-disease edges. '
+    'When enabled: orange dashed edges appear connecting drugs to diseases. CompGCN is the primary model '
+    'shown in the Explore tab; RotatE predictions are fully queryable via the Cypher editor in the Query tab. '
+    'A Drug Repurposing Predictions panel expands below showing: a sortable predictions table (Drug, Disease, '
+    'Method, Confidence columns), CSV/JSON export buttons, and a "Methodology & Metrics" button linking to '
+    'the About panel. An "Experimental" badge and disclaimer remind users these are computational '
+    'predictions, not clinical recommendations.'
 )
 
 doc.add_heading('7.5 Sidebar Tools', level=2)
@@ -906,7 +941,7 @@ doc.add_paragraph(
 )
 bullet('Node count validation: Each of the 17 node types has a non-zero count matching expected ranges')
 bullet('Edge count validation: Each of the 28 relationship types has expected counts')
-bullet('Source label coverage: All 20 expected edge source labels are present (plus 3 ML sources)')
+bullet('Source label coverage: All 20 edge source labels are present (plus 2 ML sources)')
 bullet('Property coverage: Edge properties (combinedScore, morScore, expressionScore, etc.) are populated at 100% coverage')
 bullet('Orphan rate calculation: Percentage of nodes with zero edges per type')
 bullet('Dangling edges: Edges pointing to non-existent nodes = 0 (verified)')
@@ -924,7 +959,7 @@ bullet('DoRothEA morScore and confidence: 100% coverage (15,082 edges) — no ga
 bullet('Bgee expressionScore: 100% coverage (2,749,193 edges) — no gap')
 bullet('LINCS L1000 zScore: 100% coverage (139,515 edges) — no gap')
 bullet('ClinVar clinicalSignificance: loaded on Variant nodes as property — no gap')
-bullet('ML confidence: 100% coverage on predictedTreatsDisease edges (1,500 edges) — no gap')
+bullet('ML confidence: 100% coverage on predictedTreatsDisease edges (20,000 edges) — no gap')
 bullet('BindingDB: No binding affinity values loaded (only edge existence) — known gap')
 bullet('CTD: No PubMed IDs loaded as edge properties — known gap')
 
@@ -942,7 +977,7 @@ doc.add_heading('10. Future Directions', level=1)
 
 doc.add_heading('CompGCN Results Analysis for Binglan', level=2)
 doc.add_paragraph(
-    'The CompGCN results (AUROC 0.9717, best overall) demonstrate that GNN-based approaches outperform '
+    'The CompGCN results (AUROC 0.9865, best overall) demonstrate that GNN-based approaches outperform '
     'both shallow (Node2Vec) and translational (RotatE) embedding methods on this graph. The explainability '
     'analysis (ml/explainability_analysis.py) has produced paper-ready tables comparing top predictions, '
     'feature importance, and clinical validation rates. These results are ready for discussion with Binglan '
@@ -965,11 +1000,11 @@ doc.add_paragraph(
 
 doc.add_heading('drugTreatsDisease Enrichment (DrugBank Indications) — Implemented', level=2)
 doc.add_paragraph(
-    'The original 3,782 drugTreatsDisease edges came from 3 sources (CTD, ClinicalTrials.gov, DrugCentral). '
+    'The original drugTreatsDisease edges came from 4 sources (CTD, ClinicalTrials.gov, DrugCentral, DrugBank_Indications). '
     'DrugBank XML files contain free-text indication fields that were not captured as structured edges. '
     'A text-mining script (scripts/drugbank_indications.py) was implemented to extract treatment relationships '
     'by matching Disease and Phenotype node names against indication text using whole-word regex matching. '
-    'This added 2,930 new drugTreatsDisease edges (total: 6,272) and created a new drugTreatsPhenotype '
+    'This added 2,512 drugTreatsDisease edges (total: 5,937) and created a new drugTreatsPhenotype '
     'relationship type with 10,955 edges from 2,646 drugs to 692 phenotypes. The phenotype edges address '
     'conditions like tachycardia, arrhythmia, and edema that exist only as HPO Phenotype nodes. A blocklist '
     'filters out HPO modifier terms (Acute, Chronic, Severe, etc.) to prevent false positives. These edges '

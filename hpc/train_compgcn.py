@@ -3,7 +3,7 @@ Train CompGCN embeddings on CardioKB (HPC version).
 
 CompGCN jointly embeds nodes and relations via composition operators
 during message passing. Uses the same 80/10/10 stratified split as
-Node2Vec and RotatE for fair comparison.
+RotatE for fair comparison.
 
 Output: node embeddings saved as .npz for downstream XGBoost link prediction.
 """
@@ -15,8 +15,8 @@ import numpy as np
 import torch
 import torch.nn as nn
 import torch.nn.functional as F
+from torch.amp import autocast, GradScaler
 from pathlib import Path
-from collections import defaultdict
 
 DATA_DIR = Path(__file__).resolve().parent / "data"
 SPLIT_DIR = DATA_DIR / "splits"
@@ -31,6 +31,8 @@ LEARNING_RATE = 1e-3
 NUM_EPOCHS = 200
 PATIENCE = 20
 SEED = 42
+TRAIN_SAMPLE_SIZE = 500_000
+NEG_RATIO = 1
 
 
 def load_nodes():
@@ -44,38 +46,38 @@ def load_nodes():
 
 
 def load_split_edges(split_name):
-    """Load edges from a split file."""
-    edges = []
+    """Load edges from a split file as numpy arrays."""
+    src, dst, rels = [], [], []
+    rel_set = set()
     with open(SPLIT_DIR / f"{split_name}_edges.tsv") as f:
         reader = csv.DictReader(f, delimiter="\t")
         for row in reader:
-            edges.append((int(row["src"]), int(row["dst"]), row["rel_type"]))
-    return edges
+            src.append(int(row["src"]))
+            dst.append(int(row["dst"]))
+            rels.append(row["rel_type"])
+            rel_set.add(row["rel_type"])
+    return np.array(src, dtype=np.int64), np.array(dst, dtype=np.int64), rels, rel_set
 
 
-def build_relation_mapping(train_edges, val_edges, test_edges):
+def build_relation_mapping(rel_sets):
     """Build relation-to-index mapping from all splits."""
-    rel_types = set()
-    for edges in [train_edges, val_edges, test_edges]:
-        for _, _, r in edges:
-            rel_types.add(r)
-    rel_to_id = {r: i for i, r in enumerate(sorted(rel_types))}
-    return rel_to_id
+    all_rels = set()
+    for rs in rel_sets:
+        all_rels |= rs
+    return {r: i for i, r in enumerate(sorted(all_rels))}
 
 
-def build_edge_index_and_type(edges, rel_to_id, num_nodes):
-    """Convert edge list to PyG format with inverse relations."""
+def build_edge_index_and_type(src_arr, dst_arr, rel_strs, rel_to_id):
+    """Convert edge arrays to PyG format with inverse relations using numpy."""
     num_base_rels = len(rel_to_id)
+    rel_ids = np.array([rel_to_id[r] for r in rel_strs], dtype=np.int64)
 
-    src_list, dst_list, rel_list = [], [], []
-    for s, d, r in edges:
-        rid = rel_to_id[r]
-        src_list.extend([s, d])
-        dst_list.extend([d, s])
-        rel_list.extend([rid, rid + num_base_rels])
+    all_src = np.concatenate([src_arr, dst_arr])
+    all_dst = np.concatenate([dst_arr, src_arr])
+    all_rel = np.concatenate([rel_ids, rel_ids + num_base_rels])
 
-    edge_index = torch.tensor([src_list, dst_list], dtype=torch.long)
-    edge_type = torch.tensor(rel_list, dtype=torch.long)
+    edge_index = torch.from_numpy(np.stack([all_src, all_dst]))
+    edge_type = torch.from_numpy(all_rel)
     return edge_index, edge_type
 
 
@@ -116,11 +118,11 @@ class CompGCNConv(nn.Module):
         composed = self.compose(src_emb, rel_for_edges)
         msg = self.W_node(composed)
 
-        deg = torch.zeros(num_nodes, device=x.device)
-        deg.scatter_add_(0, dst, torch.ones(dst.size(0), device=x.device))
+        deg = torch.zeros(num_nodes, device=x.device, dtype=x.dtype)
+        deg.scatter_add_(0, dst, torch.ones(dst.size(0), device=x.device, dtype=x.dtype))
         deg_inv = 1.0 / deg.clamp(min=1)
 
-        agg = torch.zeros(num_nodes, self.out_dim, device=x.device)
+        agg = torch.zeros(num_nodes, self.out_dim, device=x.device, dtype=msg.dtype)
         agg.scatter_add_(0, dst.unsqueeze(1).expand_as(msg), msg)
         agg = agg * deg_inv.unsqueeze(1)
 
@@ -176,45 +178,47 @@ class LinkPredictor(nn.Module):
         return torch.sum(h * r * t, dim=-1)
 
 
-def sample_negatives(pos_edges, num_nodes, num_neg=1, seed=None):
-    """Sample negative edges by corrupting tail entities."""
-    rng = np.random.RandomState(seed)
-    pos_set = set((s, d) for s, d, _ in pos_edges)
-    neg_edges = []
-    for s, d, r in pos_edges:
-        for _ in range(num_neg):
-            while True:
-                neg_t = rng.randint(0, num_nodes)
-                if (s, neg_t) not in pos_set:
-                    neg_edges.append((s, neg_t, r))
-                    break
-    return neg_edges
+def sample_negatives_np(src, dst, rel_ids, num_nodes, num_neg=1, rng=None):
+    """Vectorized negative sampling using numpy."""
+    n = len(src)
+    neg_dst = rng.randint(0, num_nodes, size=(n * num_neg,)).astype(np.int64)
+    neg_src = np.repeat(src, num_neg)
+    neg_rel = np.repeat(rel_ids, num_neg)
+    return neg_src, neg_dst, neg_rel
 
 
-def evaluate_ranking(model, predictor, pos_edges, neg_edges, edge_index,
-                     edge_type, device):
+def compute_loss(predictor, x, rel, pos_src, pos_dst, pos_rel,
+                 neg_src, neg_dst, neg_rel):
+    """Compute BCE loss on positive and negative edges."""
+    pos_score = predictor(x[pos_src], rel[pos_rel], x[pos_dst])
+    neg_score = predictor(x[neg_src], rel[neg_rel], x[neg_dst])
+    pos_loss = F.binary_cross_entropy_with_logits(
+        pos_score, torch.ones_like(pos_score))
+    neg_loss = F.binary_cross_entropy_with_logits(
+        neg_score, torch.zeros_like(neg_score))
+    return (pos_loss + neg_loss) / 2
+
+
+def evaluate_ranking(model, predictor, val_src, val_dst, val_rel_ids,
+                     edge_index, edge_type, num_nodes, device, rng):
     """Compute loss on validation set."""
     model.eval()
     predictor.eval()
     with torch.no_grad():
-        x, rel = model(edge_index, edge_type)
+        with autocast("cuda"):
+            x, rel = model(edge_index, edge_type)
 
-        pos_src = torch.tensor([s for s, _, _ in pos_edges], device=device)
-        pos_dst = torch.tensor([d for _, d, _ in pos_edges], device=device)
-        pos_rel = torch.tensor([r for _, _, r in pos_edges], device=device)
+            neg_src, neg_dst, neg_rel = sample_negatives_np(
+                val_src, val_dst, val_rel_ids, num_nodes, rng=rng)
 
-        neg_src = torch.tensor([s for s, _, _ in neg_edges], device=device)
-        neg_dst = torch.tensor([d for _, d, _ in neg_edges], device=device)
-        neg_rel = torch.tensor([r for _, _, r in neg_edges], device=device)
+            ps = torch.from_numpy(val_src).to(device)
+            pd = torch.from_numpy(val_dst).to(device)
+            pr = torch.from_numpy(val_rel_ids).to(device)
+            ns = torch.from_numpy(neg_src).to(device)
+            nd = torch.from_numpy(neg_dst).to(device)
+            nr = torch.from_numpy(neg_rel).to(device)
 
-        pos_score = predictor(x[pos_src], rel[pos_rel], x[pos_dst])
-        neg_score = predictor(x[neg_src], rel[neg_rel], x[neg_dst])
-
-        pos_loss = F.binary_cross_entropy_with_logits(
-            pos_score, torch.ones_like(pos_score))
-        neg_loss = F.binary_cross_entropy_with_logits(
-            neg_score, torch.zeros_like(neg_score))
-        loss = (pos_loss + neg_loss) / 2
+            loss = compute_loss(predictor, x, rel, ps, pd, pr, ns, nd, nr)
 
     return loss.item()
 
@@ -228,9 +232,11 @@ def main():
     print(f"  hidden_dim={HIDDEN_DIM}, num_layers={NUM_LAYERS}")
     print(f"  composition={COMPOSITION}, dropout={DROPOUT}")
     print(f"  lr={LEARNING_RATE}, epochs={NUM_EPOCHS}, patience={PATIENCE}")
+    print(f"  train_sample_size={TRAIN_SAMPLE_SIZE}")
     print(f"  seed={SEED}, device={device}")
     if device == "cuda":
         print(f"  GPU: {torch.cuda.get_device_name(0)}")
+        print(f"  GPU memory: {torch.cuda.get_device_properties(0).total_memory / 1e9:.1f} GB")
 
     print("\nLoading data...")
     t0 = time.time()
@@ -239,29 +245,33 @@ def main():
     num_nodes = max(nodes.keys()) + 1
     print(f"  Nodes: {len(nodes):,} (id range 0-{num_nodes - 1})")
 
-    train_edges = load_split_edges("train")
-    val_edges = load_split_edges("val")
-    test_edges = load_split_edges("test")
-    print(f"  Train: {len(train_edges):,} edges")
-    print(f"  Val:   {len(val_edges):,} edges")
-    print(f"  Test:  {len(test_edges):,} edges")
+    train_src, train_dst, train_rels, train_rel_set = load_split_edges("train")
+    val_src, val_dst, val_rels, val_rel_set = load_split_edges("val")
+    test_src, test_dst, test_rels, test_rel_set = load_split_edges("test")
+    print(f"  Train: {len(train_src):,} edges")
+    print(f"  Val:   {len(val_src):,} edges")
+    print(f"  Test:  {len(test_src):,} edges")
 
-    rel_to_id = build_relation_mapping(train_edges, val_edges, test_edges)
+    rel_to_id = build_relation_mapping([train_rel_set, val_rel_set, test_rel_set])
     num_base_rels = len(rel_to_id)
     print(f"  Relations: {num_base_rels} base types ({num_base_rels * 2} with inverse)")
 
-    train_edges_indexed = [(s, d, rel_to_id[r]) for s, d, r in train_edges]
+    train_rel_ids = np.array([rel_to_id[r] for r in train_rels], dtype=np.int64)
+    val_rel_ids = np.array([rel_to_id[r] for r in val_rels], dtype=np.int64)
+    print(f"  Mapped relation IDs")
 
+    print(f"  Building edge index (numpy)...")
     train_edge_index, train_edge_type = build_edge_index_and_type(
-        train_edges, rel_to_id, num_nodes)
+        train_src, train_dst, train_rels, rel_to_id)
+    print(f"  Edge index shape: {train_edge_index.shape}")
     train_edge_index = train_edge_index.to(device)
     train_edge_type = train_edge_type.to(device)
-
-    val_edges_indexed = [(s, d, rel_to_id[r]) for s, d, r in val_edges]
-    val_neg = sample_negatives(val_edges, num_nodes, seed=SEED + 1)
-    val_neg_indexed = [(s, d, rel_to_id[r]) for s, d, r in val_neg]
+    print(f"  Moved edge data to {device}")
 
     print(f"  Data loaded in {time.time() - t0:.1f}s")
+
+    del train_rels, val_rels, test_rels
+    del test_src, test_dst, test_rel_set
 
     print("\nInitializing CompGCN...")
     model = CompGCN(
@@ -279,56 +289,68 @@ def main():
                    sum(p.numel() for p in predictor.parameters())
     print(f"  Total parameters: {total_params:,}")
 
+    if device == "cuda":
+        alloc = torch.cuda.memory_allocated() / 1e9
+        print(f"  GPU memory allocated: {alloc:.2f} GB")
+
     optimizer = torch.optim.Adam(
         list(model.parameters()) + list(predictor.parameters()),
         lr=LEARNING_RATE,
     )
+    scaler = GradScaler("cuda")
 
-    print("\nTraining...")
+    print(f"\nTraining (subsampling {TRAIN_SAMPLE_SIZE:,} edges per epoch)...")
     t1 = time.time()
+    rng = np.random.RandomState(SEED)
+    val_rng = np.random.RandomState(SEED + 1)
 
     best_val_loss = float("inf")
     best_epoch = 0
     patience_counter = 0
     best_state = None
+    n_train = len(train_src)
 
     for epoch in range(1, NUM_EPOCHS + 1):
         model.train()
         predictor.train()
         optimizer.zero_grad()
 
-        x, rel = model(train_edge_index, train_edge_type)
+        with autocast("cuda"):
+            x, rel = model(train_edge_index, train_edge_type)
 
-        neg_train = sample_negatives(train_edges, num_nodes, seed=SEED + epoch)
-        neg_train_indexed = [(s, d, rel_to_id[r]) for s, d, r in neg_train]
+            idx = rng.choice(n_train, size=min(TRAIN_SAMPLE_SIZE, n_train), replace=False)
+            batch_src = train_src[idx]
+            batch_dst = train_dst[idx]
+            batch_rel = train_rel_ids[idx]
 
-        pos_src = torch.tensor([s for s, _, _ in train_edges_indexed], device=device)
-        pos_dst = torch.tensor([d for _, d, _ in train_edges_indexed], device=device)
-        pos_rel_idx = torch.tensor([r for _, _, r in train_edges_indexed], device=device)
+            neg_src, neg_dst, neg_rel = sample_negatives_np(
+                batch_src, batch_dst, batch_rel, num_nodes, rng=rng)
 
-        neg_src = torch.tensor([s for s, _, _ in neg_train_indexed], device=device)
-        neg_dst = torch.tensor([d for _, d, _ in neg_train_indexed], device=device)
-        neg_rel_idx = torch.tensor([r for _, _, r in neg_train_indexed], device=device)
+            ps = torch.from_numpy(batch_src).to(device)
+            pd = torch.from_numpy(batch_dst).to(device)
+            pr = torch.from_numpy(batch_rel).to(device)
+            ns = torch.from_numpy(neg_src).to(device)
+            nd = torch.from_numpy(neg_dst).to(device)
+            nr = torch.from_numpy(neg_rel).to(device)
 
-        pos_score = predictor(x[pos_src], rel[pos_rel_idx], x[pos_dst])
-        neg_score = predictor(x[neg_src], rel[neg_rel_idx], x[neg_dst])
+            loss = compute_loss(predictor, x, rel, ps, pd, pr, ns, nd, nr)
 
-        pos_loss = F.binary_cross_entropy_with_logits(
-            pos_score, torch.ones_like(pos_score))
-        neg_loss = F.binary_cross_entropy_with_logits(
-            neg_score, torch.zeros_like(neg_score))
-        loss = (pos_loss + neg_loss) / 2
-
-        loss.backward()
+        scaler.scale(loss).backward()
+        scaler.unscale_(optimizer)
         torch.nn.utils.clip_grad_norm_(model.parameters(), max_norm=1.0)
-        optimizer.step()
+        scaler.step(optimizer)
+        scaler.update()
 
         if epoch % 10 == 0 or epoch == 1:
             val_loss = evaluate_ranking(
-                model, predictor, val_edges_indexed, val_neg_indexed,
-                train_edge_index, train_edge_type, device)
+                model, predictor, val_src, val_dst, val_rel_ids,
+                train_edge_index, train_edge_type, num_nodes, device, val_rng)
+
+            gpu_info = ""
+            if device == "cuda":
+                gpu_info = f"  gpu={torch.cuda.memory_allocated() / 1e9:.1f}GB"
             print(f"  Epoch {epoch:3d}/{NUM_EPOCHS}  train_loss={loss.item():.4f}  "
-                  f"val_loss={val_loss:.4f}  best={best_val_loss:.4f}")
+                  f"val_loss={val_loss:.4f}  best={best_val_loss:.4f}{gpu_info}")
 
             if val_loss < best_val_loss:
                 best_val_loss = val_loss
@@ -353,9 +375,10 @@ def main():
     print("\nExtracting embeddings...")
     model.eval()
     with torch.no_grad():
-        x, rel = model(train_edge_index, train_edge_type)
-        node_embeddings = x.cpu().numpy()
-        rel_embeddings = rel.cpu().numpy()
+        with autocast("cuda"):
+            x, rel = model(train_edge_index, train_edge_type)
+        node_embeddings = x.float().cpu().numpy()
+        rel_embeddings = rel.float().cpu().numpy()
 
     node_ids = np.array(sorted(nodes.keys()))
     embeddings = node_embeddings[node_ids]
@@ -388,6 +411,7 @@ def main():
         "composition": COMPOSITION,
         "dropout": DROPOUT,
         "learning_rate": LEARNING_RATE,
+        "train_sample_size": TRAIN_SAMPLE_SIZE,
         "node_embedding_shape": list(embeddings.shape),
         "num_nodes": len(nodes),
         "num_base_relations": num_base_rels,

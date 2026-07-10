@@ -35,7 +35,7 @@ MEMGRAPH_URI = os.getenv("MEMGRAPH_URI", "bolt://localhost:7687")
 MEMGRAPH_USER = os.getenv("MEMGRAPH_USERNAME", "")
 MEMGRAPH_PASS = os.getenv("MEMGRAPH_PASSWORD", "")
 
-TOP_K = 500
+TOP_K = 10000
 MIN_CONFIDENCE = 0.5
 
 THERAPEUTIC_EDGE_TYPES = {
@@ -349,20 +349,37 @@ def evaluate_mlp_decoder(X_train, y_train, X_val, y_val, X_test, y_test):
     }
 
 
-def compute_ranking_metrics(test_pos, test_neg, scores_pos, scores_neg):
-    all_scores = np.concatenate([scores_pos, scores_neg])
-    sorted_indices = np.argsort(-all_scores)
+def compute_ranking_metrics_filtered(test_pos, emb_map, diseases_with_emb,
+                                     all_existing, scorer, neighbors, degree,
+                                     decoder_type="cosine"):
+    """Filtered ranking: for each test (drug, disease), rank the true disease
+    against ALL diseases, filtering out known positives from other splits.
 
-    pos_indices = set(range(len(scores_pos)))
+    This is the standard KGE evaluation protocol (Bordes et al., 2013).
+    """
+    disease_list = sorted(diseases_with_emb)
     ranks = []
-    rank = 0
-    for idx in sorted_indices:
-        rank += 1
-        if idx in pos_indices:
-            ranks.append(rank)
+    n_diseases = len(disease_list)
 
-    n_pos = len(scores_pos)
-    metrics = {}
+    for drug, true_disease in test_pos:
+        if drug not in emb_map or true_disease not in emb_map:
+            continue
+
+        true_score = scorer(drug, true_disease)
+        rank = 1
+        for dis in disease_list:
+            if dis == true_disease:
+                continue
+            if (drug, dis) in all_existing:
+                continue
+            candidate_score = scorer(drug, dis)
+            if candidate_score > true_score:
+                rank += 1
+
+        ranks.append(rank)
+
+    n_pos = len(ranks)
+    metrics = {"n_test_queries": n_pos, "n_candidate_diseases": n_diseases}
     for k in [10, 50, 100, 200]:
         hits = sum(1 for r in ranks if r <= k)
         metrics[f"hits@{k}"] = hits / n_pos if n_pos > 0 else 0
@@ -423,10 +440,10 @@ def score_all_unknown_pairs(best_result, emb_map, meta, drugs, diseases,
 
     predictions.sort(key=lambda x: -x[2])
     log.info(f"Pairs above {MIN_CONFIDENCE} confidence: {len(predictions)}")
-    top = predictions[:TOP_K]
-    if top:
-        log.info(f"Top {len(top)} (confidence: {top[-1][2]:.4f} - {top[0][2]:.4f})")
-    return top
+    if predictions:
+        log.info(f"Top confidence: {predictions[0][2]:.6f}, "
+                 f"Bottom confidence: {predictions[-1][2]:.6f}")
+    return predictions
 
 
 def save_predictions_tsv(predictions, meta):
@@ -533,106 +550,122 @@ def main():
     log.info("=" * 60)
     cosine_result = evaluate_cosine_decoder(
         train_pos, train_neg, val_pos, val_neg, test_pos, test_neg, emb_map)
-    cos_pos_scores = np.array([compute_cosine_score(emb_map[d], emb_map[dis])
-                                for d, dis in test_pos])
-    cos_neg_scores = np.array([compute_cosine_score(emb_map[d], emb_map[dis])
-                                for d, dis in test_neg])
-    cosine_result["ranking"] = compute_ranking_metrics(
-        test_pos, test_neg, cos_pos_scores, cos_neg_scores)
     results.append(cosine_result)
     log.info(f"  Val  AUROC={cosine_result['val_auroc']:.4f}, "
              f"AUPRC={cosine_result['val_auprc']:.4f}")
     log.info(f"  Test AUROC={cosine_result['test_auroc']:.4f}, "
              f"AUPRC={cosine_result['test_auprc']:.4f}")
     log.info(f"\n{cosine_result['report']}")
+
+    log.info("  Computing filtered ranking (all diseases per query)...")
+    cosine_scorer = lambda d, dis: compute_cosine_score(emb_map[d], emb_map[dis])
+    cosine_result["ranking"] = compute_ranking_metrics_filtered(
+        test_pos, emb_map, diseases_with_emb, all_existing, cosine_scorer,
+        neighbors, degree)
     for k, v in cosine_result["ranking"].items():
-        log.info(f"  {k}: {v:.4f}")
+        log.info(f"  {k}: {v:.4f}" if isinstance(v, float) else f"  {k}: {v}")
 
     log.info("\n" + "=" * 60)
     log.info("DECODER (b): XGBoost")
     log.info("=" * 60)
     xgb_result = evaluate_xgboost_decoder(X_train, y_train, X_val, y_val, X_test, y_test,
                                           emb_dim)
-    xgb_pos_scores = xgb_result["test_scores"][:len(test_pos)]
-    xgb_neg_scores = xgb_result["test_scores"][len(test_pos):]
-    xgb_result["ranking"] = compute_ranking_metrics(
-        test_pos, test_neg, xgb_pos_scores, xgb_neg_scores)
     results.append(xgb_result)
     log.info(f"  Val  AUROC={xgb_result['val_auroc']:.4f}, "
              f"AUPRC={xgb_result['val_auprc']:.4f}")
     log.info(f"  Test AUROC={xgb_result['test_auroc']:.4f}, "
              f"AUPRC={xgb_result['test_auprc']:.4f}")
     log.info(f"\n{xgb_result['report']}")
+
+    log.info("  Computing filtered ranking (all diseases per query)...")
+    xgb_model = xgb_result["model"]
+    xgb_scaler = xgb_result["scaler"]
+    def xgb_scorer(d, dis):
+        feat = compute_pair_features(emb_map[d], emb_map[dis], d, dis, neighbors, degree)
+        return float(xgb_model.predict_proba(xgb_scaler.transform(feat.reshape(1, -1)))[:, 1][0])
+    xgb_result["ranking"] = compute_ranking_metrics_filtered(
+        test_pos, emb_map, diseases_with_emb, all_existing, xgb_scorer,
+        neighbors, degree)
     for k, v in xgb_result["ranking"].items():
-        log.info(f"  {k}: {v:.4f}")
+        log.info(f"  {k}: {v:.4f}" if isinstance(v, float) else f"  {k}: {v}")
 
     log.info("\n" + "=" * 60)
     log.info("DECODER (c): MLP (1 hidden layer)")
     log.info("=" * 60)
     mlp_result = evaluate_mlp_decoder(X_train, y_train, X_val, y_val, X_test, y_test)
-    mlp_pos_scores = mlp_result["test_scores"][:len(test_pos)]
-    mlp_neg_scores = mlp_result["test_scores"][len(test_pos):]
-    mlp_result["ranking"] = compute_ranking_metrics(
-        test_pos, test_neg, mlp_pos_scores, mlp_neg_scores)
     results.append(mlp_result)
     log.info(f"  Val  AUROC={mlp_result['val_auroc']:.4f}, "
              f"AUPRC={mlp_result['val_auprc']:.4f}")
     log.info(f"  Test AUROC={mlp_result['test_auroc']:.4f}, "
              f"AUPRC={mlp_result['test_auprc']:.4f}")
     log.info(f"\n{mlp_result['report']}")
-    for k, v in mlp_result["ranking"].items():
-        log.info(f"  {k}: {v:.4f}")
 
-    baselines = {
-        "Node2Vec": {
-            "Cosine": {"test_auroc": 0.7195, "test_auprc": 0.7195},
-            "XGBoost": {"test_auroc": 0.9504, "test_auprc": 0.9579},
-            "MLP": {"test_auroc": 0.9441, "test_auprc": 0.9441},
-        },
-        "RotatE": {
-            "Cosine": {"test_auroc": 0.5299, "test_auprc": 0.5401},
-            "XGBoost": {"test_auroc": 0.9652, "test_auprc": 0.9655},
-            "MLP": {"test_auroc": 0.9607, "test_auprc": 0.9588},
-        },
-    }
+    log.info("  Computing filtered ranking (all diseases per query)...")
+    mlp_model = mlp_result["model"]
+    mlp_scaler = mlp_result["scaler"]
+    def mlp_scorer(d, dis):
+        feat = compute_pair_features(emb_map[d], emb_map[dis], d, dis, neighbors, degree)
+        return float(mlp_model.predict_proba(mlp_scaler.transform(feat.reshape(1, -1)))[:, 1][0])
+    mlp_result["ranking"] = compute_ranking_metrics_filtered(
+        test_pos, emb_map, diseases_with_emb, all_existing, mlp_scorer,
+        neighbors, degree)
+    for k, v in mlp_result["ranking"].items():
+        log.info(f"  {k}: {v:.4f}" if isinstance(v, float) else f"  {k}: {v}")
+
+    baselines = {}
 
     log.info("\n" + "=" * 60)
-    log.info("COMPARISON: CompGCN vs Node2Vec vs RotatE (XGBoost decoder)")
+    log.info("RESULTS SUMMARY (XGBoost decoder)")
     log.info("=" * 60)
-    log.info(f"{'Method':<12} {'AUROC':>8} {'AUPRC':>8} {'vs N2V':>8} {'vs RotatE':>10}")
-    log.info("-" * 50)
     xgb = next(r for r in results if r["name"] == "XGBoost")
-    n2v_auroc = baselines["Node2Vec"]["XGBoost"]["test_auroc"]
-    rot_auroc = baselines["RotatE"]["XGBoost"]["test_auroc"]
-    d_n2v = xgb["test_auroc"] - n2v_auroc
-    d_rot = xgb["test_auroc"] - rot_auroc
-    log.info(f"{'Node2Vec':<12} {n2v_auroc:>8.4f} {baselines['Node2Vec']['XGBoost']['test_auprc']:>8.4f}")
-    log.info(f"{'RotatE':<12} {rot_auroc:>8.4f} {baselines['RotatE']['XGBoost']['test_auprc']:>8.4f}")
-    sign_n = "+" if d_n2v >= 0 else ""
-    sign_r = "+" if d_rot >= 0 else ""
-    log.info(f"{'CompGCN':<12} {xgb['test_auroc']:>8.4f} {xgb['test_auprc']:>8.4f} "
-             f"{sign_n}{d_n2v:>7.4f} {sign_r}{d_rot:>9.4f}")
+    log.info(f"  CompGCN XGBoost AUROC={xgb['test_auroc']:.4f}, AUPRC={xgb['test_auprc']:.4f}")
 
     best = max(results, key=lambda r: r["test_auroc"])
     log.info(f"\nBest CompGCN decoder: {best['name']} (Test AUROC={best['test_auroc']:.4f})")
 
+    import pickle
+    models_dir = COMPGCN_DIR / "models"
+    models_dir.mkdir(exist_ok=True)
+    if "model" in best and "scaler" in best:
+        with open(models_dir / "xgboost_model.pkl", "wb") as f:
+            pickle.dump(best["model"], f)
+        with open(models_dir / "xgboost_scaler.pkl", "wb") as f:
+            pickle.dump(best["scaler"], f)
+        log.info(f"Saved XGBoost model + scaler to {models_dir}/")
+
     log.info("\n" + "=" * 60)
     log.info(f"SCORING UNKNOWN PAIRS with {best['name']}")
     log.info("=" * 60)
-    predictions = score_all_unknown_pairs(
+    all_predictions = score_all_unknown_pairs(
         best, emb_map, meta, drugs, diseases, all_existing, neighbors, degree)
 
-    save_predictions_tsv(predictions, meta)
+    log.info(f"Total predictions >= {MIN_CONFIDENCE}: {len(all_predictions)}")
+    top_predictions = all_predictions[:TOP_K]
+    log.info(f"Top {TOP_K} saved to predictions.tsv")
+
+    import gzip
+    archive_path = COMPGCN_DIR / "all_predictions_above_threshold.tsv.gz"
+    with gzip.open(archive_path, "wt", newline="") as f:
+        writer = csv.writer(f, delimiter="\t")
+        writer.writerow(["rank", "drug_int_id", "drug_name", "disease_int_id",
+                         "disease_name", "confidence"])
+        for rank, (d, dis, prob) in enumerate(all_predictions, 1):
+            drug_name = meta.get(d, {}).get("name", "?")
+            disease_name = meta.get(dis, {}).get("name", "?")
+            writer.writerow([rank, d, drug_name, dis, disease_name, f"{prob:.6f}"])
+    log.info(f"Archived {len(all_predictions)} predictions to {archive_path}")
+
+    save_predictions_tsv(top_predictions, meta)
     save_evaluation_report(
         results, len(drugs_with_emb), len(diseases_with_emb),
         len(train_pos), len(val_pos), len(test_pos), best["name"],
         baselines)
 
-    if predictions:
+    if top_predictions:
         log.info(f"\nTop 30 predicted drug repurposing candidates (CompGCN + {best['name']}):")
         log.info(f"{'Rank':<6}{'Drug':<30}{'Disease':<35}{'Confidence'}")
         log.info("-" * 85)
-        for rank, (d, dis, prob) in enumerate(predictions[:30], 1):
+        for rank, (d, dis, prob) in enumerate(top_predictions[:30], 1):
             drug_name = meta.get(d, {}).get("name", "?")[:28]
             disease_name = meta.get(dis, {}).get("name", "?")[:33]
             log.info(f"{rank:<6}{drug_name:<30}{disease_name:<35}{prob:.4f}")

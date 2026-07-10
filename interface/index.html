@@ -595,7 +595,7 @@ details summary::-webkit-details-marker { display: none; }
                     </div>
                     <div style="display:flex;align-items:center;gap:0.5rem;padding:0.2rem 0">
                         <svg width="28" height="8" style="flex-shrink:0"><line x1="0" y1="4" x2="28" y2="4" stroke="#06b6d4" stroke-width="3" stroke-dasharray="10,5"/></svg>
-                        <span><strong style="color:#06b6d4">Dashed cyan</strong> &mdash; ML-predicted drug&ndash;disease link (RotatE / CompGCN + XGBoost). <em>Not clinically validated. Hidden by default.</em></span>
+                        <span><strong style="color:#06b6d4">Dashed cyan</strong> &mdash; ML-predicted drug&ndash;disease link (CompGCN + XGBoost). <em>Not clinically validated. Hidden by default.</em></span>
                     </div>
                     <div style="display:flex;align-items:center;gap:0.5rem;padding:0.2rem 0">
                         <svg width="28" height="8" style="flex-shrink:0"><line x1="0" y1="4" x2="28" y2="4" stroke="#f59e0b" stroke-width="2.5"/></svg>
@@ -616,17 +616,8 @@ details summary::-webkit-details-marker { display: none; }
                 <span style="font-size:0.7rem;background:rgba(6,182,212,0.15);color:#06b6d4;padding:0.15rem 0.5rem;border-radius:10px;font-weight:600">Experimental</span>
             </div>
             <p style="margin:0 0 0.5rem;font-size:0.78rem">Cyan dashed edges are <strong style="color:var(--text)">ML predictions</strong> of drugs that might treat a disease. They are <em>not</em> from curated databases and require experimental validation.</p>
-            <div style="display:flex;gap:0.5rem;flex-wrap:wrap;margin-bottom:0.4rem">
-                <label style="display:flex;align-items:center;gap:0.3rem;font-size:0.76rem;cursor:pointer">
-                    <input type="checkbox" class="ml-method-filter" value="RotatE" checked onchange="filterMLMethod()" style="accent-color:#06b6d4" />
-                    <span style="color:var(--text)">RotatE</span>
-                    <span style="font-size:0.68rem;color:var(--text-muted)">(AUROC 0.965)</span>
-                </label>
-                <label style="display:flex;align-items:center;gap:0.3rem;font-size:0.76rem;cursor:pointer">
-                    <input type="checkbox" class="ml-method-filter" value="CompGCN" checked onchange="filterMLMethod()" style="accent-color:#06b6d4" />
-                    <span style="color:var(--text)">CompGCN</span>
-                    <span style="font-size:0.68rem;color:var(--text-muted)">(AUROC 0.972)</span>
-                </label>
+            <div style="display:flex;gap:0.5rem;flex-wrap:wrap;margin-bottom:0.4rem;font-size:0.76rem;color:var(--text-muted)">
+                <span>Method: <strong style="color:var(--text)">CompGCN + XGBoost</strong> <span style="font-size:0.68rem">(AUROC 0.972)</span></span>
             </div>
             <div style="display:flex;align-items:center;gap:0.5rem;margin-top:0.5rem;flex-wrap:wrap">
                 <button onclick="showPredictionsList()" style="font-size:0.74rem;padding:0.3rem 0.6rem;border-radius:5px;border:1px solid rgba(6,182,212,0.4);background:rgba(6,182,212,0.1);color:#06b6d4;cursor:pointer;font-weight:600">View Predictions Table</button>
@@ -729,21 +720,16 @@ details summary::-webkit-details-marker { display: none; }
                     <div style="background:var(--bg);border-radius:8px;padding:0.75rem;margin:0.6rem 0">
                         <div style="font-weight:700;color:var(--text);margin-bottom:0.4rem">How the pipeline works</div>
                         <ol style="padding-left:1.2rem;margin:0">
-                            <li><strong style="color:var(--text)">Graph embedding</strong> &mdash; Two complementary methods learn numerical representations for every entity in the knowledge graph:
-                                <ul style="margin:0.3rem 0 0;padding-left:1rem;list-style:disc">
-                                    <li><strong>RotatE</strong> (256-dim) &mdash; Models relationships as rotations in complex vector space, capturing asymmetric and compositional relation patterns.</li>
-                                    <li><strong>CompGCN</strong> (128-dim) &mdash; A graph neural network that jointly embeds nodes <em>and</em> relation types, learning from the full neighbourhood structure.</li>
-                                </ul>
-                            </li>
+                            <li><strong style="color:var(--text)">Graph embedding</strong> &mdash; <strong>CompGCN</strong> (128-dim), a graph neural network that jointly embeds nodes <em>and</em> relation types via composition operators during message passing, learns numerical representations for every entity in the knowledge graph.</li>
                             <li style="margin-top:0.3rem"><strong style="color:var(--text)">Feature engineering</strong> &mdash; For each candidate drug&ndash;disease pair, we combine embedding-derived features (element-wise interactions) with graph structure features (shared neighbors, Adamic-Adar index, node degree).</li>
                             <li style="margin-top:0.3rem"><strong style="color:var(--text)">Classification</strong> &mdash; An XGBoost decoder (decision tree ensemble) was trained on known &ldquo;drug treats disease&rdquo; relationships to distinguish real therapeutic links from random pairs.</li>
-                            <li style="margin-top:0.3rem"><strong style="color:var(--text)">Prediction</strong> &mdash; Each method scores all unknown drug&ndash;disease pairs. The top 500 predictions per method (confidence &ge; 50%) are stored in the graph. Enable &ldquo;Show ML predictions&rdquo; in the toolbar, then click any cyan edge to see which method produced it and the confidence score.</li>
+                            <li style="margin-top:0.3rem"><strong style="color:var(--text)">Prediction</strong> &mdash; CompGCN + XGBoost scores all ~4.4 million unknown drug&ndash;disease pairs. The top 10,000 predictions (confidence &ge; 50%) are stored in the graph. Enable &ldquo;Show ML predictions&rdquo; in the toolbar, then click any cyan edge to see the confidence score.</li>
                         </ol>
                     </div>
 
                     <div style="background:var(--bg);border-radius:8px;padding:0.75rem;margin:0.6rem 0">
                         <div style="font-weight:700;color:var(--text);margin-bottom:0.4rem">Model performance (XGBoost decoder)</div>
-                        <p>Both methods were rigorously evaluated using an 80/10/10 stratified train/validation/test split with <strong style="color:var(--text)">no data leakage</strong> (embeddings trained only on training edges):</p>
+                        <p>CompGCN was rigorously evaluated using an 80/10/10 stratified train/validation/test split with <strong style="color:var(--text)">no data leakage</strong> (embeddings trained only on training edges). RotatE (a rotation-based embedding method) was also evaluated for comparison:</p>
                         <table style="width:100%;margin:0.4rem 0;font-size:0.78rem">
                             <thead><tr>
                                 <th style="text-align:left;color:var(--text-muted);font-weight:600;padding:0.2rem 0.4rem">Metric</th>
@@ -758,7 +744,7 @@ details summary::-webkit-details-marker { display: none; }
                                 <tr><td style="padding:0.2rem 0.4rem;color:var(--text)">Hits@200</td><td style="text-align:right;padding:0.2rem 0.4rem">0.600</td><td style="text-align:right;padding:0.2rem 0.4rem">0.606</td><td style="padding:0.2rem 0.4rem">Fraction of real treatments in the top 200 predictions per disease</td></tr>
                             </tbody>
                         </table>
-                        <p style="margin-top:0.3rem;font-size:0.76rem"><strong style="color:var(--text)">Dataset:</strong> 9,735 therapeutic drugs &times; ~480 diseases. 3,026 training / ~310 validation / ~325 test known &ldquo;drug treats disease&rdquo; edges. CompGCN achieves the best AUROC; ranking metrics (Hits@K) are comparable across methods.</p>
+                        <p style="margin-top:0.3rem;font-size:0.76rem"><strong style="color:var(--text)">Dataset:</strong> 9,735 therapeutic drugs &times; ~480 diseases. 3,026 training / ~310 validation / ~325 test known &ldquo;drug treats disease&rdquo; edges. <strong style="color:var(--text)">CompGCN achieves the best AUROC (0.972)</strong> and is used for the predictions shown in the graph.</p>
                     </div>
 
                     <div style="background:rgba(248,113,113,0.08);border:1px solid rgba(248,113,113,0.2);border-radius:8px;padding:0.75rem;margin:0.6rem 0">
@@ -929,7 +915,7 @@ details summary::-webkit-details-marker { display: none; }
             <h2>ML Drug Repurposing Predictions</h2>
             <p>CardioKB includes <strong>machine learning predictions</strong> of drugs that might treat cardiovascular diseases, generated using graph embedding methods:</p>
             <ul>
-                <li><strong>RotatE</strong> and <strong>CompGCN</strong> embeddings trained on the knowledge graph, decoded with XGBoost (AUROC up to 0.972)</li>
+                <li><strong>CompGCN</strong> embeddings trained on the knowledge graph, decoded with XGBoost (AUROC 0.972)</li>
                 <li>Toggle <strong style="color:#06b6d4">&ldquo;Show ML Predictions&rdquo;</strong> to overlay predicted drug&ndash;disease links as cyan dashed edges</li>
                 <li>Filter by method, view a sortable predictions table, and export results as CSV or JSON</li>
                 <li>Click any cyan edge to see the confidence score and which model produced it</li>
@@ -972,7 +958,7 @@ details summary::-webkit-details-marker { display: none; }
         <p style="margin:0.75rem 0"><strong>Reading edges</strong></p>
         <ul>
             <li><strong>Solid edges</strong> = known relationships from integrated databases</li>
-            <li><strong style="color:#06b6d4">Dashed cyan edges</strong> = ML-predicted drug&ndash;disease links (RotatE / CompGCN + XGBoost). Hidden by default &mdash; enable via the &ldquo;Show ML predictions&rdquo; toggle. Click any cyan edge to see method and confidence score. <em>Not clinically validated.</em></li>
+            <li><strong style="color:#06b6d4">Dashed cyan edges</strong> = ML-predicted drug&ndash;disease links (CompGCN + XGBoost). Hidden by default &mdash; enable via the &ldquo;Show ML predictions&rdquo; toggle. Click any cyan edge to see confidence score. <em>Not clinically validated.</em></li>
             <li><strong style="color:#f59e0b">Solid orange edges</strong> = disease hierarchy (subtype-of)</li>
             <li>Each edge carries a <code>source</code> property identifying the originating database or model</li>
         </ul>
@@ -1670,9 +1656,10 @@ function togglePredictedEdges() {
     if (currentGraphData.edges.length) updatePredictedEdges();
 }
 
-let hiddenMLMethods = new Set();
+let hiddenMLMethods = new Set(['RotatE']);
 function filterMLMethod() {
     hiddenMLMethods.clear();
+    hiddenMLMethods.add('RotatE');
     document.querySelectorAll('.ml-method-filter').forEach(cb => {
         if (!cb.checked) hiddenMLMethods.add(cb.value);
     });
@@ -1781,7 +1768,7 @@ function exportPredictions(format) {
     if (format === 'csv') {
         const lines = [
             '# CardioKB ML Predictions Export — NOT clinically validated',
-            '# These are computational predictions from graph embedding models (RotatE / CompGCN + XGBoost).',
+            '# These are computational predictions from the CompGCN + XGBoost graph embedding pipeline.',
             '# They identify drugs worth investigating, not drugs to prescribe. Experimental validation required.',
             'Drug,Disease,Method,Confidence',
         ];
@@ -1793,7 +1780,7 @@ function exportPredictions(format) {
         ext = 'csv';
     } else {
         content = JSON.stringify({
-            warning: 'ML predictions — NOT clinically validated. These are computational predictions from graph embedding models (RotatE / CompGCN + XGBoost). They identify drugs worth investigating, not drugs to prescribe.',
+            warning: 'ML predictions — NOT clinically validated. These are computational predictions from the CompGCN + XGBoost graph embedding pipeline. They identify drugs worth investigating, not drugs to prescribe.',
             count: rows.length,
             predictions: rows,
         }, null, 2);
@@ -2120,7 +2107,7 @@ function showEdgePanel(edge, visNodes) {
     html += '<div style="margin-top:0.75rem;padding:0.5rem;background:var(--bg);border-radius:6px;font-size:0.75rem;color:var(--text-muted);line-height:1.5">';
     if (isPredicted) {
         html += '<strong style="color:var(--text)">Provenance:</strong> This is a machine learning prediction, not an established database relationship. ';
-        html += 'Graph embeddings (RotatE or CompGCN) were trained on the knowledge graph (train split only, no data leakage), then an XGBoost decoder classified potential Drug&rarr;Disease links. ';
+        html += 'CompGCN graph embeddings were trained on the knowledge graph (train split only, no data leakage), then an XGBoost decoder classified potential Drug&rarr;Disease links. ';
         html += 'These predictions require experimental validation before clinical consideration.';
     } else {
         html += '<strong style="color:var(--text)">Provenance:</strong> This relationship was extracted from ';

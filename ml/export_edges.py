@@ -43,8 +43,10 @@ def export_edges(driver):
 
     edge_path = OUTPUT_DIR / "edges.tsv"
     rel_type_counts = defaultdict(int)
+    exclude_rel_types = {"predictedTreatsDisease"}
 
     print("Exporting edges from Memgraph...")
+    print(f"  Excluding relationship types: {exclude_rel_types}")
     with driver.session() as session:
         result = session.run(
             "MATCH (a)-[r]->(b) "
@@ -54,16 +56,27 @@ def export_edges(driver):
         with open(edge_path, "w", newline="") as f:
             writer = csv.writer(f, delimiter="\t")
             writer.writerow(["src", "dst", "rel_type"])
+            seen = set()
             count = 0
+            dupes = 0
             for record in result:
+                rel = record["rel_type"]
+                if rel in exclude_rel_types:
+                    continue
                 src = get_id(record["src"])
                 dst = get_id(record["dst"])
-                rel = record["rel_type"]
+                key = (src, dst, rel)
+                if key in seen:
+                    dupes += 1
+                    continue
+                seen.add(key)
                 writer.writerow([src, dst, rel])
                 rel_type_counts[rel] += 1
                 count += 1
                 if count % 500_000 == 0:
                     print(f"  ...{count:,} edges exported")
+            if dupes:
+                print(f"  Deduplicated: {dupes:,} duplicate edges removed")
 
     print(f"Exported {count:,} edges to {edge_path}")
     print(f"Unique nodes: {len(node_map):,}")

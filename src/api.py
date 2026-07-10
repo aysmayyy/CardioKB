@@ -703,7 +703,8 @@ def graph_data():
             if all_node_ids:
                 pred_count_result = session.run(
                     "MATCH (d:Drug)-[r:predictedTreatsDisease]->(dis:Disease) "
-                    "WHERE id(d) IN $nids OR id(dis) IN $nids "
+                    "WHERE (id(d) IN $nids OR id(dis) IN $nids) "
+                    "  AND r.source = 'CompGCN_LinkPrediction' "
                     "RETURN count(r) AS total",
                     nids=all_node_ids,
                 )
@@ -711,7 +712,8 @@ def graph_data():
 
                 pred_result = session.run(
                     "MATCH (d:Drug)-[r:predictedTreatsDisease]->(dis:Disease) "
-                    "WHERE id(d) IN $nids OR id(dis) IN $nids "
+                    "WHERE (id(d) IN $nids OR id(dis) IN $nids) "
+                    "  AND r.source = 'CompGCN_LinkPrediction' "
                     "RETURN id(d) AS did, id(dis) AS disid, "
                     "       r.confidence AS confidence, r.source AS source, "
                     "       labels(d)[0] AS d_label, properties(d) AS d_props, "
@@ -747,7 +749,7 @@ def graph_data():
                         'from': did,
                         'to': disid,
                         'label': 'predictedTreatsDisease',
-                        'source': row['source'] or 'Node2Vec_LinkPrediction',
+                        'source': row['source'] or 'CompGCN_LinkPrediction',
                         'layer': 'predicted',
                         'properties': {
                             'confidence': str(row['confidence']) if row['confidence'] else '',

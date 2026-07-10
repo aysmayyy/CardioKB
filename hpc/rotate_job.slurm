@@ -11,7 +11,7 @@
 #SBATCH --cpus-per-task=8
 #SBATCH --mem=64G
 #SBATCH --gres=gpu:1
-#SBATCH --exclude=esplhpc-cp018
+#SBATCH --exclude=esplhpc-cp018,esplhpc-cp076
 
 ## Time Config — RotatE on 459K nodes, ~200 epochs with early stopping
 #SBATCH --time=24:00:00

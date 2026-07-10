@@ -4,7 +4,7 @@ A biomedical knowledge graph integrating **23 data sources** for cardiovascular 
 
 ## Current Graph Stats
 
-- **459,092 nodes** | **5,456,579 relationships** | **17 node types** | **28 relationship types** | **23 data sources** + 3 ML prediction sources
+- **459,092 nodes** | **5,474,744 relationships** | **17 node types** | **28 relationship types** | **23 data sources** + 2 ML prediction sources
 - All relationships carry a `source` property identifying the originating database
 - 7 edge types carry quantitative properties (combinedScore, expressionScore, morScore, etc.)
 
@@ -45,7 +45,7 @@ Place the `memgraph-data.tar.gz` archive anywhere on the machine, then run:
 ./scripts/import_graph.sh /path/to/memgraph-data.tar.gz
 ```
 
-This restores 459,092 nodes and 5,456,579 relationships into a Docker volume. Takes ~30 seconds.
+This restores 459,092 nodes and 5,474,744 relationships into a Docker volume. Takes ~30 seconds.
 
 ### Step 4: Launch
 
@@ -146,10 +146,10 @@ The UI at `http://localhost:5050` provides:
 | transcriptionFactorInteractsWithGene | 15,082 | DoRothEA |
 | drugTreatsPhenotype | 10,955 | DrugBank_Indications |
 | hasVariant | 8,413 | ClinVar |
-| drugTreatsDisease | 6,272 | CTD + ClinicalTrials.gov + DrugCentral + DrugBank_Indications |
+| drugTreatsDisease | 5,937 | CTD + DrugBank_Indications + DrugCentral + ClinicalTrials.gov |
 | TESTS_INTERVENTION | 3,180 | ClinicalTrials.gov |
 | diseaseIsSubtypeOf | 2,581 | Disease Ontology |
-| predictedTreatsDisease | 1,500 | ML Link Prediction |
+| predictedTreatsDisease | 20,000 | CompGCN + RotatE Link Prediction |
 | AFFECTS_RESPONSE_TO | 74 | ClinPGx |
 
 ## Edge Properties
@@ -197,12 +197,14 @@ CardioKB/
 ├── ml/
 │   ├── export_edges.py           # Export graph from Memgraph
 │   ├── split_edges.py            # Stratified train/val/test split
-│   ├── link_prediction.py        # Node2Vec decoder evaluation
 │   ├── link_prediction_rotate.py # RotatE decoder evaluation
+│   ├── link_prediction_compgcn.py # CompGCN decoder evaluation
+│   ├── score_only.py             # Memory-optimized XGBoost scoring (HPC)
+│   ├── store_predictions.py      # Load predictions into Memgraph
 │   └── data/                     # Shared exports + per-method subdirs
 ├── hpc/
-│   ├── train_node2vec.py         # Node2Vec training (SLURM)
-│   └── train_rotate.py           # RotatE training (SLURM + PyKEEN)
+│   ├── train_compgcn.py          # CompGCN training (HPC)
+│   └── train_rotate.py           # RotatE training (HPC + PyKEEN)
 ├── data/
 │   ├── raw/                      # Downloaded source data (~21 GB)
 │   ├── processed/                # Parsed TSV files
@@ -260,11 +262,11 @@ docker compose up -d
 
 ## Machine Learning: Drug Repurposing via Link Prediction
 
-CardioKB uses graph embedding methods to predict potential drug-disease treatment relationships not present in the curated knowledge graph. Three embedding methods have been evaluated.
+CardioKB uses graph embedding methods to predict potential drug-disease treatment relationships not present in the curated knowledge graph. Two embedding methods have been evaluated: CompGCN and RotatE.
 
 ### Methodology
 
-- **Edge splits**: 80/10/10 stratified train/val/test on all edge types (3,782 curated `drugTreatsDisease` edges at time of training)
+- **Edge splits**: 80/10/10 stratified train/val/test on all edge types (5,695 curated `drugTreatsDisease` edges at time of training)
 - **Embeddings trained on train split only** — no data leakage from val/test edges
 - **Negative sampling**: 1:1 ratio, excluding all known Drug-Disease edges across all splits
 - **Features**: Hadamard product + absolute difference of embeddings + cosine similarity + L2 distance + structural features (shared neighbors, Jaccard, Adamic-Adar, preferential attachment, degree)
@@ -275,37 +277,46 @@ CardioKB uses graph embedding methods to predict potential drug-disease treatmen
 
 | Method | Decoder | Test AUROC | Test AUPRC | Hits@100 | Hits@200 |
 |--------|---------|-----------|-----------|---------|---------|
-| Node2Vec (128-dim) | Cosine | 0.7195 | 0.7142 | 25.2% | — |
-| Node2Vec (128-dim) | **XGBoost** | **0.9504** | **0.9579** | **31.1%** | — |
-| Node2Vec (128-dim) | MLP | 0.9441 | 0.9535 | 30.8% | — |
-| RotatE (256-dim) | Cosine | 0.5299 | 0.5401 | 19.3% | 32.3% |
-| RotatE (256-dim) | **XGBoost** | **0.9652** | **0.9655** | **31.1%** | **60.0%** |
-| RotatE (256-dim) | MLP | 0.9607 | 0.9588 | 30.7% | 60.9% |
-| CompGCN (128-dim) | Cosine | 0.5058 | 0.5041 | 16.9% | 30.2% |
-| CompGCN (128-dim) | **XGBoost** | **0.9717** | **0.9709** | **30.5%** | **60.6%** |
-| CompGCN (128-dim) | MLP | 0.9625 | 0.9625 | 30.5% | 59.7% |
+| RotatE (256-dim) | Cosine | 0.7807 | 0.7569 | 13.4% | 27.3% |
+| RotatE (256-dim) | MLP | 0.9810 | 0.9786 | 83.5% | 91.9% |
+| RotatE (256-dim) | **XGBoost** | **0.9828** | **0.9812** | **84.1%** | **92.8%** |
+| CompGCN (128-dim) | Cosine | 0.3100 | 0.3810 | 0.4% | 0.6% |
+| CompGCN (128-dim) | MLP | 0.9838 | 0.9775 | 81.4% | 93.2% |
+| CompGCN (128-dim) | **XGBoost** | **0.9865** | **0.9854** | **82.6%** | **93.8%** |
 
-**Best overall**: CompGCN + XGBoost (Test AUROC = 0.9717, AUPRC = 0.9709)
+**Best overall**: CompGCN + XGBoost (Test AUROC = 0.9865, AUPRC = 0.9854)
 
-- CompGCN improves over RotatE by +0.0065 and Node2Vec by +0.0213 AUROC with XGBoost decoder
+- CompGCN improves over RotatE by +0.0037 AUROC with XGBoost decoder
 - CompGCN uses relation-aware message passing (subtraction composition, 2 GCN layers, 32M params)
-- All three methods achieve similar Hits@200 (~60%) with learned decoders, suggesting structural features drive ranking
-- Cosine decoder near-random for RotatE/CompGCN — embeddings are not optimized for cosine similarity
+- Both methods achieve similar Hits@200 (~93%) with learned decoders, suggesting structural features drive ranking
+- Cosine decoder near-random for CompGCN (0.31) — embeddings are not optimized for cosine similarity
+- RotatE Cosine (0.78) performs better than CompGCN Cosine due to inherent distance-based scoring
 
 ### Dataset Scale
 
-- **9,735** therapeutic drugs with embeddings
-- **457** diseases with embeddings
-- **3,026** train / **309** val / **322** test positive `drugTreatsDisease` edges
+- **10,310** therapeutic drugs with embeddings
+- **2,640** diseases with embeddings (CompGCN)
+- **4,726** train / **485** val / **484** test positive `drugTreatsDisease` edges
 
 ### Predictions in the Graph
 
-Top 500 predictions per method (confidence >= 0.5) are stored in Memgraph as `predictedTreatsDisease` edges:
-- `source: "Node2Vec_LinkPrediction"` — 500 edges
-- `source: "RotatE_LinkPrediction"` — 500 edges
-- `source: "CompGCN_LinkPrediction"` — 500 edges (pending storage)
+Top 10,000 predictions per method stored in Memgraph as `predictedTreatsDisease` edges:
+- `source: "CompGCN_LinkPrediction"` — 10,000 edges (primary, shown in web UI)
+- `source: "RotatE_LinkPrediction"` — 10,000 edges (comparison, queryable via Cypher)
 
 These are visible in the web UI as orange dashed lines with a separate toggle. Edge provenance shows confidence score, method, and "not clinically validated" warning.
+
+### ClinicalTrials.gov Inference Methodology
+
+The original ClinicalTrials.gov parser inferred `drugTreatsDisease` edges from any Phase 3/4 trial linking a drug intervention to a disease condition, yielding 868 edges. A subsequent audit revealed that many of these were spurious: trials with non-treatment primary purposes (e.g., Prevention, Diagnostic), drugs serving as comparators rather than experimental interventions, and diseases matching secondary rather than primary conditions. Four filters were applied: (1) `primaryPurpose == "TREATMENT"`, (2) drug must be in an EXPERIMENTAL arm, (3) disease must match the first-listed condition, (4) edges carry a `trialCount` property. This reduced ClinicalTrials.gov drugTreatsDisease edges from 868 to 153 (82.4% reduction), and the total drugTreatsDisease count from 6,272 to 5,937.
+
+### Why CompGCN Is the Primary Model
+
+CompGCN was selected as the primary model for the live web UI based on three factors: (1) highest test AUROC (0.9865 vs RotatE's 0.9828), (2) relation-aware message passing that distinguishes between the 27 relationship types in the graph, and (3) efficient training (~7 min vs RotatE's ~10 hrs). RotatE predictions remain stored in the graph and are queryable via Cypher in the Query tab, but only CompGCN predictions are shown in the interactive Explore tab. Both methods achieve comparable ranking performance (Hits@200: 93.8% vs 92.8%), confirming that CompGCN's selection is justified by the AUROC advantage plus practical training efficiency.
+
+### Confidence Score Interpretation
+
+The XGBoost decoder outputs values between 0 and 1 representing how closely a drug-disease pair's embedding geometry matches known treatment relationships. These scores reflect **ranking quality**, not calibrated probabilities — a confidence of 0.99 means the pair ranks very highly among candidates, not that there is a 99% chance the drug treats the disease. The top 10,000 CompGCN predictions span a narrow confidence range (0.991 to 0.989), indicating the model is uniformly confident across its top-ranked predictions. All predicted edges carry a "not clinically validated" warning in the web UI.
 
 ### ML Pipeline Structure
 
@@ -313,23 +324,15 @@ These are visible in the web UI as orange dashed lines with a separate toggle. E
 ml/
 ├── export_edges.py            # Export graph from Memgraph
 ├── split_edges.py             # 80/10/10 stratified split
-├── link_prediction.py         # Node2Vec decoder evaluation
 ├── link_prediction_rotate.py  # RotatE decoder evaluation
 ├── link_prediction_compgcn.py # CompGCN decoder evaluation
-├── evaluate_xgboost.py        # Node2Vec XGBoost plots/reports
 ├── evaluate_rotate.py         # RotatE XGBoost plots/reports
 ├── evaluate_compgcn.py        # CompGCN XGBoost plots/reports
-├── store_rotate_predictions.py
-├── store_compgcn_predictions.py
+├── score_only.py              # Memory-optimized XGBoost scoring (HPC)
+├── store_predictions.py       # Load predictions into Memgraph
 └── data/
     ├── edges.tsv, nodes.tsv   # Shared graph export
     ├── splits/                # Shared train/val/test splits
-    ├── node2vec/              # Node2Vec embeddings + results
-    │   ├── train_embeddings.npz
-    │   ├── evaluation_report.json
-    │   ├── predictions.tsv
-    │   ├── models/            # XGBoost model + embeddings
-    │   └── results/           # ROC, PR, confusion matrix plots
     ├── rotate/                # RotatE embeddings + results
     │   ├── rotate_embeddings.npz
     │   ├── training_summary.json
@@ -346,16 +349,15 @@ ml/
         └── results/           # ROC, PR, confusion matrix plots
 
 hpc/
-├── train_node2vec.py          # Node2Vec training (HPC)
-├── node2vec_job.slurm
 ├── train_compgcn.py           # CompGCN training (HPC)
 ├── compgcn_job.slurm
 ├── train_rotate.py            # RotatE training (HPC, PyKEEN)
-└── rotate_job.slurm
+├── rotate_job.slurm
+└── score_job.slurm            # XGBoost scoring (HPC, CPU-only)
 ```
 
 ## Data Sources
 
-**22 active data sources** in the current graph build:
+**23 active data sources** in the current graph build:
 
-Bgee, BindingDB, ClinicalTrials.gov, ClinPGx, ClinVar, CTD, Disease Ontology (nodes only), DoRothEA, DrugBank, DrugCentral, Gene Ontology, HGNC, HPO, LINCS L1000 (legacy), MeSH (nodes only), NCBI Gene (nodes only), OpenTargets, PubTator, Reactome, SIDER (legacy), STRING, Uberon (nodes only)
+Bgee, BindingDB, ClinicalTrials.gov, ClinPGx, ClinVar, CTD, Disease Ontology (nodes only), DoRothEA, DrugBank, DrugBank_Indications (text-mined), DrugCentral, Gene Ontology, HGNC, HPO, LINCS L1000 (legacy), MeSH (nodes only), NCBI Gene (nodes only), OpenTargets, PubTator, Reactome, SIDER (legacy), STRING, Uberon (nodes only)
