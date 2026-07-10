@@ -120,7 +120,8 @@ toc_items = [
     ('6.7 Evaluation Metrics', 1),
     ('6.8 Feature Importance', 1),
     ('6.9 Results and Clinical Validation', 1),
-    ('6.10 Future ML Directions', 1),
+    ('6.10 Known ML Limitation: Cross-Source Drug Node Duplication', 1),
+    ('6.11 Future ML Directions', 1),
     ('7. User Interface — Every Feature Explained', 0),
     ('7.1 Explore Tab', 1),
     ('7.2 Query Tab', 1),
@@ -785,11 +786,47 @@ doc.add_paragraph(
     '1,591 unique drugs across 37 unique diseases. Distribution is concentrated: top 6 diseases (heart '
     'disease, coronary artery disease, hypertension, atherosclerosis, congestive heart failure, myocardial '
     'infarction) account for ~60% of predictions. Drug diversity broadens down the ranked list: 51 drugs '
-    'in top 100, 228 at rank 1,000, 1,591 at rank 10,000. Median drug appears for 5 diseases. Zero overlap '
-    'with existing curated drugTreatsDisease edges (verified).'
+    'in top 100, 228 at rank 1,000, 1,591 at rank 10,000. Median drug appears for 5 diseases. The prediction '
+    'pipeline filters out all known drugTreatsDisease edges per node ID; however, cross-source Drug node '
+    'duplication (see below) allows a small number of already-known treatment pairs to appear as predictions '
+    'via the duplicate node (1.5% of CompGCN predictions, 1.1% of RotatE).'
 )
 
-doc.add_heading('6.10 Future ML Directions', level=2)
+doc.add_heading('6.10 Known ML Limitation: Cross-Source Drug Node Duplication', level=2)
+doc.add_paragraph(
+    'DrugBank and CTD both contribute Drug nodes to the graph. Because drugs are identified by name string '
+    'matching, 2,297 drugs (15.0% of 15,265 unique drug names) exist as two separate nodes — one from each '
+    'source — with different internal IDs and different edge neighborhoods. The ML pipeline treats these as '
+    'distinct entities, each receiving its own embedding vector.'
+)
+doc.add_paragraph(
+    'Impact on predictions: The prediction pipeline correctly filters known drugTreatsDisease edges per node '
+    'ID, but if DrugBank\'s Clopidogrel node (ID 23028) has a known edge to coronary artery disease while '
+    'CTD\'s Clopidogrel node (ID 95543) does not, the CTD copy can still produce a prediction for that pair. '
+    'Quantified impact on the 10,000-prediction output per method:'
+)
+add_table(
+    ['Metric', 'CompGCN', 'RotatE'],
+    [
+        ['Predictions from duplicate drug nodes', '6,702 (67.0%)', '6,745 (67.5%)'],
+        ['Spurious (already-known edge via other copy)', '154 (1.5%)', '108 (1.1%)'],
+        ['Redundant slots (same drug-disease from both copies)', '871 (8.7%)', '272 (2.7%)'],
+        ['Effective unique novel predictions', '~9,000 / 10,000', '~9,700 / 10,000'],
+    ],
+    col_widths=[7, 4, 4]
+)
+doc.add_paragraph(
+    'The 67% figure reflects that duplicate nodes are disproportionately well-connected drugs (they appear in '
+    'both DrugBank and CTD because they are widely studied), so they generate more predictions. However, most '
+    'of these predictions are for genuinely novel drug-disease pairs — the duplicate node simply has a different '
+    'embedding learned from its partial edge neighborhood. The true contamination rate is ~1.5% spurious '
+    'predictions (already-known treatments that leaked through) plus ~8.7% wasted slots (same drug-disease '
+    'pair predicted redundantly from both copies). Evaluation metrics (AUROC, AUPRC, Hits@K) are unaffected '
+    'because they are computed on the train/val/test splits using canonical node IDs, not on the prediction '
+    'output. A future improvement would merge duplicate Drug nodes before the ML graph export step.'
+)
+
+doc.add_heading('6.11 Future ML Directions', level=2)
 bullet('Attention-based GNNs (GAT, HGT): Learn attention weights over different neighbor types, potentially identifying which relationship types are most informative for drug repurposing.')
 bullet('Deeper models: Current CompGCN uses 2 layers (2-hop neighborhood). Adding layers could capture longer-range dependencies but risks oversmoothing (all embeddings converging to the same vector).')
 bullet('Edge-type-specific prediction heads: Instead of a single XGBoost decoder, train separate heads for different prediction tasks (drug repurposing, side effect prediction, gene-disease association).')
