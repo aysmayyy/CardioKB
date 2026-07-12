@@ -10,8 +10,9 @@
 ## Project Overview
 12-week rotation project (Jan-Apr 2026) building a CVD-focused biomedical knowledge graph. The graph integrates 23 deduplicated data sources (each node type and edge type served by exactly one authoritative database) into Memgraph for disease research, feature selection, and precision medicine. Built using **BaseAgent** multi-agent orchestration (`~/Desktop/BaseAgent/cardiokb.ipynb` on the `cardiokb` branch) with parser templates adapted for CardioKB's schema. The web UI is in this repo (`aysmayyy/CardioKB`, `baseagent-build` branch). Two legacy sources (SIDER, LINCS L1000) are retained as-is — no live API alternatives available.
 
-## Current Graph Stats (BaseAgent build — 2026-07-10)
-- **459,092 nodes** | **5,474,744 relationships** | **17 node types** | **28 relationship types** | **23 data sources** + 2 ML prediction sources
+## Current Graph Stats (Post-merge build — 2026-07-11)
+- **453,037 nodes** | **5,461,783 relationships** | **17 node types** | **28 relationship types** | **23 data sources** + 2 ML prediction sources
+- **26,794 Drug nodes** (deduplicated from 32,849 by xrefDrugBank entity resolution across DrugBank/CTD/ClinPGx/DrugCentral)
 - All relationships carry a `source` property identifying the originating database (e.g., `source: "OpenTargets"`)
 - 7 edge types carry quantitative properties: `combinedScore`, `expressionScore`, `morScore`, `confidence`, `evidenceCode`, `score`, `interactionType`, `clinicalSignificance`
 - *Stats are current as of last pipeline run; see Memgraph or `GET /api/graph-stats` for live counts.*
@@ -26,30 +27,27 @@
 
 ## ML Pipeline — Link Prediction for Drug Repurposing
 - **Pipeline**: `ml/export_edges.py` → `ml/split_edges.py` → train embeddings (HPC) → `ml/link_prediction*.py`
-- **Data**: 10,310 therapeutic drugs × 2,640 diseases, 5,937 drugTreatsDisease edges (4,726/485/484 stratified split)
-- **Predictions**: Top 500 per method stored in Memgraph as `predictedTreatsDisease` edges (confidence >= 0.5)
+- **Data**: 10,310 therapeutic drugs × 2,640 diseases (CompGCN) / 2,296 diseases (RotatE), 4,852 drugTreatsDisease edges (4,726/485/484 stratified split)
+- **Predictions**: Top predictions per method stored in Memgraph as `predictedTreatsDisease` edges (confidence >= 0.5). Total: 14,435 edges (6,607 CompGCN + 7,828 RotatE)
 - **UI**: Orange dashed edges in Explore tab, separate toggle, provenance panel shows confidence + "not clinically validated" warning
-- **drugTreatsDisease**: 5,937 edges from 4 sources (CTD: 3,115, DrugBank_Indications: 2,512, ClinicalTrials.gov: 153, DrugCentral: 157). DrugBank_Indications edges were text-mined from DrugBank XML indication fields via `scripts/drugbank_indications.py`.
-- **drugTreatsPhenotype**: 10,955 edges (source: DrugBank_Indications). Covers conditions like tachycardia, arrhythmia, edema that exist only as Phenotype (HPO) nodes. NL2Cypher uses UNION ALL across both drugTreatsDisease and drugTreatsPhenotype for treatment queries.
+- **drugTreatsDisease**: 4,852 edges from 4 sources (CTD: 3,099, DrugBank_Indications: 1,449, ClinicalTrials.gov: 147, DrugCentral: 157). DrugBank_Indications edges were text-mined from DrugBank XML indication fields via `scripts/drugbank_indications.py`.
+- **drugTreatsPhenotype**: 5,714 edges (source: DrugBank_Indications). Covers conditions like tachycardia, arrhythmia, edema that exist only as Phenotype (HPO) nodes. NL2Cypher uses UNION ALL across both drugTreatsDisease and drugTreatsPhenotype for treatment queries.
 - **ML note**: The ML pipeline trains on drugTreatsDisease only (Drug→Disease). drugTreatsPhenotype is a separate relationship type and does not affect ML training data or predictions.
 
-### Embedding Methods Compared
-| Method | Decoder | Test AUROC | Test AUPRC | Hits@100 | Hits@200 |
-|--------|---------|-----------|-----------|---------|---------|
-| Node2Vec (128-dim) | Cosine | 0.7195 | 0.7195 | — | — |
-| Node2Vec (128-dim) | **XGBoost** | **0.9504** | **0.9579** | 31.1% | — |
-| Node2Vec (128-dim) | MLP | 0.9441 | 0.9441 | — | — |
-| RotatE (256-dim) | Cosine | 0.7807 | 0.7569 | 13.4% | 27.3% |
-| RotatE (256-dim) | **XGBoost** | **0.9828** | **0.9812** | 84.1% | 92.8% |
-| RotatE (256-dim) | MLP | 0.9810 | 0.9786 | 83.5% | 91.9% |
-| CompGCN (128-dim) | Cosine | 0.3100 | 0.3810 | 0.4% | 0.6% |
-| CompGCN (128-dim) | **XGBoost** | **0.9865** | **0.9854** | **82.6%** | **93.8%** |
-| CompGCN (128-dim) | MLP | 0.9838 | 0.9775 | 81.4% | 93.2% |
+### Embedding Methods Compared (Post-Merge, July 2026)
+| Method | Decoder | Test AUROC | Test AUPRC | Hits@10 | Hits@50 | Hits@100 | Hits@200 | MRR | Med. Rank |
+|--------|---------|-----------|-----------|--------|--------|---------|---------|-----|-----------|
+| RotatE (256-dim) | Cosine | 0.7807 | 0.7569 | 1.7% | 9.3% | 13.4% | 27.3% | 0.0095 | 461 |
+| RotatE (256-dim) | **XGBoost** | **0.9828** | **0.9812** | **39.3%** | **72.1%** | **84.1%** | **92.8%** | **0.1890** | **17.5** |
+| RotatE (256-dim) | MLP | 0.9810 | 0.9786 | 41.1% | 71.9% | 83.5% | 91.9% | 0.1898 | 16 |
+| CompGCN (128-dim) | Cosine | 0.3100 | 0.3810 | 0.2% | 0.2% | 0.4% | 0.6% | 0.0027 | 2,230 |
+| CompGCN (128-dim) | **XGBoost** | **0.9865** | **0.9854** | **36.6%** | **68.0%** | **82.6%** | **93.8%** | **0.2141** | **22** |
+| CompGCN (128-dim) | MLP | 0.9838 | 0.9775 | 29.3% | 65.5% | 81.4% | 93.2% | 0.1168 | 27.5 |
 
-- **Best overall**: CompGCN + XGBoost (AUROC 0.9865) — improves over RotatE by +0.0037, Node2Vec by +0.0361
+- **Best overall**: CompGCN + XGBoost (AUROC 0.9865) — improves over RotatE by +0.0037
 - **CompGCN training**: Pure PyTorch, 200 epochs (best at epoch 60), subtraction composition, 2 layers, 32M params, GPU on HPC (~7 min)
 - **RotatE training**: PyKEEN, 200 epochs, NSSALoss, L40S GPU on HPC (~3.4 hrs), MRR=0.1890
-- **Prediction sources in Memgraph**: `CompGCN_LinkPrediction` (10,000 edges), `RotatE_LinkPrediction` (10,000 edges)
+- **Prediction sources in Memgraph**: `CompGCN_LinkPrediction` (6,607 edges, 1,038 drugs × 37 diseases), `RotatE_LinkPrediction` (7,828 edges, 1,165 drugs × 142 diseases)
 
 ### ML Data Directory Structure
 ```
@@ -178,7 +176,7 @@ CVD ontology files: `ontology/genes/cvd.txt` (3,984 gene symbols from OMIM + Dis
 ### Direct Parsers (5)
 | # | Source | Parser | Access | Status |
 |---|--------|--------|--------|--------|
-| 1 | ClinicalTrials.gov | ClinicalTrialsParser | Public API v2 | Working (21,578 trials, 20,667 STUDIES_CONDITION + 3,180 TESTS_INTERVENTION + 153 drugTreatsDisease edges). drugTreatsDisease filtered by 4 criteria: primaryPurpose==TREATMENT, EXPERIMENTAL arm type, first-listed condition only, trialCount dedup. |
+| 1 | ClinicalTrials.gov | ClinicalTrialsParser | Public API v2 | Working (21,578 trials, 20,667 STUDIES_CONDITION + 3,178 TESTS_INTERVENTION + 147 drugTreatsDisease edges). drugTreatsDisease filtered by 4 criteria: primaryPurpose==TREATMENT, EXPERIMENTAL arm type, first-listed condition only, trialCount dedup. |
 | 2 | ClinPGx (PharmGKB successor) | ClinPGxParser | Public API | Working (1,091 VARIANT_IN, 503 drugLabelAnnotatesGene, 345 drugLabelDescribesDrug, 224 AFFECTS_RESPONSE_TO, 19 AFFECTS_RESPONSE_TO_CLASS edges) |
 | 3 | NCBI Gene | NCBIGeneParser | Public FTP | Working (193,687 genes) |
 | 4 | DoRothEA (OmniPath) | DoRothEAParser | Public API | Working (12,985 TF-gene interactions, with morScore + confidence properties) |
@@ -208,7 +206,7 @@ CVD ontology files: `ontology/genes/cvd.txt` (3,984 gene symbols from OMIM + Dis
 |---|--------|--------|--------|--------|
 | 21 | HGNC Gene Families | HGNCFamiliesParser | Public | Working (1,934 GeneFamily nodes, 5,123 geneInFamily + 5,123 familyContainsGene edges) |
 | 22 | ClinVar | ClinVarParser | Public FTP | Working (4,488,042 Variant nodes, 2,267,095 hasVariant + 2,267,095 variantInGene edges) |
-| 23 | DrugBank_Indications (text-mined) | scripts/drugbank_indications.py | Derived | Working (2,930 drugTreatsDisease + 10,955 drugTreatsPhenotype edges) |
+| 23 | DrugBank_Indications (text-mined) | scripts/drugbank_indications.py | Derived | Working (1,449 drugTreatsDisease + 5,714 drugTreatsPhenotype edges) |
 
 ### Sources Removed (14) — see docs/CardioKB_Redundancy_Changelog.docx
 DisGeNET, GWAS Catalog, Jensen DISEASES, Jensen TISSUES, MEDLINE, OMIM, WikiPathways, AOP-DB, HGNC (base), CellAge, GenAge, Hetionet (precomputed), DrugAge, AnAge

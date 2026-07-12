@@ -4,7 +4,7 @@ A biomedical knowledge graph integrating **23 data sources** for cardiovascular 
 
 ## Current Graph Stats
 
-- **459,092 nodes** | **5,474,744 relationships** | **17 node types** | **28 relationship types** | **23 data sources** + 2 ML prediction sources
+- **453,037 nodes** | **5,461,783 relationships** | **17 node types** | **28 relationship types** | **23 data sources** + 2 ML prediction sources
 - All relationships carry a `source` property identifying the originating database
 - 7 edge types carry quantitative properties (combinedScore, expressionScore, morScore, etc.)
 
@@ -45,7 +45,7 @@ Place the `memgraph-data.tar.gz` archive anywhere on the machine, then run:
 ./scripts/import_graph.sh /path/to/memgraph-data.tar.gz
 ```
 
-This restores 459,092 nodes and 5,474,744 relationships into a Docker volume. Takes ~30 seconds.
+This restores 453,037 nodes and 5,461,783 relationships into a Docker volume. Takes ~30 seconds.
 
 ### Step 4: Launch
 
@@ -59,7 +59,7 @@ Open **http://localhost:5050** in a browser. Done.
 
 ```bash
 docker compose ps                            # Both 'memgraph' and 'app' should show "running"
-curl http://localhost:5050/api/graph-stats    # Should return {"nodes": 459092, ...}
+curl http://localhost:5050/api/graph-stats    # Should return {"nodes": 453037, ...}
 ```
 
 ### Local Development
@@ -103,7 +103,7 @@ The UI at `http://localhost:5050` provides:
 |------|------:|-------------|
 | Gene | 193,795 | Human genes from NCBI Gene |
 | Variant | 135,555 | Genetic variants from ClinVar |
-| Drug | 32,849 | Compounds from DrugBank + CTD |
+| Drug | 26,794 | Compounds from DrugBank + CTD (deduplicated by xrefDrugBank) |
 | BiologicalProcess | 24,428 | GO biological processes |
 | ClinicalTrial | 21,578 | Trials from ClinicalTrials.gov |
 | Phenotype | 19,389 | Clinical phenotypes from HPO |
@@ -125,8 +125,8 @@ The UI at `http://localhost:5050` provides:
 |-------------|------:|--------|
 | bodyPartOverexpressesGene | 2,749,193 | Bgee |
 | geneAssociatesWithDisease | 542,096 | PubTator + OpenTargets |
-| chemicalIncreasesExpression | 343,823 | CTD |
-| chemicalDecreasesExpression | 328,726 | CTD |
+| chemicalIncreasesExpression | 343,783 | CTD |
+| chemicalDecreasesExpression | 328,708 | CTD |
 | geneAssociatesWithPhenotype | 270,265 | HPO |
 | geneInteractsWithGene | 229,007 | STRING |
 | geneInPathway | 137,116 | Reactome |
@@ -135,21 +135,21 @@ The UI at `http://localhost:5050` provides:
 | geneAssociatedWithCellularComponent | 90,141 | Gene Ontology |
 | geneHasMolecularFunction | 76,612 | Gene Ontology |
 | compoundUpregulatesGene | 74,854 | CTD |
-| compoundCausesSideEffect | 67,721 | SIDER |
+| compoundCausesSideEffect | 67,646 | SIDER |
 | compoundDownregulatesGene | 64,661 | CTD |
 | variantAssociatedWithDisease | 51,323 | ClinVar |
 | drugBindsGene | 29,363 | DrugBank |
 | geneInFamily | 27,022 | HGNC |
-| compoundInPharmacologicClass | 25,687 | DrugCentral |
+| compoundInPharmacologicClass | 24,752 | DrugCentral |
 | chemicalBindsGene | 22,735 | BindingDB |
 | STUDIES_CONDITION | 20,667 | ClinicalTrials.gov |
 | transcriptionFactorInteractsWithGene | 15,082 | DoRothEA |
-| drugTreatsPhenotype | 10,955 | DrugBank_Indications |
+| drugTreatsPhenotype | 5,714 | DrugBank_Indications |
 | hasVariant | 8,413 | ClinVar |
-| drugTreatsDisease | 5,937 | CTD + DrugBank_Indications + DrugCentral + ClinicalTrials.gov |
-| TESTS_INTERVENTION | 3,180 | ClinicalTrials.gov |
+| drugTreatsDisease | 4,852 | CTD + DrugBank_Indications + DrugCentral + ClinicalTrials.gov |
+| TESTS_INTERVENTION | 3,178 | ClinicalTrials.gov |
 | diseaseIsSubtypeOf | 2,581 | Disease Ontology |
-| predictedTreatsDisease | 20,000 | CompGCN + RotatE Link Prediction |
+| predictedTreatsDisease | 14,435 | CompGCN (6,607) + RotatE (7,828) Link Prediction |
 | AFFECTS_RESPONSE_TO | 74 | ClinPGx |
 
 ## Edge Properties
@@ -266,57 +266,68 @@ CardioKB uses graph embedding methods to predict potential drug-disease treatmen
 
 ### Methodology
 
-- **Edge splits**: 80/10/10 stratified train/val/test on all edge types (5,695 curated `drugTreatsDisease` edges at time of training)
+- **Edge splits**: 80/10/10 stratified train/val/test on all edge types (4,852 curated `drugTreatsDisease` edges post-merge)
 - **Embeddings trained on train split only** — no data leakage from val/test edges
 - **Negative sampling**: 1:1 ratio, excluding all known Drug-Disease edges across all splits
 - **Features**: Hadamard product + absolute difference of embeddings + cosine similarity + L2 distance + structural features (shared neighbors, Jaccard, Adamic-Adar, preferential attachment, degree)
 - **Therapeutic drug filter**: Only drugs with therapeutic signal edges are considered
 - **Three decoders compared**: Cosine similarity, XGBoost, MLP
 
-### Embedding Method Comparison
+### Embedding Method Comparison (Post-Merge, July 2026)
 
-| Method | Decoder | Test AUROC | Test AUPRC | Hits@100 | Hits@200 |
-|--------|---------|-----------|-----------|---------|---------|
-| RotatE (256-dim) | Cosine | 0.7807 | 0.7569 | 13.4% | 27.3% |
-| RotatE (256-dim) | MLP | 0.9810 | 0.9786 | 83.5% | 91.9% |
-| RotatE (256-dim) | **XGBoost** | **0.9828** | **0.9812** | **84.1%** | **92.8%** |
-| CompGCN (128-dim) | Cosine | 0.3100 | 0.3810 | 0.4% | 0.6% |
-| CompGCN (128-dim) | MLP | 0.9838 | 0.9775 | 81.4% | 93.2% |
-| CompGCN (128-dim) | **XGBoost** | **0.9865** | **0.9854** | **82.6%** | **93.8%** |
+| Method | Decoder | Test AUROC | Test AUPRC | Hits@10 | Hits@50 | Hits@100 | Hits@200 | MRR | Med. Rank |
+|--------|---------|-----------|-----------|--------|--------|---------|---------|-----|-----------|
+| RotatE (256-dim) | Cosine | 0.7807 | 0.7569 | 1.7% | 9.3% | 13.4% | 27.3% | 0.0095 | 461 |
+| RotatE (256-dim) | MLP | 0.9810 | 0.9786 | 41.1% | 71.9% | 83.5% | 91.9% | 0.1898 | 16 |
+| RotatE (256-dim) | **XGBoost** | **0.9828** | **0.9812** | **39.3%** | **72.1%** | **84.1%** | **92.8%** | **0.1890** | **17.5** |
+| CompGCN (128-dim) | Cosine | 0.3100 | 0.3810 | 0.2% | 0.2% | 0.4% | 0.6% | 0.0027 | 2,230 |
+| CompGCN (128-dim) | MLP | 0.9838 | 0.9775 | 29.3% | 65.5% | 81.4% | 93.2% | 0.1168 | 27.5 |
+| CompGCN (128-dim) | **XGBoost** | **0.9865** | **0.9854** | **36.6%** | **68.0%** | **82.6%** | **93.8%** | **0.2141** | **22** |
 
 **Best overall**: CompGCN + XGBoost (Test AUROC = 0.9865, AUPRC = 0.9854)
 
 - CompGCN improves over RotatE by +0.0037 AUROC with XGBoost decoder
 - CompGCN uses relation-aware message passing (subtraction composition, 2 GCN layers, 32M params)
 - Both methods achieve similar Hits@200 (~93%) with learned decoders, suggesting structural features drive ranking
+- CompGCN has higher MRR (0.2141 vs 0.1890) but higher median rank (22 vs 17.5) — CompGCN better at reciprocal ranking, RotatE slightly tighter at top-of-list
 - Cosine decoder near-random for CompGCN (0.31) — embeddings are not optimized for cosine similarity
 - RotatE Cosine (0.78) performs better than CompGCN Cosine due to inherent distance-based scoring
 
 ### Dataset Scale
 
 - **10,310** therapeutic drugs with embeddings
-- **2,640** diseases with embeddings (CompGCN)
+- **2,640** diseases with embeddings (CompGCN) / **2,296** (RotatE)
 - **4,726** train / **485** val / **484** test positive `drugTreatsDisease` edges
+- **4,852** total `drugTreatsDisease` edges post-merge (CTD: 3,099, DrugBank_Indications: 1,449, DrugCentral: 157, ClinicalTrials.gov: 147)
 
 ### Predictions in the Graph
 
-Top 10,000 predictions per method stored in Memgraph as `predictedTreatsDisease` edges:
-- `source: "CompGCN_LinkPrediction"` — 10,000 edges (primary, shown in web UI)
-- `source: "RotatE_LinkPrediction"` — 10,000 edges (comparison, queryable via Cypher)
+Top predictions per method stored in Memgraph as `predictedTreatsDisease` edges (confidence >= 0.5):
+- `source: "CompGCN_LinkPrediction"` — 6,607 edges (1,038 drugs x 37 diseases, confidence 0.989–0.991; primary, shown in web UI)
+- `source: "RotatE_LinkPrediction"` — 7,828 edges (1,165 drugs x 142 diseases, confidence 0.993–0.997; comparison, queryable via Cypher)
+- **Total: 14,435** predicted edges
 
 These are visible in the web UI as orange dashed lines with a separate toggle. Edge provenance shows confidence score, method, and "not clinically validated" warning.
 
-### ClinicalTrials.gov Inference Methodology
+### Methodology Notes
 
-The original ClinicalTrials.gov parser inferred `drugTreatsDisease` edges from any Phase 3/4 trial linking a drug intervention to a disease condition, yielding 868 edges. A subsequent audit revealed that many of these were spurious: trials with non-treatment primary purposes (e.g., Prevention, Diagnostic), drugs serving as comparators rather than experimental interventions, and diseases matching secondary rather than primary conditions. Four filters were applied: (1) `primaryPurpose == "TREATMENT"`, (2) drug must be in an EXPERIMENTAL arm, (3) disease must match the first-listed condition, (4) edges carry a `trialCount` property. This reduced ClinicalTrials.gov drugTreatsDisease edges from 868 to 153 (82.4% reduction), and the total drugTreatsDisease count from 6,272 to 5,937.
+**ClinicalTrials.gov Inference Fix.** The original ClinicalTrials.gov parser inferred `drugTreatsDisease` edges from any Phase 3/4 trial linking a drug intervention to a disease condition, yielding 868 edges. A subsequent audit revealed that many of these were spurious: trials with non-treatment primary purposes (e.g., Prevention, Diagnostic), drugs serving as comparators rather than experimental interventions, and diseases matching secondary rather than primary conditions. Four filters were applied: (1) `primaryPurpose == "TREATMENT"`, (2) drug must be in an EXPERIMENTAL arm, (3) disease must match the first-listed condition, (4) edges carry a `trialCount` property. This reduced ClinicalTrials.gov drugTreatsDisease edges from 868 to 147 (83.1% reduction).
+
+**Duplicate Drug Node Merge (Entity Resolution).** The BaseAgent pipeline created duplicate Drug nodes when multiple sources (DrugBank, CTD, ClinPGx, DrugCentral) loaded the same compound under different internal `drugId` values but shared the same `xrefDrugBank` canonical identifier. A post-hoc entity resolution step (`scripts/merge_duplicate_drugs.py`) identified 5,611 duplicate groups (2x–8x duplication, including salt/ester forms), removed 6,055 duplicate nodes, transferred 474,641 edges to survivor nodes, and deduplicated 9,094 redundant edges. This reduced Drug nodes from 32,849 to 26,794. All ML models were retrained on the merged graph with zero cross-split leakage confirmed.
+
+**Stale Memgraph-ID Bug Fix.** After the drug node merge deleted 6,055 nodes, Memgraph recycled their internal IDs. The original `store_predictions.py` matched Drug/Disease nodes by `memgraph_id` from a stale `nodes.tsv` export, causing predicted edges to land on wrong node types (Gene, PharmacologicClass, SideEffect) that had inherited the recycled IDs. This was detected when the UI showed lab reagents and food chemicals as predicted treatments. The fix rewrote `store_predictions.py` to match nodes by name from the live graph instead of stale file-based IDs, making it permanently robust to ID recycling.
 
 ### Why CompGCN Is the Primary Model
 
-CompGCN was selected as the primary model for the live web UI based on three factors: (1) highest test AUROC (0.9865 vs RotatE's 0.9828), (2) relation-aware message passing that distinguishes between the 27 relationship types in the graph, and (3) efficient training (~7 min vs RotatE's ~10 hrs). RotatE predictions remain stored in the graph and are queryable via Cypher in the Query tab, but only CompGCN predictions are shown in the interactive Explore tab. Both methods achieve comparable ranking performance (Hits@200: 93.8% vs 92.8%), confirming that CompGCN's selection is justified by the AUROC advantage plus practical training efficiency.
+CompGCN was selected as the primary model for the live web UI based on three factors: (1) highest test AUROC (0.9865 vs RotatE's 0.9828), (2) relation-aware message passing that distinguishes between the 27 relationship types in the graph, and (3) efficient training (~7 min vs RotatE's ~3.4 hrs). RotatE predictions remain stored in the graph and are queryable via Cypher in the Query tab, but only CompGCN predictions are shown in the interactive Explore tab. Both methods achieve comparable ranking performance (Hits@200: 93.8% vs 92.8%), confirming that CompGCN's selection is justified by the AUROC advantage plus practical training efficiency.
 
-### Confidence Score Interpretation
+### Known Limitations
 
-The XGBoost decoder outputs values between 0 and 1 representing how closely a drug-disease pair's embedding geometry matches known treatment relationships. These scores reflect **ranking quality**, not calibrated probabilities — a confidence of 0.99 means the pair ranks very highly among candidates, not that there is a 99% chance the drug treats the disease. The top 10,000 CompGCN predictions span a narrow confidence range (0.991 to 0.989), indicating the model is uniformly confident across its top-ranked predictions. All predicted edges carry a "not clinically validated" warning in the web UI.
+- **Confidence scores reflect ranking, not calibrated probability.** The XGBoost decoder outputs values between 0 and 1 representing how closely a drug-disease pair's embedding geometry matches known treatment relationships. A confidence of 0.99 means the pair ranks very highly among candidates, not that there is a 99% chance the drug treats the disease. The CompGCN predictions span a narrow confidence range (0.989–0.991) and RotatE spans 0.993–0.997, indicating uniform model confidence across top-ranked predictions. All predicted edges carry a "not clinically validated" warning in the web UI.
+- **Pharmacologic-class parent nodes in predictions.** A subset of top predictions involve PharmacologicClass parent nodes (e.g., "ACE Inhibitors", "HMG-CoA Reductase Inhibitors") rather than specific Drug compounds. These class-level predictions are structurally valid (the class node has edges to member drugs) but are less actionable than compound-specific predictions. They reflect the graph structure where drug classes aggregate member drugs' connectivity.
+- **Hub-driven prediction concentration.** CompGCN predictions concentrate on high-degree Disease hub nodes: the top 6 diseases (heart disease, coronary artery disease, hypertension, atherosclerosis, congestive heart failure, myocardial infarction) account for a disproportionate share of predictions. This is expected — diseases with more known drug edges provide stronger training signal — but means rarer CVD conditions receive fewer or no predictions.
+- **Limited graph connectivity drugs.** Some predicted drugs have limited graph connectivity beyond a `compoundInPharmacologicClass` edge to a class node. These predictions are driven primarily by the class node's embedding rather than the drug's own pharmacological profile, making them lower-confidence hypotheses despite high model scores.
+- **Disease-specific embedding dominance (CompGCN).** Pulmonary embolism has substantial overall graph connectivity (6,859 incoming edges) but received only 1 CompGCN prediction (rank 7,861 of 10,000), because 92.9% of its edges are `geneAssociatesWithDisease` relationships versus only 46 `drugTreatsDisease` edges. CompGCN's neighborhood-aggregation mechanism causes its embedding for PE to be dominated by gene-association signal rather than drug-treatment signal, suppressing confident predictions even though the disease is well-represented in the graph overall. RotatE, which learns independent per-entity embeddings rather than aggregating neighbor information, was less susceptible to this effect and produced 75 predictions for PE. As a positive case study: among RotatE's PE predictions, Dabigatran (the active thrombin inhibitor, a separate Drug node from its prodrug Dabigatran etexilate) was predicted to treat PE despite having no curated `drugTreatsDisease` edge for PE — only a CTD edge to stroke. The prodrug form does have a curated PE indication (DrugBank_Indications), so the model effectively bridged the active-metabolite/prodrug entity gap, illustrating both the model's ability to surface pharmacologically valid connections and the role entity resolution plays in prediction quality.
 
 ### ML Pipeline Structure
 
