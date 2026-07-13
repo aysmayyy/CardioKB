@@ -872,6 +872,23 @@ bullet('Limited graph connectivity drugs. Some predicted drugs have connectivity
     'compoundInPharmacologicClass edge, with predictions driven by the class node\'s embedding rather than '
     'the drug\'s own pharmacological profile.')
 
+bullet('Drug candidate filter analysis. The therapeutic filter that restricts link prediction scoring '
+    'to drugs with at least one signal edge uses the set: drugBindsGene, compoundInPharmacologicClass, '
+    'compoundCausesSideEffect, drugTreatsDisease, AFFECTS_RESPONSE_TO, TESTS_INTERVENTION. Investigation '
+    'confirmed that expression-modulation edges (chemicalIncreasesExpression, chemicalDecreasesExpression from '
+    'CTD) do NOT qualify drugs for the candidate pool. However, 74 drugs (0.7% of the 10,224-drug pool) '
+    'qualify only via weaker edge types: 66 via TESTS_INTERVENTION alone (e.g., Coffee, Water, Coconut oil, '
+    'Contrast Media, BCG vaccine — substances tested as interventions in CVD clinical trials but not '
+    'therapeutic drugs) and 7 via compoundCausesSideEffect alone (e.g., Lanthanum carbonate, Hydrogen '
+    'fluoride — compounds whose only CVD-relevant signal is causing side effects). A stricter filter '
+    'retaining only drugBindsGene, compoundInPharmacologicClass, drugTreatsDisease, and AFFECTS_RESPONSE_TO '
+    'would reduce the candidate pool by 74 drugs (10,224 → 10,150) with negligible impact on prediction '
+    'quality. Three flagged drugs (Ifosfamide, Thiotepa, Iopamidol) were examined in detail: Ifosfamide and '
+    'Thiotepa qualify via drugBindsGene and compoundInPharmacologicClass (alkylating antineoplastics with '
+    'legitimate pharmacological profiles); Iopamidol (a contrast agent) qualifies via '
+    'compoundInPharmacologicClass — a harder edge case illustrating that pharmacologic class membership alone '
+    'can admit non-therapeutic compounds.')
+
 doc.add_heading('6.12 Future ML Directions', level=2)
 bullet('Attention-based GNNs (GAT, HGT): Learn attention weights over different neighbor types, potentially identifying which relationship types are most informative for drug repurposing.')
 bullet('Deeper models: Current CompGCN uses 2 layers (2-hop neighborhood). Adding layers could capture longer-range dependencies but risks oversmoothing (all embeddings converging to the same vector).')
