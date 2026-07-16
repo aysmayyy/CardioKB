@@ -13,7 +13,7 @@ A biomedical knowledge graph integrating **23 data sources** for cardiovascular 
 ### What You Need
 
 1. **Docker** and **Docker Compose** (v2) — [Install Docker](https://docs.docker.com/get-docker/)
-2. **Graph data archive** — `memgraph-data.tar.gz` (~305 MB), provided separately
+2. **Graph data archive** — `memgraph-data.tar.gz` (~304 MB), provided separately
 3. **~16 GB RAM** on the server (Memgraph loads the full graph in memory)
 
 ### Step 1: Clone the repo
@@ -253,7 +253,7 @@ python eval/eval_graph.py             # Live Memgraph validation only
 
 ```bash
 # Export graph data for transfer to another machine
-./scripts/export_graph.sh             # -> data/export/memgraph-data.tar.gz (~300 MB)
+./scripts/export_graph.sh             # -> data/export/memgraph-data.tar.gz (~304 MB)
 
 # Import on target host
 ./scripts/import_graph.sh data/export/memgraph-data.tar.gz

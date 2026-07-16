@@ -10,7 +10,7 @@
 ## Project Overview
 12-week rotation project (Jan-Apr 2026) building a CVD-focused biomedical knowledge graph. The graph integrates 23 deduplicated data sources (each node type and edge type served by exactly one authoritative database) into Memgraph for disease research, feature selection, and precision medicine. Built using **BaseAgent** multi-agent orchestration (`~/Desktop/BaseAgent/cardiokb.ipynb` on the `cardiokb` branch) with parser templates adapted for CardioKB's schema. The web UI is in this repo (`aysmayyy/CardioKB`, `baseagent-build` branch). Two legacy sources (SIDER, LINCS L1000) are retained as-is — no live API alternatives available.
 
-## Current Graph Stats (Post-merge build — 2026-07-11)
+## Current Graph Stats (Post-merge build — 2026-07-15)
 - **453,037 nodes** | **5,461,783 relationships** | **17 node types** | **28 relationship types** | **23 data sources** + 2 ML prediction sources
 - **26,794 Drug nodes** (deduplicated from 32,849 by xrefDrugBank entity resolution across DrugBank/CTD/ClinPGx/DrugCentral)
 - All relationships carry a `source` property identifying the originating database (e.g., `source: "OpenTargets"`)
@@ -97,7 +97,7 @@ ml/data/
 - `scripts/compute_specificity.py` — Pre-computes `specificityScore` node property in graph (auto-runs at end of pipeline)
 - `scripts/` — Data processing and verification scripts
 - `reports/` — Generated pipeline health reports and cached ID mapping validation report (`id_mapping_report.json`)
-- `docs/` — Documentation, research plan, specific aims
+- `docs/` — Documentation, research plan, specific aims, study guides (generate_study_guide_july15.py → CardioKB_Study_Guide_July15.docx)
 - `ml/` — Link prediction pipeline: `export_edges.py`, `split_edges.py`, `link_prediction.py`, `link_prediction_rotate.py`, `evaluate_xgboost.py`, `evaluate_rotate.py`
 - `ml/data/` — Shared graph export, splits, and per-method subdirs (`node2vec/`, `rotate/`)
 - `.claude/skills/` — Claude Code custom skills (see below)
@@ -120,7 +120,7 @@ cp .env.example .env           # Fill in MEMGRAPH_PASSWORD, ANTHROPIC_API_KEY, A
 docker compose up -d           # App live at http://localhost:5050
 
 # Export graph data for transfer to another host
-./scripts/export_graph.sh      # Produces data/export/memgraph-data.tar.gz (~1.2 GB)
+./scripts/export_graph.sh      # Produces data/export/memgraph-data.tar.gz (~304 MB)
 ```
 
 ## Running the Pipeline (Local Dev)
