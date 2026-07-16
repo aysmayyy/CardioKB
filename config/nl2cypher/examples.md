@@ -111,6 +111,13 @@ MATCH (g:Gene)-[:geneAssociatesWithPhenotype]-(p:Phenotype)
 WHERE toLower(p.phenotypeName) CONTAINS toLower("ventricular tachycardia")
 RETURN DISTINCT g.geneSymbol AS gene, p.phenotypeName AS condition, "Phenotype" AS sourceType
 
+## ml_prediction_example
+MATCH (d:Drug)-[r:predictedTreatsDisease]-(ds:Disease)
+WHERE toLower(ds.diseaseName) CONTAINS toLower("atherosclerosis")
+RETURN DISTINCT d.commonName AS drug, ds.diseaseName AS disease, r.confidence AS confidence, r.source AS method
+ORDER BY r.confidence DESC
+LIMIT 100
+
 ## drug_treats_condition_union_example
 MATCH (d:Drug)-[:drugTreatsDisease]-(ds:Disease)
 WHERE toLower(ds.diseaseName) CONTAINS toLower("tachycardia")

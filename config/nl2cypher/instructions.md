@@ -68,5 +68,6 @@ Instructions:
   MATCH (dl)-[:drugLabelAnnotatesGene]-(g:Gene)
   RETURN DISTINCT g.geneSymbol AS gene, dl.labelName AS label
   LIMIT 100
+- ML Predictions: The `predictedTreatsDisease` relationship has `confidence` (float, 0–1) and `source` (string: "CompGCN_LinkPrediction" or "RotatE_LinkPrediction") properties. When the user asks about ML predictions, drug repurposing predictions, or predicted treatments, ALWAYS include `r.confidence` and `r.source` in the RETURN clause (using a relationship variable `r`), and ORDER BY r.confidence DESC. Both ML methods should be returned unless the user specifies one.
 - ClinicalTrial phase values are stored WITHOUT spaces: "PHASE1", "PHASE2", "PHASE3", "PHASE4", "PHASE1|PHASE2", "PHASE2|PHASE3", "EARLY_PHASE1", "NA". When the user says "Phase 3", filter with `toLower(ct.phase) CONTAINS "phase3"` (no space). Never use "phase 3" with a space.
 - ClinicalTrial status values: "RECRUITING", "COMPLETED", "TERMINATED", "NOT_YET_RECRUITING", "ACTIVE_NOT_RECRUITING", "WITHDRAWN", "UNKNOWN". Only filter on status if the user explicitly asks for it (e.g., "currently recruiting"). Do not assume "currently" means "recruiting" — it may just mean the trial exists.

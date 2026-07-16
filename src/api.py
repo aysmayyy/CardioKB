@@ -697,6 +697,30 @@ def graph_data():
                             edge_entry.setdefault('properties', {})[ek] = str(r_props[ek])
                     edges.append(edge_entry)
 
+            # --- Enforce total node budget on core neighbors ---
+            # Truncate before fetching predictions so prediction nodes
+            # aren't immediately trimmed away.
+            total_nodes = len(nodes)
+            if total_nodes > limit:
+                keep_ids = set(seed_ids) | set(hub_ids)
+                non_disease = []
+                disease_extra = []
+                for nid, n in nodes.items():
+                    if nid in keep_ids:
+                        continue
+                    if n.get('type') != 'Disease':
+                        non_disease.append((nid, n.get('specificity', 0.0) or 0.0))
+                    else:
+                        disease_extra.append((nid, 0.0))
+                non_disease.sort(key=lambda x: x[1], reverse=True)
+                slots = max(limit - len(keep_ids), 0)
+                ranked = non_disease + disease_extra
+                for nid, _ in ranked[:slots]:
+                    keep_ids.add(nid)
+                nodes = {nid: n for nid, n in nodes.items() if nid in keep_ids}
+                edges = [e for e in edges
+                         if e['from'] in nodes and e['to'] in nodes]
+
             # --- Predicted edges: predictedTreatsDisease for nodes in graph ---
             all_node_ids = list(nodes.keys())
             pred_total = 0
@@ -719,8 +743,9 @@ def graph_data():
                     "       labels(d)[0] AS d_label, properties(d) AS d_props, "
                     "       labels(dis)[0] AS dis_label, properties(dis) AS dis_props "
                     "ORDER BY r.confidence DESC "
-                    "LIMIT 200",
+                    "LIMIT $plimit",
                     nids=all_node_ids,
+                    plimit=min(limit, 200),
                 )
                 for row in pred_result:
                     did = row['did']
@@ -757,12 +782,14 @@ def graph_data():
                     })
 
         pred_returned = sum(1 for e in edges if e.get('label') == 'predictedTreatsDisease')
+
         return jsonify({
             'nodes': list(nodes.values()),
             'edges': edges,
             'truncation': {
                 'predictions': {'returned': pred_returned, 'total': pred_total},
                 'hierarchy_children': {'returned': min(hier_children_total, 30), 'total': hier_children_total},
+                'nodes': {'returned': len(nodes), 'total': total_nodes},
             },
         })
     except Exception as e:
