@@ -27,7 +27,7 @@
 
 ## ML Pipeline — Link Prediction for Drug Repurposing
 - **Pipeline**: `ml/export_edges.py` → `ml/split_edges.py` → train embeddings (HPC) → `ml/link_prediction*.py`
-- **Data**: 10,310 therapeutic drugs × 2,640 diseases (CompGCN) / 2,296 diseases (RotatE), 4,852 drugTreatsDisease edges (4,726/485/484 stratified split)
+- **Data**: 10,310 therapeutic drugs × 2,640 diseases (CompGCN) / 2,296 diseases (RotatE), 4,852 drugTreatsDisease edges in live graph (4,469 in ML export, stratified 80/10/10)
 - **Predictions**: Top predictions per method stored in Memgraph as `predictedTreatsDisease` edges (confidence >= 0.5). Total: 14,435 edges (6,607 CompGCN + 7,828 RotatE)
 - **UI**: Orange dashed edges in Explore tab, separate toggle, provenance panel shows confidence + "not clinically validated" warning
 - **drugTreatsDisease**: 4,852 edges from 4 sources (CTD: 3,099, DrugBank_Indications: 1,449, ClinicalTrials.gov: 147, DrugCentral: 157). DrugBank_Indications edges were text-mined from DrugBank XML indication fields via `scripts/drugbank_indications.py`.
@@ -35,18 +35,28 @@
 - **ML note**: The ML pipeline trains on drugTreatsDisease only (Drug→Disease). drugTreatsPhenotype is a separate relationship type and does not affect ML training data or predictions.
 
 ### Embedding Methods Compared (Post-Merge, July 2026)
-| Method | Decoder | Test AUROC | Test AUPRC | Hits@10 | Hits@50 | Hits@100 | Hits@200 | MRR | Med. Rank |
-|--------|---------|-----------|-----------|--------|--------|---------|---------|-----|-----------|
-| RotatE (256-dim) | Cosine | 0.7807 | 0.7569 | 1.7% | 9.3% | 13.4% | 27.3% | 0.0095 | 461 |
-| RotatE (256-dim) | **XGBoost** | **0.9828** | **0.9812** | **39.3%** | **72.1%** | **84.1%** | **92.8%** | **0.1890** | **17.5** |
-| RotatE (256-dim) | MLP | 0.9810 | 0.9786 | 41.1% | 71.9% | 83.5% | 91.9% | 0.1898 | 16 |
-| CompGCN (128-dim) | Cosine | 0.3100 | 0.3810 | 0.2% | 0.2% | 0.4% | 0.6% | 0.0027 | 2,230 |
-| CompGCN (128-dim) | **XGBoost** | **0.9865** | **0.9854** | **36.6%** | **68.0%** | **82.6%** | **93.8%** | **0.2141** | **22** |
-| CompGCN (128-dim) | MLP | 0.9838 | 0.9775 | 29.3% | 65.5% | 81.4% | 93.2% | 0.1168 | 27.5 |
+
+**Classification metrics** (AUROC/AUPRC from original balanced evaluation, n=484):
+
+| Method | Decoder | Test AUROC | Test AUPRC |
+|--------|---------|-----------|-----------|
+| RotatE (256-dim) | Cosine | 0.7807 | 0.7569 |
+| RotatE (256-dim) | **XGBoost** | **0.9828** | **0.9812** |
+| RotatE (256-dim) | MLP | 0.9810 | 0.9786 |
+| CompGCN (128-dim) | Cosine | 0.3100 | 0.3810 |
+| CompGCN (128-dim) | **XGBoost** | **0.9865** | **0.9854** |
+| CompGCN (128-dim) | MLP | 0.9838 | 0.9775 |
+
+**Ranking metrics** (filtered ranking protocol, Bordes et al. 2013; CompGCN n=337, RotatE n=316):
+
+| Method | Decoder | Hits@1 | Hits@3 | Hits@10 | Hits@50 | Hits@100 | Hits@200 | MRR | Med. Rank |
+|--------|---------|--------|--------|--------|--------|---------|---------|-----|-----------|
+| RotatE (256-dim) | **XGBoost** | **9.5%** | **22.5%** | **43.7%** | **73.4%** | **85.1%** | **94.6%** | **0.2054** | **15.0** |
+| CompGCN (128-dim) | **XGBoost** | **14.8%** | **23.2%** | **38.3%** | **70.9%** | **88.1%** | **97.0%** | **0.2284** | **22.0** |
 
 - **Best overall**: CompGCN + XGBoost (AUROC 0.9865) — improves over RotatE by +0.0037
 - **CompGCN training**: Pure PyTorch, 200 epochs (best at epoch 60), subtraction composition, 2 layers, 32M params, GPU on HPC (~7 min)
-- **RotatE training**: PyKEEN, 200 epochs, NSSALoss, L40S GPU on HPC (~3.4 hrs), MRR=0.1890
+- **RotatE training**: PyKEEN, 200 epochs, NSSALoss, L40S GPU on HPC (~3.4 hrs)
 - **Prediction sources in Memgraph**: `CompGCN_LinkPrediction` (6,607 edges, 1,038 drugs × 37 diseases), `RotatE_LinkPrediction` (7,828 edges, 1,165 drugs × 142 diseases)
 
 ### ML Data Directory Structure

@@ -380,7 +380,7 @@ def compute_ranking_metrics_filtered(test_pos, emb_map, diseases_with_emb,
 
     n_pos = len(ranks)
     metrics = {"n_test_queries": n_pos, "n_candidate_diseases": n_diseases}
-    for k in [10, 50, 100, 200]:
+    for k in [1, 3, 10, 50, 100, 200]:
         hits = sum(1 for r in ranks if r <= k)
         metrics[f"hits@{k}"] = hits / n_pos if n_pos > 0 else 0
     metrics["mrr"] = float(np.mean([1.0 / r for r in ranks])) if ranks else 0

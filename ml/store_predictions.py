@@ -22,14 +22,26 @@ METHODS = [
 
 
 def main():
-    meta = {}
+    node_names = {}
     with open(NODES_PATH) as f:
         for row in csv.DictReader(f, delimiter="\t"):
-            meta[int(row["int_id"])] = int(row["memgraph_id"])
-    print(f"Loaded node mapping: {len(meta)} nodes")
+            node_names[int(row["int_id"])] = {"name": row["name"], "label": row["label"]}
+    print(f"Loaded node metadata: {len(node_names)} nodes")
 
     driver = GraphDatabase.driver(MEMGRAPH_URI, auth=(MEMGRAPH_USER, MEMGRAPH_PASS))
     try:
+        # Build name-to-memgraph_id lookup from live graph
+        drug_name_to_id = {}
+        disease_name_to_id = {}
+        with driver.session() as s:
+            for rec in s.run("MATCH (d:Drug) RETURN id(d) AS mgid, d.commonName AS name"):
+                if rec["name"]:
+                    drug_name_to_id[rec["name"]] = rec["mgid"]
+            for rec in s.run("MATCH (d:Disease) RETURN id(d) AS mgid, d.diseaseName AS name"):
+                if rec["name"]:
+                    disease_name_to_id[rec["name"]] = rec["mgid"]
+        print(f"Live graph: {len(drug_name_to_id)} Drug nodes, {len(disease_name_to_id)} Disease nodes")
+
         # Step 1: Check and clear ALL existing predicted edges
         with driver.session() as s:
             r = s.run("""
@@ -53,18 +65,31 @@ def main():
         # Step 2: Load predictions for each method
         for method in METHODS:
             predictions = []
+            skipped_drug = set()
+            skipped_disease = set()
             with open(method["path"]) as f:
                 for row in csv.DictReader(f, delimiter="\t"):
-                    drug_id = int(row["drug_int_id"])
-                    disease_id = int(row["disease_int_id"])
-                    if drug_id in meta and disease_id in meta:
+                    drug_name = row["drug_name"]
+                    disease_name = row["disease_name"]
+                    drug_mgid = drug_name_to_id.get(drug_name)
+                    disease_mgid = disease_name_to_id.get(disease_name)
+                    if drug_mgid is not None and disease_mgid is not None:
                         predictions.append({
-                            "drug_mgid": meta[drug_id],
-                            "disease_mgid": meta[disease_id],
+                            "drug_mgid": drug_mgid,
+                            "disease_mgid": disease_mgid,
                             "confidence": float(row["confidence"]),
                         })
+                    else:
+                        if drug_mgid is None:
+                            skipped_drug.add(drug_name)
+                        if disease_mgid is None:
+                            skipped_disease.add(disease_name)
 
-            print(f"\n{method['name']}: {len(predictions)} predictions mapped to Memgraph IDs")
+            print(f"\n{method['name']}: {len(predictions)} predictions resolved by name")
+            if skipped_drug:
+                print(f"  Skipped {len(skipped_drug)} unresolved drugs (e.g. {list(skipped_drug)[:3]})")
+            if skipped_disease:
+                print(f"  Skipped {len(skipped_disease)} unresolved diseases (e.g. {list(skipped_disease)[:3]})")
 
             total = 0
             for i in range(0, len(predictions), 500):

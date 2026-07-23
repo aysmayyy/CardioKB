@@ -273,23 +273,30 @@ CardioKB uses graph embedding methods to predict potential drug-disease treatmen
 - **Therapeutic drug filter**: Only drugs with therapeutic signal edges are considered
 - **Three decoders compared**: Cosine similarity, XGBoost, MLP
 
-### Embedding Method Comparison (Post-Merge, July 2026)
+### Classification Performance (Post-Merge, July 2026)
 
-| Method | Decoder | Test AUROC | Test AUPRC | Hits@10 | Hits@50 | Hits@100 | Hits@200 | MRR | Med. Rank |
-|--------|---------|-----------|-----------|--------|--------|---------|---------|-----|-----------|
-| RotatE (256-dim) | Cosine | 0.7807 | 0.7569 | 1.7% | 9.3% | 13.4% | 27.3% | 0.0095 | 461 |
-| RotatE (256-dim) | MLP | 0.9810 | 0.9786 | 41.1% | 71.9% | 83.5% | 91.9% | 0.1898 | 16 |
-| RotatE (256-dim) | **XGBoost** | **0.9828** | **0.9812** | **39.3%** | **72.1%** | **84.1%** | **92.8%** | **0.1890** | **17.5** |
-| CompGCN (128-dim) | Cosine | 0.3100 | 0.3810 | 0.2% | 0.2% | 0.4% | 0.6% | 0.0027 | 2,230 |
-| CompGCN (128-dim) | MLP | 0.9838 | 0.9775 | 29.3% | 65.5% | 81.4% | 93.2% | 0.1168 | 27.5 |
-| CompGCN (128-dim) | **XGBoost** | **0.9865** | **0.9854** | **36.6%** | **68.0%** | **82.6%** | **93.8%** | **0.2141** | **22** |
+| Method | Decoder | Test AUROC | Test AUPRC |
+|--------|---------|-----------|-----------|
+| RotatE (256-dim) | Cosine | 0.7807 | 0.7569 |
+| RotatE (256-dim) | MLP | 0.9810 | 0.9786 |
+| RotatE (256-dim) | **XGBoost** | **0.9828** | **0.9812** |
+| CompGCN (128-dim) | Cosine | 0.3100 | 0.3810 |
+| CompGCN (128-dim) | MLP | 0.9838 | 0.9775 |
+| CompGCN (128-dim) | **XGBoost** | **0.9865** | **0.9854** |
+
+### Ranking Performance (Filtered Ranking Protocol, Bordes et al. 2013)
+
+| Method | Decoder | Hits@1 | Hits@3 | Hits@10 | Hits@50 | Hits@100 | Hits@200 | MRR | Med. Rank |
+|--------|---------|--------|--------|--------|--------|---------|---------|-----|-----------|
+| RotatE (256-dim) | **XGBoost** | **9.5%** | **22.5%** | **43.7%** | **73.4%** | **85.1%** | **94.6%** | **0.2054** | **15.0** |
+| CompGCN (128-dim) | **XGBoost** | **14.8%** | **23.2%** | **38.3%** | **70.9%** | **88.1%** | **97.0%** | **0.2284** | **22.0** |
 
 **Best overall**: CompGCN + XGBoost (Test AUROC = 0.9865, AUPRC = 0.9854)
 
 - CompGCN improves over RotatE by +0.0037 AUROC with XGBoost decoder
 - CompGCN uses relation-aware message passing (subtraction composition, 2 GCN layers, 32M params)
-- Both methods achieve similar Hits@200 (~93%) with learned decoders, suggesting structural features drive ranking
-- CompGCN has higher MRR (0.2141 vs 0.1890) but higher median rank (22 vs 17.5) — CompGCN better at reciprocal ranking, RotatE slightly tighter at top-of-list
+- Both methods achieve similar Hits@200 (~95%) with learned decoders, suggesting structural features drive ranking
+- CompGCN has higher MRR (0.2284 vs 0.2054) but higher median rank (22 vs 15) — CompGCN better at reciprocal ranking, RotatE slightly tighter at top-of-list
 - Cosine decoder near-random for CompGCN (0.31) — embeddings are not optimized for cosine similarity
 - RotatE Cosine (0.78) performs better than CompGCN Cosine due to inherent distance-based scoring
 
@@ -297,8 +304,8 @@ CardioKB uses graph embedding methods to predict potential drug-disease treatmen
 
 - **10,310** therapeutic drugs with embeddings
 - **2,640** diseases with embeddings (CompGCN) / **2,296** (RotatE)
-- **4,726** train / **485** val / **484** test positive `drugTreatsDisease` edges
-- **4,852** total `drugTreatsDisease` edges post-merge (CTD: 3,099, DrugBank_Indications: 1,449, DrugCentral: 157, ClinicalTrials.gov: 147)
+- **4,469** `drugTreatsDisease` edges in ML export (stratified 80/10/10 split)
+- **4,852** total `drugTreatsDisease` edges in live graph (CTD: 3,099, DrugBank_Indications: 1,449, DrugCentral: 157, ClinicalTrials.gov: 147)
 
 ### Predictions in the Graph
 
@@ -319,7 +326,7 @@ These are visible in the web UI as orange dashed lines with a separate toggle. E
 
 ### Why CompGCN Is the Primary Model
 
-CompGCN was selected as the primary model for the live web UI based on three factors: (1) highest test AUROC (0.9865 vs RotatE's 0.9828), (2) relation-aware message passing that distinguishes between the 27 relationship types in the graph, and (3) efficient training (~7 min vs RotatE's ~3.4 hrs). RotatE predictions remain stored in the graph and are queryable via Cypher in the Query tab, but only CompGCN predictions are shown in the interactive Explore tab. Both methods achieve comparable ranking performance (Hits@200: 93.8% vs 92.8%), confirming that CompGCN's selection is justified by the AUROC advantage plus practical training efficiency.
+CompGCN was selected as the primary model for the live web UI based on three factors: (1) highest test AUROC (0.9865 vs RotatE's 0.9828), (2) relation-aware message passing that distinguishes between the 27 relationship types in the graph, and (3) efficient training (~7 min vs RotatE's ~3.4 hrs). RotatE predictions remain stored in the graph and are queryable via Cypher in the Query tab, but only CompGCN predictions are shown in the interactive Explore tab. Both methods achieve comparable ranking performance (Hits@200: 97.0% vs 94.6%), confirming that CompGCN's selection is justified by the AUROC advantage plus practical training efficiency.
 
 ### Known Limitations
 
