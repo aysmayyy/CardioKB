@@ -1,0 +1,266 @@
+<mxfile host="app.diagrams.net">
+  <diagram name="CardioKB Schema" id="s1">
+    <mxGraphModel dx="1800" dy="1200" grid="1" gridSize="10" guides="1" tooltips="1" connect="1" arrows="1" fold="1" page="1" pageScale="1" pageWidth="1600" pageHeight="1100">
+      <root>
+        <mxCell id="0"/>
+        <mxCell id="1" parent="0"/>
+        <mxCell id="gene" value="Gene (193,795)" style="ellipse;whiteSpace=wrap;html=1;fillColor=#4C72B0;fontColor=#FFFFFF;strokeColor=#FFFFFF;strokeWidth=2;fontSize=13;fontStyle=1;" vertex="1" parent="1">
+          <mxGeometry x="700" y="420" width="140" height="140" as="geometry"/>
+        </mxCell>
+        <mxCell id="disease" value="Disease (3,442)" style="ellipse;whiteSpace=wrap;html=1;fillColor=#DD5144;fontColor=#FFFFFF;strokeColor=#FFFFFF;strokeWidth=2;fontSize=12;fontStyle=1;" vertex="1" parent="1">
+          <mxGeometry x="1050" y="300" width="130" height="130" as="geometry"/>
+        </mxCell>
+        <mxCell id="drug" value="Drug (26,794)" style="ellipse;whiteSpace=wrap;html=1;fillColor=#55A868;fontColor=#FFFFFF;strokeColor=#FFFFFF;strokeWidth=2;fontSize=12;fontStyle=1;" vertex="1" parent="1">
+          <mxGeometry x="350" y="300" width="130" height="130" as="geometry"/>
+        </mxCell>
+        <mxCell id="variant" value="Variant (135,555)" style="ellipse;whiteSpace=wrap;html=1;fillColor=#C4AD66;fontColor=#FFFFFF;strokeColor=#FFFFFF;strokeWidth=2;fontSize=11;fontStyle=1;" vertex="1" parent="1">
+          <mxGeometry x="920" y="640" width="120" height="120" as="geometry"/>
+        </mxCell>
+        <mxCell id="pathway" value="Pathway (2,870)" style="ellipse;whiteSpace=wrap;html=1;fillColor=#8172B2;fontColor=#FFFFFF;strokeColor=#FFFFFF;strokeWidth=2;fontSize=11;fontStyle=1;" vertex="1" parent="1">
+          <mxGeometry x="500" y="660" width="110" height="110" as="geometry"/>
+        </mxCell>
+        <mxCell id="bp" value="Biological Process (24,428)" style="ellipse;whiteSpace=wrap;html=1;fillColor=#937860;fontColor=#FFFFFF;strokeColor=#FFFFFF;strokeWidth=2;fontSize=10;fontStyle=1;" vertex="1" parent="1">
+          <mxGeometry x="280" y="580" width="120" height="120" as="geometry"/>
+        </mxCell>
+        <mxCell id="mf" value="Molecular Function (10,056)" style="ellipse;whiteSpace=wrap;html=1;fillColor=#DA8BC3;fontColor=#FFFFFF;strokeColor=#FFFFFF;strokeWidth=2;fontSize=10;fontStyle=1;" vertex="1" parent="1">
+          <mxGeometry x="180" y="420" width="120" height="120" as="geometry"/>
+        </mxCell>
+        <mxCell id="cc" value="Cellular Component (4,076)" style="ellipse;whiteSpace=wrap;html=1;fillColor=#8C8C8C;fontColor=#FFFFFF;strokeColor=#FFFFFF;strokeWidth=2;fontSize=10;fontStyle=1;" vertex="1" parent="1">
+          <mxGeometry x="310" y="760" width="120" height="120" as="geometry"/>
+        </mxCell>
+        <mxCell id="bodypart" value="Body Part (1,400)" style="ellipse;whiteSpace=wrap;html=1;fillColor=#CCB974;fontColor=#FFFFFF;strokeColor=#FFFFFF;strokeWidth=2;fontSize=11;fontStyle=1;" vertex="1" parent="1">
+          <mxGeometry x="1020" y="520" width="110" height="110" as="geometry"/>
+        </mxCell>
+        <mxCell id="ct" value="Clinical Trial (21,578)" style="ellipse;whiteSpace=wrap;html=1;fillColor=#64B5CD;fontColor=#FFFFFF;strokeColor=#FFFFFF;strokeWidth=2;fontSize=11;fontStyle=1;" vertex="1" parent="1">
+          <mxGeometry x="690" y="120" width="120" height="120" as="geometry"/>
+        </mxCell>
+        <mxCell id="tf" value="Transcription Factor (367)" style="ellipse;whiteSpace=wrap;html=1;fillColor=#4C72B0;fontColor=#FFFFFF;strokeColor=#FFFFFF;strokeWidth=2;fontSize=10;fontStyle=1;" vertex="1" parent="1">
+          <mxGeometry x="710" y="760" width="110" height="110" as="geometry"/>
+        </mxCell>
+        <mxCell id="phenotype" value="Phenotype (19,389)" style="ellipse;whiteSpace=wrap;html=1;fillColor=#E5AE38;fontColor=#FFFFFF;strokeColor=#FFFFFF;strokeWidth=2;fontSize=11;fontStyle=1;" vertex="1" parent="1">
+          <mxGeometry x="1170" y="480" width="110" height="110" as="geometry"/>
+        </mxCell>
+        <mxCell id="se" value="Side Effect (2,227)" style="ellipse;whiteSpace=wrap;html=1;fillColor=#B07AA1;fontColor=#FFFFFF;strokeColor=#FFFFFF;strokeWidth=2;fontSize=11;fontStyle=1;" vertex="1" parent="1">
+          <mxGeometry x="120" y="200" width="110" height="110" as="geometry"/>
+        </mxCell>
+        <mxCell id="symptom" value="Symptom (415)" style="ellipse;whiteSpace=wrap;html=1;fillColor=#FF9DA7;fontColor=#FFFFFF;strokeColor=#FFFFFF;strokeWidth=2;fontSize=11;fontStyle=1;" vertex="1" parent="1">
+          <mxGeometry x="1300" y="200" width="100" height="100" as="geometry"/>
+        </mxCell>
+        <mxCell id="gf" value="Gene Family (4,257)" style="ellipse;whiteSpace=wrap;html=1;fillColor=#76B7B2;fontColor=#FFFFFF;strokeColor=#FFFFFF;strokeWidth=2;fontSize=10;fontStyle=1;" vertex="1" parent="1">
+          <mxGeometry x="490" y="820" width="110" height="110" as="geometry"/>
+        </mxCell>
+        <mxCell id="pc" value="Pharmacologic Class (2,359)" style="ellipse;whiteSpace=wrap;html=1;fillColor=#9D7660;fontColor=#FFFFFF;strokeColor=#FFFFFF;strokeWidth=2;fontSize=9;fontStyle=1;" vertex="1" parent="1">
+          <mxGeometry x="100" y="570" width="120" height="120" as="geometry"/>
+        </mxCell>
+        <mxCell id="dl" value="Drug Label (29)" style="ellipse;whiteSpace=wrap;html=1;fillColor=#BAB0AC;fontColor=#FFFFFF;strokeColor=#FFFFFF;strokeWidth=2;fontSize=11;fontStyle=1;" vertex="1" parent="1">
+          <mxGeometry x="140" y="100" width="110" height="110" as="geometry"/>
+        </mxCell>
+        <mxCell id="e1" value="geneAssociatesWithDisease" style="edgeStyle=orthogonalEdgeStyle;curved=1;strokeColor=#d62728;strokeWidth=1.5;fontSize=7;fontColor=#555555;" edge="1" source="gene" target="disease" parent="1">
+          <mxGeometry relative="1" as="geometry"/>
+        </mxCell>
+        <mxCell id="e2" value="geneInPathway" style="curved=1;strokeColor=#7f7f7f;strokeWidth=1.5;fontSize=7;fontColor=#555555;" edge="1" source="gene" target="pathway" parent="1">
+          <mxGeometry relative="1" as="geometry"/>
+        </mxCell>
+        <mxCell id="e3" value="geneParticipatesInBiologicalProcess" style="curved=1;strokeColor=#7f7f7f;strokeWidth=1.5;fontSize=7;fontColor=#555555;" edge="1" source="gene" target="bp" parent="1">
+          <mxGeometry relative="1" as="geometry"/>
+        </mxCell>
+        <mxCell id="e4" value="geneHasMolecularFunction" style="curved=1;strokeColor=#7f7f7f;strokeWidth=1.5;fontSize=7;fontColor=#555555;" edge="1" source="gene" target="mf" parent="1">
+          <mxGeometry relative="1" as="geometry"/>
+        </mxCell>
+        <mxCell id="e5" value="geneAssociatedWithCellularComponent" style="curved=1;strokeColor=#7f7f7f;strokeWidth=1.5;fontSize=7;fontColor=#555555;" edge="1" source="gene" target="cc" parent="1">
+          <mxGeometry relative="1" as="geometry"/>
+        </mxCell>
+        <mxCell id="e6" value="geneInteractsWithGene" style="curved=1;strokeColor=#1f77b4;strokeWidth=1.5;fontSize=7;fontColor=#555555;" edge="1" source="gene" target="gene" parent="1">
+          <mxGeometry relative="1" as="geometry">
+            <Array as="points">
+              <mxPoint x="880" y="460"/>
+              <mxPoint x="880" y="520"/>
+            </Array>
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="e9" value="geneInFamily" style="curved=1;strokeColor=#7f7f7f;strokeWidth=1.5;fontSize=7;fontColor=#555555;" edge="1" source="gene" target="gf" parent="1">
+          <mxGeometry relative="1" as="geometry"/>
+        </mxCell>
+        <mxCell id="e10" value="geneAssociatesWithPhenotype" style="curved=1;strokeColor=#d62728;strokeWidth=1.5;fontSize=7;fontColor=#555555;" edge="1" source="gene" target="phenotype" parent="1">
+          <mxGeometry relative="1" as="geometry"/>
+        </mxCell>
+        <mxCell id="e11" value="hasVariant" style="curved=1;strokeColor=#7f7f7f;strokeWidth=1.5;fontSize=7;fontColor=#555555;" edge="1" source="gene" target="variant" parent="1">
+          <mxGeometry relative="1" as="geometry"/>
+        </mxCell>
+        <mxCell id="e12" value="AFFECTS_RESPONSE_TO" style="curved=1;strokeColor=#7f7f7f;strokeWidth=1.5;fontSize=7;fontColor=#555555;" edge="1" source="gene" target="drug" parent="1">
+          <mxGeometry relative="1" as="geometry">
+            <Array as="points">
+              <mxPoint x="560" y="500"/>
+            </Array>
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="e14" value="drugBindsGene" style="curved=1;strokeColor=#1f77b4;strokeWidth=1.5;fontSize=7;fontColor=#555555;" edge="1" source="drug" target="gene" parent="1">
+          <mxGeometry relative="1" as="geometry">
+            <Array as="points">
+              <mxPoint x="560" y="420"/>
+            </Array>
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="e15" value="chemicalBindsGene" style="curved=1;strokeColor=#1f77b4;strokeWidth=1.5;fontSize=7;fontColor=#555555;" edge="1" source="drug" target="gene" parent="1">
+          <mxGeometry relative="1" as="geometry">
+            <Array as="points">
+              <mxPoint x="570" y="440"/>
+            </Array>
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="e16" value="chemicalIncreasesExpression" style="curved=1;strokeColor=#9467bd;strokeWidth=1.5;fontSize=7;fontColor=#555555;" edge="1" source="drug" target="gene" parent="1">
+          <mxGeometry relative="1" as="geometry">
+            <Array as="points">
+              <mxPoint x="560" y="460"/>
+            </Array>
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="e17" value="chemicalDecreasesExpression" style="curved=1;strokeColor=#9467bd;strokeWidth=1.5;fontSize=7;fontColor=#555555;" edge="1" source="drug" target="gene" parent="1">
+          <mxGeometry relative="1" as="geometry">
+            <Array as="points">
+              <mxPoint x="550" y="480"/>
+            </Array>
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="e18" value="compoundUpregulatesGene" style="curved=1;strokeColor=#9467bd;strokeWidth=1.5;fontSize=7;fontColor=#555555;" edge="1" source="drug" target="gene" parent="1">
+          <mxGeometry relative="1" as="geometry">
+            <Array as="points">
+              <mxPoint x="540" y="520"/>
+            </Array>
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="e19" value="compoundDownregulatesGene" style="curved=1;strokeColor=#9467bd;strokeWidth=1.5;fontSize=7;fontColor=#555555;" edge="1" source="drug" target="gene" parent="1">
+          <mxGeometry relative="1" as="geometry">
+            <Array as="points">
+              <mxPoint x="530" y="540"/>
+            </Array>
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="e20" value="drugTreatsDisease" style="curved=1;strokeColor=#2ca02c;strokeWidth=2;fontSize=8;fontColor=#2ca02c;fontStyle=1;" edge="1" source="drug" target="disease" parent="1">
+          <mxGeometry relative="1" as="geometry">
+            <Array as="points">
+              <mxPoint x="700" y="270"/>
+            </Array>
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="e22" value="compoundCausesSideEffect" style="curved=1;strokeColor=#7f7f7f;strokeWidth=1.5;fontSize=7;fontColor=#555555;" edge="1" source="drug" target="se" parent="1">
+          <mxGeometry relative="1" as="geometry"/>
+        </mxCell>
+        <mxCell id="e23" value="predictedTreatsDisease (ML)" style="curved=1;strokeColor=#ff7f0e;strokeWidth=2;dashed=1;dashPattern=8 4;fontSize=8;fontColor=#ff7f0e;fontStyle=1;" edge="1" source="drug" target="disease" parent="1">
+          <mxGeometry relative="1" as="geometry">
+            <Array as="points">
+              <mxPoint x="700" y="300"/>
+            </Array>
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="e24" value="drugTreatsPhenotype" style="curved=1;strokeColor=#2ca02c;strokeWidth=1.5;fontSize=7;fontColor=#2ca02c;" edge="1" source="drug" target="phenotype" parent="1">
+          <mxGeometry relative="1" as="geometry">
+            <Array as="points">
+              <mxPoint x="700" y="350"/>
+              <mxPoint x="1100" y="450"/>
+            </Array>
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="e25" value="diseaseIsSubtypeOf" style="curved=1;strokeColor=#7f7f7f;strokeWidth=1.5;fontSize=7;fontColor=#555555;" edge="1" source="disease" target="disease" parent="1">
+          <mxGeometry relative="1" as="geometry">
+            <Array as="points">
+              <mxPoint x="1210" y="330"/>
+              <mxPoint x="1210" y="390"/>
+            </Array>
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="e36" value="variantAssociatedWithDisease" style="curved=1;strokeColor=#d62728;strokeWidth=1.5;fontSize=7;fontColor=#555555;" edge="1" source="variant" target="disease" parent="1">
+          <mxGeometry relative="1" as="geometry"/>
+        </mxCell>
+        <mxCell id="e37" value="bodyPartOverexpressesGene" style="curved=1;strokeColor=#9467bd;strokeWidth=1.5;fontSize=7;fontColor=#555555;" edge="1" source="bodypart" target="gene" parent="1">
+          <mxGeometry relative="1" as="geometry"/>
+        </mxCell>
+        <mxCell id="e29" value="STUDIES_CONDITION" style="curved=1;strokeColor=#7f7f7f;strokeWidth=1.5;fontSize=7;fontColor=#555555;" edge="1" source="ct" target="disease" parent="1">
+          <mxGeometry relative="1" as="geometry"/>
+        </mxCell>
+        <mxCell id="e30" value="TESTS_INTERVENTION" style="curved=1;strokeColor=#7f7f7f;strokeWidth=1.5;fontSize=7;fontColor=#555555;" edge="1" source="ct" target="drug" parent="1">
+          <mxGeometry relative="1" as="geometry"/>
+        </mxCell>
+        <mxCell id="e31" value="transcriptionFactorInteractsWithGene" style="curved=1;strokeColor=#1f77b4;strokeWidth=1.5;fontSize=7;fontColor=#555555;" edge="1" source="tf" target="gene" parent="1">
+          <mxGeometry relative="1" as="geometry"/>
+        </mxCell>
+        <mxCell id="e32" value="variantInGene" style="curved=1;strokeColor=#7f7f7f;strokeWidth=1.5;fontSize=7;fontColor=#555555;" edge="1" source="variant" target="gene" parent="1">
+          <mxGeometry relative="1" as="geometry"/>
+        </mxCell>
+        <mxCell id="e35" value="compoundInPharmacologicClass" style="curved=1;strokeColor=#7f7f7f;strokeWidth=1.5;fontSize=7;fontColor=#555555;" edge="1" source="drug" target="pc" parent="1">
+          <mxGeometry relative="1" as="geometry"/>
+        </mxCell>
+        <mxCell id="e38" value="compoundCausesSideEffect" style="curved=1;strokeColor=#7f7f7f;strokeWidth=1.5;fontSize=7;fontColor=#555555;" edge="1" source="drug" target="disease" parent="1">
+          <mxGeometry relative="1" as="geometry">
+            <Array as="points">
+              <mxPoint x="700" y="330"/>
+            </Array>
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="e39" value="variantAssociatedWithDisease" style="curved=1;strokeColor=#d62728;strokeWidth=1.5;fontSize=7;fontColor=#555555;" edge="1" source="variant" target="se" parent="1">
+          <mxGeometry relative="1" as="geometry"/>
+        </mxCell>
+        <mxCell id="legend_box" value="" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#f5f5f5;strokeColor=#cccccc;strokeWidth=1;" vertex="1" parent="1">
+          <mxGeometry x="1300" y="700" width="250" height="190" as="geometry"/>
+        </mxCell>
+        <mxCell id="legend_title" value="Edge Categories" style="text;html=1;fontSize=11;fontStyle=1;align=center;" vertex="1" parent="1">
+          <mxGeometry x="1350" y="710" width="150" height="20" as="geometry"/>
+        </mxCell>
+        <mxCell id="leg1" value="" style="endArrow=classic;strokeColor=#2ca02c;strokeWidth=2;" edge="1" parent="1">
+          <mxGeometry relative="1" as="geometry">
+            <mxPoint x="1320" y="750" as="sourcePoint"/>
+            <mxPoint x="1380" y="750" as="targetPoint"/>
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="leg1l" value="Treatment / Palliation" style="text;fontSize=9;align=left;" vertex="1" parent="1">
+          <mxGeometry x="1390" y="740" width="140" height="20" as="geometry"/>
+        </mxCell>
+        <mxCell id="leg2" value="" style="endArrow=classic;strokeColor=#ff7f0e;strokeWidth=2;dashed=1;dashPattern=8 4;" edge="1" parent="1">
+          <mxGeometry relative="1" as="geometry">
+            <mxPoint x="1320" y="775" as="sourcePoint"/>
+            <mxPoint x="1380" y="775" as="targetPoint"/>
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="leg2l" value="ML Prediction" style="text;fontSize=9;align=left;" vertex="1" parent="1">
+          <mxGeometry x="1390" y="765" width="140" height="20" as="geometry"/>
+        </mxCell>
+        <mxCell id="leg3" value="" style="endArrow=classic;strokeColor=#1f77b4;strokeWidth=2;" edge="1" parent="1">
+          <mxGeometry relative="1" as="geometry">
+            <mxPoint x="1320" y="800" as="sourcePoint"/>
+            <mxPoint x="1380" y="800" as="targetPoint"/>
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="leg3l" value="Binding / Interaction" style="text;fontSize=9;align=left;" vertex="1" parent="1">
+          <mxGeometry x="1390" y="790" width="140" height="20" as="geometry"/>
+        </mxCell>
+        <mxCell id="leg4" value="" style="endArrow=classic;strokeColor=#9467bd;strokeWidth=2;" edge="1" parent="1">
+          <mxGeometry relative="1" as="geometry">
+            <mxPoint x="1320" y="825" as="sourcePoint"/>
+            <mxPoint x="1380" y="825" as="targetPoint"/>
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="leg4l" value="Regulation / Expression" style="text;fontSize=9;align=left;" vertex="1" parent="1">
+          <mxGeometry x="1390" y="815" width="140" height="20" as="geometry"/>
+        </mxCell>
+        <mxCell id="leg5" value="" style="endArrow=classic;strokeColor=#d62728;strokeWidth=2;" edge="1" parent="1">
+          <mxGeometry relative="1" as="geometry">
+            <mxPoint x="1320" y="850" as="sourcePoint"/>
+            <mxPoint x="1380" y="850" as="targetPoint"/>
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="leg5l" value="Association" style="text;fontSize=9;align=left;" vertex="1" parent="1">
+          <mxGeometry x="1390" y="840" width="140" height="20" as="geometry"/>
+        </mxCell>
+        <mxCell id="leg6" value="" style="endArrow=classic;strokeColor=#7f7f7f;strokeWidth=2;" edge="1" parent="1">
+          <mxGeometry relative="1" as="geometry">
+            <mxPoint x="1320" y="875" as="sourcePoint"/>
+            <mxPoint x="1380" y="875" as="targetPoint"/>
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="leg6l" value="Other (ontology, clinical)" style="text;fontSize=9;align=left;" vertex="1" parent="1">
+          <mxGeometry x="1390" y="865" width="140" height="20" as="geometry"/>
+        </mxCell>
+      </root>
+    </mxGraphModel>
+  </diagram>
+</mxfile>
