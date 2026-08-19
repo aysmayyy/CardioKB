@@ -20,6 +20,8 @@ For each duplicate group, this script:
 Run AFTER the full pipeline load. Idempotent — safe to re-run.
 """
 
+import argparse
+import json
 import logging
 import os
 import sys
@@ -214,6 +216,13 @@ def delete_duplicates(session, duplicate_ids):
 
 
 def main():
+    parser = argparse.ArgumentParser(description="Merge duplicate Drug nodes in Memgraph")
+    parser.add_argument(
+        "--report", type=str, default=None,
+        help="Save merge summary as JSON to this path (e.g. reports/merge_report.json)",
+    )
+    args = parser.parse_args()
+
     driver = GraphDatabase.driver(MEMGRAPH_URI, auth=(MEMGRAPH_USER, MEMGRAPH_PASS))
     try:
         with driver.session() as session:
@@ -280,6 +289,28 @@ def main():
                 f"Edges: {edges_before:,} -> {edges_after:,} "
                 f"(Delta {edges_after - edges_before:,})"
             )
+
+            if args.report:
+                report = {
+                    "duplicate_groups": len(groups),
+                    "duplication_distribution": {
+                        str(k): v for k, v in sorted(dist.items())
+                    },
+                    "nodes_removed": nodes_before - nodes_after,
+                    "edges_transferred": totals['out_moved'] + totals['in_moved'],
+                    "edges_deduplicated": totals['out_deduped'] + totals['in_deduped'],
+                    "drug_nodes_before": drug_count_before,
+                    "drug_nodes_after": drug_count_after,
+                    "total_nodes_before": nodes_before,
+                    "total_nodes_after": nodes_after,
+                    "total_edges_before": edges_before,
+                    "total_edges_after": edges_after,
+                }
+                report_path = Path(args.report)
+                report_path.parent.mkdir(parents=True, exist_ok=True)
+                with open(report_path, "w") as f:
+                    json.dump(report, f, indent=2)
+                logger.info(f"Report saved to {report_path}")
     finally:
         driver.close()
 

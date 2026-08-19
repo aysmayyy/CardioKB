@@ -29,7 +29,7 @@
 - **Pipeline**: `ml/export_edges.py` → `ml/split_edges.py` → train embeddings (HPC) → `ml/link_prediction*.py`
 - **Data**: 10,310 therapeutic drugs × 2,640 diseases (CompGCN) / 2,296 diseases (RotatE), 4,852 drugTreatsDisease edges in live graph (4,469 in ML export, stratified 80/10/10)
 - **Predictions**: Top predictions per method stored in Memgraph as `predictedTreatsDisease` edges (confidence >= 0.5). Total: 14,435 edges (6,607 CompGCN + 7,828 RotatE)
-- **UI**: Orange dashed edges in Explore tab, separate toggle, provenance panel shows confidence + "not clinically validated" warning
+- **UI**: Cyan dashed edges in Explore tab, separate toggle, provenance panel shows confidence + "not clinically validated" warning
 - **drugTreatsDisease**: 4,852 edges from 4 sources (CTD: 3,099, DrugBank_Indications: 1,449, ClinicalTrials.gov: 147, DrugCentral: 157). DrugBank_Indications edges were text-mined from DrugBank XML indication fields via `scripts/drugbank_indications.py`.
 - **drugTreatsPhenotype**: 5,714 edges (source: DrugBank_Indications). Covers conditions like tachycardia, arrhythmia, edema that exist only as Phenotype (HPO) nodes. NL2Cypher uses UNION ALL across both drugTreatsDisease and drugTreatsPhenotype for treatment queries.
 - **ML note**: The ML pipeline trains on drugTreatsDisease only (Drug→Disease). drugTreatsPhenotype is a separate relationship type and does not affect ML training data or predictions.
@@ -188,9 +188,9 @@ CVD ontology files: `ontology/genes/cvd.txt` (3,984 gene symbols from OMIM + Dis
 |---|--------|--------|--------|--------|
 | 1 | ClinicalTrials.gov | ClinicalTrialsParser | Public API v2 | Working (21,578 trials, 20,667 STUDIES_CONDITION + 3,178 TESTS_INTERVENTION + 147 drugTreatsDisease edges). drugTreatsDisease filtered by 4 criteria: primaryPurpose==TREATMENT, EXPERIMENTAL arm type, first-listed condition only, trialCount dedup. |
 | 2 | ClinPGx (PharmGKB successor) | ClinPGxParser | Public API | Working (parser exports VARIANT_IN, drugLabelAnnotatesGene, drugLabelDescribesDrug, AFFECTS_RESPONSE_TO, AFFECTS_RESPONSE_TO_CLASS; only 74 AFFECTS_RESPONSE_TO edges survive in live graph — other types have 0 edges in deployed build) |
-| 3 | NCBI Gene | NCBIGeneParser | Public FTP | Working (193,687 genes) |
+| 3 | NCBI Gene | NCBIGeneParser | Public FTP | Working (193,795 genes in live graph) |
 | 4 | DoRothEA (OmniPath) | DoRothEAParser | Public API | Working (12,985 TF-gene interactions, with morScore + confidence properties) |
-| 5 | DrugBank | DrugBankParser | XML file | Working (19,842 drugs + 4,572 CTD unique Drug nodes, 12,089 drugBindsGene edges) |
+| 5 | DrugBank | DrugBankParser | XML file | Working (19,842 drugs + 4,572 CTD unique Drug nodes, 29,363 drugBindsGene edges) |
 
 ### Hetionet-Derived Component Parsers (15)
 | # | Source | Parser | Access | Status |

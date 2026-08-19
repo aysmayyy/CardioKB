@@ -577,7 +577,7 @@ add_table(
     [
         ['CTD', '3,115', 'Curated chemical-disease therapeutic relationships from scientific literature', 'Literature-curated, high confidence.'],
         ['DrugBank_Indications', '2,512', 'Text-mined from DrugBank XML indication free-text fields', 'Whole-word disease name matching against existing Disease nodes. Significantly increased coverage.'],
-        ['ClinicalTrials.gov', '153', 'Filtered from Phase 3/4 trials with 4 criteria: primaryPurpose==TREATMENT, EXPERIMENTAL arm, first-listed condition match, trialCount property', 'High-confidence proxy treatment evidence after 82.4% reduction from unfiltered 868 edges.'],
+        ['ClinicalTrials.gov', '147', 'Filtered from Phase 3/4 trials with 4 criteria: primaryPurpose==TREATMENT, EXPERIMENTAL arm, first-listed condition match, trialCount property', 'High-confidence proxy treatment evidence after 83.1% reduction from unfiltered 868 edges.'],
         ['DrugCentral', '157', 'FDA-approved indications mapped via CUI-to-DOID', 'Regulatory evidence — FDA-approved indications.'],
         ['Total (deduplicated)', '5,937', 'Combined, deduplicated by (Drug, Disease) pair', '4,726 training edges used as ML training labels. DrugBank_Indications edges added post-training.'],
     ],
@@ -595,11 +595,11 @@ doc.add_paragraph(
     'for treatment queries. Script: scripts/drugbank_indications.py.'
 )
 
-doc.add_heading('5.7.2 ClinicalTrials.gov Inference Methodology Fix (868 to 153 edges)', level=2)
+doc.add_heading('5.7.2 ClinicalTrials.gov Inference Methodology Fix (868 to 147 edges)', level=2)
 bold_para('What it was: ', 'The original ClinicalTrials.gov parser inferred drugTreatsDisease edges from any Phase 3/4 trial where a drug intervention was linked to a disease condition. This produced 868 edges.')
 bold_para('Why it was wrong: ', 'Many edges were spurious — trials with primaryPurpose of "Prevention" or "Diagnostic" (not treatment), drugs serving as comparators or placebos rather than experimental interventions, and diseases matching secondary conditions rather than the primary condition under study.')
-bold_para('How fixed: ', 'Four filters applied via ClinicalTrials.gov API v2 batch queries: (1) primaryPurpose must be "TREATMENT", (2) drug must be in an EXPERIMENTAL arm (not comparator/placebo), (3) disease must match the first-listed condition (convention for primary condition), (4) edges carry a trialCount property counting qualifying trials. Result: 868 to 153 edges (82.4% reduction). The total drugTreatsDisease count dropped from 6,272 to 5,937.')
-bold_para('Why it matters: ', 'Inflated treatment edges would have added noise to both the knowledge graph and the ML training data. The filtered 153 edges represent higher-confidence therapeutic associations where the trial was specifically designed to test treatment efficacy.')
+bold_para('How fixed: ', 'Four filters applied via ClinicalTrials.gov API v2 batch queries: (1) primaryPurpose must be "TREATMENT", (2) drug must be in an EXPERIMENTAL arm (not comparator/placebo), (3) disease must match the first-listed condition (convention for primary condition), (4) edges carry a trialCount property counting qualifying trials. Result: 868 to 147 edges (83.1% reduction). The post-merge drugTreatsDisease total is 4,852.')
+bold_para('Why it matters: ', 'Inflated treatment edges would have added noise to both the knowledge graph and the ML training data. The filtered 147 edges represent higher-confidence therapeutic associations where the trial was specifically designed to test treatment efficacy.')
 
 doc.add_heading('5.8 Named Docker Volume Persistence Issue', level=2)
 bold_para('What it is: ', 'Docker containers can store data in volumes. An anonymous volume is created fresh each time a container starts and is deleted when the container is removed. A named volume persists independently of the container lifecycle.')
@@ -627,7 +627,7 @@ bold_para('What the task is: ', 'Given the CardioKB graph with 4,726 training dr
 
 doc.add_heading('6.2 Data Preparation', level=2)
 
-bold_para('drugTreatsDisease breakdown: ', 'CTD provides 3,115 edges (curated from literature), ClinicalTrials.gov provides 153 edges (filtered from Phase 3/4 trials with 4 criteria: primaryPurpose==TREATMENT, EXPERIMENTAL arm, first-listed condition match, trialCount property), DrugBank_Indications provides 2,512 edges (text-mined from indication fields), and DrugCentral provides 157 edges (FDA-approved indications). After deduplication by (Drug, Disease) pair: 5,937 total positive edges.')
+bold_para('drugTreatsDisease breakdown (post-merge): ', 'CTD provides 3,099 edges (curated from literature), ClinicalTrials.gov provides 147 edges (filtered from Phase 3/4 trials with 4 criteria: primaryPurpose==TREATMENT, EXPERIMENTAL arm, first-listed condition match, trialCount property), DrugBank_Indications provides 1,449 edges (text-mined from indication fields), and DrugCentral provides 157 edges (FDA-approved indications). Total: 4,852 drugTreatsDisease edges.')
 
 bold_para('Why Phase 3/4 counts as proxy treatment evidence: ', 'A drug in a Phase 3 or 4 clinical trial for a disease has already passed safety testing (Phase 1) and shown preliminary efficacy (Phase 2). While not yet FDA-approved, the existence of a large-scale efficacy trial is strong evidence of a therapeutic relationship. We only include trials where the drug is the intervention and the disease is the condition, not observational studies.')
 

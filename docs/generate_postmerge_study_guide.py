@@ -601,11 +601,11 @@ doc.add_paragraph(
     'for treatment queries. Script: scripts/drugbank_indications.py.'
 )
 
-doc.add_heading('5.7.2 ClinicalTrials.gov Inference Methodology Fix (868 to 153 edges)', level=2)
+doc.add_heading('5.7.2 ClinicalTrials.gov Inference Methodology Fix (868 to 147 edges)', level=2)
 bold_para('What it was: ', 'The original ClinicalTrials.gov parser inferred drugTreatsDisease edges from any Phase 3/4 trial where a drug intervention was linked to a disease condition. This produced 868 edges.')
 bold_para('Why it was wrong: ', 'Many edges were spurious — trials with primaryPurpose of "Prevention" or "Diagnostic" (not treatment), drugs serving as comparators or placebos rather than experimental interventions, and diseases matching secondary conditions rather than the primary condition under study.')
 bold_para('How fixed: ', 'Four filters applied via ClinicalTrials.gov API v2 batch queries: (1) primaryPurpose must be "TREATMENT", (2) drug must be in an EXPERIMENTAL arm (not comparator/placebo), (3) disease must match the first-listed condition (convention for primary condition), (4) edges carry a trialCount property counting qualifying trials. Result: 868 to 147 edges (83.1% reduction).')
-bold_para('Why it matters: ', 'Inflated treatment edges would have added noise to both the knowledge graph and the ML training data. The filtered 153 edges represent higher-confidence therapeutic associations where the trial was specifically designed to test treatment efficacy.')
+bold_para('Why it matters: ', 'Inflated treatment edges would have added noise to both the knowledge graph and the ML training data. The filtered 147 edges represent higher-confidence therapeutic associations where the trial was specifically designed to test treatment efficacy.')
 
 doc.add_heading('5.8 Named Docker Volume Persistence Issue', level=2)
 bold_para('What it is: ', 'Docker containers can store data in volumes. An anonymous volume is created fresh each time a container starts and is deleted when the container is removed. A named volume persists independently of the container lifecycle.')

@@ -38,7 +38,7 @@ Edit `.env` and fill in the required values:
 
 #### 3. Import the Graph Data
 
-The pre-built graph (459K nodes, 5.4M relationships) is distributed as a compressed Memgraph volume backup (~1.2 GB):
+The pre-built graph (453,037 nodes, 5,461,783 relationships) is distributed as a compressed Memgraph volume backup (~304 MB):
 
 ```bash
 ./scripts/import_graph.sh data/export/memgraph-data.tar.gz
@@ -86,7 +86,7 @@ docker compose up -d
 ```bash
 # Export from current Memgraph instance
 ./scripts/export_graph.sh
-# Produces: data/export/memgraph-data.tar.gz (~1.2 GB)
+# Produces: data/export/memgraph-data.tar.gz (~304 MB)
 
 # Transfer to target host and import
 scp data/export/memgraph-data.tar.gz user@host:/path/to/Cardio-KB/data/export/
